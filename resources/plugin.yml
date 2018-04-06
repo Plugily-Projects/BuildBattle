@@ -1,7 +1,7 @@
 main: me.tomthedeveloper.buildbattle.Main
 version: 3.0.0-ALPHA
 name: BuildBattle
-depend: [GameAPI, WorldEdit]
+depend: [WorldEdit]
 softdepend: [BarAPI, Vault]
 commands:
   leave:

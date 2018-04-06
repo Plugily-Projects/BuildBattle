@@ -1,8 +1,8 @@
 package me.tomthedeveloper.buildbattle.stats;
 
-import me.TomTheDeveloper.Handlers.ChatManager;
-import me.TomTheDeveloper.Handlers.UserManager;
-import me.TomTheDeveloper.User;
+import me.tomthedeveloper.buildbattle.User;
+import me.tomthedeveloper.buildbattle.handlers.ChatManager;
+import me.tomthedeveloper.buildbattle.handlers.UserManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,13 +14,10 @@ import org.bukkit.entity.Player;
  */
 public class statsCommand implements CommandExecutor {
 
-
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if(!(commandSender instanceof Player))
-            return true;
-        if(!(command.getLabel().equalsIgnoreCase("STATS")))
-            return true;
+        if(!(commandSender instanceof Player)) return true;
+        if(!(command.getLabel().equalsIgnoreCase("STATS"))) return true;
         Player player = (Player) commandSender;
         User user = UserManager.getUser(player.getUniqueId());
         player.sendMessage(ChatManager.getSingleMessage("STATS-Above-Line", ChatColor.BOLD + "-----YOUR STATS----- "));

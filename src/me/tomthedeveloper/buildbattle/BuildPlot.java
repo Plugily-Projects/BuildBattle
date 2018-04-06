@@ -1,9 +1,8 @@
 package me.tomthedeveloper.buildbattle;
 
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
-import me.TomTheDeveloper.Handlers.UserManager;
-import me.TomTheDeveloper.User;
-import me.TomTheDeveloper.Utils.ParticleEffect;
+import me.tomthedeveloper.buildbattle.handlers.UserManager;
+import me.tomthedeveloper.buildbattle.utils.ParticleEffect;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -131,9 +130,7 @@ public class BuildPlot {
         }
         getParticles().clear();
         for(Entity entity : getCenter().getWorld().getEntities()) {
-            if(isInPlotRange(entity.getLocation(), 3))
-                if(entity.getType() != EntityType.PLAYER)
-                    entity.remove();
+            if(isInPlotRange(entity.getLocation(), 3)) if(entity.getType() != EntityType.PLAYER) entity.remove();
         }
 
     }
@@ -172,16 +169,14 @@ public class BuildPlot {
         if(location.getWorld() == getMINPOINT().getWorld() && location.getWorld() == getMAXPOINT().getWorld()) {
             if(location.getX() >= getMINPOINT().getX() && location.getX() <= getMAXPOINT().getX()) {
                 if(location.getY() >= getMINPOINT().getY() && location.getY() <= getMAXPOINT().getY()) {
-                    if(location.getZ() >= getMINPOINT().getZ()
-                            && location.getZ() <= getMAXPOINT().getZ()) {
+                    if(location.getZ() >= getMINPOINT().getZ() && location.getZ() <= getMAXPOINT().getZ()) {
                         trueOrNot = true;
                     }
                 }
             }
             if(location.getX() <= getMINPOINT().getX() && location.getX() >= getMAXPOINT().getX()) {
                 if(location.getY() <= getMINPOINT().getY() && location.getY() >= getMAXPOINT().getY()) {
-                    if(location.getZ() <= getMINPOINT().getZ()
-                            && location.getZ() >= getMAXPOINT().getZ()) {
+                    if(location.getZ() <= getMINPOINT().getZ() && location.getZ() >= getMAXPOINT().getZ()) {
                         trueOrNot = true;
                     }
                 }
@@ -216,8 +211,7 @@ public class BuildPlot {
             if(location.getWorld() == getMINPOINT().getWorld() && location.getWorld() == getMAXPOINT().getWorld()) {
                 if(location.getX() >= getMINPOINT().getX() && location.getX() <= getMAXPOINT().getX()) {
                     if(location.getY() == getMINPOINT().getY()) {
-                        if(location.getZ() >= getMINPOINT().getZ()
-                                && location.getZ() <= getMAXPOINT().getZ()) {
+                        if(location.getZ() >= getMINPOINT().getZ() && location.getZ() <= getMAXPOINT().getZ()) {
                             trueOrNot = true;
                         }
                     }
@@ -225,8 +219,7 @@ public class BuildPlot {
             } else {
                 if(location.getX() <= getMINPOINT().getX() && location.getX() >= getMAXPOINT().getX()) {
                     if(location.getY() == getMAXPOINT().getY()) {
-                        if(location.getZ() <= getMINPOINT().getZ()
-                                && location.getZ() >= getMAXPOINT().getZ()) {
+                        if(location.getZ() <= getMINPOINT().getZ() && location.getZ() >= getMAXPOINT().getZ()) {
                             trueOrNot = true;
                         }
                     }
@@ -237,10 +230,8 @@ public class BuildPlot {
     }
 
     public void changeFloor(Material material, byte data) {
-        if(material == Material.WATER_BUCKET)
-            material = Material.WATER;
-        if(material == Material.LAVA_BUCKET)
-            material = Material.LAVA;
+        if(material == Material.WATER_BUCKET) material = Material.WATER;
+        if(material == Material.LAVA_BUCKET) material = Material.LAVA;
         double y = 0;
         if(getMINPOINT().getY() > getMAXPOINT().getY()) {
             y = getMAXPOINT().getY() - 1;
@@ -270,12 +261,9 @@ public class BuildPlot {
             location = getMINPOINT().clone();
         }
         Material material = location.add(0, -1, 0).getBlock().getType();
-        if(material == Material.WATER || material == Material.STATIONARY_WATER)
-            return Material.WATER_BUCKET;
-        if(material == Material.LAVA || material == Material.STATIONARY_LAVA)
-            return Material.LAVA_BUCKET;
-        if(material == Material.AIR || material == null)
-            return Material.REDSTONE_BLOCK;
+        if(material == Material.WATER || material == Material.STATIONARY_WATER) return Material.WATER_BUCKET;
+        if(material == Material.LAVA || material == Material.STATIONARY_LAVA) return Material.LAVA_BUCKET;
+        if(material == Material.AIR || material == null) return Material.REDSTONE_BLOCK;
         return material;
 
     }
@@ -296,16 +284,14 @@ public class BuildPlot {
         if(location.getWorld() == getMINPOINT().getWorld() && location.getWorld() == getMAXPOINT().getWorld()) {
             if(location.getX() >= getMINPOINT().getX() - 5 && location.getX() <= getMAXPOINT().getX() + 5) {
                 if(location.getY() >= getMINPOINT().getY() - 5 && location.getY() <= getMAXPOINT().getY() + 5) {
-                    if(location.getZ() >= getMINPOINT().getZ() - 5
-                            && location.getZ() <= getMAXPOINT().getZ() + 5) {
+                    if(location.getZ() >= getMINPOINT().getZ() - 5 && location.getZ() <= getMAXPOINT().getZ() + 5) {
                         trueOrNot = true;
                     }
                 }
             }
             if(location.getX() <= getMINPOINT().getX() + 5 && location.getX() >= getMAXPOINT().getX() - 5) {
                 if(location.getY() <= getMINPOINT().getY() && location.getY() >= getMAXPOINT().getY() - 5) {
-                    if(location.getZ() <= getMINPOINT().getZ() + 5
-                            && location.getZ() >= getMAXPOINT().getZ() - 5) {
+                    if(location.getZ() <= getMINPOINT().getZ() + 5 && location.getZ() >= getMAXPOINT().getZ() - 5) {
                         trueOrNot = true;
                     }
                 }
@@ -319,16 +305,14 @@ public class BuildPlot {
         if(location.getWorld() == getMINPOINT().getWorld() && location.getWorld() == getMAXPOINT().getWorld()) {
             if(location.getX() >= getMINPOINT().getX() - added && location.getX() <= getMAXPOINT().getX() + added) {
                 if(location.getY() >= getMINPOINT().getY() - added && location.getY() <= getMAXPOINT().getY() + added) {
-                    if(location.getZ() >= getMINPOINT().getZ() - added
-                            && location.getZ() <= getMAXPOINT().getZ() + added) {
+                    if(location.getZ() >= getMINPOINT().getZ() - added && location.getZ() <= getMAXPOINT().getZ() + added) {
                         trueOrNot = true;
                     }
                 }
             }
             if(location.getX() <= getMINPOINT().getX() + 5 && location.getX() >= getMAXPOINT().getX() - 5) {
                 if(location.getY() <= getMINPOINT().getY() && location.getY() >= getMAXPOINT().getY() - 5) {
-                    if(location.getZ() <= getMINPOINT().getZ() + 5
-                            && location.getZ() >= getMAXPOINT().getZ() - 5) {
+                    if(location.getZ() <= getMINPOINT().getZ() + 5 && location.getZ() >= getMAXPOINT().getZ() - 5) {
                         trueOrNot = true;
                     }
                 }
@@ -339,8 +323,7 @@ public class BuildPlot {
 
     public Location getTeleportLocation() {
         Location tploc = this.getCenter();
-        while(tploc.getBlock().getType() != Material.AIR || tploc.add(0, 1, 0).getBlock().getType() != Material.AIR)
-            tploc = tploc.add(0, 1, 0);
+        while(tploc.getBlock().getType() != Material.AIR || tploc.add(0, 1, 0).getBlock().getType() != Material.AIR) tploc = tploc.add(0, 1, 0);
         boolean enclosed = false;
         int counter = 0;
         Location location = tploc.clone();

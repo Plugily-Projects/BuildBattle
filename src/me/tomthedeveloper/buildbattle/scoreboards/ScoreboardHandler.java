@@ -1,12 +1,16 @@
 package me.tomthedeveloper.buildbattle.scoreboards;
 
-import me.TomTheDeveloper.Game.GameInstance;
-import me.tomthedeveloper.buildbattle.Main;
 import me.tomthedeveloper.buildbattle.ConfigPreferences;
+import me.tomthedeveloper.buildbattle.Main;
+import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.instance.BuildInstance;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.*;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
 
 /**
  * Created by Tom on 31/01/2016.

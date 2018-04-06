@@ -1,29 +1,45 @@
 package me.tomthedeveloper.buildbattle.instance;
 
-import me.TomTheDeveloper.Game.GameInstance;
-import me.TomTheDeveloper.Game.GameState;
-import me.TomTheDeveloper.Game.InstanceType;
-import me.TomTheDeveloper.Handlers.ChatManager;
-import me.TomTheDeveloper.Handlers.MessageHandler;
-import me.TomTheDeveloper.Handlers.UserManager;
-import me.TomTheDeveloper.User;
-import me.TomTheDeveloper.Utils.ArmorHelper;
-import me.TomTheDeveloper.Utils.Util;
-import me.tomthedeveloper.buildbattle.*;
+import me.tomthedeveloper.buildbattle.BuildPlot;
+import me.tomthedeveloper.buildbattle.ChatFormatter;
+import me.tomthedeveloper.buildbattle.ConfigPreferences;
+import me.tomthedeveloper.buildbattle.PlotManager;
 import me.tomthedeveloper.buildbattle.SelfMadeEvents.GameChangeStateEvent;
 import me.tomthedeveloper.buildbattle.SelfMadeEvents.GameEndEvent;
 import me.tomthedeveloper.buildbattle.SelfMadeEvents.GameStartEvent;
+import me.tomthedeveloper.buildbattle.User;
+import me.tomthedeveloper.buildbattle.VoteItems;
+import me.tomthedeveloper.buildbattle.game.GameInstance;
+import me.tomthedeveloper.buildbattle.game.GameState;
+import me.tomthedeveloper.buildbattle.game.InstanceType;
+import me.tomthedeveloper.buildbattle.handlers.ChatManager;
+import me.tomthedeveloper.buildbattle.handlers.MessageHandler;
+import me.tomthedeveloper.buildbattle.handlers.UserManager;
 import me.tomthedeveloper.buildbattle.items.SpecialItem;
 import me.tomthedeveloper.buildbattle.items.SpecialItemManager;
 import me.tomthedeveloper.buildbattle.menu.IngameMenu;
 import me.tomthedeveloper.buildbattle.scoreboards.ScoreboardHandler;
-import org.bukkit.*;
+import me.tomthedeveloper.buildbattle.utils.ArmorHelper;
+import me.tomthedeveloper.buildbattle.utils.Util;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.inventivetalent.bossbar.BossBarAPI;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -102,11 +118,9 @@ public class BuildInstance extends GameInstance {
 
     @Override
     public void leaveAttempt(Player p) {
-        if(queue.contains(p))
-            queue.remove(p);
+        if(queue.contains(p)) queue.remove(p);
         User user = UserManager.getUser(p.getUniqueId());
-        if(getGameState() == GameState.INGAME || getGameState() == GameState.ENDING)
-            UserManager.getUser(p.getUniqueId()).addInt("gamesplayed", 1);
+        if(getGameState() == GameState.INGAME || getGameState() == GameState.ENDING) UserManager.getUser(p.getUniqueId()).addInt("gamesplayed", 1);
         this.teleportToEndLocation(p);
         this.removePlayer(p);
         if(!user.isSpectator()) {
@@ -150,8 +164,7 @@ public class BuildInstance extends GameInstance {
 
     @Override
     public void run() {
-        if(!this.scoreboardDisabled)
-            updateScoreboard();
+        if(!this.scoreboardDisabled) updateScoreboard();
         updateNewSign();
         if(BAR_ENABLED) {
 
@@ -194,8 +207,7 @@ public class BuildInstance extends GameInstance {
                     for(Player player : getPlayers()) {
                         player.getInventory().clear();
                         player.setGameMode(GameMode.CREATIVE);
-                        if(PLAYERS_OUTSIDE_GAME_ENABLED)
-                            hidePlayersOutsideTheGame(player);
+                        if(PLAYERS_OUTSIDE_GAME_ENABLED) hidePlayersOutsideTheGame(player);
                         player.getInventory().setItem(8, IngameMenu.getMenuItem());
                     }
                     setRandomTheme();
@@ -214,13 +226,7 @@ public class BuildInstance extends GameInstance {
                     Bukkit.getPluginManager().callEvent(new GameEndEvent(this));
                     setTimer(10);
                 }
-                if((getTimer() == (4 * 60)
-                        || getTimer() == (3 * 60)
-                        || getTimer() == 5 * 60
-                        || getTimer() == 30
-                        || getTimer() == 2 * 60
-                        || getTimer() == 60
-                        || getTimer() == 15) && !this.isVoting()) {
+                if((getTimer() == (4 * 60) || getTimer() == (3 * 60) || getTimer() == 5 * 60 || getTimer() == 30 || getTimer() == 2 * 60 || getTimer() == 60 || getTimer() == 15) && !this.isVoting()) {
                     getChatManager().broadcastMessage("Time-Left-To-Build", ChatManager.PREFIX + "%FORMATTEDTIME% " + ChatManager.NORMAL + "time left to build!", getTimer());
                 }
                 if(getTimer() != 0 && !receivedVoteItems) {
@@ -354,8 +360,7 @@ public class BuildInstance extends GameInstance {
 
     private void hidePlayersOutsideTheGame(Player player) {
         for(Player players : plugin.getPlugin().getServer().getOnlinePlayers()) {
-            if(getPlayers().contains(players))
-                continue;
+            if(getPlayers().contains(players)) continue;
             player.hidePlayer(players);
             players.hidePlayer(player);
         }
@@ -366,12 +371,10 @@ public class BuildInstance extends GameInstance {
             BossBarAPI.removeBar(player);
             switch(getGameState()) {
                 case WAITING_FOR_PLAYERS:
-                    BossBarAPI.setMessage(player, ChatManager.getSingleMessage("Waiting-For-Players-Bar-Message", ChatManager.PREFIX + "BuildBattle made by " +
-                            ChatManager.HIGHLIGHTED + "TomTheDeveloper"));
+                    BossBarAPI.setMessage(player, ChatManager.getSingleMessage("Waiting-For-Players-Bar-Message", ChatManager.PREFIX + "BuildBattle made by " + ChatManager.HIGHLIGHTED + "TomTheDeveloper"));
                     break;
                 case STARTING:
-                    BossBarAPI.setMessage(player, ChatManager.getSingleMessage("Starting-Bar-Message", ChatManager.PREFIX + "BuildBattle made by " +
-                            ChatManager.HIGHLIGHTED + "TomTheDeveloper"));
+                    BossBarAPI.setMessage(player, ChatManager.getSingleMessage("Starting-Bar-Message", ChatManager.PREFIX + "BuildBattle made by " + ChatManager.HIGHLIGHTED + "TomTheDeveloper"));
                     break;
                 case INGAME:
                     if(!isVoting()) {
@@ -419,8 +422,7 @@ public class BuildInstance extends GameInstance {
         if(END_GAME_COMMANDS_ENABLED) {
             for(String string : ConfigPreferences.getEndGameCommands()) {
                 for(Player player : getPlayers()) {
-                    plugin.getPlugin().getServer().dispatchCommand(plugin.getPlugin().getServer().getConsoleSender(), string.replaceAll("%PLAYER%", player.getName())
-                            .replaceAll("%RANG%", Integer.toString(getRang(player))));
+                    plugin.getPlugin().getServer().dispatchCommand(plugin.getPlugin().getServer().getConsoleSender(), string.replaceAll("%PLAYER%", player.getName()).replaceAll("%RANG%", Integer.toString(getRang(player))));
                 }
             }
         }
@@ -442,8 +444,7 @@ public class BuildInstance extends GameInstance {
     }
 
     private void updateScoreboard() {
-        if(getPlayers().size() == 0)
-            return;
+        if(getPlayers().size() == 0) return;
         scoreboardHandler.updateScoreboard();
         /*
         for (Player p : getPlayers()) {
@@ -540,10 +541,8 @@ public class BuildInstance extends GameInstance {
         p.getInventory().setArmorContents(new ItemStack[]{new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
         p.getInventory().clear();
         showPlayers();
-        if(!UserManager.getUser(p.getUniqueId()).isSpectator())
-            getChatManager().broadcastJoinMessage(p);
-        if(plugin.areKitsEnabled())
-            plugin.getKitMenuHandler().giveKitMenuItem(p);
+        if(!UserManager.getUser(p.getUniqueId()).isSpectator()) getChatManager().broadcastJoinMessage(p);
+        if(plugin.areKitsEnabled()) plugin.getKitMenuHandler().giveKitMenuItem(p);
         p.updateInventory();
         for(Player player : getPlayers()) {
             showPlayer(player);
@@ -653,8 +652,7 @@ public class BuildInstance extends GameInstance {
         for(Integer rang : toplist.keySet()) {
             if(toplist.get(rang) != null) {
                 if(plugin.getPlugin().getServer().getPlayer(toplist.get(rang)) != null) {
-                    plugin.getPlugin().getServer().getPlayer(toplist.get(rang)).sendMessage(ChatManager.getSingleMessage("You-Became-xth",
-                            ChatColor.GREEN + "You became " + ChatColor.DARK_GREEN + "%NUMBER%" + ChatColor.GREEN + "th", rang));
+                    plugin.getPlugin().getServer().getPlayer(toplist.get(rang)).sendMessage(ChatManager.getSingleMessage("You-Became-xth", ChatColor.GREEN + "You became " + ChatColor.DARK_GREEN + "%NUMBER%" + ChatColor.GREEN + "th", rang));
                     if(rang == 1) {
                         UserManager.getUser(plugin.getPlugin().getServer().getPlayer(toplist.get(rang)).getUniqueId()).addInt("wins", 1);
                         if(getPlotManager().getPlot(toplist.get(rang)).getPoints() > UserManager.getUser(toplist.get(rang)).getInt("highestwin")) {
@@ -699,7 +697,6 @@ public class BuildInstance extends GameInstance {
     private void insertScore(int rang, UUID uuid) {
         UUID after = toplist.get(rang);
         toplist.put(rang, uuid);
-        if(!(rang > 10) && after != null)
-            insertScore(rang + 1, after);
+        if(!(rang > 10) && after != null) insertScore(rang + 1, after);
     }
 }

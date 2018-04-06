@@ -1,12 +1,11 @@
 package me.tomthedeveloper.buildbattle.particles;
 
-import me.TomTheDeveloper.Game.GameInstance;
-import me.tomthedeveloper.buildbattle.Main;
 import me.tomthedeveloper.buildbattle.BuildPlot;
 import me.tomthedeveloper.buildbattle.ConfigPreferences;
+import me.tomthedeveloper.buildbattle.Main;
+import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.instance.BuildInstance;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;

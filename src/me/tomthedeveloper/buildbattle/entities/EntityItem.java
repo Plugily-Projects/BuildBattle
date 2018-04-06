@@ -1,9 +1,9 @@
 package me.tomthedeveloper.buildbattle.entities;
 
-import me.TomTheDeveloper.Handlers.ConfigurationManager;
-import me.TomTheDeveloper.Utils.ParticleEffect;
-import me.TomTheDeveloper.Utils.Util;
 import me.tomthedeveloper.buildbattle.ChatFormatter;
+import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
+import me.tomthedeveloper.buildbattle.utils.ParticleEffect;
+import me.tomthedeveloper.buildbattle.utils.Util;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -37,53 +37,21 @@ public class EntityItem {
     }
 
     public static void loadAll() {
-        new EntityItem("Adult").load(ChatColor.GREEN + "Age", new String[]{ChatColor.GREEN + "Adult or baby? Click to change",
-                ChatColor.GRAY + "Selected: " + ChatColor.GREEN + "Adult"}, Material.EGG, 2);
-        new EntityItem("Baby").load(ChatColor.GREEN + "Age ", new String[]{ChatColor.GREEN + "Adult or baby? Click to change",
-                ChatColor.GRAY + "Selected: " + ChatColor.RED + "Baby"}, Material.EGG, 2);
-        new EntityItem("Move-On").load(ChatColor.GREEN + "Moving", new String[]{
-                ChatColor.GRAY + "Click to disable moving",
-                ChatColor.GRAY + "Selected: " + ChatColor.GREEN + "On"
-        }, Material.ANVIL, 0);
-        new EntityItem("Move-Off").load(ChatColor.GREEN + "Moving", new String[]{
-                ChatColor.GRAY + "Click to enabled moving",
-                ChatColor.GRAY + "Selected: " + ChatColor.RED + "Off"
-        }, Material.ANVIL, 0);
-        new EntityItem("Close").load(ChatColor.RED + "Close", new String[]{
-                ChatColor.GRAY + "Click to close"
-        }, Material.REDSTONE_BLOCK, 8);
-        new EntityItem("Despawn").load(ChatColor.RED + "Destroy entity", new String[]{
-                ChatColor.GRAY + "Click to destroy"
-        }, Material.BEDROCK, 7);
-        new EntityItem("Saddle-On").load(ChatColor.GREEN + "Saddled?", new String[]{
-                ChatColor.GRAY + "Click to remove saddle",
-                ChatColor.GRAY + "Selected: " + ChatColor.GREEN + "On"
-        }, Material.SADDLE, 3);
-        new EntityItem("Saddle-Off").load(ChatColor.GREEN + "Saddled?", new String[]{
-                ChatColor.GRAY + "Click to enable saddle",
-                ChatColor.GRAY + "Selected: " + ChatColor.RED + "Off"
-        }, Material.SADDLE, 3);
-        new EntityItem("Look-At-Me").load(ChatColor.GOLD + "Look", new String[]{
-                ChatColor.GRAY + "Click to let mob look at you"
-        }, Material.COMPASS, 1);
-        new EntityItem("Profession-Villager-Selecting").load(ChatColor.GOLD + "Choose Profession", new String[]{
-                ChatColor.GRAY + "Click to choose profession"
-        }, Material.RED_ROSE, 3);
-        new EntityItem("Profession.Librarian").load(ChatColor.GOLD + "Librarian", new String[]{
-                ChatColor.GRAY + "Click to choose librarian"
-        }, Material.BOOKSHELF, 1);
-        new EntityItem("Profession.Butcher").load(ChatColor.GOLD + "Butcher", new String[]{
-                ChatColor.GRAY + "Click to choose butcher"
-        }, Material.COOKED_BEEF, 2);
-        new EntityItem("Profession.Priest").load(ChatColor.GOLD + "Priest", new String[]{
-                ChatColor.GRAY + "Click to choose priest"
-        }, Material.FEATHER, 3);
-        new EntityItem("Profession.Blacksmith").load(ChatColor.GOLD + "Blacksmith", new String[]{
-                ChatColor.GRAY + "Click to choose blacksmith"
-        }, Material.IRON_CHESTPLATE, 4);
-        new EntityItem("Profession.Farmer").load(ChatColor.GOLD + "Farmer", new String[]{
-                ChatColor.GRAY + "Click to choose farmer"
-        }, Material.WHEAT, 0);
+        new EntityItem("Adult").load(ChatColor.GREEN + "Age", new String[]{ChatColor.GREEN + "Adult or baby? Click to change", ChatColor.GRAY + "Selected: " + ChatColor.GREEN + "Adult"}, Material.EGG, 2);
+        new EntityItem("Baby").load(ChatColor.GREEN + "Age ", new String[]{ChatColor.GREEN + "Adult or baby? Click to change", ChatColor.GRAY + "Selected: " + ChatColor.RED + "Baby"}, Material.EGG, 2);
+        new EntityItem("Move-On").load(ChatColor.GREEN + "Moving", new String[]{ChatColor.GRAY + "Click to disable moving", ChatColor.GRAY + "Selected: " + ChatColor.GREEN + "On"}, Material.ANVIL, 0);
+        new EntityItem("Move-Off").load(ChatColor.GREEN + "Moving", new String[]{ChatColor.GRAY + "Click to enabled moving", ChatColor.GRAY + "Selected: " + ChatColor.RED + "Off"}, Material.ANVIL, 0);
+        new EntityItem("Close").load(ChatColor.RED + "Close", new String[]{ChatColor.GRAY + "Click to close"}, Material.REDSTONE_BLOCK, 8);
+        new EntityItem("Despawn").load(ChatColor.RED + "Destroy entity", new String[]{ChatColor.GRAY + "Click to destroy"}, Material.BEDROCK, 7);
+        new EntityItem("Saddle-On").load(ChatColor.GREEN + "Saddled?", new String[]{ChatColor.GRAY + "Click to remove saddle", ChatColor.GRAY + "Selected: " + ChatColor.GREEN + "On"}, Material.SADDLE, 3);
+        new EntityItem("Saddle-Off").load(ChatColor.GREEN + "Saddled?", new String[]{ChatColor.GRAY + "Click to enable saddle", ChatColor.GRAY + "Selected: " + ChatColor.RED + "Off"}, Material.SADDLE, 3);
+        new EntityItem("Look-At-Me").load(ChatColor.GOLD + "Look", new String[]{ChatColor.GRAY + "Click to let mob look at you"}, Material.COMPASS, 1);
+        new EntityItem("Profession-Villager-Selecting").load(ChatColor.GOLD + "Choose Profession", new String[]{ChatColor.GRAY + "Click to choose profession"}, Material.RED_ROSE, 3);
+        new EntityItem("Profession.Librarian").load(ChatColor.GOLD + "Librarian", new String[]{ChatColor.GRAY + "Click to choose librarian"}, Material.BOOKSHELF, 1);
+        new EntityItem("Profession.Butcher").load(ChatColor.GOLD + "Butcher", new String[]{ChatColor.GRAY + "Click to choose butcher"}, Material.COOKED_BEEF, 2);
+        new EntityItem("Profession.Priest").load(ChatColor.GOLD + "Priest", new String[]{ChatColor.GRAY + "Click to choose priest"}, Material.FEATHER, 3);
+        new EntityItem("Profession.Blacksmith").load(ChatColor.GOLD + "Blacksmith", new String[]{ChatColor.GRAY + "Click to choose blacksmith"}, Material.IRON_CHESTPLATE, 4);
+        new EntityItem("Profession.Farmer").load(ChatColor.GOLD + "Farmer", new String[]{ChatColor.GRAY + "Click to choose farmer"}, Material.WHEAT, 0);
 
 
     }
@@ -165,13 +133,13 @@ public class EntityItem {
         return lore;
     }
 
+    public void setLore(String[] lore) {
+        this.lore = lore;
+    }
+
     private void setLore(List<String> lore) {
 
         this.lore = lore.toArray(new String[lore.size()]);
-    }
-
-    public void setLore(String[] lore) {
-        this.lore = lore;
     }
 
     private String getDisplayName() {

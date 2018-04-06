@@ -1,13 +1,24 @@
 package me.tomthedeveloper.buildbattle.entities;
 
-import me.TomTheDeveloper.Handlers.ChatManager;
+import me.tomthedeveloper.buildbattle.handlers.ChatManager;
 import net.minecraft.server.v1_8_R3.EntityLiving;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Chicken;
+import org.bukkit.entity.Cow;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.MushroomCow;
+import org.bukkit.entity.Pig;
+import org.bukkit.entity.PigZombie;
+import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Villager;
+import org.bukkit.entity.Wolf;
+import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -198,10 +209,8 @@ public class BuildBattleEntity {
                 break;
             case VILLAGER:
                 Villager villager = (Villager) entity;
-                if(villager.isAdult())
-                    villager.setBaby();
-                else
-                    villager.setAdult();
+                if(villager.isAdult()) villager.setBaby();
+                else villager.setAdult();
             default:
                 break;
         }
@@ -231,55 +240,20 @@ public class BuildBattleEntity {
             case ZOMBIE:
             case PIG_ZOMBIE:
             case CHICKEN:
-                return new InventoryBuilder()
-                        .setSlots(9)
-                        .addItem(this.isAdult() ? EntityItemManager.getEntityItem("Adult") : EntityItemManager.getEntityItem("Baby"))
-                        .addItem(this.isMoveable() ? EntityItemManager.getEntityItem("Move-On") : EntityItemManager.getEntityItem("Move-Off"))
-                        .addItem(EntityItemManager.getEntityItem("Look-At-Me"))
-                        .addItem(EntityItemManager.getEntityItem("Close"))
-                        .addItem(EntityItemManager.getEntityItem("Despawn"))
-                        .build();
+                return new InventoryBuilder().setSlots(9).addItem(this.isAdult() ? EntityItemManager.getEntityItem("Adult") : EntityItemManager.getEntityItem("Baby")).addItem(this.isMoveable() ? EntityItemManager.getEntityItem("Move-On") : EntityItemManager.getEntityItem("Move-Off")).addItem(EntityItemManager.getEntityItem("Look-At-Me")).addItem(EntityItemManager.getEntityItem("Close")).addItem(EntityItemManager.getEntityItem("Despawn")).build();
             case SILVERFISH:
             case ENDERMAN:
             case SPIDER:
             case CAVE_SPIDER:
             case SQUID:
-                return new InventoryBuilder()
-                        .setSlots(9)
-                        .addItem(this.isMoveable() ? EntityItemManager.getEntityItem("Move-On") : EntityItemManager.getEntityItem("Move-Off"))
-                        .addItem(EntityItemManager.getEntityItem("Look-At-Me"))
-                        .addItem(EntityItemManager.getEntityItem("Close"))
-                        .addItem(EntityItemManager.getEntityItem("Despawn"))
-                        .build();
+                return new InventoryBuilder().setSlots(9).addItem(this.isMoveable() ? EntityItemManager.getEntityItem("Move-On") : EntityItemManager.getEntityItem("Move-Off")).addItem(EntityItemManager.getEntityItem("Look-At-Me")).addItem(EntityItemManager.getEntityItem("Close")).addItem(EntityItemManager.getEntityItem("Despawn")).build();
             case HORSE:
-                return new InventoryBuilder()
-                        .setSlots(9)
-                        .addItem(this.isMoveable() ? EntityItemManager.getEntityItem("Move-On") : EntityItemManager.getEntityItem("Move-Off"))
-                        .addItem(EntityItemManager.getEntityItem("Look-At-Me"))
-                        .addItem(this.isAdult() ? EntityItemManager.getEntityItem("Adult") : EntityItemManager.getEntityItem("Baby"))
-                        .addItem(this.isSaddled() ? EntityItemManager.getEntityItem("Saddle-Off") : EntityItemManager.getEntityItem("Saddle-On"))
-                        .addItem(EntityItemManager.getEntityItem("Close"))
-                        .addItem(EntityItemManager.getEntityItem("Despawn"))
-                        .build();
+                return new InventoryBuilder().setSlots(9).addItem(this.isMoveable() ? EntityItemManager.getEntityItem("Move-On") : EntityItemManager.getEntityItem("Move-Off")).addItem(EntityItemManager.getEntityItem("Look-At-Me")).addItem(this.isAdult() ? EntityItemManager.getEntityItem("Adult") : EntityItemManager.getEntityItem("Baby")).addItem(this.isSaddled() ? EntityItemManager.getEntityItem("Saddle-Off") : EntityItemManager.getEntityItem("Saddle-On")).addItem(EntityItemManager.getEntityItem("Close")).addItem(EntityItemManager.getEntityItem("Despawn")).build();
             case VILLAGER:
-                return new InventoryBuilder()
-                        .setSlots(9)
-                        .addItem(this.isAdult() ? EntityItemManager.getEntityItem("Adult") : EntityItemManager.getEntityItem("Baby"))
-                        .addItem(this.isMoveable() ? EntityItemManager.getEntityItem("Move-On") : EntityItemManager.getEntityItem("Move-Off"))
-                        .addItem(EntityItemManager.getEntityItem("Look-At-Me"))
-                        .addItem(EntityItemManager.getEntityItem("Close"))
-                        .addItem(EntityItemManager.getEntityItem("Despawn"))
-                        .addItem(EntityItemManager.getEntityItem("Profession-Villager-Selecting"))
-                        .build();
+                return new InventoryBuilder().setSlots(9).addItem(this.isAdult() ? EntityItemManager.getEntityItem("Adult") : EntityItemManager.getEntityItem("Baby")).addItem(this.isMoveable() ? EntityItemManager.getEntityItem("Move-On") : EntityItemManager.getEntityItem("Move-Off")).addItem(EntityItemManager.getEntityItem("Look-At-Me")).addItem(EntityItemManager.getEntityItem("Close")).addItem(EntityItemManager.getEntityItem("Despawn")).addItem(EntityItemManager.getEntityItem("Profession-Villager-Selecting")).build();
 
             default:
-                return new InventoryBuilder()
-                        .setSlots(9)
-                        .addItem(this.isMoveable() ? EntityItemManager.getEntityItem("Move-On") : EntityItemManager.getEntityItem("Move-Off"))
-                        .addItem(EntityItemManager.getEntityItem("Look-At-Me"))
-                        .addItem(EntityItemManager.getEntityItem("Close"))
-                        .addItem(EntityItemManager.getEntityItem("Despawn"))
-                        .build();
+                return new InventoryBuilder().setSlots(9).addItem(this.isMoveable() ? EntityItemManager.getEntityItem("Move-On") : EntityItemManager.getEntityItem("Move-Off")).addItem(EntityItemManager.getEntityItem("Look-At-Me")).addItem(EntityItemManager.getEntityItem("Close")).addItem(EntityItemManager.getEntityItem("Despawn")).build();
 
         }
 
@@ -308,8 +282,7 @@ public class BuildBattleEntity {
         nmsEntity.c(tag);
         int AI = tag.getInt("NoAI");
         tag.setInt("NoAI", 0);
-        entity.teleport(new Location(entity.getLocation().getWorld(), entity.getLocation().getX(), entity.getLocation().getY(), entity.getLocation().getZ(),
-                location.getYaw(), -location.getPitch()));
+        entity.teleport(new Location(entity.getLocation().getWorld(), entity.getLocation().getX(), entity.getLocation().getY(), entity.getLocation().getZ(), location.getYaw(), -location.getPitch()));
         tag.setInt("NoAI", AI);
         EntityLiving el = (EntityLiving) nmsEntity;
         el.a(tag);

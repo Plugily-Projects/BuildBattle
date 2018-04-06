@@ -1,7 +1,7 @@
 package me.tomthedeveloper.buildbattle.menu;
 
-import me.TomTheDeveloper.Utils.Util;
 import me.tomthedeveloper.buildbattle.BuildPlot;
+import me.tomthedeveloper.buildbattle.utils.Util;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 

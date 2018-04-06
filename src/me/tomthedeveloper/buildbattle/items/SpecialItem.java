@@ -1,9 +1,9 @@
 package me.tomthedeveloper.buildbattle.items;
 
-import me.TomTheDeveloper.Handlers.ConfigurationManager;
-import me.TomTheDeveloper.Utils.ParticleEffect;
-import me.TomTheDeveloper.Utils.Util;
 import me.tomthedeveloper.buildbattle.ChatFormatter;
+import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
+import me.tomthedeveloper.buildbattle.utils.ParticleEffect;
+import me.tomthedeveloper.buildbattle.utils.Util;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -37,9 +37,7 @@ public class SpecialItem {
     }
 
     public static void loadAll() {
-        new SpecialItem("Leave").load(ChatColor.RED + "Leave", new String[]{
-                org.bukkit.ChatColor.GRAY + "Click to teleport to hub"
-        }, Material.BED, 8);
+        new SpecialItem("Leave").load(ChatColor.RED + "Leave", new String[]{org.bukkit.ChatColor.GRAY + "Click to teleport to hub"}, Material.BED, 8);
     }
 
     private void load(String displayName, String[] lore, Material material, int slot) {
@@ -118,13 +116,13 @@ public class SpecialItem {
         return lore;
     }
 
+    public void setLore(String[] lore) {
+        this.lore = lore;
+    }
+
     private void setLore(List<String> lore) {
 
         this.lore = lore.toArray(new String[lore.size()]);
-    }
-
-    public void setLore(String[] lore) {
-        this.lore = lore;
     }
 
     private String getDisplayName() {

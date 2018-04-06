@@ -1,9 +1,9 @@
 package me.tomthedeveloper.buildbattle.playerheads;
 
-import me.TomTheDeveloper.Handlers.ConfigurationManager;
-import me.TomTheDeveloper.Utils.Items;
-import me.TomTheDeveloper.Utils.Util;
 import me.tomthedeveloper.buildbattle.ChatFormatter;
+import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
+import me.tomthedeveloper.buildbattle.utils.Items;
+import me.tomthedeveloper.buildbattle.utils.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -133,13 +133,13 @@ class HeadsItem {
         return lorelist;
     }
 
+    public void setLore(String[] lore) {
+        this.lore = lore;
+    }
+
     public void setLore(List<String> lore) {
 
         this.lore = lore.toArray(new String[lore.size()]);
-    }
-
-    public void setLore(String[] lore) {
-        this.lore = lore;
     }
 
     private String getDisplayName() {

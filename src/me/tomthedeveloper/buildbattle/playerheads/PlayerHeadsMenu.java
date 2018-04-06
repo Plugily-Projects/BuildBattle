@@ -1,8 +1,8 @@
 package me.tomthedeveloper.buildbattle.playerheads;
 
-import me.TomTheDeveloper.Handlers.ChatManager;
-import me.TomTheDeveloper.Handlers.ConfigurationManager;
 import me.tomthedeveloper.buildbattle.ChatFormatter;
+import me.tomthedeveloper.buildbattle.handlers.ChatManager;
+import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
@@ -12,7 +12,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Tom on 26/08/2015.
@@ -56,8 +60,7 @@ public class PlayerHeadsMenu {
             headsItem.setConfig(config.getString(str + ".config"));
             headsItem.setSize(config.getInt(str + ".inventorysize"));
             headsItem.setMenuName(config.getString(str + ".menuname"));
-            if(headsItem.isEnabled())
-                headsItems.add(headsItem);
+            if(headsItem.isEnabled()) headsItems.add(headsItem);
         }
         for(HeadsItem headsItem : headsItems) {
             config = headsItem.getConfig();
@@ -86,8 +89,7 @@ public class PlayerHeadsMenu {
                 heads.setPermission(config.getString(path + ".permission"));
                 heads.setOwner(config.getString(path + ".owner"));
                 heads.setSlot(config.getInt(path + ".slot"));
-                if(heads.isEnabled())
-                    list.add(heads);
+                if(heads.isEnabled()) list.add(heads);
             }
             playerheadmenus.put(headsItem.getMenuName(), list);
         }
@@ -96,8 +98,7 @@ public class PlayerHeadsMenu {
     public static void openMenu(Player player) {
         Inventory inventory = player.getServer().createInventory(player, 3 * 9, ChatManager.getSingleMessage("Player-Head-Main-Inventory-Name", "Player Head Menu"));
         for(HeadsItem headsItem : headsItems) {
-            if(headsItem.isEnabled())
-                inventory.setItem(headsItem.getSlot(), headsItem.getItemStack());
+            if(headsItem.isEnabled()) inventory.setItem(headsItem.getSlot(), headsItem.getItemStack());
         }
         player.openInventory(inventory);
     }
@@ -116,8 +117,7 @@ public class PlayerHeadsMenu {
                     Inventory inventory = player.getServer().createInventory(player, headsItem.getSize(), headsItem.getMenuName());
                     List<HeadsItem> list = playerheadmenus.get(headsItem.getMenuName());
                     for(HeadsItem headsItem1 : list) {
-                        if(headsItem.isEnabled())
-                            inventory.setItem(headsItem1.getSlot(), headsItem1.getItemStack());
+                        if(headsItem.isEnabled()) inventory.setItem(headsItem1.getSlot(), headsItem1.getItemStack());
                     }
                     player.openInventory(inventory);
                     return;
@@ -133,8 +133,7 @@ public class PlayerHeadsMenu {
 
 
     public static List<HeadsItem> getHeadsItemsList(String menuname) {
-        if(playerheadmenus.containsKey(menuname))
-            return playerheadmenus.get(menuname);
+        if(playerheadmenus.containsKey(menuname)) return playerheadmenus.get(menuname);
         return null;
     }
 

@@ -2,18 +2,15 @@ package me.tomthedeveloper.buildbattle;
 
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import com.sk89q.worldedit.bukkit.selections.Selection;
-import me.TomTheDeveloper.CommandsInterface;
-import me.TomTheDeveloper.Game.GameInstance;
-import me.TomTheDeveloper.Game.GameState;
-import me.TomTheDeveloper.GameAPI;
-import me.TomTheDeveloper.Handlers.ChatManager;
-import me.TomTheDeveloper.Handlers.UserManager;
-import me.TomTheDeveloper.User;
 import me.tomthedeveloper.buildbattle.entities.EntityItem;
 import me.tomthedeveloper.buildbattle.entities.EntityMenuEvents;
 import me.tomthedeveloper.buildbattle.events.IngameEvents;
 import me.tomthedeveloper.buildbattle.events.NormalEvents;
 import me.tomthedeveloper.buildbattle.events.v1_8IngameEvents;
+import me.tomthedeveloper.buildbattle.game.GameInstance;
+import me.tomthedeveloper.buildbattle.game.GameState;
+import me.tomthedeveloper.buildbattle.handlers.ChatManager;
+import me.tomthedeveloper.buildbattle.handlers.UserManager;
 import me.tomthedeveloper.buildbattle.instance.BuildInstance;
 import me.tomthedeveloper.buildbattle.items.SpecialItem;
 import me.tomthedeveloper.buildbattle.particles.ParticleHandler;
@@ -45,7 +42,6 @@ import java.util.List;
  * Created by Tom on 17/08/2015.
  */
 public class Main extends JavaPlugin implements CommandsInterface {
-
 
     private static Economy econ = null;
     private static Permission perms = null;
@@ -89,10 +85,8 @@ public class Main extends JavaPlugin implements CommandsInterface {
         ChatManager.getFromLanguageConfig("Voted", ChatColor.GREEN + "Voted succesfully!");
         ChatManager.getFromLanguageConfig("Voting-For-Player-Plot", ChatManager.NORMAL + "Voting for " + ChatManager.HIGHLIGHTED + "%PLAYER%" + ChatManager.NORMAL + "'s plot!");
         ChatManager.getFromLanguageConfig("Winner-Announcement-Footer-Line", ChatColor.GREEN + "==============================");
-        ChatManager.getFromLanguageConfig("Waiting-For-Players-Bar-Message", ChatManager.PREFIX + "BuildBattle made by " +
-                ChatManager.HIGHLIGHTED + "TomTheDeveloper");
-        ChatManager.getFromLanguageConfig("Starting-Bar-Message", ChatManager.PREFIX + "BuildBattle made by " +
-                ChatManager.HIGHLIGHTED + "TomTheDeveloper");
+        ChatManager.getFromLanguageConfig("Waiting-For-Players-Bar-Message", ChatManager.PREFIX + "BuildBattle made by " + ChatManager.HIGHLIGHTED + "TomTheDeveloper");
+        ChatManager.getFromLanguageConfig("Starting-Bar-Message", ChatManager.PREFIX + "BuildBattle made by " + ChatManager.HIGHLIGHTED + "TomTheDeveloper");
         ChatManager.getFromLanguageConfig("Time-Left-Bar-Message", ChatManager.PREFIX + "Time left :" + ChatManager.HIGHLIGHTED + " %FORMATTEDTIME%");
         ChatManager.getFromLanguageConfig("Vote-Time-Left-Bar-Message", ChatManager.PREFIX + "Vote Time left :" + ChatManager.HIGHLIGHTED + " %FORMATTEDTIME%");
         ChatManager.getFromLanguageConfig("Floor-Option-Name", ChatColor.GREEN + "Floor Material");
@@ -110,8 +104,7 @@ public class Main extends JavaPlugin implements CommandsInterface {
         ChatManager.getFromLanguageConfig("Enough-Players-To-Start", "We now have enough players. The game is starting soon!");
         ChatManager.getFromLanguageConfig("Teleport-To-EndLocation-In-X-Seconds", "You will be teleported to the lobby in " + ChatManager.HIGHLIGHTED + "%TIME%" + ChatColor.GRAY + " seconds");
         ChatManager.getFromLanguageConfig("Cant-Vote-On-Own-Plot", ChatColor.RED + "U can't vote on your own plot!!");
-        ChatManager.getFromLanguageConfig("You-Became-xth",
-                ChatColor.GREEN + "You became " + ChatColor.DARK_GREEN + "%NUMBER%" + ChatColor.GREEN + "th");
+        ChatManager.getFromLanguageConfig("You-Became-xth", ChatColor.GREEN + "You became " + ChatColor.DARK_GREEN + "%NUMBER%" + ChatColor.GREEN + "th");
         ChatManager.getFromLanguageConfig("Kicked-Game-Already-Started", ChatManager.HIGHLIGHTED + "Kicked! Game has already started!");
         ChatManager.getFromLanguageConfig("Particle-Option-Name", ChatColor.GREEN + "Particles");
         ChatManager.getFromLanguageConfig("Coming-Soon", ChatColor.RED + "Coming Soon");
@@ -173,12 +166,10 @@ public class Main extends JavaPlugin implements CommandsInterface {
         this.getServer().getPluginManager().registerEvents(new EntityMenuEvents(this), this);
         ParticleHandler particleHandler = new ParticleHandler(this);
         particleHandler.start();
-        if(!this.getConfig().contains("DatabaseActivated"))
-            this.getConfig().set("DatabaseActivated", false);
+        if(!this.getConfig().contains("DatabaseActivated")) this.getConfig().set("DatabaseActivated", false);
         this.saveConfig();
         databaseActivated = this.getConfig().getBoolean("DatabaseActivated");
-        if(databaseActivated)
-            this.database = new MySQLDatabase(this);
+        if(databaseActivated) this.database = new MySQLDatabase(this);
         else {
             fileStats = new FileStats(this);
         }
@@ -282,16 +273,14 @@ public class Main extends JavaPlugin implements CommandsInterface {
 
     private boolean setupChat() {
         RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
-        if(rsp == null)
-            return false;
+        if(rsp == null) return false;
         chat = rsp.getProvider();
         return chat != null;
     }
 
     private boolean setupPermissions() {
         RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
-        if(rsp == null)
-            return false;
+        if(rsp == null) return false;
         perms = rsp.getProvider();
         return perms != null;
     }
@@ -352,8 +341,7 @@ public class Main extends JavaPlugin implements CommandsInterface {
             return true;
         }
         if(strings.length == 1 && strings[0].equalsIgnoreCase("forcestart")) {
-            if(gameAPI.getGameInstanceManager().getGameInstance(player) == null)
-                return false;
+            if(gameAPI.getGameInstanceManager().getGameInstance(player) == null) return false;
             BuildInstance invasionInstance = (BuildInstance) gameAPI.getGameInstanceManager().getGameInstance(player);
             if(invasionInstance.getGameState() == GameState.WAITING_FOR_PLAYERS) {
                 invasionInstance.setGameState(GameState.STARTING);
@@ -395,7 +383,7 @@ public class Main extends JavaPlugin implements CommandsInterface {
         return gameAPI;
     }
 
-    private void loadInstances() {
+    public void loadInstances() {
         this.saveConfig();
         if(gameAPI.getGameInstanceManager().getGameInstances() != null) {
             if(gameAPI.getGameInstanceManager().getGameInstances().size() > 0) {
@@ -408,36 +396,26 @@ public class Main extends JavaPlugin implements CommandsInterface {
         for(String ID : this.getConfig().getConfigurationSection("instances").getKeys(false)) {
             BuildInstance earthMasterInstance;
             String s = "instances." + ID + ".";
-            if(s.contains("default"))
-                continue;
+            if(s.contains("default")) continue;
 
 
             earthMasterInstance = new BuildInstance(ID);
 
 
-            if(getConfig().contains(s + "minimumplayers"))
-                earthMasterInstance.setMIN_PLAYERS(getConfig().getInt(s + "minimumplayers"));
-            else
-                earthMasterInstance.setMIN_PLAYERS(getConfig().getInt("instances.default.minimumplayers"));
-            if(getConfig().contains(s + "maximumplayers"))
-                earthMasterInstance.setMAX_PLAYERS(getConfig().getInt(s + "maximumplayers"));
-            else
-                earthMasterInstance.setMAX_PLAYERS(getConfig().getInt("instances.default.maximumplayers"));
-            if(getConfig().contains(s + "mapname"))
-                earthMasterInstance.setMapName(getConfig().getString(s + "mapname"));
-            else
-                earthMasterInstance.setMapName(getConfig().getString("instances.default.mapname"));
-            if(getConfig().contains(s + "lobbylocation"))
-                earthMasterInstance.setLobbyLocation(gameAPI.getLocation(s + "lobbylocation"));
-            if(getConfig().contains(s + "Startlocation"))
-                earthMasterInstance.setStartLocation(gameAPI.getLocation(s + "Startlocation"));
+            if(getConfig().contains(s + "minimumplayers")) earthMasterInstance.setMIN_PLAYERS(getConfig().getInt(s + "minimumplayers"));
+            else earthMasterInstance.setMIN_PLAYERS(getConfig().getInt("instances.default.minimumplayers"));
+            if(getConfig().contains(s + "maximumplayers")) earthMasterInstance.setMAX_PLAYERS(getConfig().getInt(s + "maximumplayers"));
+            else earthMasterInstance.setMAX_PLAYERS(getConfig().getInt("instances.default.maximumplayers"));
+            if(getConfig().contains(s + "mapname")) earthMasterInstance.setMapName(getConfig().getString(s + "mapname"));
+            else earthMasterInstance.setMapName(getConfig().getString("instances.default.mapname"));
+            if(getConfig().contains(s + "lobbylocation")) earthMasterInstance.setLobbyLocation(gameAPI.getLocation(s + "lobbylocation"));
+            if(getConfig().contains(s + "Startlocation")) earthMasterInstance.setStartLocation(gameAPI.getLocation(s + "Startlocation"));
             else {
                 System.out.print(ID + " doesn't contains an start location!");
                 gameAPI.getGameInstanceManager().registerGameInstance(earthMasterInstance);
                 continue;
             }
-            if(getConfig().contains(s + "Endlocation"))
-                earthMasterInstance.setEndLocation(gameAPI.getLocation(s + "Endlocation"));
+            if(getConfig().contains(s + "Endlocation")) earthMasterInstance.setEndLocation(gameAPI.getLocation(s + "Endlocation"));
             else {
                 if(!gameAPI.isBungeeActivated()) {
                     System.out.print(ID + " doesn't contains an end location!");
@@ -478,8 +456,7 @@ public class Main extends JavaPlugin implements CommandsInterface {
 
     private void loadStatsForPlayersOnline() {
         for(final Player player : getServer().getOnlinePlayers()) {
-            if(gameAPI.isBungeeActivated())
-                gameAPI.getGameInstanceManager().getGameInstances().get(0).teleportToLobby(player);
+            if(gameAPI.isBungeeActivated()) gameAPI.getGameInstanceManager().getGameInstances().get(0).teleportToLobby(player);
             if(!this.isDatabaseActivated()) {
                 List<String> temp = new ArrayList<>();
                 temp.add("gamesplayed");

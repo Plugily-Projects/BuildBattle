@@ -2,7 +2,7 @@ package me.tomthedeveloper.buildbattle.stats;
 
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
-import me.TomTheDeveloper.Handlers.ConfigurationManager;
+import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -103,8 +103,7 @@ public class MySQLConnectionManager {
 
     public void closeStatement(Statement stmt) {
         try {
-            if(stmt != null)
-                stmt.close();
+            if(stmt != null) stmt.close();
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -113,8 +112,7 @@ public class MySQLConnectionManager {
 
     public void closeResultSet(ResultSet rSet) {
         try {
-            if(rSet != null)
-                rSet.close();
+            if(rSet != null) rSet.close();
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -123,8 +121,7 @@ public class MySQLConnectionManager {
 
     public void closeConnection(Connection conn) {
         try {
-            if(conn != null)
-                conn.close(); //release the connection - the name is tricky but connection is not closed it is released
+            if(conn != null) conn.close(); //release the connection - the name is tricky but connection is not closed it is released
             //and it will stay in pool
         } catch(SQLException e) {
             e.printStackTrace();

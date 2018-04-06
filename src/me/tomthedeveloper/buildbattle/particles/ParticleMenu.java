@@ -1,12 +1,12 @@
 package me.tomthedeveloper.buildbattle.particles;
 
-import me.TomTheDeveloper.Handlers.ChatManager;
-import me.TomTheDeveloper.Handlers.ConfigurationManager;
-import me.TomTheDeveloper.Handlers.UserManager;
-import me.TomTheDeveloper.Utils.ParticleEffect;
-import me.TomTheDeveloper.Utils.Util;
 import me.tomthedeveloper.buildbattle.BuildPlot;
 import me.tomthedeveloper.buildbattle.ConfigPreferences;
+import me.tomthedeveloper.buildbattle.handlers.ChatManager;
+import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
+import me.tomthedeveloper.buildbattle.handlers.UserManager;
+import me.tomthedeveloper.buildbattle.utils.ParticleEffect;
+import me.tomthedeveloper.buildbattle.utils.Util;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -31,12 +31,10 @@ public class ParticleMenu {
     public static void openMenu(Player player, BuildPlot buildPlot) {
         Inventory inventory = player.getServer().createInventory(player, 6 * 9, ChatManager.getSingleMessage("Particle-Menu-Name", "Particle Menu"));
         for(ParticleItem particleItem : particleItems) {
-            if(particleItem.isEnabled())
-                inventory.setItem(particleItem.getSlot(), particleItem.getItemStack());
+            if(particleItem.isEnabled()) inventory.setItem(particleItem.getSlot(), particleItem.getItemStack());
         }
         ItemStack itemStack = new ItemStack(Material.REDSTONE_BLOCK);
-        Util.setItemNameAndLore(itemStack, ChatManager.getSingleMessage("Remove-Particle-Item-Name", ChatColor.RED + "Remove Particles"),
-                new String[]{ChatManager.getSingleMessage("Remove-Particle-Item-Lore", "Right click to open menu!")});
+        Util.setItemNameAndLore(itemStack, ChatManager.getSingleMessage("Remove-Particle-Item-Name", ChatColor.RED + "Remove Particles"), new String[]{ChatManager.getSingleMessage("Remove-Particle-Item-Lore", "Right click to open menu!")});
         inventory.setItem(53, itemStack);
         player.openInventory(inventory);
     }
@@ -46,11 +44,7 @@ public class ParticleMenu {
         FileConfiguration config = ConfigurationManager.getConfig("particles");
         int slotcounter = 0;
         for(ParticleEffect particleEffect : ParticleEffect.values()) {
-            if(particleEffect == ParticleEffect.BLOCK_CRACK
-                    || particleEffect == ParticleEffect.ITEM_CRACK
-                    || particleEffect == ParticleEffect.ITEM_TAKE
-                    || particleEffect == ParticleEffect.BLOCK_DUST
-                    || particleEffect == ParticleEffect.MOB_APPEARANCE)
+            if(particleEffect == ParticleEffect.BLOCK_CRACK || particleEffect == ParticleEffect.ITEM_CRACK || particleEffect == ParticleEffect.ITEM_TAKE || particleEffect == ParticleEffect.BLOCK_DUST || particleEffect == ParticleEffect.MOB_APPEARANCE)
                 continue;
             if(!config.contains(particleEffect.toString())) {
                 config.set(particleEffect.toString() + ".data", 0);
@@ -85,8 +79,7 @@ public class ParticleMenu {
 
     public static void onClick(Player player, ItemStack itemStack, BuildPlot buildPlot) {
         for(ParticleItem particleItem : particleItems) {
-            if(particleItem.getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())
-                    && particleItem.getMaterial() == itemStack.getType()) {
+            if(particleItem.getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName()) && particleItem.getMaterial() == itemStack.getType()) {
                 if(!player.hasPermission(particleItem.getPermission())) {
                     player.sendMessage(ChatManager.getSingleMessage("No-Permission-For-This-Particle", ChatColor.RED + " No permission for this particle!"));
 
@@ -106,8 +99,7 @@ public class ParticleMenu {
 
     public static ParticleItem getParticleItem(ParticleEffect effect) {
         for(ParticleItem particleItem : particleItems) {
-            if(effect == particleItem.getEffect())
-                return particleItem;
+            if(effect == particleItem.getEffect()) return particleItem;
         }
         return null;
     }

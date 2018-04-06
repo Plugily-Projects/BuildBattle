@@ -1,11 +1,15 @@
 package me.tomthedeveloper.buildbattle.scoreboards;
 
-import me.TomTheDeveloper.Game.GameState;
-import me.TomTheDeveloper.GameAPI;
-import me.TomTheDeveloper.Handlers.ConfigurationManager;
+import me.tomthedeveloper.buildbattle.GameAPI;
+import me.tomthedeveloper.buildbattle.game.GameState;
+import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 
 /**
@@ -39,8 +43,7 @@ class ScoreboardLoader {
             InputStream inputStream = ScoreboardLoader.class.getResourceAsStream("/scoreboard.yml");
             OutputStream outputStream = null;
             try {
-                outputStream =
-                        new FileOutputStream(file);
+                outputStream = new FileOutputStream(file);
                 int read = 0;
                 byte[] bytes = new byte[1024];
                 while((read = inputStream.read(bytes)) != -1) {

@@ -1,10 +1,10 @@
 package me.tomthedeveloper.buildbattle.entities;
 
-import me.TomTheDeveloper.Game.GameInstance;
-import me.TomTheDeveloper.Game.GameState;
-import me.TomTheDeveloper.GameAPI;
-import me.TomTheDeveloper.Handlers.ChatManager;
+import me.tomthedeveloper.buildbattle.GameAPI;
 import me.tomthedeveloper.buildbattle.Main;
+import me.tomthedeveloper.buildbattle.game.GameInstance;
+import me.tomthedeveloper.buildbattle.game.GameState;
+import me.tomthedeveloper.buildbattle.handlers.ChatManager;
 import me.tomthedeveloper.buildbattle.instance.BuildInstance;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -39,29 +39,11 @@ public class EntityMenuEvents implements Listener {
     public void onRightClickEntity(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
         GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance(player);
-        if(gameInstance == null)
-            return;
+        if(gameInstance == null) return;
         event.setCancelled(true);
-        if(gameInstance.getGameState() != GameState.INGAME || ((BuildInstance) gameInstance).isVoting())
-            return;
+        if(gameInstance.getGameState() != GameState.INGAME || ((BuildInstance) gameInstance).isVoting()) return;
         EntityType type = event.getRightClicked().getType();
-        if(type == EntityType.ITEM_FRAME || type == EntityType.ARMOR_STAND
-                || type == EntityType.DROPPED_ITEM
-                || type == EntityType.PRIMED_TNT
-                || type == EntityType.FALLING_BLOCK
-                || type == EntityType.COMPLEX_PART
-                || type == EntityType.ENDER_CRYSTAL
-                || type == EntityType.LEASH_HITCH
-                || type == EntityType.MINECART
-                || type == EntityType.MINECART_CHEST
-                || type == EntityType.MINECART_FURNACE
-                || type == EntityType.MINECART_COMMAND
-                || type == EntityType.MINECART_HOPPER
-                || type == EntityType.MINECART_MOB_SPAWNER
-                || type == EntityType.MINECART_TNT
-                || type == EntityType.PLAYER
-                || type == EntityType.PAINTING
-                || type == EntityType.WITHER_SKULL)
+        if(type == EntityType.ITEM_FRAME || type == EntityType.ARMOR_STAND || type == EntityType.DROPPED_ITEM || type == EntityType.PRIMED_TNT || type == EntityType.FALLING_BLOCK || type == EntityType.COMPLEX_PART || type == EntityType.ENDER_CRYSTAL || type == EntityType.LEASH_HITCH || type == EntityType.MINECART || type == EntityType.MINECART_CHEST || type == EntityType.MINECART_FURNACE || type == EntityType.MINECART_COMMAND || type == EntityType.MINECART_HOPPER || type == EntityType.MINECART_MOB_SPAWNER || type == EntityType.MINECART_TNT || type == EntityType.PLAYER || type == EntityType.PAINTING || type == EntityType.WITHER_SKULL)
             return;
         BuildBattleEntity buildBattleEntity = new BuildBattleEntity(event.getRightClicked());
         player.openInventory(buildBattleEntity.getMenu());
@@ -71,12 +53,10 @@ public class EntityMenuEvents implements Listener {
 
     @EventHandler
     public void onDamageEntity(EntityDamageByEntityEvent event) {
-        if(event.getDamager().getType() != EntityType.PLAYER)
-            return;
+        if(event.getDamager().getType() != EntityType.PLAYER) return;
         Player player = (Player) event.getDamager();
         GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance(player);
-        if(gameInstance == null)
-            return;
+        if(gameInstance == null) return;
         event.setCancelled(true);
     }
 
@@ -85,16 +65,11 @@ public class EntityMenuEvents implements Listener {
 
         Player player = (Player) event.getWhoClicked();
         GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance(player);
-        if(gameInstance == null)
-            return;
-        if(!event.getInventory().getTitle().equals(ChatManager.getSingleMessage("Entity-Menu", "Entity Menu")))
-            return;
-        if(event.getCurrentItem() == null)
-            return;
-        if(!event.getCurrentItem().hasItemMeta())
-            return;
-        if(!event.getCurrentItem().getItemMeta().hasDisplayName())
-            return;
+        if(gameInstance == null) return;
+        if(!event.getInventory().getTitle().equals(ChatManager.getSingleMessage("Entity-Menu", "Entity Menu"))) return;
+        if(event.getCurrentItem() == null) return;
+        if(!event.getCurrentItem().hasItemMeta()) return;
+        if(!event.getCurrentItem().getItemMeta().hasDisplayName()) return;
         String key = EntityItemManager.getRelatedEntityItemName(event.getCurrentItem());
         if(key.equalsIgnoreCase("Close")) {
             links.remove(player.getUniqueId());
@@ -137,16 +112,11 @@ public class EntityMenuEvents implements Listener {
 
         Player player = (Player) event.getWhoClicked();
         GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance(player);
-        if(gameInstance == null)
-            return;
-        if(!event.getInventory().getTitle().equals(ChatManager.getSingleMessage("Villager-Profession-Menu", "Choose villager profession")))
-            return;
-        if(event.getCurrentItem() == null)
-            return;
-        if(!event.getCurrentItem().hasItemMeta())
-            return;
-        if(!event.getCurrentItem().getItemMeta().hasDisplayName())
-            return;
+        if(gameInstance == null) return;
+        if(!event.getInventory().getTitle().equals(ChatManager.getSingleMessage("Villager-Profession-Menu", "Choose villager profession"))) return;
+        if(event.getCurrentItem() == null) return;
+        if(!event.getCurrentItem().hasItemMeta()) return;
+        if(!event.getCurrentItem().getItemMeta().hasDisplayName()) return;
         String key = EntityItemManager.getRelatedEntityItemName(event.getCurrentItem());
         Villager villager = (Villager) links.get(player.getUniqueId()).getEntity();
         if(key.equalsIgnoreCase("Profession.Butcher")) {

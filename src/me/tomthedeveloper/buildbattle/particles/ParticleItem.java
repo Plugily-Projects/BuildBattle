@@ -1,8 +1,8 @@
 package me.tomthedeveloper.buildbattle.particles;
 
-import me.TomTheDeveloper.Utils.ParticleEffect;
-import me.TomTheDeveloper.Utils.Util;
 import me.tomthedeveloper.buildbattle.ChatFormatter;
+import me.tomthedeveloper.buildbattle.utils.ParticleEffect;
+import me.tomthedeveloper.buildbattle.utils.Util;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -79,13 +79,13 @@ public class ParticleItem {
         return lore;
     }
 
+    public void setLore(String[] lore) {
+        this.lore = lore;
+    }
+
     public void setLore(List<String> lore) {
 
         this.lore = lore.toArray(new String[lore.size()]);
-    }
-
-    public void setLore(String[] lore) {
-        this.lore = lore;
     }
 
     public String getDisplayName() {

@@ -18,16 +18,14 @@ class EntityItemManager {
     }
 
     public static EntityItem getEntityItem(String name) {
-        if(entityItems.containsKey(name))
-            return entityItems.get(name);
+        if(entityItems.containsKey(name)) return entityItems.get(name);
         return null;
     }
 
     public static String getRelatedEntityItemName(ItemStack itemStack) {
         for(String key : entityItems.keySet()) {
             EntityItem entityItem = entityItems.get(key);
-            if(entityItem.getItemStack().getItemMeta().getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())
-                    && entityItem.getMaterial().equals(itemStack.getType())) {
+            if(entityItem.getItemStack().getItemMeta().getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName()) && entityItem.getMaterial().equals(itemStack.getType())) {
                 return key;
             }
         }

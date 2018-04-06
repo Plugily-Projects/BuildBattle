@@ -31,16 +31,7 @@ public class MySQLDatabase {
                 return;
             }
 
-            connection.createStatement().executeUpdate("CREATE TABLE IF NOT EXISTS `buildbattlestats` (\n" +
-                    "  `UUID` text NOT NULL,\n" +
-                    "  `loses` int(11) NOT NULL DEFAULT '0',\n" +
-                    "  `wins` int(11) NOT NULL DEFAULT '0',\n" +
-                    "  `highestwin` int(11) NOT NULL DEFAULT '0',\n" +
-                    "  `gamesplayed` int(11) NOT NULL DEFAULT '0',\n" +
-                    "  `blocksbroken` int(11) NOT NULL DEFAULT '0',\n" +
-                    "  `blocksplaced` int(11) NOT NULL DEFAULT '0',\n" +
-                    "  `particles` int(11) NOT NULL DEFAULT '0'\n" +
-                    ");");
+            connection.createStatement().executeUpdate("CREATE TABLE IF NOT EXISTS `buildbattlestats` (\n" + "  `UUID` text NOT NULL,\n" + "  `loses` int(11) NOT NULL DEFAULT '0',\n" + "  `wins` int(11) NOT NULL DEFAULT '0',\n" + "  `highestwin` int(11) NOT NULL DEFAULT '0',\n" + "  `gamesplayed` int(11) NOT NULL DEFAULT '0',\n" + "  `blocksbroken` int(11) NOT NULL DEFAULT '0',\n" + "  `blocksplaced` int(11) NOT NULL DEFAULT '0',\n" + "  `particles` int(11) NOT NULL DEFAULT '0'\n" + ");");
             manager.closeConnection(connection);
         } catch(SQLException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
@@ -112,8 +103,7 @@ public class MySQLDatabase {
         }
         ResultSet set = executeQuery("SELECT " + stat + " FROM `buildbattlestats` WHERE UUID='" + UUID + "'");
         try {
-            if(!set.next())
-                return 0;
+            if(!set.next()) return 0;
             return (set.getInt(1));
         } catch(SQLException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.

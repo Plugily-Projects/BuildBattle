@@ -1,6 +1,6 @@
 package me.tomthedeveloper.buildbattle.entities;
 
-import me.TomTheDeveloper.Handlers.ChatManager;
+import me.tomthedeveloper.buildbattle.handlers.ChatManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.Inventory;

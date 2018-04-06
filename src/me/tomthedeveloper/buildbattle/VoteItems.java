@@ -1,6 +1,6 @@
 package me.tomthedeveloper.buildbattle;
 
-import me.TomTheDeveloper.Handlers.ConfigurationManager;
+import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -61,8 +61,7 @@ public class VoteItems {
 
     public static int getPoints(ItemStack itemStack) {
         for(ItemStack voteitem : voteItems.keySet()) {
-            if(itemStack.getType() == voteitem.getType()
-                    && itemStack.getItemMeta().getDisplayName().equalsIgnoreCase(voteitem.getItemMeta().getDisplayName()))
+            if(itemStack.getType() == voteitem.getType() && itemStack.getItemMeta().getDisplayName().equalsIgnoreCase(voteitem.getItemMeta().getDisplayName()))
                 return voteItems.get(voteitem);
         }
         return 0;

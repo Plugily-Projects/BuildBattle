@@ -1,8 +1,8 @@
 package me.tomthedeveloper.buildbattle.particles;
 
-import me.TomTheDeveloper.Handlers.ChatManager;
-import me.TomTheDeveloper.Utils.Util;
 import me.tomthedeveloper.buildbattle.BuildPlot;
+import me.tomthedeveloper.buildbattle.handlers.ChatManager;
+import me.tomthedeveloper.buildbattle.utils.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -59,9 +59,7 @@ public class ParticleRemoveMenu {
 
         for(Location location : buildPlot.getParticles().keySet()) {
 
-            if(Math.round(location.getX()) == x
-                    && Math.round(location.getY()) == y
-                    && Math.round(location.getZ()) == z) {
+            if(Math.round(location.getX()) == x && Math.round(location.getY()) == y && Math.round(location.getZ()) == z) {
                 buildPlot.getParticles().remove(location);
                 Bukkit.getServer().getPlayer(buildPlot.getOwner()).sendMessage(ChatManager.getSingleMessage("Particle-Removed", ChatColor.GREEN + "Particle Removed!"));
                 inventory.remove(itemStack);

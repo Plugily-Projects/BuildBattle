@@ -1,7 +1,7 @@
 package me.tomthedeveloper.buildbattle;
 
-import me.TomTheDeveloper.Game.GameState;
-import me.TomTheDeveloper.Handlers.UserManager;
+import me.tomthedeveloper.buildbattle.game.GameState;
+import me.tomthedeveloper.buildbattle.handlers.UserManager;
 import me.tomthedeveloper.buildbattle.instance.BuildInstance;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -58,8 +58,7 @@ public class PlotManager {
     public BuildPlot getPlot(Player player) {
         for(BuildPlot buildPlot : plots) {
             if(buildPlot.getOwner() != null) {
-                if(buildPlot.getOwner() == player.getUniqueId())
-                    return buildPlot;
+                if(buildPlot.getOwner() == player.getUniqueId()) return buildPlot;
             }
         }
         return null;
@@ -68,8 +67,7 @@ public class PlotManager {
     public BuildPlot getPlot(UUID uuid) {
         for(BuildPlot buildPlot : plots) {
             if(buildPlot.getOwner() != null) {
-                if(buildPlot.getOwner().equals(uuid))
-                    return buildPlot;
+                if(buildPlot.getOwner().equals(uuid)) return buildPlot;
             }
         }
         return null;
@@ -95,8 +93,7 @@ public class PlotManager {
     }
 
     public void resetPlotsGradually() {
-        if(plotsToClear.isEmpty())
-            return;
+        if(plotsToClear.isEmpty()) return;
 
         plotsToClear.get(0).reset();
         plotsToClear.remove(0);
@@ -106,8 +103,7 @@ public class PlotManager {
         for(BuildPlot buildPlot : plots) {
             if(buildPlot.getOwner() != null) {
                 Location tploc = buildPlot.getCenter();
-                while(tploc.getBlock().getType() != Material.AIR)
-                    tploc = tploc.add(0, 1, 0);
+                while(tploc.getBlock().getType() != Material.AIR) tploc = tploc.add(0, 1, 0);
                 Player player = Bukkit.getServer().getPlayer(buildPlot.getOwner());
                 if(player != null) {
                     player.teleport(buildPlot.getCenter());

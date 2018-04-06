@@ -1,6 +1,6 @@
 package me.tomthedeveloper.buildbattle;
 
-import me.TomTheDeveloper.Utils.Util;
+import me.tomthedeveloper.buildbattle.utils.Util;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;

@@ -1,9 +1,9 @@
 package me.tomthedeveloper.buildbattle.menu;
 
-import me.TomTheDeveloper.Handlers.ChatManager;
-import me.TomTheDeveloper.MenuAPI.IconMenu;
-import me.TomTheDeveloper.Utils.ItemBuilder;
 import me.tomthedeveloper.buildbattle.BuildPlot;
+import me.tomthedeveloper.buildbattle.handlers.ChatManager;
+import me.tomthedeveloper.buildbattle.menuapi.IconMenu;
+import me.tomthedeveloper.buildbattle.utils.ItemBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
@@ -30,10 +30,7 @@ public class IngameMenu implements Listener {
     }
 
     public static ItemStack getMenuItem() {
-        return new ItemBuilder(Material.NETHER_STAR)
-                .name(ChatManager.getSingleMessage("Options-Menu-Item", ChatColor.GREEN + "Options"))
-                .lore(ChatManager.getSingleMessage("Options-Lore", ChatColor.GRAY + "Right click to open"))
-                .build();
+        return new ItemBuilder(Material.NETHER_STAR).name(ChatManager.getSingleMessage("Options-Menu-Item", ChatColor.GREEN + "Options")).lore(ChatManager.getSingleMessage("Options-Lore", ChatColor.GRAY + "Right click to open")).build();
     }
 
 

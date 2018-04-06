@@ -1,12 +1,18 @@
 package me.tomthedeveloper.buildbattle.stats;
 
-import me.TomTheDeveloper.Handlers.ConfigurationManager;
-import me.TomTheDeveloper.Handlers.UserManager;
 import me.tomthedeveloper.buildbattle.Main;
+import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
+import me.tomthedeveloper.buildbattle.handlers.UserManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by Tom on 30/12/2015.
@@ -25,8 +31,7 @@ public enum BuildBattleStats {
     private static Map sortByValue(Map unsortMap) {
         List list = new LinkedList(unsortMap.entrySet());
 
-        list.sort((Comparator) (o1, o2) -> ((Comparable) ((Map.Entry) (o1)).getValue())
-                .compareTo(((Map.Entry) (o2)).getValue()));
+        list.sort((Comparator) (o1, o2) -> ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue()));
 
         Map sortedMap = new LinkedHashMap();
         for(Iterator it = list.iterator(); it.hasNext(); ) {
@@ -37,8 +42,7 @@ public enum BuildBattleStats {
     }
 
     public Map<UUID, Integer> getStats() {
-        if(plugin.isDatabaseActivated())
-            return plugin.getMySQLDatabase().getColumn(name);
+        if(plugin.isDatabaseActivated()) return plugin.getMySQLDatabase().getColumn(name);
         else {
             FileConfiguration config = ConfigurationManager.getConfig("STATS");
             Map<UUID, Integer> stats = new LinkedHashMap<>();

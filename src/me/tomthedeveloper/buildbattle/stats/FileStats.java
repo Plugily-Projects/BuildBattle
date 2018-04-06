@@ -1,9 +1,9 @@
 package me.tomthedeveloper.buildbattle.stats;
 
-import me.TomTheDeveloper.Handlers.ConfigurationManager;
-import me.TomTheDeveloper.Handlers.UserManager;
-import me.TomTheDeveloper.User;
+import me.tomthedeveloper.buildbattle.User;
 import me.tomthedeveloper.buildbattle.Main;
+import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
+import me.tomthedeveloper.buildbattle.handlers.UserManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -37,8 +37,7 @@ public class FileStats {
         User user = UserManager.getUser(player.getUniqueId());
         if(config.contains(player.getUniqueId().toString() + "." + stat))
             user.setInt(stat, config.getInt(player.getUniqueId().toString() + "." + stat));
-        else
-            user.setInt(stat, 0);
+        else user.setInt(stat, 0);
     }
 
 

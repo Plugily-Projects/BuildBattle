@@ -1,9 +1,9 @@
 package me.tomthedeveloper.buildbattle.events;
 
-import me.TomTheDeveloper.GameAPI;
-import me.TomTheDeveloper.Handlers.UserManager;
-import me.TomTheDeveloper.User;
+import me.tomthedeveloper.buildbattle.GameAPI;
 import me.tomthedeveloper.buildbattle.Main;
+import me.tomthedeveloper.buildbattle.User;
+import me.tomthedeveloper.buildbattle.handlers.UserManager;
 import me.tomthedeveloper.buildbattle.stats.MySQLDatabase;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -86,8 +86,7 @@ public class NormalEvents implements Listener {
 
     @EventHandler
     public void onJoin(final PlayerJoinEvent event) {
-        if(gameAPI.isBungeeActivated())
-            gameAPI.getGameInstanceManager().getGameInstances().get(0).teleportToLobby(event.getPlayer());
+        if(gameAPI.isBungeeActivated()) gameAPI.getGameInstanceManager().getGameInstances().get(0).teleportToLobby(event.getPlayer());
         if(!plugin.isDatabaseActivated()) {
             List<String> temp = new ArrayList<>();
             temp.add("gamesplayed");
