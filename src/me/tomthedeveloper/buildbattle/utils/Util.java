@@ -43,8 +43,11 @@ public class Util {
         lore.add(string);
         meta.setLore(lore);
         itemStack.setItemMeta(meta);
+    }
 
-
+    public static int serializeInt(int i) {
+        if((i % 9) == 0) return i;
+        else return (int) ((Math.ceil(i / 9) * 9) + 9);
     }
 
     public static Queue<Block> getLineOfSight(LivingEntity entity, HashSet<Byte> transparent, int maxDistance, int maxLength) {

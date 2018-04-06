@@ -27,7 +27,6 @@ import java.io.IOException;
  */
 public class ConfigurationManager {
 
-
     public static JavaPlugin plugin;
 
     public static File getFile(String filename) {

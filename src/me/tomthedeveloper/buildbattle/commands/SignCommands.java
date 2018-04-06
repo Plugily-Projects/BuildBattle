@@ -20,7 +20,6 @@ import java.util.List;
  */
 public class SignCommands implements CommandExecutor {
 
-    private static int i;
     private GameAPI plugin;
     private int counter = 0;
 

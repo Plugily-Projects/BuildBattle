@@ -1,25 +1,20 @@
 package me.tomthedeveloper.buildbattle;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import me.tomthedeveloper.buildbattle.attacks.Attack;
-import me.tomthedeveloper.buildbattle.attacks.AttackListener;
 import me.tomthedeveloper.buildbattle.bungee.Bungee;
 import me.tomthedeveloper.buildbattle.events.SetupInventoryEvents;
 import me.tomthedeveloper.buildbattle.events.onBuild;
+import me.tomthedeveloper.buildbattle.events.onChatEvent;
 import me.tomthedeveloper.buildbattle.events.onJoin;
 import me.tomthedeveloper.buildbattle.events.onQuit;
 import me.tomthedeveloper.buildbattle.events.onSpectate;
 import me.tomthedeveloper.buildbattle.game.GameInstance;
-import me.tomthedeveloper.buildbattle.handlers.AttackManager;
 import me.tomthedeveloper.buildbattle.handlers.ChatManager;
 import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
 import me.tomthedeveloper.buildbattle.handlers.GameInstanceManager;
 import me.tomthedeveloper.buildbattle.handlers.InventoryManager;
 import me.tomthedeveloper.buildbattle.handlers.JSONWriter;
 import me.tomthedeveloper.buildbattle.handlers.SignManager;
-import me.tomthedeveloper.buildbattle.kitapi.DefaultKit;
-import me.tomthedeveloper.buildbattle.kitapi.KitHandler;
-import me.tomthedeveloper.buildbattle.kitapi.KitMenuHandler;
 import me.tomthedeveloper.buildbattle.utils.Items;
 import net.minecraft.server.v1_12_R1.Entity;
 import org.bukkit.Bukkit;
@@ -29,7 +24,6 @@ import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -40,15 +34,10 @@ import java.io.IOException;
  */
 public class GameAPI {
 
-    private static boolean restart = false;
-    private KitHandler kitHandler;
     private GameInstanceManager gameInstanceManager;
-    private KitMenuHandler kitMenuHandler;
     private String name;
     private String abreviation;
     private boolean kitsenabled = false;
-    private AttackListener attackListener;
-    private AttackManager attackManager;
     private InventoryManager inventoryManager;
     private boolean bar = false;
     private boolean bungee;
@@ -58,18 +47,6 @@ public class GameAPI {
     private boolean needsMapRestore = false;
     private boolean allowBuilding = false;
     private SignManager signManager;
-
-    public static void setRestart() {
-        restart = true;
-    }
-
-    public static boolean getRestart() {
-        return restart;
-    }
-
-    public static void addCustomEntity(int entityId, String entityName, Class<? extends Entity> entityClass) {
-
-    }
 
     public Main getPlugin() {
         return plugin;
@@ -151,31 +128,16 @@ public class GameAPI {
 
         ConfigurationManager.plugin = plugin;
         GameInstance.plugin = this;
-      /*  this.getServer().getPluginManager().registerEvents(this.getSignManager(), this);
-        this.getServer().getPluginManager().registerEvents(new onBuild(this), this);
-        this.getServer().getPluginManager().registerEvents(new onQuit(this), this);
-        this.getServer().getPluginManager().registerEvents(new onSpectate(this), this);
-        this.getServer().getPluginManager().registerEvents(new onDoubleJump(this), this);
-        this.getServer().getPluginManager().registerEvents(new onChatEvent(this), this);*/
+        plugin.getServer().getPluginManager().registerEvents(this.getSignManager(), JavaPlugin.getPlugin(Main.class));
+        plugin.getServer().getPluginManager().registerEvents(new onBuild(this), JavaPlugin.getPlugin(Main.class));
+        plugin.getServer().getPluginManager().registerEvents(new onQuit(this), JavaPlugin.getPlugin(Main.class));
+        plugin.getServer().getPluginManager().registerEvents(new onSpectate(this), JavaPlugin.getPlugin(Main.class));
+        plugin.getServer().getPluginManager().registerEvents(new onChatEvent(this), JavaPlugin.getPlugin(Main.class));
 
 
         User.plugin = this;
-        AttackListener.plugin = this;
-        Attack.plugin = this;
         JSONWriter.plugin = this;
         me.tomthedeveloper.buildbattle.handlers.JSONReader.plugin = getPlugin();
-
-
-        this.kitHandler = new KitHandler();
-
-
-        this.attackManager = new AttackManager();
-        this.attackListener = new AttackListener();
-
-
-        this.kitMenuHandler = new KitMenuHandler(this);
-        plugin.getServer().getPluginManager().registerEvents(this.kitMenuHandler, plugin);
-        this.kitHandler.setDefaultKit(new DefaultKit());
 
         plugin.getServer().getPluginManager().registerEvents(new onSpectate(this), plugin);
         // plugin.getServer().getPluginManager().registerEvents(new onDoubleJump(this), plugin);
@@ -211,43 +173,17 @@ public class GameAPI {
         }
         plugin.getCommand(this.getGameName()).setExecutor(new me.tomthedeveloper.buildbattle.commands.InstanceCommands(this, commandsInterface));
         plugin.getCommand("addsigns").setExecutor(new me.tomthedeveloper.buildbattle.commands.SignCommands(this));
-        //      this.getCommand("smartreload").setExecutor(new onReloadCommand(this));
-        plugin.getCommand("smartstop").setExecutor(new me.tomthedeveloper.buildbattle.commands.onStopCommand(this));
-
-
     }
 
-    public void onPreStart() {
-
-    }
-
-    public void enableKits() {
-        kitsenabled = true;
-    }
-
-    public void disalbeKits() {
-        kitsenabled = false;
-    }
+    public void onPreStart() {}
 
     public boolean areKitsEnabled() {
         return kitsenabled;
     }
 
-    public AttackManager getAttackManager() {
-        return attackManager;
-    }
-
     ;
 
     public void onStart() {}
-
-    ;
-
-    public void onStop() {}
-
-    ;
-
-    public void addExtraItemsToSetupInventory(GameInstance gameInstance, Inventory inventory) {}
 
     public String getGameName() {
         return name;
@@ -257,28 +193,12 @@ public class GameAPI {
         name = newName;
     }
 
-    public KitHandler getKitHandler() {
-        return kitHandler;
-    }
-
     public GameInstanceManager getGameInstanceManager() {
         return gameInstanceManager;
     }
 
-    public KitMenuHandler getKitMenuHandler() {
-        return kitMenuHandler;
-    }
-
     public SignManager getSignManager() {
         return signManager;
-    }
-
-    public AttackListener getAttackListener() {
-        return attackListener;
-    }
-
-    public void setAttackListener(AttackListener attackListener) {
-        this.attackListener = attackListener;
     }
 
     private void loadInstanceConfig() {
@@ -286,8 +206,8 @@ public class GameAPI {
             this.saveLoc("instances.default.lobbylocation", plugin.getServer().getWorlds().get(0).getSpawnLocation());
             this.saveLoc("instances.default.Startlocation", plugin.getServer().getWorlds().get(0).getSpawnLocation());
             this.saveLoc("instances.default.Endlocation", plugin.getServer().getWorlds().get(0).getSpawnLocation());
-            plugin.getConfig().set("instances.default.minimumplayers", new Integer(2));
-            plugin.getConfig().set("instances.default.maximumplayers", new Integer(10));
+            plugin.getConfig().set("instances.default.minimumplayers", 2);
+            plugin.getConfig().set("instances.default.maximumplayers", 10);
             plugin.getConfig().set("instances.default.mapname", "mapname");
             plugin.getConfig().set("instances.default.world", "worldname");
             if(this.needsMapRestore()) plugin.getConfig().set("instances.default.schematic", "schematic file name (without .schematic!)");

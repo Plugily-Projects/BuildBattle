@@ -37,10 +37,6 @@ public class BuildBattleEntity {
         this.entity = entity;
     }
 
-    public UUID getUniqueID() {
-        return entity.getUniqueId();
-    }
-
     private Boolean isAdult() {
         switch(entity.getType()) {
             case COW:

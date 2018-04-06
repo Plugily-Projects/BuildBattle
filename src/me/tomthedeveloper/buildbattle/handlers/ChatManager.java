@@ -1,8 +1,7 @@
 package me.tomthedeveloper.buildbattle.handlers;
 
-import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.GameAPI;
-import me.tomthedeveloper.buildbattle.kitapi.basekits.Kit;
+import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.utils.Util;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -85,28 +84,8 @@ public class ChatManager {
 
     }
 
-    public static String formatMessage(String message, Kit kit) {
-        String returnstring = message;
-        returnstring = returnstring.replaceFirst("%KIT%", kit.getName());
-        return returnstring.replaceAll("(&([a-f0-9]))", "\u00A7$2");
-    }
-
-    public static String getMessage(String ID, Player player, String cooldown) {
-        String returnstring = messages.get(ID);
-        returnstring = returnstring.replaceFirst("%COOLDOWN%", Long.toString(UserManager.getUser(player.getUniqueId()).getCooldown(cooldown)));
-        return returnstring.replaceAll("(&([a-f0-9]))", "\u00A7$2");
-    }
-
     public static void registerMessage(String ID, String message) {
         messages.put(ID, message);
-    }
-
-    public static void saveLanguageConfig() {
-        try {
-            config.save(ConfigurationManager.getFile("language"));
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void broadcastMessage(String ID) {
@@ -128,18 +107,6 @@ public class ChatManager {
         return prefix;
     }
 
-    public void setPREFIX(ChatColor chatColor) {
-        this.PREFIX = chatColor;
-    }
-
-    public void setHIGHLIGHTED(ChatColor HIGHLIGHTED) {
-        this.HIGHLIGHTED = HIGHLIGHTED;
-    }
-
-    public void setNORMAL(ChatColor NORMAL) {
-        this.NORMAL = NORMAL;
-    }
-
     public void broadcastMessage(String ID, String defaultmessage) {
         if(messages.containsKey(ID)) {
             broadcastMessage(ID);
@@ -147,17 +114,6 @@ public class ChatManager {
             getFromLanguageConfig(ID, defaultmessage);
 
             broadcastMessage(ID);
-        }
-
-    }
-
-    public void broadcastMessage(String ID, String defaultmessage, Player player) {
-        if(messages.containsKey(ID)) {
-            broadcastMessage(ID, player);
-        } else {
-            getFromLanguageConfig(ID, defaultmessage);
-
-            broadcastMessage(ID, player);
         }
 
     }
@@ -184,28 +140,6 @@ public class ChatManager {
 
     }
 
-    public void broadcastMessage(String ID, String defaultmessage, Player player, int integer) {
-        if(messages.containsKey(ID)) {
-            broadcastMessage(ID, player, integer);
-        } else {
-            getFromLanguageConfig(ID, defaultmessage);
-
-            broadcastMessage(ID, player, integer);
-        }
-
-    }
-
-    public void broadcastMessage(String ID, String defaultmessage, Player[] players) {
-        if(messages.containsKey(ID)) {
-            broadcastMessage(ID, players);
-        } else {
-            getFromLanguageConfig(ID, defaultmessage);
-
-            broadcastMessage(ID, players);
-        }
-
-    }
-
     public void broadcastJoinMessage(Player p) {
         if(messages.containsKey("JoinMessage")) {
             gameInstance.getChatManager().broadcastMessage("JoinMessage", p);
@@ -226,23 +160,6 @@ public class ChatManager {
         }
     }
 
-    public void broadcastDeathMessage(Player player) {
-        if(messages.containsKey("DeathMessage")) {
-            gameInstance.getChatManager().broadcastMessage("DeathMessage", player);
-        } else if(messages.containsKey("Death")) {
-            gameInstance.getChatManager().broadcastMessage("Death", player);
-        } else {
-            gameInstance.getChatManager().broadcastMessage(HIGHLIGHTED + player.getName() + NORMAL + " died!");
-        }
-    }
-
-    public void broadcastMessage(String messageID, Player[] players) {
-        String message = formatMessage(messages.get(messageID), players);
-        for(Player player : gameInstance.getPlayers()) {
-            player.sendMessage(getPrefix(gameInstance.getPlugin()) + message);
-        }
-    }
-
     public void broadcastMessage(String messageID, Player player) {
         String message = formatMessage(messages.get(messageID), player);
         for(Player player1 : gameInstance.getPlayers()) {
@@ -257,38 +174,11 @@ public class ChatManager {
         }
     }
 
-    public void broadcastMessage(String messageID, Player player, int integer) {
-        String message = formatMessage(messages.get(messageID), player, integer);
-        for(Player player1 : gameInstance.getPlayers()) {
-            player1.sendMessage(getPrefix(gameInstance.getPlugin()) + message);
-        }
-    }
-
     public void broadcastMessage(String messageID, int integer) {
         String message = formatMessage(messages.get(messageID), integer);
         for(Player player1 : gameInstance.getPlayers()) {
             player1.sendMessage(getPrefix(gameInstance.getPlugin()) + message);
         }
-    }
-
-    private String formatMessage(String message, Player[] players) {
-        String returnstring = message;
-        for(Player player : players) {
-            returnstring = returnstring.replaceFirst("%PLAYER%", player.getName());
-        }
-        returnstring = returnstring.replaceAll("%TIME%", Integer.toString(gameInstance.getTimer()));
-        returnstring = returnstring.replaceAll("%FORMATTEDTIME%", Util.formatIntoMMSS((gameInstance.getTimer())));
-        returnstring = returnstring.replaceAll("(&([a-f0-9]))", "\u00A7$2");
-        returnstring = returnstring.replaceAll("%PLAYERSIZE%", Integer.toString(gameInstance.getPlayers().size()));
-        returnstring = returnstring.replaceAll("%MAXPLAYERS%", Integer.toString(gameInstance.getMAX_PLAYERS()));
-        returnstring = returnstring.replaceAll("%MINPLAYERS%", Integer.toString(gameInstance.getMIN_PLAYERS()));
-
-        returnstring = returnstring.replaceAll("&l", ChatColor.BOLD.toString());
-        returnstring = returnstring.replaceAll("&n", ChatColor.UNDERLINE.toString());
-        returnstring = returnstring.replaceAll("&m", ChatColor.STRIKETHROUGH.toString());
-        returnstring = returnstring.replaceAll("&r", ChatColor.RESET.toString());
-        returnstring = returnstring.replaceAll("&k", ChatColor.MAGIC.toString());
-        return returnstring;
     }
 
     private String formatMessage(String message, int integer) {
@@ -307,27 +197,6 @@ public class ChatManager {
         returnstring = returnstring.replaceAll("&m", ChatColor.STRIKETHROUGH.toString());
         returnstring = returnstring.replaceAll("&r", ChatColor.RESET.toString());
         returnstring = returnstring.replaceAll("&k", ChatColor.MAGIC.toString());
-        return returnstring;
-    }
-
-    private String formatMessage(String message, Player player, int integer) {
-        String returnstring = message;
-        returnstring = returnstring.replaceAll("%NUMBER%", Integer.toString(integer));
-
-        returnstring = returnstring.replaceAll("%TIME%", Integer.toString(gameInstance.getTimer()));
-        returnstring = returnstring.replaceAll("%FORMATTEDTIME%", Util.formatIntoMMSS((gameInstance.getTimer())));
-        returnstring = returnstring.replaceAll("(&([a-f0-9]))", "\u00A7$2");
-        returnstring = returnstring.replaceAll("%PLAYERSIZE%", Integer.toString(gameInstance.getPlayers().size()));
-        returnstring = returnstring.replaceAll("%MAXPLAYERS%", Integer.toString(gameInstance.getMAX_PLAYERS()));
-        returnstring = returnstring.replaceAll("%MINPLAYERS%", Integer.toString(gameInstance.getMIN_PLAYERS()));
-        returnstring = returnstring.replaceAll("%PLAYER%", player.getDisplayName());
-
-        returnstring = returnstring.replaceAll("&l", ChatColor.BOLD.toString());
-        returnstring = returnstring.replaceAll("&n", ChatColor.UNDERLINE.toString());
-        returnstring = returnstring.replaceAll("&m", ChatColor.STRIKETHROUGH.toString());
-        returnstring = returnstring.replaceAll("&r", ChatColor.RESET.toString());
-        returnstring = returnstring.replaceAll("&k", ChatColor.MAGIC.toString());
-
         return returnstring;
     }
 
@@ -374,15 +243,6 @@ public class ChatManager {
         }
     }
 
-    public String getMessage(String ID, String defaultmessage, int integer) {
-        if(messages.containsKey(ID)) {
-            return getMessage(ID, integer);
-        } else {
-            ChatManager.getFromLanguageConfig(ID, defaultmessage);
-            return getMessage(ID, integer);
-        }
-    }
-
     public String getMessage(String ID, Player player) {
         return formatMessage(messages.get(ID), player);
     }
@@ -390,12 +250,6 @@ public class ChatManager {
     public String getMessage(String ID, OfflinePlayer playername) {
         return formatMessage(messages.get(ID), playername.getName());
     }
-
-    public String getMessage(String ID, Player[] players) {
-        return formatMessage(ID, players);
-    }
-
-    public String getMessage(String ID, int integer) {return formatMessage(getMessage(ID), integer);}
 
     private String formatMessage(String message) {
         String returnstring = message;

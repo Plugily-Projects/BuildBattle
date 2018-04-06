@@ -17,47 +17,23 @@ public class PermStrings {
         return joinFullGames;
     }
 
-    public static void setJoinFullGames(String joinFullGames) {
-        PermStrings.joinFullGames = joinFullGames;
-    }
-
     public static String getDoubleJump() {
         return doubleJump;
-    }
-
-    public static void setDoubleJump(String doubleJump) {
-        PermStrings.doubleJump = doubleJump;
     }
 
     public static String getVIP() {
         return VIP;
     }
 
-    public static void setVIP(String VIP) {
-        PermStrings.VIP = VIP;
-    }
-
     public static String getMVP() {
         return MVP;
-    }
-
-    public static void setMVP(String MVP) {
-        PermStrings.MVP = MVP;
     }
 
     public static String getELITE() {
         return ELITE;
     }
 
-    public static void setELITE(String ELITE) {
-        PermStrings.ELITE = ELITE;
-    }
-
     public static String getEditGames() {
         return editGames;
-    }
-
-    public static void setEditGames(String editGames) {
-        PermStrings.editGames = editGames;
     }
 }

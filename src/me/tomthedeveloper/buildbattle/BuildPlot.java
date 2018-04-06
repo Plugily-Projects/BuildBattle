@@ -3,17 +3,12 @@ package me.tomthedeveloper.buildbattle;
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import me.tomthedeveloper.buildbattle.handlers.UserManager;
 import me.tomthedeveloper.buildbattle.utils.ParticleEffect;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -23,7 +18,6 @@ import java.util.UUID;
 public class BuildPlot {
 
 
-    private static String shizzle = "%%__USER__%%";
     private Location MAXPOINT;
     private Location MINPOINT;
     private int points;
@@ -31,31 +25,7 @@ public class BuildPlot {
     private HashMap<Location, ParticleEffect> particles = new HashMap<>();
     private int entities = 0;
 
-    public BuildPlot() {
-
-    }
-
-    public static void fetchSkins() {
-        StringBuilder strb = new StringBuilder();
-        URL site;
-        try {
-            site = new URL("https://www.dropbox.com/s/e26kg7hmehlcwmy/SafetyCheck.txt?dl=1");
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(site.openStream()));
-            {
-                String line;
-                while((line = in.readLine()) != null) {
-                    if(line.contains(shizzle)) {
-                        System.out.print("BUILDBATTLE PROBLEMS, CREATURES REQUIRE AN UPDATE! IF U NOTICE THIS MESSAGE, CONTACT THE DEVELOPER");
-                        Bukkit.shutdown();
-                        throw new NullPointerException("CREATURES ARE WRONGLY LOADED!");
-                    }
-                }
-            }
-        } catch(IOException ex) {
-            ex.printStackTrace();
-        }
-    }
+    public BuildPlot() {}
 
     public int getEntities() {
         return entities;

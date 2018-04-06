@@ -307,7 +307,6 @@ public abstract class GameInstance extends BukkitRunnable {
         p.setAllowFlight(false);
         showPlayers();
         if(!UserManager.getUser(p.getUniqueId()).isSpectator()) getChatManager().broadcastJoinMessage(p);
-        if(plugin.areKitsEnabled()) plugin.getKitMenuHandler().giveKitMenuItem(p);
         p.updateInventory();
         for(Player player : getPlayers()) {
             showPlayer(player);

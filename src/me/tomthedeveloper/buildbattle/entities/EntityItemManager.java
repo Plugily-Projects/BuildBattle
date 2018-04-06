@@ -9,9 +9,7 @@ import java.util.HashMap;
  */
 class EntityItemManager {
 
-
     private static HashMap<String, EntityItem> entityItems = new HashMap<>();
-
 
     public static void addEntityItem(String name, EntityItem entityItem) {
         entityItems.put(name, entityItem);

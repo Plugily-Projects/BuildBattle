@@ -27,14 +27,6 @@ public class UserManager {
 
     }
 
-    public static List<User> getAllUsersOnServer() {
-        List<User> users = new ArrayList<User>();
-        for(Player player : Bukkit.getServer().getOnlinePlayers()) {
-            users.add(getUser(player.getUniqueId()));
-        }
-        return users;
-    }
-
     public static List<User> getUsers(GameInstance GameInstance) {
         List<User> users = new ArrayList<User>();
         for(Player player : GameInstance.getPlayers()) {
@@ -45,9 +37,5 @@ public class UserManager {
 
     public static void removeUser(UUID uuid) {
         users.remove(uuid);
-    }
-
-    public static void clearUsers() {
-        users.clear();
     }
 }

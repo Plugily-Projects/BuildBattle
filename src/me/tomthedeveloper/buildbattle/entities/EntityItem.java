@@ -19,7 +19,6 @@ import java.util.List;
  */
 public class EntityItem {
 
-
     private Material material;
     private Byte data = null;
     private String[] lore;
