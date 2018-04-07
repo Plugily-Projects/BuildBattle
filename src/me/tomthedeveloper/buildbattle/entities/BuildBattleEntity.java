@@ -59,10 +59,7 @@ public class BuildBattleEntity {
                 return ((Villager) entity).isAdult();
             default:
                 return null;
-
-
         }
-
     }
 
     private Boolean isSaddled() {
@@ -113,15 +110,6 @@ public class BuildBattleEntity {
             tag.setInt("NoAI", 0);
             EntityLiving el = (EntityLiving) nmsEntity;
             el.a(tag);
-           /* Location location = entity.getLocation();
-            EntityType entityType = entity.getType();
-            Boolean adult = this.isAdult();
-            entity.getWorld().spawnEntity(location,entityType);
-            if(adult != null)
-                setBaby(adult);
-            entity.remove(); */
-
-
         }
     }
 
@@ -212,15 +200,7 @@ public class BuildBattleEntity {
 
     public void remove() {
         entity.remove();
-        entity = null;
-
     }
-
-/*    public Inventory openInventory(){
-        Inventory inventory = Bukkit.createInventory(null, 9);
-
-    } */
-
 
     public Entity getEntity() {
         return entity;
@@ -245,7 +225,6 @@ public class BuildBattleEntity {
                 return new InventoryBuilder().setSlots(9).addItem(this.isMoveable() ? EntityItemManager.getEntityItem("Move-On") : EntityItemManager.getEntityItem("Move-Off")).addItem(EntityItemManager.getEntityItem("Look-At-Me")).addItem(this.isAdult() ? EntityItemManager.getEntityItem("Adult") : EntityItemManager.getEntityItem("Baby")).addItem(this.isSaddled() ? EntityItemManager.getEntityItem("Saddle-Off") : EntityItemManager.getEntityItem("Saddle-On")).addItem(EntityItemManager.getEntityItem("Close")).addItem(EntityItemManager.getEntityItem("Despawn")).build();
             case VILLAGER:
                 return new InventoryBuilder().setSlots(9).addItem(this.isAdult() ? EntityItemManager.getEntityItem("Adult") : EntityItemManager.getEntityItem("Baby")).addItem(this.isMoveable() ? EntityItemManager.getEntityItem("Move-On") : EntityItemManager.getEntityItem("Move-Off")).addItem(EntityItemManager.getEntityItem("Look-At-Me")).addItem(EntityItemManager.getEntityItem("Close")).addItem(EntityItemManager.getEntityItem("Despawn")).addItem(EntityItemManager.getEntityItem("Profession-Villager-Selecting")).build();
-
             default:
                 return new InventoryBuilder().setSlots(9).addItem(this.isMoveable() ? EntityItemManager.getEntityItem("Move-On") : EntityItemManager.getEntityItem("Move-Off")).addItem(EntityItemManager.getEntityItem("Look-At-Me")).addItem(EntityItemManager.getEntityItem("Close")).addItem(EntityItemManager.getEntityItem("Despawn")).build();
 
@@ -255,20 +234,6 @@ public class BuildBattleEntity {
     }
 
     public void setLook(Location location) {
-    /*    CraftEntity craftEntity = ((CraftEntity) entity);
-        EntityInsentient entEntity = (EntityInsentient) craftEntity.getHandle();
-            try {
-                Field field = entEntity.goalSelector.getClass().getDeclaredField("b");
-                field.setAccessible(true);
-
-                ((List<?>) field.get(entEntity.goalSelector)).clear();
-            } catch(Exception e) {
-                e.printStackTrace();
-            }
-
-        entEntity.getControllerLook().a(entity.getLocation().getX(), entity.getLocation().getY(), entity.getLocation().getZ(), location.getYaw(),(location).getPitch());
- */
-
         net.minecraft.server.v1_8_R3.Entity nmsEntity = ((CraftEntity) entity).getHandle();
 
         NBTTagCompound tag = new NBTTagCompound();
@@ -287,7 +252,6 @@ public class BuildBattleEntity {
         private int slots = 9;
         private String name = ChatManager.getSingleMessage("Entity-Menu-Name", "Entity Menu");
         private HashSet<EntityItem> items = new HashSet<>();
-
 
         private InventoryBuilder() {
         }

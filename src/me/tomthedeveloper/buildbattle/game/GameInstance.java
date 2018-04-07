@@ -40,7 +40,6 @@ public abstract class GameInstance extends BukkitRunnable {
     private int timer;
     private String schematicName;
     private String ID;
-    private InstanceType type;
 
     private Location lobbyloc = null;
     private Location Startloc = null;
@@ -68,22 +67,9 @@ public abstract class GameInstance extends BukkitRunnable {
         return plugin;
     }
 
-    public InstanceType getType() {
-        return type;
-    }
-
-    public void setType(InstanceType type) {
-        this.type = type;
-    }
-
     public String getID() {
         return ID;
     }
-
-    public void setID(String ID) {
-        this.ID = ID;
-    }
-
 
     public int getMIN_PLAYERS() {
         return MIN_PLAYERS;

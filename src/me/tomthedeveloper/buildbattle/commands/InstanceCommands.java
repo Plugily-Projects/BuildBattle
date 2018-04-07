@@ -3,7 +3,6 @@ package me.tomthedeveloper.buildbattle.commands;
 import me.tomthedeveloper.buildbattle.CommandsInterface;
 import me.tomthedeveloper.buildbattle.GameAPI;
 import me.tomthedeveloper.buildbattle.events.PlayerAddCommandEvent;
-import me.tomthedeveloper.buildbattle.events.PlayerAddSpawnCommandEvent;
 import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.setup.SetupInventory;
 import me.tomthedeveloper.buildbattle.utils.Util;
@@ -31,29 +30,29 @@ public class InstanceCommands implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
         if(!(commandSender instanceof Player)) return true;
         Player player = (Player) commandSender;
-        if(commandsInterface.checkPlayerCommands(player, command, s, strings)) return true;
+        if(commandsInterface.checkPlayerCommands(player, command, s, args)) return true;
         if(!(player.isOp() || player.hasPermission("minigames.edit"))) return true;
         if(!(command.getLabel().equalsIgnoreCase(plugin.getGameName()) || command.getLabel().equalsIgnoreCase(plugin.getAbreviation()))) return true;
-        if(commandsInterface.checkSpecialCommands(player, command, s, strings)) {
+        if(commandsInterface.checkSpecialCommands(player, command, s, args)) {
             return true;
         }
-        if(!(strings.length > 1)) return true;
+        if(!(args.length > 1)) return true;
 
-        if(strings[0].equalsIgnoreCase("create")) {
-            this.createArenaCommand((Player) commandSender, strings);
+        if(args[0].equalsIgnoreCase("create")) {
+            this.createArenaCommand((Player) commandSender, args);
             return true;
         }
-        if(strings[1].equalsIgnoreCase("addsign")) {
-            if(plugin.getGameInstanceManager().getGameInstance(strings[0]) == null) {
+        if(args[1].equalsIgnoreCase("addsign")) {
+            if(plugin.getGameInstanceManager().getGameInstance(args[0]) == null) {
                 player.sendMessage(ChatColor.RED + "ARENA DOES NOT EXIST!");
                 return true;
             } else {
                 Location location = player.getTargetBlock(null, 10).getLocation();
                 if(location.getBlock().getState() instanceof Sign) {
-                    GameInstance gameInstance = plugin.getGameInstanceManager().getGameInstance(strings[0]);
+                    GameInstance gameInstance = plugin.getGameInstanceManager().getGameInstance(args[0]);
                     int keys = 0;
                     if(plugin.getPlugin().getConfig().contains("signs." + gameInstance.getID())) {
                         keys = plugin.getPlugin().getConfig().getConfigurationSection("signs." + gameInstance.getID()).getKeys(false).size();
@@ -68,94 +67,82 @@ public class InstanceCommands implements CommandExecutor {
             }
             return true;
         }
-        if(strings[0].equalsIgnoreCase("tp") && strings.length == 3) {
-            if(strings.length != 3) {
-                player.sendMessage(ChatColor.RED + "Usage: /" + plugin.getGameName() + "tp <ARENA>");
-                return true;
-            }
-            onTpCommand(player, strings[1], strings[2]);
+        if(args[0].equalsIgnoreCase("tp") && args.length == 3) {
+            onTpCommand(player, args[1], args[2]);
             return true;
         }
 
-        if(strings[1].equalsIgnoreCase("setup") || strings[1].equals("edit")) {
-            if(plugin.getGameInstanceManager().getGameInstance(strings[0]) == null) {
+        if(args[1].equalsIgnoreCase("setup") || args[1].equals("edit")) {
+            if(plugin.getGameInstanceManager().getGameInstance(args[0]) == null) {
                 player.sendMessage(ChatColor.RED + "ARENA DOES NOT EXIST!");
                 return true;
             }
-            new SetupInventory(plugin.getGameInstanceManager().getGameInstance(strings[0])).openInventory(player);
+            new SetupInventory(plugin.getGameInstanceManager().getGameInstance(args[0])).openInventory(player);
             return true;
         }
-        if(!(strings.length > 2)) return true;
+        if(!(args.length > 2)) return true;
 
-        if(!plugin.getPlugin().getConfig().contains("instances." + strings[0])) {
+        if(!plugin.getPlugin().getConfig().contains("instances." + args[0])) {
             player.sendMessage(ChatColor.RED + "Arena doesn't exists!");
             player.sendMessage(ChatColor.RED + "Usage: /" + plugin.getGameName() + " < ARENA ID > set <MINPLAYRS | MAXPLAYERS | MAPNAME | SCHEMATIC | LOBBYLOCATION | EndLOCATION | STARTLOCATION  >  < VALUE>");
             return true;
         }
-
-
-        if(strings[1].equalsIgnoreCase("addspawn")) {
-            PlayerAddSpawnCommandEvent event = new PlayerAddSpawnCommandEvent(player, strings[2], strings[0]);
+        if(args[1].equalsIgnoreCase("add")) {
+            PlayerAddCommandEvent event = new PlayerAddCommandEvent(player, args, args[0]);
             plugin.getPlugin().getServer().getPluginManager().callEvent(event);
             plugin.getPlugin().saveConfig();
             return true;
         }
-        if(strings[1].equalsIgnoreCase("add")) {
-            PlayerAddCommandEvent event = new PlayerAddCommandEvent(player, strings, strings[0]);
-            plugin.getPlugin().getServer().getPluginManager().callEvent(event);
-            plugin.getPlugin().saveConfig();
-            return true;
-        }
-        if(!(strings[1].equalsIgnoreCase("set"))) return true;
+        if(!(args[1].equalsIgnoreCase("set"))) return true;
 
 
-        if(strings.length == 3) {
-            if(strings[2].equalsIgnoreCase("lobbylocation") || strings[2].equalsIgnoreCase("lobbyloc")) {
-                plugin.saveLoc("instances." + strings[0] + ".lobbylocation", player.getLocation());
-                player.sendMessage(plugin.getGameName() + ": Lobby location for arena/instance " + strings[0] + " set to " + Util.locationToString(player.getLocation()));
-            } else if(strings[2].equalsIgnoreCase("Startlocation") || strings[2].equalsIgnoreCase("Startloc")) {
-                plugin.saveLoc("instances." + strings[0] + ".Startlocation", player.getLocation());
-                player.sendMessage(plugin.getGameName() + " Start location for arena/instance " + strings[0] + " set to " + Util.locationToString(player.getLocation()));
-            } else if(strings[2].equalsIgnoreCase("Endlocation") || strings[2].equalsIgnoreCase("Endloc")) {
-                plugin.saveLoc("instances." + strings[0] + ".Endlocation", player.getLocation());
-                player.sendMessage(plugin.getGameName() + " End location for arena/instance " + strings[0] + " set to " + Util.locationToString(player.getLocation()));
+        if(args.length == 3) {
+            if(args[2].equalsIgnoreCase("lobbylocation") || args[2].equalsIgnoreCase("lobbyloc")) {
+                plugin.saveLoc("instances." + args[0] + ".lobbylocation", player.getLocation());
+                player.sendMessage(plugin.getGameName() + ": Lobby location for arena/instance " + args[0] + " set to " + Util.locationToString(player.getLocation()));
+            } else if(args[2].equalsIgnoreCase("Startlocation") || args[2].equalsIgnoreCase("Startloc")) {
+                plugin.saveLoc("instances." + args[0] + ".Startlocation", player.getLocation());
+                player.sendMessage(plugin.getGameName() + " Start location for arena/instance " + args[0] + " set to " + Util.locationToString(player.getLocation()));
+            } else if(args[2].equalsIgnoreCase("Endlocation") || args[2].equalsIgnoreCase("Endloc")) {
+                plugin.saveLoc("instances." + args[0] + ".Endlocation", player.getLocation());
+                player.sendMessage(plugin.getGameName() + " End location for arena/instance " + args[0] + " set to " + Util.locationToString(player.getLocation()));
             } else {
                 player.sendMessage(ChatColor.RED + "Invalid Command!");
                 player.sendMessage(ChatColor.RED + "Usage: /" + plugin.getGameName() + " <ARENA > set <StartLOCTION | LOBBYLOCATION | EndLOCATION>");
             }
-        } else if(strings.length == 4) {
+        } else if(args.length == 4) {
 
-            if(strings[2].equalsIgnoreCase("MAXPLAYERS") || strings[2].equalsIgnoreCase("maximumplayers")) {
-                plugin.getPlugin().getConfig().set("instances." + strings[0] + ".maximumplayers", Integer.parseInt(strings[3]));
-                player.sendMessage(plugin.getGameName() + " Maximum players for arena/instance " + strings[0] + " set to " + Integer.parseInt(strings[3]));
+            if(args[2].equalsIgnoreCase("MAXPLAYERS") || args[2].equalsIgnoreCase("maximumplayers")) {
+                plugin.getPlugin().getConfig().set("instances." + args[0] + ".maximumplayers", Integer.parseInt(args[3]));
+                player.sendMessage(plugin.getGameName() + " Maximum players for arena/instance " + args[0] + " set to " + Integer.parseInt(args[3]));
 
-            } else if(strings[2].equalsIgnoreCase("MINPLAYERS") || strings[2].equalsIgnoreCase("minimumplayers")) {
-                plugin.getPlugin().getConfig().set("instances." + strings[0] + ".minimumplayers", Integer.parseInt(strings[3]));
-                player.sendMessage(plugin.getGameName() + " Minimum players for arena/instance " + strings[0] + " set to " + Integer.parseInt(strings[3]));
-            } else if(strings[2].equalsIgnoreCase("MAPNAME") || strings[2].equalsIgnoreCase("NAME")) {
-                plugin.getPlugin().getConfig().set("instances." + strings[0] + ".mapname", strings[3]);
-                player.sendMessage(plugin.getGameName() + " Map name for arena/instance " + strings[0] + " set to " + strings[3]);
-            } else if(strings[2].equalsIgnoreCase("WORLD") || strings[2].equalsIgnoreCase("MAP")) {
+            } else if(args[2].equalsIgnoreCase("MINPLAYERS") || args[2].equalsIgnoreCase("minimumplayers")) {
+                plugin.getPlugin().getConfig().set("instances." + args[0] + ".minimumplayers", Integer.parseInt(args[3]));
+                player.sendMessage(plugin.getGameName() + " Minimum players for arena/instance " + args[0] + " set to " + Integer.parseInt(args[3]));
+            } else if(args[2].equalsIgnoreCase("MAPNAME") || args[2].equalsIgnoreCase("NAME")) {
+                plugin.getPlugin().getConfig().set("instances." + args[0] + ".mapname", args[3]);
+                player.sendMessage(plugin.getGameName() + " Map name for arena/instance " + args[0] + " set to " + args[3]);
+            } else if(args[2].equalsIgnoreCase("WORLD") || args[2].equalsIgnoreCase("MAP")) {
                 boolean exists = false;
                 for(World world : Bukkit.getWorlds()) {
-                    if(world.getName().equalsIgnoreCase(strings[3])) exists = true;
+                    if(world.getName().equalsIgnoreCase(args[3])) exists = true;
                 }
                 if(!exists) {
                     player.sendMessage(ChatColor.RED + "That world doesn't exists!");
                     return true;
                 }
-                plugin.getPlugin().getConfig().set("instances." + strings[0] + ".world", strings[3]);
-                player.sendMessage(plugin.getGameName() + " World for arena/instance " + strings[0] + " set to " + strings[3]);
-            } else if(strings[2].equalsIgnoreCase("schematic")) {
+                plugin.getPlugin().getConfig().set("instances." + args[0] + ".world", args[3]);
+                player.sendMessage(plugin.getGameName() + " World for arena/instance " + args[0] + " set to " + args[3]);
+            } else if(args[2].equalsIgnoreCase("schematic")) {
                 if(plugin.needsMapRestore()) {
-                    String filename = strings[3];
+                    String filename = args[3];
                     if(filename.contains(".schematic")) {
                         player.sendMessage(ChatColor.RED + "Don't put .schematic behind the name! ");
                         player.sendMessage(ChatColor.RED + "Usage: /" + plugin.getGameName() + " set schematic <filename (without .schematic)>");
                         return true;
                     } else {
-                        plugin.getPlugin().getConfig().set("instances." + strings[0] + ".schematic", strings[3]);
-                        player.sendMessage(plugin.getGameName() + ": Schematic file for arena/instance " + strings[0] + " set to " + strings[3]);
+                        plugin.getPlugin().getConfig().set("instances." + args[0] + ".schematic", args[3]);
+                        player.sendMessage(plugin.getGameName() + ": Schematic file for arena/instance " + args[0] + " set to " + args[3]);
                     }
                 } else {
                     player.sendMessage(ChatColor.RED + "This game doesn't need a schematic file!");
@@ -271,7 +258,7 @@ public class InstanceCommands implements CommandExecutor {
 
 
     private enum LocationType {
-        LOBBY, END, START;
+        LOBBY, END, START
     }
 
 }

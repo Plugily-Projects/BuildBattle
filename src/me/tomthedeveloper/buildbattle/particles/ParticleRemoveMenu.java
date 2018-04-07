@@ -21,7 +21,6 @@ import java.util.regex.Pattern;
  */
 public class ParticleRemoveMenu {
 
-
     public static void openMenu(Player player, BuildPlot buildPlot) {
         Inventory inventory = player.getServer().createInventory(player, 6 * 9, ChatManager.getSingleMessage("Particle-Remove-Menu-Name", ChatColor.RED + "Remove Particles"));
 
@@ -41,7 +40,6 @@ public class ParticleRemoveMenu {
         player.openInventory(inventory);
     }
 
-
     public static void onClick(Inventory inventory, ItemStack itemStack, BuildPlot buildPlot) {
         List<String> lore = itemStack.getItemMeta().getLore();
         double x = 0, y = 0, z = 0;
@@ -56,9 +54,7 @@ public class ParticleRemoveMenu {
                 z = getInt(ChatColor.stripColor(string));
             }
         }
-
         for(Location location : buildPlot.getParticles().keySet()) {
-
             if(Math.round(location.getX()) == x && Math.round(location.getY()) == y && Math.round(location.getZ()) == z) {
                 buildPlot.getParticles().remove(location);
                 Bukkit.getServer().getPlayer(buildPlot.getOwner()).sendMessage(ChatManager.getSingleMessage("Particle-Removed", ChatColor.GREEN + "Particle Removed!"));
@@ -69,7 +65,6 @@ public class ParticleRemoveMenu {
         }
     }
 
-
     private static int getInt(String string) {
         Pattern pattern = Pattern.compile("-?\\d+");
         Matcher matcher = pattern.matcher(string);
@@ -78,10 +73,4 @@ public class ParticleRemoveMenu {
         }
         return 0;
     }
-
-   /* public Location getLocationFromLore(ItemStack itemStack){
-        List<String> lore = itemStack.getItemMeta().getLore();
-        //lore.get(lore.size()-1)
-        re
-    } */
 }

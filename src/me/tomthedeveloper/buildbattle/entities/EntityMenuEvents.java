@@ -6,6 +6,7 @@ import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.game.GameState;
 import me.tomthedeveloper.buildbattle.handlers.ChatManager;
 import me.tomthedeveloper.buildbattle.instance.BuildInstance;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
@@ -15,8 +16,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.Inventory;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -100,7 +104,19 @@ public class EntityMenuEvents implements Listener {
             buildInstance.getPlotManager().getPlot(player).removeEntity();
 
         } else if(key.equals("Profession-Villager-Selecting")) {
-            player.openInventory(VillagerProffesionMenu.getMenu(links.get(player.getUniqueId()).getEntity()));
+            Inventory inventory = Bukkit.createInventory(null, 9, ChatManager.getSingleMessage("Villager-Profession-Menu", "Choose villager profession"));
+            Set<String> professions = new HashSet<>();
+            professions.add("Blacksmith");
+            professions.add("Librarian");
+            professions.add("Farmer");
+            professions.add("Butcher");
+            professions.add("Priest");
+            for(String string : professions) {
+                EntityItem entityItem = EntityItemManager.getEntityItem("Profession." + string);
+                inventory.setItem(entityItem.getSlot(), entityItem.getItemStack());
+            }
+
+            player.openInventory(inventory);
             event.setCancelled(true);
         }
 
@@ -109,7 +125,6 @@ public class EntityMenuEvents implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onVillagerProfessionChoose(InventoryClickEvent event) {
-
         Player player = (Player) event.getWhoClicked();
         GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance(player);
         if(gameInstance == null) return;

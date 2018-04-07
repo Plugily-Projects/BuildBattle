@@ -23,10 +23,4 @@ public class QuitEvents implements Listener {
         if(plugin.getGameInstanceManager().getGameInstance(event.getPlayer()) == null) return;
         if(!plugin.isBungeeActivated()) plugin.getGameInstanceManager().getGameInstance(event.getPlayer()).leaveAttempt(event.getPlayer());
     }
-
-    @EventHandler
-    public void onKick(PlayerKickEvent event) {
-        if(plugin.getGameInstanceManager().getGameInstance(event.getPlayer()) == null) return;
-        if(!plugin.isBungeeActivated()) plugin.getGameInstanceManager().getGameInstance(event.getPlayer()).leaveAttempt(event.getPlayer());
-    }
 }

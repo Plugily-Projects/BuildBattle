@@ -24,15 +24,12 @@ public class EntityItem {
     private String[] lore;
     private String displayName;
     private ParticleEffect effect;
-    private String permission;
-    private boolean enabled = true;
     private Location location;
     private int slot;
     private String name;
 
     private EntityItem(String name) {
         this.name = name;
-
     }
 
     public static void loadAll() {
@@ -52,13 +49,10 @@ public class EntityItem {
         new EntityItem("Profession.Blacksmith").load(ChatColor.GOLD + "Blacksmith", new String[]{ChatColor.GRAY + "Click to choose blacksmith"}, Material.IRON_CHESTPLATE, 4);
         new EntityItem("Profession.Farmer").load(ChatColor.GOLD + "Farmer", new String[]{ChatColor.GRAY + "Click to choose farmer"}, Material.WHEAT, 0);
 
-
     }
 
     private void load(String displayName, String[] lore, Material material, int slot) {
         FileConfiguration config = ConfigurationManager.getConfig("EntityMenu");
-
-
         if(!config.contains(name)) {
             config.set(name + ".data", 0);
             config.set(name + ".displayname", displayName);
@@ -73,16 +67,13 @@ public class EntityItem {
         }
         EntityItem particleItem = new EntityItem(name);
         particleItem.setData(config.getInt(name + ".data"));
-        particleItem.setEnabled(config.getBoolean(name + ".enabled"));
         particleItem.setMaterial(org.bukkit.Material.getMaterial(config.getInt(name + ".material")));
         particleItem.setLore(config.getStringList(name + ".lore"));
         particleItem.setDisplayName(config.getString(name + ".displayname"));
-        particleItem.setPermission(config.getString(name + ".permission"));
         particleItem.setSlot(config.getInt(name + ".slot"));
         EntityItemManager.addEntityItem(name, particleItem);
 
     }
-
 
     public Location getLocation() {
         return location;
@@ -90,14 +81,6 @@ public class EntityItem {
 
     public void setLocation(Location location) {
         this.location = location;
-    }
-
-    private void setPermission(String permission) {
-        this.permission = permission;
-    }
-
-    private void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 
     public void setData(Byte data) {

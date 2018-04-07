@@ -17,7 +17,6 @@ import java.util.HashMap;
  */
 public class VoteItems {
 
-
     private static HashMap<ItemStack, Integer> voteItems = new HashMap<>();
     private static FileConfiguration config = ConfigurationManager.getConfig("VoteItems");
 
@@ -30,15 +29,6 @@ public class VoteItems {
 
 
     public static void loadVoteItemsFromConfig() {
-        if(config.getKeys(false) == null || config.getKeys(false).size() == 0) {
-            setToConfig(ChatColor.RED + "Poop", Material.STAINED_CLAY, 14, 2);
-            setToConfig(ChatColor.RED + "Not good", Material.STAINED_CLAY, 6, 3);
-            setToConfig(ChatColor.YELLOW + "Ok", Material.STAINED_CLAY, 1, 4);
-            setToConfig(ChatColor.GREEN + "Good", Material.STAINED_CLAY, 13, 5);
-            setToConfig(ChatColor.GREEN + "Awesome", Material.STAINED_CLAY, 4, 6);
-            setToConfig(ChatColor.DARK_PURPLE + "EPIC", Material.STAINED_CLAY, 10, 7);
-            saveConfig();
-        }
         for(String s : config.getKeys(false)) {
             if(StringUtils.isNumeric(s) && config.contains(s + ".material") && config.contains(s + ".data") && config.contains(s + ".displayname")) {
                 ItemStack item = new ItemStack(config.getInt(s + ".material"), 1, (byte) config.getInt(s + ".data"));
@@ -51,14 +41,6 @@ public class VoteItems {
         }
     }
 
-    private static void saveConfig() {
-        try {
-            config.save(ConfigurationManager.getFile("VoteItems"));
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public static int getPoints(ItemStack itemStack) {
         for(ItemStack voteitem : voteItems.keySet()) {
             if(itemStack.getType() == voteitem.getType() && itemStack.getItemMeta().getDisplayName().equalsIgnoreCase(voteitem.getItemMeta().getDisplayName()))
@@ -66,12 +48,5 @@ public class VoteItems {
         }
         return 0;
     }
-
-    private static void setToConfig(String itemname, Material type, Integer data, Integer points) {
-        config.set(points.toString() + ".material", type.getId());
-        config.set(points.toString() + ".displayname", itemname);
-        config.set(points.toString() + ".data", data);
-    }
-
 
 }

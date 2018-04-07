@@ -17,7 +17,6 @@ import java.util.UUID;
  */
 public class BuildPlot {
 
-
     private Location MAXPOINT;
     private Location MINPOINT;
     private int points;
@@ -166,33 +165,7 @@ public class BuildPlot {
                 Location tmpblock = new Location(getMAXPOINT().getWorld(), x, y, z);
                 tmpblock.getBlock().setType(material);
             }
-
         }
-
-    }
-
-    public boolean isInFloor(Location location) {
-        boolean trueOrNot = false;
-        if(getMAXPOINT().getY() > getMINPOINT().getY()) {
-            if(location.getWorld() == getMINPOINT().getWorld() && location.getWorld() == getMAXPOINT().getWorld()) {
-                if(location.getX() >= getMINPOINT().getX() && location.getX() <= getMAXPOINT().getX()) {
-                    if(location.getY() == getMINPOINT().getY()) {
-                        if(location.getZ() >= getMINPOINT().getZ() && location.getZ() <= getMAXPOINT().getZ()) {
-                            trueOrNot = true;
-                        }
-                    }
-                }
-            } else {
-                if(location.getX() <= getMINPOINT().getX() && location.getX() >= getMAXPOINT().getX()) {
-                    if(location.getY() == getMAXPOINT().getY()) {
-                        if(location.getZ() <= getMINPOINT().getZ() && location.getZ() >= getMAXPOINT().getZ()) {
-                            trueOrNot = true;
-                        }
-                    }
-                }
-            }
-        }
-        return trueOrNot;
     }
 
     public void changeFloor(Material material, byte data) {
@@ -212,11 +185,8 @@ public class BuildPlot {
                 Location tmpblock = new Location(getMAXPOINT().getWorld(), x, y, z);
                 tmpblock.getBlock().setType(material);
                 tmpblock.getBlock().setData(data);
-
             }
-
         }
-
     }
 
     public Material getFloorMaterial() {
@@ -309,11 +279,5 @@ public class BuildPlot {
         }
         return tploc;
     }
-
-
-    public boolean isInFlyRange(Location location) {
-        return isInPlotRange(location, ConfigPreferences.getExtraPlotRange());
-    }
-
 
 }

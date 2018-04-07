@@ -21,22 +21,15 @@ public class ConfigPreferences {
     private static List<String> endGameCommands = new ArrayList<>();
     private static List<String> secondPlaceCommands = new ArrayList<>();
     private static List<String> whitelistedCommands = new ArrayList<>();
-
     private static List<String> thirdPlaceCommands = new ArrayList<>();
-
 
     public ConfigPreferences(Main main) {
         config = main.getConfig();
-
         ConfigPreferences.main = main;
     }
 
 
     public static void loadThemes() {
-        if(!config.contains("themes")) {
-            config.set("themes", Arrays.asList("Bees", "Pirates", "Medieval", "Castle", "Love", "Hate", "Ugly", "SchoolBus"));
-            saveConfig();
-        }
         for(String theme : config.getStringList("themes")) {
             BuildInstance.addTheme(theme);
         }
@@ -44,37 +37,21 @@ public class ConfigPreferences {
     }
 
     public static void loadWinCommands() {
-        if(!config.contains("Win-Commands")) {
-            config.set("Win-Commands", Arrays.asList("say %PLAYER% won the game!", "give %PLAYER% 1000"));
-            saveConfig();
-        }
         winCommands.addAll(config.getStringList("Win-Commands"));
 
     }
 
     public static void loadWhitelistedCommands() {
-        if(!config.contains("Whitelisted-Commands")) {
-            config.set("Whitelisted-Commands", Arrays.asList("me", "help"));
-            saveConfig();
-        }
         whitelistedCommands.addAll(config.getStringList("Whitelisted-Commands"));
 
     }
 
     public static void loadThirdPlaceCommands() {
-        if(!config.contains("Third-Place-Commands")) {
-            config.set("Third-Place-Commands", Arrays.asList("say %PLAYER% became third", "give %PLAYER% 1000"));
-            saveConfig();
-        }
         thirdPlaceCommands.addAll(config.getStringList("Third-Place-Commands"));
 
     }
 
     public static void loadSecondPlaceCommands() {
-        if(!config.contains("Second-Place-Commands")) {
-            config.set("Second-Place-Commands", Arrays.asList("say %PLAYER% become second", "give %PLAYER% 1000"));
-            saveConfig();
-        }
         secondPlaceCommands.addAll(config.getStringList("Second-Place-Commands"));
 
     }
@@ -102,7 +79,6 @@ public class ConfigPreferences {
             saveConfig();
         }
         endGameCommands.addAll(config.getStringList("End-Game-Commands"));
-
     }
 
     public static boolean isMobSpawningDisabled() {
@@ -122,14 +98,9 @@ public class ConfigPreferences {
     }
 
     public static void loadBlackList() {
-        if(!config.contains("blacklist")) {
-            config.set("blacklist", Arrays.asList(46, 57));
-            saveConfig();
-        }
         for(int ID : config.getIntegerList("blacklist")) {
             BuildInstance.addToBlackList(ID);
         }
-
     }
 
     public static boolean isBarEnabled() {
@@ -200,7 +171,6 @@ public class ConfigPreferences {
     }
 
     public static void loadOptions() {
-
         List<String> loadOptions = new ArrayList<>();
         loadOptions.add("Build-Time-In-Seconds");
         loadOptions.add("Voting-Time-In-Seconds");
@@ -225,7 +195,6 @@ public class ConfigPreferences {
         loadOptions.add("Disable-Scoreboard-Ingame");
         loadOptions.add("Hook-Into-Vault");
         loadOptions.add("Lobby-Starting-Time");
-
 
         for(String option : loadOptions) {
             if(config.contains(option)) {
@@ -273,16 +242,13 @@ public class ConfigPreferences {
         return options.get("Hook-Into-Vault") == 1;
     }
 
-
     public static long getParticleRefreshTick() {
         return options.get("Particle-Refresh-Per-Tick");
     }
 
-
     public static int getExtraPlotRange() {
         return options.get("Fly-Range-Out-Plot");
     }
-
 
     private static void saveConfig() {
         main.saveConfig();

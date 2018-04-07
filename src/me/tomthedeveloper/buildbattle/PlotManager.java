@@ -18,7 +18,6 @@ import java.util.UUID;
  */
 public class PlotManager {
 
-
     private List<BuildPlot> plots = new ArrayList<>();
     private List<BuildPlot> plotsToClear = new ArrayList<>();
     private BuildInstance buildInstance;
@@ -26,7 +25,6 @@ public class PlotManager {
     public PlotManager(BuildInstance buildInstance) {
         this.buildInstance = buildInstance;
     }
-
 
     public void addBuildPlot(BuildPlot buildPlot) {
         plots.add(buildPlot);
@@ -51,10 +49,6 @@ public class PlotManager {
         }
     }
 
-    public void addToClearList(BuildPlot buildPlot) {
-        plotsToClear.add(buildPlot);
-    }
-
     public BuildPlot getPlot(Player player) {
         for(BuildPlot buildPlot : plots) {
             if(buildPlot.getOwner() != null) {
@@ -71,14 +65,6 @@ public class PlotManager {
             }
         }
         return null;
-    }
-
-    public void resetPlots() {
-        for(BuildPlot buildPlot : plots) {
-            buildPlot.reset();
-        }
-
-
     }
 
     public void resetQeuedPlots() {
@@ -112,26 +98,8 @@ public class PlotManager {
         }
     }
 
-    public void teleportAllToPlot(BuildPlot buildPlot) {
-        Location tploc = buildPlot.getTeleportLocation();
-        while(tploc.getBlock().getType() != Material.AIR) {
-            tploc = tploc.add(0, 1, 0);
-        }
-        for(Player player : buildInstance.getPlayers()) {
-            //  Bukkit.getServer().getPlayer(buildPlot.getOwner()).teleport(player);
-            player.teleport(tploc);
-            player.setGameMode(GameMode.CREATIVE);
-            player.setAllowFlight(true);
-            player.setFlying(true);
-        }
-
-
-    }
-
-
     public List<BuildPlot> getPlots() {
         return plots;
     }
-
 
 }

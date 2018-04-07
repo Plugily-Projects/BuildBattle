@@ -4,14 +4,11 @@ import me.tomthedeveloper.buildbattle.ChatFormatter;
 import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
 import me.tomthedeveloper.buildbattle.utils.ParticleEffect;
 import me.tomthedeveloper.buildbattle.utils.Util;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -33,29 +30,14 @@ public class SpecialItem {
 
     private SpecialItem(String name) {
         this.name = name;
-
     }
 
     public static void loadAll() {
-        new SpecialItem("Leave").load(ChatColor.RED + "Leave", new String[]{org.bukkit.ChatColor.GRAY + "Click to teleport to hub"}, Material.BED, 8);
+        new SpecialItem("Leave").load();
     }
 
-    private void load(String displayName, String[] lore, Material material, int slot) {
+    private void load() {
         FileConfiguration config = ConfigurationManager.getConfig("SpecialItems");
-
-
-        if(!config.contains(name)) {
-            config.set(name + ".data", 0);
-            config.set(name + ".displayname", displayName);
-            config.set(name + ".lore", Arrays.asList(lore));
-            config.set(name + ".material", material.getId());
-            config.set(name + ".slot", slot);
-        }
-        try {
-            config.save(ConfigurationManager.getFile("SpecialItems"));
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
         SpecialItem particleItem = new SpecialItem(name);
         particleItem.setData(config.getInt(name + ".data"));
         particleItem.setEnabled(config.getBoolean(name + ".enabled"));

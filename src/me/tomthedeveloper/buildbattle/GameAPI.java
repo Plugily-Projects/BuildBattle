@@ -113,7 +113,6 @@ public class GameAPI {
         plugin.getServer().getPluginManager().registerEvents(this.getSignManager(), JavaPlugin.getPlugin(Main.class));
 
         loadLanguageFile();
-        loadInstanceConfig();
         loadSigns();
         plugin.saveConfig();
         ChatManager.getFromLanguageConfig("Unlocks-at-level", ChatColor.GREEN + "Unlocks at level %NUMBER% ");
@@ -146,23 +145,6 @@ public class GameAPI {
 
     public SignManager getSignManager() {
         return signManager;
-    }
-
-    private void loadInstanceConfig() {
-        if(!plugin.getConfig().contains("instances.default")) {
-            this.saveLoc("instances.default.lobbylocation", plugin.getServer().getWorlds().get(0).getSpawnLocation());
-            this.saveLoc("instances.default.Startlocation", plugin.getServer().getWorlds().get(0).getSpawnLocation());
-            this.saveLoc("instances.default.Endlocation", plugin.getServer().getWorlds().get(0).getSpawnLocation());
-            plugin.getConfig().set("instances.default.minimumplayers", 2);
-            plugin.getConfig().set("instances.default.maximumplayers", 10);
-            plugin.getConfig().set("instances.default.mapname", "mapname");
-            plugin.getConfig().set("instances.default.world", "worldname");
-            if(this.needsMapRestore()) plugin.getConfig().set("instances.default.schematic", "schematic file name (without .schematic!)");
-            plugin.saveConfig();
-
-
-        }
-
     }
 
     public void loadLanguageFile() {

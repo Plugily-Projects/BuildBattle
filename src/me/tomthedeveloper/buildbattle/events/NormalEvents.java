@@ -121,25 +121,8 @@ public class NormalEvents implements Listener {
             }
             return;
         }
-        User user = UserManager.getUser(event.getPlayer().getUniqueId());
         final String playername = event.getPlayer().getUniqueId().toString();
         final Player player = event.getPlayer();
-/*        if (plugin.getMyDatabase().getSingle(new BasicDBObject().append("UUID", event.getPlayer().getUniqueId().toString())) == null) {
-            plugin.getMyDatabase().insertDocument(new String[]{"UUID", "gamesplayed", "kills", "deaths", "highestwave", "exp", "level", "orbs"},
-                    new Object[]{event.getPlayer().getUniqueId().toString(), 0, 0, 0, 0, 0, 0, 0});
-        }
-
-        List<String> temp = new ArrayList<String>();
-        temp.add("gamesplayed");
-        temp.add("kills");
-        temp.add("deaths");
-        temp.add("highestwave");
-        temp.add("exp");
-        temp.add("level");
-        temp.add("orbs");
-        for (String s : temp) {
-            user.setInt(s, (Integer) plugin.getMyDatabase().getSingle(new BasicDBObject("UUID", event.getPlayer().getUniqueId().toString())).get(s));
-        } */
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             MySQLDatabase database = plugin.getMySQLDatabase();

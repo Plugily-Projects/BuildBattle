@@ -8,7 +8,6 @@ import me.tomthedeveloper.buildbattle.User;
 import me.tomthedeveloper.buildbattle.VoteItems;
 import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.game.GameState;
-import me.tomthedeveloper.buildbattle.game.InstanceType;
 import me.tomthedeveloper.buildbattle.handlers.ChatManager;
 import me.tomthedeveloper.buildbattle.handlers.MessageHandler;
 import me.tomthedeveloper.buildbattle.handlers.UserManager;
@@ -72,7 +71,6 @@ public class BuildInstance extends GameInstance {
 
     public BuildInstance(String ID) {
         super(ID);
-        setType(InstanceType.BUILD_BATTLE);
         plotManager = new PlotManager(this);
         scoreboardHandler = new ScoreboardHandler(this);
     }
