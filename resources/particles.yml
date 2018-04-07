@@ -1,0 +1,370 @@
+EXPLOSION_NORMAL:
+  data: 0
+  displayname: '&6EXPLOSION_NORMAL'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 0
+EXPLOSION_LARGE:
+  data: 0
+  displayname: '&6EXPLOSION_LARGE'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 1
+EXPLOSION_HUGE:
+  data: 0
+  displayname: '&6EXPLOSION_HUGE'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 2
+FIREWORKS_SPARK:
+  data: 0
+  displayname: '&6FIREWORKS_SPARK'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 3
+WATER_BUBBLE:
+  data: 0
+  displayname: '&6WATER_BUBBLE'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 4
+WATER_SPLASH:
+  data: 0
+  displayname: '&6WATER_SPLASH'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 5
+WATER_WAKE:
+  data: 0
+  displayname: '&6WATER_WAKE'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 6
+SUSPENDED:
+  data: 0
+  displayname: '&6SUSPENDED'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 7
+SUSPENDED_DEPTH:
+  data: 0
+  displayname: '&6SUSPENDED_DEPTH'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 8
+CRIT:
+  data: 0
+  displayname: '&6CRIT'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 9
+CRIT_MAGIC:
+  data: 0
+  displayname: '&6CRIT_MAGIC'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 10
+SMOKE_NORMAL:
+  data: 0
+  displayname: '&6SMOKE_NORMAL'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 11
+SMOKE_LARGE:
+  data: 0
+  displayname: '&6SMOKE_LARGE'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 12
+SPELL:
+  data: 0
+  displayname: '&6SPELL'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 13
+SPELL_INSTANT:
+  data: 0
+  displayname: '&6SPELL_INSTANT'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 14
+SPELL_MOB:
+  data: 0
+  displayname: '&6SPELL_MOB'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 15
+SPELL_MOB_AMBIENT:
+  data: 0
+  displayname: '&6SPELL_MOB_AMBIENT'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 16
+SPELL_WITCH:
+  data: 0
+  displayname: '&6SPELL_WITCH'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 17
+DRIP_WATER:
+  data: 0
+  displayname: '&6DRIP_WATER'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 18
+DRIP_LAVA:
+  data: 0
+  displayname: '&6DRIP_LAVA'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 19
+VILLAGER_ANGRY:
+  data: 0
+  displayname: '&6VILLAGER_ANGRY'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 20
+VILLAGER_HAPPY:
+  data: 0
+  displayname: '&6VILLAGER_HAPPY'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 21
+TOWN_AURA:
+  data: 0
+  displayname: '&6TOWN_AURA'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 22
+NOTE:
+  data: 0
+  displayname: '&6NOTE'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 23
+PORTAL:
+  data: 0
+  displayname: '&6PORTAL'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 24
+ENCHANTMENT_TABLE:
+  data: 0
+  displayname: '&6ENCHANTMENT_TABLE'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 25
+FLAME:
+  data: 0
+  displayname: '&6FLAME'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 26
+LAVA:
+  data: 0
+  displayname: '&6LAVA'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 27
+FOOTSTEP:
+  data: 0
+  displayname: '&6FOOTSTEP'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 28
+CLOUD:
+  data: 0
+  displayname: '&6CLOUD'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 29
+REDSTONE:
+  data: 0
+  displayname: '&6REDSTONE'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 30
+SNOWBALL:
+  data: 0
+  displayname: '&6SNOWBALL'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 31
+SNOW_SHOVEL:
+  data: 0
+  displayname: '&6SNOW_SHOVEL'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 32
+SLIME:
+  data: 0
+  displayname: '&6SLIME'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 33
+HEART:
+  data: 0
+  displayname: '&6HEART'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 34
+BARRIER:
+  data: 0
+  displayname: '&6BARRIER'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 35
+WATER_DROP:
+  data: 0
+  displayname: '&6WATER_DROP'
+  lore:
+  - Click to activate
+  - on your location
+  material: 339
+  enabled: true
+  permission: particles.VIP
+  slot: 36

@@ -207,10 +207,7 @@ public class BuildInstance extends GameInstance {
                         player.getInventory().setItem(8, IngameMenu.getMenuItem());
                     }
                     setRandomTheme();
-
                     getChatManager().broadcastMessage("The-Game-Has-Started", "The game has started! Start building guys!!");
-
-
                 }
                 setTimer(getTimer() - 1);
 

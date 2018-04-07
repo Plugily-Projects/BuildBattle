@@ -1,0 +1,65 @@
+bar: false
+BungeeActivated: false
+InventoryManager: false
+instances:
+  default:
+    lobbylocation: world,-1.0,80.0,7.0,0.0,0.0
+    Startlocation: world,-1.0,80.0,7.0,0.0,0.0
+    Endlocation: world,-1.0,80.0,7.0,0.0,0.0
+    minimumplayers: 2
+    maximumplayers: 10
+    mapname: mapname
+    world: worldname
+signs:
+  example: world,-1.0,80.0,7.0,0.0,0.0
+Disable-Leave-Command: false
+Build-Time-In-Seconds: 480
+Voting-Time-In-Seconds: 20
+Fly-Range-Out-Plot: 5
+Default-Floor-Material: 17
+Disable-Mob-Spawning-Completely: true
+Dynamic-Sign-System: true
+Amount-One-Particle-Effect-Contains: 20
+Max-Amount-Particles: 25
+Particle-Refresh-Per-Tick: 10
+Bungee-Shutdown-On-End: false
+Bungee-Restart-On-End: false
+Particle-Offset: 1
+Win-Commands-Activated: false
+End-Game-Commands-Activated: true
+Second-Place-Commands-Activated: false
+Third-Place-Commands-Activated: false
+Use-Name-Instead-Of-UUID-In-Database: false
+Mobs-Max-Amount-Per-Plot: 20
+Hide-Players-Outside-Game: true
+Disable-Scoreboard-Ingame: false
+Hook-Into-Vault: false
+Lobby-Starting-Time: 60
+themes:
+- Bees
+- Pirates
+- Medieval
+- Castle
+- Love
+- Hate
+- Ugly
+- SchoolBus
+blacklist:
+- 46
+- 57
+Win-Commands:
+- say %PLAYER% won the game!
+- give %PLAYER% 1000
+Second-Place-Commands:
+- say %PLAYER% become second
+- give %PLAYER% 1000
+Third-Place-Commands:
+- say %PLAYER% became third
+- give %PLAYER% 1000
+End-Game-Commands:
+- say %PLAYER% has played a game!
+- give %PLAYER% 100
+Whitelisted-Commands:
+- me
+- help
+DatabaseActivated: false

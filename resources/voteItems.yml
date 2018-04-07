@@ -1,1 +1,24 @@
-1:
+'2':
+  material: 159
+  displayname: "§cPoop"
+  data: 14
+'3':
+  material: 159
+  displayname: "§cNot good"
+  data: 6
+'4':
+  material: 159
+  displayname: "§eOk"
+  data: 1
+'5':
+  material: 159
+  displayname: "§aGood"
+  data: 13
+'6':
+  material: 159
+  displayname: "§aAwesome"
+  data: 4
+'7':
+  material: 159
+  displayname: "§5EPIC"
+  data: 10

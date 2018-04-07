@@ -1,0 +1,7 @@
+Leave:
+  data: 0
+  displayname: "§cLeave"
+  lore:
+  - "§7Click to teleport to hub"
+  material: 355
+  slot: 8
