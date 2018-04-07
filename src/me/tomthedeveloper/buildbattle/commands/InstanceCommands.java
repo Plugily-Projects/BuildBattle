@@ -25,7 +25,6 @@ import java.util.HashSet;
  */
 public class InstanceCommands implements CommandExecutor {
 
-
     private GameAPI plugin;
     private CommandsInterface commandsInterface;
 

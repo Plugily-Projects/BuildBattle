@@ -76,7 +76,6 @@ public class BuildInstance extends GameInstance {
         setType(InstanceType.BUILD_BATTLE);
         plotManager = new PlotManager(this);
         scoreboardHandler = new ScoreboardHandler(this);
-        BuildPlot.fetchSkins();
     }
 
     public static void addTheme(String string) {
@@ -118,7 +117,7 @@ public class BuildInstance extends GameInstance {
 
     @Override
     public void leaveAttempt(Player p) {
-        if(queue.contains(p)) queue.remove(p);
+        queue.remove(p.getUniqueId());
         User user = UserManager.getUser(p.getUniqueId());
         if(getGameState() == GameState.INGAME || getGameState() == GameState.ENDING) UserManager.getUser(p.getUniqueId()).addInt("gamesplayed", 1);
         this.teleportToEndLocation(p);
@@ -126,8 +125,6 @@ public class BuildInstance extends GameInstance {
         if(!user.isSpectator()) {
             getChatManager().broadcastLeaveMessage(p);
         }
-        user.setFakeDead(false);
-        user.setAllowDoubleJump(false);
         user.setSpectator(false);
         user.removeScoreboard();
         // if(plugin.getPlugin().isBarEnabled())
@@ -542,7 +539,6 @@ public class BuildInstance extends GameInstance {
         p.getInventory().clear();
         showPlayers();
         if(!UserManager.getUser(p.getUniqueId()).isSpectator()) getChatManager().broadcastJoinMessage(p);
-        if(plugin.areKitsEnabled()) plugin.getKitMenuHandler().giveKitMenuItem(p);
         p.updateInventory();
         for(Player player : getPlayers()) {
             showPlayer(player);
@@ -562,10 +558,6 @@ public class BuildInstance extends GameInstance {
 
     public long getTimeleft() {
         return getTimer();
-    }
-
-    public void setTimeleft(int timeleft) {
-        setTimer(timeleft);
     }
 
     public String getFormattedTimeLeft() {

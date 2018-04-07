@@ -2,7 +2,7 @@ package me.tomthedeveloper.buildbattle.game;
 
 import me.tomthedeveloper.buildbattle.User;
 import me.tomthedeveloper.buildbattle.GameAPI;
-import me.tomthedeveloper.buildbattle.bungee.Bungee;
+import me.tomthedeveloper.buildbattle.bungee.BungeeManager;
 import me.tomthedeveloper.buildbattle.handlers.ChatManager;
 import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
 import me.tomthedeveloper.buildbattle.handlers.UserManager;
@@ -19,10 +19,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.UUID;
 
 //import me.confuser.barapi.BarAPI;
@@ -281,7 +279,6 @@ public abstract class GameInstance extends BukkitRunnable {
             p.setFlying(true);
             User user = UserManager.getUser(p.getUniqueId());
             user.setSpectator(true);
-            user.setFakeDead(true);
             this.hidePlayer(p);
             if(plugin.isInventoryManagerEnabled()) {
                 plugin.getInventoryManager().saveInventoryToFile(p);
@@ -332,14 +329,6 @@ public abstract class GameInstance extends BukkitRunnable {
         return list;
     }
 
-    public List<Player> getPlayersLeft() {
-        List<Player> players = new ArrayList<Player>();
-        for(User user : UserManager.getUsers(this)) {
-            if(!user.isFakeDead()) players.add(user.toPlayer());
-        }
-        return players;
-    }
-
     public void leaveAttempt(Player p) {
 
         User user = UserManager.getUser(p.getUniqueId());
@@ -349,8 +338,6 @@ public abstract class GameInstance extends BukkitRunnable {
         if(!user.isSpectator()) {
             getChatManager().broadcastLeaveMessage(p);
         }
-        user.setFakeDead(false);
-        user.setAllowDoubleJump(false);
         user.setSpectator(false);
         user.removeScoreboard();
         // if(plugin.isBarEnabled())
@@ -443,7 +430,7 @@ public abstract class GameInstance extends BukkitRunnable {
     public void teleportAllToEndLocation() {
         if(plugin.isBungeeActivated()) {
             for(Player player : getPlayers()) {
-                Bungee.connectToHub(player);
+                plugin.getPlugin().getBungeeManager().connectToHub(player);
             }
             return;
         }
@@ -460,7 +447,7 @@ public abstract class GameInstance extends BukkitRunnable {
 
     public void teleportToEndLocation(Player player) {
         if(plugin.isBungeeActivated()) {
-            Bungee.connectToHub(player);
+            plugin.getPlugin().getBungeeManager().connectToHub(player);
             return;
         }
         Location location = getEndLocation();

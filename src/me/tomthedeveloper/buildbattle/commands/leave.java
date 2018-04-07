@@ -1,7 +1,7 @@
 package me.tomthedeveloper.buildbattle.commands;
 
 import me.tomthedeveloper.buildbattle.GameAPI;
-import me.tomthedeveloper.buildbattle.bungee.Bungee;
+import me.tomthedeveloper.buildbattle.bungee.BungeeManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -30,7 +30,7 @@ public class leave implements CommandExecutor {
             return true;
         }
         if(plugin.isBungeeActivated()) {
-            Bungee.connectToHub(player);
+            plugin.getPlugin().getBungeeManager().connectToHub(player);
             System.out.print(player.getName() + " is teleported to the Hub Server");
             return true;
         } else {

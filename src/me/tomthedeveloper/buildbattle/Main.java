@@ -2,6 +2,7 @@ package me.tomthedeveloper.buildbattle;
 
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import com.sk89q.worldedit.bukkit.selections.Selection;
+import me.tomthedeveloper.buildbattle.bungee.BungeeManager;
 import me.tomthedeveloper.buildbattle.entities.EntityItem;
 import me.tomthedeveloper.buildbattle.entities.EntityMenuEvents;
 import me.tomthedeveloper.buildbattle.events.IngameEvents;
@@ -51,29 +52,18 @@ public class Main extends JavaPlugin implements CommandsInterface {
     private FileConfiguration statsConfig = null;
     private FileStats fileStats;
     private GameAPI gameAPI = new GameAPI();
+    private BungeeManager bungeeManager;
 
-    public static Chat getChat() {
-        return chat;
-    }
-
-    public static void setChat(Chat chat) {
-        Main.chat = chat;
+    public BungeeManager getBungeeManager() {
+        return bungeeManager;
     }
 
     public static Permission getPerms() {
         return perms;
     }
 
-    public static void setPerms(Permission perms) {
-        Main.perms = perms;
-    }
-
     public static Economy getEcon() {
         return econ;
-    }
-
-    public static void setEcon(Economy econ) {
-        Main.econ = econ;
     }
 
     public void setupMessageConfig() {
@@ -142,6 +132,7 @@ public class Main extends JavaPlugin implements CommandsInterface {
         gameAPI.setGameName("BuildBattle");
         gameAPI.setAbreviation("BD");
         gameAPI.setAllowBuilding(true);
+        bungeeManager = new BungeeManager(this);
         gameAPI.onSetup(this, this);
         new ConfigPreferences(this);
         ConfigPreferences.loadOptions();

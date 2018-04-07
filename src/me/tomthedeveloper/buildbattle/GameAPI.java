@@ -1,7 +1,7 @@
 package me.tomthedeveloper.buildbattle;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import me.tomthedeveloper.buildbattle.bungee.Bungee;
+import me.tomthedeveloper.buildbattle.bungee.BungeeManager;
 import me.tomthedeveloper.buildbattle.events.SetupInventoryEvents;
 import me.tomthedeveloper.buildbattle.events.onBuild;
 import me.tomthedeveloper.buildbattle.events.onChatEvent;
@@ -16,7 +16,6 @@ import me.tomthedeveloper.buildbattle.handlers.InventoryManager;
 import me.tomthedeveloper.buildbattle.handlers.JSONWriter;
 import me.tomthedeveloper.buildbattle.handlers.SignManager;
 import me.tomthedeveloper.buildbattle.utils.Items;
-import net.minecraft.server.v1_12_R1.Entity;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -160,8 +159,6 @@ public class GameAPI {
             plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
 
             setupBungee();
-            me.tomthedeveloper.buildbattle.bungee.Bungee.plugin = this;
-            plugin.getServer().getPluginManager().registerEvents(new Bungee(), plugin);
         }
 
         if(!plugin.getConfig().contains("Disable-Leave-Command")) {
@@ -292,7 +289,6 @@ public class GameAPI {
     }
 
     public void setupBungee() {
-        Bungee.plugin = this;
         FileConfiguration fileConfiguration = ConfigurationManager.getConfig("Bungee");
 
         if(!fileConfiguration.contains("Hub")) {

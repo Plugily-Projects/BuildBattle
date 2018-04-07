@@ -6,7 +6,7 @@ import me.tomthedeveloper.buildbattle.GameAPI;
 import me.tomthedeveloper.buildbattle.Main;
 import me.tomthedeveloper.buildbattle.User;
 import me.tomthedeveloper.buildbattle.VoteItems;
-import me.tomthedeveloper.buildbattle.bungee.Bungee;
+import me.tomthedeveloper.buildbattle.bungee.BungeeManager;
 import me.tomthedeveloper.buildbattle.entities.BuildBattleEntity;
 import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.game.GameState;
@@ -122,7 +122,7 @@ public class IngameEvents implements Listener {
 
             event.setCancelled(true);
             if(gameAPI.isBungeeActivated()) {
-                Bungee.connectToHub(event.getPlayer());
+                plugin.getBungeeManager().connectToHub(event.getPlayer());
             } else {
                 gameInstance.leaveAttempt(event.getPlayer());
             }
