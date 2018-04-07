@@ -370,7 +370,7 @@ public class IngameEvents implements Listener {
         if(gameAPI.getGameInstanceManager().getGameInstance(event.getPlayer()) == null) {
             for(GameInstance gameInstance : gameAPI.getGameInstanceManager().getGameInstances()) {
                 for(Player player : gameInstance.getPlayers()) {
-                    if(event.getRecipients().contains(player)) event.getRecipients().remove(player);
+                    event.getRecipients().remove(player);
                 }
             }
             return;

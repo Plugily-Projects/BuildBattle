@@ -9,12 +9,12 @@ import org.bukkit.event.player.PlayerJoinEvent;
 /**
  * Created by Tom on 10/07/2015.
  */
-public class onJoin implements Listener {
+public class JoinEvents implements Listener {
 
 
     private GameAPI plugin;
 
-    public onJoin(GameAPI plugin) {
+    public JoinEvents(GameAPI plugin) {
         this.plugin = plugin;
     }
 

@@ -23,7 +23,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
-import java.util.UUID;
 
 /**
  * Created by Tom on 8/01/2016.

@@ -2,7 +2,6 @@ package me.tomthedeveloper.buildbattle.handlers;
 
 import me.tomthedeveloper.buildbattle.User;
 import me.tomthedeveloper.buildbattle.game.GameInstance;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ import java.util.UUID;
  */
 public class UserManager {
 
-    private static HashMap<UUID, User> users = new HashMap<UUID, User>();
+    private static HashMap<UUID, User> users = new HashMap<>();
 
     public static User getUser(UUID uuid) {
         if(users.containsKey(uuid)) {
@@ -28,7 +27,7 @@ public class UserManager {
     }
 
     public static List<User> getUsers(GameInstance GameInstance) {
-        List<User> users = new ArrayList<User>();
+        List<User> users = new ArrayList<>();
         for(Player player : GameInstance.getPlayers()) {
             users.add(getUser(player.getUniqueId()));
         }

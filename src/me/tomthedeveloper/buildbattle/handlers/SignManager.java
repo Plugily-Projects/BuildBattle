@@ -33,7 +33,7 @@ public class SignManager extends BukkitRunnable implements Listener {
     public static String[] signlines = new String[]{"--------", "Waiting", "", "--------"};
     public GameAPI plugin;
     HashMap<Sign, GameInstance> signpool = new HashMap();
-    Queue<GameInstance> gamequeue = new LinkedList<GameInstance>();
+    Queue<GameInstance> gamequeue = new LinkedList<>();
 
 
     /*
@@ -111,8 +111,7 @@ public class SignManager extends BukkitRunnable implements Listener {
     if there is a game associated with the clicked sign.
      */
     public GameInstance getBySign(Sign sign) {
-        if(signpool.containsKey(sign)) return signpool.get(sign);
-        else return null;
+        return signpool.getOrDefault(sign, null);
     }
 
     /*
@@ -123,7 +122,6 @@ public class SignManager extends BukkitRunnable implements Listener {
     public void addToQueue(GameInstance instance) {
         if(!(gamequeue.contains(instance) || signpool.containsValue(instance) || signpool.values().contains(instance))) {
             gamequeue.add(instance);
-        } else {
         }
     }
 
@@ -247,14 +245,11 @@ public class SignManager extends BukkitRunnable implements Listener {
                         }
                         if(!b) {
                             event.getPlayer().sendMessage(plugin.getGameInstanceManager().getGameInstances().get(0).getChatManager().getMessage("FullGameAlreadyFullWithPermiumPlayers", ChatColor.RED + "This game is already full with premium players! Sorry"));
-                            return;
                         } else {
-                            return;
                         }
 
                     } else {
                         event.getPlayer().sendMessage(plugin.getGameInstanceManager().getGameInstances().get(0).getChatManager().getMessage("NoPermissionToJoinFullGames", "You don't have the permission to join full games!"));
-                        return;
                     }
                     // instance.joinAttempt(event.getPlayer());
 

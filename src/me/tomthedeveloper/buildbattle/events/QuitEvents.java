@@ -9,12 +9,12 @@ import org.bukkit.event.player.PlayerQuitEvent;
 /**
  * Created by Tom on 11/08/2014.
  */
-public class onQuit implements Listener {
+public class QuitEvents implements Listener {
 
 
     public GameAPI plugin;
 
-    public onQuit(GameAPI plugin) {
+    public QuitEvents(GameAPI plugin) {
         this.plugin = plugin;
     }
 

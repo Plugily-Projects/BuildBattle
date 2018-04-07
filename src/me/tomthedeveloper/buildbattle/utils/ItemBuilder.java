@@ -72,7 +72,7 @@ public class ItemBuilder {
         final ItemMeta meta = is.getItemMeta();
         List<String> lore = meta.getLore();
         if(lore == null) {
-            lore = new ArrayList<String>();
+            lore = new ArrayList<>();
         }
         lore.add(name);
         meta.setLore(lore);

@@ -19,6 +19,7 @@ import me.tomthedeveloper.buildbattle.particles.ParticleMenu;
 import me.tomthedeveloper.buildbattle.playerheads.PlayerHeadsMenu;
 import me.tomthedeveloper.buildbattle.stats.BuildBattleStats;
 import me.tomthedeveloper.buildbattle.stats.FileStats;
+import me.tomthedeveloper.buildbattle.stats.MySQLConnectionManager;
 import me.tomthedeveloper.buildbattle.stats.MySQLDatabase;
 import me.tomthedeveloper.buildbattle.stats.statsCommand;
 import net.milkbowl.vault.chat.Chat;
@@ -228,8 +229,7 @@ public class Main extends JavaPlugin implements CommandsInterface {
 
             UserManager.removeUser(player.getUniqueId());
         }
-
-
+        getMySQLDatabase().closeDatabase();
     }
 
     public boolean isDatabaseActivated() {

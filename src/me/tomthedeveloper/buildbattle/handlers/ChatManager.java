@@ -20,8 +20,8 @@ public class ChatManager {
     public static ChatColor NORMAL = ChatColor.GRAY;
     public static ChatColor HIGHLIGHTED = ChatColor.AQUA;
     private static FileConfiguration config = null;
-    private static HashMap<String, String> messages = new HashMap<String, String>();
-    public String GAMENAME = "Firemaster";
+    private static HashMap<String, String> messages = new HashMap<>();
+    public String GAMENAME;
     public String prefix;
     private GameInstance gameInstance;
 
@@ -29,8 +29,8 @@ public class ChatManager {
         this.gameInstance = gameInstance;
         config = ConfigurationManager.getConfig("language");
 
-        GAMENAME = getFromLanguageConfig("GAMENAME", gameInstance.getPlugin().getGameName());
-        prefix = getFromLanguageConfig("PREFIX", PREFIX + "[" + GAMENAME + "] " + this.NORMAL).replaceAll("(&([a-f0-9]))", "\u00A7$2").replaceAll("&l", ChatColor.BOLD.toString());
+        GAMENAME = getFromLanguageConfig("GAMENAME", GameInstance.getPlugin().getGameName());
+        prefix = getFromLanguageConfig("PREFIX", PREFIX + "[" + GAMENAME + "] " + NORMAL).replaceAll("(&([a-f0-9]))", "\u00A7$2").replaceAll("&l", ChatColor.BOLD.toString());
         loadMessages();
 
 
@@ -38,8 +38,8 @@ public class ChatManager {
 
     public ChatManager() {
 
-        GAMENAME = getFromLanguageConfig("GAMENAME", gameInstance.getPlugin().getGameName());
-        prefix = getFromLanguageConfig("PREFIX", PREFIX + "[" + GAMENAME + "] " + this.NORMAL).replaceAll("(&([a-f0-9]))", "\u00A7$2");
+        GAMENAME = getFromLanguageConfig("GAMENAME", GameInstance.getPlugin().getGameName());
+        prefix = getFromLanguageConfig("PREFIX", PREFIX + "[" + GAMENAME + "] " + NORMAL).replaceAll("(&([a-f0-9]))", "\u00A7$2");
     }
 
     public static String getFromLanguageConfig(String messageID, String defaultMessage) {
@@ -92,11 +92,11 @@ public class ChatManager {
         if(messages.containsKey(ID)) {
             String message = formatMessage(messages.get(ID));
             for(Player player : gameInstance.getPlayers()) {
-                player.sendMessage(getPrefix(gameInstance.getPlugin()) + message);
+                player.sendMessage(getPrefix(GameInstance.getPlugin()) + message);
             }
         } else {
             for(Player p : gameInstance.getPlayers()) {
-                p.sendMessage(getPrefix(gameInstance.getPlugin()) + ID);
+                p.sendMessage(getPrefix(GameInstance.getPlugin()) + ID);
             }
         }
 
@@ -146,7 +146,7 @@ public class ChatManager {
         } else if(messages.containsKey("Join")) {
             gameInstance.getChatManager().broadcastMessage("Join", p);
         } else {
-            gameInstance.getChatManager().broadcastMessage(this.HIGHLIGHTED + p.getName() + this.NORMAL + " joined the Game! (" + gameInstance.getPlayers().size() + "/" + gameInstance.getMAX_PLAYERS() + ")");
+            gameInstance.getChatManager().broadcastMessage(HIGHLIGHTED + p.getName() + NORMAL + " joined the Game! (" + gameInstance.getPlayers().size() + "/" + gameInstance.getMAX_PLAYERS() + ")");
         }
     }
 
@@ -156,28 +156,28 @@ public class ChatManager {
         } else if(messages.containsKey("Leave")) {
             gameInstance.getChatManager().broadcastMessage("Leave", p);
         } else {
-            gameInstance.getChatManager().broadcastMessage(this.HIGHLIGHTED + p.getName() + this.NORMAL + " left the Game! (" + gameInstance.getPlayers().size() + "/" + gameInstance.getMAX_PLAYERS() + ")");
+            gameInstance.getChatManager().broadcastMessage(HIGHLIGHTED + p.getName() + NORMAL + " left the Game! (" + gameInstance.getPlayers().size() + "/" + gameInstance.getMAX_PLAYERS() + ")");
         }
     }
 
     public void broadcastMessage(String messageID, Player player) {
         String message = formatMessage(messages.get(messageID), player);
         for(Player player1 : gameInstance.getPlayers()) {
-            player1.sendMessage(getPrefix(gameInstance.getPlugin()) + message);
+            player1.sendMessage(getPrefix(GameInstance.getPlugin()) + message);
         }
     }
 
     public void broadcastMessage(String messageID, OfflinePlayer player) {
         String message = formatMessage(messages.get(messageID), player);
         for(Player player1 : gameInstance.getPlayers()) {
-            player1.sendMessage(getPrefix(gameInstance.getPlugin()) + message);
+            player1.sendMessage(getPrefix(GameInstance.getPlugin()) + message);
         }
     }
 
     public void broadcastMessage(String messageID, int integer) {
         String message = formatMessage(messages.get(messageID), integer);
         for(Player player1 : gameInstance.getPlayers()) {
-            player1.sendMessage(getPrefix(gameInstance.getPlugin()) + message);
+            player1.sendMessage(getPrefix(GameInstance.getPlugin()) + message);
         }
     }
 
@@ -225,20 +225,20 @@ public class ChatManager {
     }
 
     public String getMessage(String ID, String defaultmessage, OfflinePlayer player) {
-        if(gameInstance.plugin.getPlugin().getServer().getPlayer(player.getUniqueId()) != null) {
+        if(GameInstance.plugin.getPlugin().getServer().getPlayer(player.getUniqueId()) != null) {
 
             if(messages.containsKey(ID)) {
-                return getMessage(ID, gameInstance.plugin.getPlugin().getServer().getPlayer(player.getUniqueId()));
+                return getMessage(ID, GameInstance.plugin.getPlugin().getServer().getPlayer(player.getUniqueId()));
             } else {
                 ChatManager.getFromLanguageConfig(ID, defaultmessage);
-                return getMessage(ID, gameInstance.plugin.getPlugin().getServer().getPlayer(player.getUniqueId()));
+                return getMessage(ID, GameInstance.plugin.getPlugin().getServer().getPlayer(player.getUniqueId()));
             }
         } else {
             if(messages.containsKey(ID)) {
-                return getMessage(ID, gameInstance.plugin.getPlugin().getServer().getOfflinePlayer(player.getUniqueId()));
+                return getMessage(ID, GameInstance.plugin.getPlugin().getServer().getOfflinePlayer(player.getUniqueId()));
             } else {
                 ChatManager.getFromLanguageConfig(ID, defaultmessage);
-                return getMessage(ID, gameInstance.plugin.getPlugin().getServer().getOfflinePlayer(player.getUniqueId()));
+                return getMessage(ID, GameInstance.plugin.getPlugin().getServer().getOfflinePlayer(player.getUniqueId()));
             }
         }
     }

@@ -2,11 +2,11 @@ package me.tomthedeveloper.buildbattle;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import me.tomthedeveloper.buildbattle.events.SetupInventoryEvents;
-import me.tomthedeveloper.buildbattle.events.onBuild;
+import me.tomthedeveloper.buildbattle.events.BuildEvents;
 import me.tomthedeveloper.buildbattle.events.onChatEvent;
-import me.tomthedeveloper.buildbattle.events.onJoin;
-import me.tomthedeveloper.buildbattle.events.onQuit;
-import me.tomthedeveloper.buildbattle.events.onSpectate;
+import me.tomthedeveloper.buildbattle.events.JoinEvents;
+import me.tomthedeveloper.buildbattle.events.QuitEvents;
+import me.tomthedeveloper.buildbattle.events.SpectatorEvents;
 import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.handlers.ChatManager;
 import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
@@ -116,9 +116,9 @@ public class GameAPI {
         ConfigurationManager.plugin = plugin;
         GameInstance.plugin = this;
         plugin.getServer().getPluginManager().registerEvents(this.getSignManager(), JavaPlugin.getPlugin(Main.class));
-        plugin.getServer().getPluginManager().registerEvents(new onBuild(this), JavaPlugin.getPlugin(Main.class));
-        plugin.getServer().getPluginManager().registerEvents(new onQuit(this), JavaPlugin.getPlugin(Main.class));
-        plugin.getServer().getPluginManager().registerEvents(new onSpectate(this), JavaPlugin.getPlugin(Main.class));
+        plugin.getServer().getPluginManager().registerEvents(new BuildEvents(this), JavaPlugin.getPlugin(Main.class));
+        plugin.getServer().getPluginManager().registerEvents(new QuitEvents(this), JavaPlugin.getPlugin(Main.class));
+        plugin.getServer().getPluginManager().registerEvents(new SpectatorEvents(this), JavaPlugin.getPlugin(Main.class));
         plugin.getServer().getPluginManager().registerEvents(new onChatEvent(this), JavaPlugin.getPlugin(Main.class));
 
 
@@ -126,14 +126,14 @@ public class GameAPI {
         JSONWriter.plugin = this;
         me.tomthedeveloper.buildbattle.handlers.JSONReader.plugin = getPlugin();
 
-        plugin.getServer().getPluginManager().registerEvents(new onSpectate(this), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new SpectatorEvents(this), plugin);
         // plugin.getServer().getPluginManager().registerEvents(new onDoubleJump(this), plugin);
         if(!this.getAllowBuilding()) {
-            plugin.getServer().getPluginManager().registerEvents(new onBuild(this), plugin);
+            plugin.getServer().getPluginManager().registerEvents(new BuildEvents(this), plugin);
         }
-        plugin.getServer().getPluginManager().registerEvents(new onQuit(this), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new QuitEvents(this), plugin);
         plugin.getServer().getPluginManager().registerEvents(new SetupInventoryEvents(this), plugin);
-        plugin.getServer().getPluginManager().registerEvents(new onJoin(this), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new JoinEvents(this), plugin);
 
         loadLanguageFile();
         loadInstanceConfig();

@@ -12,7 +12,7 @@ import java.util.List;
 public class GameInstanceManager {
 
     private static GameInstanceManager gameInstanceManager;
-    private List<GameInstance> gameInstances = new ArrayList<GameInstance>();
+    private List<GameInstance> gameInstances = new ArrayList<>();
 
     public GameInstanceManager() {
 

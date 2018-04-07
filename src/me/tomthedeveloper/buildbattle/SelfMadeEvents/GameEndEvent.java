@@ -1,4 +1,4 @@
-package me.tomthedeveloper.buildbattle.SelfMadeEvents;
+package me.tomthedeveloper.buildbattle.selfmadeevents;
 
 import me.tomthedeveloper.buildbattle.instance.BuildInstance;
 import org.bukkit.event.Event;

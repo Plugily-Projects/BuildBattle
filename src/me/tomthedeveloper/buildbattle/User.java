@@ -18,8 +18,8 @@ public class User {
     private ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
     private UUID uuid;
     private boolean spectator = false;
-    private HashMap<String, Integer> ints = new HashMap<String, Integer>();
-    private HashMap<String, Object> objects = new HashMap<String, Object>();
+    private HashMap<String, Integer> ints = new HashMap<>();
+    private HashMap<String, Object> objects = new HashMap<>();
 
     public User(UUID uuid) {
         this.uuid = uuid;

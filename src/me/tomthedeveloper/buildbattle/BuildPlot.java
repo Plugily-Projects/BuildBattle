@@ -72,10 +72,6 @@ public class BuildPlot {
         this.uuid = player;
     }
 
-    public boolean isOwner(UUID uuid) {
-        return uuid.equals(uuid);
-    }
-
     public void reset() {
         CuboidSelection cuboidSelection = new CuboidSelection(getMAXPOINT().getWorld(), getMAXPOINT(), getMINPOINT());
         com.sk89q.worldedit.Vector min = cuboidSelection.getNativeMinimumPoint();
@@ -106,7 +102,7 @@ public class BuildPlot {
     }
 
     public Location getCenter() {
-        double x, y, z = 0;
+        double x, y, z;
         if(getMINPOINT().getX() > getMAXPOINT().getX()) {
             x = getMAXPOINT().getX() + ((getMINPOINT().getX() - getMAXPOINT().getX()) / 2);
         } else {
@@ -156,7 +152,7 @@ public class BuildPlot {
     }
 
     private void changeFloor(Material material) {
-        double y = 0;
+        double y;
         if(getMINPOINT().getY() > getMAXPOINT().getY()) {
             y = getMAXPOINT().getY() - 1;
         } else {
@@ -202,7 +198,7 @@ public class BuildPlot {
     public void changeFloor(Material material, byte data) {
         if(material == Material.WATER_BUCKET) material = Material.WATER;
         if(material == Material.LAVA_BUCKET) material = Material.LAVA;
-        double y = 0;
+        double y;
         if(getMINPOINT().getY() > getMAXPOINT().getY()) {
             y = getMAXPOINT().getY() - 1;
         } else {

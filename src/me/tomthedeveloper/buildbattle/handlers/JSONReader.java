@@ -36,9 +36,7 @@ public class JSONReader {
         try {
             System.out.print(plugin.getDataFolder().toString());
             jsonObject = (JSONObject) parser.parse(new FileReader(file));
-        } catch(IOException e) {
-            e.printStackTrace();
-        } catch(ParseException e) {
+        } catch(IOException | ParseException e) {
             e.printStackTrace();
         }
     }

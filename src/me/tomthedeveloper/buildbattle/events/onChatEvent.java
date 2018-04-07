@@ -30,7 +30,7 @@ public class onChatEvent implements Listener {
         }
 
         event.getRecipients().clear();
-        event.getRecipients().addAll((Collection) plugin.getGameInstanceManager().getGameInstance(event.getPlayer()).getPlayers());
+        event.getRecipients().addAll(plugin.getGameInstanceManager().getGameInstance(event.getPlayer()).getPlayers());
 
     }
 }

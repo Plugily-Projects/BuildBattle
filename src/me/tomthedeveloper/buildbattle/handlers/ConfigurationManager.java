@@ -68,8 +68,6 @@ public class ConfigurationManager {
                 System.out.print("[GameAPI]: Shutting down server! Fix this format error and restart it again.");
                 Bukkit.getServer().shutdown();
 
-            } catch(FileNotFoundException e) {
-                e.printStackTrace();
             } catch(IOException e) {
                 e.printStackTrace();
             }
@@ -100,8 +98,6 @@ public class ConfigurationManager {
             Bukkit.shutdown();
             return null;
 
-        } catch(FileNotFoundException e) {
-            e.printStackTrace();
         } catch(IOException e) {
             e.printStackTrace();
         }

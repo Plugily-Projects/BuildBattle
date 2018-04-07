@@ -9,11 +9,11 @@ import org.bukkit.event.block.BlockPlaceEvent;
 /**
  * Created by Tom on 9/08/2014.
  */
-public class onBuild implements Listener {
+public class BuildEvents implements Listener {
 
     private GameAPI plugin;
 
-    public onBuild(GameAPI plugin) {
+    public BuildEvents(GameAPI plugin) {
         this.plugin = plugin;
     }
 

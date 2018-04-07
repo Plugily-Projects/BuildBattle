@@ -22,11 +22,11 @@ import org.bukkit.event.player.PlayerShearEntityEvent;
 /**
  * Created by Tom on 1/08/2014.
  */
-public class onSpectate implements Listener {
+public class SpectatorEvents implements Listener {
 
     private GameAPI plugin;
 
-    public onSpectate(GameAPI plugin) {
+    public SpectatorEvents(GameAPI plugin) {
         this.plugin = plugin;
     }
 

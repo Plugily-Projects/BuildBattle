@@ -142,23 +142,20 @@ public class NormalEvents implements Listener {
         } */
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            boolean b = false;
             MySQLDatabase database = plugin.getMySQLDatabase();
             ResultSet resultSet = database.executeQuery("SELECT UUID from buildbattlestats WHERE UUID='" + playername + "'");
             try {
                 if(!resultSet.next()) {
                     database.insertPlayer(playername);
-                    b = true;
                     return;
                 }
-
-                int gamesplayed = 0;
-                int wins = 0;
-                int highestwin = 0;
-                int loses = 0;
-                int blocksPlaced = 0;
-                int blocksBroken = 0;
-                int particles = 0;
+                int gamesplayed;
+                int wins;
+                int highestwin;
+                int loses;
+                int blocksPlaced;
+                int blocksBroken;
+                int particles;
                 gamesplayed = database.getStat(player.getUniqueId().toString(), "gamesplayed");
                 wins = database.getStat(player.getUniqueId().toString(), "wins");
                 loses = database.getStat(player.getUniqueId().toString(), "loses");
@@ -175,47 +172,9 @@ public class NormalEvents implements Listener {
                 user1.setInt("blocksplaced", blocksPlaced);
                 user1.setInt("blocksbroken", blocksBroken);
                 user1.setInt("particles", particles);
-                b = true;
             } catch(SQLException e1) {
                 System.out.print("CONNECTION FAILED FOR PLAYER " + playername);
                 //e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-            if(b = false) {
-                try {
-                    if(!resultSet.next()) {
-                        database.insertPlayer(playername);
-                        b = true;
-                        return;
-                    }
-
-                    int gamesplayed = 0;
-                    int wins = 0;
-                    int highestwin = 0;
-                    int loses = 0;
-                    int blocksPlaced = 0;
-                    int blocksBroken = 0;
-                    int particles = 0;
-                    gamesplayed = database.getStat(player.getUniqueId().toString(), "gamesplayed");
-                    wins = database.getStat(player.getUniqueId().toString(), "wins");
-                    loses = database.getStat(player.getUniqueId().toString(), "loses");
-                    highestwin = database.getStat(player.getUniqueId().toString(), "highestwin");
-                    blocksPlaced = database.getStat(player.getUniqueId().toString(), "blocksplaced");
-                    blocksBroken = database.getStat(player.getUniqueId().toString(), "blocksbroken");
-                    particles = database.getStat(player.getUniqueId().toString(), "particles");
-                    User user1 = UserManager.getUser(player.getUniqueId());
-
-                    user1.setInt("gamesplayed", gamesplayed);
-                    user1.setInt("wins", wins);
-                    user1.setInt("highestwin", highestwin);
-                    user1.setInt("loses", loses);
-                    user1.setInt("blocksplaced", blocksPlaced);
-                    user1.setInt("blocksbroken", blocksBroken);
-                    user1.setInt("particles", particles);
-                    b = true;
-                } catch(SQLException e1) {
-                    System.out.print("CONNECTION FAILED TWICE FOR PLAYER " + playername);
-                    //e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                }
             }
         });
 

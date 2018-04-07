@@ -31,7 +31,7 @@ public enum BuildBattleStats {
     private static Map sortByValue(Map unsortMap) {
         List list = new LinkedList(unsortMap.entrySet());
 
-        list.sort((Comparator) (o1, o2) -> ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue()));
+        list.sort((o1, o2) -> ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue()));
 
         Map sortedMap = new LinkedHashMap();
         for(Iterator it = list.iterator(); it.hasNext(); ) {

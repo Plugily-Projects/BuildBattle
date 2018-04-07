@@ -30,16 +30,16 @@ import java.util.UUID;
 public abstract class GameInstance extends BukkitRunnable {
 
     public static GameAPI plugin;
-    protected HashMap<GameState, String[]> signlines = new HashMap<GameState, String[]>();
+    protected HashMap<GameState, String[]> signlines = new HashMap<>();
     protected String[] FULLlines;
-    private HashSet<Location> signs = new HashSet<Location>();
+    private HashSet<Location> signs = new HashSet<>();
     private GameState gameState;
     private int MIN_PLAYERS = 2;
     private int MAX_PLAYERS = 10;
     private String mapname = "";
     private int timer;
     private String schematicName;
-    private String ID = null;
+    private String ID;
     private InstanceType type;
 
     private Location lobbyloc = null;
@@ -59,7 +59,7 @@ public abstract class GameInstance extends BukkitRunnable {
         chatManager = new ChatManager(this);
 
         this.ID = ID;
-        players = new HashSet<UUID>();
+        players = new HashSet<>();
         loadSignLines();
 
     }
@@ -108,7 +108,7 @@ public abstract class GameInstance extends BukkitRunnable {
     public void removePlayer(Player player) {
         if(player == null) return;
         if(player.getUniqueId() == null) return;
-        if(players.contains(player.getUniqueId())) players.remove(player.getUniqueId());
+        players.remove(player.getUniqueId());
     }
 
     public void clearPlayers() {
@@ -320,9 +320,9 @@ public abstract class GameInstance extends BukkitRunnable {
     }
 
     public HashSet<Player> getPlayers() {
-        HashSet<Player> list = new HashSet<Player>();
+        HashSet<Player> list = new HashSet<>();
         for(UUID uuid : players) {
-            list.add((Player) Bukkit.getPlayer(uuid));
+            list.add(Bukkit.getPlayer(uuid));
         }
 
         return list;

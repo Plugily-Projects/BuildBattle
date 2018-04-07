@@ -80,7 +80,7 @@ public class SignCommands implements CommandExecutor {
     }
 
     public List<Sign> getSigns() {
-        List<Sign> list = new ArrayList<Sign>();
+        List<Sign> list = new ArrayList<>();
         for(String s : plugin.getPlugin().getConfig().getConfigurationSection("signs").getKeys(false)) {
             s = "signs." + s;
             Location location = plugin.getLocation(s);

@@ -54,16 +54,16 @@ public class InstanceCommands implements CommandExecutor {
                 player.sendMessage(ChatColor.RED + "ARENA DOES NOT EXIST!");
                 return true;
             } else {
-                Location location = player.getTargetBlock((HashSet<Material>) null, 10).getLocation();
+                Location location = player.getTargetBlock(null, 10).getLocation();
                 if(location.getBlock().getState() instanceof Sign) {
                     GameInstance gameInstance = plugin.getGameInstanceManager().getGameInstance(strings[0]);
                     int keys = 0;
                     if(plugin.getPlugin().getConfig().contains("signs." + gameInstance.getID())) {
                         keys = plugin.getPlugin().getConfig().getConfigurationSection("signs." + gameInstance.getID()).getKeys(false).size();
                     }
-                    plugin.saveLoc("newsigns." + gameInstance.getID() + "." + (keys + 1), player.getTargetBlock((HashSet<Material>) null, 10).getLocation());
+                    plugin.saveLoc("newsigns." + gameInstance.getID() + "." + (keys + 1), player.getTargetBlock(null, 10).getLocation());
                     player.sendMessage(ChatColor.GREEN + "SIGN ADDED!");
-                    gameInstance.addSign(player.getTargetBlock((HashSet<Material>) null, 10).getLocation());
+                    gameInstance.addSign(player.getTargetBlock(null, 10).getLocation());
                 } else {
                     player.sendMessage(ChatColor.RED + "You have to look at a sign to perform this command!");
                 }
@@ -194,12 +194,11 @@ public class InstanceCommands implements CommandExecutor {
         }
         if(plugin.getPlugin().getConfig().contains("instances." + strings[1])) {
             player.sendMessage(ChatColor.DARK_RED + "Instance/Arena already exists! Use another ID or delete it first!");
-            return;
         } else {
             createInstanceInConfig(strings[1]);
 
             player.sendMessage(ChatColor.GREEN + "Instances/Arena successfully created! Restart or reload the server to start the arena!");
-            player.sendMessage(ChatColor.RED.BOLD + "--------------- INFORMATION --------------- ");
+            player.sendMessage(ChatColor.BOLD + "--------------- INFORMATION --------------- ");
             player.sendMessage(ChatColor.GREEN + "WORLD: " + ChatColor.RED + strings[1]);
             player.sendMessage(ChatColor.GREEN + "MAX PLAYERS: " + ChatColor.RED + plugin.getPlugin().getConfig().getInt("instances.default.minimumplayers"));
             player.sendMessage(ChatColor.GREEN + "MIN PLAYERS: " + ChatColor.RED + plugin.getPlugin().getConfig().getInt("instances.default.maximumplayers"));
@@ -207,9 +206,8 @@ public class InstanceCommands implements CommandExecutor {
             player.sendMessage(ChatColor.GREEN + "LOBBY LOCATION " + ChatColor.RED + Util.locationToString(plugin.getLocation("instances." + strings[1] + ".lobbylocation")));
             player.sendMessage(ChatColor.GREEN + "Start LOCATION " + ChatColor.RED + Util.locationToString(plugin.getLocation("instances." + strings[1] + ".Startlocation")));
             player.sendMessage(ChatColor.GREEN + "End LOCATION " + ChatColor.RED + Util.locationToString(plugin.getLocation("instances." + strings[1] + ".Endlocation")));
-            player.sendMessage(ChatColor.RED.BOLD + "------------------------------------------- ");
+            player.sendMessage(ChatColor.BOLD + "------------------------------------------- ");
             player.sendMessage(ChatColor.RED + "You can edit this game instances in the config!");
-            return;
         }
     }
 

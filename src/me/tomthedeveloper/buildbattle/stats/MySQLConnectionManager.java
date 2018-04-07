@@ -70,9 +70,7 @@ public class MySQLConnectionManager {
     }
 
     public void shutdownConnPool() {
-
         try {
-
             plugin.getLogger().info("Shutting down connection pool. Trying to close all connections.");
             if(connectionPool != null) {
                 connectionPool.shutdown(); //this method must be called only once when the application stops.
@@ -86,8 +84,6 @@ public class MySQLConnectionManager {
     }
 
     public Connection getConnection() {
-
-
         Connection conn = null;
         try {
             conn = getConnectionPool().getConnection();
@@ -98,24 +94,6 @@ public class MySQLConnectionManager {
             e.printStackTrace();
         }
         return conn;
-
-    }
-
-    public void closeStatement(Statement stmt) {
-        try {
-            if(stmt != null) stmt.close();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public void closeResultSet(ResultSet rSet) {
-        try {
-            if(rSet != null) rSet.close();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
 
     }
 
@@ -131,10 +109,6 @@ public class MySQLConnectionManager {
 
     private BoneCP getConnectionPool() {
         return connectionPool;
-    }
-
-    public void setConnectionPool(BoneCP connectionPool) {
-        connectionPool = connectionPool;
     }
 
 }

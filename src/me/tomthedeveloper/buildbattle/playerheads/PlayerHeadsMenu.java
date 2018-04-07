@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -69,7 +70,7 @@ public class PlayerHeadsMenu {
                 config.set("example.data", SkullType.PLAYER.ordinal());
                 config.set("example.displayname", "&6" + "Animals");
                 config.set("example.owner", "MHF_Pig");
-                config.set("example.lore", Arrays.asList(ChatFormatter.formatMessage("&7Click to select")));
+                config.set("example.lore", Collections.singletonList(ChatFormatter.formatMessage("&7Click to select")));
                 config.set("example.material", Material.SKULL_ITEM.getId());
                 config.set("example.enabled", true);
                 config.set("example.slot", 7);
