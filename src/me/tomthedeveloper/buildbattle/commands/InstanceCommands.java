@@ -5,20 +5,17 @@ import me.tomthedeveloper.buildbattle.GameAPI;
 import me.tomthedeveloper.buildbattle.events.PlayerAddCommandEvent;
 import me.tomthedeveloper.buildbattle.events.PlayerAddSpawnCommandEvent;
 import me.tomthedeveloper.buildbattle.game.GameInstance;
-import me.tomthedeveloper.buildbattle.utils.Util;
 import me.tomthedeveloper.buildbattle.setup.SetupInventory;
+import me.tomthedeveloper.buildbattle.utils.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.HashSet;
 
 /**
  * Created by Tom on 7/08/2014.

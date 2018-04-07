@@ -15,6 +15,7 @@ public class BuildEvents implements Listener {
 
     public BuildEvents(GameAPI plugin) {
         this.plugin = plugin;
+        plugin.getPlugin().getServer().getPluginManager().registerEvents(this, plugin.getPlugin());
     }
 
     @EventHandler
@@ -22,10 +23,7 @@ public class BuildEvents implements Listener {
         if(plugin.getAllowBuilding()) return;
         if(plugin.getGameInstanceManager().getGameInstance(event.getPlayer()) == null) return;
         event.setCancelled(true);
-
-
     }
-
 
     @EventHandler
     public void onBreak(BlockBreakEvent event) {

@@ -3,7 +3,6 @@ package me.tomthedeveloper.buildbattle;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import me.tomthedeveloper.buildbattle.events.SetupInventoryEvents;
 import me.tomthedeveloper.buildbattle.events.BuildEvents;
-import me.tomthedeveloper.buildbattle.events.onChatEvent;
 import me.tomthedeveloper.buildbattle.events.JoinEvents;
 import me.tomthedeveloper.buildbattle.events.QuitEvents;
 import me.tomthedeveloper.buildbattle.events.SpectatorEvents;
@@ -92,10 +91,7 @@ public class GameAPI {
 
     public void onSetup(Main plugin, CommandsInterface commandsInterface) {
         this.plugin = plugin;
-
-        System.out.print("GAMEAPI LOADED!");
         version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
-        onPreStart();
         ConfigurationManager.plugin = plugin;
         signManager = new SignManager(this);
         gameInstanceManager = new GameInstanceManager();
@@ -108,45 +104,26 @@ public class GameAPI {
             plugin.saveConfig();
         }
         bar = plugin.getConfig().getBoolean("bar");
-
-       /* if(bar){
-            BossBar.plugin = this;
-        } */
-
-        ConfigurationManager.plugin = plugin;
         GameInstance.plugin = this;
-        plugin.getServer().getPluginManager().registerEvents(this.getSignManager(), JavaPlugin.getPlugin(Main.class));
-        plugin.getServer().getPluginManager().registerEvents(new BuildEvents(this), JavaPlugin.getPlugin(Main.class));
-        plugin.getServer().getPluginManager().registerEvents(new QuitEvents(this), JavaPlugin.getPlugin(Main.class));
-        plugin.getServer().getPluginManager().registerEvents(new SpectatorEvents(this), JavaPlugin.getPlugin(Main.class));
-        plugin.getServer().getPluginManager().registerEvents(new onChatEvent(this), JavaPlugin.getPlugin(Main.class));
-
-
         User.plugin = this;
         JSONWriter.plugin = this;
         me.tomthedeveloper.buildbattle.handlers.JSONReader.plugin = getPlugin();
 
         plugin.getServer().getPluginManager().registerEvents(new SpectatorEvents(this), plugin);
-        // plugin.getServer().getPluginManager().registerEvents(new onDoubleJump(this), plugin);
         if(!this.getAllowBuilding()) {
             plugin.getServer().getPluginManager().registerEvents(new BuildEvents(this), plugin);
         }
         plugin.getServer().getPluginManager().registerEvents(new QuitEvents(this), plugin);
         plugin.getServer().getPluginManager().registerEvents(new SetupInventoryEvents(this), plugin);
-        plugin.getServer().getPluginManager().registerEvents(new JoinEvents(this), plugin);
+        plugin.getServer().getPluginManager().registerEvents(this.getSignManager(), JavaPlugin.getPlugin(Main.class));
 
         loadLanguageFile();
         loadInstanceConfig();
         loadSigns();
-
-        onStart();
         plugin.saveConfig();
         ChatManager.getFromLanguageConfig("Unlocks-at-level", ChatColor.GREEN + "Unlocks at level %NUMBER% ");
         if(plugin.getConfig().getBoolean("BungeeActivated")) {
-
             plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
-
-            setupBungee();
         }
 
         if(!plugin.getConfig().contains("Disable-Leave-Command")) {
@@ -159,16 +136,6 @@ public class GameAPI {
         plugin.getCommand(this.getGameName()).setExecutor(new me.tomthedeveloper.buildbattle.commands.InstanceCommands(this, commandsInterface));
         plugin.getCommand("addsigns").setExecutor(new me.tomthedeveloper.buildbattle.commands.SignCommands(this));
     }
-
-    public void onPreStart() {}
-
-    public boolean areKitsEnabled() {
-        return kitsenabled;
-    }
-
-    ;
-
-    public void onStart() {}
 
     public String getGameName() {
         return name;
@@ -265,20 +232,5 @@ public class GameAPI {
     public void setAbreviation(String abreviation) {
         this.abreviation = abreviation;
     }
-
-    public void setupBungee() {
-        FileConfiguration fileConfiguration = ConfigurationManager.getConfig("Bungee");
-
-        if(!fileConfiguration.contains("Hub")) {
-            fileConfiguration.set("Hub", "Hub");
-            try {
-                fileConfiguration.save(ConfigurationManager.getFile("Bungee"));
-            } catch(IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
-
 
 }

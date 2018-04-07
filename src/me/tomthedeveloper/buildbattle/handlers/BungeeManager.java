@@ -27,7 +27,6 @@ public class BungeeManager implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-
     public void connectToHub(Player player) {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Connect");
@@ -36,7 +35,7 @@ public class BungeeManager implements Listener {
     }
 
     public String getHubServerName() {
-        return ConfigurationManager.getConfig("Bungee").getString("Hub");
+        return ConfigurationManager.getConfig("bungee").getString("Hub");
     }
 
     private String getMOTD() {

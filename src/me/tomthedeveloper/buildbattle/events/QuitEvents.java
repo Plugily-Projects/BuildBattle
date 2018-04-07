@@ -11,11 +11,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
  */
 public class QuitEvents implements Listener {
 
-
     public GameAPI plugin;
 
     public QuitEvents(GameAPI plugin) {
         this.plugin = plugin;
+        plugin.getPlugin().getServer().getPluginManager().registerEvents(this, plugin.getPlugin());
     }
 
     @EventHandler

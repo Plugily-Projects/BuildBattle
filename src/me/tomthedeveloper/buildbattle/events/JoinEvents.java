@@ -16,6 +16,7 @@ public class JoinEvents implements Listener {
 
     public JoinEvents(GameAPI plugin) {
         this.plugin = plugin;
+        plugin.getPlugin().getServer().getPluginManager().registerEvents(this, plugin.getPlugin());
     }
 
 

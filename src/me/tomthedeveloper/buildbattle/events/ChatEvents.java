@@ -11,12 +11,13 @@ import java.util.Collection;
 /**
  * Created by Tom on 13/08/2014.
  */
-public class onChatEvent implements Listener {
+public class ChatEvents implements Listener {
 
     private GameAPI plugin;
 
-    public onChatEvent(GameAPI plugin) {
+    public ChatEvents(GameAPI plugin) {
         this.plugin = plugin;
+        plugin.getPlugin().getServer().getPluginManager().registerEvents(this, plugin.getPlugin());
     }
 
     @EventHandler
@@ -28,9 +29,7 @@ public class onChatEvent implements Listener {
 
             }
         }
-
         event.getRecipients().clear();
         event.getRecipients().addAll(plugin.getGameInstanceManager().getGameInstance(event.getPlayer()).getPlayers());
-
     }
 }

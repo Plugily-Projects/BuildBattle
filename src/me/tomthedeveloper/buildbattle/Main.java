@@ -2,6 +2,11 @@ package me.tomthedeveloper.buildbattle;
 
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import com.sk89q.worldedit.bukkit.selections.Selection;
+import me.tomthedeveloper.buildbattle.events.BuildEvents;
+import me.tomthedeveloper.buildbattle.events.JoinEvents;
+import me.tomthedeveloper.buildbattle.events.QuitEvents;
+import me.tomthedeveloper.buildbattle.events.SpectatorEvents;
+import me.tomthedeveloper.buildbattle.events.ChatEvents;
 import me.tomthedeveloper.buildbattle.handlers.BungeeManager;
 import me.tomthedeveloper.buildbattle.entities.EntityItem;
 import me.tomthedeveloper.buildbattle.entities.EntityMenuEvents;
@@ -10,6 +15,7 @@ import me.tomthedeveloper.buildbattle.events.NormalEvents;
 import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.game.GameState;
 import me.tomthedeveloper.buildbattle.handlers.ChatManager;
+import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
 import me.tomthedeveloper.buildbattle.handlers.InventoryManager;
 import me.tomthedeveloper.buildbattle.handlers.UserManager;
 import me.tomthedeveloper.buildbattle.instance.BuildInstance;
@@ -19,10 +25,8 @@ import me.tomthedeveloper.buildbattle.particles.ParticleMenu;
 import me.tomthedeveloper.buildbattle.playerheads.PlayerHeadsMenu;
 import me.tomthedeveloper.buildbattle.stats.BuildBattleStats;
 import me.tomthedeveloper.buildbattle.stats.FileStats;
-import me.tomthedeveloper.buildbattle.stats.MySQLConnectionManager;
 import me.tomthedeveloper.buildbattle.stats.MySQLDatabase;
 import me.tomthedeveloper.buildbattle.stats.statsCommand;
-import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
@@ -30,7 +34,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -38,6 +41,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -47,15 +51,14 @@ public class Main extends JavaPlugin implements CommandsInterface {
 
     private static Economy econ = null;
     private static Permission perms = null;
-    private static Chat chat = null;
     private boolean databaseActivated = false;
     private MySQLDatabase database;
-    private FileConfiguration statsConfig = null;
     private FileStats fileStats;
     private GameAPI gameAPI = new GameAPI();
     private BungeeManager bungeeManager;
     private InventoryManager inventoryManager;
     private boolean inventoryManagerEnabled;
+    private List<String> filesToGenerate = Arrays.asList("EntityMenu", "particles", "scoreboard", "signModification", "SpecialItems", "STATS", "voteItems");
 
     public BungeeManager getBungeeManager() {
         return bungeeManager;
@@ -139,14 +142,17 @@ public class Main extends JavaPlugin implements CommandsInterface {
 
     @Override
     public void onEnable() {
-        gameAPI.onPreStart();
         gameAPI.setGameName("BuildBattle");
         gameAPI.setAbreviation("BD");
         gameAPI.setAllowBuilding(true);
+        initializateClasses();
         bungeeManager = new BungeeManager(this);
         inventoryManager = new InventoryManager(this);
         inventoryManagerEnabled = getConfig().getBoolean("InventoryManager");
         gameAPI.onSetup(this, this);
+        for(String s : filesToGenerate){
+            ConfigurationManager.getConfig(s);
+        }
         new ConfigPreferences(this);
         ConfigPreferences.loadOptions();
         ConfigPreferences.loadOptions();
@@ -183,8 +189,6 @@ public class Main extends JavaPlugin implements CommandsInterface {
         if(ConfigPreferences.isVaultEnabled()) {
             if(setupEconomy()) System.out.print("NO ECONOMY RELATED TO VAULT FOUND!");
         }
-
-
     }
 
     @Override
@@ -203,7 +207,6 @@ public class Main extends JavaPlugin implements CommandsInterface {
             temp.add("blocksbroken");
             temp.add("particles");
             for(final String s : temp) {
-
                 if(this.isDatabaseActivated()) {
                     int i;
                     try {
@@ -212,24 +215,26 @@ public class Main extends JavaPlugin implements CommandsInterface {
                         i = 0;
                         System.out.print("COULDN'T GET STATS FROM PLAYER: " + player.getName());
                     }
-
                     if(i > user.getInt(s)) {
                         getMySQLDatabase().setStat(player.getUniqueId().toString(), s, user.getInt(s) + i);
                     } else {
                         getMySQLDatabase().setStat(player.getUniqueId().toString(), s, user.getInt(s));
                     }
-
-
                 } else {
                     getFileStats().saveStat(player, s);
                 }
-
-
             }
-
             UserManager.removeUser(player.getUniqueId());
         }
         getMySQLDatabase().closeDatabase();
+    }
+
+    private void initializateClasses(){
+        new BuildEvents(gameAPI);
+        new QuitEvents(gameAPI);
+        new SpectatorEvents(gameAPI);
+        new ChatEvents(gameAPI);
+        new JoinEvents(gameAPI);
     }
 
     public boolean isDatabaseActivated() {

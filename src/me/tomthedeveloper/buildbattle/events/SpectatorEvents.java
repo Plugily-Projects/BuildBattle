@@ -28,6 +28,7 @@ public class SpectatorEvents implements Listener {
 
     public SpectatorEvents(GameAPI plugin) {
         this.plugin = plugin;
+        plugin.getPlugin().getServer().getPluginManager().registerEvents(this, plugin.getPlugin());
     }
 
 

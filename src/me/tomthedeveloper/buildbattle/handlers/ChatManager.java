@@ -32,12 +32,9 @@ public class ChatManager {
         GAMENAME = getFromLanguageConfig("GAMENAME", GameInstance.getPlugin().getGameName());
         prefix = getFromLanguageConfig("PREFIX", PREFIX + "[" + GAMENAME + "] " + NORMAL).replaceAll("(&([a-f0-9]))", "\u00A7$2").replaceAll("&l", ChatColor.BOLD.toString());
         loadMessages();
-
-
     }
 
     public ChatManager() {
-
         GAMENAME = getFromLanguageConfig("GAMENAME", GameInstance.getPlugin().getGameName());
         prefix = getFromLanguageConfig("PREFIX", PREFIX + "[" + GAMENAME + "] " + NORMAL).replaceAll("(&([a-f0-9]))", "\u00A7$2");
     }
