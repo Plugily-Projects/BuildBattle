@@ -3,14 +3,12 @@ package me.tomthedeveloper.buildbattle;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import me.tomthedeveloper.buildbattle.events.SetupInventoryEvents;
 import me.tomthedeveloper.buildbattle.events.BuildEvents;
-import me.tomthedeveloper.buildbattle.events.JoinEvents;
 import me.tomthedeveloper.buildbattle.events.QuitEvents;
 import me.tomthedeveloper.buildbattle.events.SpectatorEvents;
 import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.handlers.ChatManager;
 import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
 import me.tomthedeveloper.buildbattle.handlers.GameInstanceManager;
-import me.tomthedeveloper.buildbattle.handlers.JSONWriter;
 import me.tomthedeveloper.buildbattle.handlers.SignManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -105,8 +103,6 @@ public class GameAPI {
         bar = plugin.getConfig().getBoolean("bar");
         GameInstance.plugin = this;
         User.plugin = this;
-        JSONWriter.plugin = this;
-        me.tomthedeveloper.buildbattle.handlers.JSONReader.plugin = getPlugin();
 
         plugin.getServer().getPluginManager().registerEvents(new SpectatorEvents(this), plugin);
         if(!this.getAllowBuilding()) {
