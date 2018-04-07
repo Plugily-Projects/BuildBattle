@@ -1,7 +1,6 @@
 package me.tomthedeveloper.buildbattle.commands;
 
 import me.tomthedeveloper.buildbattle.GameAPI;
-import me.tomthedeveloper.buildbattle.bungee.BungeeManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

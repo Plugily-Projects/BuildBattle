@@ -32,7 +32,6 @@ public class BuildBattleEntity {
 
     private Entity entity;
 
-
     public BuildBattleEntity(Entity entity) {
         this.entity = entity;
     }

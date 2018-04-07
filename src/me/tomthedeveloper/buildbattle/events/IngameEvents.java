@@ -6,7 +6,6 @@ import me.tomthedeveloper.buildbattle.GameAPI;
 import me.tomthedeveloper.buildbattle.Main;
 import me.tomthedeveloper.buildbattle.User;
 import me.tomthedeveloper.buildbattle.VoteItems;
-import me.tomthedeveloper.buildbattle.bungee.BungeeManager;
 import me.tomthedeveloper.buildbattle.entities.BuildBattleEntity;
 import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.game.GameState;
@@ -119,7 +118,6 @@ public class IngameEvents implements Listener {
         String key = SpecialItemManager.getRelatedSpecialItem(itemStack);
         if(key == null) return;
         if(SpecialItemManager.getRelatedSpecialItem(itemStack).equalsIgnoreCase("Leave")) {
-
             event.setCancelled(true);
             if(gameAPI.isBungeeActivated()) {
                 plugin.getBungeeManager().connectToHub(event.getPlayer());

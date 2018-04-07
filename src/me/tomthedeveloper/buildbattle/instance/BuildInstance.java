@@ -147,8 +147,8 @@ public class BuildInstance extends GameInstance {
             plugin.getPlugin().getInventoryManager().loadInventory(p);
 
         } */
-        if(plugin.isInventoryManagerEnabled()) {
-            plugin.getInventoryManager().loadInventory(p);
+        if(plugin.getPlugin().isInventoryManagerEnabled()) {
+            plugin.getPlugin().getInventoryManager().loadInventory(p);
         }
         p.setGameMode(GameMode.SURVIVAL);
         for(Player player : plugin.getPlugin().getServer().getOnlinePlayers()) {
@@ -320,8 +320,8 @@ public class BuildInstance extends GameInstance {
                         player.setAllowFlight(false);
                         ArmorHelper.clearArmor(player);
                         UserManager.getUser(player.getUniqueId()).addInt("gamesplayed", 1);
-                        if(plugin.isInventoryManagerEnabled()) {
-                            plugin.getInventoryManager().loadInventory(player);
+                        if(plugin.getPlugin().isInventoryManagerEnabled()) {
+                            plugin.getPlugin().getInventoryManager().loadInventory(player);
                         }
 
                     }
@@ -523,14 +523,8 @@ public class BuildInstance extends GameInstance {
 
     @Override
     public void joinAttempt(Player p) {
-        if((getGameState() == GameState.INGAME || getGameState() == GameState.ENDING || getGameState() == GameState.RESTARTING)) {
-            return;
-
-
-        }
-        if(plugin.isInventoryManagerEnabled()) {
-            plugin.getInventoryManager().saveInventoryToFile(p);
-        }
+        if((getGameState() == GameState.INGAME || getGameState() == GameState.ENDING || getGameState() == GameState.RESTARTING)) return;
+        if(plugin.getPlugin().isInventoryManagerEnabled()) plugin.getPlugin().getInventoryManager().saveInventoryToFile(p);
         teleportToLobby(p);
         this.addPlayer(p);
         p.setHealth(20.0);

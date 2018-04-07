@@ -2,7 +2,6 @@ package me.tomthedeveloper.buildbattle.game;
 
 import me.tomthedeveloper.buildbattle.User;
 import me.tomthedeveloper.buildbattle.GameAPI;
-import me.tomthedeveloper.buildbattle.bungee.BungeeManager;
 import me.tomthedeveloper.buildbattle.handlers.ChatManager;
 import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
 import me.tomthedeveloper.buildbattle.handlers.UserManager;
@@ -280,8 +279,8 @@ public abstract class GameInstance extends BukkitRunnable {
             User user = UserManager.getUser(p.getUniqueId());
             user.setSpectator(true);
             this.hidePlayer(p);
-            if(plugin.isInventoryManagerEnabled()) {
-                plugin.getInventoryManager().saveInventoryToFile(p);
+            if(plugin.getPlugin().isInventoryManagerEnabled()) {
+                plugin.getPlugin().getInventoryManager().saveInventoryToFile(p);
             }
 
 
@@ -359,8 +358,8 @@ public abstract class GameInstance extends BukkitRunnable {
             plugin.getInventoryManager().loadInventory(p);
 
         } */
-        if(plugin.isInventoryManagerEnabled()) {
-            plugin.getInventoryManager().loadInventory(p);
+        if(plugin.getPlugin().isInventoryManagerEnabled()) {
+            plugin.getPlugin().getInventoryManager().loadInventory(p);
         }
         p.setGameMode(GameMode.SURVIVAL);
 

@@ -1,7 +1,6 @@
 package me.tomthedeveloper.buildbattle;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import me.tomthedeveloper.buildbattle.bungee.BungeeManager;
 import me.tomthedeveloper.buildbattle.events.SetupInventoryEvents;
 import me.tomthedeveloper.buildbattle.events.onBuild;
 import me.tomthedeveloper.buildbattle.events.onChatEvent;
@@ -37,10 +36,8 @@ public class GameAPI {
     private String name;
     private String abreviation;
     private boolean kitsenabled = false;
-    private InventoryManager inventoryManager;
     private boolean bar = false;
     private boolean bungee;
-    private boolean inventorymanagerEnabled = false;
     private String version;
     private Main plugin;
     private boolean needsMapRestore = false;
@@ -75,10 +72,6 @@ public class GameAPI {
         return needsMapRestore;
     }
 
-    public void setNeedsMapRestore(boolean b) {
-        needsMapRestore = b;
-    }
-
     public boolean is1_8_R3() {
         if(getVersion().equalsIgnoreCase("v1_8_R3")) return true;
         return false;
@@ -107,7 +100,6 @@ public class GameAPI {
         version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
         onPreStart();
         ConfigurationManager.plugin = plugin;
-        inventoryManager = new InventoryManager(plugin);
         signManager = new SignManager(this);
         gameInstanceManager = new GameInstanceManager();
 
@@ -118,7 +110,6 @@ public class GameAPI {
             plugin.getConfig().set("InventoryManager", false);
             plugin.saveConfig();
         }
-        inventorymanagerEnabled = plugin.getConfig().getBoolean("InventoryManager");
         bar = plugin.getConfig().getBoolean("bar");
 
        /* if(bar){
@@ -222,16 +213,6 @@ public class GameAPI {
         } catch(IOException e) {
             e.printStackTrace();
         }
-
-
-    }
-
-    public InventoryManager getInventoryManager() {
-        return inventoryManager;
-    }
-
-    public boolean isInventoryManagerEnabled() {
-        return inventorymanagerEnabled;
     }
 
     private void loadSigns() {

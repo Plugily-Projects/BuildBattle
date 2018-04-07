@@ -1,4 +1,4 @@
-package me.tomthedeveloper.buildbattle.bungee;
+package me.tomthedeveloper.buildbattle.handlers;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;

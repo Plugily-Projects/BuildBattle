@@ -92,16 +92,8 @@ public class EntityItem {
         this.location = location;
     }
 
-    public String getPermission() {
-        return permission;
-    }
-
     private void setPermission(String permission) {
         this.permission = permission;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
     }
 
     private void setEnabled(boolean enabled) {

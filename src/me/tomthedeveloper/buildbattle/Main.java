@@ -2,15 +2,15 @@ package me.tomthedeveloper.buildbattle;
 
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import com.sk89q.worldedit.bukkit.selections.Selection;
-import me.tomthedeveloper.buildbattle.bungee.BungeeManager;
+import me.tomthedeveloper.buildbattle.handlers.BungeeManager;
 import me.tomthedeveloper.buildbattle.entities.EntityItem;
 import me.tomthedeveloper.buildbattle.entities.EntityMenuEvents;
 import me.tomthedeveloper.buildbattle.events.IngameEvents;
 import me.tomthedeveloper.buildbattle.events.NormalEvents;
-import me.tomthedeveloper.buildbattle.events.v1_8IngameEvents;
 import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.game.GameState;
 import me.tomthedeveloper.buildbattle.handlers.ChatManager;
+import me.tomthedeveloper.buildbattle.handlers.InventoryManager;
 import me.tomthedeveloper.buildbattle.handlers.UserManager;
 import me.tomthedeveloper.buildbattle.instance.BuildInstance;
 import me.tomthedeveloper.buildbattle.items.SpecialItem;
@@ -53,9 +53,19 @@ public class Main extends JavaPlugin implements CommandsInterface {
     private FileStats fileStats;
     private GameAPI gameAPI = new GameAPI();
     private BungeeManager bungeeManager;
+    private InventoryManager inventoryManager;
+    private boolean inventoryManagerEnabled;
 
     public BungeeManager getBungeeManager() {
         return bungeeManager;
+    }
+
+    public InventoryManager getInventoryManager() {
+        return inventoryManager;
+    }
+
+    public boolean isInventoryManagerEnabled() {
+        return inventoryManagerEnabled;
     }
 
     public static Permission getPerms() {
@@ -133,6 +143,8 @@ public class Main extends JavaPlugin implements CommandsInterface {
         gameAPI.setAbreviation("BD");
         gameAPI.setAllowBuilding(true);
         bungeeManager = new BungeeManager(this);
+        inventoryManager = new InventoryManager(this);
+        inventoryManagerEnabled = getConfig().getBoolean("InventoryManager");
         gameAPI.onSetup(this, this);
         new ConfigPreferences(this);
         ConfigPreferences.loadOptions();
@@ -144,15 +156,13 @@ public class Main extends JavaPlugin implements CommandsInterface {
         ConfigPreferences.loadThirdPlaceCommands();
         ConfigPreferences.loadEndGameCommands();
         ConfigPreferences.loadWhitelistedCommands();
+        setupMessageConfig();
         ParticleMenu.loadFromConfig();
         PlayerHeadsMenu.loadHeadItems();
         loadInstances();
         SpecialItem.loadAll();
         VoteItems.loadVoteItemsFromConfig();
         this.getServer().getPluginManager().registerEvents(new IngameEvents(this), this);
-        if(!gameAPI.is1_7_R4()) {
-            this.getServer().getPluginManager().registerEvents(new v1_8IngameEvents(this), this);
-        }
         EntityItem.loadAll();
         this.getServer().getPluginManager().registerEvents(new EntityMenuEvents(this), this);
         ParticleHandler particleHandler = new ParticleHandler(this);
@@ -171,8 +181,6 @@ public class Main extends JavaPlugin implements CommandsInterface {
         BuildBattleStats.plugin = this;
         if(ConfigPreferences.isVaultEnabled()) {
             if(setupEconomy()) System.out.print("NO ECONOMY RELATED TO VAULT FOUND!");
-            if(setupPermissions()) System.out.print("NO PERMISSION SYSTEM RELATED TO VAULT FOUND");
-            if(setupChat()) System.out.print("NO CHAT SYSTEM RELATED TO VAULT FOUND");
         }
 
 
@@ -185,20 +193,6 @@ public class Main extends JavaPlugin implements CommandsInterface {
                 gameAPI.getGameInstanceManager().getGameInstance(player).leaveAttempt(player);
             }
             final User user = UserManager.getUser(player.getUniqueId());
-
-       /* List<String> temp = new ArrayList<String>();
-        temp.add("gamesplayed");
-        temp.add("kills");
-        temp.add("deaths");
-        temp.add("highestwave");
-        temp.add("exp");
-        temp.add("level");
-        temp.add("orbs");
-        for (String s : temp) {
-            plugin.getMyDatabase().updateDocument(new BasicDBObject("UUID", event.getPlayer().getUniqueId().toString()), new BasicDBObject(s, user.getInt(s)));
-            System.out.println("");
-        }
-        */
             List<String> temp = new ArrayList<>();
             temp.add("gamesplayed");
             temp.add("wins");
@@ -238,10 +232,6 @@ public class Main extends JavaPlugin implements CommandsInterface {
 
     }
 
-    public void onPreStart() {
-        gameAPI.setAbreviation("bb");
-    }
-
     public boolean isDatabaseActivated() {
         return databaseActivated;
     }
@@ -261,21 +251,6 @@ public class Main extends JavaPlugin implements CommandsInterface {
         econ = rsp.getProvider();
         return econ != null;
     }
-
-    private boolean setupChat() {
-        RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
-        if(rsp == null) return false;
-        chat = rsp.getProvider();
-        return chat != null;
-    }
-
-    private boolean setupPermissions() {
-        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
-        if(rsp == null) return false;
-        perms = rsp.getProvider();
-        return perms != null;
-    }
-
 
     public boolean checkPlayerCommands(Player player, Command command, String s, String[] strings) {
         if(strings.length == 2 && strings[0].equalsIgnoreCase("join")) {
@@ -364,11 +339,6 @@ public class Main extends JavaPlugin implements CommandsInterface {
     public MySQLDatabase getMySQLDatabase() {
         return database;
     }
-
-    public void getMySQLDatabase(MySQLDatabase database) {
-        this.database = database;
-    }
-
 
     public GameAPI getGameAPI() {
         return gameAPI;
@@ -462,48 +432,24 @@ public class Main extends JavaPlugin implements CommandsInterface {
                 }
                 return;
             }
-            User user = UserManager.getUser(player.getUniqueId());
-
-/*        if (plugin.getMyDatabase().getSingle(new BasicDBObject().append("UUID", event.getPlayer().getUniqueId().toString())) == null) {
-            plugin.getMyDatabase().insertDocument(new String[]{"UUID", "gamesplayed", "kills", "deaths", "highestwave", "exp", "level", "orbs"},
-                    new Object[]{event.getPlayer().getUniqueId().toString(), 0, 0, 0, 0, 0, 0, 0});
-        }
-
-        List<String> temp = new ArrayList<String>();
-        temp.add("gamesplayed");
-        temp.add("kills");
-        temp.add("deaths");
-        temp.add("highestwave");
-        temp.add("exp");
-        temp.add("level");
-        temp.add("orbs");
-        for (String s : temp) {
-            user.setInt(s, (Integer) plugin.getMyDatabase().getSingle(new BasicDBObject("UUID", event.getPlayer().getUniqueId().toString())).get(s));
-        } */
-
             Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable() {
-
-
                 final String playername = player.getUniqueId().toString();
-
                 @Override
                 public void run() {
-                    boolean b = false;
                     MySQLDatabase database = getMySQLDatabase();
                     ResultSet resultSet = database.executeQuery("SELECT UUID from buildbattlestats WHERE UUID='" + playername + "'");
                     try {
                         if(!resultSet.next()) {
                             database.insertPlayer(playername);
-                            b = true;
                         }
 
-                        int gamesplayed = 0;
-                        int wins = 0;
-                        int highestwin = 0;
-                        int loses = 0;
-                        int blocksPlaced = 0;
-                        int blocksBroken = 0;
-                        int particles = 0;
+                        int gamesplayed;
+                        int wins;
+                        int highestwin;
+                        int loses;
+                        int blocksPlaced;
+                        int blocksBroken;
+                        int particles;
                         gamesplayed = database.getStat(player.getUniqueId().toString(), "gamesplayed");
                         wins = database.getStat(player.getUniqueId().toString(), "wins");
                         loses = database.getStat(player.getUniqueId().toString(), "loses");
@@ -520,45 +466,9 @@ public class Main extends JavaPlugin implements CommandsInterface {
                         user.setInt("blocksplaced", blocksPlaced);
                         user.setInt("blocksbroken", blocksBroken);
                         user.setInt("particles", particles);
-                        b = true;
                     } catch(SQLException e1) {
                         System.out.print("CONNECTION FAILED FOR PLAYER " + player.getName());
                         //e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                    }
-                    if(b = false) {
-                        try {
-                            if(!resultSet.next()) {
-                                database.insertPlayer(playername);
-                                b = true;
-                            }
-                            int gamesplayed = 0;
-                            int wins = 0;
-                            int highestwin = 0;
-                            int loses = 0;
-                            int blocksPlaced = 0;
-                            int blocksBroken = 0;
-                            int particles = 0;
-                            gamesplayed = database.getStat(player.getUniqueId().toString(), "gamesplayed");
-                            wins = database.getStat(player.getUniqueId().toString(), "wins");
-                            loses = database.getStat(player.getUniqueId().toString(), "loses");
-                            highestwin = database.getStat(player.getUniqueId().toString(), "highestwin");
-                            blocksPlaced = database.getStat(player.getUniqueId().toString(), "blocksplaced");
-                            blocksBroken = database.getStat(player.getUniqueId().toString(), "blocksbroken");
-                            particles = database.getStat(player.getUniqueId().toString(), "particles");
-                            User user = UserManager.getUser(player.getUniqueId());
-
-                            user.setInt("gamesplayed", gamesplayed);
-                            user.setInt("wins", wins);
-                            user.setInt("highestwin", highestwin);
-                            user.setInt("loses", loses);
-                            user.setInt("blocksplaced", blocksPlaced);
-                            user.setInt("blocksbroken", blocksBroken);
-                            user.setInt("particles", particles);
-                            b = true;
-                        } catch(SQLException e1) {
-                            System.out.print("CONNECTION FAILED TWICE FOR PLAYER " + player.getName());
-                            //e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                        }
                     }
                 }
             });

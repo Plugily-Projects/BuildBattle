@@ -1,14 +1,19 @@
 package me.tomthedeveloper.buildbattle.events;
 
+import me.tomthedeveloper.buildbattle.BuildPlot;
 import me.tomthedeveloper.buildbattle.GameAPI;
 import me.tomthedeveloper.buildbattle.Main;
 import me.tomthedeveloper.buildbattle.User;
+import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.handlers.UserManager;
+import me.tomthedeveloper.buildbattle.instance.BuildInstance;
 import me.tomthedeveloper.buildbattle.stats.MySQLDatabase;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -30,6 +35,21 @@ public class NormalEvents implements Listener {
         gameAPI = plugin.getGameAPI();
     }
 
+    @EventHandler
+    public void onTntExplode(BlockExplodeEvent event) {
+        for(GameInstance gameInstance : plugin.getGameAPI().getGameInstanceManager().getGameInstances()) {
+            BuildInstance buildInstance = (BuildInstance) gameInstance;
+            for(BuildPlot buildPlot : buildInstance.getPlotManager().getPlots()) {
+                if(buildPlot.isInPlotRange(event.getBlock().getLocation(), 0)) {
+                    event.blockList().clear();
+                } else if(buildPlot.isInPlotRange(event.getBlock().getLocation(), 5)) {
+                    event.getBlock().getLocation().getBlock().setType(Material.TNT);
+                    event.blockList().clear();
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
 
     @EventHandler
     public void onQuitSaveStats(PlayerQuitEvent event) {
