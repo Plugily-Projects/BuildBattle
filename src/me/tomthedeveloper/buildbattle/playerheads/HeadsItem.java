@@ -34,21 +34,12 @@ class HeadsItem {
     private String menuName;
     private ItemStack itemStack = null;
 
-
-    public HeadsItem() {
-
-    }
-
     public String getMenuName() {
         return menuName;
     }
 
     public void setMenuName(String menuName) {
         this.menuName = menuName;
-    }
-
-    public void onClick(Player player) {
-        player.getInventory().addItem(Util.getPlayerHead(Bukkit.getOfflinePlayer(owner)));
     }
 
     private String getOwner() {

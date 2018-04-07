@@ -27,7 +27,6 @@ public class PlayerHeadsMenu {
     private static List<HeadsItem> headsItems = new ArrayList<>();
     private static HashMap<String, List<HeadsItem>> playerheadmenus = new HashMap<>();
 
-
     public static void loadHeadItems() {
         FileConfiguration config = ConfigurationManager.getConfig("playerheadmenu/mainmenu");
         if(!config.contains("animals")) {
@@ -131,12 +130,5 @@ public class PlayerHeadsMenu {
         player.getInventory().addItem(itemStack.clone());
         player.closeInventory();
     }
-
-
-    public static List<HeadsItem> getHeadsItemsList(String menuname) {
-        if(playerheadmenus.containsKey(menuname)) return playerheadmenus.get(menuname);
-        return null;
-    }
-
 
 }

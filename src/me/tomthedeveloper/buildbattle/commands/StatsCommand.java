@@ -1,4 +1,4 @@
-package me.tomthedeveloper.buildbattle.stats;
+package me.tomthedeveloper.buildbattle.commands;
 
 import me.tomthedeveloper.buildbattle.User;
 import me.tomthedeveloper.buildbattle.handlers.ChatManager;
@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 /**
  * Created by Tom on 28/08/2015.
  */
-public class statsCommand implements CommandExecutor {
+public class StatsCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {

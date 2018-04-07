@@ -3,6 +3,7 @@ package me.tomthedeveloper.buildbattle.stats;
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
 import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -22,37 +23,22 @@ public class MySQLConnectionManager {
 
     private BoneCP connectionPool = null;
     private JavaPlugin plugin;
-    private int MIN_CONNECTIONS = 5;
-    private int MAX_CONNECTIONS = 10;
 
     public MySQLConnectionManager(JavaPlugin plugin) {
         this.plugin = plugin;
     }
 
     public void configureConnPool() {
-        FileConfiguration databaseconfig = ConfigurationManager.getConfig("MySQL");
-
+        FileConfiguration databaseConfig = ConfigurationManager.getConfig("MySQL");
         try {
-
             Class.forName("com.mysql.jdbc.Driver"); //also you need the MySQL driver
             plugin.getLogger().info("Creating BoneCP Configuration...");
             BoneCPConfig config = new BoneCPConfig();
-            if(!databaseconfig.contains("address")) {
-                databaseconfig.set("address", "jdbc:mysql://localhost:3306/<databasename>");
-                databaseconfig.set("user", "<user>");
-                databaseconfig.set("password", "<password>");
-                databaseconfig.set("min-connections", 5);
-                databaseconfig.set("max-connections", 10);
-                databaseconfig.save(ConfigurationManager.getFile("MySQL"));
-                plugin.getServer().shutdown();
-                return;
-            }
-
-            config.setJdbcUrl(databaseconfig.getString("address"));
-            config.setUsername(databaseconfig.getString("user"));
-            config.setPassword(databaseconfig.getString("password"));
-            config.setMinConnectionsPerPartition(databaseconfig.getInt("min-connections")); //if you say 5 here, there will be 10 connection available
-            config.setMaxConnectionsPerPartition(databaseconfig.getInt("max-connections"));
+            config.setJdbcUrl(databaseConfig.getString("address"));
+            config.setUsername(databaseConfig.getString("user"));
+            config.setPassword(databaseConfig.getString("password"));
+            config.setMinConnectionsPerPartition(databaseConfig.getInt("min-connections")); //if you say 5 here, there will be 10 connection available
+            config.setMaxConnectionsPerPartition(databaseConfig.getInt("max-connections"));
             config.setPartitionCount(2); //2*5 = 10 connection will be available
             //config.setLazyInit(true); //depends on the application usage you should chose lazy or not
             //setting Lazy true means BoneCP won't open any connections before you request a one from it.
@@ -60,13 +46,11 @@ public class MySQLConnectionManager {
             connectionPool = new BoneCP(config); // setup the connection pool
             plugin.getLogger().info("Connection pool successfully configured. ");
             plugin.getLogger().info("Total connections ==> " + connectionPool.getTotalCreatedConnections());
-
-
         } catch(Exception e) {
-
-            e.printStackTrace(); //you should use exception wrapping on real-production code
+            e.printStackTrace();
+            Bukkit.getConsoleSender().sendMessage("Cannot save contents to MySQL database!");
+            Bukkit.getConsoleSender().sendMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
         }
-
     }
 
     public void shutdownConnPool() {
@@ -77,7 +61,6 @@ public class MySQLConnectionManager {
                 //you don't need to call it every time when you get a connection from the Connection Pool
                 plugin.getLogger().info("Pool successfully shutdown. ");
             }
-
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -94,20 +77,20 @@ public class MySQLConnectionManager {
             e.printStackTrace();
         }
         return conn;
-
     }
+
 
     public void closeConnection(Connection conn) {
         try {
-            if(conn != null) conn.close(); //release the connection - the name is tricky but connection is not closed it is released
+            if(conn != null)
+                conn.close(); //release the connection - the name is tricky but connection is not closed it is released
             //and it will stay in pool
         } catch(SQLException e) {
             e.printStackTrace();
         }
-
     }
 
-    private BoneCP getConnectionPool() {
+    public BoneCP getConnectionPool() {
         return connectionPool;
     }
 

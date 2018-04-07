@@ -20,10 +20,6 @@ class ScoreboardLines {
         return lines;
     }
 
-    public void setLines(LinkedList<String> lines) {
-        this.lines = lines;
-    }
-
     public String getTitle() {
         return ChatColor.translateAlternateColorCodes('&', title);
     }

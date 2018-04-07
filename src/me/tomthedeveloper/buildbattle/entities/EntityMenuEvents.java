@@ -5,7 +5,7 @@ import me.tomthedeveloper.buildbattle.Main;
 import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.game.GameState;
 import me.tomthedeveloper.buildbattle.handlers.ChatManager;
-import me.tomthedeveloper.buildbattle.instance.BuildInstance;
+import me.tomthedeveloper.buildbattle.game.BuildInstance;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;

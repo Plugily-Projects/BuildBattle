@@ -17,61 +17,14 @@ import java.util.HashMap;
  */
 class ScoreboardLoader {
 
-
-    private GameAPI plugin;
     private HashMap<GameState, ScoreboardLines> scoreboardData = new HashMap<>();
 
-
-    public ScoreboardLoader(GameAPI plugin) {
-        this.plugin = plugin;
-        pasteScoreboardConfig();
+    public ScoreboardLoader() {
         loadLines();
     }
 
     public HashMap<GameState, ScoreboardLines> getScoreboardData() {
         return scoreboardData;
-    }
-
-
-    private void pasteScoreboardConfig() {
-
-        File file = new File(plugin.getPlugin().getDataFolder() + File.separator + "scoreboard.yml");
-        if(!file.exists()) {
-            System.out.print("Creating new file scoreboards.yml");
-            System.out.print("Writing to file scoreboards.yml");
-
-            InputStream inputStream = ScoreboardLoader.class.getResourceAsStream("/scoreboard.yml");
-            OutputStream outputStream = null;
-            try {
-                outputStream = new FileOutputStream(file);
-                int read;
-                byte[] bytes = new byte[1024];
-                while((read = inputStream.read(bytes)) != -1) {
-                    outputStream.write(bytes, 0, read);
-                }
-                System.out.println("Done!");
-            } catch(IOException e) {
-                e.printStackTrace();
-            } finally {
-                if(inputStream != null) {
-                    try {
-                        inputStream.close();
-                    } catch(IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if(outputStream != null) {
-                    try {
-                        outputStream.close();
-                    } catch(IOException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-
-
-            }
-        }
     }
 
     private void loadLines() {

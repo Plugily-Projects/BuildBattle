@@ -14,11 +14,9 @@ import java.io.IOException;
  */
 public class FileStats {
 
-    private Main plugin;
     private FileConfiguration config;
 
-    public FileStats(Main plugin) {
-        this.plugin = plugin;
+    public FileStats() {
         config = ConfigurationManager.getConfig("STATS");
     }
 

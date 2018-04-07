@@ -4,7 +4,7 @@ import me.tomthedeveloper.buildbattle.BuildPlot;
 import me.tomthedeveloper.buildbattle.ConfigPreferences;
 import me.tomthedeveloper.buildbattle.Main;
 import me.tomthedeveloper.buildbattle.game.GameInstance;
-import me.tomthedeveloper.buildbattle.instance.BuildInstance;
+import me.tomthedeveloper.buildbattle.game.BuildInstance;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;
 

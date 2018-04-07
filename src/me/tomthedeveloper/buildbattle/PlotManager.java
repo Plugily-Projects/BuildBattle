@@ -2,9 +2,8 @@ package me.tomthedeveloper.buildbattle;
 
 import me.tomthedeveloper.buildbattle.game.GameState;
 import me.tomthedeveloper.buildbattle.handlers.UserManager;
-import me.tomthedeveloper.buildbattle.instance.BuildInstance;
+import me.tomthedeveloper.buildbattle.game.BuildInstance;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

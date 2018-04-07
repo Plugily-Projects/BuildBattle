@@ -18,7 +18,7 @@ import me.tomthedeveloper.buildbattle.handlers.ChatManager;
 import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
 import me.tomthedeveloper.buildbattle.handlers.InventoryManager;
 import me.tomthedeveloper.buildbattle.handlers.UserManager;
-import me.tomthedeveloper.buildbattle.instance.BuildInstance;
+import me.tomthedeveloper.buildbattle.game.BuildInstance;
 import me.tomthedeveloper.buildbattle.items.SpecialItem;
 import me.tomthedeveloper.buildbattle.particles.ParticleHandler;
 import me.tomthedeveloper.buildbattle.particles.ParticleMenu;
@@ -26,7 +26,7 @@ import me.tomthedeveloper.buildbattle.playerheads.PlayerHeadsMenu;
 import me.tomthedeveloper.buildbattle.stats.BuildBattleStats;
 import me.tomthedeveloper.buildbattle.stats.FileStats;
 import me.tomthedeveloper.buildbattle.stats.MySQLDatabase;
-import me.tomthedeveloper.buildbattle.stats.statsCommand;
+import me.tomthedeveloper.buildbattle.commands.StatsCommand;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
@@ -58,7 +58,7 @@ public class Main extends JavaPlugin implements CommandsInterface {
     private BungeeManager bungeeManager;
     private InventoryManager inventoryManager;
     private boolean inventoryManagerEnabled;
-    private List<String> filesToGenerate = Arrays.asList("EntityMenu", "particles", "scoreboard", "signModification", "SpecialItems", "STATS", "voteItems");
+    private List<String> filesToGenerate = Arrays.asList("EntityMenu", "particles", "scoreboard", "signModification", "SpecialItems", "STATS", "voteItems", "MySQL");
 
     public BungeeManager getBungeeManager() {
         return bungeeManager;
@@ -179,9 +179,9 @@ public class Main extends JavaPlugin implements CommandsInterface {
         databaseActivated = this.getConfig().getBoolean("DatabaseActivated");
         if(databaseActivated) this.database = new MySQLDatabase(this);
         else {
-            fileStats = new FileStats(this);
+            fileStats = new FileStats();
         }
-        this.getCommand("stats").setExecutor(new statsCommand());
+        this.getCommand("stats").setExecutor(new StatsCommand());
         //   getCommand(gameAPI.getGameName()).setExecutor(new InstanceCommands(gameAPI,this));
         this.getServer().getPluginManager().registerEvents(new NormalEvents(this), this);
         loadStatsForPlayersOnline();

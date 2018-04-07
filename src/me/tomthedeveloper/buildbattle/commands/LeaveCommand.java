@@ -9,11 +9,11 @@ import org.bukkit.entity.Player;
 /**
  * Created by Tom on 5/08/2014.
  */
-public class leave implements CommandExecutor {
+public class LeaveCommand implements CommandExecutor {
 
     private GameAPI plugin;
 
-    public leave(GameAPI plugin) {
+    public LeaveCommand(GameAPI plugin) {
         this.plugin = plugin;
     }
 

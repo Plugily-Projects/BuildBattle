@@ -1,0 +1,5 @@
+address: jdbc:mysql://localhost:3306/<databasename>
+user: <user>
+password: <password>
+min-connections: 5
+max-connections: 10

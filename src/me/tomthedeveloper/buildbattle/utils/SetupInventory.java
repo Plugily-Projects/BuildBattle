@@ -1,4 +1,4 @@
-package me.tomthedeveloper.buildbattle.setup;
+package me.tomthedeveloper.buildbattle.utils;
 
 import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.utils.ItemBuilder;

@@ -1,6 +1,6 @@
 package me.tomthedeveloper.buildbattle.events;
 
-import me.tomthedeveloper.buildbattle.permissions.PermStrings;
+import me.tomthedeveloper.buildbattle.handlers.PermissionManager;
 import me.tomthedeveloper.buildbattle.GameAPI;
 import me.tomthedeveloper.buildbattle.game.GameInstance;
 import org.bukkit.Bukkit;
@@ -31,7 +31,7 @@ public class SetupInventoryEvents implements Listener {
     public void onClick(InventoryClickEvent event) {
         if(event.getWhoClicked().getType() != EntityType.PLAYER) return;
         Player player = (Player) event.getWhoClicked();
-        if(!player.hasPermission(PermStrings.getEditGames())) return;
+        if(!player.hasPermission(PermissionManager.getEditGames())) return;
         if(!event.getInventory().getName().contains("Arena:")) return;
         if(event.getInventory().getHolder() != null) return;
         if(event.getCurrentItem() == null) return;

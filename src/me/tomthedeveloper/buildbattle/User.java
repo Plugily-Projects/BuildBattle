@@ -1,7 +1,7 @@
 package me.tomthedeveloper.buildbattle;
 
 import me.tomthedeveloper.buildbattle.game.GameInstance;
-import me.tomthedeveloper.buildbattle.permissions.PermStrings;
+import me.tomthedeveloper.buildbattle.handlers.PermissionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.ScoreboardManager;
@@ -78,7 +78,7 @@ public class User {
     }
 
     public boolean isPremium() {
-        if(this.toPlayer().hasPermission(PermStrings.getVIP()) || this.toPlayer().hasPermission(PermStrings.getMVP()) || this.toPlayer().hasPermission(PermStrings.getELITE())) {
+        if(this.toPlayer().hasPermission(PermissionManager.getVIP()) || this.toPlayer().hasPermission(PermissionManager.getMVP()) || this.toPlayer().hasPermission(PermissionManager.getELITE())) {
             return true;
         } else {
             return false;

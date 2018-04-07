@@ -6,7 +6,7 @@ import me.tomthedeveloper.buildbattle.Main;
 import me.tomthedeveloper.buildbattle.User;
 import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.handlers.UserManager;
-import me.tomthedeveloper.buildbattle.instance.BuildInstance;
+import me.tomthedeveloper.buildbattle.game.BuildInstance;
 import me.tomthedeveloper.buildbattle.stats.MySQLDatabase;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

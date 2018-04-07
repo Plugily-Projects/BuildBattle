@@ -1,6 +1,7 @@
 package me.tomthedeveloper.buildbattle;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import me.tomthedeveloper.buildbattle.commands.LeaveCommand;
 import me.tomthedeveloper.buildbattle.events.SetupInventoryEvents;
 import me.tomthedeveloper.buildbattle.events.BuildEvents;
 import me.tomthedeveloper.buildbattle.events.QuitEvents;
@@ -125,7 +126,7 @@ public class GameAPI {
             plugin.saveConfig();
         }
         if(!plugin.getConfig().getBoolean("Disable-Leave-Command")) {
-            plugin.getCommand("leave").setExecutor(new me.tomthedeveloper.buildbattle.commands.leave(this));
+            plugin.getCommand("leave").setExecutor(new LeaveCommand(this));
         }
         plugin.getCommand(this.getGameName()).setExecutor(new me.tomthedeveloper.buildbattle.commands.InstanceCommands(this, commandsInterface));
         plugin.getCommand("addsigns").setExecutor(new me.tomthedeveloper.buildbattle.commands.SignCommands(this));

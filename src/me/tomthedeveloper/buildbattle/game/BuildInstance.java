@@ -1,4 +1,4 @@
-package me.tomthedeveloper.buildbattle.instance;
+package me.tomthedeveloper.buildbattle.game;
 
 import me.tomthedeveloper.buildbattle.BuildPlot;
 import me.tomthedeveloper.buildbattle.ChatFormatter;

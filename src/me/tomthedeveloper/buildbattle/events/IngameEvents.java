@@ -11,7 +11,7 @@ import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.game.GameState;
 import me.tomthedeveloper.buildbattle.handlers.ChatManager;
 import me.tomthedeveloper.buildbattle.handlers.UserManager;
-import me.tomthedeveloper.buildbattle.instance.BuildInstance;
+import me.tomthedeveloper.buildbattle.game.BuildInstance;
 import me.tomthedeveloper.buildbattle.items.SpecialItemManager;
 import me.tomthedeveloper.buildbattle.menu.IngameMenu;
 import me.tomthedeveloper.buildbattle.particles.ParticleMenu;

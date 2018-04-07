@@ -1,9 +1,9 @@
-package me.tomthedeveloper.buildbattle.permissions;
+package me.tomthedeveloper.buildbattle.handlers;
 
 /**
  * Created by Tom on 14/08/2014.
  */
-public class PermStrings {
+public class PermissionManager {
 
 
     private static String joinFullGames = "minigames.fullgames";

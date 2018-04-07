@@ -4,7 +4,7 @@ import me.tomthedeveloper.buildbattle.CommandsInterface;
 import me.tomthedeveloper.buildbattle.GameAPI;
 import me.tomthedeveloper.buildbattle.events.PlayerAddCommandEvent;
 import me.tomthedeveloper.buildbattle.game.GameInstance;
-import me.tomthedeveloper.buildbattle.setup.SetupInventory;
+import me.tomthedeveloper.buildbattle.utils.SetupInventory;
 import me.tomthedeveloper.buildbattle.utils.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

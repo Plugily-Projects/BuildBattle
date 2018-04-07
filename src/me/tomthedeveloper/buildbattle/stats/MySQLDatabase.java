@@ -1,6 +1,7 @@
 package me.tomthedeveloper.buildbattle.stats;
 
 import me.tomthedeveloper.buildbattle.ConfigPreferences;
+import me.tomthedeveloper.buildbattle.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -15,15 +16,13 @@ import java.util.UUID;
 public class MySQLDatabase {
 
     private MySQLConnectionManager manager;
-    private JavaPlugin plugin;
+    private Main plugin;
 
-    public MySQLDatabase(JavaPlugin javaPlugin) {
-        this.plugin = javaPlugin;
-        this.manager = new MySQLConnectionManager(plugin);
-        plugin.getLogger().info("Configuring connection pool...");
+    public MySQLDatabase(Main plugin) {
+        this.plugin = plugin;
+        this.manager = new MySQLConnectionManager(this.plugin);
+        this.plugin.getLogger().info("Configuring connection pool...");
         manager.configureConnPool();
-
-
         try {
             Connection connection = manager.getConnection();
             if(connection == null) {
@@ -36,8 +35,6 @@ public class MySQLDatabase {
         } catch(SQLException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-
-        // Table exists
     }
 
 
@@ -78,18 +75,6 @@ public class MySQLDatabase {
         manager.shutdownConnPool();
     }
 
-
-    public void addStat(String UUID, String stat) {
-        addStat(UUID, stat, 1);
-    }
-
-    private void addStat(String UUID, String stat, int amount) {
-        if(ConfigPreferences.isNameUsedInDatabase()) {
-            UUID = Bukkit.getPlayer(UUID).getName();
-        }
-        executeUpdate("UPDATE `buildbattlestats` SET " + stat + "=" + stat + "+" + amount + " WHERE UUID='" + UUID + "'");
-    }
-
     public void setStat(String UUID, String stat, int number) {
         if(ConfigPreferences.isNameUsedInDatabase()) {
             UUID = Bukkit.getOfflinePlayer(java.util.UUID.fromString(UUID)).getName();
@@ -109,9 +94,7 @@ public class MySQLDatabase {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             return 0;
         }
-
     }
-
 
     public Map<UUID, Integer> getColumn(String stat) {
         ResultSet set = executeQuery("SELECT UUID, " + stat + " FROM buildbattlestats ORDER BY " + stat + " DESC;");

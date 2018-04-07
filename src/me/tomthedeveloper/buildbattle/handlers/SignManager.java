@@ -3,7 +3,6 @@ package me.tomthedeveloper.buildbattle.handlers;
 import me.tomthedeveloper.buildbattle.GameAPI;
 import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.game.GameState;
-import me.tomthedeveloper.buildbattle.permissions.PermStrings;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
@@ -221,11 +220,11 @@ public class SignManager extends BukkitRunnable implements Listener {
 
                 if(instance.getMAX_PLAYERS() <= instance.getPlayers().size()) {
 
-                    if((event.getPlayer().hasPermission(PermStrings.getVIP()) || event.getPlayer().hasPermission(PermStrings.getJoinFullGames()))) {
+                    if((event.getPlayer().hasPermission(PermissionManager.getVIP()) || event.getPlayer().hasPermission(PermissionManager.getJoinFullGames()))) {
 
                         boolean b = false;
                         for(Player player : instance.getPlayers()) {
-                            if(player.hasPermission(PermStrings.getVIP()) || player.hasPermission(PermStrings.getJoinFullGames())) {
+                            if(player.hasPermission(PermissionManager.getVIP()) || player.hasPermission(PermissionManager.getJoinFullGames())) {
 
                             } else {
                                 if((instance.getGameState() == GameState.STARTING || instance.getGameState() == GameState.WAITING_FOR_PLAYERS)) {

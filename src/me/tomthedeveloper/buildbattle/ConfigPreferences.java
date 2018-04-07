@@ -1,7 +1,7 @@
 package me.tomthedeveloper.buildbattle;
 
 import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
-import me.tomthedeveloper.buildbattle.instance.BuildInstance;
+import me.tomthedeveloper.buildbattle.game.BuildInstance;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
