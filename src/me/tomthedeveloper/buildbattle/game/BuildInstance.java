@@ -1,19 +1,16 @@
 package me.tomthedeveloper.buildbattle.game;
 
 import me.tomthedeveloper.buildbattle.BuildPlot;
-import me.tomthedeveloper.buildbattle.ChatFormatter;
 import me.tomthedeveloper.buildbattle.ConfigPreferences;
 import me.tomthedeveloper.buildbattle.PlotManager;
 import me.tomthedeveloper.buildbattle.User;
 import me.tomthedeveloper.buildbattle.VoteItems;
-import me.tomthedeveloper.buildbattle.game.GameInstance;
-import me.tomthedeveloper.buildbattle.game.GameState;
 import me.tomthedeveloper.buildbattle.handlers.ChatManager;
 import me.tomthedeveloper.buildbattle.handlers.MessageHandler;
 import me.tomthedeveloper.buildbattle.handlers.UserManager;
 import me.tomthedeveloper.buildbattle.items.SpecialItem;
 import me.tomthedeveloper.buildbattle.items.SpecialItemManager;
-import me.tomthedeveloper.buildbattle.menu.IngameMenu;
+import me.tomthedeveloper.buildbattle.utils.IngameMenu;
 import me.tomthedeveloper.buildbattle.scoreboards.ScoreboardHandler;
 import me.tomthedeveloper.buildbattle.selfmadeevents.GameChangeStateEvent;
 import me.tomthedeveloper.buildbattle.selfmadeevents.GameEndEvent;
@@ -369,9 +366,9 @@ public class BuildInstance extends GameInstance {
                     break;
                 case INGAME:
                     if(!isVoting()) {
-                        BossBarAPI.setMessage(player, ChatFormatter.formatMessage(ChatManager.getSingleMessage("Time-Left-Bar-Message", ChatFormatter.formatMessage(ChatManager.PREFIX + "Time left :" + ChatManager.HIGHLIGHTED + " %FORMATTEDTIME%")), getTimer()));
+                        BossBarAPI.setMessage(player, ChatManager.formatMessage(ChatManager.getSingleMessage("Time-Left-Bar-Message", ChatManager.formatMessage(ChatManager.PREFIX + "Time left :" + ChatManager.HIGHLIGHTED + " %FORMATTEDTIME%")), getTimer()));
                     } else {
-                        BossBarAPI.setMessage(player, ChatFormatter.formatMessage(ChatManager.getSingleMessage("Vote-Time-Left-Bar-Message", ChatManager.PREFIX + "Vote Time left :" + ChatManager.HIGHLIGHTED + " %FORMATTEDTIME%"), getTimer()));
+                        BossBarAPI.setMessage(player, ChatManager.formatMessage(ChatManager.getSingleMessage("Vote-Time-Left-Bar-Message", ChatManager.PREFIX + "Vote Time left :" + ChatManager.HIGHLIGHTED + " %FORMATTEDTIME%"), getTimer()));
 
                     }
                     break;

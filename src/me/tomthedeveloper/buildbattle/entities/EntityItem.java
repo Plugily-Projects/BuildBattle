@@ -1,6 +1,6 @@
 package me.tomthedeveloper.buildbattle.entities;
 
-import me.tomthedeveloper.buildbattle.ChatFormatter;
+import me.tomthedeveloper.buildbattle.handlers.ChatManager;
 import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
 import me.tomthedeveloper.buildbattle.utils.ParticleEffect;
 import me.tomthedeveloper.buildbattle.utils.Util;
@@ -117,7 +117,7 @@ public class EntityItem {
     }
 
     private String getDisplayName() {
-        return ChatFormatter.formatMessage(displayName);
+        return ChatManager.formatMessage(displayName);
     }
 
     private void setDisplayName(String displayName) {
@@ -148,7 +148,7 @@ public class EntityItem {
             itemStack = new ItemStack(getMaterial());
 
         }
-        Util.setItemNameAndLore(itemStack, ChatFormatter.formatMessage(this.getDisplayName()), lore);
+        Util.setItemNameAndLore(itemStack, ChatManager.formatMessage(this.getDisplayName()), lore);
         return itemStack;
     }
 }

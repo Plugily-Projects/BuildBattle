@@ -1,6 +1,6 @@
 package me.tomthedeveloper.buildbattle.particles;
 
-import me.tomthedeveloper.buildbattle.ChatFormatter;
+import me.tomthedeveloper.buildbattle.handlers.ChatManager;
 import me.tomthedeveloper.buildbattle.utils.ParticleEffect;
 import me.tomthedeveloper.buildbattle.utils.Util;
 import org.bukkit.Location;
@@ -89,7 +89,7 @@ public class ParticleItem {
     }
 
     public String getDisplayName() {
-        return ChatFormatter.formatMessage(displayName);
+        return ChatManager.formatMessage(displayName);
     }
 
     public void setDisplayName(String displayName) {
@@ -120,7 +120,7 @@ public class ParticleItem {
             itemStack = new ItemStack(getMaterial());
 
         }
-        Util.setItemNameAndLore(itemStack, ChatFormatter.formatMessage(this.getDisplayName()), lore);
+        Util.setItemNameAndLore(itemStack, ChatManager.formatMessage(this.getDisplayName()), lore);
         return itemStack;
     }
 }

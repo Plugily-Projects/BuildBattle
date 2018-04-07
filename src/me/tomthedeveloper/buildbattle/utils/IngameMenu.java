@@ -1,4 +1,4 @@
-package me.tomthedeveloper.buildbattle.menu;
+package me.tomthedeveloper.buildbattle.utils;
 
 import me.tomthedeveloper.buildbattle.BuildPlot;
 import me.tomthedeveloper.buildbattle.handlers.ChatManager;

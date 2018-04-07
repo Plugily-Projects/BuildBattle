@@ -23,10 +23,10 @@ public class ChatManager {
     private static HashMap<String, String> messages = new HashMap<>();
     public String GAMENAME;
     public String prefix;
-    private GameInstance gameInstance;
+    private static GameInstance gameInstance;
 
     public ChatManager(GameInstance gameInstance) {
-        this.gameInstance = gameInstance;
+        ChatManager.gameInstance = gameInstance;
         config = ConfigurationManager.getConfig("language");
 
         GAMENAME = getFromLanguageConfig("GAMENAME", GameInstance.getPlugin().getGameName());
@@ -178,7 +178,7 @@ public class ChatManager {
         }
     }
 
-    private String formatMessage(String message, int integer) {
+    public static String formatMessage(String message, int integer) {
         String returnstring = message;
         returnstring = returnstring.replaceAll("%NUMBER%", Integer.toString(integer));
 
@@ -248,7 +248,7 @@ public class ChatManager {
         return formatMessage(messages.get(ID), playername.getName());
     }
 
-    private String formatMessage(String message) {
+    public static String formatMessage(String message) {
         String returnstring = message;
 
         returnstring = returnstring.replaceAll("%TIME%", Integer.toString(gameInstance.getTimer()));

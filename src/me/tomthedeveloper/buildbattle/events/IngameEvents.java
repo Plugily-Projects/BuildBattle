@@ -13,7 +13,7 @@ import me.tomthedeveloper.buildbattle.handlers.ChatManager;
 import me.tomthedeveloper.buildbattle.handlers.UserManager;
 import me.tomthedeveloper.buildbattle.game.BuildInstance;
 import me.tomthedeveloper.buildbattle.items.SpecialItemManager;
-import me.tomthedeveloper.buildbattle.menu.IngameMenu;
+import me.tomthedeveloper.buildbattle.utils.IngameMenu;
 import me.tomthedeveloper.buildbattle.particles.ParticleMenu;
 import me.tomthedeveloper.buildbattle.particles.ParticleRemoveMenu;
 import me.tomthedeveloper.buildbattle.playerheads.PlayerHeadsMenu;

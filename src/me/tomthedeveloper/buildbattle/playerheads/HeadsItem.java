@@ -1,6 +1,6 @@
 package me.tomthedeveloper.buildbattle.playerheads;
 
-import me.tomthedeveloper.buildbattle.ChatFormatter;
+import me.tomthedeveloper.buildbattle.handlers.ChatManager;
 import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
 import me.tomthedeveloper.buildbattle.utils.Util;
 import org.bukkit.Bukkit;
@@ -8,7 +8,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -117,7 +116,7 @@ class HeadsItem {
     private List<String> getLore() {
         List<String> lorelist = new ArrayList<>();
         for(String string : lore) {
-            string = ChatFormatter.formatMessage(string);
+            string = ChatManager.formatMessage(string);
             lorelist.add(string);
         }
         return lorelist;
@@ -133,7 +132,7 @@ class HeadsItem {
     }
 
     private String getDisplayName() {
-        return ChatFormatter.formatMessage(displayName);
+        return ChatManager.formatMessage(displayName);
     }
 
     public void setDisplayName(String displayName) {
@@ -163,7 +162,7 @@ class HeadsItem {
                     itemStack = Util.getPlayerHead(Bukkit.getOfflinePlayer(getOwner()));
                 }
             }
-            Util.setItemNameAndLore(itemStack, ChatFormatter.formatMessage(this.getDisplayName()), getLore().toArray(new String[getLore().size()]));
+            Util.setItemNameAndLore(itemStack, ChatManager.formatMessage(this.getDisplayName()), getLore().toArray(new String[getLore().size()]));
 
             return itemStack;
         } else {

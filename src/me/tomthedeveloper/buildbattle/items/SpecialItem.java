@@ -1,6 +1,6 @@
 package me.tomthedeveloper.buildbattle.items;
 
-import me.tomthedeveloper.buildbattle.ChatFormatter;
+import me.tomthedeveloper.buildbattle.handlers.ChatManager;
 import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
 import me.tomthedeveloper.buildbattle.utils.ParticleEffect;
 import me.tomthedeveloper.buildbattle.utils.Util;
@@ -108,7 +108,7 @@ public class SpecialItem {
     }
 
     private String getDisplayName() {
-        return ChatFormatter.formatMessage(displayName);
+        return ChatManager.formatMessage(displayName);
     }
 
     private void setDisplayName(String displayName) {
@@ -139,7 +139,7 @@ public class SpecialItem {
             itemStack = new ItemStack(getMaterial());
 
         }
-        Util.setItemNameAndLore(itemStack, ChatFormatter.formatMessage(this.getDisplayName()), lore);
+        Util.setItemNameAndLore(itemStack, ChatManager.formatMessage(this.getDisplayName()), lore);
         return itemStack;
     }
 
