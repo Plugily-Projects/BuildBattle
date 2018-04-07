@@ -11,10 +11,8 @@ import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.handlers.ChatManager;
 import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
 import me.tomthedeveloper.buildbattle.handlers.GameInstanceManager;
-import me.tomthedeveloper.buildbattle.handlers.InventoryManager;
 import me.tomthedeveloper.buildbattle.handlers.JSONWriter;
 import me.tomthedeveloper.buildbattle.handlers.SignManager;
-import me.tomthedeveloper.buildbattle.utils.Items;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -93,7 +91,6 @@ public class GameAPI {
     }
 
     public void onSetup(Main plugin, CommandsInterface commandsInterface) {
-        Items.gameAPI = this;
         this.plugin = plugin;
 
         System.out.print("GAMEAPI LOADED!");

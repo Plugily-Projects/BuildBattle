@@ -19,7 +19,6 @@ import me.tomthedeveloper.buildbattle.items.SpecialItem;
 import me.tomthedeveloper.buildbattle.items.SpecialItemManager;
 import me.tomthedeveloper.buildbattle.menu.IngameMenu;
 import me.tomthedeveloper.buildbattle.scoreboards.ScoreboardHandler;
-import me.tomthedeveloper.buildbattle.utils.ArmorHelper;
 import me.tomthedeveloper.buildbattle.utils.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -134,7 +133,7 @@ public class BuildInstance extends GameInstance {
         p.setFoodLevel(20);
         p.setFlying(false);
         p.setAllowFlight(false);
-        ArmorHelper.clearArmor(p);
+        Util.clearArmor(p);
         p.getInventory().clear();
         for(PotionEffect effect : p.getActivePotionEffects()) {
             p.removePotionEffect(effect.getType());
@@ -318,7 +317,7 @@ public class BuildInstance extends GameInstance {
                         player.setGameMode(GameMode.SURVIVAL);
                         player.setFlying(false);
                         player.setAllowFlight(false);
-                        ArmorHelper.clearArmor(player);
+                        Util.clearArmor(player);
                         UserManager.getUser(player.getUniqueId()).addInt("gamesplayed", 1);
                         if(plugin.getPlugin().isInventoryManagerEnabled()) {
                             plugin.getPlugin().getInventoryManager().loadInventory(player);

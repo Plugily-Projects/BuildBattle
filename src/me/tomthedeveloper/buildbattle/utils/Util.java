@@ -3,15 +3,20 @@ package me.tomthedeveloper.buildbattle.utils;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.SkullType;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.util.BlockIterator;
 
 import java.util.ArrayList;
@@ -30,15 +35,29 @@ import java.util.regex.Pattern;
  */
 public class Util {
 
+    public static void clearArmor(Player player) {
+        player.getInventory().setHelmet(null);
+        player.getInventory().setChestplate(null);
+        player.getInventory().setLeggings(null);
+        player.getInventory().setBoots(null);
+    }
+
+    public static ItemStack getPlayerHead(OfflinePlayer player) {
+        ItemStack itemStack = new ItemStack(Material.SKULL_ITEM);
+        SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();
+        skullMeta.setOwner(player.getName());
+        itemStack.setItemMeta(skullMeta);
+        itemStack.setDurability((short) SkullType.PLAYER.ordinal());
+        return itemStack;
+    }
 
     public static void addLore(ItemStack itemStack, String string) {
-
         ItemMeta meta = itemStack.getItemMeta();
         List<String> lore;
         if(meta != null && meta.hasLore()) {
             lore = meta.getLore();
         } else {
-            lore = new ArrayList<String>();
+            lore = new ArrayList<>();
         }
         lore.add(string);
         meta.setLore(lore);
@@ -50,53 +69,6 @@ public class Util {
         else return (int) ((Math.ceil(i / 9) * 9) + 9);
     }
 
-    public static Queue<Block> getLineOfSight(LivingEntity entity, HashSet<Byte> transparent, int maxDistance, int maxLength) {
-        if(maxDistance > 120) {
-            maxDistance = 120;
-        }
-
-
-        Queue<Block> blocks = new LinkedList<Block>();
-        Iterator<Block> itr = new BlockIterator(entity, maxDistance);
-        while(itr.hasNext()) {
-            Block block = itr.next();
-            blocks.add(block);
-
-            if(maxLength != 0 && blocks.size() > maxLength) {
-                blocks.remove(0);
-            }
-            int id = block.getTypeId();
-            if(transparent == null) {
-                if(id != 0 && id != 50 && id != 59 && id != 31 && id != 175 && id != 38 && id != 37 && id != 6 && id != 106) {
-
-                    break;
-                }
-            } else {
-                if(!transparent.contains((byte) id)) break;
-            }
-
-        }
-        return blocks;
-    }
-
-    public static Entity[] getNearbyEntities(Location l, int radius) {
-
-        int chunkRadius = radius < 16 ? 1 : radius / 16;
-        HashSet<Entity> radiusEntities = new HashSet<Entity>();
-        for(int chX = 0 - chunkRadius; chX <= chunkRadius; chX++) {
-            for(int chZ = 0 - chunkRadius; chZ <= chunkRadius; chZ++) {
-                int x = (int) l.getX(), y = (int) l.getY(), z = (int) l.getZ();
-                for(Entity e : new Location(l.getWorld(), x + chX * 16, y, z + chZ * 16).getChunk().getEntities()) {
-                    if(!(l.getWorld().getName().equalsIgnoreCase(e.getWorld().getName()))) continue;
-                    if(e.getLocation().distanceSquared(l) <= radius * radius && e.getLocation().getBlock() != l.getBlock()) {
-                        radiusEntities.add(e);
-                    }
-                }
-            }
-        }
-        return radiusEntities.toArray(new Entity[radiusEntities.size()]);
-    }
-
     public static ItemStack setItemNameAndLore(ItemStack item, String name, String[] lore) {
         ItemMeta im = item.getItemMeta();
         im.setDisplayName(name);
@@ -105,40 +77,9 @@ public class Util {
         return item;
     }
 
-    public static String formatIntoHHMMSS(int secsIn) {
-
-        int hours = secsIn / 3600, remainder = secsIn % 3600, minutes = remainder / 60, seconds = remainder % 60;
-
-        return ((hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
-
-    }
-
     public static String formatIntoMMSS(int secsIn) {
-
         int minutes = secsIn / 60, seconds = secsIn % 60;
-
         return ((minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
-
-    }
-
-    public static String formatIntoMMSS(long secsIn) {
-
-        long minutes = secsIn / 60, seconds = secsIn % 60;
-
-        return ((minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
-
-    }
-
-    public static void setLocation(FileConfiguration config, Location location, String path) {
-
-
-        config.set(path + ".world", location.getWorld().getName());
-        config.set(path + ".x", location.getX());
-        config.set(path + ".z", location.getZ());
-        config.set(path + ".y", location.getY());
-        config.set(path + ".pitch", location.getPitch());
-        config.set(path + ".yaw", location.getYaw());
-
     }
 
     public static String locationToString(Location location) {
@@ -146,8 +87,6 @@ public class Util {
     }
 
     public static void spawnRandomFirework(Location location) {
-
-
         Firework fw = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
         FireworkMeta fwm = fw.getFireworkMeta();
 
@@ -179,19 +118,6 @@ public class Util {
         int rp = r.nextInt(2) + 1;
         fwm.setPower(rp);
         fw.setFireworkMeta(fwm);
-
     }
-
-
-    public static List<String> splitString(String string, int max) {
-        List<String> matchList = new ArrayList<String>();
-        Pattern regex = Pattern.compile(".{1," + max + "}(?:\\s|$)", Pattern.DOTALL);
-        Matcher regexMatcher = regex.matcher(string);
-        while(regexMatcher.find()) {
-            matchList.add(regexMatcher.group());
-        }
-        return matchList;
-    }
-
 
 }
