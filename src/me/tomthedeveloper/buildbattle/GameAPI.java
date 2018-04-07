@@ -92,7 +92,6 @@ public class GameAPI {
     public void onSetup(Main plugin, CommandsInterface commandsInterface) {
         this.plugin = plugin;
         version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
-        ConfigurationManager.plugin = plugin;
         signManager = new SignManager(this);
         gameInstanceManager = new GameInstanceManager();
 

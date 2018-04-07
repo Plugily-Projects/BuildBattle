@@ -230,6 +230,7 @@ public class Main extends JavaPlugin implements CommandsInterface {
     }
 
     private void initializateClasses(){
+        new ConfigurationManager(this);
         new BuildEvents(gameAPI);
         new QuitEvents(gameAPI);
         new SpectatorEvents(gameAPI);
