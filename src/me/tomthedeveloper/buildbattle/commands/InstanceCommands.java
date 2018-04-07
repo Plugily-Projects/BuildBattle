@@ -6,7 +6,7 @@ import me.tomthedeveloper.buildbattle.events.PlayerAddCommandEvent;
 import me.tomthedeveloper.buildbattle.events.PlayerAddSpawnCommandEvent;
 import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.utils.Util;
-import me.tomthedeveloper.setup.SetupInventory;
+import me.tomthedeveloper.buildbattle.setup.SetupInventory;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
