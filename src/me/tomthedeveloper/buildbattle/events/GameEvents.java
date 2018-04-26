@@ -51,7 +51,7 @@ public class GameEvents implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         if(plugin.getGameAPI().getGameInstanceManager().getGameInstance(event.getPlayer()) == null) return;
-        if(!plugin.getGameAPI().isBungeeActivated()) plugin.getGameAPI().getGameInstanceManager().getGameInstance(event.getPlayer()).leaveAttempt(event.getPlayer());
+        if(!plugin.isBungeeActivated()) plugin.getGameAPI().getGameInstanceManager().getGameInstance(event.getPlayer()).leaveAttempt(event.getPlayer());
     }
 
 }

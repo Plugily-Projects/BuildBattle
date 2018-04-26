@@ -1,8 +1,10 @@
 package me.tomthedeveloper.buildbattle.handlers;
 
 import me.tomthedeveloper.buildbattle.GameAPI;
+import me.tomthedeveloper.buildbattle.Main;
 import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.game.GameState;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
@@ -30,7 +32,7 @@ import java.util.Queue;
 public class SignManager extends BukkitRunnable implements Listener {
 
     public static String[] signlines = new String[]{"--------", "Waiting", "", "--------"};
-    public GameAPI plugin;
+    public Main plugin;
     HashMap<Sign, GameInstance> signpool = new HashMap();
     Queue<GameInstance> gamequeue = new LinkedList<>();
 
@@ -39,11 +41,31 @@ public class SignManager extends BukkitRunnable implements Listener {
     The constructor fills our signpool up with sig schedules a
     new bukkit task and registers the associated listener for us.
      */
-    public SignManager(GameAPI gameAPI) {
-        plugin = gameAPI;
-        plugin.getPlugin().getServer().getPluginManager().registerEvents(this, plugin.getPlugin());
+    public SignManager(Main plugin) {
+        this.plugin = plugin;
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        loadSigns();
 
         this.start();
+    }
+
+    private void loadSigns() {
+        if(!plugin.getConfig().contains("signs")) {
+            plugin.getGameAPI().saveLoc("signs.example", Bukkit.getWorlds().get(0).getSpawnLocation());
+        }
+
+        for(String path : plugin.getConfig().getConfigurationSection("signs").getKeys(false)) {
+            if(path.contains("example")) continue;
+            path = "signs." + path;
+
+            Location loc = plugin.getGameAPI().getLocation(path);
+            if(loc == null) System.out.print("LOCATION IS NNNNUUUUULLLL!!");
+            if(loc.getBlock().getState() instanceof Sign) {
+                registerSign((Sign) loc.getBlock().getState());
+            } else {
+                System.out.println("Block at given location " + path + " isn't a sign!");
+            }
+        }
     }
 
 
@@ -68,7 +90,7 @@ public class SignManager extends BukkitRunnable implements Listener {
             formatEmptySign(sign);
 
         }
-        this.runTaskTimer(plugin.getPlugin(), 20L, 20L);
+        this.runTaskTimer(plugin, 20L, 20L);
 
     }
 
@@ -197,7 +219,7 @@ public class SignManager extends BukkitRunnable implements Listener {
 
             if(instance == null) {
                 Location location = event.getClickedBlock().getLocation();
-                for(GameInstance gameInstance : plugin.getGameInstanceManager().getGameInstances()) {
+                for(GameInstance gameInstance : plugin.getGameAPI().getGameInstanceManager().getGameInstances()) {
                     if(gameInstance.getSigns().contains(location)) {
                         instance = gameInstance;
                         break;
@@ -211,7 +233,7 @@ public class SignManager extends BukkitRunnable implements Listener {
             can teleport him using the joinAttempt() method.*/
 
             if(instance != null) {
-                for(GameInstance gameInstance : plugin.getGameInstanceManager().getGameInstances()) {
+                for(GameInstance gameInstance : plugin.getGameAPI().getGameInstanceManager().getGameInstances()) {
                     if(gameInstance.getPlayers().contains(event.getPlayer())) {
                         event.getPlayer().sendMessage(ChatManager.getFromLanguageConfig("YouAreAlreadyIngame", ChatColor.RED + "You are already qeued for a game! You can leave a game with /leave."));
                         return;
@@ -229,8 +251,8 @@ public class SignManager extends BukkitRunnable implements Listener {
                             } else {
                                 if((instance.getGameState() == GameState.STARTING || instance.getGameState() == GameState.WAITING_FOR_PLAYERS)) {
                                     instance.leaveAttempt(player);
-                                    player.sendMessage(plugin.getGameInstanceManager().getGameInstances().get(0).getChatManager().getMessage("YouGotKickedToMakePlaceForAPremiumPlayer", ChatColor.RED + "You got kicked out of the game to make place for a premium player!"));
-                                    instance.getChatManager().broadcastMessage(plugin.getGameInstanceManager().getGameInstances().get(0).getChatManager().getMessage("KickedToMakePlaceForPremiumPlayer", "%PLAYER% got removed from the game to make place for a premium players!", player));
+                                    player.sendMessage(plugin.getGameAPI().getGameInstanceManager().getGameInstances().get(0).getChatManager().getMessage("YouGotKickedToMakePlaceForAPremiumPlayer", ChatColor.RED + "You got kicked out of the game to make place for a premium player!"));
+                                    instance.getChatManager().broadcastMessage(plugin.getGameAPI().getGameInstanceManager().getGameInstances().get(0).getChatManager().getMessage("KickedToMakePlaceForPremiumPlayer", "%PLAYER% got removed from the game to make place for a premium players!", player));
                                     instance.joinAttempt(event.getPlayer());
                                     b = true;
                                     return;
@@ -243,12 +265,11 @@ public class SignManager extends BukkitRunnable implements Listener {
 
                         }
                         if(!b) {
-                            event.getPlayer().sendMessage(plugin.getGameInstanceManager().getGameInstances().get(0).getChatManager().getMessage("FullGameAlreadyFullWithPermiumPlayers", ChatColor.RED + "This game is already full with premium players! Sorry"));
-                        } else {
+                            event.getPlayer().sendMessage(plugin.getGameAPI().getGameInstanceManager().getGameInstances().get(0).getChatManager().getMessage("FullGameAlreadyFullWithPermiumPlayers", ChatColor.RED + "This game is already full with premium players! Sorry"));
                         }
 
                     } else {
-                        event.getPlayer().sendMessage(plugin.getGameInstanceManager().getGameInstances().get(0).getChatManager().getMessage("NoPermissionToJoinFullGames", "You don't have the permission to join full games!"));
+                        event.getPlayer().sendMessage(plugin.getGameAPI().getGameInstanceManager().getGameInstances().get(0).getChatManager().getMessage("NoPermissionToJoinFullGames", "You don't have the permission to join full games!"));
                     }
                     // instance.joinAttempt(event.getPlayer());
 

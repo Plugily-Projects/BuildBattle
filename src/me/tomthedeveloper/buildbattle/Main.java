@@ -16,6 +16,7 @@ import me.tomthedeveloper.buildbattle.game.GameState;
 import me.tomthedeveloper.buildbattle.handlers.ChatManager;
 import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
 import me.tomthedeveloper.buildbattle.handlers.InventoryManager;
+import me.tomthedeveloper.buildbattle.handlers.SignManager;
 import me.tomthedeveloper.buildbattle.handlers.UserManager;
 import me.tomthedeveloper.buildbattle.arena.Arena;
 import me.tomthedeveloper.buildbattle.items.SpecialItem;
@@ -55,12 +56,22 @@ public class Main extends JavaPlugin implements CommandsInterface {
     private FileStats fileStats;
     private GameAPI gameAPI = new GameAPI();
     private BungeeManager bungeeManager;
+    private boolean bungeeActivated;
     private InventoryManager inventoryManager;
     private boolean inventoryManagerEnabled;
+    private SignManager signManager;
     private List<String> filesToGenerate = Arrays.asList("EntityMenu", "particles", "scoreboard", "signModification", "SpecialItems", "STATS", "voteItems", "MySQL");
 
     public BungeeManager getBungeeManager() {
         return bungeeManager;
+    }
+
+    public boolean isBungeeActivated() {
+        return bungeeActivated;
+    }
+
+    public SignManager getSignManager() {
+        return signManager;
     }
 
     public InventoryManager getInventoryManager() {
@@ -142,8 +153,6 @@ public class Main extends JavaPlugin implements CommandsInterface {
     @Override
     public void onEnable() {
         new ConfigurationManager(this);
-        gameAPI.setGameName("BuildBattle");
-        gameAPI.setAbreviation("BD");
         gameAPI.onSetup(this, this);
         initializeClasses();
         bungeeManager = new BungeeManager(this);
@@ -227,6 +236,9 @@ public class Main extends JavaPlugin implements CommandsInterface {
     }
 
     private void initializeClasses(){
+        User.plugin = this;
+        signManager = new SignManager(this);
+        bungeeActivated = getConfig().getBoolean("BungeeActivated");
         new GameEvents(this);
         new GameCommands(this);
         new SpectatorEvents(gameAPI);
@@ -351,7 +363,7 @@ public class Main extends JavaPlugin implements CommandsInterface {
         if(gameAPI.getGameInstanceManager().getGameInstances() != null) {
             if(gameAPI.getGameInstanceManager().getGameInstances().size() > 0) {
                 for(GameInstance gameInstance : gameAPI.getGameInstanceManager().getGameInstances()) {
-                    gameAPI.getSignManager().removeSign(gameInstance);
+                    signManager.removeSign(gameInstance);
                 }
             }
         }
@@ -380,7 +392,7 @@ public class Main extends JavaPlugin implements CommandsInterface {
             }
             if(getConfig().contains(s + "Endlocation")) earthMasterInstance.setEndLocation(gameAPI.getLocation(s + "Endlocation"));
             else {
-                if(!gameAPI.isBungeeActivated()) {
+                if(!bungeeActivated) {
                     System.out.print(ID + " doesn't contains an end location!");
                     gameAPI.getGameInstanceManager().registerGameInstance(earthMasterInstance);
                     continue;
@@ -419,7 +431,7 @@ public class Main extends JavaPlugin implements CommandsInterface {
 
     private void loadStatsForPlayersOnline() {
         for(final Player player : getServer().getOnlinePlayers()) {
-            if(gameAPI.isBungeeActivated()) gameAPI.getGameInstanceManager().getGameInstances().get(0).teleportToLobby(player);
+            if(bungeeActivated) gameAPI.getGameInstanceManager().getGameInstances().get(0).teleportToLobby(player);
             if(!this.isDatabaseActivated()) {
                 List<String> temp = new ArrayList<>();
                 temp.add("gamesplayed");

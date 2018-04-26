@@ -35,7 +35,7 @@ public class InstanceCommands implements CommandExecutor {
         Player player = (Player) commandSender;
         if(commandsInterface.checkPlayerCommands(player, command, s, args)) return true;
         if(!(player.isOp() || player.hasPermission("minigames.edit"))) return true;
-        if(!(command.getLabel().equalsIgnoreCase(plugin.getGameName()) || command.getLabel().equalsIgnoreCase(plugin.getAbreviation()))) return true;
+        if(!(command.getLabel().equalsIgnoreCase("BuildBattle") || command.getLabel().equalsIgnoreCase("bb"))) return true;
         if(commandsInterface.checkSpecialCommands(player, command, s, args)) {
             return true;
         }
@@ -84,7 +84,7 @@ public class InstanceCommands implements CommandExecutor {
 
         if(!plugin.getPlugin().getConfig().contains("instances." + args[0])) {
             player.sendMessage(ChatColor.RED + "Arena doesn't exists!");
-            player.sendMessage(ChatColor.RED + "Usage: /" + plugin.getGameName() + " < ARENA ID > set <MINPLAYRS | MAXPLAYERS | MAPNAME | SCHEMATIC | LOBBYLOCATION | EndLOCATION | STARTLOCATION  >  < VALUE>");
+            player.sendMessage(ChatColor.RED + "Usage: /bb < ARENA ID > set <MINPLAYRS | MAXPLAYERS | MAPNAME | SCHEMATIC | LOBBYLOCATION | EndLOCATION | STARTLOCATION  >  < VALUE>");
             return true;
         }
         if(args[1].equalsIgnoreCase("add")) {
@@ -99,29 +99,29 @@ public class InstanceCommands implements CommandExecutor {
         if(args.length == 3) {
             if(args[2].equalsIgnoreCase("lobbylocation") || args[2].equalsIgnoreCase("lobbyloc")) {
                 plugin.saveLoc("instances." + args[0] + ".lobbylocation", player.getLocation());
-                player.sendMessage(plugin.getGameName() + ": Lobby location for arena/instance " + args[0] + " set to " + Util.locationToString(player.getLocation()));
+                player.sendMessage("BuildBattle: Lobby location for arena/instance " + args[0] + " set to " + Util.locationToString(player.getLocation()));
             } else if(args[2].equalsIgnoreCase("Startlocation") || args[2].equalsIgnoreCase("Startloc")) {
                 plugin.saveLoc("instances." + args[0] + ".Startlocation", player.getLocation());
-                player.sendMessage(plugin.getGameName() + " Start location for arena/instance " + args[0] + " set to " + Util.locationToString(player.getLocation()));
+                player.sendMessage("BuildBattle: Start location for arena/instance " + args[0] + " set to " + Util.locationToString(player.getLocation()));
             } else if(args[2].equalsIgnoreCase("Endlocation") || args[2].equalsIgnoreCase("Endloc")) {
                 plugin.saveLoc("instances." + args[0] + ".Endlocation", player.getLocation());
-                player.sendMessage(plugin.getGameName() + " End location for arena/instance " + args[0] + " set to " + Util.locationToString(player.getLocation()));
+                player.sendMessage("BuildBattle: End location for arena/instance " + args[0] + " set to " + Util.locationToString(player.getLocation()));
             } else {
                 player.sendMessage(ChatColor.RED + "Invalid Command!");
-                player.sendMessage(ChatColor.RED + "Usage: /" + plugin.getGameName() + " <ARENA > set <StartLOCTION | LOBBYLOCATION | EndLOCATION>");
+                player.sendMessage(ChatColor.RED + "Usage: /bb <ARENA > set <StartLOCTION | LOBBYLOCATION | EndLOCATION>");
             }
         } else if(args.length == 4) {
 
             if(args[2].equalsIgnoreCase("MAXPLAYERS") || args[2].equalsIgnoreCase("maximumplayers")) {
                 plugin.getPlugin().getConfig().set("instances." + args[0] + ".maximumplayers", Integer.parseInt(args[3]));
-                player.sendMessage(plugin.getGameName() + " Maximum players for arena/instance " + args[0] + " set to " + Integer.parseInt(args[3]));
+                player.sendMessage("BuildBattle: Maximum players for arena/instance " + args[0] + " set to " + Integer.parseInt(args[3]));
 
             } else if(args[2].equalsIgnoreCase("MINPLAYERS") || args[2].equalsIgnoreCase("minimumplayers")) {
                 plugin.getPlugin().getConfig().set("instances." + args[0] + ".minimumplayers", Integer.parseInt(args[3]));
-                player.sendMessage(plugin.getGameName() + " Minimum players for arena/instance " + args[0] + " set to " + Integer.parseInt(args[3]));
+                player.sendMessage("BuildBattle: Minimum players for arena/instance " + args[0] + " set to " + Integer.parseInt(args[3]));
             } else if(args[2].equalsIgnoreCase("MAPNAME") || args[2].equalsIgnoreCase("NAME")) {
                 plugin.getPlugin().getConfig().set("instances." + args[0] + ".mapname", args[3]);
-                player.sendMessage(plugin.getGameName() + " Map name for arena/instance " + args[0] + " set to " + args[3]);
+                player.sendMessage("BuildBattle: Map name for arena/instance " + args[0] + " set to " + args[3]);
             } else if(args[2].equalsIgnoreCase("WORLD") || args[2].equalsIgnoreCase("MAP")) {
                 boolean exists = false;
                 for(World world : Bukkit.getWorlds()) {
@@ -132,17 +132,17 @@ public class InstanceCommands implements CommandExecutor {
                     return true;
                 }
                 plugin.getPlugin().getConfig().set("instances." + args[0] + ".world", args[3]);
-                player.sendMessage(plugin.getGameName() + " World for arena/instance " + args[0] + " set to " + args[3]);
+                player.sendMessage("BuildBattle: World for arena/instance " + args[0] + " set to " + args[3]);
             } else if(args[2].equalsIgnoreCase("schematic")) {
                 if(plugin.needsMapRestore()) {
                     String filename = args[3];
                     if(filename.contains(".schematic")) {
                         player.sendMessage(ChatColor.RED + "Don't put .schematic behind the name! ");
-                        player.sendMessage(ChatColor.RED + "Usage: /" + plugin.getGameName() + " set schematic <filename (without .schematic)>");
+                        player.sendMessage(ChatColor.RED + "Usage: /bb set schematic <filename (without .schematic)>");
                         return true;
                     } else {
                         plugin.getPlugin().getConfig().set("instances." + args[0] + ".schematic", args[3]);
-                        player.sendMessage(plugin.getGameName() + ": Schematic file for arena/instance " + args[0] + " set to " + args[3]);
+                        player.sendMessage("BuildBattle: Schematic file for arena/instance " + args[0] + " set to " + args[3]);
                     }
                 } else {
                     player.sendMessage(ChatColor.RED + "This game doesn't need a schematic file!");
@@ -152,7 +152,7 @@ public class InstanceCommands implements CommandExecutor {
 
             } else {
                 player.sendMessage(ChatColor.RED + "Invalid Command!");
-                player.sendMessage(ChatColor.RED + "Usage: /" + plugin.getGameName() + " set <MINPLAYERS | MAXPLAYERS | SCHEMATIC> <value>");
+                player.sendMessage(ChatColor.RED + "Usage: /bb set <MINPLAYERS | MAXPLAYERS | SCHEMATIC> <value>");
             }
         }
         plugin.getPlugin().saveConfig();
@@ -173,7 +173,7 @@ public class InstanceCommands implements CommandExecutor {
         }
         if(b) {
             player.sendMessage(ChatColor.DARK_RED + "Arena with that ID already exists!");
-            player.sendMessage(ChatColor.DARK_RED + "Usage: " + plugin.getGameName() + " create <ID>");
+            player.sendMessage(ChatColor.DARK_RED + "Usage: bb create <ID>");
             return;
         }
         if(plugin.getPlugin().getConfig().contains("instances." + strings[1])) {
@@ -218,7 +218,7 @@ public class InstanceCommands implements CommandExecutor {
         if(str.equalsIgnoreCase("lobby") || str.equalsIgnoreCase("lobbylocation")) type = LocationType.LOBBY;
         if(str.equalsIgnoreCase("Startlocation") || str.equalsIgnoreCase("start")) type = LocationType.START;
         if(type == null) {
-            player.sendMessage(ChatColor.RED + "Usage: /" + plugin.getGameName() + " tp <ARENA> <START|END|LOBBY>");
+            player.sendMessage(ChatColor.RED + "Usage: /bb tp <ARENA> <START|END|LOBBY>");
             return true;
         }
         if(!plugin.getPlugin().getConfig().contains("instances." + ID)) {

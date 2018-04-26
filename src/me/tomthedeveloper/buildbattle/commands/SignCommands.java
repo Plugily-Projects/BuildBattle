@@ -48,7 +48,6 @@ public class SignCommands implements CommandExecutor {
                         for(int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
                             Location tmpblock = new Location(player.getWorld(), x, y, z);
                             if(tmpblock.getBlock().getState() instanceof Sign && !getSigns().contains(tmpblock.getBlock().getState())) {
-                                boolean b = plugin.getSignManager().registerSign((Sign) tmpblock.getBlock().getState());
                                 plugin.saveLoc("signs." + i, tmpblock);
                                 counter++;
                                 i++;
@@ -60,13 +59,13 @@ public class SignCommands implements CommandExecutor {
 
             } else {
                 if(selection.getMaximumPoint().getBlock().getState() instanceof Sign && !getSigns().contains(selection.getMaximumPoint().getBlock().getState())) {
-                    plugin.getSignManager().registerSign((Sign) selection.getMaximumPoint().getBlock().getState());
+                    plugin.getPlugin().getSignManager().registerSign((Sign) selection.getMaximumPoint().getBlock().getState());
                     plugin.saveLoc("signs." + i, selection.getMaximumPoint());
                     counter++;
                     i++;
                 }
                 if(selection.getMinimumPoint().getBlock().getState() instanceof Sign && !getSigns().contains(selection.getMinimumPoint().getBlock().getState())) {
-                    plugin.getSignManager().registerSign((Sign) selection.getMinimumPoint().getBlock().getState());
+                    plugin.getPlugin().getSignManager().registerSign((Sign) selection.getMinimumPoint().getBlock().getState());
                     plugin.saveLoc("signs." + i, selection.getMinimumPoint());
                     counter++;
                     i++;

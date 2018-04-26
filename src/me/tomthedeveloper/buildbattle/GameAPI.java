@@ -30,11 +30,8 @@ public class GameAPI {
     private String abreviation;
     private boolean kitsenabled = false;
     private boolean bar = false;
-    private boolean bungee;
-    private String version;
     private Main plugin;
     private boolean needsMapRestore = false;
-    private SignManager signManager;
 
     public Main getPlugin() {
         return plugin;
@@ -44,85 +41,32 @@ public class GameAPI {
         return bar;
     }
 
-    public boolean isBungeeActivated() {
-        return bungee;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
     public boolean needsMapRestore() {
         return needsMapRestore;
     }
 
-    public boolean is1_8_R3() {
-        if(getVersion().equalsIgnoreCase("v1_8_R3")) return true;
-        return false;
-    }
-
-    public boolean is1_12_R1() {
-        if(getVersion().equalsIgnoreCase("v1_12_R1")) return true;
-        return false;
-    }
-
-    public boolean is1_7_R4() {
-        if(getVersion().equalsIgnoreCase("v1_7_R4")) return true;
-        return false;
-    }
-
-    public boolean is1_9_R1() {
-        if(getVersion().equalsIgnoreCase("v1_9_R1")) return true;
-        return false;
-    }
-
     public void onSetup(Main plugin, CommandsInterface commandsInterface) {
         this.plugin = plugin;
-        version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
-        signManager = new SignManager(this);
         gameInstanceManager = new GameInstanceManager();
-
-        if(!plugin.getConfig().contains("bar")) plugin.getConfig().set("bar", false);
-        if(!plugin.getConfig().contains("BungeeActivated")) plugin.getConfig().set("BungeeActivated", false);
-        bungee = plugin.getConfig().getBoolean("BungeeActivated");
-        if(!plugin.getConfig().contains("InventoryManager")) {
-            plugin.getConfig().set("InventoryManager", false);
-            plugin.saveConfig();
-        }
         bar = plugin.getConfig().getBoolean("bar");
         GameInstance.plugin = this;
-        User.plugin = this;
 
         plugin.getServer().getPluginManager().registerEvents(new SpectatorEvents(this), plugin);
         plugin.getServer().getPluginManager().registerEvents(new SetupInventoryEvents(this), plugin);
-        plugin.getServer().getPluginManager().registerEvents(this.getSignManager(), JavaPlugin.getPlugin(Main.class));
 
         loadLanguageFile();
-        loadSigns();
         plugin.saveConfig();
         ChatManager.getFromLanguageConfig("Unlocks-at-level", ChatColor.GREEN + "Unlocks at level %NUMBER% ");
         if(plugin.getConfig().getBoolean("BungeeActivated")) {
             plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
         }
 
-        plugin.getCommand(this.getGameName()).setExecutor(new me.tomthedeveloper.buildbattle.commands.InstanceCommands(this, commandsInterface));
+        plugin.getCommand("buildbattle").setExecutor(new me.tomthedeveloper.buildbattle.commands.InstanceCommands(this, commandsInterface));
         plugin.getCommand("addsigns").setExecutor(new me.tomthedeveloper.buildbattle.commands.SignCommands(this));
-    }
-
-    public String getGameName() {
-        return name;
-    }
-
-    public void setGameName(String newName) {
-        name = newName;
     }
 
     public GameInstanceManager getGameInstanceManager() {
         return gameInstanceManager;
-    }
-
-    public SignManager getSignManager() {
-        return signManager;
     }
 
     public void loadLanguageFile() {
@@ -131,25 +75,6 @@ public class GameAPI {
             config.save("language");
         } catch(IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    private void loadSigns() {
-        if(!plugin.getConfig().contains("signs")) {
-            saveLoc("signs.example", Bukkit.getWorlds().get(0).getSpawnLocation());
-        }
-
-        for(String path : plugin.getConfig().getConfigurationSection("signs").getKeys(false)) {
-            if(path.contains("example")) continue;
-            path = "signs." + path;
-
-            Location loc = getLocation(path);
-            if(loc == null) System.out.print("LOCATION IS NNNNUUUUULLLL!!");
-            if(loc.getBlock().getState() instanceof Sign) {
-                getSignManager().registerSign((Sign) loc.getBlock().getState());
-            } else {
-                System.out.println("Block at given location " + path + " isn't a sign!");
-            }
         }
     }
 
@@ -178,14 +103,6 @@ public class GameAPI {
         Plugin p = Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
         if(p instanceof WorldEditPlugin) return (WorldEditPlugin) p;
         return null;
-    }
-
-    public String getAbreviation() {
-        return abreviation;
-    }
-
-    public void setAbreviation(String abreviation) {
-        this.abreviation = abreviation;
     }
 
 }

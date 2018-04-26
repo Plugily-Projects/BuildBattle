@@ -52,7 +52,7 @@ public class SetupInventoryEvents implements Listener {
                 return;
             }
 
-            player.performCommand(plugin.getGameName() + " " + gameInstance.getID() + " set MAPNAME " + event.getCursor().getItemMeta().getDisplayName());
+            player.performCommand( "bb " + gameInstance.getID() + " set MAPNAME " + event.getCursor().getItemMeta().getDisplayName());
             event.getCurrentItem().getItemMeta().setDisplayName(ChatColor.GOLD + "Set a mapname (currently: " + event.getCursor().getItemMeta().getDisplayName());
             return;
         }
@@ -60,18 +60,18 @@ public class SetupInventoryEvents implements Listener {
         if(name.contains("End Location")) {
             event.setCancelled(true);
 
-            player.performCommand(plugin.getGameName() + " " + gameInstance.getID() + " set ENDLOC");
+            player.performCommand( "bb " + gameInstance.getID() + " set ENDLOC");
             return;
         }
         if(name.contains("Start Location")) {
             event.setCancelled(true);
 
-            player.performCommand(plugin.getGameName() + " " + gameInstance.getID() + " set STARTLOC");
+            player.performCommand("bb " + gameInstance.getID() + " set STARTLOC");
             return;
         }
         if(name.contains("Lobby Location")) {
             event.setCancelled(true);
-            player.performCommand(plugin.getGameName() + " " + gameInstance.getID() + " set LOBBYLOC");
+            player.performCommand("bb " + gameInstance.getID() + " set LOBBYLOC");
             return;
         }
         if(name.contains("max players")) {
@@ -79,13 +79,13 @@ public class SetupInventoryEvents implements Listener {
             if(clickType.isRightClick()) {
                 event.getCurrentItem().setAmount(event.getCurrentItem().getAmount() + 1);
                 player.updateInventory();
-                player.performCommand(plugin.getGameName() + " " + gameInstance.getID() + " set MAXPLAYERS " + event.getCurrentItem().getAmount());
+                player.performCommand("bb " + gameInstance.getID() + " set MAXPLAYERS " + event.getCurrentItem().getAmount());
                 return;
             }
             if(clickType.isLeftClick()) {
                 event.getCurrentItem().setAmount(event.getCurrentItem().getAmount() - 1);
                 player.updateInventory();
-                player.performCommand(plugin.getGameName() + " " + gameInstance.getID() + " set MAXPLAYERS " + event.getCurrentItem().getAmount());
+                player.performCommand("bb " + gameInstance.getID() + " set MAXPLAYERS " + event.getCurrentItem().getAmount());
                 return;
             }
         }
@@ -95,13 +95,13 @@ public class SetupInventoryEvents implements Listener {
             if(clickType.isRightClick()) {
                 event.getCurrentItem().setAmount(event.getCurrentItem().getAmount() + 1);
                 player.updateInventory();
-                player.performCommand(plugin.getGameName() + " " + gameInstance.getID() + " set MINPLAYERS " + event.getCurrentItem().getAmount());
+                player.performCommand("bb " + gameInstance.getID() + " set MINPLAYERS " + event.getCurrentItem().getAmount());
                 return;
             }
             if(clickType.isLeftClick()) {
                 event.getCurrentItem().setAmount(event.getCurrentItem().getAmount() - 1);
                 player.updateInventory();
-                player.performCommand(plugin.getGameName() + " " + gameInstance.getID() + " set MINPLAYERS " + event.getCurrentItem().getAmount());
+                player.performCommand("bb " + gameInstance.getID() + " set MINPLAYERS " + event.getCurrentItem().getAmount());
                 return;
             }
         }

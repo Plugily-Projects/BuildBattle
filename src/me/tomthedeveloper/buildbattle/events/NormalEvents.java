@@ -106,7 +106,7 @@ public class NormalEvents implements Listener {
 
     @EventHandler
     public void onJoin(final PlayerJoinEvent event) {
-        if(gameAPI.isBungeeActivated()) gameAPI.getGameInstanceManager().getGameInstances().get(0).teleportToLobby(event.getPlayer());
+        if(plugin.isBungeeActivated()) gameAPI.getGameInstanceManager().getGameInstances().get(0).teleportToLobby(event.getPlayer());
         if(!plugin.isDatabaseActivated()) {
             List<String> temp = new ArrayList<>();
             temp.add("gamesplayed");

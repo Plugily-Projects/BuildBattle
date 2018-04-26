@@ -29,13 +29,13 @@ public class ChatManager {
         ChatManager.gameInstance = gameInstance;
         config = ConfigurationManager.getConfig("language");
 
-        GAMENAME = getFromLanguageConfig("GAMENAME", GameInstance.getPlugin().getGameName());
+        GAMENAME = getFromLanguageConfig("GAMENAME", "BuildBattle");
         prefix = getFromLanguageConfig("PREFIX", PREFIX + "[" + GAMENAME + "] " + NORMAL).replaceAll("(&([a-f0-9]))", "\u00A7$2").replaceAll("&l", ChatColor.BOLD.toString());
         loadMessages();
     }
 
     public ChatManager() {
-        GAMENAME = getFromLanguageConfig("GAMENAME", GameInstance.getPlugin().getGameName());
+        GAMENAME = getFromLanguageConfig("GAMENAME", "BuildBattle");
         prefix = getFromLanguageConfig("PREFIX", PREFIX + "[" + GAMENAME + "] " + NORMAL).replaceAll("(&([a-f0-9]))", "\u00A7$2");
     }
 

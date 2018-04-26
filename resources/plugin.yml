@@ -7,10 +7,10 @@ commands:
   leave:
     usage: /leave
     description: Leave the game
-  BuildBattle:
-    usage: /BuildBattle
+  buildbattle:
+    usage: /buildbattle
     description: The main command
-    aliases: [BuildB, bb]
+    aliases: [buildb, bb]
   addsigns:
     usage: /addsigns
     description: Adds signs to the plugin!

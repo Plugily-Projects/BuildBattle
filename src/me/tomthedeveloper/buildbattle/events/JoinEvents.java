@@ -12,7 +12,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 //TODO update checker
 public class JoinEvents implements Listener {
 
-
     private GameAPI plugin;
 
     public JoinEvents(GameAPI plugin) {
@@ -23,7 +22,7 @@ public class JoinEvents implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        if(plugin.isBungeeActivated()) return;
+        if(plugin.getPlugin().isBungeeActivated()) return;
         for(Player player : plugin.getPlugin().getServer().getOnlinePlayers()) {
             if(plugin.getGameInstanceManager().getGameInstance(player) == null) continue;
             player.hidePlayer(event.getPlayer());

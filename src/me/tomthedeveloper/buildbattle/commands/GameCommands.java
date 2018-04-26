@@ -54,7 +54,7 @@ public class GameCommands implements CommandExecutor {
                 System.out.print(player.getName() + " tried /leave but isn't in an arena!");
                 return true;
             }
-            if(plugin.getGameAPI().isBungeeActivated()) {
+            if(plugin.isBungeeActivated()) {
                 plugin.getBungeeManager().connectToHub(player);
                 System.out.print(player.getName() + " is teleported to the Hub Server");
                 return true;

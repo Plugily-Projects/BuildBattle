@@ -71,13 +71,13 @@ public class IngameEvents implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        if((plugin.getGameAPI().isBungeeActivated() && gameAPI.getGameInstanceManager().getGameInstances().get(0).getGameState() == GameState.INGAME) || (gameAPI.isBungeeActivated() && gameAPI.getGameInstanceManager().getGameInstances().get(0).getGameState() == GameState.ENDING) || (gameAPI.isBungeeActivated() && gameAPI.getGameInstanceManager().getGameInstances().get(0).getGameState() == GameState.RESTARTING))
+        if((plugin.isBungeeActivated() && gameAPI.getGameInstanceManager().getGameInstances().get(0).getGameState() == GameState.INGAME) || (plugin.isBungeeActivated() && gameAPI.getGameInstanceManager().getGameInstances().get(0).getGameState() == GameState.ENDING) || (plugin.isBungeeActivated() && gameAPI.getGameInstanceManager().getGameInstances().get(0).getGameState() == GameState.RESTARTING))
             event.getPlayer().kickPlayer(ChatManager.getSingleMessage("Kicked-Game-Already-Started", ChatManager.HIGHLIGHTED + "Kicked! Game has already started!"));
     }
 
     @EventHandler
     public void onPreJoin(AsyncPlayerPreLoginEvent event) {
-        if((gameAPI.isBungeeActivated() && gameAPI.getGameInstanceManager().getGameInstances().get(0).getGameState() == GameState.INGAME) || (gameAPI.isBungeeActivated() && gameAPI.getGameInstanceManager().getGameInstances().get(0).getGameState() == GameState.ENDING) || (gameAPI.isBungeeActivated() && gameAPI.getGameInstanceManager().getGameInstances().get(0).getGameState() == GameState.RESTARTING)) {
+        if((plugin.isBungeeActivated() && gameAPI.getGameInstanceManager().getGameInstances().get(0).getGameState() == GameState.INGAME) || (plugin.isBungeeActivated() && gameAPI.getGameInstanceManager().getGameInstances().get(0).getGameState() == GameState.ENDING) || (plugin.isBungeeActivated() && gameAPI.getGameInstanceManager().getGameInstances().get(0).getGameState() == GameState.RESTARTING)) {
             event.setKickMessage(ChatManager.getSingleMessage("Kicked-Game-Already-Started", ChatManager.HIGHLIGHTED + "Kicked! Game has already started!"));
             event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
         }
@@ -119,7 +119,7 @@ public class IngameEvents implements Listener {
         if(key == null) return;
         if(SpecialItemManager.getRelatedSpecialItem(itemStack).equalsIgnoreCase("Leave")) {
             event.setCancelled(true);
-            if(gameAPI.isBungeeActivated()) {
+            if(plugin.isBungeeActivated()) {
                 plugin.getBungeeManager().connectToHub(event.getPlayer());
             } else {
                 gameInstance.leaveAttempt(event.getPlayer());
@@ -426,8 +426,8 @@ public class IngameEvents implements Listener {
     }
 
     @EventHandler
-    public void onWitherBos(CreatureSpawnEvent event) {
-        if(gameAPI.isBungeeActivated() && event.getEntity().getType() == EntityType.WITHER) {
+    public void onWitherBoss(CreatureSpawnEvent event) {
+        if(plugin.isBungeeActivated() && event.getEntity().getType() == EntityType.WITHER) {
             event.setCancelled(true);
             return;
         }

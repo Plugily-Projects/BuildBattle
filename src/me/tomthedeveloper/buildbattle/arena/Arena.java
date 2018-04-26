@@ -319,7 +319,7 @@ public class Arena extends GameInstance {
                     }
 
                     clearPlayers();
-                    if(plugin.isBungeeActivated()) {
+                    if(plugin.getPlugin().isBungeeActivated()) {
                         for(Player player : plugin.getPlugin().getServer().getOnlinePlayers()) {
                             this.addPlayer(player);
                         }
@@ -332,9 +332,9 @@ public class Arena extends GameInstance {
                 setVoting(false);
                 receivedVoteItems = false;
                 if(ConfigPreferences.isDynamicSignSystemEnabled()) {
-                    plugin.getSignManager().addToQueue(this);
+                   plugin.getPlugin().getSignManager().addToQueue(this);
                 }
-                if(plugin.isBungeeActivated() && ConfigPreferences.getBungeeShutdown()) {
+                if(plugin.getPlugin().isBungeeActivated() && ConfigPreferences.getBungeeShutdown()) {
                     plugin.getPlugin().getServer().shutdown();
                 }
                 if(RESTART_ON_END && BUNGEE_SHUTDOWN) {
@@ -429,7 +429,7 @@ public class Arena extends GameInstance {
     public void start() {
         this.runTaskTimer(plugin.getPlugin(), 20L, 20L);
         System.out.print(getID() + " STARTED!");
-        plugin.getSignManager().addToQueue(this);
+        plugin.getPlugin().getSignManager().addToQueue(this);
     }
 
     private void updateScoreboard() {
@@ -580,10 +580,11 @@ public class Arena extends GameInstance {
                 for(Player player1 : getPlayers()) {
                     player1.teleport(getVotingPlot().getTeleportLocation());
                 }
-                if(plugin.is1_8_R3()) {
+                //todo checks for future versions
+                //if(plugin.is1_8_R3()) {
                     for(Player player1 : getPlayers())
                         MessageHandler.sendTitleMessage(player1, getChatManager().getMessage("Plot-Owner-Title-Message", ChatManager.PREFIX + "Plot Owner: " + ChatManager.HIGHLIGHTED + "%PLAYER%", player));
-                }
+                //}
                 getChatManager().broadcastMessage("Voting-For-Player-Plot", ChatManager.NORMAL + "Voting for " + ChatManager.HIGHLIGHTED + "%PLAYER%" + ChatManager.NORMAL + "'s plot!", player);
             }
         }
@@ -599,11 +600,12 @@ public class Arena extends GameInstance {
     }
 
     private void announceResults() {
-        if(plugin.is1_8_R3()) {
+        //todo checks for future versions
+        //if(plugin.is1_8_R3()) {
             for(Player player : getPlayers()) {
                 MessageHandler.sendTitleMessage(player, getChatManager().getMessage("Title-Winner-Message", ChatColor.YELLOW + "WINNER: " + ChatColor.GREEN + "%PLAYER%", plugin.getPlugin().getServer().getOfflinePlayer(toplist.get(1))));
             }
-        }
+        //}
         for(Player player : getPlayers()) {
             player.sendMessage(ChatManager.getSingleMessage("Winner-Announcement-Header-Line", ChatColor.GREEN + "=============================="));
             player.sendMessage(ChatManager.getSingleMessage("Empty-Message", " "));

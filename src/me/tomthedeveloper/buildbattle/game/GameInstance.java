@@ -405,15 +405,8 @@ public abstract class GameInstance extends BukkitRunnable {
         else System.out.print("Startlocation for arena " + getID() + " isn't intialized!");
     }
 
-    public void teleportAllToStartLocation() {
-        for(Player player : getPlayers()) {
-            if(Startloc != null) player.teleport(Startloc);
-            else System.out.print("Startlocation for arena " + getID() + " isn't intialized!");
-        }
-    }
-
     public void teleportAllToEndLocation() {
-        if(plugin.isBungeeActivated()) {
+        if(plugin.getPlugin().isBungeeActivated()) {
             for(Player player : getPlayers()) {
                 plugin.getPlugin().getBungeeManager().connectToHub(player);
             }
@@ -431,7 +424,7 @@ public abstract class GameInstance extends BukkitRunnable {
     }
 
     public void teleportToEndLocation(Player player) {
-        if(plugin.isBungeeActivated()) {
+        if(plugin.getPlugin().isBungeeActivated()) {
             plugin.getPlugin().getBungeeManager().connectToHub(player);
             return;
         }

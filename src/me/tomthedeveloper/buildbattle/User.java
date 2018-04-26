@@ -14,7 +14,7 @@ import java.util.UUID;
  */
 public class User {
 
-    public static GameAPI plugin;
+    public static Main plugin;
     private ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
     private UUID uuid;
     private boolean spectator = false;
@@ -35,7 +35,7 @@ public class User {
     }
 
     public GameInstance getGameInstance() {
-        return plugin.getGameInstanceManager().getGameInstance(Bukkit.getPlayer(uuid));
+        return plugin.getGameAPI().getGameInstanceManager().getGameInstance(Bukkit.getPlayer(uuid));
     }
 
     public UUID getUuid() {
