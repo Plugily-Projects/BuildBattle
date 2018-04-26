@@ -142,14 +142,15 @@ public class Main extends JavaPlugin implements CommandsInterface {
 
     @Override
     public void onEnable() {
+        new ConfigurationManager(this);
         gameAPI.setGameName("BuildBattle");
         gameAPI.setAbreviation("BD");
         gameAPI.setAllowBuilding(true);
+        gameAPI.onSetup(this, this);
         initializateClasses();
         bungeeManager = new BungeeManager(this);
         inventoryManager = new InventoryManager(this);
         inventoryManagerEnabled = getConfig().getBoolean("InventoryManager");
-        gameAPI.onSetup(this, this);
         for(String s : filesToGenerate){
             ConfigurationManager.getConfig(s);
         }
@@ -230,7 +231,6 @@ public class Main extends JavaPlugin implements CommandsInterface {
     }
 
     private void initializateClasses(){
-        new ConfigurationManager(this);
         new BuildEvents(gameAPI);
         new QuitEvents(gameAPI);
         new SpectatorEvents(gameAPI);

@@ -53,11 +53,6 @@ public class Util {
         itemStack.setItemMeta(meta);
     }
 
-    public static int serializeInt(int i) {
-        if((i % 9) == 0) return i;
-        else return (int) ((Math.ceil(i / 9) * 9) + 9);
-    }
-
     public static ItemStack setItemNameAndLore(ItemStack item, String name, String[] lore) {
         ItemMeta im = item.getItemMeta();
         im.setDisplayName(name);

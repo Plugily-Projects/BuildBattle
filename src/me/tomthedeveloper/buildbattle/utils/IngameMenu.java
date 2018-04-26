@@ -45,7 +45,6 @@ public class IngameMenu {
         inv.setItem(13, particleOption);
 
         ItemStack floorOption = new ItemStack(plot.getFloorMaterial(), 1);
-        floorOption.setTypeId(plot.getFloorData());
         ItemMeta floorMeta = floorOption.getItemMeta();
         floorMeta.setDisplayName(ChatManager.getSingleMessage("Floor-Option-Name", ChatColor.GREEN + "Floor Material"));
         List<String> lore = new ArrayList<>();
