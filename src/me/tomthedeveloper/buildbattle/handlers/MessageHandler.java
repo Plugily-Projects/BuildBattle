@@ -19,7 +19,6 @@ public class MessageHandler {
     }
 
     public static void sendTitleMessage(Player player, String message) {
-
         PlayerConnection titleConnection = ((CraftPlayer) player).getHandle().playerConnection;
         IChatBaseComponent titleMain = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + message + "\"}");
         PacketPlayOutTitle packetPlayOutTitle = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE, titleMain);

@@ -2,6 +2,7 @@ package me.tomthedeveloper.buildbattle;
 
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import com.sk89q.worldedit.bukkit.selections.Selection;
+import me.tomthedeveloper.buildbattle.commands.GameCommands;
 import me.tomthedeveloper.buildbattle.events.GameEvents;
 import me.tomthedeveloper.buildbattle.events.JoinEvents;
 import me.tomthedeveloper.buildbattle.events.SpectatorEvents;
@@ -24,7 +25,6 @@ import me.tomthedeveloper.buildbattle.playerheads.PlayerHeadsMenu;
 import me.tomthedeveloper.buildbattle.stats.BuildBattleStats;
 import me.tomthedeveloper.buildbattle.stats.FileStats;
 import me.tomthedeveloper.buildbattle.stats.MySQLDatabase;
-import me.tomthedeveloper.buildbattle.commands.StatsCommand;
 import me.tomthedeveloper.buildbattle.utils.MetricsLite;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -145,7 +145,7 @@ public class Main extends JavaPlugin implements CommandsInterface {
         gameAPI.setGameName("BuildBattle");
         gameAPI.setAbreviation("BD");
         gameAPI.onSetup(this, this);
-        initializateClasses();
+        initializeClasses();
         bungeeManager = new BungeeManager(this);
         inventoryManager = new InventoryManager(this);
         inventoryManagerEnabled = getConfig().getBoolean("InventoryManager");
@@ -180,8 +180,6 @@ public class Main extends JavaPlugin implements CommandsInterface {
         else {
             fileStats = new FileStats();
         }
-        this.getCommand("stats").setExecutor(new StatsCommand());
-        //   getCommand(gameAPI.getGameName()).setExecutor(new InstanceCommands(gameAPI,this));
         this.getServer().getPluginManager().registerEvents(new NormalEvents(this), this);
         loadStatsForPlayersOnline();
         BuildBattleStats.plugin = this;
@@ -228,8 +226,9 @@ public class Main extends JavaPlugin implements CommandsInterface {
         getMySQLDatabase().closeDatabase();
     }
 
-    private void initializateClasses(){
+    private void initializeClasses(){
         new GameEvents(this);
+        new GameCommands(this);
         new SpectatorEvents(gameAPI);
         new MetricsLite(this);
         new JoinEvents(gameAPI);

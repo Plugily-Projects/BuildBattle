@@ -1,7 +1,6 @@
 package me.tomthedeveloper.buildbattle;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import me.tomthedeveloper.buildbattle.commands.LeaveCommand;
 import me.tomthedeveloper.buildbattle.events.SetupInventoryEvents;
 import me.tomthedeveloper.buildbattle.events.SpectatorEvents;
 import me.tomthedeveloper.buildbattle.game.GameInstance;
@@ -106,13 +105,6 @@ public class GameAPI {
             plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
         }
 
-        if(!plugin.getConfig().contains("Disable-Leave-Command")) {
-            plugin.getConfig().set("Disable-Leave-Command", false);
-            plugin.saveConfig();
-        }
-        if(!plugin.getConfig().getBoolean("Disable-Leave-Command")) {
-            plugin.getCommand("leave").setExecutor(new LeaveCommand(this));
-        }
         plugin.getCommand(this.getGameName()).setExecutor(new me.tomthedeveloper.buildbattle.commands.InstanceCommands(this, commandsInterface));
         plugin.getCommand("addsigns").setExecutor(new me.tomthedeveloper.buildbattle.commands.SignCommands(this));
     }
