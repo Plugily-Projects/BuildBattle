@@ -1,6 +1,6 @@
 package me.tomthedeveloper.buildbattle.selfmadeevents;
 
-import me.tomthedeveloper.buildbattle.game.BuildInstance;
+import me.tomthedeveloper.buildbattle.arena.Arena;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -11,9 +11,9 @@ public class GameEndEvent extends Event {
 
 
     private static final HandlerList handlers = new HandlerList();
-    private BuildInstance buildInstance;
+    private Arena buildInstance;
 
-    public GameEndEvent(BuildInstance buildInstance) {
+    public GameEndEvent(Arena buildInstance) {
         this.buildInstance = buildInstance;
     }
 
@@ -21,7 +21,7 @@ public class GameEndEvent extends Event {
         return handlers;
     }
 
-    public BuildInstance getBuildInstance() {
+    public Arena getBuildInstance() {
         return buildInstance;
     }
 

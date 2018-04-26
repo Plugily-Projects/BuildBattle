@@ -1,7 +1,7 @@
 package me.tomthedeveloper.buildbattle.selfmadeevents;
 
 import me.tomthedeveloper.buildbattle.game.GameState;
-import me.tomthedeveloper.buildbattle.game.BuildInstance;
+import me.tomthedeveloper.buildbattle.arena.Arena;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -13,10 +13,10 @@ public class GameChangeStateEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
     private GameState gameState;
-    private BuildInstance buildInstance;
+    private Arena buildInstance;
     private GameState previous;
 
-    public GameChangeStateEvent(GameState gameState, BuildInstance buildInstance, GameState previous) {
+    public GameChangeStateEvent(GameState gameState, Arena buildInstance, GameState previous) {
         this.gameState = gameState;
         this.buildInstance = buildInstance;
         this.previous = previous;
@@ -30,7 +30,7 @@ public class GameChangeStateEvent extends Event {
         return gameState;
     }
 
-    public BuildInstance getBuildInstance() {
+    public Arena getBuildInstance() {
         return buildInstance;
     }
 
