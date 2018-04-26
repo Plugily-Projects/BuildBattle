@@ -25,14 +25,12 @@ public class GameEvents implements Listener {
 
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
-        if(plugin.getGameAPI().getAllowBuilding()) return;
         if(plugin.getGameAPI().getGameInstanceManager().getGameInstance(event.getPlayer()) == null) return;
         event.setCancelled(true);
     }
 
     @EventHandler
     public void onBreak(BlockBreakEvent event) {
-        if(plugin.getGameAPI().getAllowBuilding()) return;
         if(plugin.getGameAPI().getGameInstanceManager().getGameInstance(event.getPlayer()) == null) return;
         event.setCancelled(true);
     }

@@ -25,6 +25,7 @@ import me.tomthedeveloper.buildbattle.stats.BuildBattleStats;
 import me.tomthedeveloper.buildbattle.stats.FileStats;
 import me.tomthedeveloper.buildbattle.stats.MySQLDatabase;
 import me.tomthedeveloper.buildbattle.commands.StatsCommand;
+import me.tomthedeveloper.buildbattle.utils.MetricsLite;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
@@ -230,6 +231,7 @@ public class Main extends JavaPlugin implements CommandsInterface {
     private void initializateClasses(){
         new GameEvents(this);
         new SpectatorEvents(gameAPI);
+        new MetricsLite(this);
         new JoinEvents(gameAPI);
     }
 
