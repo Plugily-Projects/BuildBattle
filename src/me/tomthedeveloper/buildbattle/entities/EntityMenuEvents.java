@@ -5,7 +5,7 @@ import me.tomthedeveloper.buildbattle.Main;
 import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.game.GameState;
 import me.tomthedeveloper.buildbattle.handlers.ChatManager;
-import me.tomthedeveloper.buildbattle.game.BuildInstance;
+import me.tomthedeveloper.buildbattle.arena.Arena;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -45,7 +45,7 @@ public class EntityMenuEvents implements Listener {
         GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance(player);
         if(gameInstance == null) return;
         event.setCancelled(true);
-        if(gameInstance.getGameState() != GameState.INGAME || ((BuildInstance) gameInstance).isVoting()) return;
+        if(gameInstance.getGameState() != GameState.INGAME || ((Arena) gameInstance).isVoting()) return;
         EntityType type = event.getRightClicked().getType();
         if(type == EntityType.ITEM_FRAME || type == EntityType.ARMOR_STAND || type == EntityType.DROPPED_ITEM || type == EntityType.PRIMED_TNT || type == EntityType.FALLING_BLOCK || type == EntityType.COMPLEX_PART || type == EntityType.ENDER_CRYSTAL || type == EntityType.LEASH_HITCH || type == EntityType.MINECART || type == EntityType.MINECART_CHEST || type == EntityType.MINECART_FURNACE || type == EntityType.MINECART_COMMAND || type == EntityType.MINECART_HOPPER || type == EntityType.MINECART_MOB_SPAWNER || type == EntityType.MINECART_TNT || type == EntityType.PLAYER || type == EntityType.PAINTING || type == EntityType.WITHER_SKULL)
             return;
@@ -100,7 +100,7 @@ public class EntityMenuEvents implements Listener {
             links.get(player.getUniqueId()).remove();
             player.closeInventory();
             event.setCancelled(true);
-            BuildInstance buildInstance = (BuildInstance) gameInstance;
+            Arena buildInstance = (Arena) gameInstance;
             buildInstance.getPlotManager().getPlot(player).removeEntity();
 
         } else if(key.equals("Profession-Villager-Selecting")) {

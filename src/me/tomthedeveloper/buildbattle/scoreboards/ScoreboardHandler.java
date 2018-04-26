@@ -2,7 +2,7 @@ package me.tomthedeveloper.buildbattle.scoreboards;
 
 import me.tomthedeveloper.buildbattle.ConfigPreferences;
 import me.tomthedeveloper.buildbattle.Main;
-import me.tomthedeveloper.buildbattle.game.BuildInstance;
+import me.tomthedeveloper.buildbattle.arena.Arena;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -17,11 +17,11 @@ import org.bukkit.scoreboard.ScoreboardManager;
 public class ScoreboardHandler {
 
 
-    private BuildInstance buildInstance;
+    private Arena buildInstance;
     private ScoreboardLoader scoreboardLoader;
     private ScoreboardManager scoreboardManager;
 
-    public ScoreboardHandler(BuildInstance buildInstance) {
+    public ScoreboardHandler(Arena buildInstance) {
         this.buildInstance = buildInstance;
         scoreboardManager = Bukkit.getScoreboardManager();
         scoreboardLoader = new ScoreboardLoader();

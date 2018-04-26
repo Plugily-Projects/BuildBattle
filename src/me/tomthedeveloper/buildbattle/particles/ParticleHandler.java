@@ -4,7 +4,7 @@ import me.tomthedeveloper.buildbattle.BuildPlot;
 import me.tomthedeveloper.buildbattle.ConfigPreferences;
 import me.tomthedeveloper.buildbattle.Main;
 import me.tomthedeveloper.buildbattle.game.GameInstance;
-import me.tomthedeveloper.buildbattle.game.BuildInstance;
+import me.tomthedeveloper.buildbattle.arena.Arena;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -34,7 +34,7 @@ public class ParticleHandler extends BukkitRunnable {
     @Override
     public void run() {
         for(GameInstance gameInstance : plugin.getGameAPI().getGameInstanceManager().getGameInstances()) {
-            BuildInstance buildInstance = (BuildInstance) gameInstance;
+            Arena buildInstance = (Arena) gameInstance;
             for(BuildPlot buildPlot : buildInstance.getPlotManager().getPlots()) {
                 for(Location location : buildPlot.getParticles().keySet()) {
                     if(!gameInstance.getPlayers().isEmpty())

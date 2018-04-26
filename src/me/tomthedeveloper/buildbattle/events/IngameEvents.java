@@ -11,7 +11,7 @@ import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.game.GameState;
 import me.tomthedeveloper.buildbattle.handlers.ChatManager;
 import me.tomthedeveloper.buildbattle.handlers.UserManager;
-import me.tomthedeveloper.buildbattle.game.BuildInstance;
+import me.tomthedeveloper.buildbattle.arena.Arena;
 import me.tomthedeveloper.buildbattle.items.SpecialItemManager;
 import me.tomthedeveloper.buildbattle.utils.IngameMenu;
 import me.tomthedeveloper.buildbattle.particles.ParticleMenu;
@@ -94,7 +94,7 @@ public class IngameEvents implements Listener {
 
         if(!event.getItem().hasItemMeta()) return;
         if(!event.getItem().getItemMeta().hasDisplayName()) return;
-        BuildInstance buildInstance = (BuildInstance) gameInstance;
+        Arena buildInstance = (Arena) gameInstance;
         if(!buildInstance.isVoting()) return;
         if(buildInstance.getVotingPlot().getOwner() == event.getPlayer().getUniqueId()) {
             event.getPlayer().sendMessage(ChatManager.getSingleMessage("Cant-Vote-On-Own-Plot", ChatColor.RED + "U can't vote on your own plot!!"));
@@ -138,7 +138,7 @@ public class IngameEvents implements Listener {
         ItemStack itemStack = event.getItem();
         if(!itemStack.hasItemMeta()) return;
         if(!itemStack.getItemMeta().hasDisplayName()) return;
-        BuildInstance buildInstance = (BuildInstance) gameInstance;
+        Arena buildInstance = (Arena) gameInstance;
         if(buildInstance.isVoting()) return;
         if(!IngameMenu.getMenuItem().getItemMeta().getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())) return;
         IngameMenu.openMenu(event.getPlayer(), buildInstance.getPlotManager().getPlot(event.getPlayer()));
@@ -147,7 +147,7 @@ public class IngameEvents implements Listener {
     @EventHandler
     public void onPistonExtendEvent(BlockPistonExtendEvent event) {
         for(GameInstance gameInstance : gameAPI.getGameInstanceManager().getGameInstances()) {
-            BuildInstance buildInstance = (BuildInstance) gameInstance;
+            Arena buildInstance = (Arena) gameInstance;
             for(BuildPlot buildPlot : buildInstance.getPlotManager().getPlots()) {
                 for(Block block : event.getBlocks()) {
                     if(!buildPlot.isInPlotRange(block.getLocation(), -1) && buildPlot.isInPlot(event.getBlock().getLocation())) {
@@ -171,7 +171,7 @@ public class IngameEvents implements Listener {
     @EventHandler
     public void onWaterFlowEvent(BlockFromToEvent event) {
         for(GameInstance gameInstance : gameAPI.getGameInstanceManager().getGameInstances()) {
-            BuildInstance buildInstance = (BuildInstance) gameInstance;
+            Arena buildInstance = (Arena) gameInstance;
             for(BuildPlot buildPlot : buildInstance.getPlotManager().getPlots()) {
 
                 if(!buildPlot.isInPlot(event.getToBlock().getLocation()) && buildPlot.isInPlot(event.getBlock().getLocation())) {
@@ -185,7 +185,7 @@ public class IngameEvents implements Listener {
     @EventHandler
     public void onTntExplode(EntityExplodeEvent event) {
         for(GameInstance gameInstance : gameAPI.getGameInstanceManager().getGameInstances()) {
-            BuildInstance buildInstance = (BuildInstance) gameInstance;
+            Arena buildInstance = (Arena) gameInstance;
             for(BuildPlot buildPlot : buildInstance.getPlotManager().getPlots()) {
 
                 if(buildPlot.isInPlotRange(event.getEntity().getLocation(), 0)) {
@@ -248,7 +248,7 @@ public class IngameEvents implements Listener {
     public void onTreeGrow(StructureGrowEvent event) {
         GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance(event.getPlayer());
         if(gameInstance == null) return;
-        BuildInstance buildInstance = (BuildInstance) gameInstance;
+        Arena buildInstance = (Arena) gameInstance;
         BuildPlot buildPlot = buildInstance.getPlotManager().getPlot(event.getPlayer());
         if(buildPlot == null) return;
         for(BlockState blockState : event.getBlocks()) {
@@ -260,7 +260,7 @@ public class IngameEvents implements Listener {
     @EventHandler
     public void onDispense(BlockDispenseEvent event) {
         for(GameInstance gameInstance : gameAPI.getGameInstanceManager().getGameInstances()) {
-            BuildInstance buildInstance = (BuildInstance) gameInstance;
+            Arena buildInstance = (Arena) gameInstance;
             for(BuildPlot buildPlot : buildInstance.getPlotManager().getPlots()) {
 
                 if(!buildPlot.isInPlotRange(event.getBlock().getLocation(), -1) && buildPlot.isInPlotRange(event.getBlock().getLocation(), 5)) {
@@ -290,7 +290,7 @@ public class IngameEvents implements Listener {
         GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance((Player) event.getWhoClicked());
         if(gameInstance == null) return;
 
-        BuildInstance buildInstance = (BuildInstance) gameInstance;
+        Arena buildInstance = (Arena) gameInstance;
         if(buildInstance.getGameState() != GameState.INGAME) return;
         if(displayName.equalsIgnoreCase(ChatManager.getSingleMessage("Particle-Option-Name", ChatColor.GREEN + "Particles"))) {
             event.setCancelled(true);
@@ -405,7 +405,7 @@ public class IngameEvents implements Listener {
     public void playerEmtpyBucket(PlayerBucketEmptyEvent event) {
         GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance(event.getPlayer());
         if(gameInstance == null) return;
-        BuildInstance buildInstance = (BuildInstance) gameInstance;
+        Arena buildInstance = (Arena) gameInstance;
         BuildPlot buildPlot = buildInstance.getPlotManager().getPlot(event.getPlayer());
         if(buildPlot == null) return;
 
@@ -416,7 +416,7 @@ public class IngameEvents implements Listener {
     @EventHandler
     public void onBlockSpread(BlockSpreadEvent event) {
         for(GameInstance gameInstance : gameAPI.getGameInstanceManager().getGameInstances()) {
-            BuildInstance buildInstance = (BuildInstance) gameInstance;
+            Arena buildInstance = (Arena) gameInstance;
             if(buildInstance.getPlotManager().getPlots().size() != 0 && buildInstance.getPlotManager().getPlots().get(0) != null) {
                 if(buildInstance.getPlotManager().getPlots().get(0).getCenter().getWorld().getName().equalsIgnoreCase(event.getBlock().getWorld().getName())) {
                     if(event.getSource().getType() == Material.FIRE) event.setCancelled(true);
@@ -433,14 +433,14 @@ public class IngameEvents implements Listener {
         }
         if(event.getEntity().getType() == EntityType.WITHER || ConfigPreferences.isMobSpawningDisabled()) {
             for(GameInstance gameInstance : gameAPI.getGameInstanceManager().getGameInstances()) {
-                BuildInstance buildInstance = (BuildInstance) gameInstance;
+                Arena buildInstance = (Arena) gameInstance;
                 for(BuildPlot buildplot : buildInstance.getPlotManager().getPlots()) {
                     if(buildplot.isInPlotRange(event.getEntity().getLocation(), 10)) event.setCancelled(true);
                 }
             }
         } else {
             for(GameInstance gameInstance : gameAPI.getGameInstanceManager().getGameInstances()) {
-                BuildInstance buildInstance = (BuildInstance) gameInstance;
+                Arena buildInstance = (Arena) gameInstance;
                 for(BuildPlot buildplot : buildInstance.getPlotManager().getPlots()) {
                     if(buildplot.isInPlotRange(event.getEntity().getLocation(), 1)) {
                         if(buildplot.getEntities() >= ConfigPreferences.getMaxMobs()) {
@@ -461,7 +461,7 @@ public class IngameEvents implements Listener {
     @EventHandler
     public void LeaveDecay(LeavesDecayEvent event) {
         for(GameInstance gameInstance : gameAPI.getGameInstanceManager().getGameInstances()) {
-            BuildInstance buildInstance = (BuildInstance) gameInstance;
+            Arena buildInstance = (Arena) gameInstance;
             for(BuildPlot buildPlot : buildInstance.getPlotManager().getPlots()) {
 
                 if(buildPlot.isInPlotRange(event.getBlock().getLocation(), 5)) {
@@ -491,7 +491,7 @@ public class IngameEvents implements Listener {
             event.setCancelled(true);
             return;
         }
-        BuildInstance buildInstance = (BuildInstance) gameInstance;
+        Arena buildInstance = (Arena) gameInstance;
         if(buildInstance.isVoting()) {
             event.setCancelled(true);
             return;
@@ -523,7 +523,7 @@ public class IngameEvents implements Listener {
             event.setCancelled(true);
             return;
         }
-        BuildInstance buildInstance = (BuildInstance) gameInstance;
+        Arena buildInstance = (Arena) gameInstance;
         if(buildInstance.getBlacklist().contains(event.getBlock().getTypeId())) {
             event.setCancelled(true);
             return;
@@ -553,7 +553,7 @@ public class IngameEvents implements Listener {
             event.setCancelled(true);
             return;
         }
-        BuildInstance buildInstance = (BuildInstance) gameInstance;
+        Arena buildInstance = (Arena) gameInstance;
         if(!buildInstance.isVoting()) {
             return;
         }

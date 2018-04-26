@@ -2,7 +2,7 @@ package me.tomthedeveloper.buildbattle;
 
 import me.tomthedeveloper.buildbattle.game.GameState;
 import me.tomthedeveloper.buildbattle.handlers.UserManager;
-import me.tomthedeveloper.buildbattle.game.BuildInstance;
+import me.tomthedeveloper.buildbattle.arena.Arena;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -19,9 +19,9 @@ public class PlotManager {
 
     private List<BuildPlot> plots = new ArrayList<>();
     private List<BuildPlot> plotsToClear = new ArrayList<>();
-    private BuildInstance buildInstance;
+    private Arena buildInstance;
 
-    public PlotManager(BuildInstance buildInstance) {
+    public PlotManager(Arena buildInstance) {
         this.buildInstance = buildInstance;
     }
 

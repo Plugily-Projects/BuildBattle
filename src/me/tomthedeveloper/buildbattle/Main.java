@@ -17,7 +17,7 @@ import me.tomthedeveloper.buildbattle.handlers.ChatManager;
 import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
 import me.tomthedeveloper.buildbattle.handlers.InventoryManager;
 import me.tomthedeveloper.buildbattle.handlers.UserManager;
-import me.tomthedeveloper.buildbattle.game.BuildInstance;
+import me.tomthedeveloper.buildbattle.arena.Arena;
 import me.tomthedeveloper.buildbattle.items.SpecialItem;
 import me.tomthedeveloper.buildbattle.particles.ParticleHandler;
 import me.tomthedeveloper.buildbattle.particles.ParticleMenu;
@@ -310,7 +310,7 @@ public class Main extends JavaPlugin implements CommandsInterface {
         }
         if(strings.length == 1 && strings[0].equalsIgnoreCase("forcestart")) {
             if(gameAPI.getGameInstanceManager().getGameInstance(player) == null) return false;
-            BuildInstance invasionInstance = (BuildInstance) gameAPI.getGameInstanceManager().getGameInstance(player);
+            Arena invasionInstance = (Arena) gameAPI.getGameInstanceManager().getGameInstance(player);
             if(invasionInstance.getGameState() == GameState.WAITING_FOR_PLAYERS) {
                 invasionInstance.setGameState(GameState.STARTING);
                 invasionInstance.getChatManager().broadcastMessage("Admin-ForceStart-Game", ChatManager.HIGHLIGHTED + "An admin forcestarted the game!");
@@ -357,12 +357,12 @@ public class Main extends JavaPlugin implements CommandsInterface {
         }
         gameAPI.getGameInstanceManager().getGameInstances().clear();
         for(String ID : this.getConfig().getConfigurationSection("instances").getKeys(false)) {
-            BuildInstance earthMasterInstance;
+            Arena earthMasterInstance;
             String s = "instances." + ID + ".";
             if(s.contains("default")) continue;
 
 
-            earthMasterInstance = new BuildInstance(ID);
+            earthMasterInstance = new Arena(ID);
 
 
             if(getConfig().contains(s + "minimumplayers")) earthMasterInstance.setMIN_PLAYERS(getConfig().getInt(s + "minimumplayers"));

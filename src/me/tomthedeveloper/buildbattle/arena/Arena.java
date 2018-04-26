@@ -1,10 +1,12 @@
-package me.tomthedeveloper.buildbattle.game;
+package me.tomthedeveloper.buildbattle.arena;
 
 import me.tomthedeveloper.buildbattle.BuildPlot;
 import me.tomthedeveloper.buildbattle.ConfigPreferences;
 import me.tomthedeveloper.buildbattle.PlotManager;
 import me.tomthedeveloper.buildbattle.User;
 import me.tomthedeveloper.buildbattle.VoteItems;
+import me.tomthedeveloper.buildbattle.game.GameInstance;
+import me.tomthedeveloper.buildbattle.game.GameState;
 import me.tomthedeveloper.buildbattle.handlers.ChatManager;
 import me.tomthedeveloper.buildbattle.handlers.MessageHandler;
 import me.tomthedeveloper.buildbattle.handlers.UserManager;
@@ -39,8 +41,7 @@ import java.util.UUID;
 /**
  * Created by Tom on 17/08/2015.
  */
-public class BuildInstance extends GameInstance {
-
+public class Arena extends GameInstance {
 
     private static List<String> themes = new ArrayList<>();
     private static List<Integer> blacklist = new ArrayList<>();
@@ -66,7 +67,7 @@ public class BuildInstance extends GameInstance {
     private boolean THIRD_PLACE_COMMANDS_ENABLED = ConfigPreferences.isThirdPlaceCommandsEnabled();
     private boolean END_GAME_COMMANDS_ENABLED = ConfigPreferences.isEndGameCommandsEnabled();
 
-    public BuildInstance(String ID) {
+    public Arena(String ID) {
         super(ID);
         plotManager = new PlotManager(this);
         scoreboardHandler = new ScoreboardHandler(this);

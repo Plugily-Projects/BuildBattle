@@ -1,7 +1,7 @@
 package me.tomthedeveloper.buildbattle;
 
 import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
-import me.tomthedeveloper.buildbattle.game.BuildInstance;
+import me.tomthedeveloper.buildbattle.arena.Arena;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class ConfigPreferences {
 
     public static void loadThemes() {
         for(String theme : config.getStringList("themes")) {
-            BuildInstance.addTheme(theme);
+            Arena.addTheme(theme);
         }
 
     }
@@ -99,7 +99,7 @@ public class ConfigPreferences {
 
     public static void loadBlackList() {
         for(int ID : config.getIntegerList("blacklist")) {
-            BuildInstance.addToBlackList(ID);
+            Arena.addToBlackList(ID);
         }
     }
 
