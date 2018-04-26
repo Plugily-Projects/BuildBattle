@@ -3,8 +3,6 @@ package me.tomthedeveloper.buildbattle;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import me.tomthedeveloper.buildbattle.commands.LeaveCommand;
 import me.tomthedeveloper.buildbattle.events.SetupInventoryEvents;
-import me.tomthedeveloper.buildbattle.events.BuildEvents;
-import me.tomthedeveloper.buildbattle.events.QuitEvents;
 import me.tomthedeveloper.buildbattle.events.SpectatorEvents;
 import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.handlers.ChatManager;
@@ -37,7 +35,6 @@ public class GameAPI {
     private String version;
     private Main plugin;
     private boolean needsMapRestore = false;
-    private boolean allowBuilding = false;
     private SignManager signManager;
 
     public Main getPlugin() {
@@ -54,14 +51,6 @@ public class GameAPI {
 
     public String getVersion() {
         return version;
-    }
-
-    public boolean getAllowBuilding() {
-        return allowBuilding;
-    }
-
-    public void setAllowBuilding(boolean b) {
-        this.allowBuilding = b;
     }
 
     public boolean needsMapRestore() {
@@ -106,10 +95,6 @@ public class GameAPI {
         User.plugin = this;
 
         plugin.getServer().getPluginManager().registerEvents(new SpectatorEvents(this), plugin);
-        if(!this.getAllowBuilding()) {
-            plugin.getServer().getPluginManager().registerEvents(new BuildEvents(this), plugin);
-        }
-        plugin.getServer().getPluginManager().registerEvents(new QuitEvents(this), plugin);
         plugin.getServer().getPluginManager().registerEvents(new SetupInventoryEvents(this), plugin);
         plugin.getServer().getPluginManager().registerEvents(this.getSignManager(), JavaPlugin.getPlugin(Main.class));
 

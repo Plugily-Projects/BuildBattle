@@ -2,11 +2,9 @@ package me.tomthedeveloper.buildbattle;
 
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import com.sk89q.worldedit.bukkit.selections.Selection;
-import me.tomthedeveloper.buildbattle.events.BuildEvents;
+import me.tomthedeveloper.buildbattle.events.GameEvents;
 import me.tomthedeveloper.buildbattle.events.JoinEvents;
-import me.tomthedeveloper.buildbattle.events.QuitEvents;
 import me.tomthedeveloper.buildbattle.events.SpectatorEvents;
-import me.tomthedeveloper.buildbattle.events.ChatEvents;
 import me.tomthedeveloper.buildbattle.handlers.BungeeManager;
 import me.tomthedeveloper.buildbattle.entities.EntityItem;
 import me.tomthedeveloper.buildbattle.entities.EntityMenuEvents;
@@ -145,7 +143,6 @@ public class Main extends JavaPlugin implements CommandsInterface {
         new ConfigurationManager(this);
         gameAPI.setGameName("BuildBattle");
         gameAPI.setAbreviation("BD");
-        gameAPI.setAllowBuilding(true);
         gameAPI.onSetup(this, this);
         initializateClasses();
         bungeeManager = new BungeeManager(this);
@@ -231,10 +228,8 @@ public class Main extends JavaPlugin implements CommandsInterface {
     }
 
     private void initializateClasses(){
-        new BuildEvents(gameAPI);
-        new QuitEvents(gameAPI);
+        new GameEvents(this);
         new SpectatorEvents(gameAPI);
-        new ChatEvents(gameAPI);
         new JoinEvents(gameAPI);
     }
 

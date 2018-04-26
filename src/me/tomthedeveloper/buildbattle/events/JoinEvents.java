@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 /**
  * Created by Tom on 10/07/2015.
  */
+//TODO update checker
 public class JoinEvents implements Listener {
 
 
