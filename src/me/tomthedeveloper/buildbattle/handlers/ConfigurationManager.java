@@ -23,14 +23,13 @@ import java.io.IOException;
 
 
 /**
- *
  * @author IvanTheBuilder
  */
 public class ConfigurationManager {
 
     private static Main plugin;
 
-    public ConfigurationManager(Main plugin){
+    public ConfigurationManager(Main plugin) {
         ConfigurationManager.plugin = plugin;
     }
 
@@ -63,13 +62,13 @@ public class ConfigurationManager {
         return config;
     }
 
-    public static void saveConfig(FileConfiguration config, String name){
+    public static void saveConfig(FileConfiguration config, String name) {
         try {
             config.save(new File(plugin.getDataFolder(), name + ".yml"));
         } catch(IOException e) {
             e.printStackTrace();
             Bukkit.getConsoleSender().sendMessage("Cannot save file " + name + ".yml!");
-            Bukkit.getConsoleSender().sendMessage("Create blank file " + name  + ".yml or restart the server!");
+            Bukkit.getConsoleSender().sendMessage("Create blank file " + name + ".yml or restart the server!");
         }
     }
 

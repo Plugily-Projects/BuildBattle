@@ -51,7 +51,7 @@ public class SetupInventoryEvents implements Listener {
                 return;
             }
 
-            player.performCommand( "bb " + gameInstance.getID() + " set MAPNAME " + event.getCursor().getItemMeta().getDisplayName());
+            player.performCommand("bb " + gameInstance.getID() + " set MAPNAME " + event.getCursor().getItemMeta().getDisplayName());
             event.getCurrentItem().getItemMeta().setDisplayName(ChatColor.GOLD + "Set a mapname (currently: " + event.getCursor().getItemMeta().getDisplayName());
             return;
         }
@@ -59,7 +59,7 @@ public class SetupInventoryEvents implements Listener {
         if(name.contains("End Location")) {
             event.setCancelled(true);
 
-            player.performCommand( "bb " + gameInstance.getID() + " set ENDLOC");
+            player.performCommand("bb " + gameInstance.getID() + " set ENDLOC");
             return;
         }
         if(name.contains("Start Location")) {

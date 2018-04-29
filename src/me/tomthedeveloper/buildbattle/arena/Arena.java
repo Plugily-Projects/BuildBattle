@@ -48,8 +48,11 @@ import java.util.UUID;
  */
 public class Arena extends BukkitRunnable {
 
+    public static GameAPI plugin;
     private static List<String> themes = new ArrayList<>();
     private static List<Integer> blacklist = new ArrayList<>();
+    protected HashMap<ArenaState, String[]> signlines = new HashMap<>();
+    protected String[] FULLlines;
     private ScoreboardHandler scoreboardHandler;
     private HashMap<Integer, UUID> toplist = new HashMap<>();
     private String theme = "Theme";
@@ -71,9 +74,6 @@ public class Arena extends BukkitRunnable {
     private boolean SECOND_PLACE_COMMANDS_ENABLED = ConfigPreferences.isSecondPlaceCommandsEnabled();
     private boolean THIRD_PLACE_COMMANDS_ENABLED = ConfigPreferences.isThirdPlaceCommandsEnabled();
     private boolean END_GAME_COMMANDS_ENABLED = ConfigPreferences.isEndGameCommandsEnabled();
-    public static GameAPI plugin;
-    protected HashMap<ArenaState, String[]> signlines = new HashMap<>();
-    protected String[] FULLlines;
     private HashSet<Location> signs = new HashSet<>();
     private ArenaState gameState;
     private int MIN_PLAYERS = 2;
@@ -104,6 +104,10 @@ public class Arena extends BukkitRunnable {
 
     public static void addToBlackList(int ID) {
         blacklist.add(ID);
+    }
+
+    public static GameAPI getPlugin() {
+        return plugin;
     }
 
     public boolean isVoting() {
@@ -336,7 +340,7 @@ public class Arena extends BukkitRunnable {
                 setVoting(false);
                 receivedVoteItems = false;
                 if(ConfigPreferences.isDynamicSignSystemEnabled()) {
-                   plugin.getPlugin().getSignManager().addToQueue(this);
+                    plugin.getPlugin().getSignManager().addToQueue(this);
                 }
                 if(plugin.getPlugin().isBungeeActivated() && ConfigPreferences.getBungeeShutdown()) {
                     plugin.getPlugin().getServer().shutdown();
@@ -381,14 +385,6 @@ public class Arena extends BukkitRunnable {
 
 
         }
-    }
-
-    public void setGameState(ArenaState gameState) {
-        if(getGameState() != null) {
-            GameChangeStateEvent gameChangeStateEvent = new GameChangeStateEvent(gameState, this, getGameState());
-            plugin.getPlugin().getServer().getPluginManager().callEvent(gameChangeStateEvent);
-        }
-        this.gameState = gameState;
     }
 
     private void giveRewards() {
@@ -584,8 +580,8 @@ public class Arena extends BukkitRunnable {
                 }
                 //todo checks for future versions
                 //if(plugin.is1_8_R3()) {
-                    for(Player player1 : getPlayers())
-                        MessageHandler.sendTitleMessage(player1, getChatManager().getMessage("Plot-Owner-Title-Message", ChatManager.PREFIX + "Plot Owner: " + ChatManager.HIGHLIGHTED + "%PLAYER%", player));
+                for(Player player1 : getPlayers())
+                    MessageHandler.sendTitleMessage(player1, getChatManager().getMessage("Plot-Owner-Title-Message", ChatManager.PREFIX + "Plot Owner: " + ChatManager.HIGHLIGHTED + "%PLAYER%", player));
                 //}
                 getChatManager().broadcastMessage("Voting-For-Player-Plot", ChatManager.NORMAL + "Voting for " + ChatManager.HIGHLIGHTED + "%PLAYER%" + ChatManager.NORMAL + "'s plot!", player);
             }
@@ -604,9 +600,9 @@ public class Arena extends BukkitRunnable {
     private void announceResults() {
         //todo checks for future versions
         //if(plugin.is1_8_R3()) {
-            for(Player player : getPlayers()) {
-                MessageHandler.sendTitleMessage(player, getChatManager().getMessage("Title-Winner-Message", ChatColor.YELLOW + "WINNER: " + ChatColor.GREEN + "%PLAYER%", plugin.getPlugin().getServer().getOfflinePlayer(toplist.get(1))));
-            }
+        for(Player player : getPlayers()) {
+            MessageHandler.sendTitleMessage(player, getChatManager().getMessage("Title-Winner-Message", ChatColor.YELLOW + "WINNER: " + ChatColor.GREEN + "%PLAYER%", plugin.getPlugin().getServer().getOfflinePlayer(toplist.get(1))));
+        }
         //}
         for(Player player : getPlayers()) {
             player.sendMessage(ChatManager.getSingleMessage("Winner-Announcement-Header-Line", ChatColor.GREEN + "=============================="));
@@ -676,10 +672,6 @@ public class Arena extends BukkitRunnable {
         if(!(rang > 10) && after != null) insertScore(rang + 1, after);
     }
 
-    public static GameAPI getPlugin() {
-        return plugin;
-    }
-
     public String getID() {
         return ID;
     }
@@ -740,6 +732,14 @@ public class Arena extends BukkitRunnable {
 
     public ArenaState getGameState() {
         return gameState;
+    }
+
+    public void setGameState(ArenaState gameState) {
+        if(getGameState() != null) {
+            GameChangeStateEvent gameChangeStateEvent = new GameChangeStateEvent(gameState, this, getGameState());
+            plugin.getPlugin().getServer().getPluginManager().callEvent(gameChangeStateEvent);
+        }
+        this.gameState = gameState;
     }
 
     public void updateNewSign() {

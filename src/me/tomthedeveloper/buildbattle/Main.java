@@ -60,6 +60,14 @@ public class Main extends JavaPlugin implements CommandsInterface {
     private SignManager signManager;
     private List<String> filesToGenerate = Arrays.asList("EntityMenu", "particles", "scoreboard", "signModification", "SpecialItems", "STATS", "voteItems", "MySQL");
 
+    public static Permission getPerms() {
+        return perms;
+    }
+
+    public static Economy getEcon() {
+        return econ;
+    }
+
     public BungeeManager getBungeeManager() {
         return bungeeManager;
     }
@@ -78,14 +86,6 @@ public class Main extends JavaPlugin implements CommandsInterface {
 
     public boolean isInventoryManagerEnabled() {
         return inventoryManagerEnabled;
-    }
-
-    public static Permission getPerms() {
-        return perms;
-    }
-
-    public static Economy getEcon() {
-        return econ;
     }
 
     public void setupMessageConfig() {
@@ -156,7 +156,7 @@ public class Main extends JavaPlugin implements CommandsInterface {
         bungeeManager = new BungeeManager(this);
         inventoryManager = new InventoryManager(this);
         inventoryManagerEnabled = getConfig().getBoolean("InventoryManager");
-        for(String s : filesToGenerate){
+        for(String s : filesToGenerate) {
             ConfigurationManager.getConfig(s);
         }
         new ConfigPreferences(this);
@@ -225,7 +225,7 @@ public class Main extends JavaPlugin implements CommandsInterface {
         getMySQLDatabase().closeDatabase();
     }
 
-    private void initializeClasses(){
+    private void initializeClasses() {
         User.plugin = this;
         signManager = new SignManager(this);
         bungeeActivated = getConfig().getBoolean("BungeeActivated");
@@ -430,6 +430,7 @@ public class Main extends JavaPlugin implements CommandsInterface {
             }
             Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable() {
                 final String playername = player.getUniqueId().toString();
+
                 @Override
                 public void run() {
                     MySQLDatabase database = getMySQLDatabase();

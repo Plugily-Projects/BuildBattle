@@ -20,7 +20,7 @@ public class GameCommands implements CommandExecutor {
 
     private Main plugin;
 
-    public GameCommands(Main plugin){
+    public GameCommands(Main plugin) {
         this.plugin = plugin;
         plugin.getCommand("leave").setExecutor(this);
         plugin.getCommand("stats").setExecutor(this);
@@ -65,7 +65,7 @@ public class GameCommands implements CommandExecutor {
                 return true;
             }
         }
-        if(cmd.getName().equalsIgnoreCase("stats")){
+        if(cmd.getName().equalsIgnoreCase("stats")) {
             Player player = (Player) sender;
             User user = UserManager.getUser(player.getUniqueId());
             player.sendMessage(ChatManager.getSingleMessage("STATS-Above-Line", ChatColor.BOLD + "-----YOUR STATS----- "));
