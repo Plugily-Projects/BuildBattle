@@ -11,8 +11,7 @@ import me.tomthedeveloper.buildbattle.entities.EntityItem;
 import me.tomthedeveloper.buildbattle.entities.EntityMenuEvents;
 import me.tomthedeveloper.buildbattle.events.IngameEvents;
 import me.tomthedeveloper.buildbattle.events.NormalEvents;
-import me.tomthedeveloper.buildbattle.game.GameInstance;
-import me.tomthedeveloper.buildbattle.game.GameState;
+import me.tomthedeveloper.buildbattle.arena.ArenaState;
 import me.tomthedeveloper.buildbattle.handlers.ChatManager;
 import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
 import me.tomthedeveloper.buildbattle.handlers.InventoryManager;
@@ -40,7 +39,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -200,19 +198,11 @@ public class Main extends JavaPlugin implements CommandsInterface {
     @Override
     public void onDisable() {
         for(final Player player : getServer().getOnlinePlayers()) {
-            if(gameAPI.getGameInstanceManager().getGameInstance(player) != null) {
-                gameAPI.getGameInstanceManager().getGameInstance(player).leaveAttempt(player);
+            if(gameAPI.getGameInstanceManager().getArena(player) != null) {
+                gameAPI.getGameInstanceManager().getArena(player).leaveAttempt(player);
             }
             final User user = UserManager.getUser(player.getUniqueId());
-            List<String> temp = new ArrayList<>();
-            temp.add("gamesplayed");
-            temp.add("wins");
-            temp.add("loses");
-            temp.add("highestwin");
-            temp.add("blocksplaced");
-            temp.add("blocksbroken");
-            temp.add("particles");
-            for(final String s : temp) {
+            for(final String s : BuildBattleStats.STATISTICS) {
                 if(this.isDatabaseActivated()) {
                     int i;
                     try {
@@ -268,19 +258,19 @@ public class Main extends JavaPlugin implements CommandsInterface {
 
     public boolean checkPlayerCommands(Player player, Command command, String s, String[] strings) {
         if(strings.length == 2 && strings[0].equalsIgnoreCase("join")) {
-            GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance(strings[1]);
-            if(gameInstance == null) {
+            Arena arena = gameAPI.getGameInstanceManager().getArena(strings[1]);
+            if(arena == null) {
                 player.sendMessage(ChatManager.getSingleMessage("Arena-Does-Not-Exist", ChatColor.RED + "This arena does not exist!"));
                 return true;
             } else {
-                if(gameInstance.getPlayers().size() >= gameInstance.getMAX_PLAYERS() && !UserManager.getUser(player.getUniqueId()).isPremium()) {
+                if(arena.getPlayers().size() >= arena.getMAX_PLAYERS() && !UserManager.getUser(player.getUniqueId()).isPremium()) {
                     player.sendMessage(ChatManager.getSingleMessage("Arena-Is-Full", ChatColor.RED + "This arena does not exist!"));
                     return true;
-                } else if(gameInstance.getGameState() == GameState.INGAME) {
+                } else if(arena.getGameState() == ArenaState.INGAME) {
                     player.sendMessage(ChatManager.getSingleMessage("Arena-Is-Already-Started", ChatColor.RED + "This arena is already started!"));
                     return true;
                 } else {
-                    gameInstance.joinAttempt(player);
+                    arena.joinAttempt(player);
                 }
             }
         }
@@ -300,7 +290,7 @@ public class Main extends JavaPlugin implements CommandsInterface {
             return true;
         }
         if(strings.length == 2 && strings[0].equalsIgnoreCase("addplot")) {
-            if(gameAPI.getGameInstanceManager().getGameInstance(strings[1]) == null) {
+            if(gameAPI.getGameInstanceManager().getArena(strings[1]) == null) {
                 player.sendMessage(ChatColor.RED + "That gameinstance doesn't exist!");
                 return true;
             }
@@ -321,14 +311,14 @@ public class Main extends JavaPlugin implements CommandsInterface {
             return true;
         }
         if(strings.length == 1 && strings[0].equalsIgnoreCase("forcestart")) {
-            if(gameAPI.getGameInstanceManager().getGameInstance(player) == null) return false;
-            Arena invasionInstance = (Arena) gameAPI.getGameInstanceManager().getGameInstance(player);
-            if(invasionInstance.getGameState() == GameState.WAITING_FOR_PLAYERS) {
-                invasionInstance.setGameState(GameState.STARTING);
+            if(gameAPI.getGameInstanceManager().getArena(player) == null) return false;
+            Arena invasionInstance = (Arena) gameAPI.getGameInstanceManager().getArena(player);
+            if(invasionInstance.getGameState() == ArenaState.WAITING_FOR_PLAYERS) {
+                invasionInstance.setGameState(ArenaState.STARTING);
                 invasionInstance.getChatManager().broadcastMessage("Admin-ForceStart-Game", ChatManager.HIGHLIGHTED + "An admin forcestarted the game!");
                 return true;
             }
-            if(invasionInstance.getGameState() == GameState.STARTING) {
+            if(invasionInstance.getGameState() == ArenaState.STARTING) {
                 invasionInstance.setTimer(0);
                 invasionInstance.getChatManager().broadcastMessage("Admin-Set-Starting-In-To-0", ChatManager.HIGHLIGHTED + "An admin set waiting time to 0. Game starts now!");
                 return true;
@@ -360,14 +350,14 @@ public class Main extends JavaPlugin implements CommandsInterface {
 
     public void loadInstances() {
         this.saveConfig();
-        if(gameAPI.getGameInstanceManager().getGameInstances() != null) {
-            if(gameAPI.getGameInstanceManager().getGameInstances().size() > 0) {
-                for(GameInstance gameInstance : gameAPI.getGameInstanceManager().getGameInstances()) {
-                    signManager.removeSign(gameInstance);
+        if(gameAPI.getGameInstanceManager().getArenas() != null) {
+            if(gameAPI.getGameInstanceManager().getArenas().size() > 0) {
+                for(Arena arena : gameAPI.getGameInstanceManager().getArenas()) {
+                    signManager.removeSign(arena);
                 }
             }
         }
-        gameAPI.getGameInstanceManager().getGameInstances().clear();
+        gameAPI.getGameInstanceManager().getArenas().clear();
         for(String ID : this.getConfig().getConfigurationSection("instances").getKeys(false)) {
             Arena earthMasterInstance;
             String s = "instances." + ID + ".";
@@ -387,14 +377,14 @@ public class Main extends JavaPlugin implements CommandsInterface {
             if(getConfig().contains(s + "Startlocation")) earthMasterInstance.setStartLocation(gameAPI.getLocation(s + "Startlocation"));
             else {
                 System.out.print(ID + " doesn't contains an start location!");
-                gameAPI.getGameInstanceManager().registerGameInstance(earthMasterInstance);
+                gameAPI.getGameInstanceManager().registerArena(earthMasterInstance);
                 continue;
             }
             if(getConfig().contains(s + "Endlocation")) earthMasterInstance.setEndLocation(gameAPI.getLocation(s + "Endlocation"));
             else {
                 if(!bungeeActivated) {
                     System.out.print(ID + " doesn't contains an end location!");
-                    gameAPI.getGameInstanceManager().registerGameInstance(earthMasterInstance);
+                    gameAPI.getGameInstanceManager().registerArena(earthMasterInstance);
                     continue;
                 }
             }
@@ -421,7 +411,7 @@ public class Main extends JavaPlugin implements CommandsInterface {
                 }
             }
 
-            gameAPI.getGameInstanceManager().registerGameInstance(earthMasterInstance);
+            gameAPI.getGameInstanceManager().registerArena(earthMasterInstance);
             earthMasterInstance.start();
 
 
@@ -431,17 +421,9 @@ public class Main extends JavaPlugin implements CommandsInterface {
 
     private void loadStatsForPlayersOnline() {
         for(final Player player : getServer().getOnlinePlayers()) {
-            if(bungeeActivated) gameAPI.getGameInstanceManager().getGameInstances().get(0).teleportToLobby(player);
+            if(bungeeActivated) gameAPI.getGameInstanceManager().getArenas().get(0).teleportToLobby(player);
             if(!this.isDatabaseActivated()) {
-                List<String> temp = new ArrayList<>();
-                temp.add("gamesplayed");
-                temp.add("wins");
-                temp.add("loses");
-                temp.add("highestwin");
-                temp.add("blocksplaced");
-                temp.add("blocksbroken");
-                temp.add("particles");
-                for(String s : temp) {
+                for(String s : BuildBattleStats.STATISTICS) {
                     this.getFileStats().loadStat(player, s);
                 }
                 return;

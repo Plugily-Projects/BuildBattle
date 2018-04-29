@@ -201,17 +201,6 @@ public class BuildPlot {
         if(material == Material.LAVA || material == Material.STATIONARY_LAVA) return Material.LAVA_BUCKET;
         if(material == Material.AIR || material == null) return Material.REDSTONE_BLOCK;
         return material;
-
-    }
-
-    public byte getFloorData() {
-        Location location;
-        if(getMINPOINT().getY() > getMAXPOINT().getY()) {
-            location = getMAXPOINT().clone();
-        } else {
-            location = getMINPOINT().clone();
-        }
-        return location.add(0, -1, 0).getBlock().getData();
     }
 
     public boolean isInFlyRange(Player player) {
@@ -237,24 +226,21 @@ public class BuildPlot {
     }
 
     public boolean isInPlotRange(Location location, int added) {
-        boolean trueOrNot = false;
         if(location.getWorld() == getMINPOINT().getWorld() && location.getWorld() == getMAXPOINT().getWorld()) {
             if(location.getX() >= getMINPOINT().getX() - added && location.getX() <= getMAXPOINT().getX() + added) {
                 if(location.getY() >= getMINPOINT().getY() - added && location.getY() <= getMAXPOINT().getY() + added) {
                     if(location.getZ() >= getMINPOINT().getZ() - added && location.getZ() <= getMAXPOINT().getZ() + added) {
-                        trueOrNot = true;
+                        return true;
                     }
                 }
             }
             if(location.getX() <= getMINPOINT().getX() + 5 && location.getX() >= getMAXPOINT().getX() - 5) {
                 if(location.getY() <= getMINPOINT().getY() && location.getY() >= getMAXPOINT().getY() - 5) {
-                    if(location.getZ() <= getMINPOINT().getZ() + 5 && location.getZ() >= getMAXPOINT().getZ() - 5) {
-                        trueOrNot = true;
-                    }
+                    return location.getZ() <= getMINPOINT().getZ() + 5 && location.getZ() >= getMAXPOINT().getZ() - 5;
                 }
             }
         }
-        return trueOrNot;
+        return false;
     }
 
     public Location getTeleportLocation() {

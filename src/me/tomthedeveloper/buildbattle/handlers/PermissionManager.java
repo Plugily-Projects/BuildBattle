@@ -5,20 +5,14 @@ package me.tomthedeveloper.buildbattle.handlers;
  */
 public class PermissionManager {
 
-
     private static String joinFullGames = "minigames.fullgames";
     private static String VIP = "minigames.VIP";
     private static String MVP = "minigames.MVP";
     private static String ELITE = "minigames.ELITE";
     private static String editGames = "minigames.edit";
-    private static String doubleJump = "minigames.doublejump";
 
     public static String getJoinFullGames() {
         return joinFullGames;
-    }
-
-    public static String getDoubleJump() {
-        return doubleJump;
     }
 
     public static String getVIP() {

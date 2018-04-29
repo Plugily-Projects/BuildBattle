@@ -4,7 +4,6 @@ import me.tomthedeveloper.buildbattle.BuildPlot;
 import me.tomthedeveloper.buildbattle.GameAPI;
 import me.tomthedeveloper.buildbattle.Main;
 import me.tomthedeveloper.buildbattle.User;
-import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.handlers.UserManager;
 import me.tomthedeveloper.buildbattle.arena.Arena;
 import me.tomthedeveloper.buildbattle.stats.MySQLDatabase;
@@ -15,7 +14,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -37,9 +35,8 @@ public class NormalEvents implements Listener {
 
     @EventHandler
     public void onTntExplode(BlockExplodeEvent event) {
-        for(GameInstance gameInstance : plugin.getGameAPI().getGameInstanceManager().getGameInstances()) {
-            Arena buildInstance = (Arena) gameInstance;
-            for(BuildPlot buildPlot : buildInstance.getPlotManager().getPlots()) {
+        for(Arena arena : plugin.getGameAPI().getGameInstanceManager().getArenas()) {
+            for(BuildPlot buildPlot : arena.getPlotManager().getPlots()) {
                 if(buildPlot.isInPlotRange(event.getBlock().getLocation(), 0)) {
                     event.blockList().clear();
                 } else if(buildPlot.isInPlotRange(event.getBlock().getLocation(), 5)) {
@@ -51,62 +48,10 @@ public class NormalEvents implements Listener {
         }
     }
 
-    @EventHandler
-    public void onQuitSaveStats(PlayerQuitEvent event) {
-        if(gameAPI.getGameInstanceManager().getGameInstance(event.getPlayer()) != null) {
-            gameAPI.getGameInstanceManager().getGameInstance(event.getPlayer()).leaveAttempt(event.getPlayer());
-        }
-        final User user = UserManager.getUser(event.getPlayer().getUniqueId());
-        final Player player = event.getPlayer();
-
-        if(plugin.isDatabaseActivated()) {
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                List<String> temp = new ArrayList<>();
-                temp.add("gamesplayed");
-                temp.add("wins");
-                temp.add("loses");
-                temp.add("highestwin");
-                temp.add("blocksplaced");
-                temp.add("blocksbroken");
-                temp.add("particles");
-                for(final String s : temp) {
-                    int i;
-                    try {
-                        i = plugin.getMySQLDatabase().getStat(player.getUniqueId().toString(), s);
-                    } catch(NullPointerException npe) {
-                        i = 0;
-                        System.out.print("COULDN'T GET STATS FROM PLAYER: " + player.getName());
-                    }
-
-                    if(i > user.getInt(s)) {
-                        plugin.getMySQLDatabase().setStat(player.getUniqueId().toString(), s, user.getInt(s) + i);
-                    } else {
-                        plugin.getMySQLDatabase().setStat(player.getUniqueId().toString(), s, user.getInt(s));
-                    }
-                }
-            });
-            UserManager.removeUser(event.getPlayer().getUniqueId());
-        } else {
-            List<String> temp = new ArrayList<>();
-            temp.add("gamesplayed");
-            temp.add("wins");
-            temp.add("loses");
-            temp.add("highestwin");
-            temp.add("blocksplaced");
-            temp.add("blocksbroken");
-            temp.add("particles");
-            for(final String s : temp) {
-                plugin.getFileStats().saveStat(player, s);
-            }
-        }
-
-
-    }
-
 
     @EventHandler
     public void onJoin(final PlayerJoinEvent event) {
-        if(plugin.isBungeeActivated()) gameAPI.getGameInstanceManager().getGameInstances().get(0).teleportToLobby(event.getPlayer());
+        if(plugin.isBungeeActivated()) gameAPI.getGameInstanceManager().getArenas().get(0).teleportToLobby(event.getPlayer());
         if(!plugin.isDatabaseActivated()) {
             List<String> temp = new ArrayList<>();
             temp.add("gamesplayed");

@@ -2,12 +2,12 @@ package me.tomthedeveloper.buildbattle.arena;
 
 import me.tomthedeveloper.buildbattle.BuildPlot;
 import me.tomthedeveloper.buildbattle.ConfigPreferences;
+import me.tomthedeveloper.buildbattle.GameAPI;
 import me.tomthedeveloper.buildbattle.PlotManager;
 import me.tomthedeveloper.buildbattle.User;
 import me.tomthedeveloper.buildbattle.VoteItems;
-import me.tomthedeveloper.buildbattle.game.GameInstance;
-import me.tomthedeveloper.buildbattle.game.GameState;
 import me.tomthedeveloper.buildbattle.handlers.ChatManager;
+import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
 import me.tomthedeveloper.buildbattle.handlers.MessageHandler;
 import me.tomthedeveloper.buildbattle.handlers.UserManager;
 import me.tomthedeveloper.buildbattle.items.SpecialItem;
@@ -21,15 +21,20 @@ import me.tomthedeveloper.buildbattle.utils.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.block.Sign;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.inventivetalent.bossbar.BossBarAPI;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,11 +46,11 @@ import java.util.UUID;
 /**
  * Created by Tom on 17/08/2015.
  */
-public class Arena extends GameInstance {
+public class Arena extends BukkitRunnable {
 
     private static List<String> themes = new ArrayList<>();
     private static List<Integer> blacklist = new ArrayList<>();
-    private me.tomthedeveloper.buildbattle.scoreboards.ScoreboardHandler scoreboardHandler;
+    private ScoreboardHandler scoreboardHandler;
     private HashMap<Integer, UUID> toplist = new HashMap<>();
     private String theme = "Theme";
     private PlotManager plotManager;
@@ -66,9 +71,29 @@ public class Arena extends GameInstance {
     private boolean SECOND_PLACE_COMMANDS_ENABLED = ConfigPreferences.isSecondPlaceCommandsEnabled();
     private boolean THIRD_PLACE_COMMANDS_ENABLED = ConfigPreferences.isThirdPlaceCommandsEnabled();
     private boolean END_GAME_COMMANDS_ENABLED = ConfigPreferences.isEndGameCommandsEnabled();
+    public static GameAPI plugin;
+    protected HashMap<ArenaState, String[]> signlines = new HashMap<>();
+    protected String[] FULLlines;
+    private HashSet<Location> signs = new HashSet<>();
+    private ArenaState gameState;
+    private int MIN_PLAYERS = 2;
+    private int MAX_PLAYERS = 10;
+    private String mapname = "";
+    private int timer;
+    private String ID;
+    private Location lobbyloc = null;
+    private Location Startloc = null;
+    private Location Endloc = null;
+    private HashSet<UUID> players;
+    private ChatManager chatManager;
 
     public Arena(String ID) {
-        super(ID);
+        gameState = ArenaState.WAITING_FOR_PLAYERS;
+        chatManager = new ChatManager(this);
+
+        this.ID = ID;
+        players = new HashSet<>();
+        loadSignLines();
         plotManager = new PlotManager(this);
         scoreboardHandler = new ScoreboardHandler(this);
     }
@@ -93,16 +118,11 @@ public class Arena extends GameInstance {
         return plotManager;
     }
 
-    public void setPlotManager(PlotManager plotManager) {
-        this.plotManager = plotManager;
-    }
-
-    @Override
     public boolean needsPlayers() {
         if(!ConfigPreferences.isDynamicSignSystemEnabled()) {
             return true;
         } else {
-            return getGameState() == GameState.STARTING || getGameState() == GameState.WAITING_FOR_PLAYERS;
+            return getGameState() == ArenaState.STARTING || getGameState() == ArenaState.WAITING_FOR_PLAYERS;
         }
     }
 
@@ -110,11 +130,10 @@ public class Arena extends GameInstance {
         setTheme(themes.get(random.nextInt(themes.size() - 1)));
     }
 
-    @Override
     public void leaveAttempt(Player p) {
         queue.remove(p.getUniqueId());
         User user = UserManager.getUser(p.getUniqueId());
-        if(getGameState() == GameState.INGAME || getGameState() == GameState.ENDING) UserManager.getUser(p.getUniqueId()).addInt("gamesplayed", 1);
+        if(getGameState() == ArenaState.INGAME || getGameState() == ArenaState.ENDING) UserManager.getUser(p.getUniqueId()).addInt("gamesplayed", 1);
         this.teleportToEndLocation(p);
         this.removePlayer(p);
         if(!user.isSpectator()) {
@@ -136,7 +155,7 @@ public class Arena extends GameInstance {
         }
         p.setFireTicks(0);
         if(getPlayers().size() == 0) {
-            this.setGameState(GameState.RESTARTING);
+            this.setGameState(ArenaState.RESTARTING);
         }
        /* if(!plugin.getPlugin().isBungeeActivated()) {
             plugin.getPlugin().getInventoryManager().loadInventory(p);
@@ -154,7 +173,6 @@ public class Arena extends GameInstance {
         }
     }
 
-    @Override
     public void run() {
         if(!this.scoreboardDisabled) updateScoreboard();
         updateNewSign();
@@ -176,7 +194,7 @@ public class Arena extends GameInstance {
                     }
                 } else {
                     getChatManager().broadcastMessage("Enough-Players-To-Start", "We now have enough players. The game is starting soon!");
-                    setGameState(GameState.STARTING);
+                    setGameState(ArenaState.STARTING);
                     Bukkit.getPluginManager().callEvent(new GameStartEvent(this));
 
                     setTimer(LOBBY_STARTING_TIMER);
@@ -192,7 +210,7 @@ public class Arena extends GameInstance {
                     if(!getPlotManager().isPlotsCleared()) {
                         getPlotManager().resetQeuedPlots();
                     }
-                    setGameState(GameState.INGAME);
+                    setGameState(ArenaState.INGAME);
                     getPlotManager().distributePlots();
                     getPlotManager().teleportToPlots();
                     setTimer(BUILDTIME);
@@ -211,7 +229,7 @@ public class Arena extends GameInstance {
             case INGAME:
                 if(getPlayers().size() <= 1) {
                     getChatManager().broadcastMessage("Only-Player-Left", ChatColor.RED + "U are the only player left. U will be teleported to the lobby");
-                    setGameState(GameState.ENDING);
+                    setGameState(ArenaState.ENDING);
                     Bukkit.getPluginManager().callEvent(new GameEndEvent(this));
                     setTimer(10);
                 }
@@ -233,20 +251,6 @@ public class Arena extends GameInstance {
                         }
                     }
                     extracounter++;
-               /* }else{
-                    if(extracounter == 1){
-                        extracounter = 0;
-                        for(Player player:getPlayers()){
-                            BuildPlot buildPlot = getVotingPlot();
-                            if(buildPlot != null) {
-                                if (!buildPlot.isInFlyRange(player)) {
-                                    player.teleport(buildPlot.getTeleportLocation());
-                                    player.sendMessage(ChatManager.getSingleMessage("Cant-Fly-Out-Of-Plot", ChatColor.RED + "U can't fly so far out!"));
-                                }
-                            }
-                        }
-                    }
-                    extracounter++; */
                 } else if(getTimer() == 0 && !receivedVoteItems) {
 
                     for(Player player : getPlayers()) {
@@ -283,7 +287,7 @@ public class Arena extends GameInstance {
                         for(Player player : getPlayers()) {
                             player.teleport(winnerPlot.getTeleportLocation());
                         }
-                        this.setGameState(GameState.ENDING);
+                        this.setGameState(ArenaState.ENDING);
                         Bukkit.getPluginManager().callEvent(new GameEndEvent(this));
 
                         setTimer(10);
@@ -303,7 +307,7 @@ public class Arena extends GameInstance {
                 if(getTimer() == 0) {
 
                     teleportAllToEndLocation();
-                    setGameState(GameState.RESTARTING);
+                    setGameState(ArenaState.RESTARTING);
                     for(Player player : getPlayers()) {
                         player.getInventory().clear();
                         UserManager.getUser(player.getUniqueId()).removeScoreboard();
@@ -342,7 +346,7 @@ public class Arena extends GameInstance {
                 }
 
 
-                setGameState(GameState.WAITING_FOR_PLAYERS);
+                setGameState(ArenaState.WAITING_FOR_PLAYERS);
                 toplist.clear();
         }
     }
@@ -379,13 +383,12 @@ public class Arena extends GameInstance {
         }
     }
 
-    @Override
-    public void setGameState(GameState gameState) {
+    public void setGameState(ArenaState gameState) {
         if(getGameState() != null) {
             GameChangeStateEvent gameChangeStateEvent = new GameChangeStateEvent(gameState, this, getGameState());
             plugin.getPlugin().getServer().getPluginManager().callEvent(gameChangeStateEvent);
         }
-        super.setGameState(gameState);
+        this.gameState = gameState;
     }
 
     private void giveRewards() {
@@ -513,9 +516,8 @@ public class Arena extends GameInstance {
         return blacklist;
     }
 
-    @Override
     public void joinAttempt(Player p) {
-        if((getGameState() == GameState.INGAME || getGameState() == GameState.ENDING || getGameState() == GameState.RESTARTING)) return;
+        if((getGameState() == ArenaState.INGAME || getGameState() == ArenaState.ENDING || getGameState() == ArenaState.RESTARTING)) return;
         if(plugin.getPlugin().isInventoryManagerEnabled()) plugin.getPlugin().getInventoryManager().saveInventoryToFile(p);
         teleportToLobby(p);
         this.addPlayer(p);
@@ -640,18 +642,13 @@ public class Arena extends GameInstance {
                         }
                     } else {
                         UserManager.getUser(plugin.getPlugin().getServer().getPlayer(toplist.get(rang)).getUniqueId()).addInt("loses", 1);
-
                     }
-
                 }
             }
-
         }
-
     }
 
     private void calculateResults() {
-
         for(int b = 1; b <= 10; b++) {
             toplist.put(b, null);
         }
@@ -669,7 +666,6 @@ public class Arena extends GameInstance {
                     insertScore(rang, buildPlot.getOwner());
                     break;
                 }
-
             }
         }
     }
@@ -679,4 +675,226 @@ public class Arena extends GameInstance {
         toplist.put(rang, uuid);
         if(!(rang > 10) && after != null) insertScore(rang + 1, after);
     }
+
+    public static GameAPI getPlugin() {
+        return plugin;
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public int getMIN_PLAYERS() {
+        return MIN_PLAYERS;
+    }
+
+    public void setMIN_PLAYERS(int MIN_PLAYERS) {
+        this.MIN_PLAYERS = MIN_PLAYERS;
+    }
+
+    public String getMapName() {
+        return mapname;
+    }
+
+    public void setMapName(String mapname) {
+        this.mapname = mapname;
+    }
+
+    public void addPlayer(Player player) {
+        players.add(player.getUniqueId());
+    }
+
+    public void removePlayer(Player player) {
+        if(player == null) return;
+        if(player.getUniqueId() == null) return;
+        players.remove(player.getUniqueId());
+    }
+
+    public void clearPlayers() {
+        players.clear();
+    }
+
+    public void addSign(Location location) {
+        signs.add(location);
+    }
+
+    public int getTimer() {
+        return timer;
+    }
+
+    public void setTimer(int timer) {
+        this.timer = timer;
+    }
+
+    public ChatManager getChatManager() {
+        return chatManager;
+    }
+
+    public int getMAX_PLAYERS() {
+        return MAX_PLAYERS;
+    }
+
+    public void setMAX_PLAYERS(int MAX_PLAYERS) {
+        this.MAX_PLAYERS = MAX_PLAYERS;
+    }
+
+    public ArenaState getGameState() {
+        return gameState;
+    }
+
+    public void updateNewSign() {
+        if(signs.size() > 0) {
+            for(Location location : signs) {
+                updateSign((Sign) location.getBlock().getState());
+            }
+        }
+    }
+
+    public HashSet<Location> getSigns() {
+        return signs;
+    }
+
+    public void updateSign(Sign sign) {
+        String[] strings = signlines.get(getGameState());
+        if(getGameState() == ArenaState.STARTING || getGameState() == ArenaState.WAITING_FOR_PLAYERS) {
+            if(getPlayers().size() >= MAX_PLAYERS) strings = FULLlines;
+        }
+
+        int i = 0;
+        sign = (Sign) sign.getLocation().clone().getBlock().getState();
+        for(String string : strings) {
+            sign.setLine(i, formatText(string));
+
+            i++;
+        }
+        sign.update(true);
+        sign.update();
+    }
+
+
+    private String formatText(String s) {
+        String returnstring = s;
+        returnstring = returnstring.replaceAll("%ARENA%", getID());
+        returnstring = returnstring.replaceAll("%PLAYERSIZE%", Integer.toString(getPlayers().size()));
+        returnstring = returnstring.replaceAll("%MAXPLAYERS%", Integer.toString(this.MAX_PLAYERS));
+        returnstring = returnstring.replaceAll("%MAPNAME%", getMapName());
+        returnstring = returnstring.replaceAll("(&([a-f0-9]))", "\u00A7$2");
+        return returnstring;
+
+    }
+
+    public void showPlayers() {
+        for(Player player : getPlayers()) {
+            for(Player p : getPlayers()) {
+                player.showPlayer(p);
+                p.showPlayer(player);
+            }
+        }
+    }
+
+    public HashSet<Player> getPlayers() {
+        HashSet<Player> list = new HashSet<>();
+        for(UUID uuid : players) {
+            list.add(Bukkit.getPlayer(uuid));
+        }
+
+        return list;
+    }
+
+    public void hidePlayer(Player p) {
+        for(Player player : getPlayers()) {
+            player.hidePlayer(p);
+        }
+    }
+
+    public void showPlayer(Player p) {
+        for(Player player : getPlayers()) {
+            player.showPlayer(p);
+        }
+    }
+
+    public void teleportToLobby(Player player) {
+        Location location = getLobbyLocation();
+        if(location == null) {
+            System.out.print("LobbyLocation isn't intialized for arena " + getID());
+        }
+        player.teleport(location);
+
+    }
+
+    public Location getLobbyLocation() {
+        return lobbyloc;
+    }
+
+    public void setLobbyLocation(Location loc) {
+        this.lobbyloc = loc;
+    }
+
+    public Location getStartLocation() {
+        return Startloc;
+    }
+
+
+    public void setStartLocation(Location location) {
+        Startloc = location;
+    }
+
+    public void teleportToStartLocation(Player player) {
+        if(Startloc != null) player.teleport(Startloc);
+        else System.out.print("Startlocation for arena " + getID() + " isn't intialized!");
+    }
+
+    public void teleportAllToEndLocation() {
+        if(plugin.getPlugin().isBungeeActivated()) {
+            for(Player player : getPlayers()) {
+                plugin.getPlugin().getBungeeManager().connectToHub(player);
+            }
+            return;
+        }
+        Location location = getEndLocation();
+
+        if(location == null) {
+            location = getLobbyLocation();
+            System.out.print("EndLocation for arena " + getID() + " isn't intialized!");
+        }
+        for(Player player : getPlayers()) {
+            player.teleport(location);
+        }
+    }
+
+    public void teleportToEndLocation(Player player) {
+        if(plugin.getPlugin().isBungeeActivated()) {
+            plugin.getPlugin().getBungeeManager().connectToHub(player);
+            return;
+        }
+        Location location = getEndLocation();
+        if(location == null) {
+            location = getLobbyLocation();
+            System.out.print("EndLocation for arena " + getID() + " isn't intialized!");
+        }
+
+        player.teleport(location);
+    }
+
+    public Location getEndLocation() {
+        return Endloc;
+    }
+
+    public void setEndLocation(Location Endloc) {
+        this.Endloc = Endloc;
+    }
+
+
+    public void loadSignLines() {
+        FileConfiguration config = ConfigurationManager.getConfig("signModification");
+        for(String s : config.getConfigurationSection("signs.format").getKeys(false)) {
+            if(s.equalsIgnoreCase("WaitingForNewGame") || s.equalsIgnoreCase("FULL")) continue;
+            String path = "signs.format." + s + ".";
+            signlines.put(ArenaState.fromString(s), new String[]{
+                    config.getString(path + "lines.1"), config.getString(path + "lines.2"), config.getString(path + "lines.3"), config.getString(path + "lines.4")});
+            FULLlines = new String[]{config.getString(path + "lines.1"), config.getString(path + "lines.2"), config.getString(path + "lines.3"), config.getString(path + "lines.4")};
+
+        }
+    }
+
 }

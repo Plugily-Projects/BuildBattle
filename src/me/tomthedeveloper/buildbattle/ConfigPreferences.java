@@ -74,10 +74,6 @@ public class ConfigPreferences {
 
 
     public static void loadEndGameCommands() {
-        if(!config.contains("End-Game-Commands")) {
-            config.set("End-Game-Commands", Arrays.asList("say %PLAYER% has played a game!", "give %PLAYER% 100"));
-            saveConfig();
-        }
         endGameCommands.addAll(config.getStringList("End-Game-Commands"));
     }
 
@@ -122,7 +118,6 @@ public class ConfigPreferences {
     public static int getMaxParticles() {
         return options.get("Max-Amount-Particles");
     }
-
 
     public static boolean restartOnEnd() {
         return options.get("Bungee-Restart-On-End") == 1;
@@ -208,31 +203,6 @@ public class ConfigPreferences {
                 } else {
                     options.put(option, config.getInt(option));
                 }
-            } else {
-                if(option.equalsIgnoreCase("Build-Time-In-Seconds")) config.set("Build-Time-In-Seconds", 60 * 8);
-                if(option.equals("Voting-Time-In-Seconds")) config.set("Voting-Time-In-Seconds", 20);
-                if(option.equals("bar")) config.set("bar", true);
-                if(option.equals("Fly-Range-Out-Plot")) config.set("Fly-Range-Out-Plot", 5);
-                if(option.equals("Default-Floor-Material")) config.set("Default-Floor-Material", 17);
-                if(option.equals("Disable-Mob-Spawning-Completely")) config.set("Disable-Mob-Spawning-Completely", true);
-                if(option.equals("Dynamic-Sign-System")) config.set("Dynamic-Sign-System", true);
-                if(option.equals("Amount-One-Particle-Effect-Contains")) config.set("Amount-One-Particle-Effect-Contains", 20);
-                if(option.equals("Max-Amount-Particles")) config.set("Max-Amount-Particles", 25);
-                if(option.equals("Particle-Refresh-Per-Tick")) config.set("Particle-Refresh-Per-Tick", 10);
-                if(option.equals("Bungee-Shutdown-On-End")) config.set("Bungee-Shutdown-On-End", false);
-                if(option.equals("Particle-Offset")) config.set("Particle-Offset", 1);
-                if(option.equals("Win-Commands-Activated")) config.set("Win-Commands-Activated", false);
-                if(option.equals("Second-Place-Commands-Activated")) config.set("Second-Place-Commands-Activated", false);
-                if(option.equals("Third-Place-Commands-Activated")) config.set("Third-Place-Commands-Activated", false);
-                if(option.equals("End-Game-Commands-Activated")) config.set("End-Game-Commands-Activated", true);
-                if(option.equals("Bungee-Restart-On-End")) config.set("Bungee-Restart-On-End", false);
-                if(option.equals("Use-Name-Instead-Of-UUID-In-Database")) config.set("Use-Name-Instead-Of-UUID-In-Database", false);
-                if(option.equals("Mobs-Max-Amount-Per-Plot")) config.set("Mobs-Max-Amount-Per-Plot", 20);
-                if(option.equals("Hide-Players-Outside-Game")) config.set("Hide-Players-Outside-Game", true);
-                if(option.equals("Disable-Scoreboard-Ingame")) config.set("Disable-Scoreboard-Ingame", false);
-                if(option.equals("Hook-Into-Vault")) config.set("Hook-Into-Vault", false);
-                if(option.equals("Lobby-Starting-Time")) config.set("Lobby-Starting-Time", 60);
-                saveConfig();
             }
             saveConfig();
         }
@@ -244,10 +214,6 @@ public class ConfigPreferences {
 
     public static long getParticleRefreshTick() {
         return options.get("Particle-Refresh-Per-Tick");
-    }
-
-    public static int getExtraPlotRange() {
-        return options.get("Fly-Range-Out-Plot");
     }
 
     private static void saveConfig() {

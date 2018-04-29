@@ -6,7 +6,7 @@ import me.tomthedeveloper.buildbattle.handlers.UserManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -18,11 +18,22 @@ import java.util.UUID;
  * Created by Tom on 30/12/2015.
  */
 public enum BuildBattleStats {
-    BLOCKS_PLACED("blocksplaced"), BLOCKS_BROKEN("blocksbroken"), GAMES_PLAYED("gamesplayed"), WINS("wins"), LOSES("loses");
+    BLOCKS_PLACED("blocksplaced"), BLOCKS_BROKEN("blocksbroken"), GAMES_PLAYED("gamesplayed"), WINS("wins"), LOSES("loses"), HIGHEST_WIN("highestwin"), PARTICLES("particles");
 
     public static Main plugin;
-    private String name;
+    public static List<String> STATISTICS = new ArrayList<>();
 
+    static {
+        STATISTICS.add("blocksplaced");
+        STATISTICS.add("blocksbroken");
+        STATISTICS.add("gamesplayed");
+        STATISTICS.add("wins");
+        STATISTICS.add("loses");
+        STATISTICS.add("highestwin");
+        STATISTICS.add("particles");
+    }
+
+    private String name;
 
     BuildBattleStats(String name) {
         this.name = name;

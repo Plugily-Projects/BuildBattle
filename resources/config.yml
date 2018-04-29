@@ -15,7 +15,6 @@ signs:
 Disable-Leave-Command: false
 Build-Time-In-Seconds: 480
 Voting-Time-In-Seconds: 20
-Fly-Range-Out-Plot: 5
 Default-Floor-Material: 17
 Disable-Mob-Spawning-Completely: true
 Dynamic-Sign-System: true

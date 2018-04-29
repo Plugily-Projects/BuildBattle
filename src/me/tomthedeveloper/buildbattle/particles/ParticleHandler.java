@@ -3,7 +3,6 @@ package me.tomthedeveloper.buildbattle.particles;
 import me.tomthedeveloper.buildbattle.BuildPlot;
 import me.tomthedeveloper.buildbattle.ConfigPreferences;
 import me.tomthedeveloper.buildbattle.Main;
-import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.arena.Arena;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -33,14 +32,11 @@ public class ParticleHandler extends BukkitRunnable {
 
     @Override
     public void run() {
-        for(GameInstance gameInstance : plugin.getGameAPI().getGameInstanceManager().getGameInstances()) {
-            Arena buildInstance = (Arena) gameInstance;
-            for(BuildPlot buildPlot : buildInstance.getPlotManager().getPlots()) {
+        for(Arena arena : plugin.getGameAPI().getGameInstanceManager().getArenas()) {
+            for(BuildPlot buildPlot : arena.getPlotManager().getPlots()) {
                 for(Location location : buildPlot.getParticles().keySet()) {
-                    if(!gameInstance.getPlayers().isEmpty())
-                        buildPlot.getParticles().get(location).display((float) particleOffset, (float) particleOffset, (float) particleOffset, (float) 1, amount, location, new ArrayList<>(gameInstance.getPlayers()));
-
-
+                    if(!arena.getPlayers().isEmpty())
+                        buildPlot.getParticles().get(location).display((float) particleOffset, (float) particleOffset, (float) particleOffset, (float) 1, amount, location, new ArrayList<>(arena.getPlayers()));
                 }
             }
         }

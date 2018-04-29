@@ -6,17 +6,16 @@ import me.tomthedeveloper.buildbattle.GameAPI;
 import me.tomthedeveloper.buildbattle.Main;
 import me.tomthedeveloper.buildbattle.User;
 import me.tomthedeveloper.buildbattle.VoteItems;
+import me.tomthedeveloper.buildbattle.arena.Arena;
+import me.tomthedeveloper.buildbattle.arena.ArenaState;
 import me.tomthedeveloper.buildbattle.entities.BuildBattleEntity;
-import me.tomthedeveloper.buildbattle.game.GameInstance;
-import me.tomthedeveloper.buildbattle.game.GameState;
 import me.tomthedeveloper.buildbattle.handlers.ChatManager;
 import me.tomthedeveloper.buildbattle.handlers.UserManager;
-import me.tomthedeveloper.buildbattle.arena.Arena;
 import me.tomthedeveloper.buildbattle.items.SpecialItemManager;
-import me.tomthedeveloper.buildbattle.utils.IngameMenu;
 import me.tomthedeveloper.buildbattle.particles.ParticleMenu;
 import me.tomthedeveloper.buildbattle.particles.ParticleRemoveMenu;
 import me.tomthedeveloper.buildbattle.playerheads.PlayerHeadsMenu;
+import me.tomthedeveloper.buildbattle.utils.IngameMenu;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -58,45 +57,40 @@ import java.util.ArrayList;
  */
 public class IngameEvents implements Listener {
 
-
     private Main plugin;
     private GameAPI gameAPI;
 
     public IngameEvents(Main main) {
         this.plugin = main;
         this.gameAPI = plugin.getGameAPI();
-
     }
-
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        if((plugin.isBungeeActivated() && gameAPI.getGameInstanceManager().getGameInstances().get(0).getGameState() == GameState.INGAME) || (plugin.isBungeeActivated() && gameAPI.getGameInstanceManager().getGameInstances().get(0).getGameState() == GameState.ENDING) || (plugin.isBungeeActivated() && gameAPI.getGameInstanceManager().getGameInstances().get(0).getGameState() == GameState.RESTARTING))
+        if((plugin.isBungeeActivated() && gameAPI.getGameInstanceManager().getArenas().get(0).getGameState() == ArenaState.INGAME) || (plugin.isBungeeActivated() && gameAPI.getGameInstanceManager().getArenas().get(0).getGameState() == ArenaState.ENDING) || (plugin.isBungeeActivated() && gameAPI.getGameInstanceManager().getArenas().get(0).getGameState() == ArenaState.RESTARTING))
             event.getPlayer().kickPlayer(ChatManager.getSingleMessage("Kicked-Game-Already-Started", ChatManager.HIGHLIGHTED + "Kicked! Game has already started!"));
     }
 
     @EventHandler
     public void onPreJoin(AsyncPlayerPreLoginEvent event) {
-        if((plugin.isBungeeActivated() && gameAPI.getGameInstanceManager().getGameInstances().get(0).getGameState() == GameState.INGAME) || (plugin.isBungeeActivated() && gameAPI.getGameInstanceManager().getGameInstances().get(0).getGameState() == GameState.ENDING) || (plugin.isBungeeActivated() && gameAPI.getGameInstanceManager().getGameInstances().get(0).getGameState() == GameState.RESTARTING)) {
+        if((plugin.isBungeeActivated() && gameAPI.getGameInstanceManager().getArenas().get(0).getGameState() == ArenaState.INGAME) || (plugin.isBungeeActivated() && gameAPI.getGameInstanceManager().getArenas().get(0).getGameState() == ArenaState.ENDING) || (plugin.isBungeeActivated() && gameAPI.getGameInstanceManager().getArenas().get(0).getGameState() == ArenaState.RESTARTING)) {
             event.setKickMessage(ChatManager.getSingleMessage("Kicked-Game-Already-Started", ChatManager.HIGHLIGHTED + "Kicked! Game has already started!"));
             event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
         }
-
     }
 
     @EventHandler
     public void onVote(PlayerInteractEvent event) {
         if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) return;
         if(event.getItem() == null) return;
-        GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance(event.getPlayer());
-        if(gameInstance == null) return;
-        if(gameInstance.getGameState() != GameState.INGAME) return;
+        Arena arena = gameAPI.getGameInstanceManager().getArena(event.getPlayer());
+        if(arena == null) return;
+        if(arena.getGameState() != ArenaState.INGAME) return;
 
         if(!event.getItem().hasItemMeta()) return;
         if(!event.getItem().getItemMeta().hasDisplayName()) return;
-        Arena buildInstance = (Arena) gameInstance;
-        if(!buildInstance.isVoting()) return;
-        if(buildInstance.getVotingPlot().getOwner() == event.getPlayer().getUniqueId()) {
+        if(!arena.isVoting()) return;
+        if(arena.getVotingPlot().getOwner() == event.getPlayer().getUniqueId()) {
             event.getPlayer().sendMessage(ChatManager.getSingleMessage("Cant-Vote-On-Own-Plot", ChatColor.RED + "U can't vote on your own plot!!"));
             event.setCancelled(true);
             return;
@@ -109,8 +103,8 @@ public class IngameEvents implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onLeave(PlayerInteractEvent event) {
         if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) return;
-        GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance(event.getPlayer());
-        if(gameInstance == null) return;
+        Arena arena = gameAPI.getGameInstanceManager().getArena(event.getPlayer());
+        if(arena == null) return;
         ItemStack itemStack = event.getPlayer().getItemInHand();
         if(itemStack == null) return;
         if(itemStack.getItemMeta() == null) return;
@@ -122,7 +116,7 @@ public class IngameEvents implements Listener {
             if(plugin.isBungeeActivated()) {
                 plugin.getBungeeManager().connectToHub(event.getPlayer());
             } else {
-                gameInstance.leaveAttempt(event.getPlayer());
+                arena.leaveAttempt(event.getPlayer());
             }
         }
     }
@@ -132,23 +126,21 @@ public class IngameEvents implements Listener {
     public void onOpenOptionMenu(PlayerInteractEvent event) {
         if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) return;
         if(event.getItem() == null) return;
-        GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance(event.getPlayer());
-        if(gameInstance == null) return;
-        if(gameInstance.getGameState() != GameState.INGAME) return;
+        Arena arena = gameAPI.getGameInstanceManager().getArena(event.getPlayer());
+        if(arena == null) return;
+        if(arena.getGameState() != ArenaState.INGAME) return;
         ItemStack itemStack = event.getItem();
         if(!itemStack.hasItemMeta()) return;
         if(!itemStack.getItemMeta().hasDisplayName()) return;
-        Arena buildInstance = (Arena) gameInstance;
-        if(buildInstance.isVoting()) return;
+        if(arena.isVoting()) return;
         if(!IngameMenu.getMenuItem().getItemMeta().getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())) return;
-        IngameMenu.openMenu(event.getPlayer(), buildInstance.getPlotManager().getPlot(event.getPlayer()));
+        IngameMenu.openMenu(event.getPlayer(), arena.getPlotManager().getPlot(event.getPlayer()));
     }
 
     @EventHandler
     public void onPistonExtendEvent(BlockPistonExtendEvent event) {
-        for(GameInstance gameInstance : gameAPI.getGameInstanceManager().getGameInstances()) {
-            Arena buildInstance = (Arena) gameInstance;
-            for(BuildPlot buildPlot : buildInstance.getPlotManager().getPlots()) {
+        for(Arena arena : gameAPI.getGameInstanceManager().getArenas()) {
+            for(BuildPlot buildPlot : arena.getPlotManager().getPlots()) {
                 for(Block block : event.getBlocks()) {
                     if(!buildPlot.isInPlotRange(block.getLocation(), -1) && buildPlot.isInPlot(event.getBlock().getLocation())) {
                         event.setCancelled(true);
@@ -162,32 +154,26 @@ public class IngameEvents implements Listener {
     public void onFoodChange(FoodLevelChangeEvent event) {
         if(!(event.getEntity().getType() == EntityType.PLAYER)) return;
         Player player = (Player) event.getEntity();
-        if(gameAPI.getGameInstanceManager().getGameInstance(player) == null) return;
-        GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance(player);
+        if(gameAPI.getGameInstanceManager().getArena(player) == null) return;
         event.setCancelled(true);
         player.setFoodLevel(20);
     }
 
     @EventHandler
     public void onWaterFlowEvent(BlockFromToEvent event) {
-        for(GameInstance gameInstance : gameAPI.getGameInstanceManager().getGameInstances()) {
-            Arena buildInstance = (Arena) gameInstance;
-            for(BuildPlot buildPlot : buildInstance.getPlotManager().getPlots()) {
-
+        for(Arena arena : gameAPI.getGameInstanceManager().getArenas()) {
+            for(BuildPlot buildPlot : arena.getPlotManager().getPlots()) {
                 if(!buildPlot.isInPlot(event.getToBlock().getLocation()) && buildPlot.isInPlot(event.getBlock().getLocation())) {
                     event.setCancelled(true);
                 }
-
             }
         }
     }
 
     @EventHandler
     public void onTntExplode(EntityExplodeEvent event) {
-        for(GameInstance gameInstance : gameAPI.getGameInstanceManager().getGameInstances()) {
-            Arena buildInstance = (Arena) gameInstance;
-            for(BuildPlot buildPlot : buildInstance.getPlotManager().getPlots()) {
-
+        for(Arena arena : gameAPI.getGameInstanceManager().getArenas()) {
+            for(BuildPlot buildPlot : arena.getPlotManager().getPlots()) {
                 if(buildPlot.isInPlotRange(event.getEntity().getLocation(), 0)) {
                     event.blockList().clear();
                     event.setCancelled(true);
@@ -203,8 +189,8 @@ public class IngameEvents implements Listener {
     @EventHandler
     public void cancelTNT(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance(player);
-        if(gameInstance == null) return;
+        Arena arena = gameAPI.getGameInstanceManager().getArena(player);
+        if(arena == null) return;
         if(player.getItemInHand() == null) return;
         if(player.getItemInHand().getType() != Material.FLINT_AND_STEEL) {
             return;
@@ -220,8 +206,8 @@ public class IngameEvents implements Listener {
     public void onEntityDamageEntity(EntityDamageByEntityEvent event) {
         if(event.getEntity().getType() != EntityType.PLAYER) return;
         Player player = (Player) event.getEntity();
-        GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance(player);
-        if(gameInstance == null) return;
+        Arena arena = gameAPI.getGameInstanceManager().getArena(player);
+        if(arena == null) return;
         event.setCancelled(true);
     }
 
@@ -229,8 +215,8 @@ public class IngameEvents implements Listener {
     public void onGetDamaged(EntityDamageByEntityEvent event) {
         if(event.getDamager().getType() != EntityType.PLAYER) return;
         Player player = (Player) event.getDamager();
-        GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance(player);
-        if(gameInstance == null) return;
+        Arena arena = gameAPI.getGameInstanceManager().getArena(player);
+        if(arena == null) return;
         event.setCancelled(true);
     }
 
@@ -238,18 +224,17 @@ public class IngameEvents implements Listener {
     public void onDamage(EntityDamageEvent event) {
         if(event.getEntity().getType() != EntityType.PLAYER) return;
         Player player = (Player) event.getEntity();
-        GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance(player);
-        if(gameInstance == null) return;
+        Arena arena = gameAPI.getGameInstanceManager().getArena(player);
+        if(arena == null) return;
         event.setCancelled(true);
     }
 
 
     @EventHandler
     public void onTreeGrow(StructureGrowEvent event) {
-        GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance(event.getPlayer());
-        if(gameInstance == null) return;
-        Arena buildInstance = (Arena) gameInstance;
-        BuildPlot buildPlot = buildInstance.getPlotManager().getPlot(event.getPlayer());
+        Arena arena = gameAPI.getGameInstanceManager().getArena(event.getPlayer());
+        if(arena == null) return;
+        BuildPlot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
         if(buildPlot == null) return;
         for(BlockState blockState : event.getBlocks()) {
             if(!buildPlot.isInPlot(blockState.getLocation())) blockState.setType(Material.AIR);
@@ -259,10 +244,8 @@ public class IngameEvents implements Listener {
 
     @EventHandler
     public void onDispense(BlockDispenseEvent event) {
-        for(GameInstance gameInstance : gameAPI.getGameInstanceManager().getGameInstances()) {
-            Arena buildInstance = (Arena) gameInstance;
-            for(BuildPlot buildPlot : buildInstance.getPlotManager().getPlots()) {
-
+        for(Arena arena : gameAPI.getGameInstanceManager().getArenas()) {
+            for(BuildPlot buildPlot : arena.getPlotManager().getPlots()) {
                 if(!buildPlot.isInPlotRange(event.getBlock().getLocation(), -1) && buildPlot.isInPlotRange(event.getBlock().getLocation(), 5)) {
                     event.setCancelled(true);
                 }
@@ -273,12 +256,8 @@ public class IngameEvents implements Listener {
 
     @EventHandler
     public void onFloorChange(InventoryClickEvent event) {
-
         if(event.getCurrentItem() == null) return;
-
         if(!event.getCurrentItem().hasItemMeta()) return;
-
-
         if(!event.getCurrentItem().getItemMeta().hasDisplayName()) return;
         ItemStack currentItem = event.getCurrentItem();
         String displayName = event.getCurrentItem().getItemMeta().getDisplayName();
@@ -287,21 +266,20 @@ public class IngameEvents implements Listener {
         //   event.setCancelled(true);
 
 
-        GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance((Player) event.getWhoClicked());
-        if(gameInstance == null) return;
+        Arena arena = gameAPI.getGameInstanceManager().getArena((Player) event.getWhoClicked());
+        if(arena == null) return;
 
-        Arena buildInstance = (Arena) gameInstance;
-        if(buildInstance.getGameState() != GameState.INGAME) return;
+        if(arena.getGameState() != ArenaState.INGAME) return;
         if(displayName.equalsIgnoreCase(ChatManager.getSingleMessage("Particle-Option-Name", ChatColor.GREEN + "Particles"))) {
             event.setCancelled(true);
             event.getWhoClicked().closeInventory();
-            ParticleMenu.openMenu(player, buildInstance.getPlotManager().getPlot((Player) event.getWhoClicked()));
+            ParticleMenu.openMenu(player, arena.getPlotManager().getPlot((Player) event.getWhoClicked()));
             return;
         }
         String inventoryName = event.getInventory().getName();
         if(inventoryName.equalsIgnoreCase(ChatManager.getSingleMessage("Particle-Remove-Menu-Name", "Remove Particles"))) {
             event.setCancelled(true);
-            ParticleRemoveMenu.onClick(event.getInventory(), event.getCurrentItem(), buildInstance.getPlotManager().getPlot(player));
+            ParticleRemoveMenu.onClick(event.getInventory(), event.getCurrentItem(), arena.getPlotManager().getPlot(player));
 
             return;
         }
@@ -326,10 +304,10 @@ public class IngameEvents implements Listener {
             if(displayName.contains(ChatManager.getSingleMessage("Remove-Particle-Item-Name", ChatColor.RED + "Remove Particles"))) {
                 event.setCancelled(true);
                 event.getWhoClicked().closeInventory();
-                ParticleRemoveMenu.openMenu(player, buildInstance.getPlotManager().getPlot((Player) event.getWhoClicked()));
+                ParticleRemoveMenu.openMenu(player, arena.getPlotManager().getPlot((Player) event.getWhoClicked()));
                 return;
             }
-            ParticleMenu.onClick(player, event.getCurrentItem(), buildInstance.getPlotManager().getPlot((Player) event.getWhoClicked()));
+            ParticleMenu.onClick(player, event.getCurrentItem(), arena.getPlotManager().getPlot((Player) event.getWhoClicked()));
 
             event.setCancelled(true);
         }
@@ -349,7 +327,7 @@ public class IngameEvents implements Listener {
             return;
         }
         if(displayName.equalsIgnoreCase(ChatManager.getSingleMessage("Floor-Option-Name", ChatColor.GREEN + "Floor Material"))) {
-            buildInstance.getPlotManager().getPlot(player).changeFloor(event.getCursor().getType(), event.getCursor().getData().getData());
+            arena.getPlotManager().getPlot(player).changeFloor(event.getCursor().getType(), event.getCursor().getData().getData());
             player.sendMessage(ChatManager.getSingleMessage("Floor-Changed", ChatColor.GREEN + "Floor changed!"));
             event.getCursor().setAmount(0);
             event.getCursor().setType(Material.AIR);
@@ -367,26 +345,25 @@ public class IngameEvents implements Listener {
 
     @EventHandler
     public void onChatIngame(AsyncPlayerChatEvent event) {
-        if(gameAPI.getGameInstanceManager().getGameInstance(event.getPlayer()) == null) {
-            for(GameInstance gameInstance : gameAPI.getGameInstanceManager().getGameInstances()) {
-                for(Player player : gameInstance.getPlayers()) {
+        if(gameAPI.getGameInstanceManager().getArena(event.getPlayer()) == null) {
+            for(Arena arena : gameAPI.getGameInstanceManager().getArenas()) {
+                for(Player player : arena.getPlayers()) {
                     event.getRecipients().remove(player);
                 }
             }
             return;
         }
 
-        GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance(event.getPlayer());
+        Arena arena = gameAPI.getGameInstanceManager().getArena(event.getPlayer());
         event.getRecipients().clear();
-        event.getRecipients().addAll(new ArrayList<>(gameInstance.getPlayers()));
+        event.getRecipients().addAll(new ArrayList<>(arena.getPlayers()));
 
 
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void disableCommands(PlayerCommandPreprocessEvent event) {
-        if(gameAPI.getGameInstanceManager().getGameInstance(event.getPlayer()) == null) return;
-        GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance(event.getPlayer());
+        if(gameAPI.getGameInstanceManager().getArena(event.getPlayer()) == null) return;
         Boolean whitelisted = false;
         for(String string : ConfigPreferences.getWhitelistedCommands()) {
             if(event.getMessage().contains(string)) whitelisted = true;
@@ -403,10 +380,9 @@ public class IngameEvents implements Listener {
 
     @EventHandler
     public void playerEmtpyBucket(PlayerBucketEmptyEvent event) {
-        GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance(event.getPlayer());
-        if(gameInstance == null) return;
-        Arena buildInstance = (Arena) gameInstance;
-        BuildPlot buildPlot = buildInstance.getPlotManager().getPlot(event.getPlayer());
+        Arena arena = gameAPI.getGameInstanceManager().getArena(event.getPlayer());
+        if(arena == null) return;
+        BuildPlot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
         if(buildPlot == null) return;
 
         if(!buildPlot.isInPlot(event.getBlockClicked().getRelative(event.getBlockFace()).getLocation())) event.setCancelled(true);
@@ -415,10 +391,9 @@ public class IngameEvents implements Listener {
 
     @EventHandler
     public void onBlockSpread(BlockSpreadEvent event) {
-        for(GameInstance gameInstance : gameAPI.getGameInstanceManager().getGameInstances()) {
-            Arena buildInstance = (Arena) gameInstance;
-            if(buildInstance.getPlotManager().getPlots().size() != 0 && buildInstance.getPlotManager().getPlots().get(0) != null) {
-                if(buildInstance.getPlotManager().getPlots().get(0).getCenter().getWorld().getName().equalsIgnoreCase(event.getBlock().getWorld().getName())) {
+        for(Arena arena : gameAPI.getGameInstanceManager().getArenas()) {
+            if(arena.getPlotManager().getPlots().size() != 0 && arena.getPlotManager().getPlots().get(0) != null) {
+                if(arena.getPlotManager().getPlots().get(0).getCenter().getWorld().getName().equalsIgnoreCase(event.getBlock().getWorld().getName())) {
                     if(event.getSource().getType() == Material.FIRE) event.setCancelled(true);
                 }
             }
@@ -432,16 +407,14 @@ public class IngameEvents implements Listener {
             return;
         }
         if(event.getEntity().getType() == EntityType.WITHER || ConfigPreferences.isMobSpawningDisabled()) {
-            for(GameInstance gameInstance : gameAPI.getGameInstanceManager().getGameInstances()) {
-                Arena buildInstance = (Arena) gameInstance;
-                for(BuildPlot buildplot : buildInstance.getPlotManager().getPlots()) {
+            for(Arena arena : gameAPI.getGameInstanceManager().getArenas()) {
+                for(BuildPlot buildplot : arena.getPlotManager().getPlots()) {
                     if(buildplot.isInPlotRange(event.getEntity().getLocation(), 10)) event.setCancelled(true);
                 }
             }
         } else {
-            for(GameInstance gameInstance : gameAPI.getGameInstanceManager().getGameInstances()) {
-                Arena buildInstance = (Arena) gameInstance;
-                for(BuildPlot buildplot : buildInstance.getPlotManager().getPlots()) {
+            for(Arena arena : gameAPI.getGameInstanceManager().getArenas()) {
+                for(BuildPlot buildplot : arena.getPlotManager().getPlots()) {
                     if(buildplot.isInPlotRange(event.getEntity().getLocation(), 1)) {
                         if(buildplot.getEntities() >= ConfigPreferences.getMaxMobs()) {
                             plugin.getServer().getPlayer(buildplot.getOwner()).sendMessage(ChatManager.getSingleMessage("Max-Entities-Reached", ChatColor.RED + "Max entities reached!"));
@@ -460,10 +433,8 @@ public class IngameEvents implements Listener {
 
     @EventHandler
     public void LeaveDecay(LeavesDecayEvent event) {
-        for(GameInstance gameInstance : gameAPI.getGameInstanceManager().getGameInstances()) {
-            Arena buildInstance = (Arena) gameInstance;
-            for(BuildPlot buildPlot : buildInstance.getPlotManager().getPlots()) {
-
+        for(Arena arena : gameAPI.getGameInstanceManager().getArenas()) {
+            for(BuildPlot buildPlot : arena.getPlotManager().getPlots()) {
                 if(buildPlot.isInPlotRange(event.getBlock().getLocation(), 5)) {
                     event.setCancelled(true);
                 }
@@ -485,22 +456,20 @@ public class IngameEvents implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBreak(BlockBreakEvent event) {
-        GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance(event.getPlayer());
-        if(gameInstance == null) return;
-        if(gameInstance.getGameState() != GameState.INGAME) {
+        Arena arena = gameAPI.getGameInstanceManager().getArena(event.getPlayer());
+        if(arena == null) return;
+        if(arena.getGameState() != ArenaState.INGAME) {
             event.setCancelled(true);
             return;
         }
-        Arena buildInstance = (Arena) gameInstance;
-        if(buildInstance.isVoting()) {
+        if(arena.isVoting()) {
             event.setCancelled(true);
             return;
         }
-        if(buildInstance.getBlacklist().contains(event.getBlock().getTypeId())) {
+        if(arena.getBlacklist().contains(event.getBlock().getTypeId())) {
             event.setCancelled(true);
             return;
         }
-
         User user = UserManager.getUser(event.getPlayer().getUniqueId());
         BuildPlot buildPlot = (BuildPlot) user.getObject("plot");
         if(buildPlot == null) {
@@ -517,18 +486,17 @@ public class IngameEvents implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlace(BlockPlaceEvent event) {
-        GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance(event.getPlayer());
-        if(gameInstance == null) return;
-        if(gameInstance.getGameState() != GameState.INGAME) {
+        Arena arena = gameAPI.getGameInstanceManager().getArena(event.getPlayer());
+        if(arena == null) return;
+        if(arena.getGameState() != ArenaState.INGAME) {
             event.setCancelled(true);
             return;
         }
-        Arena buildInstance = (Arena) gameInstance;
-        if(buildInstance.getBlacklist().contains(event.getBlock().getTypeId())) {
+        if(arena.getBlacklist().contains(event.getBlock().getTypeId())) {
             event.setCancelled(true);
             return;
         }
-        if(buildInstance.isVoting()) {
+        if(arena.isVoting()) {
             event.setCancelled(true);
             return;
         }
@@ -547,25 +515,16 @@ public class IngameEvents implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance((Player) event.getWhoClicked());
-        if(gameInstance == null) return;
-        if(gameInstance.getGameState() != GameState.INGAME) {
+        Arena arena = gameAPI.getGameInstanceManager().getArena((Player) event.getWhoClicked());
+        if(arena == null) return;
+        if(arena.getGameState() != ArenaState.INGAME) {
             event.setCancelled(true);
             return;
         }
-        Arena buildInstance = (Arena) gameInstance;
-        if(!buildInstance.isVoting()) {
+        if(!arena.isVoting()) {
             return;
         }
         event.setCancelled(true);
     }
-
-    @EventHandler
-    public void onInventoryClickEvent(InventoryClickEvent event) {
-        if(event.getInventory().getTitle() == null) return;
-        if(!event.getInventory().getTitle().equalsIgnoreCase(ChatManager.getSingleMessage("Ingame-Menu-Name", "Options Menu"))) return;
-        GameInstance gameInstance = gameAPI.getGameInstanceManager().getGameInstance((Player) event.getWhoClicked());
-    }
-
 
 }

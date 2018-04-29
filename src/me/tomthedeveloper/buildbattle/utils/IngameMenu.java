@@ -25,7 +25,6 @@ public class IngameMenu {
         return new ItemBuilder(Material.NETHER_STAR).name(ChatManager.getSingleMessage("Options-Menu-Item", ChatColor.GREEN + "Options")).lore(ChatManager.getSingleMessage("Options-Lore", ChatColor.GRAY + "Right click to open")).build();
     }
 
-
     private static Inventory createMenu(BuildPlot plot) {
         Inventory inv = Bukkit.createInventory(null, 3 * 9, ChatManager.getSingleMessage("Ingame-Menu-Name", "Option Menu"));
 
