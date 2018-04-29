@@ -20,12 +20,10 @@ import java.io.IOException;
 /**
  * Created by Tom on 25/07/2014.
  */
+//todo remove me
 public class GameAPI {
 
     private ArenaRegistry gameInstanceManager;
-    private String name;
-    private String abreviation;
-    private boolean kitsenabled = false;
     private boolean bar = false;
     private Main plugin;
     private boolean needsMapRestore = false;
