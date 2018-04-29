@@ -1,6 +1,6 @@
 package me.tomthedeveloper.buildbattle;
 
-import me.tomthedeveloper.buildbattle.game.GameInstance;
+import me.tomthedeveloper.buildbattle.arena.Arena;
 import me.tomthedeveloper.buildbattle.handlers.PermissionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -34,8 +34,8 @@ public class User {
         objects.put(s, object);
     }
 
-    public GameInstance getGameInstance() {
-        return plugin.getGameAPI().getGameInstanceManager().getGameInstance(Bukkit.getPlayer(uuid));
+    public Arena getArena() {
+        return plugin.getGameAPI().getGameInstanceManager().getArena(Bukkit.getPlayer(uuid));
     }
 
     public UUID getUuid() {

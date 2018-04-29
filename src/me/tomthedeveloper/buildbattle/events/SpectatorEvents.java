@@ -80,8 +80,8 @@ public class SpectatorEvents implements Listener {
         if(!(event.getEntity() instanceof Player)) return;
         Player player = (Player) event.getEntity();
         if(!UserManager.getUser(player.getUniqueId()).isSpectator()) return;
-        if(plugin.getGameInstanceManager().getGameInstance(player) == null) return;
-        if(player.getLocation().getY() < 1) player.teleport(plugin.getGameInstanceManager().getGameInstance(player).getStartLocation());
+        if(plugin.getGameInstanceManager().getArena(player) == null) return;
+        if(player.getLocation().getY() < 1) player.teleport(plugin.getGameInstanceManager().getArena(player).getStartLocation());
         event.setCancelled(true);
     }
 

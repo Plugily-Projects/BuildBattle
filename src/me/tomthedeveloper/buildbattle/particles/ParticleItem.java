@@ -14,7 +14,6 @@ import java.util.List;
  */
 public class ParticleItem {
 
-
     private Material material;
     private Byte data = null;
     private String[] lore;
@@ -24,12 +23,6 @@ public class ParticleItem {
     private boolean enabled = true;
     private Location location;
     private int slot;
-
-
-    public ParticleItem() {
-
-    }
-
 
     public Location getLocation() {
         return location;

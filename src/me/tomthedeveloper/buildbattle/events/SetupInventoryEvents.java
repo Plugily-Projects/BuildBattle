@@ -2,7 +2,6 @@ package me.tomthedeveloper.buildbattle.events;
 
 import me.tomthedeveloper.buildbattle.handlers.PermissionManager;
 import me.tomthedeveloper.buildbattle.GameAPI;
-import me.tomthedeveloper.buildbattle.game.GameInstance;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -40,7 +39,7 @@ public class SetupInventoryEvents implements Listener {
 
         String name = event.getCurrentItem().getItemMeta().getDisplayName();
 
-        GameInstance gameInstance = plugin.getGameInstanceManager().getGameInstance(event.getInventory().getName().replace("Arena: ", ""));
+        GameInstance gameInstance = plugin.getGameInstanceManager().getArena(event.getInventory().getName().replace("Arena: ", ""));
         if(event.getCurrentItem().getType() == Material.NAME_TAG && event.getCursor().getType() == Material.NAME_TAG) {
             event.setCancelled(true);
             if(!event.getCursor().hasItemMeta()) {

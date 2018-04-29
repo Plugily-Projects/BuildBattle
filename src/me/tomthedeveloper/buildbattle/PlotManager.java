@@ -1,6 +1,6 @@
 package me.tomthedeveloper.buildbattle;
 
-import me.tomthedeveloper.buildbattle.game.GameState;
+import me.tomthedeveloper.buildbattle.arena.ArenaState;
 import me.tomthedeveloper.buildbattle.handlers.UserManager;
 import me.tomthedeveloper.buildbattle.arena.Arena;
 import org.bukkit.Bukkit;
@@ -44,7 +44,7 @@ public class PlotManager {
         if(!players.isEmpty()) {
             System.out.print("YOU HAVENT SET ENOUGH PLOTS! SET FOR ARENA " + buildInstance.getID() + ". YOU HAVE TO SET " + players.size() + " MORE PLOTS!");
             System.out.print("STOPPING THE GAME");
-            buildInstance.setGameState(GameState.ENDING);
+            buildInstance.setGameState(ArenaState.ENDING);
         }
     }
 

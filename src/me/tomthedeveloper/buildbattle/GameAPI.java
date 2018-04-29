@@ -1,22 +1,19 @@
 package me.tomthedeveloper.buildbattle;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import me.tomthedeveloper.buildbattle.arena.Arena;
 import me.tomthedeveloper.buildbattle.events.SetupInventoryEvents;
 import me.tomthedeveloper.buildbattle.events.SpectatorEvents;
-import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.handlers.ChatManager;
 import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
-import me.tomthedeveloper.buildbattle.handlers.GameInstanceManager;
-import me.tomthedeveloper.buildbattle.handlers.SignManager;
+import me.tomthedeveloper.buildbattle.arena.ArenaRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
-import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
 
@@ -25,7 +22,7 @@ import java.io.IOException;
  */
 public class GameAPI {
 
-    private GameInstanceManager gameInstanceManager;
+    private ArenaRegistry gameInstanceManager;
     private String name;
     private String abreviation;
     private boolean kitsenabled = false;
@@ -47,9 +44,9 @@ public class GameAPI {
 
     public void onSetup(Main plugin, CommandsInterface commandsInterface) {
         this.plugin = plugin;
-        gameInstanceManager = new GameInstanceManager();
+        gameInstanceManager = new ArenaRegistry();
         bar = plugin.getConfig().getBoolean("bar");
-        GameInstance.plugin = this;
+        Arena.plugin = this;
 
         plugin.getServer().getPluginManager().registerEvents(new SpectatorEvents(this), plugin);
         plugin.getServer().getPluginManager().registerEvents(new SetupInventoryEvents(this), plugin);
@@ -65,7 +62,7 @@ public class GameAPI {
         plugin.getCommand("addsigns").setExecutor(new me.tomthedeveloper.buildbattle.commands.SignCommands(this));
     }
 
-    public GameInstanceManager getGameInstanceManager() {
+    public ArenaRegistry getGameInstanceManager() {
         return gameInstanceManager;
     }
 

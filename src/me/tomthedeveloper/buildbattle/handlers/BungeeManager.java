@@ -3,9 +3,8 @@ package me.tomthedeveloper.buildbattle.handlers;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import me.tomthedeveloper.buildbattle.Main;
-import me.tomthedeveloper.buildbattle.game.GameInstance;
-import me.tomthedeveloper.buildbattle.game.GameState;
-import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
+import me.tomthedeveloper.buildbattle.arena.Arena;
+import me.tomthedeveloper.buildbattle.arena.ArenaState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -39,23 +38,23 @@ public class BungeeManager implements Listener {
     }
 
     private String getMOTD() {
-        GameInstance gameInstance = plugin.getGameAPI().getGameInstanceManager().getGameInstances().get(0);
-        if(gameInstance.getGameState() == GameState.STARTING && (gameInstance.getTimer() <= 3)) {
-            return GameState.INGAME.toString();
+        Arena arena = plugin.getGameAPI().getGameInstanceManager().getArenas().get(0);
+        if(arena.getGameState() == ArenaState.STARTING && (arena.getTimer() <= 3)) {
+            return ArenaState.INGAME.toString();
         } else {
-            return gameInstance.getGameState().toString();
+            return arena.getGameState().toString();
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onServerListPing(ServerListPingEvent event) {
         if(plugin.getGameAPI().getGameInstanceManager() == null) return;
-        if(plugin.getGameAPI().getGameInstanceManager().getGameInstances().size() == 0) return;
-        if(plugin.getGameAPI().getGameInstanceManager().getGameInstances() == null) {
+        if(plugin.getGameAPI().getGameInstanceManager().getArenas().size() == 0) return;
+        if(plugin.getGameAPI().getGameInstanceManager().getArenas() == null) {
             System.out.print("NO GAMEINSTANCE FOUND! FIRST CONFIGURE AN ARENA BEFORE ACTIVATING BUNGEEEMODE!");
             return;
         }
-        event.setMaxPlayers(plugin.getGameAPI().getGameInstanceManager().getGameInstances().get(0).getMAX_PLAYERS());
+        event.setMaxPlayers(plugin.getGameAPI().getGameInstanceManager().getArenas().get(0).getMAX_PLAYERS());
         event.setMotd(this.getMOTD());
     }
 
@@ -63,15 +62,15 @@ public class BungeeManager implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onJoin(final PlayerJoinEvent event) {
         event.setJoinMessage("");
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> plugin.getGameAPI().getGameInstanceManager().getGameInstances().get(0).joinAttempt(event.getPlayer()), 1L);
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> plugin.getGameAPI().getGameInstanceManager().getArenas().get(0).joinAttempt(event.getPlayer()), 1L);
     }
 
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onQuit(PlayerQuitEvent event) {
         event.setQuitMessage("");
-        if(plugin.getGameAPI().getGameInstanceManager().getGameInstance(event.getPlayer()) != null)
-            plugin.getGameAPI().getGameInstanceManager().getGameInstances().get(0).leaveAttempt(event.getPlayer());
+        if(plugin.getGameAPI().getGameInstanceManager().getArena(event.getPlayer()) != null)
+            plugin.getGameAPI().getGameInstanceManager().getArenas().get(0).leaveAttempt(event.getPlayer());
     }
 
 

@@ -24,7 +24,7 @@ public class JoinEvents implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         if(plugin.getPlugin().isBungeeActivated()) return;
         for(Player player : plugin.getPlugin().getServer().getOnlinePlayers()) {
-            if(plugin.getGameInstanceManager().getGameInstance(player) == null) continue;
+            if(plugin.getGameInstanceManager().getArena(player) == null) continue;
             player.hidePlayer(event.getPlayer());
             event.getPlayer().hidePlayer(player);
         }

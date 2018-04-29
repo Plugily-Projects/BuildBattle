@@ -24,9 +24,7 @@ import java.util.List;
  */
 public class ParticleMenu {
 
-
     private static List<ParticleItem> particleItems = new ArrayList<>();
-
 
     public static void openMenu(Player player, BuildPlot buildPlot) {
         Inventory inventory = player.getServer().createInventory(player, 6 * 9, ChatManager.getSingleMessage("Particle-Menu-Name", "Particle Menu"));

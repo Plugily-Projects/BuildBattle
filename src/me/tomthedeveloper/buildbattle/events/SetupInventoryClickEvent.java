@@ -1,6 +1,6 @@
 package me.tomthedeveloper.buildbattle.events;
 
-import me.tomthedeveloper.buildbattle.game.GameInstance;
+import me.tomthedeveloper.buildbattle.arena.Arena;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -14,15 +14,15 @@ public class SetupInventoryClickEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
     private Player player;
-    private GameInstance gameInstance;
+    private Arena arena;
     private ItemStack itemStack;
     private ClickType clickType;
     private boolean cancel = false;
 
 
-    public SetupInventoryClickEvent(GameInstance gameInstance, ItemStack itemStack, Player player, ClickType clickType) {
+    public SetupInventoryClickEvent(Arena arena, ItemStack itemStack, Player player, ClickType clickType) {
         this.player = player;
-        this.gameInstance = gameInstance;
+        this.arena = arena;
         this.itemStack = itemStack;
         this.clickType = clickType;
     }
@@ -35,8 +35,8 @@ public class SetupInventoryClickEvent extends Event {
         return player;
     }
 
-    public GameInstance getGameInstance() {
-        return gameInstance;
+    public Arena getArena() {
+        return arena;
     }
 
     public ItemStack getItemStack() {

@@ -1,9 +1,8 @@
 package me.tomthedeveloper.buildbattle.handlers;
 
-import me.tomthedeveloper.buildbattle.GameAPI;
 import me.tomthedeveloper.buildbattle.Main;
-import me.tomthedeveloper.buildbattle.game.GameInstance;
-import me.tomthedeveloper.buildbattle.game.GameState;
+import me.tomthedeveloper.buildbattle.arena.Arena;
+import me.tomthedeveloper.buildbattle.arena.ArenaState;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -33,8 +32,8 @@ public class SignManager extends BukkitRunnable implements Listener {
 
     public static String[] signlines = new String[]{"--------", "Waiting", "", "--------"};
     public Main plugin;
-    HashMap<Sign, GameInstance> signpool = new HashMap();
-    Queue<GameInstance> gamequeue = new LinkedList<>();
+    HashMap<Sign, Arena> signpool = new HashMap();
+    Queue<Arena> gamequeue = new LinkedList<>();
 
 
     /*
@@ -94,11 +93,11 @@ public class SignManager extends BukkitRunnable implements Listener {
 
     }
 
-    public void removeSign(GameInstance gameInstance) {
-        if(signpool.containsValue(gameInstance)) {
+    public void removeSign(Arena arena) {
+        if(signpool.containsValue(arena)) {
             for(Sign sign : signpool.keySet()) {
                 if(signpool.get(sign) != null) {
-                    if(signpool.get(sign).equals(gameInstance)) {
+                    if(signpool.get(sign).equals(arena)) {
                         signpool.put(sign, null);
                         return;
                     }
@@ -131,7 +130,7 @@ public class SignManager extends BukkitRunnable implements Listener {
     This will be used by the listener that will check
     if there is a game associated with the clicked sign.
      */
-    public GameInstance getBySign(Sign sign) {
+    public Arena getBySign(Sign sign) {
         return signpool.getOrDefault(sign, null);
     }
 
@@ -140,9 +139,9 @@ public class SignManager extends BukkitRunnable implements Listener {
     or by some kind of handler that decides when
     a game should show up here on the signwall
     */
-    public void addToQueue(GameInstance instance) {
-        if(!(gamequeue.contains(instance) || signpool.containsValue(instance) || signpool.values().contains(instance))) {
-            gamequeue.add(instance);
+    public void addToQueue(Arena arena) {
+        if(!(gamequeue.contains(arena) || signpool.containsValue(arena) || signpool.values().contains(arena))) {
+            gamequeue.add(arena);
         }
     }
 
@@ -176,12 +175,12 @@ public class SignManager extends BukkitRunnable implements Listener {
                 sign.update(true);
                 continue;
             }
-            GameInstance instance = getBySign(sign);
-            instance.updateSign(sign);
+            Arena arena = getBySign(sign);
+            arena.updateSign(sign);
 
            /* If it no longer needs players,
            remove it from the board*/
-            if(!instance.needsPlayers()) {
+            if(!arena.needsPlayers()) {
                 signpool.put(sign, null);
                 formatEmptySign(sign);
                 sign.update(true);
@@ -198,7 +197,7 @@ public class SignManager extends BukkitRunnable implements Listener {
              */
             if(emptysign == null) break;
 
-            GameInstance instance = gamequeue.poll();
+            Arena instance = gamequeue.poll();
             instance.updateSign(emptysign);
             signpool.put(emptysign, instance);
             emptysign.update(true);
@@ -215,13 +214,13 @@ public class SignManager extends BukkitRunnable implements Listener {
     public void onJoinAttempt(PlayerInteractEvent event) {
         if(event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getState() instanceof Sign) {
 
-            GameInstance instance = getBySign((Sign) event.getClickedBlock().getState());
+            Arena arenaSign = getBySign((Sign) event.getClickedBlock().getState());
 
-            if(instance == null) {
+            if(arenaSign == null) {
                 Location location = event.getClickedBlock().getLocation();
-                for(GameInstance gameInstance : plugin.getGameAPI().getGameInstanceManager().getGameInstances()) {
-                    if(gameInstance.getSigns().contains(location)) {
-                        instance = gameInstance;
+                for(Arena arena : plugin.getGameAPI().getGameInstanceManager().getArenas()) {
+                    if(arena.getSigns().contains(location)) {
+                        arenaSign = arena;
                         break;
                     }
                 }
@@ -232,32 +231,32 @@ public class SignManager extends BukkitRunnable implements Listener {
             If there is still a spot left for him, the instance
             can teleport him using the joinAttempt() method.*/
 
-            if(instance != null) {
-                for(GameInstance gameInstance : plugin.getGameAPI().getGameInstanceManager().getGameInstances()) {
-                    if(gameInstance.getPlayers().contains(event.getPlayer())) {
+            if(arenaSign != null) {
+                for(Arena arena : plugin.getGameAPI().getGameInstanceManager().getArenas()) {
+                    if(arena.getPlayers().contains(event.getPlayer())) {
                         event.getPlayer().sendMessage(ChatManager.getFromLanguageConfig("YouAreAlreadyIngame", ChatColor.RED + "You are already qeued for a game! You can leave a game with /leave."));
                         return;
                     }
                 }
 
-                if(instance.getMAX_PLAYERS() <= instance.getPlayers().size()) {
+                if(arenaSign.getMAX_PLAYERS() <= arenaSign.getPlayers().size()) {
 
                     if((event.getPlayer().hasPermission(PermissionManager.getVIP()) || event.getPlayer().hasPermission(PermissionManager.getJoinFullGames()))) {
 
                         boolean b = false;
-                        for(Player player : instance.getPlayers()) {
+                        for(Player player : arenaSign.getPlayers()) {
                             if(player.hasPermission(PermissionManager.getVIP()) || player.hasPermission(PermissionManager.getJoinFullGames())) {
 
                             } else {
-                                if((instance.getGameState() == GameState.STARTING || instance.getGameState() == GameState.WAITING_FOR_PLAYERS)) {
-                                    instance.leaveAttempt(player);
-                                    player.sendMessage(plugin.getGameAPI().getGameInstanceManager().getGameInstances().get(0).getChatManager().getMessage("YouGotKickedToMakePlaceForAPremiumPlayer", ChatColor.RED + "You got kicked out of the game to make place for a premium player!"));
-                                    instance.getChatManager().broadcastMessage(plugin.getGameAPI().getGameInstanceManager().getGameInstances().get(0).getChatManager().getMessage("KickedToMakePlaceForPremiumPlayer", "%PLAYER% got removed from the game to make place for a premium players!", player));
-                                    instance.joinAttempt(event.getPlayer());
+                                if((arenaSign.getGameState() == ArenaState.STARTING || arenaSign.getGameState() == ArenaState.WAITING_FOR_PLAYERS)) {
+                                    arenaSign.leaveAttempt(player);
+                                    player.sendMessage(plugin.getGameAPI().getGameInstanceManager().getArenas().get(0).getChatManager().getMessage("YouGotKickedToMakePlaceForAPremiumPlayer", ChatColor.RED + "You got kicked out of the game to make place for a premium player!"));
+                                    arenaSign.getChatManager().broadcastMessage(plugin.getGameAPI().getGameInstanceManager().getArenas().get(0).getChatManager().getMessage("KickedToMakePlaceForPremiumPlayer", "%PLAYER% got removed from the game to make place for a premium players!", player));
+                                    arenaSign.joinAttempt(event.getPlayer());
                                     b = true;
                                     return;
                                 } else {
-                                    instance.joinAttempt(event.getPlayer());
+                                    arenaSign.joinAttempt(event.getPlayer());
                                     b = true;
                                     return;
                                 }
@@ -265,16 +264,16 @@ public class SignManager extends BukkitRunnable implements Listener {
 
                         }
                         if(!b) {
-                            event.getPlayer().sendMessage(plugin.getGameAPI().getGameInstanceManager().getGameInstances().get(0).getChatManager().getMessage("FullGameAlreadyFullWithPermiumPlayers", ChatColor.RED + "This game is already full with premium players! Sorry"));
+                            event.getPlayer().sendMessage(plugin.getGameAPI().getGameInstanceManager().getArenas().get(0).getChatManager().getMessage("FullGameAlreadyFullWithPermiumPlayers", ChatColor.RED + "This game is already full with premium players! Sorry"));
                         }
 
                     } else {
-                        event.getPlayer().sendMessage(plugin.getGameAPI().getGameInstanceManager().getGameInstances().get(0).getChatManager().getMessage("NoPermissionToJoinFullGames", "You don't have the permission to join full games!"));
+                        event.getPlayer().sendMessage(plugin.getGameAPI().getGameInstanceManager().getArenas().get(0).getChatManager().getMessage("NoPermissionToJoinFullGames", "You don't have the permission to join full games!"));
                     }
                     // instance.joinAttempt(event.getPlayer());
 
                 } else {
-                    instance.joinAttempt(event.getPlayer());
+                    arenaSign.joinAttempt(event.getPlayer());
                 }
             }
         }

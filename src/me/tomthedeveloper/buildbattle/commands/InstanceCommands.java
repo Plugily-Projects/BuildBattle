@@ -2,8 +2,8 @@ package me.tomthedeveloper.buildbattle.commands;
 
 import me.tomthedeveloper.buildbattle.CommandsInterface;
 import me.tomthedeveloper.buildbattle.GameAPI;
+import me.tomthedeveloper.buildbattle.arena.Arena;
 import me.tomthedeveloper.buildbattle.events.PlayerAddCommandEvent;
-import me.tomthedeveloper.buildbattle.game.GameInstance;
 import me.tomthedeveloper.buildbattle.utils.SetupInventory;
 import me.tomthedeveloper.buildbattle.utils.Util;
 import org.bukkit.Bukkit;
@@ -46,20 +46,20 @@ public class InstanceCommands implements CommandExecutor {
             return true;
         }
         if(args[1].equalsIgnoreCase("addsign")) {
-            if(plugin.getGameInstanceManager().getGameInstance(args[0]) == null) {
+            if(plugin.getGameInstanceManager().getArena(args[0]) == null) {
                 player.sendMessage(ChatColor.RED + "ARENA DOES NOT EXIST!");
                 return true;
             } else {
                 Location location = player.getTargetBlock(null, 10).getLocation();
                 if(location.getBlock().getState() instanceof Sign) {
-                    GameInstance gameInstance = plugin.getGameInstanceManager().getGameInstance(args[0]);
+                    Arena arena = plugin.getGameInstanceManager().getArena(args[0]);
                     int keys = 0;
-                    if(plugin.getPlugin().getConfig().contains("signs." + gameInstance.getID())) {
-                        keys = plugin.getPlugin().getConfig().getConfigurationSection("signs." + gameInstance.getID()).getKeys(false).size();
+                    if(plugin.getPlugin().getConfig().contains("signs." + arena.getID())) {
+                        keys = plugin.getPlugin().getConfig().getConfigurationSection("signs." + arena.getID()).getKeys(false).size();
                     }
-                    plugin.saveLoc("newsigns." + gameInstance.getID() + "." + (keys + 1), player.getTargetBlock(null, 10).getLocation());
+                    plugin.saveLoc("newsigns." + arena.getID() + "." + (keys + 1), player.getTargetBlock(null, 10).getLocation());
                     player.sendMessage(ChatColor.GREEN + "SIGN ADDED!");
-                    gameInstance.addSign(player.getTargetBlock(null, 10).getLocation());
+                    arena.addSign(player.getTargetBlock(null, 10).getLocation());
                 } else {
                     player.sendMessage(ChatColor.RED + "You have to look at a sign to perform this command!");
                 }
@@ -73,11 +73,11 @@ public class InstanceCommands implements CommandExecutor {
         }
 
         if(args[1].equalsIgnoreCase("setup") || args[1].equals("edit")) {
-            if(plugin.getGameInstanceManager().getGameInstance(args[0]) == null) {
+            if(plugin.getGameInstanceManager().getArena(args[0]) == null) {
                 player.sendMessage(ChatColor.RED + "ARENA DOES NOT EXIST!");
                 return true;
             }
-            new SetupInventory(plugin.getGameInstanceManager().getGameInstance(args[0])).openInventory(player);
+            new SetupInventory(plugin.getGameInstanceManager().getArena(args[0])).openInventory(player);
             return true;
         }
         if(!(args.length > 2)) return true;
@@ -164,8 +164,8 @@ public class InstanceCommands implements CommandExecutor {
 
 
         boolean b = false;
-        for(GameInstance gameInstance : plugin.getGameInstanceManager().getGameInstances()) {
-            if(gameInstance.getID().equalsIgnoreCase(strings[1])) {
+        for(Arena arena : plugin.getGameInstanceManager().getArenas()) {
+            if(arena.getID().equalsIgnoreCase(strings[1])) {
                 b = true;
                 break;
             }
@@ -225,31 +225,31 @@ public class InstanceCommands implements CommandExecutor {
             player.sendMessage(ChatColor.RED + "That arena doesn't exists!");
             return true;
         }
-        GameInstance gameInstance = plugin.getGameInstanceManager().getGameInstance(ID);
+        Arena arena = plugin.getGameInstanceManager().getArena(ID);
 
         switch(type) {
             case LOBBY:
-                if(gameInstance.getLobbyLocation() == null) {
+                if(arena.getLobbyLocation() == null) {
                     player.sendMessage(ChatColor.RED + "Lobby location isn't set for this arena!");
                     return true;
                 }
-                gameInstance.teleportToLobby(player);
+                arena.teleportToLobby(player);
                 player.sendMessage(ChatColor.GRAY + "Teleported to LOBBY location from arena" + ID);
                 break;
             case START:
-                if(gameInstance.getLobbyLocation() == null) {
+                if(arena.getLobbyLocation() == null) {
                     player.sendMessage(ChatColor.RED + "Start location isn't set for this arena!");
                     return true;
                 }
-                gameInstance.teleportToStartLocation(player);
+                arena.teleportToStartLocation(player);
                 player.sendMessage(ChatColor.GRAY + "Teleported to START location from arena" + ID);
                 break;
             case END:
-                if(gameInstance.getLobbyLocation() == null) {
+                if(arena.getLobbyLocation() == null) {
                     player.sendMessage(ChatColor.RED + "End location isn't set for this arena!");
                     return true;
                 }
-                gameInstance.teleportToEndLocation(player);
+                arena.teleportToEndLocation(player);
                 player.sendMessage(ChatColor.GRAY + "Teleported to END location from arena" + ID);
                 break;
         }

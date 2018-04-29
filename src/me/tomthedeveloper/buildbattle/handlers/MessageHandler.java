@@ -1,6 +1,6 @@
 package me.tomthedeveloper.buildbattle.handlers;
 
-import me.tomthedeveloper.buildbattle.game.GameInstance;
+import me.tomthedeveloper.buildbattle.arena.Arena;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.PacketPlayOutTitle;
 import net.minecraft.server.v1_8_R3.PlayerConnection;
@@ -12,10 +12,10 @@ import org.bukkit.entity.Player;
  */
 public class MessageHandler {
 
-    private GameInstance gameInstance;
+    private Arena arena;
 
-    private MessageHandler(GameInstance gameInstance) {
-        this.gameInstance = gameInstance;
+    private MessageHandler(Arena arena) {
+        this.arena = arena;
     }
 
     public static void sendTitleMessage(Player player, String message) {

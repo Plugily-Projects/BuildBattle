@@ -1,15 +1,9 @@
 package me.tomthedeveloper.buildbattle.scoreboards;
 
-import me.tomthedeveloper.buildbattle.GameAPI;
-import me.tomthedeveloper.buildbattle.game.GameState;
+import me.tomthedeveloper.buildbattle.arena.ArenaState;
 import me.tomthedeveloper.buildbattle.handlers.ConfigurationManager;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.HashMap;
 
 /**
@@ -17,13 +11,13 @@ import java.util.HashMap;
  */
 class ScoreboardLoader {
 
-    private HashMap<GameState, ScoreboardLines> scoreboardData = new HashMap<>();
+    private HashMap<ArenaState, ScoreboardLines> scoreboardData = new HashMap<>();
 
     public ScoreboardLoader() {
         loadLines();
     }
 
-    public HashMap<GameState, ScoreboardLines> getScoreboardData() {
+    public HashMap<ArenaState, ScoreboardLines> getScoreboardData() {
         return scoreboardData;
     }
 
@@ -35,7 +29,7 @@ class ScoreboardLoader {
                 scoreboardLines.addLine(line);
             }
             scoreboardLines.setTitle(config.getString("scoreboard." + section + ".title"));
-            scoreboardData.put(GameState.fromString(section), scoreboardLines);
+            scoreboardData.put(ArenaState.fromString(section), scoreboardLines);
         }
     }
 }
