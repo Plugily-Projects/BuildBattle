@@ -23,7 +23,7 @@ public class SetupInventory {
         //todo later addItem(new ItemBuilder(new ItemStack(Material.CHEST)).name(ChatColor.GOLD + "Add new plot"));
         addItem(new ItemBuilder(new ItemStack(Material.EMERALD, arena.getMIN_PLAYERS())).name(ChatColor.GOLD + "Set min players").lore(ChatColor.GRAY + "LEFT click to decrease").lore(ChatColor.GRAY + "RIGHT click to increase").build(), "bb " + arena.getID() + " set MINPLAYERS " + arena.getMIN_PLAYERS());
         addItem(new ItemBuilder(new ItemStack(Material.EMERALD, arena.getMAX_PLAYERS())).name(ChatColor.GOLD + "Set max players").lore(ChatColor.GRAY + "LEFT click to decrease").lore(ChatColor.GRAY + "RIGHT click to increase").build(), "bb " + arena.getID() + " set MAXPLAYERS " + arena.getMAX_PLAYERS());
-        if(!Arena.getPlugin().getPlugin().isBungeeActivated()) {
+        if(!Arena.getPlugin().isBungeeActivated()) {
             addItem(new ItemBuilder(new ItemStack(Material.SIGN)).name(ChatColor.GOLD + "Add signs").lore(ChatColor.GRAY + "Select a region with your").lore(ChatColor.GRAY + "world edit wand and click this.").lore(ChatColor.RED + "Be aware that you have Bungee disabled!").build(), "addsigns");
         }
         addItem(new ItemBuilder(new ItemStack(Material.NAME_TAG)).name(ChatColor.GOLD + "Set a mapname (currently: " + arena.getMapName()).lore(ChatColor.GRAY + "Replace this nametag with another nametag").lore(ChatColor.GRAY + "that is named as the mapname").build(), "bb " + arena.getID() + " set MAPNAME <NAME>");

@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.utils.Util;
 
@@ -134,7 +135,7 @@ public class ChatManager {
 
     }
 
-    public String getPrefix(GameAPI plugin) {
+    public String getPrefix(Main plugin) {
         //return PREFIX + "[" + GAMENAME + "] " + NORMAL;
         return prefix;
     }
@@ -238,20 +239,19 @@ public class ChatManager {
     }
 
     public String getMessage(String ID, String defaultmessage, OfflinePlayer player) {
-        if(Arena.plugin.getPlugin().getServer().getPlayer(player.getUniqueId()) != null) {
-
+        if(Arena.getPlugin().getServer().getPlayer(player.getUniqueId()) != null) {
             if(messages.containsKey(ID)) {
-                return getMessage(ID, Arena.plugin.getPlugin().getServer().getPlayer(player.getUniqueId()));
+                return getMessage(ID, Arena.getPlugin().getServer().getPlayer(player.getUniqueId()));
             } else {
                 ChatManager.getFromLanguageConfig(ID, defaultmessage);
-                return getMessage(ID, Arena.plugin.getPlugin().getServer().getPlayer(player.getUniqueId()));
+                return getMessage(ID, Arena.getPlugin().getServer().getPlayer(player.getUniqueId()));
             }
         } else {
             if(messages.containsKey(ID)) {
-                return getMessage(ID, Arena.plugin.getPlugin().getServer().getOfflinePlayer(player.getUniqueId()));
+                return getMessage(ID, Arena.getPlugin().getServer().getOfflinePlayer(player.getUniqueId()));
             } else {
                 ChatManager.getFromLanguageConfig(ID, defaultmessage);
-                return getMessage(ID, Arena.plugin.getPlugin().getServer().getOfflinePlayer(player.getUniqueId()));
+                return getMessage(ID, Arena.getPlugin().getServer().getOfflinePlayer(player.getUniqueId()));
             }
         }
     }
