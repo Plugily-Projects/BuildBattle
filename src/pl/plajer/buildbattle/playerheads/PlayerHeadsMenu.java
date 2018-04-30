@@ -1,7 +1,5 @@
 package pl.plajer.buildbattle.playerheads;
 
-import pl.plajer.buildbattle.handlers.ChatManager;
-import pl.plajer.buildbattle.handlers.ConfigurationManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
@@ -9,6 +7,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import pl.plajer.buildbattle.handlers.ChatManager;
+import pl.plajer.buildbattle.handlers.ConfigurationManager;
 
 import java.io.IOException;
 import java.util.ArrayList;

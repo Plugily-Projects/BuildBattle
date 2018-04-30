@@ -1,11 +1,11 @@
 package pl.plajer.buildbattle.events;
 
-import pl.plajer.buildbattle.arena.Arena;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import pl.plajer.buildbattle.arena.Arena;
 
 /**
  * Created by Tom on 15/06/2015.

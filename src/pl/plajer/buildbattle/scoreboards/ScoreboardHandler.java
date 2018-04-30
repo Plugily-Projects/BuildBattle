@@ -1,8 +1,5 @@
 package pl.plajer.buildbattle.scoreboards;
 
-import pl.plajer.buildbattle.ConfigPreferences;
-import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.arena.Arena;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -10,6 +7,9 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
+import pl.plajer.buildbattle.ConfigPreferences;
+import pl.plajer.buildbattle.Main;
+import pl.plajer.buildbattle.arena.Arena;
 
 /**
  * Created by Tom on 31/01/2016.

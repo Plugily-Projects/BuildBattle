@@ -1,5 +1,11 @@
 package pl.plajer.buildbattle.particles;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import pl.plajer.buildbattle.BuildPlot;
 import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.handlers.ChatManager;
@@ -7,12 +13,6 @@ import pl.plajer.buildbattle.handlers.ConfigurationManager;
 import pl.plajer.buildbattle.handlers.UserManager;
 import pl.plajer.buildbattle.utils.ParticleEffect;
 import pl.plajer.buildbattle.utils.Util;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
 import java.util.ArrayList;

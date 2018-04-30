@@ -1,11 +1,11 @@
 package pl.plajer.buildbattle.handlers;
 
-import pl.plajer.buildbattle.arena.Arena;
-import pl.plajer.buildbattle.utils.Util;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import pl.plajer.buildbattle.arena.Arena;
+import pl.plajer.buildbattle.utils.Util;
 
 import java.io.IOException;
 import java.util.HashMap;

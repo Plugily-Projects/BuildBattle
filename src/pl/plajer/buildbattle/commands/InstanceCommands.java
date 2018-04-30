@@ -1,12 +1,5 @@
 package pl.plajer.buildbattle.commands;
 
-import pl.plajer.buildbattle.CommandsInterface;
-import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.arena.Arena;
-import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.events.PlayerAddCommandEvent;
-import pl.plajer.buildbattle.utils.SetupInventory;
-import pl.plajer.buildbattle.utils.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -16,6 +9,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import pl.plajer.buildbattle.CommandsInterface;
+import pl.plajer.buildbattle.Main;
+import pl.plajer.buildbattle.arena.Arena;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
+import pl.plajer.buildbattle.events.PlayerAddCommandEvent;
+import pl.plajer.buildbattle.utils.SetupInventory;
+import pl.plajer.buildbattle.utils.Util;
 
 /**
  * Created by Tom on 7/08/2014.

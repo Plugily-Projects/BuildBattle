@@ -3,28 +3,38 @@ package pl.plajer.buildbattle;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import com.sk89q.worldedit.bukkit.selections.Selection;
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.block.Sign;
+import org.bukkit.command.Command;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.java.JavaPlugin;
+import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
+import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.commands.GameCommands;
 import pl.plajer.buildbattle.commands.InstanceCommands;
 import pl.plajer.buildbattle.commands.SignCommands;
+import pl.plajer.buildbattle.entities.EntityItem;
+import pl.plajer.buildbattle.entities.EntityMenuEvents;
 import pl.plajer.buildbattle.events.GameEvents;
+import pl.plajer.buildbattle.events.IngameEvents;
 import pl.plajer.buildbattle.events.JoinEvents;
+import pl.plajer.buildbattle.events.NormalEvents;
 import pl.plajer.buildbattle.events.SetupInventoryEvents;
 import pl.plajer.buildbattle.events.SpectatorEvents;
 import pl.plajer.buildbattle.handlers.BungeeManager;
-import pl.plajer.buildbattle.entities.EntityItem;
-import pl.plajer.buildbattle.entities.EntityMenuEvents;
-import pl.plajer.buildbattle.events.IngameEvents;
-import pl.plajer.buildbattle.events.NormalEvents;
-import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.ConfigurationManager;
 import pl.plajer.buildbattle.handlers.InventoryManager;
 import pl.plajer.buildbattle.handlers.SignManager;
 import pl.plajer.buildbattle.handlers.UserManager;
-import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.items.SpecialItem;
 import pl.plajer.buildbattle.particles.ParticleHandler;
 import pl.plajer.buildbattle.particles.ParticleMenu;
@@ -33,16 +43,6 @@ import pl.plajer.buildbattle.stats.BuildBattleStats;
 import pl.plajer.buildbattle.stats.FileStats;
 import pl.plajer.buildbattle.stats.MySQLDatabase;
 import pl.plajer.buildbattle.utils.MetricsLite;
-import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.permission.Permission;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.block.Sign;
-import org.bukkit.command.Command;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle.utils.Util;
 
 import java.io.IOException;
@@ -498,5 +498,5 @@ public class Main extends JavaPlugin implements CommandsInterface {
         if(p instanceof WorldEditPlugin) return (WorldEditPlugin) p;
         return null;
     }
-    
+
 }

@@ -1,6 +1,5 @@
 package pl.plajer.buildbattle.handlers;
 
-import pl.plajer.buildbattle.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -14,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import pl.plajer.buildbattle.Main;
 
 import java.io.File;
 import java.util.ArrayList;

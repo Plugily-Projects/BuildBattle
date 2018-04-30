@@ -1,11 +1,11 @@
 package pl.plajer.buildbattle.particles;
 
-import pl.plajer.buildbattle.handlers.ChatManager;
-import pl.plajer.buildbattle.utils.ParticleEffect;
-import pl.plajer.buildbattle.utils.Util;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import pl.plajer.buildbattle.handlers.ChatManager;
+import pl.plajer.buildbattle.utils.ParticleEffect;
+import pl.plajer.buildbattle.utils.Util;
 
 import java.util.List;
 
@@ -72,13 +72,13 @@ public class ParticleItem {
         return lore;
     }
 
+    public void setLore(String[] lore) {
+        this.lore = lore;
+    }
+
     public void setLore(List<String> lore) {
 
         this.lore = lore.toArray(new String[lore.size()]);
-    }
-
-    public void setLore(String[] lore) {
-        this.lore = lore;
     }
 
     public String getDisplayName() {

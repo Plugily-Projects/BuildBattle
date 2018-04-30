@@ -1,9 +1,5 @@
 package pl.plajer.buildbattle.events;
 
-import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.arena.Arena;
-import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.handlers.PermissionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -13,6 +9,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import pl.plajer.buildbattle.Main;
+import pl.plajer.buildbattle.arena.Arena;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
+import pl.plajer.buildbattle.handlers.PermissionManager;
 
 /**
  * Created by Tom on 15/06/2015.

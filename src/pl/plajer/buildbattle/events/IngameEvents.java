@@ -1,21 +1,5 @@
 package pl.plajer.buildbattle.events;
 
-import pl.plajer.buildbattle.BuildPlot;
-import pl.plajer.buildbattle.ConfigPreferences;
-import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.User;
-import pl.plajer.buildbattle.VoteItems;
-import pl.plajer.buildbattle.arena.Arena;
-import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.ArenaState;
-import pl.plajer.buildbattle.entities.BuildBattleEntity;
-import pl.plajer.buildbattle.handlers.ChatManager;
-import pl.plajer.buildbattle.handlers.UserManager;
-import pl.plajer.buildbattle.items.SpecialItemManager;
-import pl.plajer.buildbattle.particles.ParticleMenu;
-import pl.plajer.buildbattle.particles.ParticleRemoveMenu;
-import pl.plajer.buildbattle.playerheads.PlayerHeadsMenu;
-import pl.plajer.buildbattle.utils.IngameMenu;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -49,6 +33,22 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
+import pl.plajer.buildbattle.BuildPlot;
+import pl.plajer.buildbattle.ConfigPreferences;
+import pl.plajer.buildbattle.Main;
+import pl.plajer.buildbattle.User;
+import pl.plajer.buildbattle.VoteItems;
+import pl.plajer.buildbattle.arena.Arena;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
+import pl.plajer.buildbattle.arena.ArenaState;
+import pl.plajer.buildbattle.entities.BuildBattleEntity;
+import pl.plajer.buildbattle.handlers.ChatManager;
+import pl.plajer.buildbattle.handlers.UserManager;
+import pl.plajer.buildbattle.items.SpecialItemManager;
+import pl.plajer.buildbattle.particles.ParticleMenu;
+import pl.plajer.buildbattle.particles.ParticleRemoveMenu;
+import pl.plajer.buildbattle.playerheads.PlayerHeadsMenu;
+import pl.plajer.buildbattle.utils.IngameMenu;
 
 import java.util.ArrayList;
 

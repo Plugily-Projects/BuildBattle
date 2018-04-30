@@ -1,16 +1,16 @@
 package pl.plajer.buildbattle.commands;
 
-import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.User;
-import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.handlers.ChatManager;
-import pl.plajer.buildbattle.handlers.UserManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import pl.plajer.buildbattle.Main;
+import pl.plajer.buildbattle.User;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
+import pl.plajer.buildbattle.handlers.ChatManager;
+import pl.plajer.buildbattle.handlers.UserManager;
 
 /**
  * @author Plajer

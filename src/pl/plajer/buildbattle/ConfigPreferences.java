@@ -1,8 +1,8 @@
 package pl.plajer.buildbattle;
 
-import pl.plajer.buildbattle.handlers.ConfigurationManager;
-import pl.plajer.buildbattle.arena.Arena;
 import org.bukkit.configuration.file.FileConfiguration;
+import pl.plajer.buildbattle.arena.Arena;
+import pl.plajer.buildbattle.handlers.ConfigurationManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;

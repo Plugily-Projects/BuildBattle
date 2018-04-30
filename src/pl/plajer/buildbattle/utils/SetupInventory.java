@@ -1,12 +1,12 @@
 package pl.plajer.buildbattle.utils;
 
-import pl.plajer.buildbattle.arena.Arena;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import pl.plajer.buildbattle.arena.Arena;
 
 /**
  * Created by Tom on 15/06/2015.

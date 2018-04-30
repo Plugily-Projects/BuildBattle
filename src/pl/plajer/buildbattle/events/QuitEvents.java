@@ -1,15 +1,15 @@
 package pl.plajer.buildbattle.events;
 
-import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.User;
-import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.handlers.UserManager;
-import pl.plajer.buildbattle.stats.BuildBattleStats;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
+import pl.plajer.buildbattle.Main;
+import pl.plajer.buildbattle.User;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
+import pl.plajer.buildbattle.handlers.UserManager;
+import pl.plajer.buildbattle.stats.BuildBattleStats;
 
 /**
  * @author Plajer

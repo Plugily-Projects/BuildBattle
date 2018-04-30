@@ -2,10 +2,6 @@ package pl.plajer.buildbattle.handlers;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.arena.Arena;
-import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.ArenaState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -13,6 +9,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerListPingEvent;
+import pl.plajer.buildbattle.Main;
+import pl.plajer.buildbattle.arena.Arena;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
+import pl.plajer.buildbattle.arena.ArenaState;
 
 /**
  * Created by Tom on 31/08/2014.

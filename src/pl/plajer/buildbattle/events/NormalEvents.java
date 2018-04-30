@@ -1,12 +1,5 @@
 package pl.plajer.buildbattle.events;
 
-import pl.plajer.buildbattle.BuildPlot;
-import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.User;
-import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.handlers.UserManager;
-import pl.plajer.buildbattle.arena.Arena;
-import pl.plajer.buildbattle.stats.MySQLDatabase;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -14,6 +7,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import pl.plajer.buildbattle.BuildPlot;
+import pl.plajer.buildbattle.Main;
+import pl.plajer.buildbattle.User;
+import pl.plajer.buildbattle.arena.Arena;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
+import pl.plajer.buildbattle.handlers.UserManager;
+import pl.plajer.buildbattle.stats.MySQLDatabase;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

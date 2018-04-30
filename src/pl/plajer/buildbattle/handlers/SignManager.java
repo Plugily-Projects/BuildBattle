@@ -1,9 +1,5 @@
 package pl.plajer.buildbattle.handlers;
 
-import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.arena.Arena;
-import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.ArenaState;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -15,6 +11,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import pl.plajer.buildbattle.Main;
+import pl.plajer.buildbattle.arena.Arena;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
+import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.utils.Util;
 
 import java.io.IOException;

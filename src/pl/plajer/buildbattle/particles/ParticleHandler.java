@@ -1,11 +1,11 @@
 package pl.plajer.buildbattle.particles;
 
+import org.bukkit.Location;
+import org.bukkit.scheduler.BukkitRunnable;
 import pl.plajer.buildbattle.BuildPlot;
 import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.Arena;
-import org.bukkit.Location;
-import org.bukkit.scheduler.BukkitRunnable;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 
 import java.util.ArrayList;

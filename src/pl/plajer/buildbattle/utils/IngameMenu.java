@@ -1,7 +1,5 @@
 package pl.plajer.buildbattle.utils;
 
-import pl.plajer.buildbattle.BuildPlot;
-import pl.plajer.buildbattle.handlers.ChatManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -10,6 +8,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import pl.plajer.buildbattle.BuildPlot;
+import pl.plajer.buildbattle.handlers.ChatManager;
 
 import java.util.ArrayList;
 import java.util.Collections;

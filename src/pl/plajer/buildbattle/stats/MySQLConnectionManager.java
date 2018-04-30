@@ -2,10 +2,10 @@ package pl.plajer.buildbattle.stats;
 
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
-import pl.plajer.buildbattle.handlers.ConfigurationManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import pl.plajer.buildbattle.handlers.ConfigurationManager;
 
 import java.sql.Connection;
 import java.sql.SQLException;

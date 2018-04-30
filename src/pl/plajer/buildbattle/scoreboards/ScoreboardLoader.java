@@ -1,8 +1,8 @@
 package pl.plajer.buildbattle.scoreboards;
 
+import org.bukkit.configuration.file.FileConfiguration;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.handlers.ConfigurationManager;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashMap;
 

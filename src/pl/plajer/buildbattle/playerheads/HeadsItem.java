@@ -1,14 +1,14 @@
 package pl.plajer.buildbattle.playerheads;
 
-import pl.plajer.buildbattle.handlers.ChatManager;
-import pl.plajer.buildbattle.handlers.ConfigurationManager;
-import pl.plajer.buildbattle.utils.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
+import pl.plajer.buildbattle.handlers.ChatManager;
+import pl.plajer.buildbattle.handlers.ConfigurationManager;
+import pl.plajer.buildbattle.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,13 +122,13 @@ class HeadsItem {
         return lorelist;
     }
 
+    public void setLore(String[] lore) {
+        this.lore = lore;
+    }
+
     public void setLore(List<String> lore) {
 
         this.lore = lore.toArray(new String[lore.size()]);
-    }
-
-    public void setLore(String[] lore) {
-        this.lore = lore;
     }
 
     private String getDisplayName() {

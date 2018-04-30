@@ -1,10 +1,5 @@
 package pl.plajer.buildbattle.entities;
 
-import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.ArenaState;
-import pl.plajer.buildbattle.handlers.ChatManager;
-import pl.plajer.buildbattle.arena.Arena;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -16,6 +11,11 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.Inventory;
+import pl.plajer.buildbattle.Main;
+import pl.plajer.buildbattle.arena.Arena;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
+import pl.plajer.buildbattle.arena.ArenaState;
+import pl.plajer.buildbattle.handlers.ChatManager;
 
 import java.util.HashMap;
 import java.util.HashSet;

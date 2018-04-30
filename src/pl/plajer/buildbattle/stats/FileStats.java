@@ -1,10 +1,10 @@
 package pl.plajer.buildbattle.stats;
 
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import pl.plajer.buildbattle.User;
 import pl.plajer.buildbattle.handlers.ConfigurationManager;
 import pl.plajer.buildbattle.handlers.UserManager;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 
 import java.io.IOException;
 

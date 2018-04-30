@@ -1,12 +1,12 @@
 package pl.plajer.buildbattle;
 
-import pl.plajer.buildbattle.arena.ArenaState;
-import pl.plajer.buildbattle.handlers.UserManager;
-import pl.plajer.buildbattle.arena.Arena;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import pl.plajer.buildbattle.arena.Arena;
+import pl.plajer.buildbattle.arena.ArenaState;
+import pl.plajer.buildbattle.handlers.UserManager;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,8 +1,8 @@
 package pl.plajer.buildbattle.selfmadeevents;
 
-import pl.plajer.buildbattle.arena.Arena;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import pl.plajer.buildbattle.arena.Arena;
 
 /**
  * Created by Tom on 1/11/2015.

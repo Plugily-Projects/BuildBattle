@@ -1,8 +1,8 @@
 package pl.plajer.buildbattle.stats;
 
+import org.bukkit.Bukkit;
 import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
-import org.bukkit.Bukkit;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

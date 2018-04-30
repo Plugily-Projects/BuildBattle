@@ -1,13 +1,13 @@
 package pl.plajer.buildbattle.items;
 
-import pl.plajer.buildbattle.handlers.ChatManager;
-import pl.plajer.buildbattle.handlers.ConfigurationManager;
-import pl.plajer.buildbattle.utils.ParticleEffect;
-import pl.plajer.buildbattle.utils.Util;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
+import pl.plajer.buildbattle.handlers.ChatManager;
+import pl.plajer.buildbattle.handlers.ConfigurationManager;
+import pl.plajer.buildbattle.utils.ParticleEffect;
+import pl.plajer.buildbattle.utils.Util;
 
 import java.util.List;
 
@@ -98,13 +98,13 @@ public class SpecialItem {
         return lore;
     }
 
+    public void setLore(String[] lore) {
+        this.lore = lore;
+    }
+
     private void setLore(List<String> lore) {
 
         this.lore = lore.toArray(new String[lore.size()]);
-    }
-
-    public void setLore(String[] lore) {
-        this.lore = lore;
     }
 
     private String getDisplayName() {

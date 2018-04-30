@@ -1,6 +1,5 @@
 package pl.plajer.buildbattle.entities;
 
-import pl.plajer.buildbattle.handlers.ChatManager;
 import net.minecraft.server.v1_8_R3.EntityLiving;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import org.bukkit.Bukkit;
@@ -21,6 +20,7 @@ import org.bukkit.entity.Wolf;
 import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import pl.plajer.buildbattle.handlers.ChatManager;
 
 import java.util.HashSet;
 

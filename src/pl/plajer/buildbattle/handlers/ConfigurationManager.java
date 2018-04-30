@@ -1,11 +1,11 @@
 package pl.plajer.buildbattle.handlers;
 
 
-import pl.plajer.buildbattle.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import pl.plajer.buildbattle.Main;
 
 import java.io.File;
 import java.io.IOException;
