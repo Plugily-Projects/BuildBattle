@@ -1,6 +1,5 @@
 package pl.plajer.buildbattle.handlers;
 
-import pl.plajer.buildbattle.GameAPI;
 import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.utils.Util;
 import org.bukkit.ChatColor;

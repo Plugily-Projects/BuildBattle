@@ -1,6 +1,7 @@
 package pl.plajer.buildbattle.events;
 
-import pl.plajer.buildbattle.GameAPI;
+import pl.plajer.buildbattle.Main;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.handlers.UserManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,11 +25,11 @@ import org.bukkit.event.player.PlayerShearEntityEvent;
  */
 public class SpectatorEvents implements Listener {
 
-    private GameAPI plugin;
+    private Main plugin;
 
-    public SpectatorEvents(GameAPI plugin) {
+    public SpectatorEvents(Main plugin) {
         this.plugin = plugin;
-        plugin.getPlugin().getServer().getPluginManager().registerEvents(this, plugin.getPlugin());
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
 
@@ -80,8 +81,8 @@ public class SpectatorEvents implements Listener {
         if(!(event.getEntity() instanceof Player)) return;
         Player player = (Player) event.getEntity();
         if(!UserManager.getUser(player.getUniqueId()).isSpectator()) return;
-        if(plugin.getGameInstanceManager().getArena(player) == null) return;
-        if(player.getLocation().getY() < 1) player.teleport(plugin.getGameInstanceManager().getArena(player).getStartLocation());
+        if(ArenaRegistry.getArena(player) == null) return;
+        if(player.getLocation().getY() < 1) player.teleport(ArenaRegistry.getArena(player).getStartLocation());
         event.setCancelled(true);
     }
 

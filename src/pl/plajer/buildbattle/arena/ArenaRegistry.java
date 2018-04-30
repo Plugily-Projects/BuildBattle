@@ -11,13 +11,13 @@ import java.util.List;
  */
 public class ArenaRegistry {
 
-    private List<Arena> arenas = new ArrayList<>();
+    private static List<Arena> arenas = new ArrayList<>();
 
-    public List<Arena> getArenas() {
+    public static List<Arena> getArenas() {
         return arenas;
     }
 
-    public boolean isInArena(Player p) {
+    public static boolean isInArena(Player p) {
         for(Arena arena : arenas) {
             if(arena.getPlayers().contains(p)) {
                 return true;
@@ -27,7 +27,7 @@ public class ArenaRegistry {
     }
 
     @Nullable
-    public Arena getArena(Player p) {
+    public static Arena getArena(Player p) {
         if(p == null) return null;
         if(!p.isOnline()) return null;
 
@@ -41,11 +41,11 @@ public class ArenaRegistry {
         return null;
     }
 
-    public void registerArena(Arena arena) {
+    public static void registerArena(Arena arena) {
         arenas.add(arena);
     }
 
-    public Arena getArena(String ID) {
+    public static Arena getArena(String ID) {
         for(Arena arena : arenas) {
             if(arena.getID().equalsIgnoreCase(ID)) {
                 return arena;

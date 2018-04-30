@@ -1,7 +1,7 @@
 package pl.plajer.buildbattle.entities;
 
-import pl.plajer.buildbattle.GameAPI;
 import pl.plajer.buildbattle.Main;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.arena.Arena;
@@ -27,21 +27,16 @@ import java.util.UUID;
  */
 public class EntityMenuEvents implements Listener {
 
-    private Main plugin;
-    private GameAPI gameAPI;
     private HashMap<UUID, BuildBattleEntity> links = new HashMap<>();
 
-
     public EntityMenuEvents(Main plugin) {
-        this.plugin = plugin;
-        this.gameAPI = plugin.getGameAPI();
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
-
 
     @EventHandler
     public void onRightClickEntity(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
-        Arena arena = gameAPI.getGameInstanceManager().getArena(player);
+        Arena arena = ArenaRegistry.getArena(player);
         if(arena == null) return;
         event.setCancelled(true);
         if(arena.getGameState() != ArenaState.INGAME || ((Arena) arena).isVoting()) return;
@@ -58,7 +53,7 @@ public class EntityMenuEvents implements Listener {
     public void onDamageEntity(EntityDamageByEntityEvent event) {
         if(event.getDamager().getType() != EntityType.PLAYER) return;
         Player player = (Player) event.getDamager();
-        Arena arena = gameAPI.getGameInstanceManager().getArena(player);
+        Arena arena = ArenaRegistry.getArena(player);
         if(arena == null) return;
         event.setCancelled(true);
     }
@@ -67,7 +62,7 @@ public class EntityMenuEvents implements Listener {
     public void onInventoryClick(InventoryClickEvent event) {
 
         Player player = (Player) event.getWhoClicked();
-        Arena arena = gameAPI.getGameInstanceManager().getArena(player);
+        Arena arena = ArenaRegistry.getArena(player);
         if(arena == null) return;
         if(!event.getInventory().getTitle().equals(ChatManager.getSingleMessage("Entity-Menu", "Entity Menu"))) return;
         if(event.getCurrentItem() == null) return;
@@ -124,7 +119,7 @@ public class EntityMenuEvents implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onVillagerProfessionChoose(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
-        Arena arena = gameAPI.getGameInstanceManager().getArena(player);
+        Arena arena = ArenaRegistry.getArena(player);
         if(arena == null) return;
         if(!event.getInventory().getTitle().equals(ChatManager.getSingleMessage("Villager-Profession-Menu", "Choose villager profession"))) return;
         if(event.getCurrentItem() == null) return;

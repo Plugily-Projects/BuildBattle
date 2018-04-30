@@ -2,11 +2,11 @@ package pl.plajer.buildbattle.events;
 
 import pl.plajer.buildbattle.BuildPlot;
 import pl.plajer.buildbattle.ConfigPreferences;
-import pl.plajer.buildbattle.GameAPI;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.User;
 import pl.plajer.buildbattle.VoteItems;
 import pl.plajer.buildbattle.arena.Arena;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.entities.BuildBattleEntity;
 import pl.plajer.buildbattle.handlers.ChatManager;
@@ -58,22 +58,20 @@ import java.util.ArrayList;
 public class IngameEvents implements Listener {
 
     private Main plugin;
-    private GameAPI gameAPI;
 
     public IngameEvents(Main main) {
         this.plugin = main;
-        this.gameAPI = plugin.getGameAPI();
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        if((plugin.isBungeeActivated() && gameAPI.getGameInstanceManager().getArenas().get(0).getGameState() == ArenaState.INGAME) || (plugin.isBungeeActivated() && gameAPI.getGameInstanceManager().getArenas().get(0).getGameState() == ArenaState.ENDING) || (plugin.isBungeeActivated() && gameAPI.getGameInstanceManager().getArenas().get(0).getGameState() == ArenaState.RESTARTING))
+        if((plugin.isBungeeActivated() && ArenaRegistry.getArenas().get(0).getGameState() == ArenaState.INGAME) || (plugin.isBungeeActivated() && ArenaRegistry.getArenas().get(0).getGameState() == ArenaState.ENDING) || (plugin.isBungeeActivated() && ArenaRegistry.getArenas().get(0).getGameState() == ArenaState.RESTARTING))
             event.getPlayer().kickPlayer(ChatManager.getSingleMessage("Kicked-Game-Already-Started", ChatManager.HIGHLIGHTED + "Kicked! Game has already started!"));
     }
 
     @EventHandler
     public void onPreJoin(AsyncPlayerPreLoginEvent event) {
-        if((plugin.isBungeeActivated() && gameAPI.getGameInstanceManager().getArenas().get(0).getGameState() == ArenaState.INGAME) || (plugin.isBungeeActivated() && gameAPI.getGameInstanceManager().getArenas().get(0).getGameState() == ArenaState.ENDING) || (plugin.isBungeeActivated() && gameAPI.getGameInstanceManager().getArenas().get(0).getGameState() == ArenaState.RESTARTING)) {
+        if((plugin.isBungeeActivated() && ArenaRegistry.getArenas().get(0).getGameState() == ArenaState.INGAME) || (plugin.isBungeeActivated() && ArenaRegistry.getArenas().get(0).getGameState() == ArenaState.ENDING) || (plugin.isBungeeActivated() && ArenaRegistry.getArenas().get(0).getGameState() == ArenaState.RESTARTING)) {
             event.setKickMessage(ChatManager.getSingleMessage("Kicked-Game-Already-Started", ChatManager.HIGHLIGHTED + "Kicked! Game has already started!"));
             event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
         }
@@ -83,7 +81,7 @@ public class IngameEvents implements Listener {
     public void onVote(PlayerInteractEvent event) {
         if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) return;
         if(event.getItem() == null) return;
-        Arena arena = gameAPI.getGameInstanceManager().getArena(event.getPlayer());
+        Arena arena = ArenaRegistry.getArena(event.getPlayer());
         if(arena == null) return;
         if(arena.getGameState() != ArenaState.INGAME) return;
 
@@ -103,7 +101,7 @@ public class IngameEvents implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onLeave(PlayerInteractEvent event) {
         if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) return;
-        Arena arena = gameAPI.getGameInstanceManager().getArena(event.getPlayer());
+        Arena arena = ArenaRegistry.getArena(event.getPlayer());
         if(arena == null) return;
         ItemStack itemStack = event.getPlayer().getItemInHand();
         if(itemStack == null) return;
@@ -126,7 +124,7 @@ public class IngameEvents implements Listener {
     public void onOpenOptionMenu(PlayerInteractEvent event) {
         if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) return;
         if(event.getItem() == null) return;
-        Arena arena = gameAPI.getGameInstanceManager().getArena(event.getPlayer());
+        Arena arena = ArenaRegistry.getArena(event.getPlayer());
         if(arena == null) return;
         if(arena.getGameState() != ArenaState.INGAME) return;
         ItemStack itemStack = event.getItem();
@@ -139,7 +137,7 @@ public class IngameEvents implements Listener {
 
     @EventHandler
     public void onPistonExtendEvent(BlockPistonExtendEvent event) {
-        for(Arena arena : gameAPI.getGameInstanceManager().getArenas()) {
+        for(Arena arena : ArenaRegistry.getArenas()) {
             for(BuildPlot buildPlot : arena.getPlotManager().getPlots()) {
                 for(Block block : event.getBlocks()) {
                     if(!buildPlot.isInPlotRange(block.getLocation(), -1) && buildPlot.isInPlot(event.getBlock().getLocation())) {
@@ -154,14 +152,14 @@ public class IngameEvents implements Listener {
     public void onFoodChange(FoodLevelChangeEvent event) {
         if(!(event.getEntity().getType() == EntityType.PLAYER)) return;
         Player player = (Player) event.getEntity();
-        if(gameAPI.getGameInstanceManager().getArena(player) == null) return;
+        if(ArenaRegistry.getArena(player) == null) return;
         event.setCancelled(true);
         player.setFoodLevel(20);
     }
 
     @EventHandler
     public void onWaterFlowEvent(BlockFromToEvent event) {
-        for(Arena arena : gameAPI.getGameInstanceManager().getArenas()) {
+        for(Arena arena : ArenaRegistry.getArenas()) {
             for(BuildPlot buildPlot : arena.getPlotManager().getPlots()) {
                 if(!buildPlot.isInPlot(event.getToBlock().getLocation()) && buildPlot.isInPlot(event.getBlock().getLocation())) {
                     event.setCancelled(true);
@@ -172,7 +170,7 @@ public class IngameEvents implements Listener {
 
     @EventHandler
     public void onTntExplode(EntityExplodeEvent event) {
-        for(Arena arena : gameAPI.getGameInstanceManager().getArenas()) {
+        for(Arena arena : ArenaRegistry.getArenas()) {
             for(BuildPlot buildPlot : arena.getPlotManager().getPlots()) {
                 if(buildPlot.isInPlotRange(event.getEntity().getLocation(), 0)) {
                     event.blockList().clear();
@@ -189,7 +187,7 @@ public class IngameEvents implements Listener {
     @EventHandler
     public void cancelTNT(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        Arena arena = gameAPI.getGameInstanceManager().getArena(player);
+        Arena arena = ArenaRegistry.getArena(player);
         if(arena == null) return;
         if(player.getItemInHand() == null) return;
         if(player.getItemInHand().getType() != Material.FLINT_AND_STEEL) {
@@ -206,7 +204,7 @@ public class IngameEvents implements Listener {
     public void onEntityDamageEntity(EntityDamageByEntityEvent event) {
         if(event.getEntity().getType() != EntityType.PLAYER) return;
         Player player = (Player) event.getEntity();
-        Arena arena = gameAPI.getGameInstanceManager().getArena(player);
+        Arena arena = ArenaRegistry.getArena(player);
         if(arena == null) return;
         event.setCancelled(true);
     }
@@ -215,7 +213,7 @@ public class IngameEvents implements Listener {
     public void onGetDamaged(EntityDamageByEntityEvent event) {
         if(event.getDamager().getType() != EntityType.PLAYER) return;
         Player player = (Player) event.getDamager();
-        Arena arena = gameAPI.getGameInstanceManager().getArena(player);
+        Arena arena = ArenaRegistry.getArena(player);
         if(arena == null) return;
         event.setCancelled(true);
     }
@@ -224,7 +222,7 @@ public class IngameEvents implements Listener {
     public void onDamage(EntityDamageEvent event) {
         if(event.getEntity().getType() != EntityType.PLAYER) return;
         Player player = (Player) event.getEntity();
-        Arena arena = gameAPI.getGameInstanceManager().getArena(player);
+        Arena arena = ArenaRegistry.getArena(player);
         if(arena == null) return;
         event.setCancelled(true);
     }
@@ -232,7 +230,7 @@ public class IngameEvents implements Listener {
 
     @EventHandler
     public void onTreeGrow(StructureGrowEvent event) {
-        Arena arena = gameAPI.getGameInstanceManager().getArena(event.getPlayer());
+        Arena arena = ArenaRegistry.getArena(event.getPlayer());
         if(arena == null) return;
         BuildPlot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
         if(buildPlot == null) return;
@@ -244,7 +242,7 @@ public class IngameEvents implements Listener {
 
     @EventHandler
     public void onDispense(BlockDispenseEvent event) {
-        for(Arena arena : gameAPI.getGameInstanceManager().getArenas()) {
+        for(Arena arena : ArenaRegistry.getArenas()) {
             for(BuildPlot buildPlot : arena.getPlotManager().getPlots()) {
                 if(!buildPlot.isInPlotRange(event.getBlock().getLocation(), -1) && buildPlot.isInPlotRange(event.getBlock().getLocation(), 5)) {
                     event.setCancelled(true);
@@ -266,7 +264,7 @@ public class IngameEvents implements Listener {
         //   event.setCancelled(true);
 
 
-        Arena arena = gameAPI.getGameInstanceManager().getArena((Player) event.getWhoClicked());
+        Arena arena = ArenaRegistry.getArena((Player) event.getWhoClicked());
         if(arena == null) return;
 
         if(arena.getGameState() != ArenaState.INGAME) return;
@@ -345,8 +343,8 @@ public class IngameEvents implements Listener {
 
     @EventHandler
     public void onChatIngame(AsyncPlayerChatEvent event) {
-        if(gameAPI.getGameInstanceManager().getArena(event.getPlayer()) == null) {
-            for(Arena arena : gameAPI.getGameInstanceManager().getArenas()) {
+        if(ArenaRegistry.getArena(event.getPlayer()) == null) {
+            for(Arena arena : ArenaRegistry.getArenas()) {
                 for(Player player : arena.getPlayers()) {
                     event.getRecipients().remove(player);
                 }
@@ -354,7 +352,7 @@ public class IngameEvents implements Listener {
             return;
         }
 
-        Arena arena = gameAPI.getGameInstanceManager().getArena(event.getPlayer());
+        Arena arena = ArenaRegistry.getArena(event.getPlayer());
         event.getRecipients().clear();
         event.getRecipients().addAll(new ArrayList<>(arena.getPlayers()));
 
@@ -363,7 +361,7 @@ public class IngameEvents implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void disableCommands(PlayerCommandPreprocessEvent event) {
-        if(gameAPI.getGameInstanceManager().getArena(event.getPlayer()) == null) return;
+        if(ArenaRegistry.getArena(event.getPlayer()) == null) return;
         Boolean whitelisted = false;
         for(String string : ConfigPreferences.getWhitelistedCommands()) {
             if(event.getMessage().contains(string)) whitelisted = true;
@@ -380,7 +378,7 @@ public class IngameEvents implements Listener {
 
     @EventHandler
     public void playerEmtpyBucket(PlayerBucketEmptyEvent event) {
-        Arena arena = gameAPI.getGameInstanceManager().getArena(event.getPlayer());
+        Arena arena = ArenaRegistry.getArena(event.getPlayer());
         if(arena == null) return;
         BuildPlot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
         if(buildPlot == null) return;
@@ -391,7 +389,7 @@ public class IngameEvents implements Listener {
 
     @EventHandler
     public void onBlockSpread(BlockSpreadEvent event) {
-        for(Arena arena : gameAPI.getGameInstanceManager().getArenas()) {
+        for(Arena arena : ArenaRegistry.getArenas()) {
             if(arena.getPlotManager().getPlots().size() != 0 && arena.getPlotManager().getPlots().get(0) != null) {
                 if(arena.getPlotManager().getPlots().get(0).getCenter().getWorld().getName().equalsIgnoreCase(event.getBlock().getWorld().getName())) {
                     if(event.getSource().getType() == Material.FIRE) event.setCancelled(true);
@@ -407,13 +405,13 @@ public class IngameEvents implements Listener {
             return;
         }
         if(event.getEntity().getType() == EntityType.WITHER || ConfigPreferences.isMobSpawningDisabled()) {
-            for(Arena arena : gameAPI.getGameInstanceManager().getArenas()) {
+            for(Arena arena : ArenaRegistry.getArenas()) {
                 for(BuildPlot buildplot : arena.getPlotManager().getPlots()) {
                     if(buildplot.isInPlotRange(event.getEntity().getLocation(), 10)) event.setCancelled(true);
                 }
             }
         } else {
-            for(Arena arena : gameAPI.getGameInstanceManager().getArenas()) {
+            for(Arena arena : ArenaRegistry.getArenas()) {
                 for(BuildPlot buildplot : arena.getPlotManager().getPlots()) {
                     if(buildplot.isInPlotRange(event.getEntity().getLocation(), 1)) {
                         if(buildplot.getEntities() >= ConfigPreferences.getMaxMobs()) {
@@ -433,7 +431,7 @@ public class IngameEvents implements Listener {
 
     @EventHandler
     public void LeaveDecay(LeavesDecayEvent event) {
-        for(Arena arena : gameAPI.getGameInstanceManager().getArenas()) {
+        for(Arena arena : ArenaRegistry.getArenas()) {
             for(BuildPlot buildPlot : arena.getPlotManager().getPlots()) {
                 if(buildPlot.isInPlotRange(event.getBlock().getLocation(), 5)) {
                     event.setCancelled(true);
@@ -456,7 +454,7 @@ public class IngameEvents implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBreak(BlockBreakEvent event) {
-        Arena arena = gameAPI.getGameInstanceManager().getArena(event.getPlayer());
+        Arena arena = ArenaRegistry.getArena(event.getPlayer());
         if(arena == null) return;
         if(arena.getGameState() != ArenaState.INGAME) {
             event.setCancelled(true);
@@ -486,7 +484,7 @@ public class IngameEvents implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlace(BlockPlaceEvent event) {
-        Arena arena = gameAPI.getGameInstanceManager().getArena(event.getPlayer());
+        Arena arena = ArenaRegistry.getArena(event.getPlayer());
         if(arena == null) return;
         if(arena.getGameState() != ArenaState.INGAME) {
             event.setCancelled(true);
@@ -515,7 +513,7 @@ public class IngameEvents implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        Arena arena = gameAPI.getGameInstanceManager().getArena((Player) event.getWhoClicked());
+        Arena arena = ArenaRegistry.getArena((Player) event.getWhoClicked());
         if(arena == null) return;
         if(arena.getGameState() != ArenaState.INGAME) {
             event.setCancelled(true);

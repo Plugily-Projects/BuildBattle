@@ -4,6 +4,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.Arena;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,7 +39,7 @@ public class BungeeManager implements Listener {
     }
 
     private String getMOTD() {
-        Arena arena = plugin.getGameAPI().getGameInstanceManager().getArenas().get(0);
+        Arena arena = ArenaRegistry.getArenas().get(0);
         if(arena.getGameState() == ArenaState.STARTING && (arena.getTimer() <= 3)) {
             return ArenaState.INGAME.toString();
         } else {
@@ -48,13 +49,12 @@ public class BungeeManager implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onServerListPing(ServerListPingEvent event) {
-        if(plugin.getGameAPI().getGameInstanceManager() == null) return;
-        if(plugin.getGameAPI().getGameInstanceManager().getArenas().size() == 0) return;
-        if(plugin.getGameAPI().getGameInstanceManager().getArenas() == null) {
+        if(ArenaRegistry.getArenas().size() == 0) return;
+        if(ArenaRegistry.getArenas().isEmpty()) {
             System.out.print("NO GAMEINSTANCE FOUND! FIRST CONFIGURE AN ARENA BEFORE ACTIVATING BUNGEEEMODE!");
             return;
         }
-        event.setMaxPlayers(plugin.getGameAPI().getGameInstanceManager().getArenas().get(0).getMAX_PLAYERS());
+        event.setMaxPlayers(ArenaRegistry.getArenas().get(0).getMAX_PLAYERS());
         event.setMotd(this.getMOTD());
     }
 
@@ -62,15 +62,15 @@ public class BungeeManager implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onJoin(final PlayerJoinEvent event) {
         event.setJoinMessage("");
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> plugin.getGameAPI().getGameInstanceManager().getArenas().get(0).joinAttempt(event.getPlayer()), 1L);
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> ArenaRegistry.getArenas().get(0).joinAttempt(event.getPlayer()), 1L);
     }
 
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onQuit(PlayerQuitEvent event) {
         event.setQuitMessage("");
-        if(plugin.getGameAPI().getGameInstanceManager().getArena(event.getPlayer()) != null)
-            plugin.getGameAPI().getGameInstanceManager().getArenas().get(0).leaveAttempt(event.getPlayer());
+        if(ArenaRegistry.getArena(event.getPlayer()) != null)
+            ArenaRegistry.getArenas().get(0).leaveAttempt(event.getPlayer());
     }
 
 

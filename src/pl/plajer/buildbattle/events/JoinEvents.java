@@ -1,10 +1,11 @@
 package pl.plajer.buildbattle.events;
 
-import pl.plajer.buildbattle.GameAPI;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import pl.plajer.buildbattle.Main;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
 
 /**
  * Created by Tom on 10/07/2015.
@@ -12,19 +13,19 @@ import org.bukkit.event.player.PlayerJoinEvent;
 //TODO update checker
 public class JoinEvents implements Listener {
 
-    private GameAPI plugin;
+    private Main plugin;
 
-    public JoinEvents(GameAPI plugin) {
+    public JoinEvents(Main plugin) {
         this.plugin = plugin;
-        plugin.getPlugin().getServer().getPluginManager().registerEvents(this, plugin.getPlugin());
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        if(plugin.getPlugin().isBungeeActivated()) return;
-        for(Player player : plugin.getPlugin().getServer().getOnlinePlayers()) {
-            if(plugin.getGameInstanceManager().getArena(player) == null) continue;
+        if(plugin.isBungeeActivated()) return;
+        for(Player player : plugin.getServer().getOnlinePlayers()) {
+            if(ArenaRegistry.getArena(player) == null) continue;
             player.hidePlayer(event.getPlayer());
             event.getPlayer().hidePlayer(player);
         }

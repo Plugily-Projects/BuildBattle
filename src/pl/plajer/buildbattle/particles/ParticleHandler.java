@@ -6,6 +6,7 @@ import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.Arena;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
 
 import java.util.ArrayList;
 
@@ -32,7 +33,7 @@ public class ParticleHandler extends BukkitRunnable {
 
     @Override
     public void run() {
-        for(Arena arena : plugin.getGameAPI().getGameInstanceManager().getArenas()) {
+        for(Arena arena : ArenaRegistry.getArenas()) {
             for(BuildPlot buildPlot : arena.getPlotManager().getPlots()) {
                 for(Location location : buildPlot.getParticles().keySet()) {
                     if(!arena.getPlayers().isEmpty())

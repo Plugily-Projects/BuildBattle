@@ -2,6 +2,7 @@ package pl.plajer.buildbattle.commands;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.User;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.UserManager;
 import org.bukkit.ChatColor;
@@ -50,7 +51,7 @@ public class GameCommands implements CommandExecutor {
             if(plugin.getConfig().getBoolean("Disable-Leave-Command")) return true;
             if(checkSenderIsConsole(sender)) return true;
             Player player = (Player) sender;
-            if(plugin.getGameAPI().getGameInstanceManager().getArena(player) == null) {
+            if(ArenaRegistry.getArena(player) == null) {
                 System.out.print(player.getName() + " tried /leave but isn't in an arena!");
                 return true;
             }
@@ -59,8 +60,8 @@ public class GameCommands implements CommandExecutor {
                 System.out.print(player.getName() + " is teleported to the Hub Server");
                 return true;
             } else {
-                plugin.getGameAPI().getGameInstanceManager().getArena(player).teleportToEndLocation(player);
-                plugin.getGameAPI().getGameInstanceManager().getArena(player).leaveAttempt(player);
+                ArenaRegistry.getArena(player).teleportToEndLocation(player);
+                ArenaRegistry.getArena(player).leaveAttempt(player);
                 System.out.print(player.getName() + " has left the arena! He is teleported to the end location.");
                 return true;
             }

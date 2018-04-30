@@ -1,6 +1,7 @@
 package pl.plajer.buildbattle;
 
 import pl.plajer.buildbattle.arena.Arena;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.handlers.PermissionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -35,7 +36,7 @@ public class User {
     }
 
     public Arena getArena() {
-        return plugin.getGameAPI().getGameInstanceManager().getArena(Bukkit.getPlayer(uuid));
+        return ArenaRegistry.getArena(Bukkit.getPlayer(uuid));
     }
 
     public UUID getUuid() {

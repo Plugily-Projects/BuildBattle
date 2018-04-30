@@ -1,9 +1,9 @@
 package pl.plajer.buildbattle.events;
 
 import pl.plajer.buildbattle.BuildPlot;
-import pl.plajer.buildbattle.GameAPI;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.User;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.handlers.UserManager;
 import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.stats.MySQLDatabase;
@@ -26,16 +26,14 @@ import java.util.List;
 public class NormalEvents implements Listener {
 
     private Main plugin;
-    private GameAPI gameAPI;
 
     public NormalEvents(Main plugin) {
         this.plugin = plugin;
-        gameAPI = plugin.getGameAPI();
     }
 
     @EventHandler
     public void onTntExplode(BlockExplodeEvent event) {
-        for(Arena arena : plugin.getGameAPI().getGameInstanceManager().getArenas()) {
+        for(Arena arena : ArenaRegistry.getArenas()) {
             for(BuildPlot buildPlot : arena.getPlotManager().getPlots()) {
                 if(buildPlot.isInPlotRange(event.getBlock().getLocation(), 0)) {
                     event.blockList().clear();
@@ -51,7 +49,7 @@ public class NormalEvents implements Listener {
 
     @EventHandler
     public void onJoin(final PlayerJoinEvent event) {
-        if(plugin.isBungeeActivated()) gameAPI.getGameInstanceManager().getArenas().get(0).teleportToLobby(event.getPlayer());
+        if(plugin.isBungeeActivated()) ArenaRegistry.getArenas().get(0).teleportToLobby(event.getPlayer());
         if(!plugin.isDatabaseActivated()) {
             List<String> temp = new ArrayList<>();
             temp.add("gamesplayed");

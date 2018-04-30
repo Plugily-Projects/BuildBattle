@@ -1,7 +1,9 @@
 package pl.plajer.buildbattle.events;
 
+import pl.plajer.buildbattle.Main;
+import pl.plajer.buildbattle.arena.Arena;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.handlers.PermissionManager;
-import pl.plajer.buildbattle.GameAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -17,14 +19,11 @@ import org.bukkit.event.inventory.InventoryClickEvent;
  */
 public class SetupInventoryEvents implements Listener {
 
+    private Main plugin;
 
-    private GameAPI plugin;
-
-
-    public SetupInventoryEvents(GameAPI plugin) {
+    public SetupInventoryEvents(Main plugin) {
         this.plugin = plugin;
     }
-
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
@@ -39,7 +38,7 @@ public class SetupInventoryEvents implements Listener {
 
         String name = event.getCurrentItem().getItemMeta().getDisplayName();
 
-        GameInstance gameInstance = plugin.getGameInstanceManager().getArena(event.getInventory().getName().replace("Arena: ", ""));
+        Arena arena = ArenaRegistry.getArena(event.getInventory().getName().replace("Arena: ", ""));
         if(event.getCurrentItem().getType() == Material.NAME_TAG && event.getCursor().getType() == Material.NAME_TAG) {
             event.setCancelled(true);
             if(!event.getCursor().hasItemMeta()) {
@@ -51,7 +50,7 @@ public class SetupInventoryEvents implements Listener {
                 return;
             }
 
-            player.performCommand("bb " + gameInstance.getID() + " set MAPNAME " + event.getCursor().getItemMeta().getDisplayName());
+            player.performCommand("bb " + arena.getID() + " set MAPNAME " + event.getCursor().getItemMeta().getDisplayName());
             event.getCurrentItem().getItemMeta().setDisplayName(ChatColor.GOLD + "Set a mapname (currently: " + event.getCursor().getItemMeta().getDisplayName());
             return;
         }
@@ -59,18 +58,18 @@ public class SetupInventoryEvents implements Listener {
         if(name.contains("End Location")) {
             event.setCancelled(true);
 
-            player.performCommand("bb " + gameInstance.getID() + " set ENDLOC");
+            player.performCommand("bb " + arena.getID() + " set ENDLOC");
             return;
         }
         if(name.contains("Start Location")) {
             event.setCancelled(true);
 
-            player.performCommand("bb " + gameInstance.getID() + " set STARTLOC");
+            player.performCommand("bb " + arena.getID() + " set STARTLOC");
             return;
         }
         if(name.contains("Lobby Location")) {
             event.setCancelled(true);
-            player.performCommand("bb " + gameInstance.getID() + " set LOBBYLOC");
+            player.performCommand("bb " + arena.getID() + " set LOBBYLOC");
             return;
         }
         if(name.contains("max players")) {
@@ -78,13 +77,13 @@ public class SetupInventoryEvents implements Listener {
             if(clickType.isRightClick()) {
                 event.getCurrentItem().setAmount(event.getCurrentItem().getAmount() + 1);
                 player.updateInventory();
-                player.performCommand("bb " + gameInstance.getID() + " set MAXPLAYERS " + event.getCurrentItem().getAmount());
+                player.performCommand("bb " + arena.getID() + " set MAXPLAYERS " + event.getCurrentItem().getAmount());
                 return;
             }
             if(clickType.isLeftClick()) {
                 event.getCurrentItem().setAmount(event.getCurrentItem().getAmount() - 1);
                 player.updateInventory();
-                player.performCommand("bb " + gameInstance.getID() + " set MAXPLAYERS " + event.getCurrentItem().getAmount());
+                player.performCommand("bb " + arena.getID() + " set MAXPLAYERS " + event.getCurrentItem().getAmount());
                 return;
             }
         }
@@ -94,13 +93,13 @@ public class SetupInventoryEvents implements Listener {
             if(clickType.isRightClick()) {
                 event.getCurrentItem().setAmount(event.getCurrentItem().getAmount() + 1);
                 player.updateInventory();
-                player.performCommand("bb " + gameInstance.getID() + " set MINPLAYERS " + event.getCurrentItem().getAmount());
+                player.performCommand("bb " + arena.getID() + " set MINPLAYERS " + event.getCurrentItem().getAmount());
                 return;
             }
             if(clickType.isLeftClick()) {
                 event.getCurrentItem().setAmount(event.getCurrentItem().getAmount() - 1);
                 player.updateInventory();
-                player.performCommand("bb " + gameInstance.getID() + " set MINPLAYERS " + event.getCurrentItem().getAmount());
+                player.performCommand("bb " + arena.getID() + " set MINPLAYERS " + event.getCurrentItem().getAmount());
                 return;
             }
         }
@@ -112,7 +111,7 @@ public class SetupInventoryEvents implements Listener {
         if(event.getCurrentItem().getType() != Material.NAME_TAG) {
             event.setCancelled(true);
         }
-        Bukkit.getPluginManager().callEvent(new SetupInventoryClickEvent(gameInstance, event.getCurrentItem(), player, clickType));
+        Bukkit.getPluginManager().callEvent(new SetupInventoryClickEvent(arena, event.getCurrentItem(), player, clickType));
 
 
     }

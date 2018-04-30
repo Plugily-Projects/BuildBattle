@@ -6,6 +6,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.SkullType;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
@@ -13,6 +15,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.plugin.java.JavaPlugin;
+import pl.plajer.buildbattle.Main;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,6 +27,8 @@ import java.util.Random;
  * Created by Tom on 29/07/2014.
  */
 public class Util {
+
+    private static Main plugin = JavaPlugin.getPlugin(Main.class);
 
     public static void clearArmor(Player player) {
         player.getInventory().setHelmet(null);
@@ -102,6 +108,24 @@ public class Util {
         int rp = r.nextInt(2) + 1;
         fwm.setPower(rp);
         fw.setFireworkMeta(fwm);
+    }
+
+    public static Location getLocation(String path) {
+        String[] loc = plugin.getConfig().getString(path).split(",");
+        plugin.getServer().createWorld(new WorldCreator(loc[0]));
+        World w = plugin.getServer().getWorld(loc[0]);
+        Double x = Double.parseDouble(loc[1]);
+        Double y = Double.parseDouble(loc[2]);
+        Double z = Double.parseDouble(loc[3]);
+        float yaw = Float.parseFloat(loc[4]);
+        float pitch = Float.parseFloat(loc[5]);
+        return new Location(w, x, y, z, yaw, pitch);
+    }
+
+    public static void saveLoc(String path, Location loc) {
+        String location = loc.getWorld().getName() + "," + loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getYaw() + "," + loc.getPitch();
+        plugin.getConfig().set(path, location);
+        plugin.saveConfig();
     }
 
 }

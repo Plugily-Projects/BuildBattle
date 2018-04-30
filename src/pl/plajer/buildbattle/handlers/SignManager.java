@@ -2,6 +2,7 @@ package pl.plajer.buildbattle.handlers;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.Arena;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import pl.plajer.buildbattle.utils.Util;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -50,14 +52,13 @@ public class SignManager extends BukkitRunnable implements Listener {
 
     private void loadSigns() {
         if(!plugin.getConfig().contains("signs")) {
-            plugin.getGameAPI().saveLoc("signs.example", Bukkit.getWorlds().get(0).getSpawnLocation());
+            Util.saveLoc("signs.example", Bukkit.getWorlds().get(0).getSpawnLocation());
         }
-
         for(String path : plugin.getConfig().getConfigurationSection("signs").getKeys(false)) {
             if(path.contains("example")) continue;
             path = "signs." + path;
 
-            Location loc = plugin.getGameAPI().getLocation(path);
+            Location loc = Util.getLocation(path);
             if(loc == null) System.out.print("LOCATION IS NNNNUUUUULLLL!!");
             if(loc.getBlock().getState() instanceof Sign) {
                 registerSign((Sign) loc.getBlock().getState());
@@ -218,7 +219,7 @@ public class SignManager extends BukkitRunnable implements Listener {
 
             if(arenaSign == null) {
                 Location location = event.getClickedBlock().getLocation();
-                for(Arena arena : plugin.getGameAPI().getGameInstanceManager().getArenas()) {
+                for(Arena arena : ArenaRegistry.getArenas()) {
                     if(arena.getSigns().contains(location)) {
                         arenaSign = arena;
                         break;
@@ -232,7 +233,7 @@ public class SignManager extends BukkitRunnable implements Listener {
             can teleport him using the joinAttempt() method.*/
 
             if(arenaSign != null) {
-                for(Arena arena : plugin.getGameAPI().getGameInstanceManager().getArenas()) {
+                for(Arena arena : ArenaRegistry.getArenas()) {
                     if(arena.getPlayers().contains(event.getPlayer())) {
                         event.getPlayer().sendMessage(ChatManager.getFromLanguageConfig("YouAreAlreadyIngame", ChatColor.RED + "You are already qeued for a game! You can leave a game with /leave."));
                         return;
@@ -250,8 +251,8 @@ public class SignManager extends BukkitRunnable implements Listener {
                             } else {
                                 if((arenaSign.getGameState() == ArenaState.STARTING || arenaSign.getGameState() == ArenaState.WAITING_FOR_PLAYERS)) {
                                     arenaSign.leaveAttempt(player);
-                                    player.sendMessage(plugin.getGameAPI().getGameInstanceManager().getArenas().get(0).getChatManager().getMessage("YouGotKickedToMakePlaceForAPremiumPlayer", ChatColor.RED + "You got kicked out of the game to make place for a premium player!"));
-                                    arenaSign.getChatManager().broadcastMessage(plugin.getGameAPI().getGameInstanceManager().getArenas().get(0).getChatManager().getMessage("KickedToMakePlaceForPremiumPlayer", "%PLAYER% got removed from the game to make place for a premium players!", player));
+                                    player.sendMessage(ArenaRegistry.getArenas().get(0).getChatManager().getMessage("YouGotKickedToMakePlaceForAPremiumPlayer", ChatColor.RED + "You got kicked out of the game to make place for a premium player!"));
+                                    arenaSign.getChatManager().broadcastMessage(ArenaRegistry.getArenas().get(0).getChatManager().getMessage("KickedToMakePlaceForPremiumPlayer", "%PLAYER% got removed from the game to make place for a premium players!", player));
                                     arenaSign.joinAttempt(event.getPlayer());
                                     b = true;
                                     return;
@@ -264,11 +265,11 @@ public class SignManager extends BukkitRunnable implements Listener {
 
                         }
                         if(!b) {
-                            event.getPlayer().sendMessage(plugin.getGameAPI().getGameInstanceManager().getArenas().get(0).getChatManager().getMessage("FullGameAlreadyFullWithPermiumPlayers", ChatColor.RED + "This game is already full with premium players! Sorry"));
+                            event.getPlayer().sendMessage(ArenaRegistry.getArenas().get(0).getChatManager().getMessage("FullGameAlreadyFullWithPermiumPlayers", ChatColor.RED + "This game is already full with premium players! Sorry"));
                         }
 
                     } else {
-                        event.getPlayer().sendMessage(plugin.getGameAPI().getGameInstanceManager().getArenas().get(0).getChatManager().getMessage("NoPermissionToJoinFullGames", "You don't have the permission to join full games!"));
+                        event.getPlayer().sendMessage(ArenaRegistry.getArenas().get(0).getChatManager().getMessage("NoPermissionToJoinFullGames", "You don't have the permission to join full games!"));
                     }
                     // instance.joinAttempt(event.getPlayer());
 

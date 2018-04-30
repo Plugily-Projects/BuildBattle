@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
 
 /**
  * @author Plajer
@@ -24,27 +25,27 @@ public class GameEvents implements Listener {
 
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
-        if(plugin.getGameAPI().getGameInstanceManager().getArena(event.getPlayer()) == null) return;
+        if(ArenaRegistry.getArena(event.getPlayer()) == null) return;
         event.setCancelled(true);
     }
 
     @EventHandler
     public void onBreak(BlockBreakEvent event) {
-        if(plugin.getGameAPI().getGameInstanceManager().getArena(event.getPlayer()) == null) return;
+        if(ArenaRegistry.getArena(event.getPlayer()) == null) return;
         event.setCancelled(true);
     }
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
-        if(plugin.getGameAPI().getGameInstanceManager().getArena(event.getPlayer()) == null) {
+        if(ArenaRegistry.getArena(event.getPlayer()) == null) {
             for(Player player : event.getRecipients()) {
-                if(plugin.getGameAPI().getGameInstanceManager().getArena(event.getPlayer()) == null) return;
+                if(ArenaRegistry.getArena(event.getPlayer()) == null) return;
                 event.getRecipients().remove(player);
 
             }
         }
         event.getRecipients().clear();
-        event.getRecipients().addAll(plugin.getGameAPI().getGameInstanceManager().getArena(event.getPlayer()).getPlayers());
+        event.getRecipients().addAll(ArenaRegistry.getArena(event.getPlayer()).getPlayers());
     }
 
 }
