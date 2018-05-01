@@ -2,6 +2,7 @@ package pl.plajer.buildbattle.entities;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
@@ -39,11 +40,11 @@ public class EntityMenuEvents implements Listener {
         Arena arena = ArenaRegistry.getArena(player);
         if(arena == null) return;
         event.setCancelled(true);
-        if(arena.getGameState() != ArenaState.INGAME || ((Arena) arena).isVoting()) return;
+        if(arena.getGameState() != ArenaState.INGAME || arena.isVoting()) return;
         EntityType type = event.getRightClicked().getType();
         if(type == EntityType.ITEM_FRAME || type == EntityType.ARMOR_STAND || type == EntityType.DROPPED_ITEM || type == EntityType.PRIMED_TNT || type == EntityType.FALLING_BLOCK || type == EntityType.COMPLEX_PART || type == EntityType.ENDER_CRYSTAL || type == EntityType.LEASH_HITCH || type == EntityType.MINECART || type == EntityType.MINECART_CHEST || type == EntityType.MINECART_FURNACE || type == EntityType.MINECART_COMMAND || type == EntityType.MINECART_HOPPER || type == EntityType.MINECART_MOB_SPAWNER || type == EntityType.MINECART_TNT || type == EntityType.PLAYER || type == EntityType.PAINTING || type == EntityType.WITHER_SKULL)
             return;
-        BuildBattleEntity buildBattleEntity = new BuildBattleEntity(event.getRightClicked());
+        BuildBattleEntity buildBattleEntity = new BuildBattleEntity(((LivingEntity) event.getRightClicked()));
         player.openInventory(buildBattleEntity.getMenu());
         links.put(player.getUniqueId(), buildBattleEntity);
 
