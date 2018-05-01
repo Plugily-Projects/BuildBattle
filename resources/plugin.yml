@@ -1,4 +1,4 @@
-main: me.tomthedeveloper.buildbattle.Main
+main: pl.plajer.buildbattle.Main
 version: 3.0.0-ALPHA
 name: BuildBattle
 depend: [WorldEdit]

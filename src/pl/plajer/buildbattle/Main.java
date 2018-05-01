@@ -238,7 +238,7 @@ public class Main extends JavaPlugin {
             }
             UserManager.removeUser(player.getUniqueId());
         }
-        getMySQLDatabase().closeDatabase();
+        if(databaseActivated) getMySQLDatabase().closeDatabase();
     }
 
     private void initializeClasses() {

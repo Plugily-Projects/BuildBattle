@@ -568,7 +568,7 @@ public class Arena extends BukkitRunnable {
                 //todo checks for future versions
                 //if(plugin.is1_8_R3()) {
                 for(Player player1 : getPlayers())
-                    MessageHandler.sendTitleMessage(player1, getChatManager().getMessage("Plot-Owner-Title-Message", ChatManager.PREFIX + "Plot Owner: " + ChatManager.HIGHLIGHTED + "%PLAYER%", player));
+                    MessageHandler.sendTitleMessage(player1, getChatManager().getMessage("Plot-Owner-Title-Message", ChatManager.PREFIX + "Plot Owner: " + ChatManager.HIGHLIGHTED + "%PLAYER%", player), 5, 20, 5, ChatColor.BLACK);
                 //}
                 getChatManager().broadcastMessage("Voting-For-Player-Plot", ChatManager.NORMAL + "Voting for " + ChatManager.HIGHLIGHTED + "%PLAYER%" + ChatManager.NORMAL + "'s plot!", player);
             }
@@ -588,7 +588,7 @@ public class Arena extends BukkitRunnable {
         //todo checks for future versions
         //if(plugin.is1_8_R3()) {
         for(Player player : getPlayers()) {
-            MessageHandler.sendTitleMessage(player, getChatManager().getMessage("Title-Winner-Message", ChatColor.YELLOW + "WINNER: " + ChatColor.GREEN + "%PLAYER%", plugin.getServer().getOfflinePlayer(toplist.get(1))));
+            MessageHandler.sendTitleMessage(player, getChatManager().getMessage("Title-Winner-Message", ChatColor.YELLOW + "WINNER: " + ChatColor.GREEN + "%PLAYER%", plugin.getServer().getOfflinePlayer(toplist.get(1))), 5, 40, 5, ChatColor.BLACK);
         }
         //}
         for(Player player : getPlayers()) {
