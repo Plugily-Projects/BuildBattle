@@ -60,6 +60,7 @@ public class Main extends JavaPlugin {
     private InventoryManager inventoryManager;
     private boolean inventoryManagerEnabled;
     private SignManager signManager;
+    private String version;
     private List<String> filesToGenerate = Arrays.asList("EntityMenu", "particles", "scoreboard", "signModification", "SpecialItems", "STATS", "voteItems", "MySQL");
 
     public static Permission getPerms() {
@@ -88,6 +89,14 @@ public class Main extends JavaPlugin {
 
     public boolean isInventoryManagerEnabled() {
         return inventoryManagerEnabled;
+    }
+
+    public boolean is1_8_R3() {
+        return version.equalsIgnoreCase("v1_8_R3");
+    }
+
+    public boolean is1_9_R1() {
+        return version.equalsIgnoreCase("v1_9_R1");
     }
 
     private void loadLanguageFile() {
@@ -162,6 +171,7 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
         new ConfigurationManager(this);
         initializeClasses();
         bungeeManager = new BungeeManager(this);

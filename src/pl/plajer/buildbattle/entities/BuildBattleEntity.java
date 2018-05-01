@@ -6,11 +6,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
+import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Cow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.MushroomCow;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.PigZombie;
@@ -20,6 +22,8 @@ import org.bukkit.entity.Wolf;
 import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
+import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.handlers.ChatManager;
 
 import java.util.HashSet;
@@ -29,9 +33,10 @@ import java.util.HashSet;
  */
 public class BuildBattleEntity {
 
-    private Entity entity;
+    private LivingEntity entity;
+    private Main plugin = JavaPlugin.getPlugin(Main.class);
 
-    public BuildBattleEntity(Entity entity) {
+    public BuildBattleEntity(LivingEntity entity) {
         this.entity = entity;
     }
 
@@ -66,10 +71,41 @@ public class BuildBattleEntity {
         return entity.getType() == EntityType.HORSE && ((Horse) entity).getInventory().getSaddle() == null;
     }
 
-    private void setSaddle(boolean b) {
+    public EntityType getType() {
+        return entity.getType();
+    }
+
+    private boolean isMoveable() {
+        if(plugin.is1_8_R3()) {
+            net.minecraft.server.v1_8_R3.Entity nmsEntity = ((CraftEntity) entity).getHandle();
+
+            NBTTagCompound tag = new NBTTagCompound();
+
+            nmsEntity.c(tag);
+            return !tag.getBoolean("NoAI");
+        } else {
+            return entity.hasAI();
+        }
+    }
+
+    public void toggleMoveable() {
+        if(plugin.is1_8_R3()) {
+            net.minecraft.server.v1_8_R3.Entity nmsEntity = ((CraftEntity) entity).getHandle();
+
+            NBTTagCompound tag = new NBTTagCompound();
+            nmsEntity.c(tag);
+            tag.setInt("NoAI", isMoveable() ? 1 : 0);
+            EntityLiving el = (EntityLiving) nmsEntity;
+            el.a(tag);
+        } else {
+            entity.setAI(!isMoveable());
+        }
+    }
+
+    public void switchSaddle() {
         if(entity.getType() == EntityType.HORSE) {
             Horse horse = (Horse) entity;
-            if(!b) {
+            if(!isSaddled()) {
                 horse.getInventory().setSaddle(new ItemStack(Material.SADDLE));
             } else {
                 horse.getInventory().setSaddle(new ItemStack(Material.AIR));
@@ -77,124 +113,11 @@ public class BuildBattleEntity {
         }
     }
 
-
-    public EntityType getType() {
-        return entity.getType();
-    }
-
-    private boolean isMoveable() {
-        net.minecraft.server.v1_8_R3.Entity nmsEntity = ((CraftEntity) entity).getHandle();
-
-        NBTTagCompound tag = new NBTTagCompound();
-
-        nmsEntity.c(tag);
-        return !tag.getBoolean("NoAI");
-    }
-
-    public void setMoveable(boolean moveable) {
-        if(isMoveable()) {
-            net.minecraft.server.v1_8_R3.Entity nmsEntity = ((CraftEntity) entity).getHandle();
-
-            NBTTagCompound tag = new NBTTagCompound();
-
-            nmsEntity.c(tag);
-            tag.setInt("NoAI", 1);
-            EntityLiving el = (EntityLiving) nmsEntity;
-            el.a(tag);
-        } else {
-            net.minecraft.server.v1_8_R3.Entity nmsEntity = ((CraftEntity) entity).getHandle();
-
-            NBTTagCompound tag = new NBTTagCompound();
-
-            nmsEntity.c(tag);
-            tag.setInt("NoAI", 0);
-            EntityLiving el = (EntityLiving) nmsEntity;
-            el.a(tag);
-        }
-    }
-
-    public void switchSaddle() {
-        setSaddle(!isSaddled());
-    }
-
-    public void switchMoveeable() {
-        setMoveable(!isMoveable());
-    }
-
     public void switchAge() {
-        setBaby(isAdult());
-    }
-
-    private void setBaby(boolean baby) {
-        switch(entity.getType()) {
-            case COW:
-                Cow cow = (Cow) entity;
-                if(cow.isAdult()) {
-                    cow.setBaby();
-                } else {
-                    cow.setAdult();
-                }
-                break;
-            case SHEEP:
-                Sheep sheep = (Sheep) entity;
-                if(sheep.isAdult()) {
-                    sheep.setBaby();
-                } else {
-                    sheep.setAdult();
-                }
-                break;
-            case PIG:
-                Pig pig = (Pig) entity;
-                if(pig.isAdult()) {
-                    pig.setBaby();
-                } else {
-                    pig.setAdult();
-                }
-                break;
-            case WOLF:
-                Wolf wolf = (Wolf) entity;
-                if(wolf.isAdult()) {
-                    wolf.setBaby();
-                } else {
-                    wolf.setAdult();
-                }
-                break;
-            case ZOMBIE:
-                ((Zombie) entity).setBaby(baby);
-                break;
-            case PIG_ZOMBIE:
-                ((PigZombie) entity).setBaby(baby);
-                break;
-            case CHICKEN:
-                Chicken chicken = (Chicken) entity;
-                if(chicken.isAdult()) {
-                    chicken.setBaby();
-                } else {
-                    chicken.setAdult();
-                }
-                break;
-            case HORSE:
-                Horse horse = (Horse) entity;
-                if(horse.isAdult()) {
-                    horse.setBaby();
-                } else {
-                    horse.setAdult();
-                }
-                break;
-            case MUSHROOM_COW:
-                MushroomCow mushroomCow = (MushroomCow) entity;
-                if(mushroomCow.isAdult()) {
-                    mushroomCow.setBaby();
-                } else {
-                    mushroomCow.setAdult();
-                }
-                break;
-            case VILLAGER:
-                Villager villager = (Villager) entity;
-                if(villager.isAdult()) villager.setBaby();
-                else villager.setAdult();
-            default:
-                break;
+        if(((Ageable) entity).isAdult()) {
+            ((Ageable) entity).setBaby();
+        } else {
+            ((Ageable) entity).setAdult();
         }
     }
 
@@ -234,17 +157,18 @@ public class BuildBattleEntity {
     }
 
     public void setLook(Location location) {
-        net.minecraft.server.v1_8_R3.Entity nmsEntity = ((CraftEntity) entity).getHandle();
-
-        NBTTagCompound tag = new NBTTagCompound();
-
-        nmsEntity.c(tag);
-        int AI = tag.getInt("NoAI");
-        tag.setInt("NoAI", 0);
         entity.teleport(new Location(entity.getLocation().getWorld(), entity.getLocation().getX(), entity.getLocation().getY(), entity.getLocation().getZ(), location.getYaw(), -location.getPitch()));
-        tag.setInt("NoAI", AI);
-        EntityLiving el = (EntityLiving) nmsEntity;
-        el.a(tag);
+
+        if(plugin.is1_8_R3()) {
+            net.minecraft.server.v1_8_R3.Entity nmsEntity = ((CraftEntity) entity).getHandle();
+            NBTTagCompound tag = new NBTTagCompound();
+            nmsEntity.c(tag);
+            tag.setInt("NoAI", 1);
+            EntityLiving el = (EntityLiving) nmsEntity;
+            el.a(tag);
+        } else {
+            entity.setAI(false);
+        }
     }
 
     public class InventoryBuilder {

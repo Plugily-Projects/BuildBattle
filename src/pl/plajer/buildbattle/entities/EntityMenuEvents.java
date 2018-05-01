@@ -74,7 +74,7 @@ public class EntityMenuEvents implements Listener {
             player.closeInventory();
             event.setCancelled(true);
         } else if(key.equalsIgnoreCase("Move-On") || key.equalsIgnoreCase("Move-Off")) {
-            links.get(player.getUniqueId()).switchMoveeable();
+            links.get(player.getUniqueId()).toggleMoveable();
             event.setCancelled(true);
             player.closeInventory();
 
