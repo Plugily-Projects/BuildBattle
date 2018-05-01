@@ -25,7 +25,7 @@ public class IngameMenu {
     }
 
     private static Inventory createMenu(BuildPlot plot) {
-        Inventory inv = Bukkit.createInventory(null, 3 * 9, ChatManager.getSingleMessage("Ingame-Menu-Name", "Option Menu"));
+        Inventory inv = Bukkit.createInventory(null, 5 * 9, ChatManager.getSingleMessage("Ingame-Menu-Name", "Option Menu"));
 
         ItemStack headOption = new ItemStack(Material.SKULL_ITEM, 1);
         headOption.setTypeId((byte) SkullType.PLAYER.ordinal());
@@ -51,6 +51,13 @@ public class IngameMenu {
         floorMeta.setLore(lore);
         floorOption.setItemMeta(floorMeta);
         inv.setItem(15, floorOption);
+
+        ItemStack bannerOption = new ItemStack(Material.BANNER, 1);
+        ItemMeta bannerMeta = bannerOption.getItemMeta();
+        bannerMeta.setDisplayName(ChatManager.getSingleMessage("Banner-Option-Name", ChatColor.GREEN + "Banner Creator"));
+        particleMeta.setLore(Collections.singletonList(ChatManager.getSingleMessage("Banner-Option-Lore", ChatColor.GRAY + "Click to open banner creator")));
+        bannerOption.setItemMeta(bannerMeta);
+        inv.setItem(29, bannerOption);
         return inv;
     }
 

@@ -253,90 +253,75 @@ public class IngameEvents implements Listener {
     }
 
     @EventHandler
-    public void onFloorChange(InventoryClickEvent event) {
-        if(event.getCurrentItem() == null) return;
-        if(!event.getCurrentItem().hasItemMeta()) return;
-        if(!event.getCurrentItem().getItemMeta().hasDisplayName()) return;
-        ItemStack currentItem = event.getCurrentItem();
-        String displayName = event.getCurrentItem().getItemMeta().getDisplayName();
-        Player player = (Player) event.getWhoClicked();
-        // if(event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.getSingleMessage("Ingame-Menu-Name", "Option Menu")))
-        //   event.setCancelled(true);
-
-
-        Arena arena = ArenaRegistry.getArena((Player) event.getWhoClicked());
+    public void onOptionMenuClick(InventoryClickEvent e) {
+        if(e.getInventory() == null) return;
+        if(e.getCurrentItem() == null) return;
+        if(!e.getCurrentItem().hasItemMeta()) return;
+        if(!e.getCurrentItem().getItemMeta().hasDisplayName()) return;
+        String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
+        Player player = (Player) e.getWhoClicked();
+        if(e.getInventory().getName().equals(ChatManager.getSingleMessage("Ingame-Menu-Name", "Option Menu"))){
+            e.setCancelled(true);
+        }
+        Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
         if(arena == null) return;
 
         if(arena.getGameState() != ArenaState.INGAME) return;
         if(displayName.equalsIgnoreCase(ChatManager.getSingleMessage("Particle-Option-Name", ChatColor.GREEN + "Particles"))) {
-            event.setCancelled(true);
-            event.getWhoClicked().closeInventory();
-            ParticleMenu.openMenu(player, arena.getPlotManager().getPlot((Player) event.getWhoClicked()));
+            e.getWhoClicked().closeInventory();
+            ParticleMenu.openMenu(player, arena.getPlotManager().getPlot((Player) e.getWhoClicked()));
             return;
-        }
-        String inventoryName = event.getInventory().getName();
-        if(inventoryName.equalsIgnoreCase(ChatManager.getSingleMessage("Particle-Remove-Menu-Name", "Remove Particles"))) {
-            event.setCancelled(true);
-            ParticleRemoveMenu.onClick(event.getInventory(), event.getCurrentItem(), arena.getPlotManager().getPlot(player));
-
+        } else if(e.getInventory().getName().equalsIgnoreCase(ChatManager.getSingleMessage("Particle-Remove-Menu-Name", "Remove Particles"))) {
+            ParticleRemoveMenu.onClick(e.getInventory(), e.getCurrentItem(), arena.getPlotManager().getPlot(player));
             return;
-        }
-        if(inventoryName.equalsIgnoreCase(ChatManager.getSingleMessage("Player-Head-Main-Inventory-Name", "Player Head Menu"))) {
-            event.setCancelled(true);
-            PlayerHeadsMenu.onClickInMainMenu(player, event.getCurrentItem());
-
+        } else if(e.getInventory().getName().equalsIgnoreCase(ChatManager.getSingleMessage("Player-Head-Main-Inventory-Name", "Player Head Menu"))) {
+            PlayerHeadsMenu.onClickInMainMenu(player, e.getCurrentItem());
             return;
-        }
-        if(PlayerHeadsMenu.getMenuNames().contains(event.getInventory().getName())) {
-            event.setCancelled(true);
-            PlayerHeadsMenu.onClickInDeeperMenu(player, event.getCurrentItem(), event.getInventory().getName());
+        } else if(PlayerHeadsMenu.getMenuNames().contains(e.getInventory().getName())) {
+            PlayerHeadsMenu.onClickInDeeperMenu(player, e.getCurrentItem(), e.getInventory().getName());
             return;
-        }
-        if(displayName.equalsIgnoreCase(ChatManager.getSingleMessage("Heads-Option-Name", ChatColor.GREEN + "Particles"))) {
-
-            event.setCancelled(true);
+        } else if(displayName.equalsIgnoreCase(ChatManager.getSingleMessage("Heads-Option-Name", ChatColor.GREEN + "Particles"))) {
             PlayerHeadsMenu.openMenu(player);
-        }
-        if(inventoryName.equalsIgnoreCase(ChatManager.getSingleMessage("Particle-Menu-Name", "Particle Menu"))) {
-
+            return;
+        } else if(e.getInventory().getName().equalsIgnoreCase(ChatManager.getSingleMessage("Particle-Menu-Name", "Particle Menu"))) {
             if(displayName.contains(ChatManager.getSingleMessage("Remove-Particle-Item-Name", ChatColor.RED + "Remove Particles"))) {
-                event.setCancelled(true);
-                event.getWhoClicked().closeInventory();
-                ParticleRemoveMenu.openMenu(player, arena.getPlotManager().getPlot((Player) event.getWhoClicked()));
+                e.getWhoClicked().closeInventory();
+                ParticleRemoveMenu.openMenu(player, arena.getPlotManager().getPlot((Player) e.getWhoClicked()));
                 return;
             }
-            ParticleMenu.onClick(player, event.getCurrentItem(), arena.getPlotManager().getPlot((Player) event.getWhoClicked()));
-
-            event.setCancelled(true);
-        }
-        if(event.getCursor() == null) {
-            event.setCancelled(true);
+            ParticleMenu.onClick(player, e.getCurrentItem(), arena.getPlotManager().getPlot((Player) e.getWhoClicked()));
+            return;
+        } else if(e.getInventory().getName().equalsIgnoreCase(ChatManager.getSingleMessage("Banner-Option-Name", ChatColor.GREEN + "Banner Creator"))){
+            e.getWhoClicked().closeInventory();
+            e.getWhoClicked().sendMessage("Soon :)");
             return;
         }
-        if(!((event.getCursor().getType().isBlock() && event.getCursor().getType().isSolid()) || event.getCursor().getType() == Material.WATER_BUCKET || event.getCursor().getType() == Material.LAVA_BUCKET)) {
-            event.setCancelled(true);
+        if(e.getCursor() == null) {
+            return;
+        }
+        if(!((e.getCursor().getType().isBlock() && e.getCursor().getType().isSolid()) || e.getCursor().getType() == Material.WATER_BUCKET || e.getCursor().getType() == Material.LAVA_BUCKET)) {
             return;
         }
 
-        if(event.getCursor().getType() == null || event.getCursor().getType() == Material.SAPLING || event.getCursor().getType() == Material.TRAP_DOOR || event.getCursor().getType() == Material.WOOD_DOOR || event.getCursor().getType() == Material.IRON_TRAPDOOR || event.getCursor().getType() == Material.WOODEN_DOOR || event.getCursor().getType() == Material.ACACIA_DOOR || event.getCursor().getType() == Material.BIRCH_DOOR || event.getCursor().getType() == Material.WOOD_DOOR || event.getCursor().getType() == Material.JUNGLE_DOOR || event.getCursor().getType() == Material.SPRUCE_DOOR || event.getCursor().getType() == Material.IRON_DOOR || event.getCursor().getType() == Material.CHEST || event.getCursor().getType() == Material.TRAPPED_CHEST || event.getCursor().getType() == Material.FENCE_GATE || event.getCursor().getType() == Material.BED || event.getCursor().getType() == Material.LADDER || event.getCursor().getType() == Material.JUNGLE_FENCE_GATE || event.getCursor().getType() == Material.JUNGLE_DOOR_ITEM || event.getCursor().getType() == Material.SIGN || event.getCursor().getType() == Material.SIGN_POST || event.getCursor().getType() == Material.WALL_SIGN || event.getCursor().getType() == Material.CACTUS || event.getCursor().getType() == Material.ENDER_CHEST || event.getCursor().getType() == Material.PISTON_BASE
+        if(e.getCursor().getType() == null || e.getCursor().getType() == Material.SAPLING || e.getCursor().getType() == Material.TRAP_DOOR || e.getCursor().getType() == Material.WOOD_DOOR || e.getCursor().getType() == Material.IRON_TRAPDOOR || e.getCursor().getType() == Material.WOODEN_DOOR || e.getCursor().getType() == Material.ACACIA_DOOR || e.getCursor().getType() == Material.BIRCH_DOOR || e.getCursor().getType() == Material.WOOD_DOOR || e.getCursor().getType() == Material.JUNGLE_DOOR || e.getCursor().getType() == Material.SPRUCE_DOOR || e.getCursor().getType() == Material.IRON_DOOR || e.getCursor().getType() == Material.CHEST || e.getCursor().getType() == Material.TRAPPED_CHEST || e.getCursor().getType() == Material.FENCE_GATE || e.getCursor().getType() == Material.BED || e.getCursor().getType() == Material.LADDER || e.getCursor().getType() == Material.JUNGLE_FENCE_GATE || e.getCursor().getType() == Material.JUNGLE_DOOR_ITEM || e.getCursor().getType() == Material.SIGN || e.getCursor().getType() == Material.SIGN_POST || e.getCursor().getType() == Material.WALL_SIGN || e.getCursor().getType() == Material.CACTUS || e.getCursor().getType() == Material.ENDER_CHEST || e.getCursor().getType() == Material.PISTON_BASE
 
-                || event.getCursor().getType() == Material.TNT || event.getCursor().getType() == Material.AIR) {
-            event.setCancelled(true);
+                || e.getCursor().getType() == Material.TNT || e.getCursor().getType() == Material.AIR) {
+            e.setCancelled(true);
             return;
         }
         if(displayName.equalsIgnoreCase(ChatManager.getSingleMessage("Floor-Option-Name", ChatColor.GREEN + "Floor Material"))) {
-            arena.getPlotManager().getPlot(player).changeFloor(event.getCursor().getType(), event.getCursor().getData().getData());
+            arena.getPlotManager().getPlot(player).changeFloor(e.getCursor().getType(), e.getCursor().getData().getData());
             player.sendMessage(ChatManager.getSingleMessage("Floor-Changed", ChatColor.GREEN + "Floor changed!"));
-            event.getCursor().setAmount(0);
-            event.getCursor().setType(Material.AIR);
-            event.getCurrentItem().setType(Material.AIR);
+            e.getCursor().setAmount(0);
+            e.getCursor().setType(Material.AIR);
+            e.getCurrentItem().setType(Material.AIR);
             player.closeInventory();
             for(Entity entity : player.getNearbyEntities(5, 5, 5)) {
                 if(entity.getType() == EntityType.DROPPED_ITEM) {
                     entity.remove();
                 }
             }
-            event.setCancelled(true);
+            e.setCancelled(true);
         }
 
     }

@@ -24,18 +24,6 @@ public class GameEvents implements Listener {
     }
 
     @EventHandler
-    public void onPlace(BlockPlaceEvent event) {
-        if(ArenaRegistry.getArena(event.getPlayer()) == null) return;
-        event.setCancelled(true);
-    }
-
-    @EventHandler
-    public void onBreak(BlockBreakEvent event) {
-        if(ArenaRegistry.getArena(event.getPlayer()) == null) return;
-        event.setCancelled(true);
-    }
-
-    @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
         if(ArenaRegistry.getArena(event.getPlayer()) == null) {
             for(Player player : event.getRecipients()) {

@@ -196,7 +196,6 @@ public class Main extends JavaPlugin {
         new EntityMenuEvents(this);
         ParticleHandler particleHandler = new ParticleHandler(this);
         particleHandler.start();
-        if(!this.getConfig().contains("DatabaseActivated")) this.getConfig().set("DatabaseActivated", false);
         this.saveConfig();
         databaseActivated = this.getConfig().getBoolean("DatabaseActivated");
         if(databaseActivated) this.database = new MySQLDatabase(this);

@@ -61,12 +61,6 @@ public class SetupInventoryEvents implements Listener {
             player.performCommand("bb " + arena.getID() + " set ENDLOC");
             return;
         }
-        if(name.contains("Start Location")) {
-            event.setCancelled(true);
-
-            player.performCommand("bb " + arena.getID() + " set STARTLOC");
-            return;
-        }
         if(name.contains("Lobby Location")) {
             event.setCancelled(true);
             player.performCommand("bb " + arena.getID() + " set LOBBYLOC");
