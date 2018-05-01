@@ -260,7 +260,7 @@ public class IngameEvents implements Listener {
         if(!e.getCurrentItem().getItemMeta().hasDisplayName()) return;
         String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
         Player player = (Player) e.getWhoClicked();
-        if(e.getInventory().getName().equals(ChatManager.getSingleMessage("Ingame-Menu-Name", "Option Menu"))){
+        if(e.getInventory().getName().equals(ChatManager.getSingleMessage("Ingame-Menu-Name", "Option Menu"))) {
             e.setCancelled(true);
         }
         Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
@@ -291,7 +291,7 @@ public class IngameEvents implements Listener {
             }
             ParticleMenu.onClick(player, e.getCurrentItem(), arena.getPlotManager().getPlot((Player) e.getWhoClicked()));
             return;
-        } else if(e.getInventory().getName().equalsIgnoreCase(ChatManager.getSingleMessage("Banner-Option-Name", ChatColor.GREEN + "Banner Creator"))){
+        } else if(e.getInventory().getName().equalsIgnoreCase(ChatManager.getSingleMessage("Banner-Option-Name", ChatColor.GREEN + "Banner Creator"))) {
             e.getWhoClicked().closeInventory();
             e.getWhoClicked().sendMessage("Soon :)");
             return;

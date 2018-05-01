@@ -416,10 +416,6 @@ public class GameCommands implements CommandExecutor {
         return true;
     }
 
-    private enum LocationType {
-        LOBBY, END, START
-    }
-
     public List<Sign> getSigns() {
         List<Sign> list = new ArrayList<>();
         for(String s : plugin.getConfig().getConfigurationSection("signs").getKeys(false)) {
@@ -428,6 +424,10 @@ public class GameCommands implements CommandExecutor {
             if(location.getBlock().getState() instanceof Sign) list.add((Sign) location.getBlock().getState());
         }
         return list;
+    }
+
+    private enum LocationType {
+        LOBBY, END, START
     }
 
 }
