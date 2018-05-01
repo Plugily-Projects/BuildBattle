@@ -405,7 +405,7 @@ public class IngameEvents implements Listener {
                             return;
                         } else {
                             buildplot.addEntity();
-                            new BuildBattleEntity(event.getEntity()).toggleMoveable(false);
+                            new BuildBattleEntity(event.getEntity()).toggleMoveable();
                         }
 
                     }
