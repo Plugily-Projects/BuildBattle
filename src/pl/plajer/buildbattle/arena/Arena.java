@@ -181,16 +181,12 @@ public class Arena extends BukkitRunnable {
         if(!this.scoreboardDisabled) updateScoreboard();
         updateNewSign();
         if(BAR_ENABLED) {
-
-
             updateBar();
         }
         switch(getGameState()) {
-
             case WAITING_FOR_PLAYERS:
                 getPlotManager().resetPlotsGradually();
                 if(getPlayers().size() < getMIN_PLAYERS()) {
-
                     if(getTimer() <= 0) {
                         setTimer(LOBBY_STARTING_TIMER);
                         getChatManager().broadcastMessage("Waiting-For-Players-Message");
@@ -200,14 +196,11 @@ public class Arena extends BukkitRunnable {
                     getChatManager().broadcastMessage("Enough-Players-To-Start", "We now have enough players. The game is starting soon!");
                     setGameState(ArenaState.STARTING);
                     Bukkit.getPluginManager().callEvent(new GameStartEvent(this));
-
                     setTimer(LOBBY_STARTING_TIMER);
                     this.showPlayers();
-
                 }
                 setTimer(getTimer() - 1);
                 break;
-
             case STARTING:
                 if(getTimer() == 0) {
                     extracounter = 0;
@@ -228,7 +221,6 @@ public class Arena extends BukkitRunnable {
                     getChatManager().broadcastMessage("The-Game-Has-Started", "The game has started! Start building guys!!");
                 }
                 setTimer(getTimer() - 1);
-
                 break;
             case INGAME:
                 if(getPlayers().size() <= 1) {
@@ -256,7 +248,6 @@ public class Arena extends BukkitRunnable {
                     }
                     extracounter++;
                 } else if(getTimer() == 0 && !receivedVoteItems) {
-
                     for(Player player : getPlayers()) {
                         queue.add(player.getUniqueId());
                     }
@@ -293,7 +284,6 @@ public class Arena extends BukkitRunnable {
                         }
                         this.setGameState(ArenaState.ENDING);
                         Bukkit.getPluginManager().callEvent(new GameEndEvent(this));
-
                         setTimer(10);
                     }
 
@@ -378,12 +368,9 @@ public class Arena extends BukkitRunnable {
                         BossBarAPI.setMessage(player, ChatManager.formatMessage(ChatManager.getSingleMessage("Time-Left-Bar-Message", ChatManager.formatMessage(ChatManager.PREFIX + "Time left :" + ChatManager.HIGHLIGHTED + " %FORMATTEDTIME%")), getTimer()));
                     } else {
                         BossBarAPI.setMessage(player, ChatManager.formatMessage(ChatManager.getSingleMessage("Vote-Time-Left-Bar-Message", ChatManager.PREFIX + "Vote Time left :" + ChatManager.HIGHLIGHTED + " %FORMATTEDTIME%"), getTimer()));
-
                     }
                     break;
             }
-
-
         }
     }
 

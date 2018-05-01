@@ -1,8 +1,6 @@
 package pl.plajer.buildbattle;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
-import com.sk89q.worldedit.bukkit.selections.Selection;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
@@ -19,8 +17,6 @@ import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.commands.GameCommands;
-import pl.plajer.buildbattle.commands.InstanceCommands;
-import pl.plajer.buildbattle.commands.SignCommands;
 import pl.plajer.buildbattle.entities.EntityItem;
 import pl.plajer.buildbattle.entities.EntityMenuEvents;
 import pl.plajer.buildbattle.events.GameEvents;
@@ -54,7 +50,7 @@ import java.util.List;
 /**
  * Created by Tom on 17/08/2015.
  */
-public class Main extends JavaPlugin implements CommandsInterface {
+public class Main extends JavaPlugin {
 
     private static Economy econ = null;
     private static Permission perms = null;
@@ -169,8 +165,6 @@ public class Main extends JavaPlugin implements CommandsInterface {
     @Override
     public void onEnable() {
         new ConfigurationManager(this);
-        getCommand("buildbattle").setExecutor(new InstanceCommands(this, this));
-        getCommand("addsigns").setExecutor(new SignCommands(this));
         initializeClasses();
         bungeeManager = new BungeeManager(this);
         inventoryManager = new InventoryManager(this);
@@ -281,90 +275,6 @@ public class Main extends JavaPlugin implements CommandsInterface {
         return econ != null;
     }
 
-    public boolean checkPlayerCommands(Player player, Command command, String s, String[] strings) {
-        if(strings.length == 2 && strings[0].equalsIgnoreCase("join")) {
-            Arena arena = ArenaRegistry.getArena(strings[1]);
-            if(arena == null) {
-                player.sendMessage(ChatManager.getSingleMessage("Arena-Does-Not-Exist", ChatColor.RED + "This arena does not exist!"));
-                return true;
-            } else {
-                if(arena.getPlayers().size() >= arena.getMAX_PLAYERS() && !UserManager.getUser(player.getUniqueId()).isPremium()) {
-                    player.sendMessage(ChatManager.getSingleMessage("Arena-Is-Full", ChatColor.RED + "This arena does not exist!"));
-                    return true;
-                } else if(arena.getGameState() == ArenaState.INGAME) {
-                    player.sendMessage(ChatManager.getSingleMessage("Arena-Is-Already-Started", ChatColor.RED + "This arena is already started!"));
-                    return true;
-                } else {
-                    arena.joinAttempt(player);
-                }
-            }
-        }
-        return false;
-    }
-
-
-    public boolean checkSpecialCommands(Player player, Command command, String s, String[] args) {
-        if(args.length == 0) {
-            player.sendMessage(ChatColor.GOLD + "----------------{BuildBattle Commands}----------");
-            player.sendMessage(ChatColor.AQUA + "/BuildBattle create <ARENAID>: " + ChatColor.GRAY + "Create an arena!");
-            player.sendMessage(ChatColor.AQUA + "/BuildBattle <ARENAID> edit: " + ChatColor.GRAY + "Opens the menu to edit the arena!");
-            player.sendMessage(ChatColor.AQUA + "/BuildBattle addplot <ARENAID>: " + ChatColor.GRAY + "Adds a plot to the arena");
-            player.sendMessage(ChatColor.AQUA + "/BuildBattle forcestart: " + ChatColor.GRAY + "Forcestarts the arena u are in");
-            player.sendMessage(ChatColor.AQUA + "/BuildBattle reload: " + ChatColor.GRAY + "Reloads plugin");
-            player.sendMessage(ChatColor.GOLD + "-------------------------------------------------");
-            return true;
-        }
-        if(args.length == 2 && args[0].equalsIgnoreCase("addplot")) {
-            if(ArenaRegistry.getArena(args[1]) == null) {
-                player.sendMessage(ChatColor.RED + "That gameinstance doesn't exist!");
-                return true;
-            }
-            Selection selection = getWorldEditPlugin().getSelection(player);
-            if(selection instanceof CuboidSelection) {
-                if(getConfig().contains("instances." + args[1] + ".plots")) {
-                    Util.saveLoc("instances." + args[1] + ".plots." + (getConfig().getConfigurationSection("instances." + args[1] + ".plots").getKeys(false).size() + 1) + ".minpoint", selection.getMinimumPoint());
-                    Util.saveLoc("instances." + args[1] + ".plots." + (getConfig().getConfigurationSection("instances." + args[1] + ".plots").getKeys(false).size()) + ".maxpoint", selection.getMaximumPoint());
-                } else {
-                    Util.saveLoc("instances." + args[1] + ".plots.0.minpoint", selection.getMinimumPoint());
-                    Util.saveLoc("instances." + args[1] + ".plots.0.maxpoint", selection.getMaximumPoint());
-                }
-                this.saveConfig();
-                player.sendMessage(ChatColor.GREEN + "Plot added to instance " + ChatColor.RED + args[1]);
-            } else {
-                player.sendMessage(ChatColor.RED + "U don't have the right selection!");
-            }
-            return true;
-        }
-        if(args.length == 1 && args[0].equalsIgnoreCase("forcestart")) {
-            if(ArenaRegistry.getArena(player) == null) return false;
-            Arena invasionInstance = ArenaRegistry.getArena(player);
-            if(invasionInstance.getGameState() == ArenaState.WAITING_FOR_PLAYERS) {
-                invasionInstance.setGameState(ArenaState.STARTING);
-                invasionInstance.getChatManager().broadcastMessage("Admin-ForceStart-Game", ChatManager.HIGHLIGHTED + "An admin forcestarted the game!");
-                return true;
-            }
-            if(invasionInstance.getGameState() == ArenaState.STARTING) {
-                invasionInstance.setTimer(0);
-                invasionInstance.getChatManager().broadcastMessage("Admin-Set-Starting-In-To-0", ChatManager.HIGHLIGHTED + "An admin set waiting time to 0. Game starts now!");
-                return true;
-            }
-        }
-        if(args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-            ConfigPreferences.loadOptions();
-            ConfigPreferences.loadOptions();
-            ConfigPreferences.loadThemes();
-            ConfigPreferences.loadBlackList();
-            ConfigPreferences.loadWinCommands();
-            ConfigPreferences.loadSecondPlaceCommands();
-            ConfigPreferences.loadThirdPlaceCommands();
-            ConfigPreferences.loadEndGameCommands();
-            ConfigPreferences.loadWhitelistedCommands();
-            this.loadInstances();
-            player.sendMessage(ChatColor.GREEN + "Plugin reloaded!");
-        }
-        return false;
-    }
-
     public MySQLDatabase getMySQLDatabase() {
         return database;
     }
@@ -380,32 +290,30 @@ public class Main extends JavaPlugin implements CommandsInterface {
         }
         ArenaRegistry.getArenas().clear();
         for(String ID : this.getConfig().getConfigurationSection("instances").getKeys(false)) {
-            Arena earthMasterInstance;
+            Arena arena;
             String s = "instances." + ID + ".";
             if(s.contains("default")) continue;
 
+            arena = new Arena(ID);
 
-            earthMasterInstance = new Arena(ID);
-
-
-            if(getConfig().contains(s + "minimumplayers")) earthMasterInstance.setMIN_PLAYERS(getConfig().getInt(s + "minimumplayers"));
-            else earthMasterInstance.setMIN_PLAYERS(getConfig().getInt("instances.default.minimumplayers"));
-            if(getConfig().contains(s + "maximumplayers")) earthMasterInstance.setMAX_PLAYERS(getConfig().getInt(s + "maximumplayers"));
-            else earthMasterInstance.setMAX_PLAYERS(getConfig().getInt("instances.default.maximumplayers"));
-            if(getConfig().contains(s + "mapname")) earthMasterInstance.setMapName(getConfig().getString(s + "mapname"));
-            else earthMasterInstance.setMapName(getConfig().getString("instances.default.mapname"));
-            if(getConfig().contains(s + "lobbylocation")) earthMasterInstance.setLobbyLocation(Util.getLocation(s + "lobbylocation"));
-            if(getConfig().contains(s + "Startlocation")) earthMasterInstance.setStartLocation(Util.getLocation(s + "Startlocation"));
+            if(getConfig().contains(s + "minimumplayers")) arena.setMIN_PLAYERS(getConfig().getInt(s + "minimumplayers"));
+            else arena.setMIN_PLAYERS(getConfig().getInt("instances.default.minimumplayers"));
+            if(getConfig().contains(s + "maximumplayers")) arena.setMAX_PLAYERS(getConfig().getInt(s + "maximumplayers"));
+            else arena.setMAX_PLAYERS(getConfig().getInt("instances.default.maximumplayers"));
+            if(getConfig().contains(s + "mapname")) arena.setMapName(getConfig().getString(s + "mapname"));
+            else arena.setMapName(getConfig().getString("instances.default.mapname"));
+            if(getConfig().contains(s + "lobbylocation")) arena.setLobbyLocation(Util.getLocation(s + "lobbylocation"));
+            if(getConfig().contains(s + "Startlocation")) arena.setStartLocation(Util.getLocation(s + "Startlocation"));
             else {
                 System.out.print(ID + " doesn't contains an start location!");
-                ArenaRegistry.registerArena(earthMasterInstance);
+                ArenaRegistry.registerArena(arena);
                 continue;
             }
-            if(getConfig().contains(s + "Endlocation")) earthMasterInstance.setEndLocation(Util.getLocation(s + "Endlocation"));
+            if(getConfig().contains(s + "Endlocation")) arena.setEndLocation(Util.getLocation(s + "Endlocation"));
             else {
                 if(!bungeeActivated) {
                     System.out.print(ID + " doesn't contains an end location!");
-                    ArenaRegistry.registerArena(earthMasterInstance);
+                    ArenaRegistry.registerArena(arena);
                     continue;
                 }
             }
@@ -415,27 +323,24 @@ public class Main extends JavaPlugin implements CommandsInterface {
                     buildPlot.setMAXPOINT(Util.getLocation(s + "plots." + plotname + ".maxpoint"));
                     buildPlot.setMINPOINT(Util.getLocation(s + "plots." + plotname + ".minpoint"));
                     buildPlot.reset();
-                    earthMasterInstance.getPlotManager().addBuildPlot(buildPlot);
+                    arena.getPlotManager().addBuildPlot(buildPlot);
                 }
 
             } else {
                 System.out.print("Instance doesn't contains plots!");
             }
-            if(getConfig().contains("newsigns." + earthMasterInstance.getID())) {
-                for(String key : getConfig().getConfigurationSection("newsigns." + earthMasterInstance.getID()).getKeys(false)) {
-                    if(Util.getLocation("newsigns." + earthMasterInstance.getID() + "." + key).getBlock().getState() instanceof Sign) {
-                        earthMasterInstance.addSign(Util.getLocation("newsigns." + earthMasterInstance.getID() + "." + key));
+            if(getConfig().contains("newsigns." + arena.getID())) {
+                for(String key : getConfig().getConfigurationSection("newsigns." + arena.getID()).getKeys(false)) {
+                    if(Util.getLocation("newsigns." + arena.getID() + "." + key).getBlock().getState() instanceof Sign) {
+                        arena.addSign(Util.getLocation("newsigns." + arena.getID() + "." + key));
                     } else {
-                        Location location = Util.getLocation("newsigns." + earthMasterInstance.getID() + "." + key);
+                        Location location = Util.getLocation("newsigns." + arena.getID() + "." + key);
                         System.out.println("SIGN ON LOCATION " + location.getX() + ", " + location.getY() + ", " + location.getZ() + "iIN WORLD " + location.getWorld().getName() + "ISN'T A SIGN!");
                     }
                 }
             }
-
-            ArenaRegistry.registerArena(earthMasterInstance);
-            earthMasterInstance.start();
-
-
+            ArenaRegistry.registerArena(arena);
+            arena.start();
         }
     }
 
