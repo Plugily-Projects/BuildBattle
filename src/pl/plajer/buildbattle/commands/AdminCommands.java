@@ -27,7 +27,7 @@ public class AdminCommands extends GameCommands {
         this.plugin = plugin;
     }
 
-    public void addPlot(Player player, String arena){
+    public void addPlot(Player player, String arena) {
         if(ArenaRegistry.getArena(arena) == null) {
             player.sendMessage(ChatColor.RED + "This arena doesn't exist!");
             return;
@@ -48,7 +48,7 @@ public class AdminCommands extends GameCommands {
         }
     }
 
-    public void forceStart(Player player){
+    public void forceStart(Player player) {
         Arena arena = ArenaRegistry.getArena(player);
         if(arena == null) return;
         if(arena.getGameState() == ArenaState.WAITING_FOR_PLAYERS) {
@@ -60,7 +60,7 @@ public class AdminCommands extends GameCommands {
         }
     }
 
-    public void reloadPlugin(Player player){
+    public void reloadPlugin(Player player) {
         ConfigPreferences.loadOptions();
         ConfigPreferences.loadOptions();
         ConfigPreferences.loadThemes();
@@ -74,7 +74,7 @@ public class AdminCommands extends GameCommands {
         player.sendMessage(ChatColor.GREEN + "Plugin reloaded!");
     }
 
-    public void addSign(Player player, String arenaName){
+    public void addSign(Player player, String arenaName) {
         Arena arena = ArenaRegistry.getArena(arenaName);
         if(arena == null) {
             player.sendMessage(ChatColor.RED + "Arena doesn't exist!");

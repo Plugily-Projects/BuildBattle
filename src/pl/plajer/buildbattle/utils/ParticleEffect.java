@@ -4,11 +4,9 @@ package pl.plajer.buildbattle.utils;
  * Created by Tom on 30/07/2014.
  */
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 import pl.plajer.buildbattle.utils.ReflectionHandler.PackageType;
 
 import java.lang.reflect.Constructor;
@@ -18,7 +16,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 public enum ParticleEffect {
     EXPLOSION_NORMAL("ExplosionNormal", 0, -1, ParticleProperty.DIRECTIONAL),

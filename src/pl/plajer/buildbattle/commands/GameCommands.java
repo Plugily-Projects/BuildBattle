@@ -13,7 +13,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.User;
 import pl.plajer.buildbattle.arena.Arena;
@@ -38,7 +37,7 @@ public class GameCommands implements CommandExecutor {
     private Main plugin;
     private AdminCommands adminCommands;
 
-    public GameCommands(){}
+    public GameCommands() {}
 
     public GameCommands(Main plugin) {
         this.plugin = plugin;
