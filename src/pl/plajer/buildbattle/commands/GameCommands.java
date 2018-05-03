@@ -36,6 +36,9 @@ import java.util.List;
 public class GameCommands implements CommandExecutor {
 
     private Main plugin;
+    private AdminCommands adminCommands;
+
+    public GameCommands(){}
 
     public GameCommands(Main plugin) {
         this.plugin = plugin;
@@ -43,6 +46,7 @@ public class GameCommands implements CommandExecutor {
         plugin.getCommand("leave").setExecutor(this);
         plugin.getCommand("stats").setExecutor(this);
         plugin.getCommand("addsigns").setExecutor(this);
+        this.adminCommands = new AdminCommands(plugin);
     }
 
     boolean checkSenderIsConsole(CommandSender sender) {
@@ -69,7 +73,8 @@ public class GameCommands implements CommandExecutor {
             if(plugin.getConfig().getBoolean("Disable-Leave-Command")) return true;
             if(checkSenderIsConsole(sender)) return true;
             Player player = (Player) sender;
-            if(ArenaRegistry.getArena(player) == null) {
+            Arena arena = ArenaRegistry.getArena(player);
+            if(arena == null) {
                 System.out.print(player.getName() + " tried /leave but isn't in an arena!");
                 return true;
             }
@@ -78,8 +83,8 @@ public class GameCommands implements CommandExecutor {
                 System.out.print(player.getName() + " is teleported to the Hub Server");
                 return true;
             } else {
-                ArenaRegistry.getArena(player).teleportToEndLocation(player);
-                ArenaRegistry.getArena(player).leaveAttempt(player);
+                arena.teleportToEndLocation(player);
+                arena.leaveAttempt(player);
                 System.out.print(player.getName() + " has left the arena! He is teleported to the end location.");
                 return true;
             }
@@ -178,52 +183,14 @@ public class GameCommands implements CommandExecutor {
             //todo different permissions
             if(!hasPermission(sender, "minigames.edit")) return true;
             if(args.length == 2 && args[0].equalsIgnoreCase("addplot")) {
-                if(ArenaRegistry.getArena(args[1]) == null) {
-                    player.sendMessage(ChatColor.RED + "That gameinstance doesn't exist!");
-                    return true;
-                }
-                Selection selection = plugin.getWorldEditPlugin().getSelection(player);
-                if(selection instanceof CuboidSelection) {
-                    if(plugin.getConfig().contains("instances." + args[1] + ".plots")) {
-                        Util.saveLoc("instances." + args[1] + ".plots." + (plugin.getConfig().getConfigurationSection("instances." + args[1] + ".plots").getKeys(false).size() + 1) + ".minpoint", selection.getMinimumPoint());
-                        Util.saveLoc("instances." + args[1] + ".plots." + (plugin.getConfig().getConfigurationSection("instances." + args[1] + ".plots").getKeys(false).size()) + ".maxpoint", selection.getMaximumPoint());
-                    } else {
-                        Util.saveLoc("instances." + args[1] + ".plots.0.minpoint", selection.getMinimumPoint());
-                        Util.saveLoc("instances." + args[1] + ".plots.0.maxpoint", selection.getMaximumPoint());
-                    }
-                    plugin.saveConfig();
-                    player.sendMessage(ChatColor.GREEN + "Plot added to instance " + ChatColor.RED + args[1]);
-                } else {
-                    player.sendMessage(ChatColor.RED + "U don't have the right selection!");
-                }
+                adminCommands.addPlot(player, args[1]);
                 return true;
             }
             if(args.length == 1 && args[0].equalsIgnoreCase("forcestart")) {
-                if(ArenaRegistry.getArena(player) == null) return false;
-                Arena invasionInstance = ArenaRegistry.getArena(player);
-                if(invasionInstance.getGameState() == ArenaState.WAITING_FOR_PLAYERS) {
-                    invasionInstance.setGameState(ArenaState.STARTING);
-                    invasionInstance.getChatManager().broadcastMessage("Admin-ForceStart-Game", ChatManager.HIGHLIGHTED + "An admin forcestarted the game!");
-                    return true;
-                }
-                if(invasionInstance.getGameState() == ArenaState.STARTING) {
-                    invasionInstance.setTimer(0);
-                    invasionInstance.getChatManager().broadcastMessage("Admin-Set-Starting-In-To-0", ChatManager.HIGHLIGHTED + "An admin set waiting time to 0. Game starts now!");
-                    return true;
-                }
+                adminCommands.forceStart(player);
             }
             if(args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-                ConfigPreferences.loadOptions();
-                ConfigPreferences.loadOptions();
-                ConfigPreferences.loadThemes();
-                ConfigPreferences.loadBlackList();
-                ConfigPreferences.loadWinCommands();
-                ConfigPreferences.loadSecondPlaceCommands();
-                ConfigPreferences.loadThirdPlaceCommands();
-                ConfigPreferences.loadEndGameCommands();
-                ConfigPreferences.loadWhitelistedCommands();
-                plugin.loadInstances();
-                player.sendMessage(ChatColor.GREEN + "Plugin reloaded!");
+                adminCommands.reloadPlugin(player);
                 return true;
             }
             //fixme xd
@@ -233,38 +200,20 @@ public class GameCommands implements CommandExecutor {
                 return true;
             }
             if(args[1].equalsIgnoreCase("addsign")) {
-                if(ArenaRegistry.getArena(args[0]) == null) {
-                    player.sendMessage(ChatColor.RED + "ARENA DOES NOT EXIST!");
-                    return true;
-                } else {
-                    Location location = player.getTargetBlock(null, 10).getLocation();
-                    if(location.getBlock().getState() instanceof Sign) {
-                        Arena arena = ArenaRegistry.getArena(args[0]);
-                        int keys = 0;
-                        if(plugin.getConfig().contains("signs." + arena.getID())) {
-                            keys = plugin.getConfig().getConfigurationSection("signs." + arena.getID()).getKeys(false).size();
-                        }
-                        Util.saveLoc("newsigns." + arena.getID() + "." + (keys + 1), player.getTargetBlock(null, 10).getLocation());
-                        player.sendMessage(ChatColor.GREEN + "SIGN ADDED!");
-                        arena.addSign(player.getTargetBlock(null, 10).getLocation());
-                    } else {
-                        player.sendMessage(ChatColor.RED + "You have to look at a sign to perform this command!");
-                    }
-
-                }
+                adminCommands.addSign(player, args[0]);
                 return true;
             }
             if(args[0].equalsIgnoreCase("tp") && args.length == 3) {
                 onTpCommand(player, args[1], args[2]);
                 return true;
             }
-
             if(args[1].equalsIgnoreCase("setup") || args[1].equals("edit")) {
-                if(ArenaRegistry.getArena(args[0]) == null) {
+                Arena arena = ArenaRegistry.getArena(args[0]);
+                if(arena == null) {
                     player.sendMessage(ChatColor.RED + "ARENA DOES NOT EXIST!");
                     return true;
                 }
-                new SetupInventory(ArenaRegistry.getArena(args[0])).openInventory(player);
+                new SetupInventory(arena).openInventory(player);
                 return true;
             }
             if(!(args.length > 2)) return true;
@@ -298,11 +247,9 @@ public class GameCommands implements CommandExecutor {
                     player.sendMessage(ChatColor.RED + "Usage: /bb <ARENA > set <StartLOCTION | LOBBYLOCATION | EndLOCATION>");
                 }
             } else if(args.length == 4) {
-
                 if(args[2].equalsIgnoreCase("MAXPLAYERS") || args[2].equalsIgnoreCase("maximumplayers")) {
                     plugin.getConfig().set("instances." + args[0] + ".maximumplayers", Integer.parseInt(args[3]));
                     player.sendMessage("BuildBattle: Maximum players for arena/instance " + args[0] + " set to " + Integer.parseInt(args[3]));
-
                 } else if(args[2].equalsIgnoreCase("MINPLAYERS") || args[2].equalsIgnoreCase("minimumplayers")) {
                     plugin.getConfig().set("instances." + args[0] + ".minimumplayers", Integer.parseInt(args[3]));
                     player.sendMessage("BuildBattle: Minimum players for arena/instance " + args[0] + " set to " + Integer.parseInt(args[3]));
@@ -381,12 +328,11 @@ public class GameCommands implements CommandExecutor {
             player.sendMessage(ChatColor.RED + "Usage: /bb tp <ARENA> <START|END|LOBBY>");
             return true;
         }
-        if(!plugin.getConfig().contains("instances." + ID)) {
+        Arena arena = ArenaRegistry.getArena(ID);
+        if(!plugin.getConfig().contains("instances." + ID) || arena == null) {
             player.sendMessage(ChatColor.RED + "That arena doesn't exists!");
             return true;
         }
-        Arena arena = ArenaRegistry.getArena(ID);
-
         switch(type) {
             case LOBBY:
                 if(arena.getLobbyLocation() == null) {

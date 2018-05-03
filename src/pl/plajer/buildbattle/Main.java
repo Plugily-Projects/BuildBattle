@@ -61,7 +61,7 @@ public class Main extends JavaPlugin {
     private boolean inventoryManagerEnabled;
     private SignManager signManager;
     private String version;
-    private List<String> filesToGenerate = Arrays.asList("EntityMenu", "particles", "scoreboard", "signModification", "SpecialItems", "STATS", "voteItems", "MySQL");
+    private List<String> filesToGenerate = Arrays.asList("EntityMenu", "particles", "scoreboard", "signModification", "SpecialItems", "stats", "voteItems", "MySQL");
 
     public static Permission getPerms() {
         return perms;
@@ -221,8 +221,9 @@ public class Main extends JavaPlugin {
     @Override
     public void onDisable() {
         for(final Player player : getServer().getOnlinePlayers()) {
-            if(ArenaRegistry.getArena(player) != null) {
-                ArenaRegistry.getArena(player).leaveAttempt(player);
+            Arena arena = ArenaRegistry.getArena(player);
+            if(arena != null) {
+                arena.leaveAttempt(player);
             }
             final User user = UserManager.getUser(player.getUniqueId());
             for(final String s : BuildBattleStats.STATISTICS) {

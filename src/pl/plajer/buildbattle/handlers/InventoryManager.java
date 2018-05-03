@@ -34,7 +34,7 @@ public class InventoryManager {
         String UUID = player.getUniqueId().toString();
         PlayerInventory inventory = player.getInventory();
         File path = new File(plugin.getDataFolder() + File.separator + "inventorys");
-        if(inventory == null || path == null) return false;
+        if(inventory == null) return false;
         try {
             File invFile = new File(plugin.getDataFolder() + File.separator + "inventorys" + File.separator, UUID + ".invsave");
             if(!path.exists()) path.mkdir();

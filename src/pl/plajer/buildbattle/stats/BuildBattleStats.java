@@ -55,7 +55,7 @@ public enum BuildBattleStats {
     public Map<UUID, Integer> getStats() {
         if(plugin.isDatabaseActivated()) return plugin.getMySQLDatabase().getColumn(name);
         else {
-            FileConfiguration config = ConfigurationManager.getConfig("STATS");
+            FileConfiguration config = ConfigurationManager.getConfig("stats");
             Map<UUID, Integer> stats = new LinkedHashMap<>();
             for(String string : config.getKeys(false)) {
                 stats.put(UUID.fromString(string), config.getInt(string + "." + name));

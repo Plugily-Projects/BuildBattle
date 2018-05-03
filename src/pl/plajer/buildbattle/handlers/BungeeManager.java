@@ -19,7 +19,7 @@ import pl.plajer.buildbattle.arena.ArenaState;
  */
 public class BungeeManager implements Listener {
 
-    public Main plugin;
+    private Main plugin;
 
     public BungeeManager(Main plugin) {
         this.plugin = plugin;
@@ -34,10 +34,6 @@ public class BungeeManager implements Listener {
         player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
     }
 
-    public String getHubServerName() {
-        return ConfigurationManager.getConfig("bungee").getString("Hub");
-    }
-
     private String getMOTD() {
         Arena arena = ArenaRegistry.getArenas().get(0);
         if(arena.getGameState() == ArenaState.STARTING && (arena.getTimer() <= 3)) {
@@ -47,11 +43,17 @@ public class BungeeManager implements Listener {
         }
     }
 
+
+    public String getHubServerName() {
+        return ConfigurationManager.getConfig("bungee").getString("Hub");
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onServerListPing(ServerListPingEvent event) {
-        if(ArenaRegistry.getArenas().size() == 0) return;
-        if(ArenaRegistry.getArenas().isEmpty()) {
-            System.out.print("NO GAMEINSTANCE FOUND! FIRST CONFIGURE AN ARENA BEFORE ACTIVATING BUNGEEEMODE!");
+        if(ArenaRegistry.getArenas().isEmpty())
+            return;
+        if(ArenaRegistry.getArenas() == null) {
+            System.out.println("No ready arena found! Please create one before activating bungee mode!");
             return;
         }
         event.setMaxPlayers(ArenaRegistry.getArenas().get(0).getMAX_PLAYERS());
@@ -65,12 +67,12 @@ public class BungeeManager implements Listener {
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> ArenaRegistry.getArenas().get(0).joinAttempt(event.getPlayer()), 1L);
     }
 
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onQuit(PlayerQuitEvent event) {
         event.setQuitMessage("");
         if(ArenaRegistry.getArena(event.getPlayer()) != null)
             ArenaRegistry.getArenas().get(0).leaveAttempt(event.getPlayer());
+
     }
 
 

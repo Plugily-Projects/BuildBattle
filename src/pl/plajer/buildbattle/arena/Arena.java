@@ -51,8 +51,8 @@ public class Arena extends BukkitRunnable {
     public static Main plugin;
     private static List<String> themes = new ArrayList<>();
     private static List<Integer> blacklist = new ArrayList<>();
-    protected HashMap<ArenaState, String[]> signlines = new HashMap<>();
-    protected String[] FULLlines;
+    private HashMap<ArenaState, String[]> signlines = new HashMap<>();
+    private String[] FULLlines;
     private ScoreboardHandler scoreboardHandler;
     private HashMap<Integer, UUID> toplist = new HashMap<>();
     private String theme = "Theme";
@@ -421,78 +421,6 @@ public class Arena extends BukkitRunnable {
     private void updateScoreboard() {
         if(getPlayers().size() == 0) return;
         scoreboardHandler.updateScoreboard();
-        /*
-        for (Player p : getPlayers()) {
-
-            User user = UserManager.getUser(p.getUniqueId());
-
-            user.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-            if (user.getScoreboard().getObjective("waiting") == null) {
-                user.getScoreboard().registerNewObjective("waiting", "dummy");
-                user.getScoreboard().registerNewObjective("starting", "dummy");
-                user.getScoreboard().registerNewObjective("ingame", "dummy");
-
-            }
-            switch (getGameState()) {
-                case WAITING_FOR_PLAYERS:
-                    Objective waitingobj = user.getScoreboard().getObjective("waiting");
-                    waitingobj.setDisplayName(getChatManager().getMessage("Scoreboard-Header", ChatManager.PREFIX + "Main"));
-                    waitingobj.setDisplaySlot(DisplaySlot.SIDEBAR);
-
-                    Score playerscore1 = waitingobj.getScore(getChatManager().getMessage("Scoreboard-Players", ChatManager.NORMAL + "Players: "));
-                    playerscore1.setScore(getPlayers().size());
-                    Score minplayerscore1 = waitingobj.getScore(getChatManager().getMessage("Scoreboard-MinPlayers-Message", ChatManager.NORMAL + "Min Players: "));
-                    minplayerscore1.setScore(getMIN_PLAYERS());
-
-                    break;
-                case STARTING:
-                    Objective startingobj = user.getScoreboard().getObjective("starting");
-                    startingobj.setDisplayName(getChatManager().getMessage("Scoreboard-Header", ChatManager.PREFIX + "Build Battle"));
-                    startingobj.setDisplaySlot(DisplaySlot.SIDEBAR);
-
-                    Score timerscore = startingobj.getScore(getChatManager().getMessage("Scoreboard-Starting-In", ChatManager.NORMAL + "Starting in: "));
-                    timerscore.setScore(getTimer());
-
-                    Score playerscore = startingobj.getScore(getChatManager().getMessage("Scoreboard-Players", ChatManager.NORMAL + "Players: "));
-                    playerscore.setScore(getPlayers().size());
-                    Score minplayerscore = startingobj.getScore(getChatManager().getMessage("Scoreboard-MinPlayers-Message", ChatManager.NORMAL + "Min Players: "));
-                    minplayerscore.setScore(getMIN_PLAYERS());
-
-                    break;
-                case INGAME:
-                    user.getScoreboard().getObjective("ingame").unregister();
-                    user.getScoreboard().registerNewObjective("ingame", "dummy");
-                    Objective ingameobj = user.getScoreboard().getObjective("ingame");
-                    ingameobj.setDisplayName(getChatManager().getMessage("Scoreboard-Header", ChatManager.PREFIX + "Freeze Tag"));
-                    ingameobj.setDisplaySlot(DisplaySlot.SIDEBAR);
-                    Score timeleft = ingameobj.getScore(getChatManager().getMessage("SCOREBOARD-Time-Left", ChatColor.RED + "" + ChatColor.BOLD + "Time Left: "));
-                    timeleft.setScore(9);
-                    Score timeleftscore = ingameobj.getScore(ChatColor.WHITE + getFormattedTimeLeft());
-                    timeleftscore.setScore(8);
-                    Score empty = ingameobj.getScore(" ");
-                    empty.setScore(6);
-                    Score theme = ingameobj.getScore(getChatManager().getMessage("SCOREBOARD-Theme", ChatColor.GREEN + "Theme"));
-                    theme.setScore(5);
-                    Score themescore = ingameobj.getScore(ChatColor.WHITE + getTheme());
-                    themescore.setScore(4);
-
-
-                    break;
-
-                case ENDING:
-                    break;
-                case RESTARTING:
-
-                    break;
-                default:
-                    setGameState(GameState.WAITING_FOR_PLAYERS);
-            }
-            user.setScoreboard(user.getScoreboard());
-
-
-        }
-        */
-
     }
 
     public List<Integer> getBlacklist() {
@@ -548,11 +476,6 @@ public class Arena extends BukkitRunnable {
             setTimer(ConfigPreferences.getVotingTime());
             setTimer(ConfigPreferences.getVotingTime());
             OfflinePlayer player = plugin.getServer().getOfflinePlayer(queue.poll());
-            //while(player.isOnline() && !queue.isEmpty()){
-            //   player = plugin.getServer().getPlayer(queue.poll());
-
-            //}
-
             while(getPlotManager().getPlot(player.getUniqueId()) == null && !queue.isEmpty()) {
                 System.out.print("A PLAYER HAS NO PLOT!");
                 player = plugin.getServer().getPlayer(queue.poll());

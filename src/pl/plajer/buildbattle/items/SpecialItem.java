@@ -99,7 +99,6 @@ public class SpecialItem {
     }
 
     private void setLore(List<String> lore) {
-
         this.lore = lore.toArray(new String[lore.size()]);
     }
 

@@ -16,7 +16,7 @@ public class FileStats {
     private FileConfiguration config;
 
     public FileStats() {
-        config = ConfigurationManager.getConfig("STATS");
+        config = ConfigurationManager.getConfig("stats");
     }
 
 
@@ -24,7 +24,7 @@ public class FileStats {
         User user = UserManager.getUser(player.getUniqueId());
         config.set(player.getUniqueId().toString() + "." + stat, user.getInt(stat));
         try {
-            config.save(ConfigurationManager.getFile("STATS"));
+            config.save(ConfigurationManager.getFile("stats"));
         } catch(IOException e) {
             e.printStackTrace();
         }

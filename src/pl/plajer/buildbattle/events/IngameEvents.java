@@ -347,11 +347,10 @@ public class IngameEvents implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void disableCommands(PlayerCommandPreprocessEvent event) {
         if(ArenaRegistry.getArena(event.getPlayer()) == null) return;
-        Boolean whitelisted = false;
         for(String string : ConfigPreferences.getWhitelistedCommands()) {
-            if(event.getMessage().contains(string)) whitelisted = true;
+            if(event.getMessage().contains(string)) return;
         }
-        if(event.getMessage().contains("leave") || event.getMessage().contains("stats") || whitelisted) {
+        if(event.getMessage().contains("leave") || event.getMessage().contains("stats")) {
             return;
         }
         if(event.getPlayer().isOp() || event.getPlayer().hasPermission("minigames.edit")) return;

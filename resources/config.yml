@@ -1,6 +1,24 @@
-bar: false
+#
+#        Build Battle 3 configuration file
+#               Edit it by yourself
+#          Read descriptions CAREFULLY
+#   You don't want to break anything, do you?
+#
+
+# Enable boss bar for the game?
+# Requires BossBarAPI for now.
+Boss-Bar-Enabled: false
+
+# Should we hook into bungee cord? (If you wanna use arena per server option)
+# You STILL need to use external addon for HUB server game signs
 BungeeActivated: false
+
+# Enable Inventory Manager for your games? (VERY USEFUL feature for MULTI ARENA)
+# This saves inventory of players and restores it after player leaves arena.
+# Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions
 InventoryManager: false
+
+#todo move me to arenas.yml please
 instances:
   default:
     lobbylocation: world,-1.0,80.0,7.0,0.0,0.0
@@ -12,6 +30,8 @@ instances:
     world: worldname
 signs:
   example: world,-1.0,80.0,7.0,0.0,0.0
+
+# Should /bb leave command be disabled?
 Disable-Leave-Command: false
 Build-Time-In-Seconds: 480
 Voting-Time-In-Seconds: 20
@@ -33,8 +53,13 @@ Mobs-Max-Amount-Per-Plot: 20
 Hide-Players-Outside-Game: true
 Disable-Scoreboard-Ingame: false
 Hook-Into-Vault: false
+
+# Time in lobby to wait before start
 Lobby-Starting-Time: 60
-themes:
+
+# All game themes, type here everything you want your players to build.
+# Do not use spaces, use underscore character "_" instead
+Game-Themes:
 - Bees
 - Pirates
 - Medieval
@@ -42,22 +67,37 @@ themes:
 - Love
 - Hate
 - Ugly
-- SchoolBus
-blacklist:
+- School_Bus
+- Pixel_Art
+
+# Blacklisted items, you can't use them while building.
+# Currently ID's are only supported, todo to remove.
+Blacklisted-Items:
 - 46
 - 57
+
+# Commands executed when player wins
+# Use %PLAYER% placeholder to replace it with winner's name
 Win-Commands:
 - say %PLAYER% won the game!
 - give %PLAYER% 1000
+
+# Commands executed for second winner
 Second-Place-Commands:
 - say %PLAYER% become second
 - give %PLAYER% 1000
+
+# Commands executed for third winner
 Third-Place-Commands:
 - say %PLAYER% became third
 - give %PLAYER% 1000
+
+# Commands executed for every player after the game ends
 End-Game-Commands:
 - say %PLAYER% has played a game!
 - give %PLAYER% 100
+
+# Commands which can be executed while being in game
 Whitelisted-Commands:
 - me
 - help

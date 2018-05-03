@@ -29,7 +29,7 @@ public class ConfigPreferences {
 
 
     public static void loadThemes() {
-        for(String theme : config.getStringList("themes")) {
+        for(String theme : config.getStringList("Game-Themes")) {
             Arena.addTheme(theme);
         }
 
@@ -93,13 +93,13 @@ public class ConfigPreferences {
     }
 
     public static void loadBlackList() {
-        for(int ID : config.getIntegerList("blacklist")) {
+        for(int ID : config.getIntegerList("Blacklisted-Items")) {
             Arena.addToBlackList(ID);
         }
     }
 
     public static boolean isBarEnabled() {
-        return options.get("bar") == 1;
+        return options.get("Boss-Bar-Enabled") == 1;
     }
 
     public static List<String> getWhitelistedCommands() {
@@ -168,7 +168,7 @@ public class ConfigPreferences {
         List<String> loadOptions = new ArrayList<>();
         loadOptions.add("Build-Time-In-Seconds");
         loadOptions.add("Voting-Time-In-Seconds");
-        loadOptions.add("bar");
+        loadOptions.add("Boss-Bar-Enabled");
         loadOptions.add("Fly-Range-Out-Plot");
         loadOptions.add("Default-Floor-Material");
         loadOptions.add("Disable-Mob-Spawning-Completely");
