@@ -37,7 +37,7 @@ public class BungeeManager implements Listener {
     private String getMOTD() {
         Arena arena = ArenaRegistry.getArenas().get(0);
         if(arena.getGameState() == ArenaState.STARTING && (arena.getTimer() <= 3)) {
-            return ArenaState.INGAME.toString();
+            return ArenaState.IN_GAME.toString();
         } else {
             return arena.getGameState().toString();
         }
@@ -56,7 +56,7 @@ public class BungeeManager implements Listener {
             System.out.println("No ready arena found! Please create one before activating bungee mode!");
             return;
         }
-        event.setMaxPlayers(ArenaRegistry.getArenas().get(0).getMAX_PLAYERS());
+        event.setMaxPlayers(ArenaRegistry.getArenas().get(0).getMaximumPlayers());
         event.setMotd(this.getMOTD());
     }
 

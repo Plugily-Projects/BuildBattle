@@ -15,15 +15,15 @@ public class PermissionManager {
         return joinFullGames;
     }
 
-    public static String getVIP() {
+    public static String getVip() {
         return VIP;
     }
 
-    public static String getMVP() {
+    public static String getMvp() {
         return MVP;
     }
 
-    public static String getELITE() {
+    public static String getElite() {
         return ELITE;
     }
 

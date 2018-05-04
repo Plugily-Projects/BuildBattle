@@ -28,6 +28,7 @@ instances:
     maximumplayers: 10
     mapname: mapname
     world: worldname
+    signs: {}
 signs:
   example: world,-1.0,80.0,7.0,0.0,0.0
 
@@ -37,7 +38,6 @@ Build-Time-In-Seconds: 480
 Voting-Time-In-Seconds: 20
 Default-Floor-Material: 17
 Disable-Mob-Spawning-Completely: true
-Dynamic-Sign-System: true
 Amount-One-Particle-Effect-Contains: 20
 Max-Amount-Particles: 25
 Particle-Refresh-Per-Tick: 10

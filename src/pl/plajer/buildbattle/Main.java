@@ -289,13 +289,6 @@ public class Main extends JavaPlugin {
 
     public void loadInstances() {
         this.saveConfig();
-        if(ArenaRegistry.getArenas() != null) {
-            if(ArenaRegistry.getArenas().size() > 0) {
-                for(Arena arena : ArenaRegistry.getArenas()) {
-                    signManager.removeSign(arena);
-                }
-            }
-        }
         ArenaRegistry.getArenas().clear();
         for(String ID : this.getConfig().getConfigurationSection("instances").getKeys(false)) {
             Arena arena;
@@ -304,10 +297,10 @@ public class Main extends JavaPlugin {
 
             arena = new Arena(ID);
 
-            if(getConfig().contains(s + "minimumplayers")) arena.setMIN_PLAYERS(getConfig().getInt(s + "minimumplayers"));
-            else arena.setMIN_PLAYERS(getConfig().getInt("instances.default.minimumplayers"));
-            if(getConfig().contains(s + "maximumplayers")) arena.setMAX_PLAYERS(getConfig().getInt(s + "maximumplayers"));
-            else arena.setMAX_PLAYERS(getConfig().getInt("instances.default.maximumplayers"));
+            if(getConfig().contains(s + "minimumplayers")) arena.setMinimumPlayers(getConfig().getInt(s + "minimumplayers"));
+            else arena.setMinimumPlayers(getConfig().getInt("instances.default.minimumplayers"));
+            if(getConfig().contains(s + "maximumplayers")) arena.setMaximumPlayers(getConfig().getInt(s + "maximumplayers"));
+            else arena.setMaximumPlayers(getConfig().getInt("instances.default.maximumplayers"));
             if(getConfig().contains(s + "mapname")) arena.setMapName(getConfig().getString(s + "mapname"));
             else arena.setMapName(getConfig().getString("instances.default.mapname"));
             if(getConfig().contains(s + "lobbylocation")) arena.setLobbyLocation(Util.getLocation(s + "lobbylocation"));

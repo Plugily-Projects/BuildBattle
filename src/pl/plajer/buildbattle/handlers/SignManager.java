@@ -9,274 +9,202 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.utils.Util;
 
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.List;
+import java.util.Map;
 
 /**
- * User: Ivan
- * Date: 24/08/13
- * Time: 0:05
- * IDE: IntelliJ IDEA
- * Look me up on bukkit forums!
- * [url]http://forums.bukkit.org/members/ivan.5352/[/url]
+ * @author Plajer
+ * <p>
+ * Created at 04.05.2018
  */
-public class SignManager extends BukkitRunnable implements Listener {
+public class SignManager implements Listener {
 
-    public static String[] signlines = new String[]{"--------", "Waiting", "", "--------"};
-    public Main plugin;
-    HashMap<Sign, Arena> signpool = new HashMap();
-    Queue<Arena> gamequeue = new LinkedList<>();
+    private Main plugin;
+    private Map<Sign, Arena> loadedSigns = new HashMap<>();
+    private Map<ArenaState, String> gameStateToString = new HashMap<>();
 
-
-    /*
-    The constructor fills our signpool up with sig schedules a
-    new bukkit task and registers the associated listener for us.
-     */
     public SignManager(Main plugin) {
         this.plugin = plugin;
+        FileConfiguration config = ConfigurationManager.getConfig("signModification");
+        gameStateToString.put(ArenaState.WAITING_FOR_PLAYERS, config.getString("Signs.Game-States.Inactive"));
+        gameStateToString.put(ArenaState.STARTING, config.getString("Signs.Game-States.Starting"));
+        gameStateToString.put(ArenaState.IN_GAME, config.getString("Signs.Game-States.In-Game"));
+        gameStateToString.put(ArenaState.ENDING, config.getString("Signs.Game-States.Ending"));
+        gameStateToString.put(ArenaState.RESTARTING, config.getString("Signs.Game-States.Restarting"));
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         loadSigns();
-
-        this.start();
+        updateSignScheduler();
     }
 
-    private void loadSigns() {
-        if(!plugin.getConfig().contains("signs")) {
-            Util.saveLoc("signs.example", Bukkit.getWorlds().get(0).getSpawnLocation());
-        }
-        for(String path : plugin.getConfig().getConfigurationSection("signs").getKeys(false)) {
-            if(path.contains("example")) continue;
-            path = "signs." + path;
-
-            Location loc = Util.getLocation(path);
-            if(loc == null) System.out.print("LOCATION IS NNNNUUUUULLLL!!");
-            if(loc.getBlock().getState() instanceof Sign) {
-                registerSign((Sign) loc.getBlock().getState());
-            } else {
-                System.out.println("Block at given location " + path + " isn't a sign!");
-            }
-        }
-    }
-
-
-    public void start() {
-        FileConfiguration config = ConfigurationManager.getConfig("signModification");
-        if(!config.contains("signs.format.WaitingForNewGame")) {
-            config.set("signs.format.WaitingForNewGame.lines.1", signlines[0]);
-            config.set("signs.format.WaitingForNewGame.lines.2", signlines[1]);
-            config.set("signs.format.WaitingForNewGame.lines.3", signlines[2]);
-            config.set("signs.format.WaitingForNewGame.lines.4", signlines[3]);
-            try {
-                config.save(ConfigurationManager.getFile("signModification"));
-            } catch(IOException e) {
-                e.printStackTrace();
-            }
-        }
-        signlines[0] = config.getString("signs.format.WaitingForNewGame.lines.1");
-        signlines[1] = config.getString("signs.format.WaitingForNewGame.lines.2");
-        signlines[2] = config.getString("signs.format.WaitingForNewGame.lines.3");
-        signlines[3] = config.getString("signs.format.WaitingForNewGame.lines.4");
-        for(Sign sign : signpool.keySet()) {
-            formatEmptySign(sign);
-
-        }
-        this.runTaskTimer(plugin, 20L, 20L);
-
-    }
-
-    public void removeSign(Arena arena) {
-        if(signpool.containsValue(arena)) {
-            for(Sign sign : signpool.keySet()) {
-                if(signpool.get(sign) != null) {
-                    if(signpool.get(sign).equals(arena)) {
-                        signpool.put(sign, null);
-                        return;
-                    }
-                }
-            }
-        }
-    }
-
-    public boolean registerSign(Sign sign) {
-        if(!signpool.containsKey(sign)) {
-            signpool.put(sign, null);
-            formatEmptySign(sign);
-            return true;
-        }
-        return false;
-    }
-
-    /*
-    Gets an empty sign out of our signpool
-     */
-    public Sign getEmptySign() {
-        for(Sign sign : signpool.keySet()) {
-            if(signpool.get(sign) == null) return sign;
-        }
-
-        return null;
-    }
-
-    /*
-    This will be used by the listener that will check
-    if there is a game associated with the clicked sign.
-     */
-    public Arena getBySign(Sign sign) {
-        return signpool.getOrDefault(sign, null);
-    }
-
-    /*
-    This method will be called by your gameinstance
-    or by some kind of handler that decides when
-    a game should show up here on the signwall
-    */
-    public void addToQueue(Arena arena) {
-        if(!(gamequeue.contains(arena) || signpool.containsValue(arena) || signpool.values().contains(arena))) {
-            gamequeue.add(arena);
-        }
-    }
-
-    /*
-    This is the method called by our loop
-    that will decide what pops up when
-    the sign is empty.
-     */
-    private void formatEmptySign(Sign sign) {
-        sign.setLine(0, signlines[0].replaceAll("(&([a-f0-9]))", "\u00A7$2"));
-        sign.setLine(1, signlines[1].replaceAll("(&([a-f0-9]))", "\u00A7$2"));
-        sign.setLine(2, signlines[2].replaceAll("(&([a-f0-9]))", "\u00A7$2"));
-        sign.setLine(3, signlines[3].replaceAll("(&([a-f0-9]))", "\u00A7$2"));
-        sign.update(true);
-    }
-
-
-    /*
-    This is our loop. Here is where the magic
-    happens :).
-     */
-    @Override
-    public void run() {
-
-
-    /* This part removes full games from the signwall,
-     since they don't need players anymore*/
-        for(Sign sign : signpool.keySet()) {
-            if(signpool.get(sign) == null) {
-                formatEmptySign(sign);
-                sign.update(true);
-                continue;
-            }
-            Arena arena = getBySign(sign);
-            arena.updateSign(sign);
-
-           /* If it no longer needs players,
-           remove it from the board*/
-            if(!arena.needsPlayers()) {
-                signpool.put(sign, null);
-                formatEmptySign(sign);
-                sign.update(true);
-            }
-        }
-
-
-        /* This part checks if more games have to be added to the list
-         */
-        while(!gamequeue.isEmpty()) {
-            Sign emptysign = getEmptySign();
-
-            /* If no signs are availible, break out of the loop
-             */
-            if(emptysign == null) break;
-
-            Arena instance = gamequeue.poll();
-            instance.updateSign(emptysign);
-            signpool.put(emptysign, instance);
-            emptysign.update(true);
-        }
-
-    }
-
-    /*
-    This is the listener part of our controller.
-    It checks if a game is associated with the
-    clicked sign.
-     */
     @EventHandler
-    public void onJoinAttempt(PlayerInteractEvent event) {
-        if(event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getState() instanceof Sign) {
-
-            Arena arenaSign = getBySign((Sign) event.getClickedBlock().getState());
-
-            if(arenaSign == null) {
-                Location location = event.getClickedBlock().getLocation();
-                for(Arena arena : ArenaRegistry.getArenas()) {
-                    if(arena.getSigns().contains(location)) {
-                        arenaSign = arena;
-                        break;
+    public void onSignChange(SignChangeEvent e) {
+        //todo permission check if(!e.getPlayer().hasPermission("buildbattle.admin.sign.create")) return;
+        if(e.getLine(0).equalsIgnoreCase("[buildbattle]")) {
+            if(e.getLine(1).isEmpty()) {
+                //todo translateee
+                e.getPlayer().sendMessage(ChatManager.PREFIX + "Please type arena name!");
+                return;
+            }
+            FileConfiguration config = ConfigurationManager.getConfig("signModification");
+            for(Arena arena : ArenaRegistry.getArenas()) {
+                if(arena.getID().equalsIgnoreCase(e.getLine(1))) {
+                    for(int i = 0; i < config.getStringList("Signs.Lines").size(); i++) {
+                        if(i == 1) {
+                            //maybe not needed
+                            e.setLine(i, ChatColor.translateAlternateColorCodes('&', config.getStringList("Signs.Lines").get(i)
+                                    .replaceAll("%mapname%", arena.getMapName())));
+                        }
+                        if(config.getStringList("Signs.Lines").get(i).contains("%state%")) {
+                            e.setLine(i, config.getStringList("Signs.Lines").get(i)
+                                    .replaceAll("%state%", ChatManager.colorMessage(gameStateToString.get(ArenaState.WAITING_FOR_PLAYERS))));
+                        }
+                        if(config.getStringList("Signs.Lines").get(i).contains("%playersize%")) {
+                            e.setLine(i, config.getStringList("Signs.Lines").get(i)
+                                    .replaceAll("%playersize%", String.valueOf(arena.getPlayers().size()))
+                                    .replaceAll("%maxplayers%", String.valueOf(arena.getMaximumPlayers())));
+                        }
                     }
+                    loadedSigns.put((Sign) e.getBlock().getState(), arena);
+                    //todo translateeeeeeeeeee
+                    e.getPlayer().sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("&lSign created!"));
+                    String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + "," + e.getBlock().getY() + "," + e.getBlock().getZ() + ",0.0,0.0";
+                    List<String> locs = plugin.getConfig().getStringList("instances." + arena.getID() + ".signs");
+                    locs.add(location);
+                    plugin.getConfig().set("instances." + arena.getID() + ".signs", locs);
+                    plugin.saveConfig();
+                    return;
                 }
             }
-            /* If there is a Start associated, tell the Startinstance
-            that someone is trying to join. It will return us a
-            string with the message that the player will receive.
-            If there is still a spot left for him, the instance
-            can teleport him using the joinAttempt() method.*/
+            //todo translateeeeeeeeeeeeeeeeeee
+            e.getPlayer().sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("&lArena doesn't exist!"));
+        }
+    }
 
-            if(arenaSign != null) {
-                for(Arena arena : ArenaRegistry.getArenas()) {
-                    if(arena.getPlayers().contains(event.getPlayer())) {
-                        event.getPlayer().sendMessage(ChatManager.getFromLanguageConfig("YouAreAlreadyIngame", ChatColor.RED + "You are already qeued for a game! You can leave a game with /leave."));
+    @EventHandler
+    public void onSignDestroy(BlockBreakEvent e) {
+        //todo perm check if(!e.getPlayer().hasPermission("buildbattle.admin.sign.break")) return;
+        if(loadedSigns.get(e.getBlock().getState()) == null) return;
+        loadedSigns.remove(e.getBlock().getState());
+        String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + "," + e.getBlock().getY() + "," + e.getBlock().getZ() + "," + "0.0,0.0";
+        for(String arena : plugin.getConfig().getConfigurationSection("instances").getKeys(false)) {
+            for(String sign : plugin.getConfig().getStringList("instances." + arena + ".signs")) {
+                if(sign.equals(location)) {
+                    List<String> signs = plugin.getConfig().getStringList("instances." + arena + ".signs");
+                    signs.remove(location);
+                    plugin.getConfig().set(arena + ".signs", signs);
+                    plugin.saveConfig();
+                    e.getPlayer().sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("Signs.Sign-Removed"));
+                    return;
+                }
+            }
+        }
+        e.getPlayer().sendMessage(ChatManager.PREFIX + "" + ChatColor.RED + "Couldn't remove sign from configuration! Please do this manually!");
+    }
+
+    @EventHandler
+    public void onJoinAttempt(PlayerInteractEvent e) {
+        if(e.getAction() == Action.RIGHT_CLICK_BLOCK &&
+                e.getClickedBlock().getState() instanceof Sign && loadedSigns.containsKey(e.getClickedBlock().getState())) {
+
+            Arena arena = loadedSigns.get(e.getClickedBlock().getState());
+            if(arena != null) {
+                for(Arena loopArena : ArenaRegistry.getArenas()) {
+                    if(loopArena.getPlayers().contains(e.getPlayer())) {
+                        //todo translateeeeeeeeeeeeeeeeeeee
+                        e.getPlayer().sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("&lYou're already playing"));
                         return;
                     }
                 }
-
-                if(arenaSign.getMAX_PLAYERS() <= arenaSign.getPlayers().size()) {
-
-                    if((event.getPlayer().hasPermission(PermissionManager.getVIP()) || event.getPlayer().hasPermission(PermissionManager.getJoinFullGames()))) {
-
+                if(arena.getMaximumPlayers() <= arena.getPlayers().size()) {
+                    if((e.getPlayer().hasPermission(PermissionManager.getVip()) || e.getPlayer().hasPermission(PermissionManager.getJoinFullGames()))) {
                         boolean b = false;
-                        for(Player player : arenaSign.getPlayers()) {
-                            if(player.hasPermission(PermissionManager.getVIP()) || player.hasPermission(PermissionManager.getJoinFullGames())) {
-
-                            } else {
-                                if((arenaSign.getGameState() == ArenaState.STARTING || arenaSign.getGameState() == ArenaState.WAITING_FOR_PLAYERS)) {
-                                    arenaSign.leaveAttempt(player);
-                                    player.sendMessage(ArenaRegistry.getArenas().get(0).getChatManager().getMessage("YouGotKickedToMakePlaceForAPremiumPlayer", ChatColor.RED + "You got kicked out of the game to make place for a premium player!"));
-                                    arenaSign.getChatManager().broadcastMessage(ArenaRegistry.getArenas().get(0).getChatManager().getMessage("KickedToMakePlaceForPremiumPlayer", "%PLAYER% got removed from the game to make place for a premium players!", player));
-                                    arenaSign.joinAttempt(event.getPlayer());
-                                    b = true;
+                        for(Player player : arena.getPlayers()) {
+                            if(!player.hasPermission(PermissionManager.getVip()) || !player.hasPermission(PermissionManager.getJoinFullGames())) {
+                                if((arena.getGameState() == ArenaState.STARTING || arena.getGameState() == ArenaState.WAITING_FOR_PLAYERS)) {
+                                    arena.leaveAttempt(player);
+                                    //todo translateeeeeeeeeeeeeeeeeeeeeeeeeee
+                                    player.sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.You-Were-Kicked-For-Premium-Slot"));
+                                    String message = ChatManager.formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Kicked-For-Premium-Slot"), player);
+                                    for(Player p : arena.getPlayers()) {
+                                        p.sendMessage(ChatManager.PREFIX + message);
+                                    }
+                                    arena.joinAttempt(e.getPlayer());
                                     return;
                                 } else {
-                                    arenaSign.joinAttempt(event.getPlayer());
-                                    b = true;
+                                    arena.joinAttempt(e.getPlayer());
                                     return;
                                 }
                             }
-
                         }
                         if(!b) {
-                            event.getPlayer().sendMessage(ArenaRegistry.getArenas().get(0).getChatManager().getMessage("FullGameAlreadyFullWithPermiumPlayers", ChatColor.RED + "This game is already full with premium players! Sorry"));
+                            //todo transltateeraadaxreaercar
+                            e.getPlayer().sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("In-Game.No-Slots-For-Premium"));
                         }
-
                     } else {
-                        event.getPlayer().sendMessage(ArenaRegistry.getArenas().get(0).getChatManager().getMessage("NoPermissionToJoinFullGames", "You don't have the permission to join full games!"));
+                        //todo afsasdh vhagsd
+                        e.getPlayer().sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("In-Game.Full-Game-No-Permission"));
                     }
-                    // instance.joinAttempt(event.getPlayer());
-
                 } else {
-                    arenaSign.joinAttempt(event.getPlayer());
+                    arena.joinAttempt(e.getPlayer());
                 }
             }
         }
+    }
+
+    public void loadSigns() {
+        loadedSigns.clear();
+        for(String path : plugin.getConfig().getConfigurationSection("instances").getKeys(false)) {
+            for(String sign : plugin.getConfig().getStringList("instances." + path + ".signs")) {
+                Location loc = Util.getLocation(sign);
+                if(loc.getBlock().getState() instanceof Sign) {
+                    String mapName = ((Sign) loc.getBlock().getState()).getLine(2);
+                    for(Arena inst : ArenaRegistry.getArenas()) {
+                        if(inst.getMapName().equals(mapName)) {
+                            loadedSigns.put((Sign) loc.getBlock().getState(), inst);
+                        }
+                    }
+                } else {
+                    //todo DEBUGGGG Main.debug("Block at loc " + loc + " for arena " + path + " not a sign", System.currentTimeMillis());
+                }
+            }
+        }
+    }
+
+    private void updateSignScheduler() {
+        Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+            for(Sign s : loadedSigns.keySet()) {
+                Arena arena = loadedSigns.get(s);
+                ArenaState arenaState;
+                if(arena == null) {
+                    arenaState = ArenaState.WAITING_FOR_PLAYERS;
+                } else {
+                    arenaState = arena.getGameState();
+                }
+                FileConfiguration config = ConfigurationManager.getConfig("signModification");
+                s.setLine(0, ChatColor.translateAlternateColorCodes('&', config.getStringList("Signs.Lines").get(0)));
+                if(arena.getPlayers().size() == arena.getMaximumPlayers()) {
+                    //todo translargvuatetaeate
+                    s.setLine(1, ChatColor.translateAlternateColorCodes('&', config.getStringList("Signs.Lines").get(1).replaceAll("%state%", ChatManager.colorMessage("Signs.Game-States.Full-Game"))));
+                } else {
+                    //todo oooooooooooooooo
+                    s.setLine(1, ChatColor.translateAlternateColorCodes('&', config.getStringList("Signs.Lines").get(1).replaceAll("%state%", gameStateToString.get(arenaState))));
+                }
+                s.setLine(2, ChatColor.translateAlternateColorCodes('&', config.getStringList("Signs.Lines").get(2).replaceAll("%mapname%", arena.getMapName())));
+                s.setLine(3, ChatColor.translateAlternateColorCodes('&', config.getStringList("Signs.Lines").get(3)
+                        .replaceAll("%maxplayers%", String.valueOf(arena.getMaximumPlayers()))
+                        .replaceAll("%playersize%", String.valueOf(arena.getPlayers().size()))));
+                s.update();
+            }
+        }, 10, 10);
     }
 }

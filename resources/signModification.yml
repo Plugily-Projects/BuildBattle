@@ -1,45 +1,14 @@
 #todo move me
-signs:
-  format:
-    WaitingForNewGame:
-      lines:
-        '1': '--------'
-        '2': Waiting
-        '3': ''
-        '4': '--------'
-    WAITING_FOR_PLAYERS:
-      lines:
-        '1': "§2[Join]"
-        '2': '%MAPNAME%'
-        '3': '%ARENA%'
-        '4': "§5[%PLAYERSIZE%/%MAXPLAYERS%]"
-    STARTING:
-      lines:
-        '1': "§2[Starting]"
-        '2': '%MAPNAME%'
-        '3': '%ARENA%'
-        '4': "§5[%PLAYERSIZE%/%MAXPLAYERS%]"
-    FULL:
-      lines:
-        '1': "§4[Full]"
-        '2': '%MAPNAME%'
-        '3': '%ARENA%'
-        '4': "§5[%PLAYERSIZE%/%MAXPLAYERS%]"
-    INGAME:
-      lines:
-        '1': "§c[Ingame]"
-        '2': '%MAPNAME%'
-        '3': '%ARENA%'
-        '4': "§5[%PLAYERSIZE%/%MAXPLAYERS%]"
-    ENDING:
-      lines:
-        '1': "§c----------"
-        '2': "§c--ENDING--"
-        '3': "§c----------"
-        '4': "§c----------"
-    RESTARTING:
-      lines:
-        '1': "§c----------"
-        '2': "§cRESTARTING"
-        '3': "§c----------"
-        '4': "§c----------"
+Signs:
+  Lines:
+    - "&b&lBuildBattle"
+    - "%state%"
+    - "%mapname%"
+    - "&5[%playersize%/%maxplayers%]"
+  Game-States:
+    Inactive: "&lInactive..."
+    In-Game: "&lIn-game"
+    Starting: "&e&lStarting"
+    Full-Game: "&4&lFULL"
+    Ending: "&lEnding"
+    Restarting: "&c&lRestarting"

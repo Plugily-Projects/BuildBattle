@@ -76,8 +76,8 @@ public class Arena extends BukkitRunnable {
     private boolean END_GAME_COMMANDS_ENABLED = ConfigPreferences.isEndGameCommandsEnabled();
     private HashSet<Location> signs = new HashSet<>();
     private ArenaState gameState;
-    private int MIN_PLAYERS = 2;
-    private int MAX_PLAYERS = 10;
+    private int minimumPlayers = 2;
+    private int maximumPlayers = 10;
     private String mapname = "";
     private int timer;
     private String ID;
@@ -122,14 +122,6 @@ public class Arena extends BukkitRunnable {
         return plotManager;
     }
 
-    public boolean needsPlayers() {
-        if(!ConfigPreferences.isDynamicSignSystemEnabled()) {
-            return true;
-        } else {
-            return getGameState() == ArenaState.STARTING || getGameState() == ArenaState.WAITING_FOR_PLAYERS;
-        }
-    }
-
     private void setRandomTheme() {
         setTheme(themes.get(random.nextInt(themes.size() - 1)));
     }
@@ -137,7 +129,7 @@ public class Arena extends BukkitRunnable {
     public void leaveAttempt(Player p) {
         queue.remove(p.getUniqueId());
         User user = UserManager.getUser(p.getUniqueId());
-        if(getGameState() == ArenaState.INGAME || getGameState() == ArenaState.ENDING) UserManager.getUser(p.getUniqueId()).addInt("gamesplayed", 1);
+        if(getGameState() == ArenaState.IN_GAME || getGameState() == ArenaState.ENDING) UserManager.getUser(p.getUniqueId()).addInt("gamesplayed", 1);
         this.teleportToEndLocation(p);
         this.removePlayer(p);
         if(!user.isSpectator()) {
@@ -178,6 +170,8 @@ public class Arena extends BukkitRunnable {
     }
 
     public void run() {
+        //idle task
+        if(getPlayers().size() == 0 && getGameState() == ArenaState.WAITING_FOR_PLAYERS) return;
         if(!this.scoreboardDisabled) updateScoreboard();
         updateNewSign();
         if(BAR_ENABLED) {
@@ -186,7 +180,7 @@ public class Arena extends BukkitRunnable {
         switch(getGameState()) {
             case WAITING_FOR_PLAYERS:
                 getPlotManager().resetPlotsGradually();
-                if(getPlayers().size() < getMIN_PLAYERS()) {
+                if(getPlayers().size() < getMinimumPlayers()) {
                     if(getTimer() <= 0) {
                         setTimer(LOBBY_STARTING_TIMER);
                         getChatManager().broadcastMessage("Waiting-For-Players-Message");
@@ -207,7 +201,7 @@ public class Arena extends BukkitRunnable {
                     if(!getPlotManager().isPlotsCleared()) {
                         getPlotManager().resetQeuedPlots();
                     }
-                    setGameState(ArenaState.INGAME);
+                    setGameState(ArenaState.IN_GAME);
                     getPlotManager().distributePlots();
                     getPlotManager().teleportToPlots();
                     setTimer(BUILDTIME);
@@ -222,7 +216,7 @@ public class Arena extends BukkitRunnable {
                 }
                 setTimer(getTimer() - 1);
                 break;
-            case INGAME:
+            case IN_GAME:
                 if(getPlayers().size() <= 1) {
                     getChatManager().broadcastMessage("Only-Player-Left", ChatColor.RED + "U are the only player left. U will be teleported to the lobby");
                     setGameState(ArenaState.ENDING);
@@ -329,9 +323,6 @@ public class Arena extends BukkitRunnable {
 
                 setVoting(false);
                 receivedVoteItems = false;
-                if(ConfigPreferences.isDynamicSignSystemEnabled()) {
-                    plugin.getSignManager().addToQueue(this);
-                }
                 if(plugin.isBungeeActivated() && ConfigPreferences.getBungeeShutdown()) {
                     plugin.getServer().shutdown();
                 }
@@ -363,7 +354,7 @@ public class Arena extends BukkitRunnable {
                 case STARTING:
                     BossBarAPI.setMessage(player, ChatManager.getSingleMessage("Starting-Bar-Message", ChatManager.PREFIX + "BuildBattle made by " + ChatManager.HIGHLIGHTED + "TomTheDeveloper"));
                     break;
-                case INGAME:
+                case IN_GAME:
                     if(!isVoting()) {
                         BossBarAPI.setMessage(player, ChatManager.formatMessage(ChatManager.getSingleMessage("Time-Left-Bar-Message", ChatManager.formatMessage(ChatManager.PREFIX + "Time left :" + ChatManager.HIGHLIGHTED + " %FORMATTEDTIME%")), getTimer()));
                     } else {
@@ -414,8 +405,6 @@ public class Arena extends BukkitRunnable {
 
     public void start() {
         this.runTaskTimer(plugin, 20L, 20L);
-        System.out.print(getID() + " STARTED!");
-        plugin.getSignManager().addToQueue(this);
     }
 
     private void updateScoreboard() {
@@ -428,7 +417,7 @@ public class Arena extends BukkitRunnable {
     }
 
     public void joinAttempt(Player p) {
-        if((getGameState() == ArenaState.INGAME || getGameState() == ArenaState.ENDING || getGameState() == ArenaState.RESTARTING)) return;
+        if((getGameState() == ArenaState.IN_GAME || getGameState() == ArenaState.ENDING || getGameState() == ArenaState.RESTARTING)) return;
         if(plugin.isInventoryManagerEnabled()) plugin.getInventoryManager().saveInventoryToFile(p);
         teleportToLobby(p);
         this.addPlayer(p);
@@ -586,12 +575,12 @@ public class Arena extends BukkitRunnable {
         return ID;
     }
 
-    public int getMIN_PLAYERS() {
-        return MIN_PLAYERS;
+    public int getMinimumPlayers() {
+        return minimumPlayers;
     }
 
-    public void setMIN_PLAYERS(int MIN_PLAYERS) {
-        this.MIN_PLAYERS = MIN_PLAYERS;
+    public void setMinimumPlayers(int minimumPlayers) {
+        this.minimumPlayers = minimumPlayers;
     }
 
     public String getMapName() {
@@ -632,12 +621,12 @@ public class Arena extends BukkitRunnable {
         return chatManager;
     }
 
-    public int getMAX_PLAYERS() {
-        return MAX_PLAYERS;
+    public int getMaximumPlayers() {
+        return maximumPlayers;
     }
 
-    public void setMAX_PLAYERS(int MAX_PLAYERS) {
-        this.MAX_PLAYERS = MAX_PLAYERS;
+    public void setMaximumPlayers(int maximumPlayers) {
+        this.maximumPlayers = maximumPlayers;
     }
 
     public ArenaState getGameState() {
@@ -667,7 +656,7 @@ public class Arena extends BukkitRunnable {
     public void updateSign(Sign sign) {
         String[] strings = signlines.get(getGameState());
         if(getGameState() == ArenaState.STARTING || getGameState() == ArenaState.WAITING_FOR_PLAYERS) {
-            if(getPlayers().size() >= MAX_PLAYERS) strings = FULLlines;
+            if(getPlayers().size() >= maximumPlayers) strings = FULLlines;
         }
 
         int i = 0;
@@ -686,7 +675,7 @@ public class Arena extends BukkitRunnable {
         String returnstring = s;
         returnstring = returnstring.replaceAll("%ARENA%", getID());
         returnstring = returnstring.replaceAll("%PLAYERSIZE%", Integer.toString(getPlayers().size()));
-        returnstring = returnstring.replaceAll("%MAXPLAYERS%", Integer.toString(this.MAX_PLAYERS));
+        returnstring = returnstring.replaceAll("%MAXPLAYERS%", Integer.toString(this.maximumPlayers));
         returnstring = returnstring.replaceAll("%MAPNAME%", getMapName());
         returnstring = returnstring.replaceAll("(&([a-f0-9]))", "\u00A7$2");
         return returnstring;

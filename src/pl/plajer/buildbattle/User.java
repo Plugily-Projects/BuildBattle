@@ -79,7 +79,7 @@ public class User {
     }
 
     public boolean isPremium() {
-        if(this.toPlayer().hasPermission(PermissionManager.getVIP()) || this.toPlayer().hasPermission(PermissionManager.getMVP()) || this.toPlayer().hasPermission(PermissionManager.getELITE())) {
+        if(this.toPlayer().hasPermission(PermissionManager.getVip()) || this.toPlayer().hasPermission(PermissionManager.getMvp()) || this.toPlayer().hasPermission(PermissionManager.getElite())) {
             return true;
         } else {
             return false;

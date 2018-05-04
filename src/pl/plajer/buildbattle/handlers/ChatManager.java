@@ -4,7 +4,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.utils.Util;
 
@@ -39,6 +38,10 @@ public class ChatManager {
         prefix = getFromLanguageConfig("PREFIX", PREFIX + "[" + GAMENAME + "] " + NORMAL).replaceAll("(&([a-f0-9]))", "\u00A7$2");
     }
 
+    public static String colorMessage(String msg){
+        return ChatColor.translateAlternateColorCodes('&', msg);
+    }
+
     public static String getFromLanguageConfig(String messageID, String defaultMessage) {
         if(messages.containsKey(messageID)) return messages.get(messageID);
         FileConfiguration configuration = ConfigurationManager.getConfig("language");
@@ -53,6 +56,20 @@ public class ChatManager {
         registerMessage(messageID, configuration.getString(messageID));
         return configuration.getString(messageID);
 
+    }
+
+    public static String formatMessage(Arena arena, String message, Player player) {
+        String returnstring = message;
+        returnstring = returnstring.replaceAll("%PLAYER%", player.getName());
+        returnstring = returnstring.replaceAll("%TIME%", Integer.toString(arena.getTimer()));
+        returnstring = returnstring.replaceAll("%FORMATTEDTIME%", Util.formatIntoMMSS((arena.getTimer())));
+        returnstring = returnstring.replaceAll("(&([a-f0-9]))", "\u00A7$2");
+        returnstring = returnstring.replaceAll("%PLAYERSIZE%", Integer.toString(arena.getPlayers().size()));
+        returnstring = returnstring.replaceAll("%MAXPLAYERS%", Integer.toString(arena.getMaximumPlayers()));
+        returnstring = returnstring.replaceAll("%MINPLAYERS%", Integer.toString(arena.getMinimumPlayers()));
+        //todo remember
+        returnstring = colorMessage(returnstring);
+        return returnstring;
     }
 
     public static String getSingleMessage(String ID, String defualt) {
@@ -93,8 +110,8 @@ public class ChatManager {
         returnstring = returnstring.replaceAll("%FORMATTEDTIME%", Util.formatIntoMMSS((arena.getTimer())));
         returnstring = returnstring.replaceAll("(&([a-f0-9]))", "\u00A7$2");
         returnstring = returnstring.replaceAll("%PLAYERSIZE%", Integer.toString(arena.getPlayers().size()));
-        returnstring = returnstring.replaceAll("%MAXPLAYERS%", Integer.toString(arena.getMAX_PLAYERS()));
-        returnstring = returnstring.replaceAll("%MINPLAYERS%", Integer.toString(arena.getMIN_PLAYERS()));
+        returnstring = returnstring.replaceAll("%MAXPLAYERS%", Integer.toString(arena.getMaximumPlayers()));
+        returnstring = returnstring.replaceAll("%MINPLAYERS%", Integer.toString(arena.getMinimumPlayers()));
 
         returnstring = returnstring.replaceAll("&l", ChatColor.BOLD.toString());
         returnstring = returnstring.replaceAll("&n", ChatColor.UNDERLINE.toString());
@@ -111,8 +128,8 @@ public class ChatManager {
         returnstring = returnstring.replaceAll("%FORMATTEDTIME%", Util.formatIntoMMSS((arena.getTimer())));
         returnstring = returnstring.replaceAll("(&([a-f0-9]))", "\u00A7$2");
         returnstring = returnstring.replaceAll("%PLAYERSIZE%", Integer.toString(arena.getPlayers().size()));
-        returnstring = returnstring.replaceAll("%MAXPLAYERS%", Integer.toString(arena.getMAX_PLAYERS()));
-        returnstring = returnstring.replaceAll("%MINPLAYERS%", Integer.toString(arena.getMIN_PLAYERS()));
+        returnstring = returnstring.replaceAll("%MAXPLAYERS%", Integer.toString(arena.getMaximumPlayers()));
+        returnstring = returnstring.replaceAll("%MINPLAYERS%", Integer.toString(arena.getMinimumPlayers()));
         returnstring = returnstring.replaceAll("&l", ChatColor.BOLD.toString());
         returnstring = returnstring.replaceAll("&n", ChatColor.UNDERLINE.toString());
         returnstring = returnstring.replaceAll("&m", ChatColor.STRIKETHROUGH.toString());
@@ -125,18 +142,17 @@ public class ChatManager {
         if(messages.containsKey(ID)) {
             String message = formatMessage(messages.get(ID));
             for(Player player : arena.getPlayers()) {
-                player.sendMessage(getPrefix(Arena.getPlugin()) + message);
+                player.sendMessage(getPrefix() + message);
             }
         } else {
             for(Player p : arena.getPlayers()) {
-                p.sendMessage(getPrefix(Arena.getPlugin()) + ID);
+                p.sendMessage(getPrefix() + ID);
             }
         }
 
     }
 
-    public String getPrefix(Main plugin) {
-        //return PREFIX + "[" + GAMENAME + "] " + NORMAL;
+    public String getPrefix() {
         return prefix;
     }
 
@@ -179,7 +195,7 @@ public class ChatManager {
         } else if(messages.containsKey("Join")) {
             arena.getChatManager().broadcastMessage("Join", p);
         } else {
-            arena.getChatManager().broadcastMessage(HIGHLIGHTED + p.getName() + NORMAL + " joined the Game! (" + arena.getPlayers().size() + "/" + arena.getMAX_PLAYERS() + ")");
+            arena.getChatManager().broadcastMessage(HIGHLIGHTED + p.getName() + NORMAL + " joined the Game! (" + arena.getPlayers().size() + "/" + arena.getMaximumPlayers() + ")");
         }
     }
 
@@ -189,53 +205,34 @@ public class ChatManager {
         } else if(messages.containsKey("Leave")) {
             arena.getChatManager().broadcastMessage("Leave", p);
         } else {
-            arena.getChatManager().broadcastMessage(HIGHLIGHTED + p.getName() + NORMAL + " left the Game! (" + arena.getPlayers().size() + "/" + arena.getMAX_PLAYERS() + ")");
+            arena.getChatManager().broadcastMessage(HIGHLIGHTED + p.getName() + NORMAL + " left the Game! (" + arena.getPlayers().size() + "/" + arena.getMaximumPlayers() + ")");
         }
     }
 
     public void broadcastMessage(String messageID, Player player) {
         String message = formatMessage(messages.get(messageID), player);
         for(Player player1 : arena.getPlayers()) {
-            player1.sendMessage(getPrefix(Arena.getPlugin()) + message);
+            player1.sendMessage(getPrefix() + message);
         }
     }
 
     public void broadcastMessage(String messageID, OfflinePlayer player) {
         String message = formatMessage(messages.get(messageID), player);
         for(Player player1 : arena.getPlayers()) {
-            player1.sendMessage(getPrefix(Arena.getPlugin()) + message);
+            player1.sendMessage(getPrefix() + message);
         }
     }
 
     public void broadcastMessage(String messageID, int integer) {
         String message = formatMessage(messages.get(messageID), integer);
         for(Player player1 : arena.getPlayers()) {
-            player1.sendMessage(getPrefix(Arena.getPlugin()) + message);
+            player1.sendMessage(getPrefix() + message);
         }
     }
 
     public String getMessage(String ID) {
-
         String message = messages.get(ID);
         return formatMessage(message);
-    }
-
-    public String getMessage(String ID, String defaultmessage) {
-        if(messages.containsKey(ID)) {
-            return getMessage(ID);
-        } else {
-            ChatManager.getFromLanguageConfig(ID, defaultmessage);
-            return getMessage(ID);
-        }
-    }
-
-    public String getMessage(String ID, String defaultmessage, Player player) {
-        if(messages.containsKey(ID)) {
-            return getMessage(ID, player);
-        } else {
-            ChatManager.getFromLanguageConfig(ID, defaultmessage);
-            return getMessage(ID, player);
-        }
     }
 
     public String getMessage(String ID, String defaultmessage, OfflinePlayer player) {
@@ -271,8 +268,8 @@ public class ChatManager {
         returnstring = returnstring.replaceAll("%FORMATTEDTIME%", Util.formatIntoMMSS((arena.getTimer())));
         returnstring = returnstring.replaceAll("(&([a-f0-9]))", "\u00A7$2");
         returnstring = returnstring.replaceAll("%PLAYERSIZE%", Integer.toString(arena.getPlayers().size()));
-        returnstring = returnstring.replaceAll("%MAXPLAYERS%", Integer.toString(arena.getMAX_PLAYERS()));
-        returnstring = returnstring.replaceAll("%MINPLAYERS%", Integer.toString(arena.getMIN_PLAYERS()));
+        returnstring = returnstring.replaceAll("%MAXPLAYERS%", Integer.toString(arena.getMaximumPlayers()));
+        returnstring = returnstring.replaceAll("%MINPLAYERS%", Integer.toString(arena.getMinimumPlayers()));
         returnstring = returnstring.replaceAll("&l", ChatColor.BOLD.toString());
         returnstring = returnstring.replaceAll("&n", ChatColor.UNDERLINE.toString());
         returnstring = returnstring.replaceAll("&m", ChatColor.STRIKETHROUGH.toString());
@@ -288,8 +285,8 @@ public class ChatManager {
         returnstring = returnstring.replaceAll("%FORMATTEDTIME%", Util.formatIntoMMSS((arena.getTimer())));
         returnstring = returnstring.replaceAll("(&([a-f0-9]))", "\u00A7$2");
         returnstring = returnstring.replaceAll("%PLAYERSIZE%", Integer.toString(arena.getPlayers().size()));
-        returnstring = returnstring.replaceAll("%MAXPLAYERS%", Integer.toString(arena.getMAX_PLAYERS()));
-        returnstring = returnstring.replaceAll("%MINPLAYERS%", Integer.toString(arena.getMIN_PLAYERS()));
+        returnstring = returnstring.replaceAll("%MAXPLAYERS%", Integer.toString(arena.getMaximumPlayers()));
+        returnstring = returnstring.replaceAll("%MINPLAYERS%", Integer.toString(arena.getMinimumPlayers()));
         returnstring = returnstring.replaceAll("&l", ChatColor.BOLD.toString());
         returnstring = returnstring.replaceAll("&n", ChatColor.UNDERLINE.toString());
         returnstring = returnstring.replaceAll("&m", ChatColor.STRIKETHROUGH.toString());
@@ -305,8 +302,8 @@ public class ChatManager {
         returnstring = returnstring.replaceAll("%FORMATTEDTIME%", Util.formatIntoMMSS((arena.getTimer())));
         returnstring = returnstring.replaceAll("(&([a-f0-9]))", "\u00A7$2");
         returnstring = returnstring.replaceAll("%PLAYERSIZE%", Integer.toString(arena.getPlayers().size()));
-        returnstring = returnstring.replaceAll("%MAXPLAYERS%", Integer.toString(arena.getMAX_PLAYERS()));
-        returnstring = returnstring.replaceAll("%MINPLAYERS%", Integer.toString(arena.getMIN_PLAYERS()));
+        returnstring = returnstring.replaceAll("%MAXPLAYERS%", Integer.toString(arena.getMaximumPlayers()));
+        returnstring = returnstring.replaceAll("%MINPLAYERS%", Integer.toString(arena.getMinimumPlayers()));
         returnstring = returnstring.replaceAll("&l", ChatColor.BOLD.toString());
         returnstring = returnstring.replaceAll("&n", ChatColor.UNDERLINE.toString());
         returnstring = returnstring.replaceAll("&m", ChatColor.STRIKETHROUGH.toString());
@@ -317,7 +314,6 @@ public class ChatManager {
 
     public void loadMessages() {
         for(String path : config.getKeys(false)) {
-            ;
             String string = config.getString(path);
             messages.put(path, string);
         }

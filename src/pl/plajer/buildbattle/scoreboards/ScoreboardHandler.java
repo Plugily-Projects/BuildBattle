@@ -53,12 +53,12 @@ public class ScoreboardHandler {
 
 
     private String format(String string, Player player) {
-        string = string.replaceAll("%MIN_PLAYERS%", Integer.toString(buildInstance.getMIN_PLAYERS()));
+        string = string.replaceAll("%MIN_PLAYERS%", Integer.toString(buildInstance.getMinimumPlayers()));
         string = string.replaceAll("%PLAYERS%", Integer.toString(buildInstance.getPlayers().size()));
         string = string.replaceAll("%PLAYER%", player.getName());
         string = string.replaceAll("%THEME%", buildInstance.getTheme());
-        string = string.replaceAll("%MIN_PLAYERS%", Integer.toString(buildInstance.getMIN_PLAYERS()));
-        string = string.replaceAll("%MAX_PLAYERS%", Integer.toString(buildInstance.getMAX_PLAYERS()));
+        string = string.replaceAll("%MIN_PLAYERS%", Integer.toString(buildInstance.getMinimumPlayers()));
+        string = string.replaceAll("%MAX_PLAYERS%", Integer.toString(buildInstance.getMaximumPlayers()));
         string = string.replaceAll("%TIMER%", Integer.toString(buildInstance.getTimer()));
         string = string.replaceAll("%TIME_LEFT%", Long.toString(buildInstance.getTimeleft()));
         string = string.replaceAll("%FORMATTED_TIME_LEFT%", buildInstance.getFormattedTimeLeft());

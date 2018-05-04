@@ -6,9 +6,9 @@
 # %MIN_PLAYERS% -   Show minimum players to start the game
 # %MAX_PLAYERS% -   Show maximum amount of players that are allowed ingame.
 # %TIMER%       -   STARTING: Shows when the game is about to start
-# %TIME_LEFT%   -   INGAME: Shows how many time is left
-# %FORMATTED_TIME_LEFT%  - INGAME: Show the time that is left but then formatted (for example: 4:38)
-# %THEME%       -   INGAME: Shows the theme
+# %TIME_LEFT%   -   IN_GAME: Shows how many time is left
+# %FORMATTED_TIME_LEFT%  - IN_GAME: Show the time that is left but then formatted (for example: 4:38)
+# %THEME%       -   IN_GAME: Shows the theme
 #
 # IF U USE VAULT (Will NOT work if Vault isn't implemented).
 # %MONEY%      - Shows money balance from players (Needs Vault Economy)

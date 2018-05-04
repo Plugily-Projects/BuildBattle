@@ -80,10 +80,6 @@ public class ConfigPreferences {
         return options.get("Disable-Mob-Spawning-Completely") == 1;
     }
 
-    public static boolean isDynamicSignSystemEnabled() {
-        return options.get("Dynamic-Sign-System") == 1;
-    }
-
     public static int getDefaultFloorMaterial() {
         return options.get("Default-Floor-Material");
     }
@@ -172,7 +168,6 @@ public class ConfigPreferences {
         loadOptions.add("Fly-Range-Out-Plot");
         loadOptions.add("Default-Floor-Material");
         loadOptions.add("Disable-Mob-Spawning-Completely");
-        loadOptions.add("Dynamic-Sign-System");
         loadOptions.add("Amount-One-Particle-Effect-Contains");
         loadOptions.add("Max-Amount-Particles");
         loadOptions.add("Particle-Refresh-Per-Tick");

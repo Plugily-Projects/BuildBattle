@@ -103,7 +103,10 @@ public class GameCommands implements CommandExecutor {
             return true;
         }
         if(cmd.getName().equalsIgnoreCase("addsigns")) {
-            if(checkSenderIsConsole(sender)) return true;
+            //todo replace with static manager
+            sender.sendMessage("unused");
+            return true;
+            /*if(checkSenderIsConsole(sender)) return true;
             Player player = (Player) sender;
             Selection selection = plugin.getWorldEditPlugin().getSelection(player);
             int i = plugin.getConfig().getConfigurationSection("signs").getKeys(false).size();
@@ -147,7 +150,7 @@ public class GameCommands implements CommandExecutor {
             }
             plugin.saveConfig();
             player.sendMessage(ChatColor.GREEN + "" + counter + " signs added!");
-            return true;
+            return true;*/
         }
         if(cmd.getName().equalsIgnoreCase("buildbattle")) {
             if(checkSenderIsConsole(sender)) return true;
@@ -168,10 +171,10 @@ public class GameCommands implements CommandExecutor {
                     player.sendMessage(ChatManager.getSingleMessage("Arena-Does-Not-Exist", ChatColor.RED + "This arena does not exist!"));
                     return true;
                 } else {
-                    if(arena.getPlayers().size() >= arena.getMAX_PLAYERS() && !UserManager.getUser(player.getUniqueId()).isPremium()) {
+                    if(arena.getPlayers().size() >= arena.getMaximumPlayers() && !UserManager.getUser(player.getUniqueId()).isPremium()) {
                         player.sendMessage(ChatManager.getSingleMessage("Arena-Is-Full", ChatColor.RED + "This arena does not exist!"));
                         return true;
-                    } else if(arena.getGameState() == ArenaState.INGAME) {
+                    } else if(arena.getGameState() == ArenaState.IN_GAME) {
                         player.sendMessage(ChatManager.getSingleMessage("Arena-Is-Already-Started", ChatColor.RED + "This arena is already started!"));
                         return true;
                     } else {

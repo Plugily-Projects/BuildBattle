@@ -11,15 +11,6 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * @author
- */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
-/**
  * @author IvanTheBuilder
  */
 public class ConfigurationManager {
