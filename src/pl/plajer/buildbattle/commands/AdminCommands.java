@@ -44,7 +44,7 @@ public class AdminCommands extends GameCommands {
             plugin.saveConfig();
             player.sendMessage(ChatColor.GREEN + "Plot added to instance " + ChatColor.RED + arena);
         } else {
-            player.sendMessage(ChatColor.RED + "U don't have the right selection!");
+            player.sendMessage(ChatColor.RED + "You don't have the right selection!");
         }
     }
 

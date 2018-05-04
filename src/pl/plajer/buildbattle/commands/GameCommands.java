@@ -315,6 +315,7 @@ public class GameCommands implements CommandExecutor {
         plugin.getConfig().set(path + "minimumplayers", plugin.getConfig().getInt("instances.default.minimumplayers"));
         plugin.getConfig().set(path + "maximumplayers", plugin.getConfig().getInt("instances.default.maximumplayers"));
         plugin.getConfig().set(path + "mapname", plugin.getConfig().getInt("instances.default.mapname"));
+        plugin.getConfig().set(path + "signs", new ArrayList<>());
 
         plugin.getConfig().set(path + "world", plugin.getConfig().getString("instances.default.world"));
         plugin.saveConfig();
@@ -362,16 +363,6 @@ public class GameCommands implements CommandExecutor {
                 break;
         }
         return true;
-    }
-
-    public List<Sign> getSigns() {
-        List<Sign> list = new ArrayList<>();
-        for(String s : plugin.getConfig().getConfigurationSection("signs").getKeys(false)) {
-            s = "signs." + s;
-            Location location = Util.getLocation(s);
-            if(location.getBlock().getState() instanceof Sign) list.add((Sign) location.getBlock().getState());
-        }
-        return list;
     }
 
     private enum LocationType {
