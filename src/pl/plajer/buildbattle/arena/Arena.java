@@ -309,11 +309,10 @@ public class Arena extends BukkitRunnable {
                 if(plugin.isBungeeActivated() && ConfigPreferences.getBungeeShutdown()) {
                     plugin.getServer().shutdown();
                 }
+                //todo remove me
                 if(RESTART_ON_END && BUNGEE_SHUTDOWN) {
                     plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), "restart");
                 }
-
-
                 setGameState(ArenaState.WAITING_FOR_PLAYERS);
                 topList.clear();
         }
