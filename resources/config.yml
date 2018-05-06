@@ -101,4 +101,15 @@ End-Game-Commands:
 Whitelisted-Commands:
 - me
 - help
+
+Update-Notifier:
+  # Should we check for updates on plugin start/after admin join?
+  # You REALLY should have this true!
+  Enabled: true
+  # Should we inform you when beta version is out?
+  # BETA IS NOT ALWAYS AS STABLE AS NORMAL RELEASE!
+  Notify-Beta-Versions: true
+
 DatabaseActivated: false
+
+# That's the end, really! But... where is the dragon!?

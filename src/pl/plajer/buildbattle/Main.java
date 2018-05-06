@@ -27,6 +27,7 @@ import pl.plajer.buildbattle.handlers.BungeeManager;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.ConfigurationManager;
 import pl.plajer.buildbattle.handlers.InventoryManager;
+import pl.plajer.buildbattle.handlers.PlaceholderManager;
 import pl.plajer.buildbattle.handlers.SignManager;
 import pl.plajer.buildbattle.handlers.UserManager;
 import pl.plajer.buildbattle.items.SpecialItem;
@@ -37,6 +38,7 @@ import pl.plajer.buildbattle.stats.BuildBattleStats;
 import pl.plajer.buildbattle.stats.FileStats;
 import pl.plajer.buildbattle.stats.MySQLDatabase;
 import pl.plajer.buildbattle.utils.MetricsLite;
+import pl.plajer.buildbattle.utils.UpdateChecker;
 import pl.plajer.buildbattle.utils.Util;
 
 import java.io.IOException;
@@ -218,6 +220,32 @@ public class Main extends JavaPlugin {
         }
     }
 
+    private void checkUpdate(){
+        String currentVersion = "v" + Bukkit.getPluginManager().getPlugin("BuildBattle").getDescription().getVersion();
+        if(getConfig().getBoolean("Update-Notifier.Enabled")) {
+            try {
+                UpdateChecker.checkUpdate(currentVersion);
+                String latestVersion = UpdateChecker.getLatestVersion();
+                if(latestVersion != null) {
+                    latestVersion = "v" + latestVersion;
+                    if(latestVersion.contains("b")) {
+                        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
+                        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Current version %old%, latest version %new%".replaceAll("%old%", currentVersion).replaceAll("%new%", latestVersion));
+                    } else {
+                        //MessageUtils.updateIsHere();
+                        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Your Build Battle plugin is outdated! Download it to keep with latest changes and fixes.");
+                        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Disable this option in config.yml if you wish.");
+                        Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + currentVersion + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + latestVersion);
+                    }
+                }
+            } catch(Exception ex) {
+                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] An error occured while checking for update!");
+                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Please check internet connection or check for update via WWW site directly!");
+                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "WWW site https://www.spigotmc.org/resources/buildbattle-1-8.44703/");
+            }
+        }
+    }
+
     @Override
     public void onDisable() {
         for(final Player player : getServer().getOnlinePlayers()) {
@@ -261,6 +289,8 @@ public class Main extends JavaPlugin {
         new SpectatorEvents(this);
         new MetricsLite(this);
         new JoinEvents(this);
+        new PlaceholderManager();
+        checkUpdate();
     }
 
     public boolean isDatabaseActivated() {

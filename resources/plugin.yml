@@ -2,7 +2,7 @@ main: pl.plajer.buildbattle.Main
 version: 3.0.0-ALPHA
 name: BuildBattle
 depend: [WorldEdit]
-softdepend: [BarAPI, Vault]
+softdepend: [BarAPI, Vault, PlaceholderAPI]
 commands:
   leave:
     usage: /leave
