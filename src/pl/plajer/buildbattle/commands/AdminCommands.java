@@ -14,6 +14,8 @@ import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.utils.Util;
 
+import java.util.List;
+
 /**
  * @author Plajer
  * <p>
@@ -79,15 +81,14 @@ public class AdminCommands extends GameCommands {
         if(arena == null) {
             player.sendMessage(ChatColor.RED + "Arena doesn't exist!");
         } else {
-            Location location = player.getTargetBlock(null, 10).getLocation();
-            if(location.getBlock().getState() instanceof Sign) {
-                int keys = 0;
-                if(plugin.getConfig().contains("signs." + arena.getID())) {
-                    keys = plugin.getConfig().getConfigurationSection("signs." + arena.getID()).getKeys(false).size();
-                }
-                Util.saveLoc("newsigns." + arena.getID() + "." + (keys + 1), player.getTargetBlock(null, 10).getLocation());
+            Location loc = player.getTargetBlock(null, 10).getLocation();
+            if(loc.getBlock().getState() instanceof Sign) {
+                List<String> signs = plugin.getConfig().getStringList("instances." + arena.getID() + ".signs");
+                signs.add(loc.getWorld().getName() + "," + loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getYaw() + "," + loc.getPitch());
+                plugin.getConfig().set("instances." + arena.getID() + ".signs", signs);
+                plugin.saveConfig();
+                plugin.getSignManager().getLoadedSigns().put((Sign) loc.getBlock().getState(), arena);
                 player.sendMessage(ChatColor.GREEN + "SIGN ADDED!");
-                arena.addSign(player.getTargetBlock(null, 10).getLocation());
             } else {
                 player.sendMessage(ChatColor.RED + "You have to look at a sign to perform this command!");
             }

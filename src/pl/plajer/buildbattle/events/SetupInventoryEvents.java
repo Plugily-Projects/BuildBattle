@@ -23,6 +23,7 @@ public class SetupInventoryEvents implements Listener {
 
     public SetupInventoryEvents(Main plugin) {
         this.plugin = plugin;
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler

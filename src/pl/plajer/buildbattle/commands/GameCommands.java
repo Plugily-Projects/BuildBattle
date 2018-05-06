@@ -1,13 +1,8 @@
 package pl.plajer.buildbattle.commands;
 
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
-import com.sk89q.worldedit.bukkit.selections.Selection;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -25,7 +20,6 @@ import pl.plajer.buildbattle.utils.SetupInventory;
 import pl.plajer.buildbattle.utils.Util;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Plajer
@@ -299,9 +293,9 @@ public class GameCommands implements CommandExecutor {
             player.sendMessage(ChatColor.GREEN + "MAX PLAYERS: " + ChatColor.RED + plugin.getConfig().getInt("instances.default.minimumplayers"));
             player.sendMessage(ChatColor.GREEN + "MIN PLAYERS: " + ChatColor.RED + plugin.getConfig().getInt("instances.default.maximumplayers"));
             player.sendMessage(ChatColor.GREEN + "MAP NAME: " + ChatColor.RED + plugin.getConfig().getInt("instances.default.mapname"));
-            player.sendMessage(ChatColor.GREEN + "LOBBY LOCATION " + ChatColor.RED + Util.locationToString(Util.getLocation("instances." + strings[1] + ".lobbylocation")));
-            player.sendMessage(ChatColor.GREEN + "Start LOCATION " + ChatColor.RED + Util.locationToString(Util.getLocation("instances." + strings[1] + ".Startlocation")));
-            player.sendMessage(ChatColor.GREEN + "End LOCATION " + ChatColor.RED + Util.locationToString(Util.getLocation("instances." + strings[1] + ".Endlocation")));
+            player.sendMessage(ChatColor.GREEN + "LOBBY LOCATION " + ChatColor.RED + Util.locationToString(Util.getLocation(true, "instances." + strings[1] + ".lobbylocation")));
+            player.sendMessage(ChatColor.GREEN + "Start LOCATION " + ChatColor.RED + Util.locationToString(Util.getLocation(true, "instances." + strings[1] + ".Startlocation")));
+            player.sendMessage(ChatColor.GREEN + "End LOCATION " + ChatColor.RED + Util.locationToString(Util.getLocation(true, "instances." + strings[1] + ".Endlocation")));
             player.sendMessage(ChatColor.BOLD + "------------------------------------------- ");
             player.sendMessage(ChatColor.RED + "You can edit this game instances in the config!");
         }

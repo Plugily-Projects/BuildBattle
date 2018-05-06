@@ -5,8 +5,6 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -199,6 +197,8 @@ public class Main extends JavaPlugin {
         ParticleMenu.loadFromConfig();
         PlayerHeadsMenu.loadHeadItems();
         loadInstances();
+        //load signs after arenas
+        signManager = new SignManager(this);
         SpecialItem.loadAll();
         VoteItems.loadVoteItemsFromConfig();
         this.getServer().getPluginManager().registerEvents(new IngameEvents(this), this);
@@ -220,7 +220,7 @@ public class Main extends JavaPlugin {
         }
     }
 
-    private void checkUpdate(){
+    private void checkUpdate() {
         String currentVersion = "v" + Bukkit.getPluginManager().getPlugin("BuildBattle").getDescription().getVersion();
         if(getConfig().getBoolean("Update-Notifier.Enabled")) {
             try {
@@ -282,7 +282,6 @@ public class Main extends JavaPlugin {
         User.plugin = this;
         loadLanguageFile();
         new SetupInventoryEvents(this);
-        signManager = new SignManager(this);
         bungeeActivated = getConfig().getBoolean("BungeeActivated");
         new GameEvents(this);
         new GameCommands(this);
@@ -333,14 +332,14 @@ public class Main extends JavaPlugin {
             else arena.setMaximumPlayers(getConfig().getInt("instances.default.maximumplayers"));
             if(getConfig().contains(s + "mapname")) arena.setMapName(getConfig().getString(s + "mapname"));
             else arena.setMapName(getConfig().getString("instances.default.mapname"));
-            if(getConfig().contains(s + "lobbylocation")) arena.setLobbyLocation(Util.getLocation(s + "lobbylocation"));
-            if(getConfig().contains(s + "Startlocation")) arena.setStartLocation(Util.getLocation(s + "Startlocation"));
+            if(getConfig().contains(s + "lobbylocation")) arena.setLobbyLocation(Util.getLocation(true, s + "lobbylocation"));
+            if(getConfig().contains(s + "Startlocation")) arena.setStartLocation(Util.getLocation(true, s + "Startlocation"));
             else {
                 System.out.print(ID + " doesn't contains an start location!");
                 ArenaRegistry.registerArena(arena);
                 continue;
             }
-            if(getConfig().contains(s + "Endlocation")) arena.setEndLocation(Util.getLocation(s + "Endlocation"));
+            if(getConfig().contains(s + "Endlocation")) arena.setEndLocation(Util.getLocation(true, s + "Endlocation"));
             else {
                 if(!bungeeActivated) {
                     System.out.print(ID + " doesn't contains an end location!");
@@ -351,24 +350,14 @@ public class Main extends JavaPlugin {
             if(getConfig().contains(s + "plots")) {
                 for(String plotname : getConfig().getConfigurationSection(s + "plots").getKeys(false)) {
                     BuildPlot buildPlot = new BuildPlot();
-                    buildPlot.setMAXPOINT(Util.getLocation(s + "plots." + plotname + ".maxpoint"));
-                    buildPlot.setMINPOINT(Util.getLocation(s + "plots." + plotname + ".minpoint"));
+                    buildPlot.setMAXPOINT(Util.getLocation(true, s + "plots." + plotname + ".maxpoint"));
+                    buildPlot.setMINPOINT(Util.getLocation(true, s + "plots." + plotname + ".minpoint"));
                     buildPlot.reset();
                     arena.getPlotManager().addBuildPlot(buildPlot);
                 }
 
             } else {
                 System.out.print("Instance doesn't contains plots!");
-            }
-            if(getConfig().contains("newsigns." + arena.getID())) {
-                for(String key : getConfig().getConfigurationSection("newsigns." + arena.getID()).getKeys(false)) {
-                    if(Util.getLocation("newsigns." + arena.getID() + "." + key).getBlock().getState() instanceof Sign) {
-                        arena.addSign(Util.getLocation("newsigns." + arena.getID() + "." + key));
-                    } else {
-                        Location location = Util.getLocation("newsigns." + arena.getID() + "." + key);
-                        System.out.println("SIGN ON LOCATION " + location.getX() + ", " + location.getY() + ", " + location.getZ() + "iIN WORLD " + location.getWorld().getName() + "ISN'T A SIGN!");
-                    }
-                }
             }
             ArenaRegistry.registerArena(arena);
             arena.start();

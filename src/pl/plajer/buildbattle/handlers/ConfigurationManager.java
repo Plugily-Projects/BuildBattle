@@ -28,23 +28,16 @@ public class ConfigurationManager {
     public static FileConfiguration getConfig(String filename) {
         File file = new File(plugin.getDataFolder() + File.separator + filename + ".yml");
         if(!file.exists()) {
-            try {
-                plugin.getLogger().info("Creating " + filename + ".yml because it does not exist!");
-                file.createNewFile();
-            } catch(IOException ex) {
-                ex.printStackTrace();
-                Bukkit.getConsoleSender().sendMessage("Cannot save file " + filename + ".yml!");
-                Bukkit.getConsoleSender().sendMessage("Create blank file " + filename + ".yml or restart the server!");
-            }
+            plugin.getLogger().info("Creating " + filename + ".yml because it does not exist!");
+            plugin.saveResource(filename + ".yml", true);
         }
         file = new File(plugin.getDataFolder(), filename + ".yml");
         YamlConfiguration config = new YamlConfiguration();
         try {
             config.load(file);
-            config.save(file);
         } catch(InvalidConfigurationException | IOException ex) {
             ex.printStackTrace();
-            Bukkit.getConsoleSender().sendMessage("Cannot save file " + filename + ".yml!");
+            Bukkit.getConsoleSender().sendMessage("Cannot load file " + filename + ".yml!");
             Bukkit.getConsoleSender().sendMessage("Create blank file " + filename + ".yml or restart the server!");
         }
         return config;

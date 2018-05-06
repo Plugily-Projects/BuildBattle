@@ -110,8 +110,13 @@ public class Util {
         fw.setFireworkMeta(fwm);
     }
 
-    public static Location getLocation(String path) {
-        String[] loc = plugin.getConfig().getString(path).split(",");
+    public static Location getLocation(boolean configUsage, String path) {
+        String[] loc;
+        if(configUsage) {
+            loc = plugin.getConfig().getString(path).split(",");
+        } else {
+            loc = path.split(",");
+        }
         plugin.getServer().createWorld(new WorldCreator(loc[0]));
         World w = plugin.getServer().getWorld(loc[0]);
         Double x = Double.parseDouble(loc[1]);

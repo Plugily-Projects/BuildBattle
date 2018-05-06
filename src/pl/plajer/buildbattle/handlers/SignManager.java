@@ -92,18 +92,19 @@ public class SignManager implements Listener {
 
     @EventHandler
     public void onSignDestroy(BlockBreakEvent e) {
-        //todo perm check if(!e.getPlayer().hasPermission("buildbattle.admin.sign.break")) return;
+        if(!e.getPlayer().hasPermission("buildbattle.admin.sign.break")) return;
         if(loadedSigns.get(e.getBlock().getState()) == null) return;
         loadedSigns.remove(e.getBlock().getState());
-        String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + "," + e.getBlock().getY() + "," + e.getBlock().getZ() + "," + "0.0,0.0";
+        String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + ".0" + "," + e.getBlock().getY() + ".0" + "," + e.getBlock().getZ() + ".0" + "," + "0.0,0.0";
         for(String arena : plugin.getConfig().getConfigurationSection("instances").getKeys(false)) {
             for(String sign : plugin.getConfig().getStringList("instances." + arena + ".signs")) {
                 if(sign.equals(location)) {
                     List<String> signs = plugin.getConfig().getStringList("instances." + arena + ".signs");
                     signs.remove(location);
-                    plugin.getConfig().set(arena + ".signs", signs);
+                    plugin.getConfig().set("instances." + arena + ".signs", signs);
                     plugin.saveConfig();
-                    e.getPlayer().sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("Signs.Sign-Removed"));
+                    //todo translat
+                    e.getPlayer().sendMessage(ChatManager.PREFIX + "REMOVEDD");//ChatManager.colorMessage("Signs.Sign-Removed"));
                     return;
                 }
             }
@@ -161,18 +162,18 @@ public class SignManager implements Listener {
         }
     }
 
+    public Map<Sign, Arena> getLoadedSigns() {
+        return loadedSigns;
+    }
+
     public void loadSigns() {
         loadedSigns.clear();
         for(String path : plugin.getConfig().getConfigurationSection("instances").getKeys(false)) {
+            if(path.equals("default")) continue;
             for(String sign : plugin.getConfig().getStringList("instances." + path + ".signs")) {
-                Location loc = Util.getLocation(sign);
+                Location loc = Util.getLocation(false, sign);
                 if(loc.getBlock().getState() instanceof Sign) {
-                    String mapName = ((Sign) loc.getBlock().getState()).getLine(2);
-                    for(Arena inst : ArenaRegistry.getArenas()) {
-                        if(inst.getMapName().equals(mapName)) {
-                            loadedSigns.put((Sign) loc.getBlock().getState(), inst);
-                        }
-                    }
+                    loadedSigns.put((Sign) loc.getBlock().getState(), ArenaRegistry.getArena(path));
                 } else {
                     //todo DEBUGGGG Main.debug("Block at loc " + loc + " for arena " + path + " not a sign", System.currentTimeMillis());
                 }
