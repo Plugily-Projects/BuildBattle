@@ -10,6 +10,7 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.Arena;
+import pl.plajer.buildbattle.utils.Util;
 
 /**
  * Created by Tom on 31/01/2016.
@@ -61,7 +62,7 @@ public class ScoreboardHandler {
         string = string.replaceAll("%MAX_PLAYERS%", Integer.toString(buildInstance.getMaximumPlayers()));
         string = string.replaceAll("%TIMER%", Integer.toString(buildInstance.getTimer()));
         string = string.replaceAll("%TIME_LEFT%", Long.toString(buildInstance.getTimeleft()));
-        string = string.replaceAll("%FORMATTED_TIME_LEFT%", buildInstance.getFormattedTimeLeft());
+        string = string.replaceAll("%FORMATTED_TIME_LEFT%", Util.formatIntoMMSS(buildInstance.getTimer()));
         string = string.replaceAll("%ARENA_ID%", buildInstance.getID());
         string = string.replaceAll("%MAPNAME%", buildInstance.getMapName());
         if(ConfigPreferences.isVaultEnabled()) {

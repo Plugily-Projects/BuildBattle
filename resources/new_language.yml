@@ -25,8 +25,8 @@ Commands:
 Bossbar:
   Waiting-For-Players: "&4&lWaiting for more players..."
   Starting-In: "&f&lStarting in: &e&l%time%"
-  Time-Left: "&f&lTime left: &e&l%FORMATTEDTIME%"
-  Vote-Time-Left: "&e&lVote time left: &f&e%FORMATTEDTIME%"
+  Time-Left: "&f&lTime left: &e&l%time%"
+  Vote-Time-Left: "&e&lVote time left: &f&e%time%"
 
 In-Game:
     Plugin-Prefix: "&6[&bBuildBattle&6] "
@@ -43,18 +43,18 @@ In-Game:
       Enough-Players-To-Start: "&7We now have enough players. The game is starting soon!"
       Game-Started: "&7The game has started! Defend the village against waves of zombies!"
     Voting-Messages:
-      Plot-Owner-Title: "&aPlot owner: &7%PLAYER%"
+      Plot-Owner-Title: "&aPlot owner: &7%player%"
       Voting-For-Player-Plot: "&7Now voting for &e&l%PLAYER%'s &7plot!"
       Cant-Vote-Own-Plot: "&cYou can't vote for your plot!"
       Vote-Successful: "&aVoted successfully!"
-      Winner-Title: "&eWINNER: &a%PLAYER%"
+      Winner-Title: "&eWINNER: &a%player%"
       Winner-Message:
         Header: "&a==============================\n&f&lBuildBattle\n"
-        First-Winner: "&e1st Winner &7- %PLAYER% (Plot %NUMBER%)"
-        Second-Winner: "&62nd Winner &7- %PLAYER% (Plot %NUMBER%)"
-        Third-Winner: "&c3rd Winner &7- %PLAYER% (Plot %NUMBER%)"
+        First-Winner: "&e1st Winner &7- %player% (Plot %number%)"
+        Second-Winner: "&62nd Winner &7- %player% (Plot %number%)"
+        Third-Winner: "&c3rd Winner &7- %player% (Plot %number%)"
         Footer: "\n&a=============================="
-        You-Became-Other: "&aYou became &7%NUMBER%th"
+        You-Became-Other: "&aYou became &7%number%th"
     Game-End-Messages:
       Only-You-Playing: "&7You're the only player left. You'll be teleported to the lobby."
     Admin-Messages:

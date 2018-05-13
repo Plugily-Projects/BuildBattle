@@ -265,15 +265,15 @@ public class ChatManager {
         return returnstring;
     }
 
-    public String getMessage(String ID, Player player, Arena arena) {
+    public static String getMessage(String ID, Player player, Arena arena) {
         return formatMessage(messages.get(ID), player, arena);
     }
 
-    public String getMessage(String ID, OfflinePlayer playername, Arena arena) {
+    public static String getMessage(String ID, OfflinePlayer playername, Arena arena) {
         return formatMessage(messages.get(ID), playername.getName(), arena);
     }
 
-    public String formatMessage(String message, String playername, Arena arena) {
+    public static String formatMessage(String message, String playername, Arena arena) {
         String returnstring = message;
         returnstring = returnstring.replaceAll("%PLAYER%", playername);
         returnstring = returnstring.replaceAll("%TIME%", Integer.toString(arena.getTimer()));
