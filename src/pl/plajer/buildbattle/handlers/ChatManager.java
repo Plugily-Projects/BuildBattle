@@ -15,24 +15,24 @@ import java.util.HashMap;
  * Created by Tom on 27/07/2014.
  */
 public class ChatManager {
-    
+
     public static ChatColor NORMAL = ChatColor.GRAY;
     public static ChatColor HIGHLIGHTED = ChatColor.AQUA;
+    public static String PREFIX;
     private static FileConfiguration config = null;
     private static HashMap<String, String> messages = new HashMap<>();
-    public static String PREFIX;
 
-    public ChatManager(){
+    public ChatManager() {
         PREFIX = colorMessage("In-Game.Plugin-Prefix");
         config = ConfigurationManager.getConfig("language");
         loadMessages();
     }
 
-    public static String colorMessage(String msg){
+    public static String colorMessage(String msg) {
         return ChatColor.translateAlternateColorCodes('&', LanguageManager.getLanguageMessage(msg));
     }
-    
-    public static String colorRawMessage(String msg){
+
+    public static String colorRawMessage(String msg) {
         return ChatColor.translateAlternateColorCodes('&', msg);
     }
 
@@ -231,14 +231,6 @@ public class ChatManager {
         }
     }
 
-    public String getMessage(String ID, Player player, Arena arena) {
-        return formatMessage(messages.get(ID), player, arena);
-    }
-
-    public String getMessage(String ID, OfflinePlayer playername, Arena arena) {
-        return formatMessage(messages.get(ID), playername.getName(), arena);
-    }
-
     public static String formatMessage(String message, Player player, Arena arena) {
         String returnstring = message;
         returnstring = returnstring.replaceAll("%PLAYER%", player.getName());
@@ -271,6 +263,14 @@ public class ChatManager {
         returnstring = returnstring.replaceAll("&r", ChatColor.RESET.toString());
         returnstring = returnstring.replaceAll("&k", ChatColor.MAGIC.toString());
         return returnstring;
+    }
+
+    public String getMessage(String ID, Player player, Arena arena) {
+        return formatMessage(messages.get(ID), player, arena);
+    }
+
+    public String getMessage(String ID, OfflinePlayer playername, Arena arena) {
+        return formatMessage(messages.get(ID), playername.getName(), arena);
     }
 
     public String formatMessage(String message, String playername, Arena arena) {

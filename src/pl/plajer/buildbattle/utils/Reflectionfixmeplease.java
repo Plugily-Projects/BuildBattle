@@ -19,8 +19,8 @@ import java.lang.reflect.Method;
  */
 public class Reflectionfixmeplease {
 
-    public static void displayParticle(Location loc, Particle particle, float x, float y, float z, int amount){
-        if(!JavaPlugin.getPlugin(Main.class).is1_8_R3()){
+    public static void displayParticle(Location loc, Particle particle, float x, float y, float z, int amount) {
+        if(!JavaPlugin.getPlugin(Main.class).is1_8_R3()) {
             loc.getWorld().spawnParticle(particle, loc, amount, (double) x, (double) y, (double) z);
         } else {
             try {

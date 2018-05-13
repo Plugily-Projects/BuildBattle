@@ -40,9 +40,10 @@ public class ParticleMenu {
     public static void loadFromConfig() {
         FileConfiguration config = ConfigurationManager.getConfig("particles");
         int slotcounter = 0;
-        for(Particle particle : Particle.values()){
-            if(particle == Particle.BLOCK_CRACK || particle == Particle.ITEM_CRACK || particle == Particle.ITEM_TAKE || particle == Particle.BLOCK_DUST || particle == Particle.MOB_APPEARANCE) continue;
-            if(!config.contains(particle.toString())){
+        for(Particle particle : Particle.values()) {
+            if(particle == Particle.BLOCK_CRACK || particle == Particle.ITEM_CRACK || particle == Particle.ITEM_TAKE || particle == Particle.BLOCK_DUST || particle == Particle.MOB_APPEARANCE)
+                continue;
+            if(!config.contains(particle.toString())) {
                 config.set(particle.toString() + ".data", 0);
                 config.set(particle.toString() + ".displayname", "&6" + particle.toString());
                 config.set(particle.toString() + ".lore", Arrays.asList("Click to activate", "on your location"));

@@ -592,7 +592,7 @@ public class Arena extends BukkitRunnable {
     public void setTimer(int timer) {
         this.timer = timer;
     }
-    
+
     public int getMaximumPlayers() {
         return maximumPlayers;
     }
