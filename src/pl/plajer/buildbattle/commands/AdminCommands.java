@@ -21,7 +21,7 @@ import java.util.List;
  * <p>
  * Created at 03.05.2018
  */
-public class AdminCommands extends GameCommands {
+public class AdminCommands extends MainCommand {
 
     private Main plugin;
 

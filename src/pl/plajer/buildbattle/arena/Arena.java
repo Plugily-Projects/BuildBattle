@@ -162,6 +162,8 @@ public class Arena extends BukkitRunnable {
         }
         switch(getGameState()) {
             case WAITING_FOR_PLAYERS:
+                if(plugin.isBungeeActivated())
+                    plugin.getServer().setWhitelist(false);
                 getPlotManager().resetPlotsGradually();
                 if(getPlayers().size() < getMinimumPlayers()) {
                     if(getTimer() <= 0) {
@@ -200,6 +202,13 @@ public class Arena extends BukkitRunnable {
                 setTimer(getTimer() - 1);
                 break;
             case IN_GAME:
+                if(plugin.isBungeeActivated()) {
+                    if(getMaximumPlayers() <= getPlayers().size()) {
+                        plugin.getServer().setWhitelist(true);
+                    } else {
+                        plugin.getServer().setWhitelist(false);
+                    }
+                }
                 if(getPlayers().size() <= 1) {
                     ChatManager.broadcastMessage("Only-Player-Left", ChatColor.RED + "U are the only player left. U will be teleported to the lobby", this);
                     setGameState(ArenaState.ENDING);
@@ -267,6 +276,8 @@ public class Arena extends BukkitRunnable {
                 setTimer(getTimer() - 1);
                 break;
             case ENDING:
+                if(plugin.isBungeeActivated())
+                    plugin.getServer().setWhitelist(false);
                 setVoting(false);
                 setTimer(getTimer() - 1);
                 for(Player player : getPlayers()) {

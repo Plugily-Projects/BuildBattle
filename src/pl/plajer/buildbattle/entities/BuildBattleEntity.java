@@ -174,7 +174,7 @@ public class BuildBattleEntity {
     public class InventoryBuilder {
 
         private int slots = 9;
-        private String name = ChatManager.getSingleMessage("Entity-Menu-Name", "Entity Menu");
+        private String name = ChatManager.colorMessage("Menus.Entity-Menu-Name");
         private HashSet<EntityItem> items = new HashSet<>();
 
         private InventoryBuilder() {

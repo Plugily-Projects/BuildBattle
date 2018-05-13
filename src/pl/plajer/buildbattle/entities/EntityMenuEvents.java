@@ -42,7 +42,11 @@ public class EntityMenuEvents implements Listener {
         event.setCancelled(true);
         if(arena.getGameState() != ArenaState.IN_GAME || arena.isVoting()) return;
         EntityType type = event.getRightClicked().getType();
-        if(type == EntityType.ITEM_FRAME || type == EntityType.ARMOR_STAND || type == EntityType.DROPPED_ITEM || type == EntityType.PRIMED_TNT || type == EntityType.FALLING_BLOCK || type == EntityType.COMPLEX_PART || type == EntityType.ENDER_CRYSTAL || type == EntityType.LEASH_HITCH || type == EntityType.MINECART || type == EntityType.MINECART_CHEST || type == EntityType.MINECART_FURNACE || type == EntityType.MINECART_COMMAND || type == EntityType.MINECART_HOPPER || type == EntityType.MINECART_MOB_SPAWNER || type == EntityType.MINECART_TNT || type == EntityType.PLAYER || type == EntityType.PAINTING || type == EntityType.WITHER_SKULL)
+        if(type == EntityType.ITEM_FRAME || type == EntityType.ARMOR_STAND || type == EntityType.DROPPED_ITEM || type == EntityType.PRIMED_TNT
+                || type == EntityType.FALLING_BLOCK || type == EntityType.COMPLEX_PART || type == EntityType.ENDER_CRYSTAL ||
+                type == EntityType.LEASH_HITCH || type == EntityType.MINECART || type == EntityType.MINECART_CHEST || type == EntityType.MINECART_FURNACE ||
+                type == EntityType.MINECART_COMMAND || type == EntityType.MINECART_HOPPER || type == EntityType.MINECART_MOB_SPAWNER || type == EntityType.MINECART_TNT
+                || type == EntityType.PLAYER || type == EntityType.PAINTING || type == EntityType.WITHER_SKULL)
             return;
         BuildBattleEntity buildBattleEntity = new BuildBattleEntity(((LivingEntity) event.getRightClicked()));
         player.openInventory(buildBattleEntity.getMenu());
@@ -65,7 +69,7 @@ public class EntityMenuEvents implements Listener {
         Player player = (Player) event.getWhoClicked();
         Arena arena = ArenaRegistry.getArena(player);
         if(arena == null) return;
-        if(!event.getInventory().getTitle().equals(ChatManager.getSingleMessage("Entity-Menu", "Entity Menu"))) return;
+        if(!event.getInventory().getTitle().equals(ChatManager.colorMessage("Menus.Entity-Menu-Name"))) return;
         if(event.getCurrentItem() == null) return;
         if(!event.getCurrentItem().hasItemMeta()) return;
         if(!event.getCurrentItem().getItemMeta().hasDisplayName()) return;

@@ -63,22 +63,6 @@ public class IngameEvents implements Listener {
         this.plugin = main;
     }
 
-    //todo whitelist instead
-    @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        if((plugin.isBungeeActivated() && ArenaRegistry.getArenas().get(0).getGameState() == ArenaState.IN_GAME) || (plugin.isBungeeActivated() && ArenaRegistry.getArenas().get(0).getGameState() == ArenaState.ENDING) || (plugin.isBungeeActivated() && ArenaRegistry.getArenas().get(0).getGameState() == ArenaState.RESTARTING))
-            event.getPlayer().kickPlayer(ChatManager.getSingleMessage("Kicked-Game-Already-Started", ChatManager.HIGHLIGHTED + "Kicked! Game has already started!"));
-    }
-
-    //todo whitelist instead
-    @EventHandler
-    public void onPreJoin(AsyncPlayerPreLoginEvent event) {
-        if((plugin.isBungeeActivated() && ArenaRegistry.getArenas().get(0).getGameState() == ArenaState.IN_GAME) || (plugin.isBungeeActivated() && ArenaRegistry.getArenas().get(0).getGameState() == ArenaState.ENDING) || (plugin.isBungeeActivated() && ArenaRegistry.getArenas().get(0).getGameState() == ArenaState.RESTARTING)) {
-            event.setKickMessage(ChatManager.getSingleMessage("Kicked-Game-Already-Started", ChatManager.HIGHLIGHTED + "Kicked! Game has already started!"));
-            event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
-        }
-    }
-
     @EventHandler
     public void onVote(PlayerInteractEvent event) {
         if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) return;
@@ -91,12 +75,12 @@ public class IngameEvents implements Listener {
         if(!event.getItem().getItemMeta().hasDisplayName()) return;
         if(!arena.isVoting()) return;
         if(arena.getVotingPlot().getOwner() == event.getPlayer().getUniqueId()) {
-            event.getPlayer().sendMessage(ChatManager.getSingleMessage("Cant-Vote-On-Own-Plot", ChatColor.RED + "U can't vote on your own plot!!"));
+            event.getPlayer().sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Cant-Vote-Own-Plot"));
             event.setCancelled(true);
             return;
         }
         UserManager.getUser(event.getPlayer().getUniqueId()).setInt("points", VoteItems.getPoints(event.getItem()));
-        event.getPlayer().sendMessage(ChatManager.getSingleMessage("Voted", ChatColor.GREEN + "Voted succesfully!"));
+        event.getPlayer().sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Vote-Successful"));
         event.setCancelled(true);
     }
 
@@ -171,7 +155,7 @@ public class IngameEvents implements Listener {
     }
 
     @EventHandler
-    public void onTntExplode(EntityExplodeEvent event) {
+    public void onTNTExplode(EntityExplodeEvent event) {
         for(Arena arena : ArenaRegistry.getArenas()) {
             for(BuildPlot buildPlot : arena.getPlotManager().getPlots()) {
                 if(buildPlot.isInPlotRange(event.getEntity().getLocation(), 0)) {
@@ -187,7 +171,7 @@ public class IngameEvents implements Listener {
     }
 
     @EventHandler
-    public void cancelTNT(PlayerInteractEvent event) {
+    public void onTNTInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         Arena arena = ArenaRegistry.getArena(player);
         if(arena == null) return;
@@ -262,38 +246,38 @@ public class IngameEvents implements Listener {
         if(!e.getCurrentItem().getItemMeta().hasDisplayName()) return;
         String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
         Player player = (Player) e.getWhoClicked();
-        if(e.getInventory().getName().equals(ChatManager.getSingleMessage("Ingame-Menu-Name", "Option Menu"))) {
+        if(e.getInventory().getName().equals(ChatManager.colorMessage("Menus.Option-Menu.Inventory-Name"))) {
             e.setCancelled(true);
         }
         Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
         if(arena == null) return;
 
         if(arena.getGameState() != ArenaState.IN_GAME) return;
-        if(displayName.equalsIgnoreCase(ChatManager.getSingleMessage("Particle-Option-Name", ChatColor.GREEN + "Particles"))) {
+        if(displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Particle-Option"))) {
             e.getWhoClicked().closeInventory();
             ParticleMenu.openMenu(player);
             return;
-        } else if(e.getInventory().getName().equalsIgnoreCase(ChatManager.getSingleMessage("Particle-Remove-Menu-Name", "Remove Particles"))) {
+        } else if(e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Particle-Remove"))) {
             ParticleRemoveMenu.onClick(e.getInventory(), e.getCurrentItem(), arena.getPlotManager().getPlot(player));
             return;
-        } else if(e.getInventory().getName().equalsIgnoreCase(ChatManager.getSingleMessage("Player-Head-Main-Inventory-Name", "Player Head Menu"))) {
+        } else if(e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Players-Heads-Inventory-Name"))) {
             PlayerHeadsMenu.onClickInMainMenu(player, e.getCurrentItem());
             return;
         } else if(PlayerHeadsMenu.getMenuNames().contains(e.getInventory().getName())) {
             PlayerHeadsMenu.onClickInDeeperMenu(player, e.getCurrentItem(), e.getInventory().getName());
             return;
-        } else if(displayName.equalsIgnoreCase(ChatManager.getSingleMessage("Heads-Option-Name", ChatColor.GREEN + "Particles"))) {
+        } else if(displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Players-Heads-Option"))) {
             PlayerHeadsMenu.openMenu(player);
             return;
-        } else if(e.getInventory().getName().equalsIgnoreCase(ChatManager.getSingleMessage("Particle-Menu-Name", "Particle Menu"))) {
-            if(displayName.contains(ChatManager.getSingleMessage("Remove-Particle-Item-Name", ChatColor.RED + "Remove Particles"))) {
+        } else if(e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Particle-Inventory-Name"))) {
+            if(displayName.contains(ChatManager.colorMessage("Menus.Option-Menu.Particle-Remove"))) {
                 e.getWhoClicked().closeInventory();
                 ParticleRemoveMenu.openMenu(player, arena.getPlotManager().getPlot((Player) e.getWhoClicked()));
                 return;
             }
             ParticleMenu.onClick(player, e.getCurrentItem(), arena.getPlotManager().getPlot((Player) e.getWhoClicked()));
             return;
-        } else if(e.getInventory().getName().equalsIgnoreCase(ChatManager.getSingleMessage("Banner-Option-Name", ChatColor.GREEN + "Banner Creator"))) {
+        } else if(e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Banners-Option-Inventory-Name"))) {
             e.getWhoClicked().closeInventory();
             e.getWhoClicked().sendMessage("Soon :)");
             return;
@@ -311,9 +295,9 @@ public class IngameEvents implements Listener {
             e.setCancelled(true);
             return;
         }
-        if(displayName.equalsIgnoreCase(ChatManager.getSingleMessage("Floor-Option-Name", ChatColor.GREEN + "Floor Material"))) {
+        if(displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Floor-Option"))) {
             arena.getPlotManager().getPlot(player).changeFloor(e.getCursor().getType(), e.getCursor().getData().getData());
-            player.sendMessage(ChatManager.getSingleMessage("Floor-Changed", ChatColor.GREEN + "Floor changed!"));
+            player.sendMessage(ChatManager.colorMessage("Menus.Option-Menu.Floor-Changed"));
             //todo wtf
             e.getCursor().setAmount(0);
             e.getCursor().setType(Material.AIR);

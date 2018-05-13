@@ -4,9 +4,6 @@ name: BuildBattle
 depend: [WorldEdit]
 softdepend: [BarAPI, Vault, PlaceholderAPI]
 commands:
-  leave:
-    usage: /leave
-    description: Leave the game
   buildbattle:
     usage: /buildbattle
     description: The main command
@@ -14,6 +11,3 @@ commands:
   addsigns:
     usage: /addsigns
     description: Adds signs to the plugin!
-  stats:
-    usage: /stats
-    description: See your stats

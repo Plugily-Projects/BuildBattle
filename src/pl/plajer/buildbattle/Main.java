@@ -12,7 +12,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.commands.GameCommands;
+import pl.plajer.buildbattle.commands.MainCommand;
 import pl.plajer.buildbattle.entities.EntityItem;
 import pl.plajer.buildbattle.entities.EntityMenuEvents;
 import pl.plajer.buildbattle.events.GameEvents;
@@ -286,7 +286,7 @@ public class Main extends JavaPlugin {
         new SetupInventoryEvents(this);
         bungeeActivated = getConfig().getBoolean("BungeeActivated");
         new GameEvents(this);
-        new GameCommands(this);
+        new MainCommand(this);
         new SpectatorEvents(this);
         new MetricsLite(this);
         new JoinEvents(this);
