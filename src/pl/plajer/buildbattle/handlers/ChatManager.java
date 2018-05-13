@@ -72,19 +72,6 @@ public class ChatManager {
 
     }
 
-    public static String getSingleMessage(String ID, String defualt, int i) {
-        if(messages.containsKey(ID)) return messages.get(ID).replaceAll("(&([a-f0-9]))", "\u00A7$2").replaceAll("%NUMBER%", Integer.toString(i));
-        return defualt.replaceAll("(&([a-f0-9]))", "\u00A7$2").replaceAll("%NUMBER%", Integer.toString(i));
-
-    }
-
-    public static String getSingleMessage(String ID, String defualt, OfflinePlayer player, int i) {
-        if(messages.containsKey(ID))
-            return messages.get(ID).replaceAll("(&([a-f0-9]))", "\u00A7$2").replaceAll("%NUMBER%", Integer.toString(i)).replaceAll("%PLAYER%", player.getName());
-        return defualt.replaceAll("(&([a-f0-9]))", "\u00A7$2").replaceAll("%NUMBER%", Integer.toString(i)).replaceAll("%PLAYER%", player.getName());
-
-    }
-
     public static void registerMessage(String ID, String message) {
         messages.put(ID, message);
     }
@@ -213,24 +200,6 @@ public class ChatManager {
         }
     }
 
-    public static String getMessage(String ID, String defaultmessage, OfflinePlayer player, Arena arena) {
-        if(Arena.getPlugin().getServer().getPlayer(player.getUniqueId()) != null) {
-            if(messages.containsKey(ID)) {
-                return getMessage(ID, Arena.getPlugin().getServer().getPlayer(player.getUniqueId()), arena);
-            } else {
-                ChatManager.getFromLanguageConfig(ID, defaultmessage);
-                return getMessage(ID, Arena.getPlugin().getServer().getPlayer(player.getUniqueId()), arena);
-            }
-        } else {
-            if(messages.containsKey(ID)) {
-                return getMessage(ID, Arena.getPlugin().getServer().getOfflinePlayer(player.getUniqueId()), arena);
-            } else {
-                ChatManager.getFromLanguageConfig(ID, defaultmessage);
-                return getMessage(ID, Arena.getPlugin().getServer().getOfflinePlayer(player.getUniqueId()), arena);
-            }
-        }
-    }
-
     public static String formatMessage(String message, Player player, Arena arena) {
         String returnstring = message;
         returnstring = returnstring.replaceAll("%PLAYER%", player.getName());
@@ -251,31 +220,6 @@ public class ChatManager {
     public static String formatMessage(String message, OfflinePlayer player, Arena arena) {
         String returnstring = message;
         returnstring = returnstring.replaceAll("%PLAYER%", player.getName());
-        returnstring = returnstring.replaceAll("%TIME%", Integer.toString(arena.getTimer()));
-        returnstring = returnstring.replaceAll("%FORMATTEDTIME%", Util.formatIntoMMSS((arena.getTimer())));
-        returnstring = returnstring.replaceAll("(&([a-f0-9]))", "\u00A7$2");
-        returnstring = returnstring.replaceAll("%PLAYERSIZE%", Integer.toString(arena.getPlayers().size()));
-        returnstring = returnstring.replaceAll("%MAXPLAYERS%", Integer.toString(arena.getMaximumPlayers()));
-        returnstring = returnstring.replaceAll("%MINPLAYERS%", Integer.toString(arena.getMinimumPlayers()));
-        returnstring = returnstring.replaceAll("&l", ChatColor.BOLD.toString());
-        returnstring = returnstring.replaceAll("&n", ChatColor.UNDERLINE.toString());
-        returnstring = returnstring.replaceAll("&m", ChatColor.STRIKETHROUGH.toString());
-        returnstring = returnstring.replaceAll("&r", ChatColor.RESET.toString());
-        returnstring = returnstring.replaceAll("&k", ChatColor.MAGIC.toString());
-        return returnstring;
-    }
-
-    public static String getMessage(String ID, Player player, Arena arena) {
-        return formatMessage(messages.get(ID), player, arena);
-    }
-
-    public static String getMessage(String ID, OfflinePlayer playername, Arena arena) {
-        return formatMessage(messages.get(ID), playername.getName(), arena);
-    }
-
-    public static String formatMessage(String message, String playername, Arena arena) {
-        String returnstring = message;
-        returnstring = returnstring.replaceAll("%PLAYER%", playername);
         returnstring = returnstring.replaceAll("%TIME%", Integer.toString(arena.getTimer()));
         returnstring = returnstring.replaceAll("%FORMATTEDTIME%", Util.formatIntoMMSS((arena.getTimer())));
         returnstring = returnstring.replaceAll("(&([a-f0-9]))", "\u00A7$2");
