@@ -5,7 +5,6 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -16,13 +15,10 @@ import pl.plajer.buildbattle.commands.MainCommand;
 import pl.plajer.buildbattle.entities.EntityItem;
 import pl.plajer.buildbattle.entities.EntityMenuEvents;
 import pl.plajer.buildbattle.events.GameEvents;
-import pl.plajer.buildbattle.events.IngameEvents;
 import pl.plajer.buildbattle.events.JoinEvents;
-import pl.plajer.buildbattle.events.NormalEvents;
 import pl.plajer.buildbattle.events.SetupInventoryEvents;
 import pl.plajer.buildbattle.events.SpectatorEvents;
 import pl.plajer.buildbattle.handlers.BungeeManager;
-import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.ConfigurationManager;
 import pl.plajer.buildbattle.handlers.InventoryManager;
 import pl.plajer.buildbattle.handlers.PlaceholderManager;
@@ -40,7 +36,6 @@ import pl.plajer.buildbattle.utils.MetricsLite;
 import pl.plajer.buildbattle.utils.UpdateChecker;
 import pl.plajer.buildbattle.utils.Util;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -100,76 +95,6 @@ public class Main extends JavaPlugin {
         return version.equalsIgnoreCase("v1_9_R1");
     }
 
-    private void loadLanguageFile() {
-        FileConfiguration config = ConfigurationManager.getConfig("language");
-        try {
-            config.save("language");
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void setupMessageConfig() {
-        ChatManager.getFromLanguageConfig("Waiting-For-Players-Message", "Waiting for players... We need at least " + ChatManager.HIGHLIGHTED + "%MINPLAYERS%" + ChatManager.NORMAL + " players to start.");
-        ChatManager.getFromLanguageConfig("Enough-Players-To-Start", "We now have enough players. The game is starting soon!");
-        ChatManager.getFromLanguageConfig("The-Game-Has-Started", "The game has started! Start building guys!!");
-        ChatManager.getFromLanguageConfig("Time-Left-To-Build", ChatManager.PREFIX + "%FORMATTEDTIME% " + ChatManager.NORMAL + "time left to build!");
-        ChatManager.getFromLanguageConfig("Cant-Fly-Out-Of-Plot", ChatColor.RED + "U can't fly so far out!");
-        ChatManager.getFromLanguageConfig("Voted", ChatColor.GREEN + "Voted succesfully!");
-        ChatManager.getFromLanguageConfig("Voting-For-Player-Plot", ChatManager.NORMAL + "Voting for " + ChatManager.HIGHLIGHTED + "%PLAYER%" + ChatManager.NORMAL + "'s plot!");
-        ChatManager.getFromLanguageConfig("Winner-Announcement-Footer-Line", ChatColor.GREEN + "==============================");
-        ChatManager.getFromLanguageConfig("Waiting-For-Players-Bar-Message", ChatManager.PREFIX + "BuildBattle made by " + ChatManager.HIGHLIGHTED + "TomTheDeveloper");
-        ChatManager.getFromLanguageConfig("Starting-Bar-Message", ChatManager.PREFIX + "BuildBattle made by " + ChatManager.HIGHLIGHTED + "TomTheDeveloper");
-        ChatManager.getFromLanguageConfig("Time-Left-Bar-Message", ChatManager.PREFIX + "Time left :" + ChatManager.HIGHLIGHTED + " %FORMATTEDTIME%");
-        ChatManager.getFromLanguageConfig("Vote-Time-Left-Bar-Message", ChatManager.PREFIX + "Vote Time left :" + ChatManager.HIGHLIGHTED + " %FORMATTEDTIME%");
-        ChatManager.getFromLanguageConfig("Floor-Option-Name", ChatColor.GREEN + "Floor Material");
-        ChatManager.getFromLanguageConfig("Floor-Changed", ChatColor.GREEN + "Floor changed!");
-        ChatManager.getFromLanguageConfig("Ingame-Menu-Name", "Options Menu");
-        ChatManager.getFromLanguageConfig("Options-Menu-Item", ChatColor.GREEN + "Options");
-        ChatManager.getFromLanguageConfig("Options-Lore", ChatColor.GRAY + "Right click to open");
-        ChatManager.getFromLanguageConfig("Drag-And-Drop-Item-Here", "Drag and drop an item here");
-        ChatManager.getFromLanguageConfig("To-Change-Floor", "to change the floor");
-        ChatManager.getFromLanguageConfig("Join", ChatManager.HIGHLIGHTED + "%PLAYER%" + ChatColor.GRAY + " joined the game (%PLAYERSIZE%/%MAXPLAYERS%)!");
-        ChatManager.getFromLanguageConfig("Leave", ChatManager.HIGHLIGHTED + "%PLAYER% " + ChatColor.GRAY + "left the game (%PLAYERSIZE%/%MAXPLAYERS%)!");
-        ChatManager.getFromLanguageConfig("Death", ChatManager.HIGHLIGHTED + "%PLAYER% " + ChatColor.GRAY + "died!");
-        ChatManager.getFromLanguageConfig("Seconds-Left-Until-Game-Starts", "The game starts in " + ChatManager.HIGHLIGHTED + "%TIME%" + ChatColor.GRAY + " seconds!");
-        ChatManager.getFromLanguageConfig("Waiting-For-Players", "Waiting for players... We need at least " + ChatManager.HIGHLIGHTED + "%MINPLAYERS%" + ChatColor.GRAY + " players to start.");
-        ChatManager.getFromLanguageConfig("Enough-Players-To-Start", "We now have enough players. The game is starting soon!");
-        ChatManager.getFromLanguageConfig("Teleport-To-EndLocation-In-X-Seconds", "You will be teleported to the lobby in " + ChatManager.HIGHLIGHTED + "%TIME%" + ChatColor.GRAY + " seconds");
-        ChatManager.getFromLanguageConfig("Cant-Vote-On-Own-Plot", ChatColor.RED + "U can't vote on your own plot!!");
-        ChatManager.getFromLanguageConfig("You-Became-xth", ChatColor.GREEN + "You became " + ChatColor.DARK_GREEN + "%NUMBER%" + ChatColor.GREEN + "th");
-        ChatManager.getFromLanguageConfig("Kicked-Game-Already-Started", ChatManager.HIGHLIGHTED + "Kicked! Game has already started!");
-        ChatManager.getFromLanguageConfig("Particle-Option-Name", ChatColor.GREEN + "Particles");
-        ChatManager.getFromLanguageConfig("Coming-Soon", ChatColor.RED + "Coming Soon");
-        ChatManager.getFromLanguageConfig("Heads-Option-Name", ChatColor.GREEN + "Heads");
-        ChatManager.getFromLanguageConfig("Only-Command-Ingame-Is-Leave", ChatColor.RED + "You have to leave the game first to perform commands. The only command that works is /leave!");
-        ChatManager.getFromLanguageConfig("Particle-Menu-Name", "Particle Menu");
-        ChatManager.getFromLanguageConfig("No-Permission-For-This-Particle", ChatColor.RED + " No permission for this particle!");
-        ChatManager.getFromLanguageConfig("Reached-Max-Amount-Of-Particles", ChatColor.RED + "Reached max amount of particles!");
-        ChatManager.getFromLanguageConfig("Particle-Succesfully-Added", ChatColor.GREEN + "Particle succesfully added!");
-        ChatManager.getFromLanguageConfig("Particle-Remove-Menu-Name", "Remove Particles");
-        ChatManager.getFromLanguageConfig("Location", "Location: ");
-        ChatManager.getFromLanguageConfig("Particle-Removed", ChatColor.GREEN + "Particle Removed!");
-        ChatManager.getFromLanguageConfig("Remove-Particle-Item-Lore", "Right click to open menu!");
-        ChatManager.getFromLanguageConfig("Particle-Option-Lore", ChatColor.GRAY + "Click to open menu");
-        ChatManager.getFromLanguageConfig("Player-Head-Main-Inventory-Name", "Player Head Menu");
-        ChatManager.getFromLanguageConfig("Starting-In-Title-Screen", ChatColor.GREEN + "Starting in " + ChatColor.RED + "%NUMBER");
-        ChatManager.getFromLanguageConfig("STATS-AboveLine", ChatColor.BOLD + "-----YOUR STATS----- ");
-        ChatManager.getFromLanguageConfig("STATS-Wins", ChatColor.GREEN + "Wins: " + ChatColor.YELLOW);
-        ChatManager.getFromLanguageConfig("STATS-Loses", ChatColor.GREEN + "Loses: " + ChatColor.YELLOW);
-        ChatManager.getFromLanguageConfig("STATS-Games-Played", ChatColor.GREEN + "Games played: " + ChatColor.YELLOW);
-        ChatManager.getFromLanguageConfig("STATS-Highest-Win", ChatColor.GREEN + "Highest win: " + ChatColor.YELLOW);
-        ChatManager.getFromLanguageConfig("STATS-Blocks-Placed", ChatColor.GREEN + "Blocks Placed: " + ChatColor.YELLOW);
-        ChatManager.getFromLanguageConfig("STATS-Blocks-Broken", ChatColor.GREEN + "Blocks Broken: " + ChatColor.YELLOW);
-        ChatManager.getFromLanguageConfig("STATS-Particles-Placed", ChatColor.GREEN + "Particles Placed: " + ChatColor.YELLOW);
-        ChatManager.getFromLanguageConfig("STATS-UnderLinen", ChatColor.BOLD + "--------------------");
-        ChatManager.getFromLanguageConfig("Heads-Option-Lore", ChatColor.GRAY + "Open for heads menu!");
-        ChatManager.getFromLanguageConfig("Arena-Does-Not-Exist", ChatColor.RED + "This arena does not exist!");
-        ChatManager.getFromLanguageConfig("Arena-Is-Full", ChatColor.RED + "This arena does not exist!");
-        ChatManager.getFromLanguageConfig("Arena-Is-Already-Started", ChatColor.RED + "This arena is already started!");
-        ChatManager.getFromLanguageConfig("Unlocks-at-level", ChatColor.GREEN + "Unlocks at level %NUMBER%");
-    }
-
     @Override
     public void onEnable() {
         version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
@@ -185,7 +110,6 @@ public class Main extends JavaPlugin {
         if(getConfig().getBoolean("BungeeActivated")) {
             getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         }
-        new ConfigPreferences(this);
         ConfigPreferences.loadOptions();
         ConfigPreferences.loadOptions();
         ConfigPreferences.loadThemes();
@@ -195,7 +119,7 @@ public class Main extends JavaPlugin {
         ConfigPreferences.loadThirdPlaceCommands();
         ConfigPreferences.loadEndGameCommands();
         ConfigPreferences.loadWhitelistedCommands();
-        setupMessageConfig();
+        saveResource("language.yml", false);
         ParticleMenu.loadFromConfig();
         PlayerHeadsMenu.loadHeadItems();
         loadInstances();
@@ -203,7 +127,6 @@ public class Main extends JavaPlugin {
         signManager = new SignManager(this);
         SpecialItem.loadAll();
         VoteItems.loadVoteItemsFromConfig();
-        this.getServer().getPluginManager().registerEvents(new IngameEvents(this), this);
         EntityItem.loadAll();
         new EntityMenuEvents(this);
         ParticleHandler particleHandler = new ParticleHandler(this);
@@ -214,7 +137,6 @@ public class Main extends JavaPlugin {
         else {
             fileStats = new FileStats();
         }
-        this.getServer().getPluginManager().registerEvents(new NormalEvents(this), this);
         loadStatsForPlayersOnline();
         BuildBattleStats.plugin = this;
         if(ConfigPreferences.isVaultEnabled()) {
@@ -282,7 +204,6 @@ public class Main extends JavaPlugin {
     private void initializeClasses() {
         Arena.plugin = this;
         User.plugin = this;
-        loadLanguageFile();
         new SetupInventoryEvents(this);
         bungeeActivated = getConfig().getBoolean("BungeeActivated");
         new GameEvents(this);
@@ -290,7 +211,9 @@ public class Main extends JavaPlugin {
         new SpectatorEvents(this);
         new MetricsLite(this);
         new JoinEvents(this);
+        new GameEvents(this);
         new PlaceholderManager();
+        new ConfigPreferences(this);
         checkUpdate();
     }
 

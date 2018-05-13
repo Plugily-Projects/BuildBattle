@@ -51,6 +51,7 @@ public class LanguageManager {
         }
     }
 
+    //todo remember to change
     public static String getDefaultLanguageMessage(String message) {
         if(ConfigurationManager.getConfig("new_language").isSet(message)) {
             return ConfigurationManager.getConfig("new_language").getString(message);
@@ -58,6 +59,7 @@ public class LanguageManager {
         return "NULL_MESSAGE";
     }
 
+    //todo
     public static String getLanguageMessage(String message) {
         return getDefaultLanguageMessage(message);
         /*switch(pluginLocale) {

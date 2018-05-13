@@ -102,7 +102,6 @@ public class SpectatorEvents implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onSpectate(PlayerPickupItemEvent event) {
-
         if(UserManager.getUser(event.getPlayer().getUniqueId()).isSpectator()) event.setCancelled(true);
     }
 
