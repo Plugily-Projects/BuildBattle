@@ -7,14 +7,14 @@ import pl.plajer.buildbattle.arena.Arena;
 /**
  * Created by Tom on 1/11/2015.
  */
-public class GameStartEvent extends Event {
+public class BBGameStartEvent extends Event {
 
 
     private static final HandlerList handlers = new HandlerList();
     private Arena buildInstance;
 
 
-    public GameStartEvent(Arena buildInstance) {
+    public BBGameStartEvent(Arena buildInstance) {
         this.buildInstance = buildInstance;
     }
 

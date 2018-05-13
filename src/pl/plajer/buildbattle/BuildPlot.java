@@ -3,11 +3,11 @@ package pl.plajer.buildbattle;
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import pl.plajer.buildbattle.handlers.UserManager;
-import pl.plajer.buildbattle.utils.ParticleEffect;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -21,7 +21,7 @@ public class BuildPlot {
     private Location MINPOINT;
     private int points;
     private UUID uuid;
-    private HashMap<Location, ParticleEffect> particles = new HashMap<>();
+    private HashMap<Location, Particle> particles = new HashMap<>();
     private int entities = 0;
 
     public BuildPlot() {}
@@ -39,11 +39,11 @@ public class BuildPlot {
         entities--;
     }
 
-    public HashMap<Location, ParticleEffect> getParticles() {
+    public HashMap<Location, Particle> getParticles() {
         return particles;
     }
 
-    public void addParticle(Location location, ParticleEffect effect) {
+    public void addParticle(Location location, Particle effect) {
         particles.put(location, effect);
     }
 

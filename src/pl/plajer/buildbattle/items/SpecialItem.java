@@ -6,7 +6,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.ConfigurationManager;
-import pl.plajer.buildbattle.utils.ParticleEffect;
 import pl.plajer.buildbattle.utils.Util;
 
 import java.util.List;
@@ -16,12 +15,10 @@ import java.util.List;
  */
 public class SpecialItem {
 
-
     private Material material;
     private Byte data = null;
     private String[] lore;
     private String displayName;
-    private ParticleEffect effect;
     private String permission;
     private boolean enabled = true;
     private Location location;
@@ -112,14 +109,6 @@ public class SpecialItem {
 
     private void setDisplayName(String displayName) {
         this.displayName = displayName;
-    }
-
-    public ParticleEffect getEffect() {
-        return effect;
-    }
-
-    public void setEffect(ParticleEffect effect) {
-        this.effect = effect;
     }
 
     public int getSlot() {

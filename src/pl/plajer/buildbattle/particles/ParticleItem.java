@@ -2,9 +2,9 @@ package pl.plajer.buildbattle.particles;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.inventory.ItemStack;
 import pl.plajer.buildbattle.handlers.ChatManager;
-import pl.plajer.buildbattle.utils.ParticleEffect;
 import pl.plajer.buildbattle.utils.Util;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class ParticleItem {
     private Byte data = null;
     private String[] lore;
     private String displayName;
-    private ParticleEffect effect;
+    private Particle effect;
     private String permission;
     private boolean enabled = true;
     private Location location;
@@ -77,7 +77,6 @@ public class ParticleItem {
     }
 
     public void setLore(List<String> lore) {
-
         this.lore = lore.toArray(new String[lore.size()]);
     }
 
@@ -89,11 +88,11 @@ public class ParticleItem {
         this.displayName = displayName;
     }
 
-    public ParticleEffect getEffect() {
+    public Particle getEffect() {
         return effect;
     }
 
-    public void setEffect(ParticleEffect effect) {
+    public void setEffect(Particle effect) {
         this.effect = effect;
     }
 

@@ -7,6 +7,7 @@ import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
+import pl.plajer.buildbattle.utils.Reflectionfixmeplease;
 
 import java.util.ArrayList;
 
@@ -37,7 +38,9 @@ public class ParticleHandler extends BukkitRunnable {
             for(BuildPlot buildPlot : arena.getPlotManager().getPlots()) {
                 for(Location location : buildPlot.getParticles().keySet()) {
                     if(!arena.getPlayers().isEmpty())
-                        buildPlot.getParticles().get(location).display((float) particleOffset, (float) particleOffset, (float) particleOffset, (float) 1, amount, location, new ArrayList<>(arena.getPlayers()));
+                        //per player?
+                        Reflectionfixmeplease.displayParticle(location, buildPlot.getParticles().get(location), (float) particleOffset, (float) particleOffset, (float) particleOffset, amount);
+                        //buildPlot.getParticles().get(location).display((float) particleOffset, (float) particleOffset, (float) particleOffset, (float) 1, amount, location, new ArrayList<>(arena.getPlayers()));
                 }
             }
         }

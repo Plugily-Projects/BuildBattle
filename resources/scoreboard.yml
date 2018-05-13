@@ -39,7 +39,7 @@ scoreboard:
       - " "
       - "&5&bStarting in:"
       - "&d %TIMER%"
-  INGAME:
+  IN_GAME:
     title: "&6BuildBattle"
     lines:
       - "&5Time left;"

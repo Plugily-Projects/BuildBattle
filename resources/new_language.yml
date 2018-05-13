@@ -1,6 +1,12 @@
 # reworkin' dis...
 # under construction don't touch!
 
+Commands:
+  No-Arena-Like-That: "&cNo arena with that ID!"
+  Added-Plot: "&aAdded plot for arena &7%ARENA%"
+  No-Selection: "&cPlease use WorldEdit selection first!"
+  Plugin-Reloaded: "&aPlugin and configuration reloaded!"
+
 Bossbar:
   Waiting-For-Players: "&4&lWaiting for more players..."
   Starting-In: "&f&lStarting in: &e&l%time%"
@@ -18,6 +24,15 @@ In-Game:
     Voting-Messages:
       Plot-Owner-Title: "&aPlot owner: &7%PLAYER%"
       Voting-For-Player-Plot: "&7Now voting for &e&l%PLAYER%'s &7plot!"
+      Winner-Title: "&eWINNER: &a%PLAYER%"
+      Winner-Message:
+        Header: "&a==============================\n&f&lBuildBattle\n"
+        First-Winner: "&e1st Winner &7- %PLAYER% (Plot %NUMBER%)"
+        Second-Winner: "&62nd Winner &7- %PLAYER% (Plot %NUMBER%)"
+        Third-Winner: "&c3rd Winner &7- %PLAYER% (Plot %NUMBER%)"
+        Footer: "\n&a=============================="
+        You-Became-Other: "&aYou became &7%NUMBER%th"
     Game-End-Messages:
       Only-You-Playing: "&7You're the only player left. You'll be teleported to the lobby."
-      # Arena 467 todo
+    Admin-Messages:
+      Set-Starting-In-To-0: "&bAn admin set waiting time to 0. The game starts now!"

@@ -23,9 +23,9 @@ import pl.plajer.buildbattle.handlers.UserManager;
 import pl.plajer.buildbattle.items.SpecialItem;
 import pl.plajer.buildbattle.items.SpecialItemManager;
 import pl.plajer.buildbattle.scoreboards.ScoreboardHandler;
-import pl.plajer.buildbattle.selfmadeevents.GameChangeStateEvent;
-import pl.plajer.buildbattle.selfmadeevents.GameEndEvent;
-import pl.plajer.buildbattle.selfmadeevents.GameStartEvent;
+import pl.plajer.buildbattle.selfmadeevents.BBGameChangeStateEvent;
+import pl.plajer.buildbattle.selfmadeevents.BBGameEndEvent;
+import pl.plajer.buildbattle.selfmadeevents.BBGameStartEvent;
 import pl.plajer.buildbattle.utils.IngameMenu;
 import pl.plajer.buildbattle.utils.Util;
 
@@ -174,7 +174,7 @@ public class Arena extends BukkitRunnable {
                 } else {
                     getChatManager().broadcastMessage("Enough-Players-To-Start", "We now have enough players. The game is starting soon!");
                     setGameState(ArenaState.STARTING);
-                    Bukkit.getPluginManager().callEvent(new GameStartEvent(this));
+                    Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
                     setTimer(LOBBY_STARTING_TIMER);
                     this.showPlayers();
                 }
@@ -205,7 +205,7 @@ public class Arena extends BukkitRunnable {
                 if(getPlayers().size() <= 1) {
                     getChatManager().broadcastMessage("Only-Player-Left", ChatColor.RED + "U are the only player left. U will be teleported to the lobby");
                     setGameState(ArenaState.ENDING);
-                    Bukkit.getPluginManager().callEvent(new GameEndEvent(this));
+                    Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
                     setTimer(10);
                 }
                 if((getTimer() == (4 * 60) || getTimer() == (3 * 60) || getTimer() == 5 * 60 || getTimer() == 30 || getTimer() == 2 * 60 || getTimer() == 60 || getTimer() == 15) && !this.isVoting()) {
@@ -262,7 +262,7 @@ public class Arena extends BukkitRunnable {
                             player.teleport(winnerPlot.getTeleportLocation());
                         }
                         this.setGameState(ArenaState.ENDING);
-                        Bukkit.getPluginManager().callEvent(new GameEndEvent(this));
+                        Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
                         setTimer(10);
                     }
                 }
@@ -613,7 +613,7 @@ public class Arena extends BukkitRunnable {
 
     public void setGameState(ArenaState gameState) {
         if(getGameState() != null) {
-            GameChangeStateEvent gameChangeStateEvent = new GameChangeStateEvent(gameState, this, getGameState());
+            BBGameChangeStateEvent gameChangeStateEvent = new BBGameChangeStateEvent(gameState, this, getGameState());
             plugin.getServer().getPluginManager().callEvent(gameChangeStateEvent);
         }
         this.gameState = gameState;
