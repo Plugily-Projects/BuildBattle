@@ -5,6 +5,8 @@ package pl.plajer.buildbattle.handlers;
  */
 public class PermissionManager {
 
+
+    //todo perm
     private static String joinFullGames = "minigames.fullgames";
     private static String VIP = "minigames.VIP";
     private static String MVP = "minigames.MVP";

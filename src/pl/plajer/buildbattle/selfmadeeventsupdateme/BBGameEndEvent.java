@@ -1,4 +1,4 @@
-package pl.plajer.buildbattle.selfmadeevents;
+package pl.plajer.buildbattle.selfmadeeventsupdateme;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -7,14 +7,13 @@ import pl.plajer.buildbattle.arena.Arena;
 /**
  * Created by Tom on 1/11/2015.
  */
-public class BBGameStartEvent extends Event {
+public class BBGameEndEvent extends Event {
 
 
     private static final HandlerList handlers = new HandlerList();
     private Arena buildInstance;
 
-
-    public BBGameStartEvent(Arena buildInstance) {
+    public BBGameEndEvent(Arena buildInstance) {
         this.buildInstance = buildInstance;
     }
 

@@ -10,6 +10,7 @@ import pl.plajer.buildbattle.arena.Arena;
 /**
  * Created by Tom on 15/06/2015.
  */
+//todo delet
 public class SetupInventoryClickEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();

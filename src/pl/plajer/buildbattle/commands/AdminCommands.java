@@ -55,10 +55,10 @@ public class AdminCommands extends GameCommands {
         if(arena == null) return;
         if(arena.getGameState() == ArenaState.WAITING_FOR_PLAYERS) {
             arena.setGameState(ArenaState.STARTING);
-            arena.getChatManager().broadcastMessage("Admin-ForceStart-Game", ChatManager.HIGHLIGHTED + "An admin forcestarted the game!");
+            ChatManager.broadcastMessage("Admin-ForceStart-Game", ChatManager.HIGHLIGHTED + "An admin forcestarted the game!", arena);
         } else if(arena.getGameState() == ArenaState.STARTING) {
             arena.setTimer(0);
-            arena.getChatManager().broadcastMessage("Admin-Set-Starting-In-To-0", ChatManager.HIGHLIGHTED + "An admin set waiting time to 0. Game starts now!");
+            ChatManager.broadcastMessage("Admin-Set-Starting-In-To-0", ChatManager.HIGHLIGHTED + "An admin set waiting time to 0. Game starts now!", arena);
         }
     }
 

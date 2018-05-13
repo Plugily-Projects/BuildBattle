@@ -63,12 +63,14 @@ public class IngameEvents implements Listener {
         this.plugin = main;
     }
 
+    //todo whitelist instead
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         if((plugin.isBungeeActivated() && ArenaRegistry.getArenas().get(0).getGameState() == ArenaState.IN_GAME) || (plugin.isBungeeActivated() && ArenaRegistry.getArenas().get(0).getGameState() == ArenaState.ENDING) || (plugin.isBungeeActivated() && ArenaRegistry.getArenas().get(0).getGameState() == ArenaState.RESTARTING))
             event.getPlayer().kickPlayer(ChatManager.getSingleMessage("Kicked-Game-Already-Started", ChatManager.HIGHLIGHTED + "Kicked! Game has already started!"));
     }
 
+    //todo whitelist instead
     @EventHandler
     public void onPreJoin(AsyncPlayerPreLoginEvent event) {
         if((plugin.isBungeeActivated() && ArenaRegistry.getArenas().get(0).getGameState() == ArenaState.IN_GAME) || (plugin.isBungeeActivated() && ArenaRegistry.getArenas().get(0).getGameState() == ArenaState.ENDING) || (plugin.isBungeeActivated() && ArenaRegistry.getArenas().get(0).getGameState() == ArenaState.RESTARTING)) {
@@ -269,7 +271,7 @@ public class IngameEvents implements Listener {
         if(arena.getGameState() != ArenaState.IN_GAME) return;
         if(displayName.equalsIgnoreCase(ChatManager.getSingleMessage("Particle-Option-Name", ChatColor.GREEN + "Particles"))) {
             e.getWhoClicked().closeInventory();
-            ParticleMenu.openMenu(player, arena.getPlotManager().getPlot((Player) e.getWhoClicked()));
+            ParticleMenu.openMenu(player);
             return;
         } else if(e.getInventory().getName().equalsIgnoreCase(ChatManager.getSingleMessage("Particle-Remove-Menu-Name", "Remove Particles"))) {
             ParticleRemoveMenu.onClick(e.getInventory(), e.getCurrentItem(), arena.getPlotManager().getPlot(player));
@@ -312,6 +314,7 @@ public class IngameEvents implements Listener {
         if(displayName.equalsIgnoreCase(ChatManager.getSingleMessage("Floor-Option-Name", ChatColor.GREEN + "Floor Material"))) {
             arena.getPlotManager().getPlot(player).changeFloor(e.getCursor().getType(), e.getCursor().getData().getData());
             player.sendMessage(ChatManager.getSingleMessage("Floor-Changed", ChatColor.GREEN + "Floor changed!"));
+            //todo wtf
             e.getCursor().setAmount(0);
             e.getCursor().setType(Material.AIR);
             e.getCurrentItem().setType(Material.AIR);
@@ -350,9 +353,11 @@ public class IngameEvents implements Listener {
         for(String string : ConfigPreferences.getWhitelistedCommands()) {
             if(event.getMessage().contains(string)) return;
         }
+        //todo more
         if(event.getMessage().contains("leave") || event.getMessage().contains("stats")) {
             return;
         }
+        //todo perm
         if(event.getPlayer().isOp() || event.getPlayer().hasPermission("minigames.edit")) return;
         event.setCancelled(true);
         event.getPlayer().sendMessage(ChatManager.getSingleMessage("Only-Command-Ingame-Is-Leave", ChatColor.RED + "You have to leave the game first to perform commands. The only command that works is /leave!"));
@@ -460,7 +465,6 @@ public class IngameEvents implements Listener {
         }
         if(buildPlot.isInPlot(event.getBlock().getLocation())) {
             UserManager.getUser(event.getPlayer().getUniqueId()).addInt("blocksbroken", 1);
-
             return;
         }
         event.setCancelled(true);

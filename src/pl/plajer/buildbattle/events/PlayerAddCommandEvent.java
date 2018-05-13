@@ -7,6 +7,7 @@ import org.bukkit.event.HandlerList;
 /**
  * Created by Tom on 15/08/2014.
  */
+//todo delet
 public class PlayerAddCommandEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();

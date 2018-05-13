@@ -68,7 +68,7 @@ public class PlayerHeadsMenu {
                 config.set("example.data", SkullType.PLAYER.ordinal());
                 config.set("example.displayname", "&6" + "Animals");
                 config.set("example.owner", "MHF_Pig");
-                config.set("example.lore", Collections.singletonList(ChatManager.formatMessage("&7Click to select")));
+                config.set("example.lore", Collections.singletonList(ChatManager.colorRawMessage("&7Click to select")));
                 config.set("example.material", Material.SKULL_ITEM.getId());
                 config.set("example.enabled", true);
                 config.set("example.slot", 7);

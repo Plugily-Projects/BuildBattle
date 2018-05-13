@@ -116,7 +116,7 @@ public class EntityItem {
     }
 
     private String getDisplayName() {
-        return ChatManager.formatMessage(displayName);
+        return ChatManager.colorRawMessage(displayName);
     }
 
     private void setDisplayName(String displayName) {
@@ -139,7 +139,7 @@ public class EntityItem {
             itemStack = new ItemStack(getMaterial());
 
         }
-        Util.setItemNameAndLore(itemStack, ChatManager.formatMessage(this.getDisplayName()), lore);
+        Util.setItemNameAndLore(itemStack, ChatManager.colorRawMessage(this.getDisplayName()), lore);
         return itemStack;
     }
 }

@@ -25,7 +25,7 @@ public class ParticleMenu {
 
     private static List<ParticleItem> particleItems = new ArrayList<>();
 
-    public static void openMenu(Player player, BuildPlot buildPlot) {
+    public static void openMenu(Player player) {
         Inventory inventory = player.getServer().createInventory(player, 6 * 9, ChatManager.getSingleMessage("Particle-Menu-Name", "Particle Menu"));
         for(ParticleItem particleItem : particleItems) {
             if(particleItem.isEnabled()) inventory.setItem(particleItem.getSlot(), particleItem.getItemStack());
@@ -92,9 +92,5 @@ public class ParticleMenu {
             if(effect == particleItem.getEffect()) return particleItem;
         }
         return null;
-    }
-
-    public static List<ParticleItem> getParticleItems() {
-        return particleItems;
     }
 }

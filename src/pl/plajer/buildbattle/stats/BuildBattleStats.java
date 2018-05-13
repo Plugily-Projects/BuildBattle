@@ -17,8 +17,9 @@ import java.util.UUID;
 /**
  * Created by Tom on 30/12/2015.
  */
+//todo update api
 public enum BuildBattleStats {
-    BLOCKS_PLACED("blocksplaced"), BLOCKS_BROKEN("blocksbroken"), GAMES_PLAYED("gamesplayed"), WINS("wins"), LOSES("loses"), HIGHEST_WIN("highestwin"), PARTICLES("particles");
+    BLOCKS_PLACED("blocksplaced"), BLOCKS_BROKEN("blocksbroken"), GAMES_PLAYED("gamesplayed"), WINS("wins"), LOSES("loses"), HIGHEST_WIN("highestwin"), PARTICLES_USED("particles");
 
     public static Main plugin;
     public static List<String> STATISTICS = new ArrayList<>();

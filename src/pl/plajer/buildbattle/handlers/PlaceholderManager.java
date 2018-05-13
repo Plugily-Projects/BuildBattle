@@ -47,6 +47,8 @@ public class PlaceholderManager extends PlaceholderExpansion {
                 return String.valueOf(BuildBattleStats.LOSES.getStat(player));
             case "highest_win":
                 return String.valueOf(BuildBattleStats.HIGHEST_WIN.getStat(player));
+            case "particles_used":
+                return String.valueOf(BuildBattleStats.PARTICLES_USED.getStat(player));
         }
         return null;
     }

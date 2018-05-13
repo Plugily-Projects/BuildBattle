@@ -31,7 +31,7 @@ public class VoteItems {
             if(StringUtils.isNumeric(s) && config.contains(s + ".material") && config.contains(s + ".data") && config.contains(s + ".displayname")) {
                 ItemStack item = new ItemStack(config.getInt(s + ".material"), 1, (byte) config.getInt(s + ".data"));
                 ItemMeta itemMeta = item.getItemMeta();
-                itemMeta.setDisplayName(ChatManager.formatMessage(config.getString(s + ".displayname")));
+                itemMeta.setDisplayName(ChatManager.colorRawMessage(config.getString(s + ".displayname")));
                 item.setItemMeta(itemMeta);
                 voteItems.put(item, Integer.parseInt(s));
 

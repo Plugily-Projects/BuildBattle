@@ -23,9 +23,9 @@ import pl.plajer.buildbattle.handlers.UserManager;
 import pl.plajer.buildbattle.items.SpecialItem;
 import pl.plajer.buildbattle.items.SpecialItemManager;
 import pl.plajer.buildbattle.scoreboards.ScoreboardHandler;
-import pl.plajer.buildbattle.selfmadeevents.BBGameChangeStateEvent;
-import pl.plajer.buildbattle.selfmadeevents.BBGameEndEvent;
-import pl.plajer.buildbattle.selfmadeevents.BBGameStartEvent;
+import pl.plajer.buildbattle.selfmadeeventsupdateme.BBGameChangeStateEvent;
+import pl.plajer.buildbattle.selfmadeeventsupdateme.BBGameEndEvent;
+import pl.plajer.buildbattle.selfmadeeventsupdateme.BBGameStartEvent;
 import pl.plajer.buildbattle.utils.IngameMenu;
 import pl.plajer.buildbattle.utils.Util;
 
@@ -80,11 +80,9 @@ public class Arena extends BukkitRunnable {
     private Location startLoc = null;
     private Location endLoc = null;
     private Set<UUID> players = new HashSet<>();
-    private ChatManager chatManager;
 
     public Arena(String ID) {
         gameState = ArenaState.WAITING_FOR_PLAYERS;
-        chatManager = new ChatManager(this);
         this.ID = ID;
         plotManager = new PlotManager(this);
         scoreboardHandler = new ScoreboardHandler(this);
@@ -125,7 +123,7 @@ public class Arena extends BukkitRunnable {
         this.teleportToEndLocation(p);
         this.removePlayer(p);
         if(!user.isSpectator()) {
-            getChatManager().broadcastLeaveMessage(p);
+            ChatManager.broadcastLeaveMessage(p, this);
         }
         user.setSpectator(false);
         user.removeScoreboard();
@@ -168,11 +166,11 @@ public class Arena extends BukkitRunnable {
                 if(getPlayers().size() < getMinimumPlayers()) {
                     if(getTimer() <= 0) {
                         setTimer(LOBBY_STARTING_TIMER);
-                        getChatManager().broadcastMessage("Waiting-For-Players-Message");
+                        ChatManager.broadcastMessage("Waiting-For-Players-Message", this);
                         return;
                     }
                 } else {
-                    getChatManager().broadcastMessage("Enough-Players-To-Start", "We now have enough players. The game is starting soon!");
+                    ChatManager.broadcastMessage("Enough-Players-To-Start", "We now have enough players. The game is starting soon!", this);
                     setGameState(ArenaState.STARTING);
                     Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
                     setTimer(LOBBY_STARTING_TIMER);
@@ -197,19 +195,19 @@ public class Arena extends BukkitRunnable {
                         player.getInventory().setItem(8, IngameMenu.getMenuItem());
                     }
                     setRandomTheme();
-                    getChatManager().broadcastMessage("The-Game-Has-Started", "The game has started! Start building guys!!");
+                    ChatManager.broadcastMessage("The-Game-Has-Started", "The game has started! Start building guys!!", this);
                 }
                 setTimer(getTimer() - 1);
                 break;
             case IN_GAME:
                 if(getPlayers().size() <= 1) {
-                    getChatManager().broadcastMessage("Only-Player-Left", ChatColor.RED + "U are the only player left. U will be teleported to the lobby");
+                    ChatManager.broadcastMessage("Only-Player-Left", ChatColor.RED + "U are the only player left. U will be teleported to the lobby", this);
                     setGameState(ArenaState.ENDING);
                     Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
                     setTimer(10);
                 }
                 if((getTimer() == (4 * 60) || getTimer() == (3 * 60) || getTimer() == 5 * 60 || getTimer() == 30 || getTimer() == 2 * 60 || getTimer() == 60 || getTimer() == 15) && !this.isVoting()) {
-                    getChatManager().broadcastMessage("Time-Left-To-Build", ChatManager.PREFIX + "%FORMATTEDTIME% " + ChatManager.NORMAL + "time left to build!", getTimer());
+                    ChatManager.broadcastMessage("Time-Left-To-Build", ChatManager.PREFIX + "%FORMATTEDTIME% " + ChatManager.NORMAL + "time left to build!", getTimer(), this);
                 }
                 if(getTimer() != 0 && !receivedVoteItems) {
                     if(extraCounter == 1) {
@@ -338,9 +336,9 @@ public class Arena extends BukkitRunnable {
                     break;
                 case IN_GAME:
                     if(!isVoting()) {
-                        BossBarAPI.setMessage(player, ChatManager.formatMessage(ChatManager.getSingleMessage("Time-Left-Bar-Message", ChatManager.formatMessage(ChatManager.PREFIX + "Time left :" + ChatManager.HIGHLIGHTED + " %FORMATTEDTIME%")), getTimer()));
+                        BossBarAPI.setMessage(player, ChatManager.formatMessage(ChatManager.getSingleMessage("Time-Left-Bar-Message", ChatManager.formatMessage(ChatManager.PREFIX + "Time left :" + ChatManager.HIGHLIGHTED + " %FORMATTEDTIME%", this)), this));
                     } else {
-                        BossBarAPI.setMessage(player, ChatManager.formatMessage(ChatManager.getSingleMessage("Vote-Time-Left-Bar-Message", ChatManager.PREFIX + "Vote Time left :" + ChatManager.HIGHLIGHTED + " %FORMATTEDTIME%"), getTimer()));
+                        BossBarAPI.setMessage(player, ChatManager.formatMessage(ChatManager.getSingleMessage("Vote-Time-Left-Bar-Message", ChatManager.PREFIX + "Vote Time left :" + ChatManager.HIGHLIGHTED + " %FORMATTEDTIME%"), this));
                     }
                     break;
             }
@@ -408,7 +406,7 @@ public class Arena extends BukkitRunnable {
         p.getInventory().setArmorContents(new ItemStack[]{new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
         p.getInventory().clear();
         showPlayers();
-        if(!UserManager.getUser(p.getUniqueId()).isSpectator()) getChatManager().broadcastJoinMessage(p);
+        if(!UserManager.getUser(p.getUniqueId()).isSpectator()) ChatManager.broadcastJoinMessage(p, this);
         p.updateInventory();
         for(Player player : getPlayers()) {
             showPlayer(player);
@@ -462,9 +460,9 @@ public class Arena extends BukkitRunnable {
                 //todo checks for future versions
                 //if(plugin.is1_8_R3()) {
                 for(Player player1 : getPlayers())
-                    MessageHandler.sendTitleMessage(player1, getChatManager().getMessage("Plot-Owner-Title-Message", ChatManager.PREFIX + "Plot Owner: " + ChatManager.HIGHLIGHTED + "%PLAYER%", player), 5, 20, 5, ChatColor.BLACK);
+                    MessageHandler.sendTitleMessage(player1, ChatManager.getMessage("Plot-Owner-Title-Message", ChatManager.PREFIX + "Plot Owner: " + ChatManager.HIGHLIGHTED + "%PLAYER%", player, this), 5, 20, 5, ChatColor.BLACK);
                 //}
-                getChatManager().broadcastMessage("Voting-For-Player-Plot", ChatManager.NORMAL + "Voting for " + ChatManager.HIGHLIGHTED + "%PLAYER%" + ChatManager.NORMAL + "'s plot!", player);
+                ChatManager.broadcastMessage("Voting-For-Player-Plot", ChatManager.NORMAL + "Voting for " + ChatManager.HIGHLIGHTED + "%PLAYER%" + ChatManager.NORMAL + "'s plot!", player, this);
             }
         }
 
@@ -482,7 +480,7 @@ public class Arena extends BukkitRunnable {
         //todo checks for future versions
         //if(plugin.is1_8_R3()) {
         for(Player player : getPlayers()) {
-            MessageHandler.sendTitleMessage(player, getChatManager().getMessage("Title-Winner-Message", ChatColor.YELLOW + "WINNER: " + ChatColor.GREEN + "%PLAYER%", plugin.getServer().getOfflinePlayer(topList.get(1))), 5, 40, 5, ChatColor.BLACK);
+            MessageHandler.sendTitleMessage(player, ChatManager.getMessage("Title-Winner-Message", ChatColor.YELLOW + "WINNER: " + ChatColor.GREEN + "%PLAYER%", plugin.getServer().getOfflinePlayer(topList.get(1)), this), 5, 40, 5, ChatColor.BLACK);
         }
         //}
         for(Player player : getPlayers()) {
@@ -594,11 +592,7 @@ public class Arena extends BukkitRunnable {
     public void setTimer(int timer) {
         this.timer = timer;
     }
-
-    public ChatManager getChatManager() {
-        return chatManager;
-    }
-
+    
     public int getMaximumPlayers() {
         return maximumPlayers;
     }

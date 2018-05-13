@@ -1,4 +1,4 @@
-package pl.plajer.buildbattle.selfmadeevents;
+package pl.plajer.buildbattle.selfmadeeventsupdateme;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;

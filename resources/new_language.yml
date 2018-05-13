@@ -2,10 +2,25 @@
 # under construction don't touch!
 
 Commands:
+  Only-By-Player: "&cYou can execute this command only as player!"
+  No-Permission: "&cYou don't have permission to use this command!"
   No-Arena-Like-That: "&cNo arena with that ID!"
+  Arena-Is-Full: "&cThis arena is full, sorry!"
+  Arena-Started: "&cThis arena already started, sorry!"
   Added-Plot: "&aAdded plot for arena &7%ARENA%"
   No-Selection: "&cPlease use WorldEdit selection first!"
   Plugin-Reloaded: "&aPlugin and configuration reloaded!"
+  Stats-Command:
+      Header: "&l-----YOUR STATS-----"
+      Header-Other: "&l-----STATS FOR %player%-----"
+      Footer: "&l--------------------"
+      Wins: "&aWins: &e"
+      Loses: "&aLoses: &e"
+      Games-Played: "&aGames played: &e"
+      Highest-Win: "&aHighest win (points): &e"
+      Blocks-Placed: "&aBlocks placed: &e"
+      Blocks-Broken: "&aBlocks broken: &e"
+      Particles-Placed: "&aParticles placed: &e"
 
 Bossbar:
   Waiting-For-Players: "&4&lWaiting for more players..."
@@ -14,6 +29,12 @@ Bossbar:
   Vote-Time-Left: "&e&lVote time left: &f&e%FORMATTEDTIME%"
 
 In-Game:
+    Plugin-Prefix: "&6[&bBuildBattle&6] "
+  Only-Command-Ingame-Is-Leave: "&cYou have to leave the game first to perform commands. The only command that works is /leave!"
+  Max-Entities-Limit-Reached: "&cYou can't spawn more entities!"
+  Max-Particles-Limit-Reached: "&cYou can't spawn more particles!"
+  No-Permission-For-Particle: "&cYou don't have permission for this particle!"
+  Particle-Added: "&aParticle successfully added!"
   Messages:
     Time-Left-To-Build: "&6%FORMATTEDTIME% &7time left to build!"
     Plot-Leave-Error: "&cYou can't fly out of the plot!"
@@ -24,6 +45,8 @@ In-Game:
     Voting-Messages:
       Plot-Owner-Title: "&aPlot owner: &7%PLAYER%"
       Voting-For-Player-Plot: "&7Now voting for &e&l%PLAYER%'s &7plot!"
+      Cant-Vote-Own-Plot: "&cYou can't vote for your plot!"
+      Vote-Successful: "&aVoted successfully!"
       Winner-Title: "&eWINNER: &a%PLAYER%"
       Winner-Message:
         Header: "&a==============================\n&f&lBuildBattle\n"
@@ -36,3 +59,35 @@ In-Game:
       Only-You-Playing: "&7You're the only player left. You'll be teleported to the lobby."
     Admin-Messages:
       Set-Starting-In-To-0: "&bAn admin set waiting time to 0. The game starts now!"
+
+Menus:
+  Entity-Menu-Name: "&aEntity menu"
+  Option-Menu:
+    Inventory-Name: "&aOptions menu"
+    Particle-Inventory-Name: "&aParticles menu"
+    Particle-Option: "&aChoose particles"
+    Particle-Remove: "&cRemove particles"
+    Players-Heads-Inventory-Name: "&aPlayers heads menu"
+    Floor-Option: "&aChange floor material"
+    Floor-Changed: "&aFloor material changed!"
+    Banners-Option: "&aCreate banners &7(soon)"
+    Banners-Option-Inventory-Name: "&aBanners menu"
+
+
+Signs:
+  Please-Type-Arena-Name: "&cPlease type arena name in second line!"
+  Arena-Doesnt-Exists: "&cArena with that name doesn't exists!"
+  Sign-Created: "&aSign created successfully!"
+  Sign-Removed: "&aSign successfully removed!"
+  Game-States:
+    Inactive: "&lInactive..."
+    In-Game: "&lIn-game"
+    Starting: "&e&lStarting"
+    Full-Game: "&4&lFULL"
+    Ending: "&lEnding"
+    Restarting: "&c&lRestarting"
+  Lines:
+    - "&a&lVillage Defense"
+    - "%state%"
+    - "%mapname%"
+    - "&5[%playersize%/%maxplayers%]"

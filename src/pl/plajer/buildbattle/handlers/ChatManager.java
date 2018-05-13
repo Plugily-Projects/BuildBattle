@@ -5,6 +5,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import pl.plajer.buildbattle.arena.Arena;
+import pl.plajer.buildbattle.language.LanguageManager;
 import pl.plajer.buildbattle.utils.Util;
 
 import java.io.IOException;
@@ -14,31 +15,24 @@ import java.util.HashMap;
  * Created by Tom on 27/07/2014.
  */
 public class ChatManager {
-
-    public static ChatColor PREFIX = ChatColor.GOLD;
+    
     public static ChatColor NORMAL = ChatColor.GRAY;
     public static ChatColor HIGHLIGHTED = ChatColor.AQUA;
     private static FileConfiguration config = null;
     private static HashMap<String, String> messages = new HashMap<>();
-    private static Arena arena;
-    public String GAMENAME;
-    public String prefix;
+    public static String PREFIX;
 
-    public ChatManager(Arena arena) {
-        ChatManager.arena = arena;
+    public ChatManager(){
+        PREFIX = colorMessage("In-Game.Plugin-Prefix");
         config = ConfigurationManager.getConfig("language");
-
-        GAMENAME = getFromLanguageConfig("GAMENAME", "BuildBattle");
-        prefix = getFromLanguageConfig("PREFIX", PREFIX + "[" + GAMENAME + "] " + NORMAL).replaceAll("(&([a-f0-9]))", "\u00A7$2").replaceAll("&l", ChatColor.BOLD.toString());
         loadMessages();
     }
 
-    public ChatManager() {
-        GAMENAME = getFromLanguageConfig("GAMENAME", "BuildBattle");
-        prefix = getFromLanguageConfig("PREFIX", PREFIX + "[" + GAMENAME + "] " + NORMAL).replaceAll("(&([a-f0-9]))", "\u00A7$2");
-    }
-
     public static String colorMessage(String msg){
+        return ChatColor.translateAlternateColorCodes('&', LanguageManager.getLanguageMessage(msg));
+    }
+    
+    public static String colorRawMessage(String msg){
         return ChatColor.translateAlternateColorCodes('&', msg);
     }
 
@@ -68,7 +62,7 @@ public class ChatManager {
         returnstring = returnstring.replaceAll("%MAXPLAYERS%", Integer.toString(arena.getMaximumPlayers()));
         returnstring = returnstring.replaceAll("%MINPLAYERS%", Integer.toString(arena.getMinimumPlayers()));
         //todo remember
-        returnstring = colorMessage(returnstring);
+        returnstring = colorRawMessage(returnstring);
         return returnstring;
     }
 
@@ -84,13 +78,6 @@ public class ChatManager {
 
     }
 
-    public static String getSingleMessage(String ID, String defualt, Player player, int i) {
-        if(messages.containsKey(ID))
-            return messages.get(ID).replaceAll("(&([a-f0-9]))", "\u00A7$2").replaceAll("%NUMBER%", Integer.toString(i)).replaceAll("%PLAYER%", player.getDisplayName());
-        return defualt.replaceAll("(&([a-f0-9]))", "\u00A7$2").replaceAll("%NUMBER%", Integer.toString(i)).replaceAll("%PLAYER%", player.getDisplayName());
-
-    }
-
     public static String getSingleMessage(String ID, String defualt, OfflinePlayer player, int i) {
         if(messages.containsKey(ID))
             return messages.get(ID).replaceAll("(&([a-f0-9]))", "\u00A7$2").replaceAll("%NUMBER%", Integer.toString(i)).replaceAll("%PLAYER%", player.getName());
@@ -102,7 +89,7 @@ public class ChatManager {
         messages.put(ID, message);
     }
 
-    public static String formatMessage(String message, int integer) {
+    public static String formatMessage(String message, int integer, Arena arena) {
         String returnstring = message;
         returnstring = returnstring.replaceAll("%NUMBER%", Integer.toString(integer));
 
@@ -121,7 +108,7 @@ public class ChatManager {
         return returnstring;
     }
 
-    public static String formatMessage(String message) {
+    public static String formatMessage(String message, Arena arena) {
         String returnstring = message;
 
         returnstring = returnstring.replaceAll("%TIME%", Integer.toString(arena.getTimer()));
@@ -138,130 +125,121 @@ public class ChatManager {
         return returnstring;
     }
 
-    public void broadcastMessage(String ID) {
+    public static void broadcastMessage(String ID, Arena arena) {
         if(messages.containsKey(ID)) {
-            String message = formatMessage(messages.get(ID));
+            String message = formatMessage(messages.get(ID), arena);
             for(Player player : arena.getPlayers()) {
-                player.sendMessage(getPrefix() + message);
+                player.sendMessage(PREFIX + message);
             }
         } else {
             for(Player p : arena.getPlayers()) {
-                p.sendMessage(getPrefix() + ID);
+                p.sendMessage(PREFIX + ID);
             }
         }
 
     }
 
-    public String getPrefix() {
-        return prefix;
-    }
-
-    public void broadcastMessage(String ID, String defaultmessage) {
+    public static void broadcastMessage(String ID, String defaultmessage, Arena arena) {
         if(messages.containsKey(ID)) {
-            broadcastMessage(ID);
+            broadcastMessage(ID, arena);
         } else {
             getFromLanguageConfig(ID, defaultmessage);
 
-            broadcastMessage(ID);
+            broadcastMessage(ID, arena);
         }
 
     }
 
-    public void broadcastMessage(String ID, String defaultmessage, OfflinePlayer player) {
+    public static void broadcastMessage(String ID, String defaultmessage, OfflinePlayer player, Arena arena) {
         if(messages.containsKey(ID)) {
-            broadcastMessage(ID, player);
+            broadcastMessage(ID, player, arena);
         } else {
             getFromLanguageConfig(ID, defaultmessage);
-
-            broadcastMessage(ID, player);
+            broadcastMessage(ID, player, arena);
         }
 
     }
 
-    public void broadcastMessage(String ID, String defaultmessage, int integer) {
+    public static void broadcastMessage(String ID, String defaultmessage, int integer, Arena arena) {
         if(messages.containsKey(ID)) {
-            broadcastMessage(ID, integer);
+            broadcastMessage(ID, integer, arena);
         } else {
             getFromLanguageConfig(ID, defaultmessage);
-
-            broadcastMessage(ID, integer);
+            broadcastMessage(ID, integer, arena);
         }
 
     }
 
-    public void broadcastJoinMessage(Player p) {
+    //todo wtff
+    public static void broadcastJoinMessage(Player p, Arena arena) {
         if(messages.containsKey("JoinMessage")) {
-            arena.getChatManager().broadcastMessage("JoinMessage", p);
+            ChatManager.broadcastMessage("JoinMessage", p, arena);
         } else if(messages.containsKey("Join")) {
-            arena.getChatManager().broadcastMessage("Join", p);
+            ChatManager.broadcastMessage("Join", p, arena);
         } else {
-            arena.getChatManager().broadcastMessage(HIGHLIGHTED + p.getName() + NORMAL + " joined the Game! (" + arena.getPlayers().size() + "/" + arena.getMaximumPlayers() + ")");
+            ChatManager.broadcastMessage(HIGHLIGHTED + p.getName() + NORMAL + " joined the Game! (" + arena.getPlayers().size() + "/" + arena.getMaximumPlayers() + ")", arena);
         }
     }
 
-    public void broadcastLeaveMessage(Player p) {
+    //todo wtf
+    public static void broadcastLeaveMessage(Player p, Arena arena) {
         if(messages.containsKey("LeaveMessage")) {
-            arena.getChatManager().broadcastMessage("LeaveMessage", p);
+            ChatManager.broadcastMessage("LeaveMessage", p, arena);
         } else if(messages.containsKey("Leave")) {
-            arena.getChatManager().broadcastMessage("Leave", p);
+            ChatManager.broadcastMessage("Leave", p, arena);
         } else {
-            arena.getChatManager().broadcastMessage(HIGHLIGHTED + p.getName() + NORMAL + " left the Game! (" + arena.getPlayers().size() + "/" + arena.getMaximumPlayers() + ")");
+            ChatManager.broadcastMessage(HIGHLIGHTED + p.getName() + NORMAL + " left the Game! (" + arena.getPlayers().size() + "/" + arena.getMaximumPlayers() + ")", arena);
         }
     }
 
-    public void broadcastMessage(String messageID, Player player) {
-        String message = formatMessage(messages.get(messageID), player);
+    public static void broadcastMessage(String messageID, Player player, Arena arena) {
+        String message = formatMessage(messages.get(messageID), player, arena);
         for(Player player1 : arena.getPlayers()) {
-            player1.sendMessage(getPrefix() + message);
+            player1.sendMessage(PREFIX + message);
         }
     }
 
-    public void broadcastMessage(String messageID, OfflinePlayer player) {
-        String message = formatMessage(messages.get(messageID), player);
+    public static void broadcastMessage(String messageID, OfflinePlayer player, Arena arena) {
+        String message = formatMessage(messages.get(messageID), player, arena);
         for(Player player1 : arena.getPlayers()) {
-            player1.sendMessage(getPrefix() + message);
+            player1.sendMessage(PREFIX + message);
         }
     }
 
-    public void broadcastMessage(String messageID, int integer) {
-        String message = formatMessage(messages.get(messageID), integer);
+    public static void broadcastMessage(String messageID, int integer, Arena arena) {
+        String message = formatMessage(messages.get(messageID), integer, arena);
         for(Player player1 : arena.getPlayers()) {
-            player1.sendMessage(getPrefix() + message);
+            player1.sendMessage(PREFIX + message);
         }
     }
 
-    public String getMessage(String ID) {
-        String message = messages.get(ID);
-        return formatMessage(message);
-    }
-
-    public String getMessage(String ID, String defaultmessage, OfflinePlayer player) {
+    public static String getMessage(String ID, String defaultmessage, OfflinePlayer player, Arena arena) {
         if(Arena.getPlugin().getServer().getPlayer(player.getUniqueId()) != null) {
             if(messages.containsKey(ID)) {
-                return getMessage(ID, Arena.getPlugin().getServer().getPlayer(player.getUniqueId()));
+                return getMessage(ID, Arena.getPlugin().getServer().getPlayer(player.getUniqueId()), arena);
             } else {
                 ChatManager.getFromLanguageConfig(ID, defaultmessage);
-                return getMessage(ID, Arena.getPlugin().getServer().getPlayer(player.getUniqueId()));
+                return getMessage(ID, Arena.getPlugin().getServer().getPlayer(player.getUniqueId()), arena);
             }
         } else {
             if(messages.containsKey(ID)) {
-                return getMessage(ID, Arena.getPlugin().getServer().getOfflinePlayer(player.getUniqueId()));
+                return getMessage(ID, Arena.getPlugin().getServer().getOfflinePlayer(player.getUniqueId()), arena);
             } else {
                 ChatManager.getFromLanguageConfig(ID, defaultmessage);
-                return getMessage(ID, Arena.getPlugin().getServer().getOfflinePlayer(player.getUniqueId()));
+                return getMessage(ID, Arena.getPlugin().getServer().getOfflinePlayer(player.getUniqueId()), arena);
             }
         }
     }
 
-    public String getMessage(String ID, Player player) {
-        return formatMessage(messages.get(ID), player);
+    public String getMessage(String ID, Player player, Arena arena) {
+        return formatMessage(messages.get(ID), player, arena);
     }
 
-    public String getMessage(String ID, OfflinePlayer playername) {
-        return formatMessage(messages.get(ID), playername.getName());
+    public String getMessage(String ID, OfflinePlayer playername, Arena arena) {
+        return formatMessage(messages.get(ID), playername.getName(), arena);
     }
 
-    public String formatMessage(String message, Player player) {
+    public static String formatMessage(String message, Player player, Arena arena) {
         String returnstring = message;
         returnstring = returnstring.replaceAll("%PLAYER%", player.getName());
         returnstring = returnstring.replaceAll("%TIME%", Integer.toString(arena.getTimer()));
@@ -278,7 +256,7 @@ public class ChatManager {
         return returnstring;
     }
 
-    public String formatMessage(String message, OfflinePlayer player) {
+    public static String formatMessage(String message, OfflinePlayer player, Arena arena) {
         String returnstring = message;
         returnstring = returnstring.replaceAll("%PLAYER%", player.getName());
         returnstring = returnstring.replaceAll("%TIME%", Integer.toString(arena.getTimer()));
@@ -295,7 +273,7 @@ public class ChatManager {
         return returnstring;
     }
 
-    public String formatMessage(String message, String playername) {
+    public String formatMessage(String message, String playername, Arena arena) {
         String returnstring = message;
         returnstring = returnstring.replaceAll("%PLAYER%", playername);
         returnstring = returnstring.replaceAll("%TIME%", Integer.toString(arena.getTimer()));

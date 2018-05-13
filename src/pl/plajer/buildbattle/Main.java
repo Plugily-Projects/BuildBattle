@@ -29,6 +29,7 @@ import pl.plajer.buildbattle.handlers.PlaceholderManager;
 import pl.plajer.buildbattle.handlers.SignManager;
 import pl.plajer.buildbattle.handlers.UserManager;
 import pl.plajer.buildbattle.items.SpecialItem;
+import pl.plajer.buildbattle.language.LanguageManager;
 import pl.plajer.buildbattle.particles.ParticleHandler;
 import pl.plajer.buildbattle.particles.ParticleMenu;
 import pl.plajer.buildbattle.playerheads.PlayerHeadsMenu;
@@ -173,6 +174,7 @@ public class Main extends JavaPlugin {
     public void onEnable() {
         version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
         new ConfigurationManager(this);
+        LanguageManager.init(this);
         initializeClasses();
         bungeeManager = new BungeeManager(this);
         inventoryManager = new InventoryManager(this);

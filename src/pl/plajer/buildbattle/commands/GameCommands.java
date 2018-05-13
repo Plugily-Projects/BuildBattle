@@ -265,7 +265,7 @@ public class GameCommands implements CommandExecutor {
                     player.sendMessage("BuildBattle: World for arena/instance " + args[0] + " set to " + args[3]);
                 } else {
                     player.sendMessage(ChatColor.RED + "Invalid Command!");
-                    player.sendMessage(ChatColor.RED + "Usage: /bb set <MINPLAYERS | MAXPLAYERS | SCHEMATIC> <value>");
+                    player.sendMessage(ChatColor.RED + "Usage: /bb set <MINPLAYERS | MAXPLAYERS> <value>");
                 }
             }
             plugin.saveConfig();

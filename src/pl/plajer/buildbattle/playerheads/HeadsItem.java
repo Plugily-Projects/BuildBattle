@@ -116,7 +116,7 @@ class HeadsItem {
     private List<String> getLore() {
         List<String> lorelist = new ArrayList<>();
         for(String string : lore) {
-            string = ChatManager.formatMessage(string);
+            string = ChatManager.colorRawMessage(string);
             lorelist.add(string);
         }
         return lorelist;
@@ -132,7 +132,7 @@ class HeadsItem {
     }
 
     private String getDisplayName() {
-        return ChatManager.formatMessage(displayName);
+        return ChatManager.colorRawMessage(displayName);
     }
 
     public void setDisplayName(String displayName) {
@@ -162,7 +162,7 @@ class HeadsItem {
                     itemStack = Util.getPlayerHead(Bukkit.getOfflinePlayer(getOwner()));
                 }
             }
-            Util.setItemNameAndLore(itemStack, ChatManager.formatMessage(this.getDisplayName()), getLore().toArray(new String[getLore().size()]));
+            Util.setItemNameAndLore(itemStack, ChatManager.colorRawMessage(this.getDisplayName()), getLore().toArray(new String[getLore().size()]));
 
             return itemStack;
         } else {
