@@ -37,10 +37,7 @@ import pl.plajer.buildbattle3.handlers.PermissionManager;
  */
 public class SetupInventoryEvents implements Listener {
 
-    private Main plugin;
-
     public SetupInventoryEvents(Main plugin) {
-        this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -58,6 +55,7 @@ public class SetupInventoryEvents implements Listener {
         String name = event.getCurrentItem().getItemMeta().getDisplayName();
 
         Arena arena = ArenaRegistry.getArena(event.getInventory().getName().replace("Arena: ", ""));
+        if(arena == null) return;
         if(event.getCurrentItem().getType() == Material.NAME_TAG && event.getCursor().getType() == Material.NAME_TAG) {
             event.setCancelled(true);
             if(!event.getCursor().hasItemMeta()) {
@@ -118,7 +116,7 @@ public class SetupInventoryEvents implements Listener {
         }
         if(name.contains("Add signs")) {
             event.setCancelled(true);
-            player.performCommand("addsigns");
+            player.performCommand("vda addsign " + arena.getID());
             return;
         }
         if(event.getCurrentItem().getType() != Material.NAME_TAG) {

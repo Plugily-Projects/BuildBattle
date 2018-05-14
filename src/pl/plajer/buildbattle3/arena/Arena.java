@@ -29,10 +29,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.inventivetalent.bossbar.BossBarAPI;
-import pl.plajer.buildbattle3.BuildPlot;
 import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.Main;
-import pl.plajer.buildbattle3.PlotManager;
+import pl.plajer.buildbattle3.plots.PlotManager;
+import pl.plajer.buildbattle3.plots.Plot;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.VoteItems;
 import pl.plajer.buildbattle3.handlers.ChatManager;
@@ -75,7 +75,7 @@ public class Arena extends BukkitRunnable {
     private Queue<UUID> queue = new LinkedList<>();
     private Random random = new Random();
     private int extraCounter;
-    private BuildPlot votingPlot = null;
+    private Plot votingPlot = null;
     private boolean voteTime;
     private boolean scoreboardDisabled = ConfigPreferences.isScoreboardDisabled();
     private boolean BAR_ENABLED = ConfigPreferences.isBarEnabled();
@@ -253,7 +253,7 @@ public class Arena extends BukkitRunnable {
                         extraCounter = 0;
                         for(Player player : getPlayers()) {
                             User user = UserManager.getUser(player.getUniqueId());
-                            BuildPlot buildPlot = (BuildPlot) user.getObject("plot");
+                            Plot buildPlot = (Plot) user.getObject("plot");
                             if(buildPlot != null) {
                                 if(!buildPlot.isInFlyRange(player)) {
                                     player.teleport(buildPlot.getTeleportLocation());
@@ -293,7 +293,7 @@ public class Arena extends BukkitRunnable {
                         calculateResults();
                         announceResults();
                         giveRewards();
-                        BuildPlot winnerPlot = getPlotManager().getPlot(topList.get(1));
+                        Plot winnerPlot = getPlotManager().getPlot(topList.get(1));
 
                         for(Player player : getPlayers()) {
                             player.teleport(winnerPlot.getTeleportLocation());
@@ -494,11 +494,11 @@ public class Arena extends BukkitRunnable {
 
     }
 
-    public BuildPlot getVotingPlot() {
+    public Plot getVotingPlot() {
         return votingPlot;
     }
 
-    private void setVotingPlot(BuildPlot buildPlot) {
+    private void setVotingPlot(Plot buildPlot) {
         votingPlot = buildPlot;
     }
 
@@ -561,7 +561,7 @@ public class Arena extends BukkitRunnable {
         for(int b = 1; b <= 10; b++) {
             topList.put(b, null);
         }
-        for(BuildPlot buildPlot : getPlotManager().getPlots()) {
+        for(Plot buildPlot : getPlotManager().getPlots()) {
             long i = buildPlot.getPoints();
             Iterator it = topList.entrySet().iterator();
             while(it.hasNext()) {

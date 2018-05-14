@@ -18,6 +18,7 @@
 
 package pl.plajer.buildbattle3.commands;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.user.User;
@@ -52,20 +53,21 @@ public class GameCommands extends MainCommand {
         player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Footer"));
     }
 
-    public void leaveGame(Player player) {
-        if(plugin.getConfig().getBoolean("Disable-Leave-Command")) return;
-        Arena arena = ArenaRegistry.getArena(player);
-        if(arena == null) {
-            System.out.print(player.getName() + " tried /leave but isn't in an arena!");
-            return;
-        }
-        if(plugin.isBungeeActivated()) {
-            plugin.getBungeeManager().connectToHub(player);
-            System.out.print(player.getName() + " is teleported to the Hub Server");
-        } else {
-            arena.teleportToEndLocation(player);
-            arena.leaveAttempt(player);
-            System.out.print(player.getName() + " has left the arena! He is teleported to the end location.");
+    public void leaveGame(CommandSender sender) {
+        if(checkSenderIsConsole(sender)) return;
+        if(!plugin.getConfig().getBoolean("Disable-Leave-Command")) {
+            Player p = (Player) sender;
+            Arena arena = ArenaRegistry.getArena(p);
+            if(arena == null) return;
+            p.sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
+            if(plugin.isBungeeActivated()) {
+                plugin.getBungeeManager().connectToHub(p);
+                System.out.print(p.getName() + " is teleported to the Hub Server");
+            } else {
+                arena.teleportToEndLocation(p);
+                arena.leaveAttempt(p);
+                System.out.print(p.getName() + " has left the arena! He is teleported to the end location.");
+            }
         }
     }
 

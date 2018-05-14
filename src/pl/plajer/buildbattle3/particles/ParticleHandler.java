@@ -20,7 +20,7 @@ package pl.plajer.buildbattle3.particles;
 
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;
-import pl.plajer.buildbattle3.BuildPlot;
+import pl.plajer.buildbattle3.plots.Plot;
 import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
@@ -51,7 +51,7 @@ public class ParticleHandler extends BukkitRunnable {
     @Override
     public void run() {
         for(Arena arena : ArenaRegistry.getArenas()) {
-            for(BuildPlot buildPlot : arena.getPlotManager().getPlots()) {
+            for(Plot buildPlot : arena.getPlotManager().getPlots()) {
                 for(Location location : buildPlot.getParticles().keySet()) {
                     if(!arena.getPlayers().isEmpty())
                         //per player?

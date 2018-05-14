@@ -25,7 +25,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import pl.plajer.buildbattle3.BuildPlot;
+import pl.plajer.buildbattle3.plots.Plot;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class IngameMenu {
         return new ItemBuilder(Material.NETHER_STAR).name(ChatManager.colorMessage("Menus.Option-Menu.Option-Item")).lore(ChatManager.colorMessage("Menus.Option-Menu.Option-Item-Lore")).build();
     }
 
-    private static Inventory createMenu(BuildPlot plot) {
+    private static Inventory createMenu(Plot plot) {
         Inventory inv = Bukkit.createInventory(null, 4 * 9, ChatManager.colorMessage("Menus.Option-Menu.Inventory-Name"));
 
         ItemStack headOption = new ItemStack(Material.SKULL_ITEM, 1);
@@ -77,7 +77,7 @@ public class IngameMenu {
         return inv;
     }
 
-    public static void openMenu(Player player, BuildPlot buildPlot) {
+    public static void openMenu(Player player, Plot buildPlot) {
         player.openInventory(createMenu(buildPlot));
     }
 

@@ -24,7 +24,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import pl.plajer.buildbattle3.BuildPlot;
+import pl.plajer.buildbattle3.plots.Plot;
 import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
@@ -85,7 +85,7 @@ public class ParticleMenu {
     }
 
 
-    public static void onClick(Player player, ItemStack itemStack, BuildPlot buildPlot) {
+    public static void onClick(Player player, ItemStack itemStack, Plot buildPlot) {
         for(ParticleItem particleItem : particleItems) {
             if(particleItem.getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName()) && particleItem.getMaterial() == itemStack.getType()) {
                 if(!player.hasPermission(particleItem.getPermission())) {

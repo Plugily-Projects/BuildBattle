@@ -56,7 +56,7 @@ public class MainCommand implements CommandExecutor {
     public MainCommand(Main plugin) {
         this.plugin = plugin;
         plugin.getCommand("buildbattle").setExecutor(this);
-        plugin.getCommand("addsigns").setExecutor(this);
+        //todo /bba command
         this.adminCommands = new AdminCommands(plugin);
         this.gameCommands = new GameCommands(plugin);
     }
@@ -79,56 +79,6 @@ public class MainCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if(cmd.getName().equalsIgnoreCase("addsigns")) {
-            //todo replace with static manager
-            sender.sendMessage("unused");
-            return true;
-            /*if(checkSenderIsConsole(sender)) return true;
-            Player player = (Player) sender;
-            Selection selection = plugin.getWorldEditPlugin().getSelection(player);
-            int i = plugin.getConfig().getConfigurationSection("signs").getKeys(false).size();
-            int counter = 0;
-            i = i + 2;
-            if(selection == null) {
-                player.sendMessage("You have to select a region with 1 or more signs in it with World Edit before clicking on the sign");
-                return true;
-            }
-            if(selection instanceof CuboidSelection) {
-                CuboidSelection cuboidSelection = (CuboidSelection) selection;
-                Vector min = cuboidSelection.getNativeMinimumPoint();
-                Vector max = cuboidSelection.getNativeMaximumPoint();
-                for(int x = min.getBlockX(); x <= max.getBlockX(); x = x + 1) {
-                    for(int y = min.getBlockY(); y <= max.getBlockY(); y = y + 1) {
-                        for(int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
-                            Location tmpblock = new Location(player.getWorld(), x, y, z);
-                            if(tmpblock.getBlock().getState() instanceof Sign && !getSigns().contains(tmpblock.getBlock().getState())) {
-                                Util.saveLoc("signs." + i, tmpblock);
-                                counter++;
-                                i++;
-                            }
-
-                        }
-                    }
-                }
-
-            } else {
-                if(selection.getMaximumPoint().getBlock().getState() instanceof Sign && !getSigns().contains(selection.getMaximumPoint().getBlock().getState())) {
-                    plugin.getSignManager().registerSign((Sign) selection.getMaximumPoint().getBlock().getState());
-                    Util.saveLoc("signs." + i, selection.getMaximumPoint());
-                    counter++;
-                    i++;
-                }
-                if(selection.getMinimumPoint().getBlock().getState() instanceof Sign && !getSigns().contains(selection.getMinimumPoint().getBlock().getState())) {
-                    plugin.getSignManager().registerSign((Sign) selection.getMinimumPoint().getBlock().getState());
-                    Util.saveLoc("signs." + i, selection.getMinimumPoint());
-                    counter++;
-                    i++;
-                }
-            }
-            plugin.saveConfig();
-            player.sendMessage(ChatColor.GREEN + "" + counter + " signs added!");
-            return true;*/
-        }
         if(cmd.getName().equalsIgnoreCase("buildbattle")) {
             if(checkSenderIsConsole(sender)) return true;
             Player player = (Player) sender;
@@ -139,11 +89,11 @@ public class MainCommand implements CommandExecutor {
                 player.sendMessage(ChatColor.AQUA + "/bb leave: " + ChatColor.GRAY + "Quit arena you're in");
                 //todo perm
                 if(player.hasPermission("buildbattle.admin")) {
-                    player.sendMessage(ChatColor.AQUA + "/BuildBattle create <ARENAID>: " + ChatColor.GRAY + "Create an arena!");
-                    player.sendMessage(ChatColor.AQUA + "/BuildBattle <ARENAID> edit: " + ChatColor.GRAY + "Opens the menu to edit the arena!");
-                    player.sendMessage(ChatColor.AQUA + "/BuildBattle addplot <ARENAID>: " + ChatColor.GRAY + "Adds a plot to the arena");
-                    player.sendMessage(ChatColor.AQUA + "/BuildBattle forcestart: " + ChatColor.GRAY + "Forcestarts the arena u are in");
-                    player.sendMessage(ChatColor.AQUA + "/BuildBattle reload: " + ChatColor.GRAY + "Reloads plugin");
+                    player.sendMessage(ChatColor.AQUA + "/bb create <ARENAID>: " + ChatColor.GRAY + "Create an arena!");
+                    player.sendMessage(ChatColor.AQUA + "/bb <ARENAID> edit: " + ChatColor.GRAY + "Opens the menu to edit the arena!");
+                    player.sendMessage(ChatColor.AQUA + "/bb addplot <ARENAID>: " + ChatColor.GRAY + "Adds a plot to the arena");
+                    player.sendMessage(ChatColor.AQUA + "/bb forcestart: " + ChatColor.GRAY + "Forcestarts the arena u are in");
+                    player.sendMessage(ChatColor.AQUA + "/bb reload: " + ChatColor.GRAY + "Reloads plugin");
                 }
                 player.sendMessage(ChatColor.GOLD + "-------------------------------------------------");
                 return true;

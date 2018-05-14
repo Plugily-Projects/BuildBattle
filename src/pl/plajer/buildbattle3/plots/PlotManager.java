@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle3;
+package pl.plajer.buildbattle3.plots;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -24,6 +24,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaState;
+import pl.plajer.buildbattle3.plots.Plot;
 import pl.plajer.buildbattle3.user.UserManager;
 
 import java.util.ArrayList;
@@ -35,21 +36,21 @@ import java.util.UUID;
  */
 public class PlotManager {
 
-    private List<BuildPlot> plots = new ArrayList<>();
-    private List<BuildPlot> plotsToClear = new ArrayList<>();
+    private List<Plot> plots = new ArrayList<>();
+    private List<Plot> plotsToClear = new ArrayList<>();
     private Arena buildInstance;
 
     public PlotManager(Arena buildInstance) {
         this.buildInstance = buildInstance;
     }
 
-    public void addBuildPlot(BuildPlot buildPlot) {
+    public void addBuildPlot(Plot buildPlot) {
         plots.add(buildPlot);
     }
 
     public void distributePlots() {
         List<Player> players = new ArrayList<>(buildInstance.getPlayers());
-        for(BuildPlot buildPlot : plots) {
+        for(Plot buildPlot : plots) {
             if(!players.isEmpty() && buildPlot.getOwner() == null && getPlot(players.get(0)) == null) {
                 buildPlot.setOwner(players.get(0).getUniqueId());
                 UserManager.getUser(players.get(0).getUniqueId()).setObject(buildPlot, "plot");
@@ -66,8 +67,8 @@ public class PlotManager {
         }
     }
 
-    public BuildPlot getPlot(Player player) {
-        for(BuildPlot buildPlot : plots) {
+    public Plot getPlot(Player player) {
+        for(Plot buildPlot : plots) {
             if(buildPlot.getOwner() != null) {
                 if(buildPlot.getOwner() == player.getUniqueId()) return buildPlot;
             }
@@ -75,8 +76,8 @@ public class PlotManager {
         return null;
     }
 
-    public BuildPlot getPlot(UUID uuid) {
-        for(BuildPlot buildPlot : plots) {
+    public Plot getPlot(UUID uuid) {
+        for(Plot buildPlot : plots) {
             if(buildPlot.getOwner() != null) {
                 if(buildPlot.getOwner().equals(uuid)) return buildPlot;
             }
@@ -85,7 +86,7 @@ public class PlotManager {
     }
 
     public void resetQeuedPlots() {
-        for(BuildPlot buildPlot : plotsToClear) {
+        for(Plot buildPlot : plotsToClear) {
             buildPlot.reset();
         }
         plotsToClear.clear();
@@ -103,7 +104,7 @@ public class PlotManager {
     }
 
     public void teleportToPlots() {
-        for(BuildPlot buildPlot : plots) {
+        for(Plot buildPlot : plots) {
             if(buildPlot.getOwner() != null) {
                 Location tploc = buildPlot.getCenter();
                 while(tploc.getBlock().getType() != Material.AIR) tploc = tploc.add(0, 1, 0);
@@ -115,7 +116,7 @@ public class PlotManager {
         }
     }
 
-    public List<BuildPlot> getPlots() {
+    public List<Plot> getPlots() {
         return plots;
     }
 

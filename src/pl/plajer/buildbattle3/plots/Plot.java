@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle3;
+package pl.plajer.buildbattle3.plots;
 
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import org.bukkit.Location;
@@ -25,6 +25,7 @@ import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.user.User;
 
@@ -34,16 +35,16 @@ import java.util.UUID;
 /**
  * Created by Tom on 17/08/2015.
  */
-public class BuildPlot {
+public class Plot {
 
-    private Location MAXPOINT;
-    private Location MINPOINT;
+    private Location maxPoint;
+    private Location minPoint;
     private int points;
     private UUID uuid;
     private HashMap<Location, Particle> particles = new HashMap<>();
     private int entities = 0;
 
-    public BuildPlot() {}
+    public Plot() {}
 
     public int getEntities() {
         return entities;
@@ -66,20 +67,20 @@ public class BuildPlot {
         particles.put(location, effect);
     }
 
-    private Location getMAXPOINT() {
-        return MAXPOINT;
+    private Location getMaxPoint() {
+        return maxPoint;
     }
 
-    public void setMAXPOINT(Location MAXPOINT) {
-        this.MAXPOINT = MAXPOINT;
+    public void setMaxPoint(Location maxPoint) {
+        this.maxPoint = maxPoint;
     }
 
-    private Location getMINPOINT() {
-        return MINPOINT;
+    private Location getMinPoint() {
+        return minPoint;
     }
 
-    public void setMINPOINT(Location MINPOINT) {
-        this.MINPOINT = MINPOINT;
+    public void setMinPoint(Location minPoint) {
+        this.minPoint = minPoint;
     }
 
     public UUID getOwner() {
@@ -91,13 +92,13 @@ public class BuildPlot {
     }
 
     public void reset() {
-        CuboidSelection cuboidSelection = new CuboidSelection(getMAXPOINT().getWorld(), getMAXPOINT(), getMINPOINT());
+        CuboidSelection cuboidSelection = new CuboidSelection(getMaxPoint().getWorld(), getMaxPoint(), getMinPoint());
         com.sk89q.worldedit.Vector min = cuboidSelection.getNativeMinimumPoint();
         com.sk89q.worldedit.Vector max = cuboidSelection.getNativeMaximumPoint();
         for(int x = min.getBlockX(); x <= max.getBlockX(); x = x + 1) {
             for(int y = min.getBlockY(); y <= max.getBlockY(); y = y + 1) {
                 for(int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
-                    Location tmpblock = new Location(getMAXPOINT().getWorld(), x, y, z);
+                    Location tmpblock = new Location(getMaxPoint().getWorld(), x, y, z);
                     if(tmpblock.getBlock().getType() != Material.AIR) {
                         tmpblock.getBlock().setType(Material.AIR);
 
@@ -121,22 +122,22 @@ public class BuildPlot {
 
     public Location getCenter() {
         double x, y, z;
-        if(getMINPOINT().getX() > getMAXPOINT().getX()) {
-            x = getMAXPOINT().getX() + ((getMINPOINT().getX() - getMAXPOINT().getX()) / 2);
+        if(getMinPoint().getX() > getMaxPoint().getX()) {
+            x = getMaxPoint().getX() + ((getMinPoint().getX() - getMaxPoint().getX()) / 2);
         } else {
-            x = getMINPOINT().getX() + ((getMAXPOINT().getX() - getMINPOINT().getX()) / 2);
+            x = getMinPoint().getX() + ((getMaxPoint().getX() - getMinPoint().getX()) / 2);
         }
-        if(getMINPOINT().getY() > getMAXPOINT().getY()) {
-            y = getMAXPOINT().getY() + ((getMINPOINT().getY() - getMAXPOINT().getY()) / 2);
+        if(getMinPoint().getY() > getMaxPoint().getY()) {
+            y = getMaxPoint().getY() + ((getMinPoint().getY() - getMaxPoint().getY()) / 2);
         } else {
-            y = getMINPOINT().getY() + ((getMAXPOINT().getY() - getMINPOINT().getY()) / 2);
+            y = getMinPoint().getY() + ((getMaxPoint().getY() - getMinPoint().getY()) / 2);
         }
-        if(getMINPOINT().getZ() > getMAXPOINT().getZ()) {
-            z = getMAXPOINT().getZ() + ((getMINPOINT().getZ() - getMAXPOINT().getZ()) / 2);
+        if(getMinPoint().getZ() > getMaxPoint().getZ()) {
+            z = getMaxPoint().getZ() + ((getMinPoint().getZ() - getMaxPoint().getZ()) / 2);
         } else {
-            z = getMINPOINT().getZ() + ((getMAXPOINT().getZ() - getMINPOINT().getZ()) / 2);
+            z = getMinPoint().getZ() + ((getMaxPoint().getZ() - getMinPoint().getZ()) / 2);
         }
-        return new Location(getMINPOINT().getWorld(), x, y, z);
+        return new Location(getMinPoint().getWorld(), x, y, z);
 
     }
 
@@ -150,17 +151,17 @@ public class BuildPlot {
 
     public boolean isInPlot(Location location) {
         boolean trueOrNot = false;
-        if(location.getWorld() == getMINPOINT().getWorld() && location.getWorld() == getMAXPOINT().getWorld()) {
-            if(location.getX() >= getMINPOINT().getX() && location.getX() <= getMAXPOINT().getX()) {
-                if(location.getY() >= getMINPOINT().getY() && location.getY() <= getMAXPOINT().getY()) {
-                    if(location.getZ() >= getMINPOINT().getZ() && location.getZ() <= getMAXPOINT().getZ()) {
+        if(location.getWorld() == getMinPoint().getWorld() && location.getWorld() == getMaxPoint().getWorld()) {
+            if(location.getX() >= getMinPoint().getX() && location.getX() <= getMaxPoint().getX()) {
+                if(location.getY() >= getMinPoint().getY() && location.getY() <= getMaxPoint().getY()) {
+                    if(location.getZ() >= getMinPoint().getZ() && location.getZ() <= getMaxPoint().getZ()) {
                         trueOrNot = true;
                     }
                 }
             }
-            if(location.getX() <= getMINPOINT().getX() && location.getX() >= getMAXPOINT().getX()) {
-                if(location.getY() <= getMINPOINT().getY() && location.getY() >= getMAXPOINT().getY()) {
-                    if(location.getZ() <= getMINPOINT().getZ() && location.getZ() >= getMAXPOINT().getZ()) {
+            if(location.getX() <= getMinPoint().getX() && location.getX() >= getMaxPoint().getX()) {
+                if(location.getY() <= getMinPoint().getY() && location.getY() >= getMaxPoint().getY()) {
+                    if(location.getZ() <= getMinPoint().getZ() && location.getZ() >= getMaxPoint().getZ()) {
                         trueOrNot = true;
                     }
                 }
@@ -171,17 +172,17 @@ public class BuildPlot {
 
     private void changeFloor(Material material) {
         double y;
-        if(getMINPOINT().getY() > getMAXPOINT().getY()) {
-            y = getMAXPOINT().getY() - 1;
+        if(getMinPoint().getY() > getMaxPoint().getY()) {
+            y = getMaxPoint().getY() - 1;
         } else {
-            y = getMINPOINT().getY() - 1;
+            y = getMinPoint().getY() - 1;
         }
-        CuboidSelection cuboidSelection = new CuboidSelection(getMAXPOINT().getWorld(), getMAXPOINT(), getMINPOINT());
+        CuboidSelection cuboidSelection = new CuboidSelection(getMaxPoint().getWorld(), getMaxPoint(), getMinPoint());
         com.sk89q.worldedit.Vector min = cuboidSelection.getNativeMinimumPoint();
         com.sk89q.worldedit.Vector max = cuboidSelection.getNativeMaximumPoint();
         for(int x = min.getBlockX(); x <= max.getBlockX(); x = x + 1) {
             for(int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
-                Location tmpblock = new Location(getMAXPOINT().getWorld(), x, y, z);
+                Location tmpblock = new Location(getMaxPoint().getWorld(), x, y, z);
                 tmpblock.getBlock().setType(material);
             }
         }
@@ -191,17 +192,17 @@ public class BuildPlot {
         if(material == Material.WATER_BUCKET) material = Material.WATER;
         if(material == Material.LAVA_BUCKET) material = Material.LAVA;
         double y;
-        if(getMINPOINT().getY() > getMAXPOINT().getY()) {
-            y = getMAXPOINT().getY() - 1;
+        if(getMinPoint().getY() > getMaxPoint().getY()) {
+            y = getMaxPoint().getY() - 1;
         } else {
-            y = getMINPOINT().getY() - 1;
+            y = getMinPoint().getY() - 1;
         }
-        CuboidSelection cuboidSelection = new CuboidSelection(getMAXPOINT().getWorld(), getMAXPOINT(), getMINPOINT());
+        CuboidSelection cuboidSelection = new CuboidSelection(getMaxPoint().getWorld(), getMaxPoint(), getMinPoint());
         com.sk89q.worldedit.Vector min = cuboidSelection.getNativeMinimumPoint();
         com.sk89q.worldedit.Vector max = cuboidSelection.getNativeMaximumPoint();
         for(int x = min.getBlockX(); x <= max.getBlockX(); x = x + 1) {
             for(int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
-                Location tmpblock = new Location(getMAXPOINT().getWorld(), x, y, z);
+                Location tmpblock = new Location(getMaxPoint().getWorld(), x, y, z);
                 tmpblock.getBlock().setType(material);
                 tmpblock.getBlock().setData(data);
             }
@@ -210,10 +211,10 @@ public class BuildPlot {
 
     public Material getFloorMaterial() {
         Location location;
-        if(getMINPOINT().getY() > getMAXPOINT().getY()) {
-            location = getMAXPOINT().clone();
+        if(getMinPoint().getY() > getMaxPoint().getY()) {
+            location = getMaxPoint().clone();
         } else {
-            location = getMINPOINT().clone();
+            location = getMinPoint().clone();
         }
         Material material = location.add(0, -1, 0).getBlock().getType();
         if(material == Material.WATER || material == Material.STATIONARY_WATER) return Material.WATER_BUCKET;
@@ -225,17 +226,17 @@ public class BuildPlot {
     public boolean isInFlyRange(Player player) {
         boolean trueOrNot = false;
         Location location = player.getLocation();
-        if(location.getWorld() == getMINPOINT().getWorld() && location.getWorld() == getMAXPOINT().getWorld()) {
-            if(location.getX() >= getMINPOINT().getX() - 5 && location.getX() <= getMAXPOINT().getX() + 5) {
-                if(location.getY() >= getMINPOINT().getY() - 5 && location.getY() <= getMAXPOINT().getY() + 5) {
-                    if(location.getZ() >= getMINPOINT().getZ() - 5 && location.getZ() <= getMAXPOINT().getZ() + 5) {
+        if(location.getWorld() == getMinPoint().getWorld() && location.getWorld() == getMaxPoint().getWorld()) {
+            if(location.getX() >= getMinPoint().getX() - 5 && location.getX() <= getMaxPoint().getX() + 5) {
+                if(location.getY() >= getMinPoint().getY() - 5 && location.getY() <= getMaxPoint().getY() + 5) {
+                    if(location.getZ() >= getMinPoint().getZ() - 5 && location.getZ() <= getMaxPoint().getZ() + 5) {
                         trueOrNot = true;
                     }
                 }
             }
-            if(location.getX() <= getMINPOINT().getX() + 5 && location.getX() >= getMAXPOINT().getX() - 5) {
-                if(location.getY() <= getMINPOINT().getY() && location.getY() >= getMAXPOINT().getY() - 5) {
-                    if(location.getZ() <= getMINPOINT().getZ() + 5 && location.getZ() >= getMAXPOINT().getZ() - 5) {
+            if(location.getX() <= getMinPoint().getX() + 5 && location.getX() >= getMaxPoint().getX() - 5) {
+                if(location.getY() <= getMinPoint().getY() && location.getY() >= getMaxPoint().getY() - 5) {
+                    if(location.getZ() <= getMinPoint().getZ() + 5 && location.getZ() >= getMaxPoint().getZ() - 5) {
                         trueOrNot = true;
                     }
                 }
@@ -245,17 +246,17 @@ public class BuildPlot {
     }
 
     public boolean isInPlotRange(Location location, int added) {
-        if(location.getWorld() == getMINPOINT().getWorld() && location.getWorld() == getMAXPOINT().getWorld()) {
-            if(location.getX() >= getMINPOINT().getX() - added && location.getX() <= getMAXPOINT().getX() + added) {
-                if(location.getY() >= getMINPOINT().getY() - added && location.getY() <= getMAXPOINT().getY() + added) {
-                    if(location.getZ() >= getMINPOINT().getZ() - added && location.getZ() <= getMAXPOINT().getZ() + added) {
+        if(location.getWorld() == getMinPoint().getWorld() && location.getWorld() == getMaxPoint().getWorld()) {
+            if(location.getX() >= getMinPoint().getX() - added && location.getX() <= getMaxPoint().getX() + added) {
+                if(location.getY() >= getMinPoint().getY() - added && location.getY() <= getMaxPoint().getY() + added) {
+                    if(location.getZ() >= getMinPoint().getZ() - added && location.getZ() <= getMaxPoint().getZ() + added) {
                         return true;
                     }
                 }
             }
-            if(location.getX() <= getMINPOINT().getX() + 5 && location.getX() >= getMAXPOINT().getX() - 5) {
-                if(location.getY() <= getMINPOINT().getY() && location.getY() >= getMAXPOINT().getY() - 5) {
-                    return location.getZ() <= getMINPOINT().getZ() + 5 && location.getZ() >= getMAXPOINT().getZ() - 5;
+            if(location.getX() <= getMinPoint().getX() + 5 && location.getX() >= getMaxPoint().getX() - 5) {
+                if(location.getY() <= getMinPoint().getY() && location.getY() >= getMaxPoint().getY() - 5) {
+                    return location.getZ() <= getMinPoint().getZ() + 5 && location.getZ() >= getMaxPoint().getZ() - 5;
                 }
             }
         }

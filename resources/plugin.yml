@@ -10,12 +10,9 @@ commands:
     usage: /buildbattle
     description: The main command
     aliases: [buildb, bb]
-  addsigns:
-    usage: /addsigns
-    description: Adds signs to the plugin!
 
 permissions:
   buildbattle.admin.*:
     children:
       buildbattle.updatenotify: true
-      buildbattle.
+      buildbattle.admin.commands.override: true

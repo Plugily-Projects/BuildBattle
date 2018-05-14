@@ -153,7 +153,6 @@ public class JoinEvents implements Listener {
                 user1.setInt("particles", particles);
             } catch(SQLException e1) {
                 System.out.print("CONNECTION FAILED FOR PLAYER " + playername);
-                //e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
         });
     }

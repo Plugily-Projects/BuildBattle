@@ -30,6 +30,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
+import pl.plajer.buildbattle3.plots.Plot;
 import pl.plajer.buildbattle3.commands.MainCommand;
 import pl.plajer.buildbattle3.entities.EntityItem;
 import pl.plajer.buildbattle3.entities.EntityMenuEvents;
@@ -324,9 +325,9 @@ public class Main extends JavaPlugin {
             }
             if(config.contains(s + "plots")) {
                 for(String plotName : config.getConfigurationSection(s + "plots").getKeys(false)) {
-                    BuildPlot buildPlot = new BuildPlot();
-                    buildPlot.setMAXPOINT(Util.getLocation(false, config.getString(s + "plots." + plotName + ".maxpoint")));
-                    buildPlot.setMINPOINT(Util.getLocation(false, config.getString(s + "plots." + plotName + ".minpoint")));
+                    Plot buildPlot = new Plot();
+                    buildPlot.setMaxPoint(Util.getLocation(false, config.getString(s + "plots." + plotName + ".maxpoint")));
+                    buildPlot.setMinPoint(Util.getLocation(false, config.getString(s + "plots." + plotName + ".minpoint")));
                     buildPlot.reset();
                     arena.getPlotManager().addBuildPlot(buildPlot);
                 }

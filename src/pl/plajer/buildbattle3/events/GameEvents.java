@@ -48,7 +48,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
-import pl.plajer.buildbattle3.BuildPlot;
+import pl.plajer.buildbattle3.plots.Plot;
 import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.user.User;
@@ -140,7 +140,7 @@ public class GameEvents implements Listener {
     @EventHandler
     public void onPistonExtendEvent(BlockPistonExtendEvent event) {
         for(Arena arena : ArenaRegistry.getArenas()) {
-            for(BuildPlot buildPlot : arena.getPlotManager().getPlots()) {
+            for(Plot buildPlot : arena.getPlotManager().getPlots()) {
                 for(Block block : event.getBlocks()) {
                     if(!buildPlot.isInPlotRange(block.getLocation(), -1) && buildPlot.isInPlot(event.getBlock().getLocation())) {
                         event.setCancelled(true);
@@ -162,7 +162,7 @@ public class GameEvents implements Listener {
     @EventHandler
     public void onWaterFlowEvent(BlockFromToEvent event) {
         for(Arena arena : ArenaRegistry.getArenas()) {
-            for(BuildPlot buildPlot : arena.getPlotManager().getPlots()) {
+            for(Plot buildPlot : arena.getPlotManager().getPlots()) {
                 if(!buildPlot.isInPlot(event.getToBlock().getLocation()) && buildPlot.isInPlot(event.getBlock().getLocation())) {
                     event.setCancelled(true);
                 }
@@ -173,7 +173,7 @@ public class GameEvents implements Listener {
     @EventHandler
     public void onTNTExplode(EntityExplodeEvent event) {
         for(Arena arena : ArenaRegistry.getArenas()) {
-            for(BuildPlot buildPlot : arena.getPlotManager().getPlots()) {
+            for(Plot buildPlot : arena.getPlotManager().getPlots()) {
                 if(buildPlot.isInPlotRange(event.getEntity().getLocation(), 0)) {
                     event.blockList().clear();
                     event.setCancelled(true);
@@ -234,7 +234,7 @@ public class GameEvents implements Listener {
     public void onTreeGrow(StructureGrowEvent event) {
         Arena arena = ArenaRegistry.getArena(event.getPlayer());
         if(arena == null) return;
-        BuildPlot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
+        Plot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
         if(buildPlot == null) return;
         for(BlockState blockState : event.getBlocks()) {
             if(!buildPlot.isInPlot(blockState.getLocation())) blockState.setType(Material.AIR);
@@ -245,7 +245,7 @@ public class GameEvents implements Listener {
     @EventHandler
     public void onDispense(BlockDispenseEvent event) {
         for(Arena arena : ArenaRegistry.getArenas()) {
-            for(BuildPlot buildPlot : arena.getPlotManager().getPlots()) {
+            for(Plot buildPlot : arena.getPlotManager().getPlots()) {
                 if(!buildPlot.isInPlotRange(event.getBlock().getLocation(), -1) && buildPlot.isInPlotRange(event.getBlock().getLocation(), 5)) {
                     event.setCancelled(true);
                 }
@@ -353,12 +353,8 @@ public class GameEvents implements Listener {
         for(String string : ConfigPreferences.getWhitelistedCommands()) {
             if(event.getMessage().contains(string)) return;
         }
-        //todo more
-        if(event.getMessage().contains("leave") || event.getMessage().contains("stats")) {
-            return;
-        }
-        //todo perm
-        if(event.getPlayer().isOp() || event.getPlayer().hasPermission("minigames.edit")) return;
+        if(event.getPlayer().isOp() || event.getPlayer().hasPermission("buildbattle.admin.commands.override")) return;
+        if(event.getMessage().contains("leave") || event.getMessage().contains("stats")) return;
         event.setCancelled(true);
         event.getPlayer().sendMessage(ChatManager.colorMessage("In-Game.Only-Command-Ingame-Is-Leave"));
     }
@@ -367,7 +363,7 @@ public class GameEvents implements Listener {
     public void playerEmtpyBucket(PlayerBucketEmptyEvent event) {
         Arena arena = ArenaRegistry.getArena(event.getPlayer());
         if(arena == null) return;
-        BuildPlot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
+        Plot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
         if(buildPlot == null) return;
         if(!buildPlot.isInPlot(event.getBlockClicked().getRelative(event.getBlockFace()).getLocation())) event.setCancelled(true);
     }
@@ -391,13 +387,13 @@ public class GameEvents implements Listener {
         }
         if(event.getEntity().getType() == EntityType.WITHER || ConfigPreferences.isMobSpawningDisabled()) {
             for(Arena arena : ArenaRegistry.getArenas()) {
-                for(BuildPlot buildplot : arena.getPlotManager().getPlots()) {
+                for(Plot buildplot : arena.getPlotManager().getPlots()) {
                     if(buildplot.isInPlotRange(event.getEntity().getLocation(), 10)) event.setCancelled(true);
                 }
             }
         } else {
             for(Arena arena : ArenaRegistry.getArenas()) {
-                for(BuildPlot buildplot : arena.getPlotManager().getPlots()) {
+                for(Plot buildplot : arena.getPlotManager().getPlots()) {
                     if(buildplot.isInPlotRange(event.getEntity().getLocation(), 1)) {
                         if(buildplot.getEntities() >= ConfigPreferences.getMaxMobs()) {
                             plugin.getServer().getPlayer(buildplot.getOwner()).sendMessage(ChatManager.colorMessage("In-Game.Max-Entities-Limit-Reached"));
@@ -417,7 +413,7 @@ public class GameEvents implements Listener {
     @EventHandler
     public void LeaveDecay(LeavesDecayEvent event) {
         for(Arena arena : ArenaRegistry.getArenas()) {
-            for(BuildPlot buildPlot : arena.getPlotManager().getPlots()) {
+            for(Plot buildPlot : arena.getPlotManager().getPlots()) {
                 if(buildPlot.isInPlotRange(event.getBlock().getLocation(), 5)) {
                     event.setCancelled(true);
                 }
@@ -454,7 +450,7 @@ public class GameEvents implements Listener {
             return;
         }
         User user = UserManager.getUser(event.getPlayer().getUniqueId());
-        BuildPlot buildPlot = (BuildPlot) user.getObject("plot");
+        Plot buildPlot = (Plot) user.getObject("plot");
         if(buildPlot == null) {
             event.setCancelled(true);
             return;
@@ -483,7 +479,7 @@ public class GameEvents implements Listener {
             return;
         }
         User user = UserManager.getUser(event.getPlayer().getUniqueId());
-        BuildPlot buildPlot = (BuildPlot) user.getObject("plot");
+        Plot buildPlot = (Plot) user.getObject("plot");
         if(buildPlot == null) {
             event.setCancelled(true);
             return;
@@ -515,7 +511,6 @@ public class GameEvents implements Listener {
             for(Player player : event.getRecipients()) {
                 if(ArenaRegistry.getArena(event.getPlayer()) == null) return;
                 event.getRecipients().remove(player);
-
             }
         }
         event.getRecipients().clear();
