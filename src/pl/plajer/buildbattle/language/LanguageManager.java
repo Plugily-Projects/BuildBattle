@@ -1,7 +1,26 @@
+/*
+ *  Village Defense 3 - Protect villagers from hordes of zombies
+ * Copyright (C) 2018  Plajer's Lair - maintained by Plajer
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package pl.plajer.buildbattle.language;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.handlers.ConfigurationManager;
 
@@ -17,8 +36,8 @@ public class LanguageManager {
 
     public static void init(Main pl) {
         plugin = pl;
-        ConfigurationManager.getConfig("new_language");
-        // setupLocale();
+        ConfigurationManager.getConfig("language");
+        setupLocale();
     }
 
     private static void setupLocale() {
@@ -51,18 +70,28 @@ public class LanguageManager {
         }
     }
 
-    //todo remember to change
+    public static FileConfiguration getLocaleFile() {
+        switch(pluginLocale) {
+            case DEFAULT:
+                return ConfigurationManager.getConfig("language");
+            case DEUTSCH:
+                return ConfigurationManager.getConfig("language_de");
+            case POLSKI:
+                return ConfigurationManager.getConfig("language_pl");
+            default:
+                return ConfigurationManager.getConfig("language");
+        }
+    }
+
     public static String getDefaultLanguageMessage(String message) {
-        if(ConfigurationManager.getConfig("new_language").isSet(message)) {
-            return ConfigurationManager.getConfig("new_language").getString(message);
+        if(ConfigurationManager.getConfig("language").isSet(message)) {
+            return ConfigurationManager.getConfig("language").getString(message);
         }
         return "NULL_MESSAGE";
     }
 
-    //todo
     public static String getLanguageMessage(String message) {
-        return getDefaultLanguageMessage(message);
-        /*switch(pluginLocale) {
+        switch(pluginLocale) {
             case DEFAULT:
                 if(ConfigurationManager.getConfig("language").isSet(message)) {
                     return ConfigurationManager.getConfig("language").getString(message);
@@ -83,7 +112,7 @@ public class LanguageManager {
                     return ConfigurationManager.getConfig("language").getString(message);
                 }
                 return null;
-        }*/
+        }
     }
 
     private enum VDLocale {

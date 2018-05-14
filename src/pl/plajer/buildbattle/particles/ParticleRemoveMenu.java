@@ -1,3 +1,21 @@
+/*
+ *  Village Defense 3 - Protect villagers from hordes of zombies
+ * Copyright (C) 2018  Plajer's Lair - maintained by Plajer
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package pl.plajer.buildbattle.particles;
 
 import org.bukkit.Bukkit;
@@ -22,7 +40,7 @@ import java.util.regex.Pattern;
 public class ParticleRemoveMenu {
 
     public static void openMenu(Player player, BuildPlot buildPlot) {
-        Inventory inventory = player.getServer().createInventory(player, 6 * 9, ChatManager.getSingleMessage("Particle-Remove-Menu-Name", ChatColor.RED + "Remove Particles"));
+        Inventory inventory = player.getServer().createInventory(player, 6 * 9, ChatManager.colorMessage("Menus.Option-Menu.Particle-Remove"));
 
         for(Location location : buildPlot.getParticles().keySet()) {
             ParticleItem particleItem = ParticleMenu.getParticleItem(buildPlot.getParticles().get(location));
@@ -30,7 +48,8 @@ public class ParticleRemoveMenu {
             ItemMeta itemMeta = itemStack.getItemMeta();
             itemMeta.setLore(new ArrayList<>());
             itemStack.setItemMeta(itemMeta);
-            Util.addLore(itemStack, ChatManager.getSingleMessage("Location", ChatColor.GRAY + "Location: "));
+            //todo translatable
+            Util.addLore(itemStack, ChatManager.colorMessage("Menus.Location-Message"));
             Util.addLore(itemStack, ChatColor.GRAY + "  x: " + Math.round(location.getX()));
             Util.addLore(itemStack, ChatColor.GRAY + "  y: " + Math.round(location.getY()));
             Util.addLore(itemStack, ChatColor.GRAY + "  z: " + Math.round(location.getZ()));
@@ -57,7 +76,7 @@ public class ParticleRemoveMenu {
         for(Location location : buildPlot.getParticles().keySet()) {
             if(Math.round(location.getX()) == x && Math.round(location.getY()) == y && Math.round(location.getZ()) == z) {
                 buildPlot.getParticles().remove(location);
-                Bukkit.getServer().getPlayer(buildPlot.getOwner()).sendMessage(ChatManager.getSingleMessage("Particle-Removed", ChatColor.GREEN + "Particle Removed!"));
+                Bukkit.getServer().getPlayer(buildPlot.getOwner()).sendMessage(ChatManager.colorMessage("In-Game.Particle-Removed"));
                 inventory.remove(itemStack);
                 Bukkit.getServer().getPlayer(buildPlot.getOwner()).updateInventory();
                 break;

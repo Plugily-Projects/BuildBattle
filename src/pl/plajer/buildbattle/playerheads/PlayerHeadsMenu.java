@@ -1,3 +1,21 @@
+/*
+ *  Village Defense 3 - Protect villagers from hordes of zombies
+ * Copyright (C) 2018  Plajer's Lair - maintained by Plajer
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package pl.plajer.buildbattle.playerheads;
 
 import org.bukkit.ChatColor;
@@ -95,7 +113,7 @@ public class PlayerHeadsMenu {
     }
 
     public static void openMenu(Player player) {
-        Inventory inventory = player.getServer().createInventory(player, 3 * 9, ChatManager.getSingleMessage("Player-Head-Main-Inventory-Name", "Player Head Menu"));
+        Inventory inventory = player.getServer().createInventory(player, 3 * 9, ChatManager.colorMessage("Menus.Option-Menu.Players-Heads-Inventory-Name"));
         for(HeadsItem headsItem : headsItems) {
             if(headsItem.isEnabled()) inventory.setItem(headsItem.getSlot(), headsItem.getItemStack());
         }
@@ -110,7 +128,7 @@ public class PlayerHeadsMenu {
         for(HeadsItem headsItem : headsItems) {
             if(headsItem.getItemStack().getItemMeta().getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())) {
                 if(!player.hasPermission(headsItem.getPermission())) {
-                    player.sendMessage(ChatManager.getSingleMessage("No-Permission", ChatColor.RED + "U don't have permission for this!"));
+                    player.sendMessage(ChatManager.colorMessage("Menus.Option-Menu.Players-Heads-No-Permission"));
                     return;
                 } else {
                     Inventory inventory = player.getServer().createInventory(player, headsItem.getSize(), headsItem.getMenuName());

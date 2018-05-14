@@ -1,0 +1,127 @@
+#
+#                    WARNING!
+#      This file is not meant to be edited!
+#   Every time language.yml gets updated this file
+#      will be regenerated with updated messages!
+# Modify langauge.yml if you want to use custom messages
+#
+#  Use 'locale: de' in config.yml to enable this locale
+#
+#
+#        Translation done by Tigerkatze
+# (https://www.spigotmc.org/members/tigerkatze.414545/)
+#               Thanks a lot!!
+
+Commands:
+  Only-By-Player: "&cDu kannst diesen Command nur als Spieler ausführen!"
+  No-Permission: "&cDu hast keine Rechte, um diesen Command auszuführen!"
+  No-Arena-Like-That: "&cKeine Arena mit dieser ID gefunden!"
+  Arena-Is-Full: "&cDie Arena ist voll! Entschuldigung!"
+  Arena-Started: "&cDie Arena existiert bereits!"
+  Added-Plot: "&aPlot zur Arena &7%ARENA% &ahinzugefügt"
+  No-Selection: "&cBitte benutze WorldEdit Makierungen!"
+  Plugin-Reloaded: "&aPlugin und Config reloadet!"
+  Stats-Command:
+    Header: "&l-----DEINE STATISTIK-----"
+    Header-Other: "&l-----STATISTIK für %player%-----"
+    Footer: "&l--------------------"
+    Wins: "&aGewonnen: &e"
+    Loses: "&aVerloren: &e"
+    Games-Played: "&aSpiele gespielt: &e"
+    Highest-Win: "&aHöchste Win Punkte: &e"
+    Blocks-Placed: "&aBlöcke platziert: &e"
+    Blocks-Broken: "&aBlöcke zerstört: &e"
+    Particles-Placed: "&aPartikel platziert: &e"
+
+Bossbar:
+  Waiting-For-Players: "&4&lWarte auf mehr Spieler..."
+  Starting-In: "&f&lStarte in: &e&l%time%"
+  Time-Left: "&f&lZeit übrig: &e&l%time%"
+  Vote-Time-Left: "&e&lAbstimmungs Zeit übrig: &f&e%time%"
+
+In-Game:
+  Plugin-Prefix: "&6[&bBuildBattle&6] "
+  Only-Command-Ingame-Is-Leave: "&cDu must das Spiel verlassen um Commands benutzen zu können. Nur /leave funktioniert!"
+  Max-Entities-Limit-Reached: "&cDu kannst nicht mehr Entities spawnen!"
+  Max-Particles-Limit-Reached: "&cDu kannst nicht mehr Partikel spawnen!"
+  No-Permission-For-Particle: "&cDu hast keine Rechte für diesen Partikel!"
+  Particle-Added: "&aPartikel erfolgreich hinzugefügt!"
+  Particle-Removed: "&aPartikel erfolgreich entfernt!"
+  Full-Game-No-Permission: "&cDu hast nicht die Permission um einem vollen Spiel beizutreten!"
+  No-Slots-For-Premium: "&cDie Runde ist bereits voll mit Premium-Spielern! Entschuldigung!"
+  Messages:
+    Time-Left-To-Build: "&6%FORMATTEDTIME% &7Zeit übrig zum Bauen!"
+    Plot-Leave-Error: "&cDu kannst nicht aus deinen Plot gehen!"
+    Already-Playing: "&cDu spielst bereits!"
+    Cant-Fly-Outside-Plot: "&cDu kannst nicht außerhalb deines Plots fliegen!"
+    Join: "&b%PLAYER%&7 ist dem Spiel beigetreten (%PLAYERSIZE%/%MAXPLAYERS%)!"
+    Leave: "&b%PLAYER% &7hat das Spiel verlassen (%PLAYERSIZE%/%MAXPLAYERS%)!"
+    Lobby-Messages:
+      Waiting-For-Players: "&7Warte auf Spieler... Wir brauchen mindestens &b%MINPLAYERS%&7 Spieler zum starten."
+      Enough-Players-To-Start: "&7Wir haben jetzt genug Spieler! Das Spiel startet gleich..."
+      Game-Started: "&7The game has started! Defend the village against waves of zombies!"
+      Kicked-For-Premium-Slot: "&c%PLAYER% wurde entfernt um einen Premium-Spieler joinen zu lassen!"
+      You-Were-Kicked-For-Premium-Slot: "&cDu wurdest entfernt um einen Premium-Spieler joinen zu lassen!"
+    Voting-Messages:
+      Plot-Owner-Title: "&aPlot Owner: &7%player%"
+      Voting-For-Player-Plot: "&7Bewerte für &e&l%PLAYER%'s &7Plot!"
+      Cant-Vote-Own-Plot: "&cDu kannst nicht für dein Plot abstimmen!"
+      Vote-Successful: "&aStimme erfolgreich!"
+      Winner-Title: "&eGewinner: &a%player%"
+      Winner-Message:
+        Header: "&a==============================\n&f&lBuildBattle\n"
+        First-Winner: "&e1er Gewinner &7- %player% (Plot %number%)"
+        Second-Winner: "&62er Gewinner &7- %player% (Plot %number%)"
+        Third-Winner: "&c3er Gewinner &7- %player% (Plot %number%)"
+        Footer: "\n&a=============================="
+        You-Became-Other: "&aDu bist &7%number%er geworden!"
+    Game-End-Messages:
+      Only-You-Playing: "&7Du bist der einzigste übrige Spieler. Du wirst zur Lobby teleportiert!"
+    Admin-Messages:
+      Set-Starting-In-To-0: "&bEin Team-Mitglied hat die Zeit auf 0 gesetzt! Das Spiel startet jetzt!"
+
+Menus:
+  Entity-Menu-Name: "&aEntity Menü"
+  Villager-Profession-Menu-Name: "&7Wähle Villager Beruf"
+  #todo more here
+  Location-Message: "&aPosition: "
+  Option-Menu:
+    Inventory-Name: "&aOptions Menü"
+    Option-Item: "&aOptions"
+    Option-Item-Lore: "&7Rechtsklick um das Menü zu öffnen"
+    Particle-Inventory-Name: "&aPartikel Menü"
+    Particle-Option: "&aWähle Partikel"
+    Particle-Option-Lore: "&7Klicke um Partikel zu bekommen"
+    Particle-Remove: "&cEntferne Partikel"
+    Particle-Remove-Lore: "&7Rechtsklick um das Menü zu öffnen"
+    Players-Heads-Inventory-Name: "&aSpieler Kopf Menü"
+    Players-Heads-Option: "&aBekomme Spieler Kopf"
+    Players-Heads-Option-Lore: "&7Klicke um Köpfe zu erhalten"
+    Players-Heads-No-Permission: "&cDu hast keine Rechte dazu!"
+    Floor-Option: "&aÄndere Boden-Material"
+    Floor-Option-Lore: "&7Siehe einen Block hierher um den Boden zu ändern"
+    Floor-Changed: "&aBoden geändert!"
+    Banners-Option: "&aKreiere Banner &7(Demnächst)"
+    Banners-Option-Inventory-Name: "&aBanner Menü"
+
+
+Signs:
+  Please-Type-Arena-Name: "&cBitte Schreibe den Arena-Namen in die 2. Zeile!"
+  Arena-Doesnt-Exists: "&cArena mit diesen Namen existiert nicht!"
+  Sign-Created: "&aSchild erfolgreich erstellt!"
+  Sign-Removed: "&aSchild erfolgreich entfernt!"
+  Game-States:
+    Inactive: "&lInaktiv..."
+    In-Game: "&lIn-game"
+    Starting: "&e&lStarte"
+    Full-Game: "&4&lVOLL"
+    Ending: "&lEnde"
+    Restarting: "&c&lRestarte"
+  Lines:
+    - "&b&lBuildBattle"
+    - "%state%"
+    - "%mapname%"
+    - "&5[%playersize%/%maxplayers%]"
+
+File-Version-Do-Not-Edit: 0
+Translation-Version: 0

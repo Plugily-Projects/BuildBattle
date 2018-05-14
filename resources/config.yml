@@ -5,6 +5,17 @@
 #   You don't want to break anything, do you?
 #
 
+# Locale of VD 3 language. By default it's english.
+# Available localizations:
+# default - uses messages from 'language.yml' file
+# de - Deutsche sprache. Uses messages from 'language_de.yml' file
+# pl - Jezyk Polski. Uses messages from 'language_pl.yml' file
+#
+# DO NOT MODIFY LOCALE FILES (language_de/pl.yml), THEY ARE OVERRIDDEN EVERY RESTART
+# TO EDIT THEM, COPY THEIR CONTENTS INTO language.yml FILE!
+#
+locale: default
+
 # Enable boss bar for the game?
 # Requires BossBarAPI for now.
 Boss-Bar-Enabled: false
@@ -18,20 +29,6 @@ BungeeActivated: false
 # Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions
 InventoryManager: false
 
-#todo move me to arenas.yml please
-instances:
-  default:
-    lobbylocation: world,-1.0,80.0,7.0,0.0,0.0
-    Startlocation: world,-1.0,80.0,7.0,0.0,0.0
-    Endlocation: world,-1.0,80.0,7.0,0.0,0.0
-    minimumplayers: 2
-    maximumplayers: 10
-    mapname: mapname
-    world: worldname
-    signs: {}
-signs:
-  example: world,-1.0,80.0,7.0,0.0,0.0
-
 # Should /bb leave command be disabled?
 Disable-Leave-Command: false
 Build-Time-In-Seconds: 480
@@ -42,7 +39,6 @@ Amount-One-Particle-Effect-Contains: 20
 Max-Amount-Particles: 25
 Particle-Refresh-Per-Tick: 10
 Bungee-Shutdown-On-End: false
-Bungee-Restart-On-End: false
 Particle-Offset: 1
 Win-Commands-Activated: false
 End-Game-Commands-Activated: true

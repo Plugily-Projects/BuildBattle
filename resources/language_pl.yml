@@ -1,5 +1,8 @@
-# reworkin' dis...
-# under construction don't touch!
+#    You can translate Build Battle 3 messages here.
+#             Color codes (&) supported.
+#
+#     Some messages support their own placeholders
+#               like %player% etc.
 
 Commands:
   Only-By-Player: "&cYou can execute this command only as player!"
@@ -35,12 +38,16 @@ In-Game:
   Max-Particles-Limit-Reached: "&cYou can't spawn more particles!"
   No-Permission-For-Particle: "&cYou don't have permission for this particle!"
   Particle-Added: "&aParticle successfully added!"
+  Particle-Removed: "&cParticle successfully removed!"
   Full-Game-No-Permission: "&cYou don't have the permission to join full games!"
   No-Slots-For-Premium: "&cThis game is already full of premium players! Sorry!"
   Messages:
     Time-Left-To-Build: "&6%FORMATTEDTIME% &7time left to build!"
     Plot-Leave-Error: "&cYou can't fly out of the plot!"
     Already-Playing: "&cYou're playing already!"
+    Cant-Fly-Outside-Plot: "&cYou can't fly outside your plot!"
+    Join: "&b%PLAYER%&7 joined the game (%PLAYERSIZE%/%MAXPLAYERS%)!"
+    Leave: "&b%PLAYER% &7left the game (%PLAYERSIZE%/%MAXPLAYERS%)!"
     Lobby-Messages:
       Waiting-For-Players: "&7Waiting for players... We need at least &b%MINPLAYERS%&7 players to start."
       Enough-Players-To-Start: "&7We now have enough players. The game is starting soon!"
@@ -67,14 +74,24 @@ In-Game:
 
 Menus:
   Entity-Menu-Name: "&aEntity menu"
+  Villager-Profession-Menu-Name: "&7Choose villager profession"
+  #todo more here
+  Location-Message: "&aLocation: "
   Option-Menu:
     Inventory-Name: "&aOptions menu"
+    Option-Item: "&aOptions"
+    Option-Item-Lore: "&7Right click to open menu"
     Particle-Inventory-Name: "&aParticles menu"
     Particle-Option: "&aChoose particles"
+    Particle-Option-Lore: "&7Click to get particles"
     Particle-Remove: "&cRemove particles"
+    Particle-Remove-Lore: "&7Right click to open menu"
     Players-Heads-Inventory-Name: "&aPlayers heads menu"
     Players-Heads-Option: "&aGet player heads"
+    Players-Heads-Option-Lore: "&7Click to get heads"
+    Players-Heads-No-Permission: "&cYou don't have permission!"
     Floor-Option: "&aChange floor material"
+    Floor-Option-Lore: "&7Drag block here to change floor"
     Floor-Changed: "&aFloor material changed!"
     Banners-Option: "&aCreate banners &7(soon)"
     Banners-Option-Inventory-Name: "&aBanners menu"
@@ -93,7 +110,10 @@ Signs:
     Ending: "&lEnding"
     Restarting: "&c&lRestarting"
   Lines:
-    - "&a&lVillage Defense"
+    - "&b&lBuildBattle"
     - "%state%"
     - "%mapname%"
     - "&5[%playersize%/%maxplayers%]"
+
+File-Version-Do-Not-Edit: 0
+Translation-Version: 0

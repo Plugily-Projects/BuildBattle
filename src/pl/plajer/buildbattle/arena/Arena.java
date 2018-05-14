@@ -1,3 +1,21 @@
+/*
+ *  Village Defense 3 - Protect villagers from hordes of zombies
+ * Copyright (C) 2018  Plajer's Lair - maintained by Plajer
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package pl.plajer.buildbattle.arena;
 
 import org.bukkit.Bukkit;
@@ -63,8 +81,6 @@ public class Arena extends BukkitRunnable {
     private boolean BAR_ENABLED = ConfigPreferences.isBarEnabled();
     private int BUILD_TIME = ConfigPreferences.getBuildTime();
     private boolean PLAYERS_OUTSIDE_GAME_ENABLED = ConfigPreferences.isHidePlayersOutsideGameEnabled();
-    private boolean BUNGEE_SHUTDOWN = ConfigPreferences.getBungeeShutdown();
-    private boolean RESTART_ON_END = ConfigPreferences.restartOnEnd();
     private int LOBBY_STARTING_TIMER = ConfigPreferences.getLobbyTimer();
     private boolean WIN_COMMANDS_ENABLED = ConfigPreferences.isWinCommandsEnabled();
     private boolean SECOND_PLACE_COMMANDS_ENABLED = ConfigPreferences.isSecondPlaceCommandsEnabled();
@@ -122,9 +138,7 @@ public class Arena extends BukkitRunnable {
         if(getGameState() == ArenaState.IN_GAME || getGameState() == ArenaState.ENDING) UserManager.getUser(p.getUniqueId()).addInt("gamesplayed", 1);
         this.teleportToEndLocation(p);
         this.removePlayer(p);
-        if(!user.isSpectator()) {
-            ChatManager.broadcastLeaveMessage(p, this);
-        }
+        if(!user.isSpectator()) ChatManager.broadcastAction(this, p, ChatManager.ActionType.LEAVE);
         user.setSpectator(false);
         user.removeScoreboard();
 
@@ -168,11 +182,18 @@ public class Arena extends BukkitRunnable {
                 if(getPlayers().size() < getMinimumPlayers()) {
                     if(getTimer() <= 0) {
                         setTimer(LOBBY_STARTING_TIMER);
-                        ChatManager.broadcastMessage("Waiting-For-Players-Message", this);
+                        String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players")
+                                .replaceAll("%MINPLAYERS%", String.valueOf(getMinimumPlayers()));
+                        for(Player p : getPlayers()){
+                            p.sendMessage(ChatManager.PREFIX + message);
+                        }
                         return;
                     }
                 } else {
-                    ChatManager.broadcastMessage("Enough-Players-To-Start", "We now have enough players. The game is starting soon!", this);
+                    String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start");
+                    for(Player p : getPlayers()){
+                        p.sendMessage(ChatManager.PREFIX + message);
+                    }
                     setGameState(ArenaState.STARTING);
                     Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
                     setTimer(LOBBY_STARTING_TIMER);
@@ -197,7 +218,10 @@ public class Arena extends BukkitRunnable {
                         player.getInventory().setItem(8, IngameMenu.getMenuItem());
                     }
                     setRandomTheme();
-                    ChatManager.broadcastMessage("The-Game-Has-Started", "The game has started! Start building guys!!", this);
+                    String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started");
+                    for(Player p : getPlayers()){
+                        p.sendMessage(ChatManager.PREFIX + message);
+                    }
                 }
                 setTimer(getTimer() - 1);
                 break;
@@ -210,13 +234,19 @@ public class Arena extends BukkitRunnable {
                     }
                 }
                 if(getPlayers().size() <= 1) {
-                    ChatManager.broadcastMessage("Only-Player-Left", ChatColor.RED + "U are the only player left. U will be teleported to the lobby", this);
+                    String message = ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Only-You-Playing");
+                    for(Player p : getPlayers()){
+                        p.sendMessage(ChatManager.PREFIX + message);
+                    }
                     setGameState(ArenaState.ENDING);
                     Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
                     setTimer(10);
                 }
                 if((getTimer() == (4 * 60) || getTimer() == (3 * 60) || getTimer() == 5 * 60 || getTimer() == 30 || getTimer() == 2 * 60 || getTimer() == 60 || getTimer() == 15) && !this.isVoting()) {
-                    ChatManager.broadcastMessage("Time-Left-To-Build", ChatManager.PREFIX + "%FORMATTEDTIME% " + ChatManager.NORMAL + "time left to build!", getTimer(), this);
+                    String message = ChatManager.colorMessage("In-Game.Messages.Time-Left-To-Build").replaceAll("%FORMATTEDTIME%", Util.formatIntoMMSS(getTimer()));
+                    for(Player p : getPlayers()) {
+                        p.sendMessage(ChatManager.PREFIX + message);
+                    }
                 }
                 if(getTimer() != 0 && !receivedVoteItems) {
                     if(extraCounter == 1) {
@@ -227,7 +257,7 @@ public class Arena extends BukkitRunnable {
                             if(buildPlot != null) {
                                 if(!buildPlot.isInFlyRange(player)) {
                                     player.teleport(buildPlot.getTeleportLocation());
-                                    player.sendMessage(ChatManager.getSingleMessage("Cant-Fly-Out-Of-Plot", ChatColor.RED + "U can't fly so far out!"));
+                                    player.sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("In-Game.Messages.Cant-Fly-Outside-Plot"));
                                 }
                             }
                         }
@@ -285,7 +315,6 @@ public class Arena extends BukkitRunnable {
                     showPlayers();
                 }
                 if(getTimer() == 0) {
-
                     teleportAllToEndLocation();
                     setGameState(ArenaState.RESTARTING);
                     for(Player player : getPlayers()) {
@@ -299,9 +328,7 @@ public class Arena extends BukkitRunnable {
                         if(plugin.isInventoryManagerEnabled()) {
                             plugin.getInventoryManager().loadInventory(player);
                         }
-
                     }
-
                     clearPlayers();
                     if(plugin.isBungeeActivated()) {
                         for(Player player : plugin.getServer().getOnlinePlayers()) {
@@ -312,15 +339,10 @@ public class Arena extends BukkitRunnable {
                 break;
             case RESTARTING:
                 setTimer(14);
-
                 setVoting(false);
                 receivedVoteItems = false;
                 if(plugin.isBungeeActivated() && ConfigPreferences.getBungeeShutdown()) {
                     plugin.getServer().shutdown();
-                }
-                //todo remove me
-                if(RESTART_ON_END && BUNGEE_SHUTDOWN) {
-                    plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), "restart");
                 }
                 setGameState(ArenaState.WAITING_FOR_PLAYERS);
                 topList.clear();
@@ -417,7 +439,7 @@ public class Arena extends BukkitRunnable {
         p.getInventory().setArmorContents(new ItemStack[]{new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
         p.getInventory().clear();
         showPlayers();
-        if(!UserManager.getUser(p.getUniqueId()).isSpectator()) ChatManager.broadcastJoinMessage(p, this);
+        if(!UserManager.getUser(p.getUniqueId()).isSpectator()) ChatManager.broadcastAction(this, p, ChatManager.ActionType.JOIN);
         p.updateInventory();
         for(Player player : getPlayers()) {
             showPlayer(player);
@@ -461,15 +483,12 @@ public class Arena extends BukkitRunnable {
             } else {
                 // getPlotManager().teleportAllToPlot(plotManager.getPlot(player.getUniqueId()));
                 setVotingPlot(plotManager.getPlot(player.getUniqueId()));
-                for(Player player1 : getPlayers()) {
-                    player1.teleport(getVotingPlot().getTeleportLocation());
+                String message = ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Voting-For-Players-Plot").replaceAll("%PLAYER%", player.getName());
+                for(Player p : getPlayers()) {
+                    p.teleport(getVotingPlot().getTeleportLocation());
+                    MessageHandler.sendTitleMessage(p, ChatManager.colorMessage("In-Game.Voting-Messages.Plot-Owner-Title").replaceAll("%player%", player.getName()), 5, 20, 5, ChatColor.BLACK);
+                    p.sendMessage(ChatManager.PREFIX + message);
                 }
-                //todo checks for future versions
-                //if(plugin.is1_8_R3()) {
-                for(Player player1 : getPlayers())
-                    MessageHandler.sendTitleMessage(player1, ChatManager.colorMessage("In-Game.Voting-Messages.Plot-Owner-Title").replaceAll("%player%", player.getName()), 5, 20, 5, ChatColor.BLACK);
-                //}
-                ChatManager.broadcastMessage("Voting-For-Player-Plot", ChatManager.NORMAL + "Voting for " + ChatManager.HIGHLIGHTED + "%PLAYER%" + ChatManager.NORMAL + "'s plot!", player, this);
             }
         }
 
@@ -484,12 +503,9 @@ public class Arena extends BukkitRunnable {
     }
 
     private void announceResults() {
-        //todo checks for future versions
-        //if(plugin.is1_8_R3()) {
         for(Player player : getPlayers()) {
             MessageHandler.sendTitleMessage(player, ChatManager.colorMessage("In-Game.Voting-Messages.Winner-Title").replaceAll("%player%", plugin.getServer().getOfflinePlayer(topList.get(1)).getName()), 5, 40, 5, ChatColor.BLACK);
         }
-        //}
         for(Player player : getPlayers()) {
             player.sendMessage(ChatManager.colorMessage("In-Game.Voting-Messages.Winner-Message.Header"));
             player.sendMessage(ChatManager.colorMessage("In-Game.Voting-Messages.Winner-Message.First-Winner")
@@ -647,12 +663,6 @@ public class Arena extends BukkitRunnable {
         }
 
         return list;
-    }
-
-    public void hidePlayer(Player p) {
-        for(Player player : getPlayers()) {
-            player.hidePlayer(p);
-        }
     }
 
     public void showPlayer(Player p) {

@@ -1,3 +1,21 @@
+/*
+ *  Village Defense 3 - Protect villagers from hordes of zombies
+ * Copyright (C) 2018  Plajer's Lair - maintained by Plajer
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package pl.plajer.buildbattle.commands;
 
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
@@ -5,6 +23,7 @@ import com.sk89q.worldedit.bukkit.selections.Selection;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
@@ -12,6 +31,7 @@ import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.handlers.ChatManager;
+import pl.plajer.buildbattle.handlers.ConfigurationManager;
 import pl.plajer.buildbattle.utils.Util;
 
 import java.util.List;
@@ -36,14 +56,15 @@ public class AdminCommands extends MainCommand {
         }
         Selection selection = plugin.getWorldEditPlugin().getSelection(player);
         if(selection instanceof CuboidSelection) {
-            if(plugin.getConfig().contains("instances." + arena + ".plots")) {
-                Util.saveLoc("instances." + arena + ".plots." + (plugin.getConfig().getConfigurationSection("instances." + arena + ".plots").getKeys(false).size() + 1) + ".minpoint", selection.getMinimumPoint());
-                Util.saveLoc("instances." + arena + ".plots." + (plugin.getConfig().getConfigurationSection("instances." + arena + ".plots").getKeys(false).size()) + ".maxpoint", selection.getMaximumPoint());
+            FileConfiguration config = ConfigurationManager.getConfig("arenas");
+            if(config.contains("instances." + arena + ".plots")) {
+                Util.saveLocation("instances." + arena + ".plots." + (config.getConfigurationSection("instances." + arena + ".plots").getKeys(false).size() + 1) + ".minpoint", selection.getMinimumPoint());
+                Util.saveLocation("instances." + arena + ".plots." + (config.getConfigurationSection("instances." + arena + ".plots").getKeys(false).size()) + ".maxpoint", selection.getMaximumPoint());
             } else {
-                Util.saveLoc("instances." + arena + ".plots.0.minpoint", selection.getMinimumPoint());
-                Util.saveLoc("instances." + arena + ".plots.0.maxpoint", selection.getMaximumPoint());
+                Util.saveLocation("instances." + arena + ".plots.0.minpoint", selection.getMinimumPoint());
+                Util.saveLocation("instances." + arena + ".plots.0.maxpoint", selection.getMaximumPoint());
             }
-            plugin.saveConfig();
+            ConfigurationManager.saveConfig(config, "arenas");
             player.sendMessage(ChatColor.GREEN + "Plot added to instance " + ChatColor.RED + arena);
         } else {
             player.sendMessage(ChatColor.RED + "You don't have the right selection!");
@@ -53,12 +74,12 @@ public class AdminCommands extends MainCommand {
     public void forceStart(Player player) {
         Arena arena = ArenaRegistry.getArena(player);
         if(arena == null) return;
-        if(arena.getGameState() == ArenaState.WAITING_FOR_PLAYERS) {
+        if(arena.getGameState() == ArenaState.WAITING_FOR_PLAYERS || arena.getGameState() == ArenaState.STARTING) {
             arena.setGameState(ArenaState.STARTING);
-            ChatManager.broadcastMessage("Admin-ForceStart-Game", ChatManager.HIGHLIGHTED + "An admin forcestarted the game!", arena);
-        } else if(arena.getGameState() == ArenaState.STARTING) {
             arena.setTimer(0);
-            ChatManager.broadcastMessage("Admin-Set-Starting-In-To-0", ChatManager.HIGHLIGHTED + "An admin set waiting time to 0. Game starts now!", arena);
+            for(Player p : arena.getPlayers()) {
+                p.sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("In-Game.Messages.Admin-Messages.Set-Starting-In-To-0"));
+            }
         }
     }
 
@@ -83,10 +104,11 @@ public class AdminCommands extends MainCommand {
         } else {
             Location loc = player.getTargetBlock(null, 10).getLocation();
             if(loc.getBlock().getState() instanceof Sign) {
-                List<String> signs = plugin.getConfig().getStringList("instances." + arena.getID() + ".signs");
+                FileConfiguration config = ConfigurationManager.getConfig("arenas");
+                List<String> signs = config.getStringList("instances." + arena.getID() + ".signs");
                 signs.add(loc.getWorld().getName() + "," + loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getYaw() + "," + loc.getPitch());
-                plugin.getConfig().set("instances." + arena.getID() + ".signs", signs);
-                plugin.saveConfig();
+                config.set("instances." + arena.getID() + ".signs", signs);
+                ConfigurationManager.saveConfig(config, "arenas");
                 plugin.getSignManager().getLoadedSigns().put((Sign) loc.getBlock().getState(), arena);
                 player.sendMessage(ChatColor.GREEN + "SIGN ADDED!");
             } else {

@@ -1,3 +1,21 @@
+/*
+ *  Village Defense 3 - Protect villagers from hordes of zombies
+ * Copyright (C) 2018  Plajer's Lair - maintained by Plajer
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package pl.plajer.buildbattle;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -5,6 +23,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -57,7 +76,7 @@ public class Main extends JavaPlugin {
     private boolean inventoryManagerEnabled;
     private SignManager signManager;
     private String version;
-    private List<String> filesToGenerate = Arrays.asList("EntityMenu", "particles", "scoreboard", "signModification", "SpecialItems", "stats", "voteItems", "MySQL");
+    private List<String> filesToGenerate = Arrays.asList("arenas", "EntityMenu", "particles", "scoreboard", "SpecialItems", "stats", "voteItems", "mysql");
 
     public static Permission getPerms() {
         return perms;
@@ -244,27 +263,28 @@ public class Main extends JavaPlugin {
     public void loadInstances() {
         this.saveConfig();
         ArenaRegistry.getArenas().clear();
-        for(String ID : this.getConfig().getConfigurationSection("instances").getKeys(false)) {
+        FileConfiguration config = ConfigurationManager.getConfig("arenas");
+        for(String ID : config.getConfigurationSection("instances").getKeys(false)) {
             Arena arena;
             String s = "instances." + ID + ".";
             if(s.contains("default")) continue;
 
             arena = new Arena(ID);
 
-            if(getConfig().contains(s + "minimumplayers")) arena.setMinimumPlayers(getConfig().getInt(s + "minimumplayers"));
-            else arena.setMinimumPlayers(getConfig().getInt("instances.default.minimumplayers"));
-            if(getConfig().contains(s + "maximumplayers")) arena.setMaximumPlayers(getConfig().getInt(s + "maximumplayers"));
-            else arena.setMaximumPlayers(getConfig().getInt("instances.default.maximumplayers"));
-            if(getConfig().contains(s + "mapname")) arena.setMapName(getConfig().getString(s + "mapname"));
-            else arena.setMapName(getConfig().getString("instances.default.mapname"));
-            if(getConfig().contains(s + "lobbylocation")) arena.setLobbyLocation(Util.getLocation(true, s + "lobbylocation"));
-            if(getConfig().contains(s + "Startlocation")) arena.setStartLocation(Util.getLocation(true, s + "Startlocation"));
+            if(config.contains(s + "minimumplayers")) arena.setMinimumPlayers(config.getInt(s + "minimumplayers"));
+            else arena.setMinimumPlayers(config.getInt("instances.default.minimumplayers"));
+            if(config.contains(s + "maximumplayers")) arena.setMaximumPlayers(config.getInt(s + "maximumplayers"));
+            else arena.setMaximumPlayers(config.getInt("instances.default.maximumplayers"));
+            if(config.contains(s + "mapname")) arena.setMapName(config.getString(s + "mapname"));
+            else arena.setMapName(config.getString("instances.default.mapname"));
+            if(config.contains(s + "lobbylocation")) arena.setLobbyLocation(Util.getLocation(false, config.getString(s + "lobbylocation")));
+            if(config.contains(s + "Startlocation")) arena.setStartLocation(Util.getLocation(false, config.getString(s + "Startlocation")));
             else {
                 System.out.print(ID + " doesn't contains an start location!");
                 ArenaRegistry.registerArena(arena);
                 continue;
             }
-            if(getConfig().contains(s + "Endlocation")) arena.setEndLocation(Util.getLocation(true, s + "Endlocation"));
+            if(config.contains(s + "Endlocation")) arena.setEndLocation(Util.getLocation(false, config.getString(s + "Endlocation")));
             else {
                 if(!bungeeActivated) {
                     System.out.print(ID + " doesn't contains an end location!");
@@ -272,15 +292,14 @@ public class Main extends JavaPlugin {
                     continue;
                 }
             }
-            if(getConfig().contains(s + "plots")) {
-                for(String plotname : getConfig().getConfigurationSection(s + "plots").getKeys(false)) {
+            if(config.contains(s + "plots")) {
+                for(String plotName : config.getConfigurationSection(s + "plots").getKeys(false)) {
                     BuildPlot buildPlot = new BuildPlot();
-                    buildPlot.setMAXPOINT(Util.getLocation(true, s + "plots." + plotname + ".maxpoint"));
-                    buildPlot.setMINPOINT(Util.getLocation(true, s + "plots." + plotname + ".minpoint"));
+                    buildPlot.setMAXPOINT(Util.getLocation(false, config.getString(s + "plots." + plotName + ".maxpoint")));
+                    buildPlot.setMINPOINT(Util.getLocation(false, config.getString(s + "plots." + plotName + ".minpoint")));
                     buildPlot.reset();
                     arena.getPlotManager().addBuildPlot(buildPlot);
                 }
-
             } else {
                 System.out.print("Instance doesn't contains plots!");
             }
@@ -300,15 +319,15 @@ public class Main extends JavaPlugin {
                 return;
             }
             Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable() {
-                final String playername = player.getUniqueId().toString();
+                final String playerName = player.getUniqueId().toString();
 
                 @Override
                 public void run() {
                     MySQLDatabase database = getMySQLDatabase();
-                    ResultSet resultSet = database.executeQuery("SELECT UUID from buildbattlestats WHERE UUID='" + playername + "'");
+                    ResultSet resultSet = database.executeQuery("SELECT UUID from buildbattlestats WHERE UUID='" + playerName + "'");
                     try {
                         if(!resultSet.next()) {
-                            database.insertPlayer(playername);
+                            database.insertPlayer(playerName);
                         }
 
                         int gamesplayed;

@@ -1,3 +1,21 @@
+/*
+ *  Village Defense 3 - Protect villagers from hordes of zombies
+ * Copyright (C) 2018  Plajer's Lair - maintained by Plajer
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package pl.plajer.buildbattle.commands;
 
 import org.bukkit.Bukkit;
@@ -7,6 +25,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.Arena;
@@ -14,6 +33,7 @@ import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.events.PlayerAddCommandEvent;
 import pl.plajer.buildbattle.handlers.ChatManager;
+import pl.plajer.buildbattle.handlers.ConfigurationManager;
 import pl.plajer.buildbattle.handlers.UserManager;
 import pl.plajer.buildbattle.utils.SetupInventory;
 import pl.plajer.buildbattle.utils.Util;
@@ -43,8 +63,7 @@ public class MainCommand implements CommandExecutor {
 
     boolean checkSenderIsConsole(CommandSender sender) {
         if(sender instanceof ConsoleCommandSender) {
-            //todo make me translatable
-            sender.sendMessage("Only player can execute this command!");
+            sender.sendMessage(ChatManager.colorMessage("Commands.Only-By-Player"));
             return true;
         }
         return false;
@@ -54,8 +73,7 @@ public class MainCommand implements CommandExecutor {
         if(sender.hasPermission(perm)) {
             return true;
         }
-        //todo make me translatable
-        sender.sendMessage("You don't have permission to this command!");
+        sender.sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("Commands.No-Permission"));
         return false;
     }
 
@@ -141,14 +159,14 @@ public class MainCommand implements CommandExecutor {
             if(args.length == 2 && args[0].equalsIgnoreCase("join")) {
                 Arena arena = ArenaRegistry.getArena(args[1]);
                 if(arena == null) {
-                    player.sendMessage(ChatManager.getSingleMessage("Arena-Does-Not-Exist", ChatColor.RED + "This arena does not exist!"));
+                    player.sendMessage(ChatManager.colorMessage("Commands.No-Arena-Like-That"));
                     return true;
                 } else {
                     if(arena.getPlayers().size() >= arena.getMaximumPlayers() && !UserManager.getUser(player.getUniqueId()).isPremium()) {
-                        player.sendMessage(ChatManager.getSingleMessage("Arena-Is-Full", ChatColor.RED + "This arena does not exist!"));
+                        player.sendMessage(ChatManager.colorMessage("Commands.Arena-Is-Full"));
                         return true;
                     } else if(arena.getGameState() == ArenaState.IN_GAME) {
-                        player.sendMessage(ChatManager.getSingleMessage("Arena-Is-Already-Started", ChatColor.RED + "This arena is already started!"));
+                        player.sendMessage(ChatManager.colorMessage("Commands.Arena-Started"));
                         return true;
                     } else {
                         arena.joinAttempt(player);
@@ -193,7 +211,7 @@ public class MainCommand implements CommandExecutor {
             }
             if(!(args.length > 2)) return true;
 
-            if(!plugin.getConfig().contains("instances." + args[0])) {
+            if(!ConfigurationManager.getConfig("arenas").contains("instances." + args[0])) {
                 player.sendMessage(ChatColor.RED + "Arena doesn't exists!");
                 player.sendMessage(ChatColor.RED + "Usage: /bb < ARENA ID > set <MINPLAYRS | MAXPLAYERS | MAPNAME | SCHEMATIC | LOBBYLOCATION | EndLOCATION | STARTLOCATION  >  < VALUE>");
                 return true;
@@ -206,16 +224,16 @@ public class MainCommand implements CommandExecutor {
             }
             if(!(args[1].equalsIgnoreCase("set"))) return true;
 
-
+            FileConfiguration config = ConfigurationManager.getConfig("arenas");
             if(args.length == 3) {
                 if(args[2].equalsIgnoreCase("lobbylocation") || args[2].equalsIgnoreCase("lobbyloc")) {
-                    Util.saveLoc("instances." + args[0] + ".lobbylocation", player.getLocation());
+                    Util.saveLocation("instances." + args[0] + ".lobbylocation", player.getLocation());
                     player.sendMessage("BuildBattle: Lobby location for arena/instance " + args[0] + " set to " + Util.locationToString(player.getLocation()));
                 } else if(args[2].equalsIgnoreCase("Startlocation") || args[2].equalsIgnoreCase("Startloc")) {
-                    Util.saveLoc("instances." + args[0] + ".Startlocation", player.getLocation());
+                    Util.saveLocation("instances." + args[0] + ".Startlocation", player.getLocation());
                     player.sendMessage("BuildBattle: Start location for arena/instance " + args[0] + " set to " + Util.locationToString(player.getLocation()));
                 } else if(args[2].equalsIgnoreCase("Endlocation") || args[2].equalsIgnoreCase("Endloc")) {
-                    Util.saveLoc("instances." + args[0] + ".Endlocation", player.getLocation());
+                    Util.saveLocation("instances." + args[0] + ".Endlocation", player.getLocation());
                     player.sendMessage("BuildBattle: End location for arena/instance " + args[0] + " set to " + Util.locationToString(player.getLocation()));
                 } else {
                     player.sendMessage(ChatColor.RED + "Invalid Command!");
@@ -223,13 +241,13 @@ public class MainCommand implements CommandExecutor {
                 }
             } else if(args.length == 4) {
                 if(args[2].equalsIgnoreCase("MAXPLAYERS") || args[2].equalsIgnoreCase("maximumplayers")) {
-                    plugin.getConfig().set("instances." + args[0] + ".maximumplayers", Integer.parseInt(args[3]));
+                    config.set("instances." + args[0] + ".maximumplayers", Integer.parseInt(args[3]));
                     player.sendMessage("BuildBattle: Maximum players for arena/instance " + args[0] + " set to " + Integer.parseInt(args[3]));
                 } else if(args[2].equalsIgnoreCase("MINPLAYERS") || args[2].equalsIgnoreCase("minimumplayers")) {
-                    plugin.getConfig().set("instances." + args[0] + ".minimumplayers", Integer.parseInt(args[3]));
+                    config.set("instances." + args[0] + ".minimumplayers", Integer.parseInt(args[3]));
                     player.sendMessage("BuildBattle: Minimum players for arena/instance " + args[0] + " set to " + Integer.parseInt(args[3]));
                 } else if(args[2].equalsIgnoreCase("MAPNAME") || args[2].equalsIgnoreCase("NAME")) {
-                    plugin.getConfig().set("instances." + args[0] + ".mapname", args[3]);
+                    config.set("instances." + args[0] + ".mapname", args[3]);
                     player.sendMessage("BuildBattle: Map name for arena/instance " + args[0] + " set to " + args[3]);
                 } else if(args[2].equalsIgnoreCase("WORLD") || args[2].equalsIgnoreCase("MAP")) {
                     boolean exists = false;
@@ -240,41 +258,42 @@ public class MainCommand implements CommandExecutor {
                         player.sendMessage(ChatColor.RED + "That world doesn't exists!");
                         return true;
                     }
-                    plugin.getConfig().set("instances." + args[0] + ".world", args[3]);
+                    config.set("instances." + args[0] + ".world", args[3]);
                     player.sendMessage("BuildBattle: World for arena/instance " + args[0] + " set to " + args[3]);
                 } else {
                     player.sendMessage(ChatColor.RED + "Invalid Command!");
                     player.sendMessage(ChatColor.RED + "Usage: /bb set <MINPLAYERS | MAXPLAYERS> <value>");
                 }
             }
-            plugin.saveConfig();
+            ConfigurationManager.saveConfig(config, "arenas");
             return true;
         }
         return false;
     }
 
-    private void createArenaCommand(Player player, String[] strings) {
+    private void createArenaCommand(Player player, String[] args) {
         for(Arena arena : ArenaRegistry.getArenas()) {
-            if(arena.getID().equalsIgnoreCase(strings[1])) {
+            if(arena.getID().equalsIgnoreCase(args[1])) {
                 player.sendMessage(ChatColor.DARK_RED + "Arena with that ID already exists!");
                 player.sendMessage(ChatColor.DARK_RED + "Usage: bb create <ID>");
                 return;
             }
         }
-        if(plugin.getConfig().contains("instances." + strings[1])) {
+        FileConfiguration config = ConfigurationManager.getConfig("arenas");
+        if(config.contains("instances." + args[1])) {
             player.sendMessage(ChatColor.DARK_RED + "Instance/Arena already exists! Use another ID or delete it first!");
         } else {
-            createInstanceInConfig(strings[1]);
+            createInstanceInConfig(args[1]);
 
             player.sendMessage(ChatColor.GREEN + "Instances/Arena successfully created! Restart or reload the server to start the arena!");
             player.sendMessage(ChatColor.BOLD + "--------------- INFORMATION --------------- ");
-            player.sendMessage(ChatColor.GREEN + "WORLD: " + ChatColor.RED + strings[1]);
-            player.sendMessage(ChatColor.GREEN + "MAX PLAYERS: " + ChatColor.RED + plugin.getConfig().getInt("instances.default.minimumplayers"));
-            player.sendMessage(ChatColor.GREEN + "MIN PLAYERS: " + ChatColor.RED + plugin.getConfig().getInt("instances.default.maximumplayers"));
-            player.sendMessage(ChatColor.GREEN + "MAP NAME: " + ChatColor.RED + plugin.getConfig().getInt("instances.default.mapname"));
-            player.sendMessage(ChatColor.GREEN + "LOBBY LOCATION " + ChatColor.RED + Util.locationToString(Util.getLocation(true, "instances." + strings[1] + ".lobbylocation")));
-            player.sendMessage(ChatColor.GREEN + "Start LOCATION " + ChatColor.RED + Util.locationToString(Util.getLocation(true, "instances." + strings[1] + ".Startlocation")));
-            player.sendMessage(ChatColor.GREEN + "End LOCATION " + ChatColor.RED + Util.locationToString(Util.getLocation(true, "instances." + strings[1] + ".Endlocation")));
+            player.sendMessage(ChatColor.GREEN + "WORLD: " + ChatColor.RED + args[1]);
+            player.sendMessage(ChatColor.GREEN + "MAX PLAYERS: " + ChatColor.RED + config.getInt("instances.default.minimumplayers"));
+            player.sendMessage(ChatColor.GREEN + "MIN PLAYERS: " + ChatColor.RED + config.getInt("instances.default.maximumplayers"));
+            player.sendMessage(ChatColor.GREEN + "MAP NAME: " + ChatColor.RED + config.getInt("instances.default.mapname"));
+            player.sendMessage(ChatColor.GREEN + "LOBBY LOCATION " + ChatColor.RED + Util.locationToString(Util.getLocation(false, config.getString("instances." + args[1] + ".lobbylocation"))));
+            player.sendMessage(ChatColor.GREEN + "Start LOCATION " + ChatColor.RED + Util.locationToString(Util.getLocation(false, config.getString("instances." + args[1] + ".Startlocation"))));
+            player.sendMessage(ChatColor.GREEN + "End LOCATION " + ChatColor.RED + Util.locationToString(Util.getLocation(false, config.getString("instances." + args[1] + ".Endlocation"))));
             player.sendMessage(ChatColor.BOLD + "------------------------------------------- ");
             player.sendMessage(ChatColor.RED + "You can edit this game instances in the config!");
         }
@@ -282,16 +301,17 @@ public class MainCommand implements CommandExecutor {
 
     private void createInstanceInConfig(String ID) {
         String path = "instances." + ID + ".";
-        Util.saveLoc(path + "lobbylocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
-        Util.saveLoc(path + "Startlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
-        Util.saveLoc(path + "Endlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
-        plugin.getConfig().set(path + "minimumplayers", plugin.getConfig().getInt("instances.default.minimumplayers"));
-        plugin.getConfig().set(path + "maximumplayers", plugin.getConfig().getInt("instances.default.maximumplayers"));
-        plugin.getConfig().set(path + "mapname", plugin.getConfig().getInt("instances.default.mapname"));
-        plugin.getConfig().set(path + "signs", new ArrayList<>());
+        Util.saveLocation(path + "lobbylocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+        Util.saveLocation(path + "Startlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+        Util.saveLocation(path + "Endlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+        FileConfiguration config = ConfigurationManager.getConfig("arenas");
+        config.set(path + "minimumplayers", config.getInt("instances.default.minimumplayers"));
+        config.set(path + "maximumplayers", config.getInt("instances.default.maximumplayers"));
+        config.set(path + "mapname", config.getInt("instances.default.mapname"));
+        config.set(path + "signs", new ArrayList<>());
 
-        plugin.getConfig().set(path + "world", plugin.getConfig().getString("instances.default.world"));
-        plugin.saveConfig();
+        config.set(path + "world", config.getString("instances.default.world"));
+        ConfigurationManager.saveConfig(config, "arenas");
         plugin.loadInstances();
     }
 
@@ -305,7 +325,7 @@ public class MainCommand implements CommandExecutor {
             return true;
         }
         Arena arena = ArenaRegistry.getArena(ID);
-        if(!plugin.getConfig().contains("instances." + ID) || arena == null) {
+        if(!ConfigurationManager.getConfig("arenas").contains("instances." + ID) || arena == null) {
             player.sendMessage(ChatColor.RED + "That arena doesn't exists!");
             return true;
         }

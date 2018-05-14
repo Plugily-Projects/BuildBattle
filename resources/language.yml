@@ -1,64 +1,119 @@
-#probably not everything but, ITS HERE OK!?
-Waiting-For-Players-Message: "Waiting for players... We need at least &b%MINPLAYERS%&7
-  players to start."
-Enough-Players-To-Start: "We now have enough players. The game is starting soon!"
-The-Game-Has-Started: "The game has started! Start building guys!!"
-Time-Left-To-Build: "&6%FORMATTEDTIME% &7time left to build!"
-Cant-Fly-Out-Of-Plot: "&cU can't fly so far out!"
-Voted: "&aVoted succesfully!"
-Voting-For-Player-Plot: "&7Voting for &b%PLAYER%&7's plot!"
-Winner-Announcement-Footer-Line: "&a=============================="
-Waiting-For-Players-Bar-Message: "&6BuildBattle made by &bTomTheDeveloper"
-Starting-Bar-Message: "&6BuildBattle made by &bTomTheDeveloper"
-Time-Left-Bar-Message: "&6Time left:&b %FORMATTEDTIME%"
-Vote-Time-Left-Bar-Message: "&6Vote Time left :&b %FORMATTEDTIME%"
-Floor-Option-Name: "&aFloor Material"
-Floor-Changed: "&aFloor changed!"
-Ingame-Menu-Name: "Options Menu"
-Options-Menu-Item: "&aOptions"
-Options-Lore: "&7Right click to open"
-Drag-And-Drop-Item-Here: "Drag and drop an item here"
-To-Change-Floor: "to change the floor"
-Join: "&b%PLAYER%&7 joined the game (%PLAYERSIZE%/%MAXPLAYERS%)!"
-Leave: "&b%PLAYER% &7left the game (%PLAYERSIZE%/%MAXPLAYERS%)!"
-Death: "&b%PLAYER% &7died!"
-Seconds-Left-Until-Game-Starts: "The game starts in &b%TIME%&7 seconds!"
-Waiting-For-Players: "Waiting for players... We need at least &b%MINPLAYERS%&7 players
-  to start."
-Teleport-To-EndLocation-In-X-Seconds: "You will be teleported to the lobby in &b%TIME%&7
-  seconds"
-Cant-Vote-On-Own-Plot: "&cU can't vote on your own plot!!"
-You-Became-xth: "&aYou became &2%NUMBER%&ath"
-Kicked-Game-Already-Started: "&bKicked! Game has already started!"
-Particle-Option-Name: "&aParticles"
-Coming-Soon: "&cComing Soon"
-Heads-Option-Name: "&aHeads"
-Only-Command-Ingame-Is-Leave: "&cYou have to leave the game first to perform commands.
-  The only command that works is /leave!"
-Particle-Menu-Name: "Particle Menu"
-No-Permission-For-This-Particle: "&c No permission for this particle!"
-Reached-Max-Amount-Of-Particles: "&cReached max amount of particles!"
-Particle-Succesfully-Added: "&aParticle succesfully added!"
-Particle-Remove-Menu-Name: "Remove Particles"
-Location: 'Location: '
-Particle-Removed: "&aParticle Removed!"
-Remove-Particle-Item-Lore: "Right click to open menu!"
-Particle-Option-Lore: "&7Click to open menu"
-Player-Head-Main-Inventory-Name: "Player Head Menu"
-Starting-In-Title-Screen: "&aStarting in &c%NUMBER"
-STATS-AboveLine: '&l-----YOUR STATS----- '
-STATS-Wins: '&aWins: &e'
-STATS-Loses: '&aLoses: &e'
-STATS-Games-Played: '&aGames played: &e'
-STATS-Highest-Win: '&aHighest win: &e'
-STATS-Blocks-Placed: '&aBlocks Placed: &e'
-STATS-Blocks-Broken: '&aBlocks Broken: &e'
-STATS-Particles-Placed: '&aParticles Placed: &e'
-STATS-UnderLinen: "&l--------------------"
-Heads-Option-Lore: "&7Open for heads menu!"
-Arena-Does-Not-Exist: "&cThis arena does not exist!"
-Arena-Is-Full: "&cThis arena does not exist!"
-Arena-Is-Already-Started: "&cThis arena is already started!"
-Unlocks-at-level: "&aUnlocks at level %NUMBER%"
-GAMENAME: "BuildBattle"
-PREFIX: "&6[BuildBattle] &7"
+#    You can translate Build Battle 3 messages here.
+#             Color codes (&) supported.
+#
+#     Some messages support their own placeholders
+#               like %player% etc.
+
+Commands:
+  Only-By-Player: "&cYou can execute this command only as player!"
+  No-Permission: "&cYou don't have permission to use this command!"
+  No-Arena-Like-That: "&cNo arena with that ID!"
+  Arena-Is-Full: "&cThis arena is full, sorry!"
+  Arena-Started: "&cThis arena already started, sorry!"
+  Added-Plot: "&aAdded plot for arena &7%ARENA%"
+  No-Selection: "&cPlease use WorldEdit selection first!"
+  Plugin-Reloaded: "&aPlugin and configuration reloaded!"
+  Stats-Command:
+    Header: "&l-----YOUR STATS-----"
+    Header-Other: "&l-----STATS FOR %player%-----"
+    Footer: "&l--------------------"
+    Wins: "&aWins: &e"
+    Loses: "&aLoses: &e"
+    Games-Played: "&aGames played: &e"
+    Highest-Win: "&aHighest win (points): &e"
+    Blocks-Placed: "&aBlocks placed: &e"
+    Blocks-Broken: "&aBlocks broken: &e"
+    Particles-Placed: "&aParticles placed: &e"
+
+Bossbar:
+  Waiting-For-Players: "&4&lWaiting for more players..."
+  Starting-In: "&f&lStarting in: &e&l%time%"
+  Time-Left: "&f&lTime left: &e&l%time%"
+  Vote-Time-Left: "&e&lVote time left: &f&e%time%"
+
+In-Game:
+  Plugin-Prefix: "&6[&bBuildBattle&6] "
+  Only-Command-Ingame-Is-Leave: "&cYou have to leave the game first to perform commands. The only command that works is /leave!"
+  Max-Entities-Limit-Reached: "&cYou can't spawn more entities!"
+  Max-Particles-Limit-Reached: "&cYou can't spawn more particles!"
+  No-Permission-For-Particle: "&cYou don't have permission for this particle!"
+  Particle-Added: "&aParticle successfully added!"
+  Particle-Removed: "&cParticle successfully removed!"
+  Full-Game-No-Permission: "&cYou don't have the permission to join full games!"
+  No-Slots-For-Premium: "&cThis game is already full of premium players! Sorry!"
+  Messages:
+    Time-Left-To-Build: "&6%FORMATTEDTIME% &7time left to build!"
+    Plot-Leave-Error: "&cYou can't fly out of the plot!"
+    Already-Playing: "&cYou're playing already!"
+    Cant-Fly-Outside-Plot: "&cYou can't fly outside your plot!"
+    Join: "&b%PLAYER%&7 joined the game (%PLAYERSIZE%/%MAXPLAYERS%)!"
+    Leave: "&b%PLAYER% &7left the game (%PLAYERSIZE%/%MAXPLAYERS%)!"
+    Lobby-Messages:
+      Waiting-For-Players: "&7Waiting for players... We need at least &b%MINPLAYERS%&7 players to start."
+      Enough-Players-To-Start: "&7We now have enough players. The game is starting soon!"
+      Game-Started: "&7The game has started! Defend the village against waves of zombies!"
+      Kicked-For-Premium-Slot: "&c%PLAYER% got removed from the game to make a place for premium players!"
+      You-Were-Kicked-For-Premium-Slot: "&cYou got kicked out of the game to make a place for a premium player!"
+    Voting-Messages:
+      Plot-Owner-Title: "&aPlot owner: &7%player%"
+      Voting-For-Player-Plot: "&7Now voting for &e&l%PLAYER%'s &7plot!"
+      Cant-Vote-Own-Plot: "&cYou can't vote for your plot!"
+      Vote-Successful: "&aVoted successfully!"
+      Winner-Title: "&eWINNER: &a%player%"
+      Winner-Message:
+        Header: "&a==============================\n&f&lBuildBattle\n"
+        First-Winner: "&e1st Winner &7- %player% (Plot %number%)"
+        Second-Winner: "&62nd Winner &7- %player% (Plot %number%)"
+        Third-Winner: "&c3rd Winner &7- %player% (Plot %number%)"
+        Footer: "\n&a=============================="
+        You-Became-Other: "&aYou became &7%number%th"
+    Game-End-Messages:
+      Only-You-Playing: "&7You're the only player left. You'll be teleported to the lobby."
+    Admin-Messages:
+      Set-Starting-In-To-0: "&bAn admin set waiting time to 0. The game starts now!"
+
+Menus:
+  Entity-Menu-Name: "&aEntity menu"
+  Villager-Profession-Menu-Name: "&7Choose villager profession"
+  #todo more here
+  Location-Message: "&aLocation: "
+  Option-Menu:
+    Inventory-Name: "&aOptions menu"
+    Option-Item: "&aOptions"
+    Option-Item-Lore: "&7Right click to open menu"
+    Particle-Inventory-Name: "&aParticles menu"
+    Particle-Option: "&aChoose particles"
+    Particle-Option-Lore: "&7Click to get particles"
+    Particle-Remove: "&cRemove particles"
+    Particle-Remove-Lore: "&7Right click to open menu"
+    Players-Heads-Inventory-Name: "&aPlayers heads menu"
+    Players-Heads-Option: "&aGet player heads"
+    Players-Heads-Option-Lore: "&7Click to get heads"
+    Players-Heads-No-Permission: "&cYou don't have permission!"
+    Floor-Option: "&aChange floor material"
+    Floor-Option-Lore: "&7Drag block here to change floor"
+    Floor-Changed: "&aFloor material changed!"
+    Banners-Option: "&aCreate banners &7(soon)"
+    Banners-Option-Inventory-Name: "&aBanners menu"
+
+
+Signs:
+  Please-Type-Arena-Name: "&cPlease type arena name in second line!"
+  Arena-Doesnt-Exists: "&cArena with that name doesn't exists!"
+  Sign-Created: "&aSign created successfully!"
+  Sign-Removed: "&aSign successfully removed!"
+  Game-States:
+    Inactive: "&lInactive..."
+    In-Game: "&lIn-game"
+    Starting: "&e&lStarting"
+    Full-Game: "&4&lFULL"
+    Ending: "&lEnding"
+    Restarting: "&c&lRestarting"
+  Lines:
+    - "&b&lBuildBattle"
+    - "%state%"
+    - "%mapname%"
+    - "&5[%playersize%/%maxplayers%]"
+
+# Do not modify!
+File-Version-Do-Not-Edit: 0

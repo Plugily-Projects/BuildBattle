@@ -1,3 +1,21 @@
+/*
+ *  Village Defense 3 - Protect villagers from hordes of zombies
+ * Copyright (C) 2018  Plajer's Lair - maintained by Plajer
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package pl.plajer.buildbattle.utils;
 
 import org.bukkit.Color;
@@ -8,6 +26,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.SkullType;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
@@ -17,6 +36,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle.Main;
+import pl.plajer.buildbattle.handlers.ConfigurationManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -127,10 +147,11 @@ public class Util {
         return new Location(w, x, y, z, yaw, pitch);
     }
 
-    public static void saveLoc(String path, Location loc) {
+    public static void saveLocation(String path, Location loc) {
+        FileConfiguration config = ConfigurationManager.getConfig("arenas");
         String location = loc.getWorld().getName() + "," + loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getYaw() + "," + loc.getPitch();
-        plugin.getConfig().set(path, location);
-        plugin.saveConfig();
+        config.set(path, location);
+        ConfigurationManager.saveConfig(config, "arenas");
     }
 
 }
