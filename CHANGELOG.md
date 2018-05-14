@@ -8,3 +8,4 @@
 * Added plugin's issue template
 * StatsStorage API reworked
 * Added Java Docs
+* Removed /addsigns command
