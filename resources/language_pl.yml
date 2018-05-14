@@ -4,6 +4,7 @@
 #     Some messages support their own placeholders
 #               like %player% etc.
 
+# todo translate me
 Commands:
   Only-By-Player: "&cYou can execute this command only as player!"
   Teleported-To-The-Lobby: "&aYou've been teleported to the lobby!"
