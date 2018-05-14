@@ -108,4 +108,10 @@ Update-Notifier:
 
 DatabaseActivated: false
 
-# That's the end, really! But... where is the dragon!?
+# Should plugin send 'debug spam' to console? IT CAN HELP IF YOU OCCUR SOME WEIRD BEHAVIOUR FROM PLUGIN
+Debug: false
+
+# Don't modify.
+Version: 0
+
+# No way! You've reached the end! But... where's the dragon!?

@@ -34,7 +34,7 @@ import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.events.PlayerAddCommandEvent;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.ConfigurationManager;
-import pl.plajer.buildbattle.handlers.UserManager;
+import pl.plajer.buildbattle.user.UserManager;
 import pl.plajer.buildbattle.utils.SetupInventory;
 import pl.plajer.buildbattle.utils.Util;
 

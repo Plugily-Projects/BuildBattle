@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle.handlers;
+package pl.plajer.buildbattle.user;
 
-import pl.plajer.buildbattle.User;
+import pl.plajer.buildbattle.user.User;
 
 import java.util.HashMap;
 import java.util.UUID;

@@ -18,7 +18,6 @@
 
 package pl.plajer.buildbattle.particles;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -29,7 +28,7 @@ import pl.plajer.buildbattle.BuildPlot;
 import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.ConfigurationManager;
-import pl.plajer.buildbattle.handlers.UserManager;
+import pl.plajer.buildbattle.user.UserManager;
 import pl.plajer.buildbattle.utils.Util;
 
 import java.util.ArrayList;

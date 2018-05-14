@@ -24,10 +24,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.User;
+import pl.plajer.buildbattle.stats.StatsStorage;
+import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.handlers.UserManager;
-import pl.plajer.buildbattle.stats.BuildBattleStats;
+import pl.plajer.buildbattle.user.UserManager;
 
 /**
  * @author Plajer
@@ -59,26 +59,26 @@ public class QuitEvents implements Listener {
 
         if(plugin.isDatabaseActivated()) {
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                for(final String s : BuildBattleStats.STATISTICS) {
+                for(StatsStorage.StatisticType s : StatsStorage.StatisticType.values()) {
                     int i;
                     try {
-                        i = plugin.getMySQLDatabase().getStat(player.getUniqueId().toString(), s);
+                        i = plugin.getMySQLDatabase().getStat(player.getUniqueId().toString(), s.getName());
                     } catch(NullPointerException npe) {
                         i = 0;
                         System.out.print("COULDN'T GET STATS FROM PLAYER: " + player.getName());
                     }
 
-                    if(i > user.getInt(s)) {
-                        plugin.getMySQLDatabase().setStat(player.getUniqueId().toString(), s, user.getInt(s) + i);
+                    if(i > user.getInt(s.getName())) {
+                        plugin.getMySQLDatabase().setStat(player.getUniqueId().toString(), s.getName(), user.getInt(s.getName()) + i);
                     } else {
-                        plugin.getMySQLDatabase().setStat(player.getUniqueId().toString(), s, user.getInt(s));
+                        plugin.getMySQLDatabase().setStat(player.getUniqueId().toString(), s.getName(), user.getInt(s.getName()));
                     }
                 }
             });
             UserManager.removeUser(event.getPlayer().getUniqueId());
         } else {
-            for(String s : BuildBattleStats.STATISTICS) {
-                plugin.getFileStats().saveStat(player, s);
+            for(StatsStorage.StatisticType s : StatsStorage.StatisticType.values()) {
+                plugin.getFileStats().saveStat(player, s.getName());
             }
         }
     }

@@ -20,7 +20,7 @@ package pl.plajer.buildbattle.handlers;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
-import pl.plajer.buildbattle.stats.BuildBattleStats;
+import pl.plajer.buildbattle.stats.StatsStorage;
 
 /**
  * @author Plajer
@@ -54,19 +54,19 @@ public class PlaceholderManager extends PlaceholderExpansion {
         if(player == null) return null;
         switch(id) {
             case "blocks_broken":
-                return String.valueOf(BuildBattleStats.BLOCKS_BROKEN.getStat(player));
+                return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.BLOCKS_BROKEN));
             case "blocks_placed":
-                return String.valueOf(BuildBattleStats.BLOCKS_PLACED.getStat(player));
+                return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.BLOCKS_PLACED));
             case "games_played":
-                return String.valueOf(BuildBattleStats.GAMES_PLAYED.getStat(player));
+                return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.GAMES_PLAYED));
             case "wins":
-                return String.valueOf(BuildBattleStats.WINS.getStat(player));
+                return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.WINS));
             case "loses":
-                return String.valueOf(BuildBattleStats.LOSES.getStat(player));
+                return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.LOSES));
             case "highest_win":
-                return String.valueOf(BuildBattleStats.HIGHEST_WIN.getStat(player));
+                return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.HIGHEST_WIN));
             case "particles_used":
-                return String.valueOf(BuildBattleStats.PARTICLES_USED.getStat(player));
+                return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.PARTICLES_USED));
         }
         return null;
     }

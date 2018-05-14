@@ -16,11 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle;
+package pl.plajer.buildbattle.user;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.ScoreboardManager;
+import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.handlers.PermissionManager;

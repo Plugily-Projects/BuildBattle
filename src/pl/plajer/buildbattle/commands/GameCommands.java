@@ -20,11 +20,11 @@ package pl.plajer.buildbattle.commands;
 
 import org.bukkit.entity.Player;
 import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.User;
+import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.handlers.ChatManager;
-import pl.plajer.buildbattle.handlers.UserManager;
+import pl.plajer.buildbattle.user.UserManager;
 
 /**
  * @author Plajer

@@ -36,7 +36,7 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.handlers.UserManager;
+import pl.plajer.buildbattle.user.UserManager;
 
 /**
  * Created by Tom on 1/08/2014.

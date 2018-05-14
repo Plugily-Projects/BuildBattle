@@ -42,15 +42,17 @@ import pl.plajer.buildbattle.handlers.ConfigurationManager;
 import pl.plajer.buildbattle.handlers.InventoryManager;
 import pl.plajer.buildbattle.handlers.PlaceholderManager;
 import pl.plajer.buildbattle.handlers.SignManager;
-import pl.plajer.buildbattle.handlers.UserManager;
+import pl.plajer.buildbattle.stats.StatsStorage;
+import pl.plajer.buildbattle.user.UserManager;
 import pl.plajer.buildbattle.items.SpecialItem;
 import pl.plajer.buildbattle.language.LanguageManager;
 import pl.plajer.buildbattle.particles.ParticleHandler;
 import pl.plajer.buildbattle.particles.ParticleMenu;
 import pl.plajer.buildbattle.playerheads.PlayerHeadsMenu;
-import pl.plajer.buildbattle.stats.BuildBattleStats;
 import pl.plajer.buildbattle.stats.FileStats;
 import pl.plajer.buildbattle.stats.MySQLDatabase;
+import pl.plajer.buildbattle.user.User;
+import pl.plajer.buildbattle.utils.MessageUtils;
 import pl.plajer.buildbattle.utils.MetricsLite;
 import pl.plajer.buildbattle.utils.UpdateChecker;
 import pl.plajer.buildbattle.utils.Util;
@@ -68,6 +70,8 @@ public class Main extends JavaPlugin {
     private static Economy econ = null;
     private static Permission perms = null;
     private boolean databaseActivated = false;
+    private boolean forceDisable = false;
+    private static boolean debug;
     private MySQLDatabase database;
     private FileStats fileStats;
     private BungeeManager bungeeManager;
@@ -114,9 +118,32 @@ public class Main extends JavaPlugin {
         return version.equalsIgnoreCase("v1_9_R1");
     }
 
+    public static void debug(String thing, long millis) {
+        long elapsed = System.currentTimeMillis() - millis;
+        if(debug) {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[Village Debugger] Running task '" + thing + "'");
+        }
+        if(elapsed > 15) {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Village Debugger] Slow server response, games may be affected.");
+        }
+    }
+
     @Override
     public void onEnable() {
         version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+        try {
+            Class.forName("org.spigotmc.SpigotConfig");
+        } catch(Exception e) {
+            MessageUtils.thisVersionIsNotSupported();
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server software is not supported by Build Battle!");
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "We support only Spigot and Spigot forks only! Shutting off...");
+            forceDisable = true;
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        //todo migrations
+        debug = getConfig().getBoolean("Debug");
+        debug("Main setup start", System.currentTimeMillis());
         new ConfigurationManager(this);
         LanguageManager.init(this);
         initializeClasses();
@@ -157,7 +184,6 @@ public class Main extends JavaPlugin {
             fileStats = new FileStats();
         }
         loadStatsForPlayersOnline();
-        BuildBattleStats.plugin = this;
         if(ConfigPreferences.isVaultEnabled()) {
             if(setupEconomy()) System.out.print("NO ECONOMY RELATED TO VAULT FOUND!");
         }
@@ -191,28 +217,29 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if(forceDisable) return;
         for(final Player player : getServer().getOnlinePlayers()) {
             Arena arena = ArenaRegistry.getArena(player);
             if(arena != null) {
                 arena.leaveAttempt(player);
             }
             final User user = UserManager.getUser(player.getUniqueId());
-            for(final String s : BuildBattleStats.STATISTICS) {
+            for(StatsStorage.StatisticType s : StatsStorage.StatisticType.values()) {
                 if(this.isDatabaseActivated()) {
                     int i;
                     try {
-                        i = getMySQLDatabase().getStat(player.getUniqueId().toString(), s);
+                        i = getMySQLDatabase().getStat(player.getUniqueId().toString(), s.getName());
                     } catch(NullPointerException npe) {
                         i = 0;
                         System.out.print("COULDN'T GET STATS FROM PLAYER: " + player.getName());
                     }
-                    if(i > user.getInt(s)) {
-                        getMySQLDatabase().setStat(player.getUniqueId().toString(), s, user.getInt(s) + i);
+                    if(i > user.getInt(s.getName())) {
+                        getMySQLDatabase().setStat(player.getUniqueId().toString(), s.getName(), user.getInt(s.getName()) + i);
                     } else {
-                        getMySQLDatabase().setStat(player.getUniqueId().toString(), s, user.getInt(s));
+                        getMySQLDatabase().setStat(player.getUniqueId().toString(), s.getName(), user.getInt(s.getName()));
                     }
                 } else {
-                    getFileStats().saveStat(player, s);
+                    getFileStats().saveStat(player, s.getName());
                 }
             }
             UserManager.removeUser(player.getUniqueId());
@@ -231,7 +258,10 @@ public class Main extends JavaPlugin {
         new MetricsLite(this);
         new JoinEvents(this);
         new GameEvents(this);
-        new PlaceholderManager();
+        StatsStorage.plugin = this;
+        if(getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new PlaceholderManager().register();
+        }
         new ConfigPreferences(this);
         checkUpdate();
     }
@@ -313,8 +343,8 @@ public class Main extends JavaPlugin {
         for(final Player player : getServer().getOnlinePlayers()) {
             if(bungeeActivated) ArenaRegistry.getArenas().get(0).teleportToLobby(player);
             if(!this.isDatabaseActivated()) {
-                for(String s : BuildBattleStats.STATISTICS) {
-                    this.getFileStats().loadStat(player, s);
+                for(StatsStorage.StatisticType s : StatsStorage.StatisticType.values()) {
+                    this.getFileStats().loadStat(player, s.getName());
                 }
                 return;
             }

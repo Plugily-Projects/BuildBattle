@@ -18,7 +18,6 @@
 
 package pl.plajer.buildbattle.events;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -43,25 +42,23 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
 import pl.plajer.buildbattle.BuildPlot;
 import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.User;
+import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.VoteItems;
 import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.entities.BuildBattleEntity;
 import pl.plajer.buildbattle.handlers.ChatManager;
-import pl.plajer.buildbattle.handlers.UserManager;
+import pl.plajer.buildbattle.user.UserManager;
 import pl.plajer.buildbattle.items.SpecialItemManager;
 import pl.plajer.buildbattle.particles.ParticleMenu;
 import pl.plajer.buildbattle.particles.ParticleRemoveMenu;

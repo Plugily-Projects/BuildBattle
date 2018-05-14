@@ -3,6 +3,8 @@ version: 3.0.0-ALPHA
 name: BuildBattle
 depend: [WorldEdit]
 softdepend: [BarAPI, Vault, PlaceholderAPI]
+authors: [Plajer, TomTheDeveloper]
+
 commands:
   buildbattle:
     usage: /buildbattle
@@ -11,3 +13,9 @@ commands:
   addsigns:
     usage: /addsigns
     description: Adds signs to the plugin!
+
+permissions:
+  buildbattle.admin.*:
+    children:
+      buildbattle.updatenotify: true
+      buildbattle.

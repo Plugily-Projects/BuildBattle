@@ -25,9 +25,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.User;
+import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.handlers.UserManager;
+import pl.plajer.buildbattle.user.UserManager;
 import pl.plajer.buildbattle.stats.MySQLDatabase;
 import pl.plajer.buildbattle.utils.UpdateChecker;
 
