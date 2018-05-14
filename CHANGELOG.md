@@ -6,3 +6,4 @@
 * Added locales support
 * Added plugin's license
 * Added plugin's issue template
+* StatsStorage API reworked
