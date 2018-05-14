@@ -54,7 +54,7 @@ import pl.plajer.buildbattle3.stats.FileStats;
 import pl.plajer.buildbattle3.stats.MySQLDatabase;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.utils.MessageUtils;
-import pl.plajer.buildbattle3.utils.MetricsLite;
+import pl.plajer.buildbattle3.utils.Metrics;
 import pl.plajer.buildbattle3.utils.UpdateChecker;
 import pl.plajer.buildbattle3.utils.Util;
 
@@ -72,6 +72,7 @@ public class Main extends JavaPlugin {
     private static Permission perms = null;
     private boolean databaseActivated = false;
     private boolean forceDisable = false;
+    private boolean dataEnabled = true;
     private static boolean debug;
     private MySQLDatabase database;
     private FileStats fileStats;
@@ -117,6 +118,14 @@ public class Main extends JavaPlugin {
 
     public boolean is1_9_R1() {
         return version.equalsIgnoreCase("v1_9_R1");
+    }
+
+    public boolean isDataEnabled() {
+        return dataEnabled;
+    }
+
+    public void setDataEnabled(boolean dataEnabled) {
+        this.dataEnabled = dataEnabled;
     }
 
     public static void debug(String thing, long millis) {
@@ -256,7 +265,8 @@ public class Main extends JavaPlugin {
         new GameEvents(this);
         new MainCommand(this);
         new SpectatorEvents(this);
-        new MetricsLite(this);
+        new Metrics(this);
+        //todo some fancy metrics stats here
         new JoinEvents(this);
         new GameEvents(this);
         StatsStorage.plugin = this;
