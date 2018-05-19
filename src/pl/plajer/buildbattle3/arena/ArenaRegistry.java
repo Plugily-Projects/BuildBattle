@@ -19,6 +19,7 @@
 package pl.plajer.buildbattle3.arena;
 
 import org.bukkit.entity.Player;
+import pl.plajer.buildbattle3.Main;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -51,7 +52,13 @@ public class ArenaRegistry {
     }
 
     public static void registerArena(Arena arena) {
+        Main.debug("Registering new game instance, " + arena.getID(), System.currentTimeMillis());
         arenas.add(arena);
+    }
+
+    public static void unregisterArena(Arena arena) {
+        Main.debug("Unegistering game instance, " + arena.getID(), System.currentTimeMillis());
+        arenas.remove(arena);
     }
 
     public static Arena getArena(String ID) {

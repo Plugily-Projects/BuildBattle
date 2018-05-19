@@ -21,6 +21,8 @@ package pl.plajer.buildbattle3.events;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.Sign;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -30,29 +32,48 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
+import pl.plajer.buildbattle3.handlers.ConfigurationManager;
 import pl.plajer.buildbattle3.handlers.PermissionManager;
+import pl.plajer.buildbattle3.plots.Plot;
+import pl.plajer.buildbattle3.utils.SetupInventory;
+import pl.plajer.buildbattle3.utils.Util;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Tom on 15/06/2015.
  */
 public class SetupInventoryEvents implements Listener {
 
+    private Main plugin;
+
     public SetupInventoryEvents(Main plugin) {
+        this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
+
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        if(event.getWhoClicked().getType() != EntityType.PLAYER) return;
+        if(event.getWhoClicked().getType() != EntityType.PLAYER)
+            return;
         Player player = (Player) event.getWhoClicked();
-        if(!player.hasPermission(PermissionManager.getEditGames())) return;
-        if(!event.getInventory().getName().contains("Arena:")) return;
-        if(event.getInventory().getHolder() != null) return;
-        if(event.getCurrentItem() == null) return;
-        if(!event.getCurrentItem().hasItemMeta()) return;
-        if(!event.getCurrentItem().getItemMeta().hasDisplayName()) return;
+        if(!player.hasPermission(PermissionManager.getEditGames()))
+            return;
+        if(!event.getInventory().getName().contains("Arena:"))
+            return;
+        if(event.getInventory().getHolder() != null)
+            return;
+        if(event.getCurrentItem() == null)
+            return;
+        if(!event.getCurrentItem().hasItemMeta())
+            return;
+        if(!event.getCurrentItem().getItemMeta().hasDisplayName())
+            return;
 
         String name = event.getCurrentItem().getItemMeta().getDisplayName();
+        name = ChatColor.stripColor(name);
 
         Arena arena = ArenaRegistry.getArena(event.getInventory().getName().replace("Arena: ", ""));
         if(arena == null) return;
@@ -72,58 +93,127 @@ public class SetupInventoryEvents implements Listener {
             return;
         }
         ClickType clickType = event.getClick();
-        if(name.contains("End Location")) {
+        if(name.contains("ending location")) {
             event.setCancelled(true);
-
+            player.closeInventory();
             player.performCommand("bb " + arena.getID() + " set ENDLOC");
             return;
         }
-        if(name.contains("Lobby Location")) {
+        if(name.contains("starting location")) {
             event.setCancelled(true);
+            player.closeInventory();
+            player.performCommand("bb " + arena.getID() + " set STARTLOC");
+            return;
+        }
+        if(name.contains("lobby location")) {
+            event.setCancelled(true);
+            player.closeInventory();
             player.performCommand("bb " + arena.getID() + " set LOBBYLOC");
             return;
         }
-        if(name.contains("max players")) {
+        if(name.contains("maximum players")) {
             event.setCancelled(true);
             if(clickType.isRightClick()) {
                 event.getCurrentItem().setAmount(event.getCurrentItem().getAmount() + 1);
-                player.updateInventory();
                 player.performCommand("bb " + arena.getID() + " set MAXPLAYERS " + event.getCurrentItem().getAmount());
-                return;
             }
             if(clickType.isLeftClick()) {
                 event.getCurrentItem().setAmount(event.getCurrentItem().getAmount() - 1);
-                player.updateInventory();
                 player.performCommand("bb " + arena.getID() + " set MAXPLAYERS " + event.getCurrentItem().getAmount());
-                return;
             }
+            player.closeInventory();
+            player.openInventory(new SetupInventory(arena).getInventory());
         }
 
-        if(name.contains("min players")) {
+        if(name.contains("minimum players")) {
             event.setCancelled(true);
             if(clickType.isRightClick()) {
                 event.getCurrentItem().setAmount(event.getCurrentItem().getAmount() + 1);
-                player.updateInventory();
                 player.performCommand("bb " + arena.getID() + " set MINPLAYERS " + event.getCurrentItem().getAmount());
-                return;
             }
             if(clickType.isLeftClick()) {
                 event.getCurrentItem().setAmount(event.getCurrentItem().getAmount() - 1);
-                player.updateInventory();
                 player.performCommand("bb " + arena.getID() + " set MINPLAYERS " + event.getCurrentItem().getAmount());
-                return;
             }
+            player.closeInventory();
+            player.openInventory(new SetupInventory(arena).getInventory());
         }
-        if(name.contains("Add signs")) {
+        if(name.contains("Add game sign")) {
             event.setCancelled(true);
-            player.performCommand("vda addsign " + arena.getID());
+            plugin.getMainCommand().getAdminCommands().addSign(player, arena.getID());
             return;
         }
         if(event.getCurrentItem().getType() != Material.NAME_TAG) {
             event.setCancelled(true);
         }
-        Bukkit.getPluginManager().callEvent(new SetupInventoryClickEvent(arena, event.getCurrentItem(), player, clickType));
+        if(name.contains("Add game plot")) {
+            player.performCommand("bb addplot " + arena.getID());
+        }
+        if(name.contains("Register arena")) {
+            event.setCancelled(true);
+            event.getWhoClicked().closeInventory();
+            if(arena.isReady()) {
+                event.getWhoClicked().sendMessage(ChatColor.GREEN + "This arena was already validated and is ready to use!");
+                return;
+            }
+            String[] locations = new String[]{"lobbylocation", "Endlocation"};
+            for(String s : locations) {
+                if(!ConfigurationManager.getConfig("arenas").isSet("instances." + arena.getID() + "." + s) || ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + "." + s).equals(Util.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
+                    event.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure following spawn properly: " + s + " (cannot be world spawn location)");
+                    return;
+                }
+            }
+            if(ConfigurationManager.getConfig("arenas").getConfigurationSection("instances." + arena.getID() + ".plots") == null) {
+                event.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure plots properly");
+                return;
+            } else {
+                for(String plotName : ConfigurationManager.getConfig("arenas").getConfigurationSection(arena.getID() + "plots").getKeys(false)) {
+                    if(ConfigurationManager.getConfig("arenas").isSet(arena.getID() + "plots." + plotName + ".maxpoint") && ConfigurationManager.getConfig("arenas").isSet(arena.getID() + "plots." + plotName + ".minpoint")) {
+                        Plot buildPlot = new Plot();
+                        buildPlot.setMaxPoint(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString(arena.getID() + "plots." + plotName + ".maxpoint")));
+                        buildPlot.setMinPoint(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString(arena.getID() + "plots." + plotName + ".minpoint")));
+                        buildPlot.reset();
+                        arena.getPlotManager().addBuildPlot(buildPlot);
+                    } else {
+                        event.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Plots are not configured properly! (missing selection values)");
+                        return;
+                    }
+                }
+            }
+            event.getWhoClicked().sendMessage(ChatColor.GREEN + "Validation succeeded! Registering new arena instance: " + arena.getID());
+            FileConfiguration config = ConfigurationManager.getConfig("arenas");
+            config.set("instances." + arena.getID() + ".isdone", true);
+            ConfigurationManager.saveConfig(config, "arenas");
+            List<Sign> signsToUpdate = new ArrayList<>();
+            ArenaRegistry.unregisterArena(arena);
+            if(plugin.getSignManager().getLoadedSigns().containsValue(arena)) {
+                for(Sign s : plugin.getSignManager().getLoadedSigns().keySet()) {
+                    if(plugin.getSignManager().getLoadedSigns().get(s).equals(arena)) {
+                        signsToUpdate.add(s);
+                    }
+                }
+            }
+            arena = new Arena(arena.getID());
+            arena.setReady(true);
+            arena.setMinimumPlayers(ConfigurationManager.getConfig("arenas").getInt("instances." + arena.getID() + ".minimumplayers"));
+            arena.setMaximumPlayers(ConfigurationManager.getConfig("arenas").getInt("instances." + arena.getID() + ".maximumplayers"));
+            arena.setMapName(ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + ".mapname"));
+            arena.setLobbyLocation(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + ".lobbylocation")));
+            arena.setEndLocation(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + ".Endlocation")));
 
-
+            for(String plotName : config.getConfigurationSection(arena.getID() + "plots").getKeys(false)) {
+                Plot buildPlot = new Plot();
+                buildPlot.setMaxPoint(Util.getLocation(false, config.getString(arena.getID() + "plots." + plotName + ".maxpoint")));
+                buildPlot.setMinPoint(Util.getLocation(false, config.getString(arena.getID() + "plots." + plotName + ".minpoint")));
+                buildPlot.reset();
+                arena.getPlotManager().addBuildPlot(buildPlot);
+            }
+            ArenaRegistry.registerArena(arena);
+            arena.start();
+            for(Sign s : signsToUpdate) {
+                plugin.getSignManager().getLoadedSigns().put(s, arena);
+            }
+        }
     }
+
 }

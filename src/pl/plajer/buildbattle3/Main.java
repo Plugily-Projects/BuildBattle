@@ -80,6 +80,7 @@ public class Main extends JavaPlugin {
     private BungeeManager bungeeManager;
     private boolean bungeeActivated;
     private InventoryManager inventoryManager;
+    private MainCommand mainCommand;
     private boolean inventoryManagerEnabled;
     private SignManager signManager;
     private String version;
@@ -103,6 +104,10 @@ public class Main extends JavaPlugin {
 
     public SignManager getSignManager() {
         return signManager;
+    }
+
+    public MainCommand getMainCommand() {
+        return mainCommand;
     }
 
     public InventoryManager getInventoryManager() {
@@ -179,7 +184,7 @@ public class Main extends JavaPlugin {
         saveResource("language.yml", false);
         ParticleMenu.loadFromConfig();
         PlayerHeadsMenu.loadHeadItems();
-        loadInstances();
+        loadArenas();
         //load signs after arenas
         signManager = new SignManager(this);
         SpecialItem.loadAll();
@@ -265,7 +270,7 @@ public class Main extends JavaPlugin {
         new SetupInventoryEvents(this);
         bungeeActivated = getConfig().getBoolean("BungeeActivated");
         new GameEvents(this);
-        new MainCommand(this);
+        mainCommand = new MainCommand(this);
         new SpectatorEvents(this);
         new Metrics(this);
         //todo some fancy metrics stats here
@@ -303,7 +308,7 @@ public class Main extends JavaPlugin {
         return database;
     }
 
-    public void loadInstances() {
+    public void loadArenas() {
         this.saveConfig();
         ArenaRegistry.getArenas().clear();
         FileConfiguration config = ConfigurationManager.getConfig("arenas");

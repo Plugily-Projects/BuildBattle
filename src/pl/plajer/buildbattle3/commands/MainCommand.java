@@ -35,8 +35,6 @@ import pl.plajer.buildbattle3.events.PlayerAddCommandEvent;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
 import pl.plajer.buildbattle3.handlers.PermissionManager;
-import pl.plajer.buildbattle3.plots.Plot;
-import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.SetupInventory;
 import pl.plajer.buildbattle3.utils.Util;
 
@@ -61,6 +59,10 @@ public class MainCommand implements CommandExecutor {
         //todo /bba command
         this.adminCommands = new AdminCommands(plugin);
         this.gameCommands = new GameCommands(plugin);
+    }
+
+    public AdminCommands getAdminCommands() {
+        return adminCommands;
     }
 
     boolean checkSenderIsConsole(CommandSender sender) {
@@ -269,7 +271,7 @@ public class MainCommand implements CommandExecutor {
         arena.setReady(false);
         ArenaRegistry.registerArena(arena);
 
-        plugin.loadInstances();
+        plugin.loadArenas();
     }
 
 }
