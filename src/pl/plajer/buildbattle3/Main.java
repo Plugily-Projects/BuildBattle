@@ -280,8 +280,37 @@ public class Main extends JavaPlugin {
         new GameEvents(this);
         mainCommand = new MainCommand(this);
         new SpectatorEvents(this);
-        new Metrics(this);
-        //todo some fancy metrics stats here
+        Metrics metrics = new Metrics(this);
+        metrics.addCustomChart(new Metrics.SimplePie("bungeecord_hooked", () -> getConfig().getString("BungeeActivated", "false")));
+        metrics.addCustomChart(new Metrics.SimplePie("locale_used", () -> {
+            switch(getConfig().getString("locale", "default")) {
+                case "default":
+                    return "English";
+                case "en":
+                    return "English";
+                case "pl":
+                    return "Polish";
+                case "de":
+                    return "German";
+                default:
+                    return "English";
+            }
+        }));
+        metrics.addCustomChart(new Metrics.SimplePie("update_notifier", () -> {
+            if(getConfig().getBoolean("Update-Notifier.Enabled", true)) {
+                if(getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
+                    return "Enabled with beta notifier";
+                } else {
+                    return "Enabled";
+                }
+            } else {
+                if(getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
+                    return "Beta notifier only";
+                } else {
+                    return "Disabled";
+                }
+            }
+        }));
         new JoinEvents(this);
         new GameEvents(this);
         StatsStorage.plugin = this;
