@@ -24,7 +24,6 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
-import pl.plajer.buildbattle3.handlers.PermissionManager;
 
 import java.util.HashMap;
 import java.util.UUID;

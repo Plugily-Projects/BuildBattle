@@ -20,8 +20,8 @@ package pl.plajer.buildbattle3.stats;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
+import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
 
 import java.io.IOException;

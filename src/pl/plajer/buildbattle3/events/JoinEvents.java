@@ -25,10 +25,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import pl.plajer.buildbattle3.Main;
-import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
-import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.stats.MySQLDatabase;
+import pl.plajer.buildbattle3.user.User;
+import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.UpdateChecker;
 
 import java.sql.ResultSet;
@@ -63,7 +63,7 @@ public class JoinEvents implements Listener {
     public void onJoinCheckVersion(final PlayerJoinEvent event) {
         //we want to be the first :)
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            if(event.getPlayer().isOp() && !plugin.isDataEnabled()){
+            if(event.getPlayer().isOp() && !plugin.isDataEnabled()) {
                 event.getPlayer().sendMessage(ChatColor.RED + "[BuildBattle] It seems that you've disabled bStats statistics.");
                 event.getPlayer().sendMessage(ChatColor.RED + "Please consider enabling it to help us develop our plugins better!");
                 event.getPlayer().sendMessage(ChatColor.RED + "Enable it in plugins/bStats/config.yml file");

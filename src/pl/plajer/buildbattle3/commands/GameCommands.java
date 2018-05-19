@@ -21,10 +21,10 @@ package pl.plajer.buildbattle3.commands;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import pl.plajer.buildbattle3.Main;
-import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.handlers.ChatManager;
+import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
 
 /**

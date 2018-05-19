@@ -141,7 +141,7 @@ public class SignManager implements Listener {
                     }
                 }
                 if(arena.getMaximumPlayers() <= arena.getPlayers().size()) {
-                    if(( e.getPlayer().hasPermission(PermissionManager.getJoinFullGames()))) {
+                    if((e.getPlayer().hasPermission(PermissionManager.getJoinFullGames()))) {
                         boolean b = false;
                         for(Player player : arena.getPlayers()) {
                             if(!player.hasPermission(PermissionManager.getJoinFullGames())) {

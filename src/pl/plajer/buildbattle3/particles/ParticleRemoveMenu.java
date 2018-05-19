@@ -25,8 +25,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import pl.plajer.buildbattle3.plots.Plot;
 import pl.plajer.buildbattle3.handlers.ChatManager;
+import pl.plajer.buildbattle3.plots.Plot;
 import pl.plajer.buildbattle3.utils.Util;
 
 import java.util.ArrayList;

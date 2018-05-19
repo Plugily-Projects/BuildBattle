@@ -24,7 +24,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaState;
-import pl.plajer.buildbattle3.plots.Plot;
 import pl.plajer.buildbattle3.user.UserManager;
 
 import java.util.ArrayList;

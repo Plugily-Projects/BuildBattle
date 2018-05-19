@@ -23,7 +23,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.language.LanguageManager;
-import pl.plajer.buildbattle3.utils.Util;
 
 /**
  * Created by Tom on 27/07/2014.
@@ -53,16 +52,16 @@ public class ChatManager {
     }
 
     public static void broadcastAction(Arena arena, Player p, ActionType action) {
-        switch(action){
+        switch(action) {
             case JOIN:
                 String joinMsg = ChatManager.colorMessage("In-Game.Messages.Join").replace("%PLAYER%", p.getName());
-                for(Player player : arena.getPlayers()){
+                for(Player player : arena.getPlayers()) {
                     player.sendMessage(joinMsg);
                 }
                 break;
             case LEAVE:
                 String leaveMsg = ChatManager.colorMessage("In-Game.Messages.Leave").replace("%PLAYER%", p.getName());
-                for(Player player : arena.getPlayers()){
+                for(Player player : arena.getPlayers()) {
                     player.sendMessage(leaveMsg);
                 }
                 break;

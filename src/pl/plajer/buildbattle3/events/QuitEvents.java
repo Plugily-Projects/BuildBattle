@@ -24,9 +24,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import pl.plajer.buildbattle3.Main;
+import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.buildbattleapi.StatsStorage;
 import pl.plajer.buildbattle3.user.User;
-import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.user.UserManager;
 
 /**

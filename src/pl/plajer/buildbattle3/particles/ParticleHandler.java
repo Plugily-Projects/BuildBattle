@@ -20,11 +20,11 @@ package pl.plajer.buildbattle3.particles;
 
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;
-import pl.plajer.buildbattle3.plots.Plot;
 import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
+import pl.plajer.buildbattle3.plots.Plot;
 import pl.plajer.buildbattle3.utils.ParticleUtils;
 
 /**

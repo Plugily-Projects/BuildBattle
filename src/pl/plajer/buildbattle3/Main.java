@@ -30,8 +30,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
-import pl.plajer.buildbattle3.handlers.PermissionManager;
-import pl.plajer.buildbattle3.plots.Plot;
+import pl.plajer.buildbattle3.buildbattleapi.StatsStorage;
 import pl.plajer.buildbattle3.commands.MainCommand;
 import pl.plajer.buildbattle3.entities.EntityItem;
 import pl.plajer.buildbattle3.entities.EntityMenuEvents;
@@ -42,18 +41,19 @@ import pl.plajer.buildbattle3.events.SpectatorEvents;
 import pl.plajer.buildbattle3.handlers.BungeeManager;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
 import pl.plajer.buildbattle3.handlers.InventoryManager;
+import pl.plajer.buildbattle3.handlers.PermissionManager;
 import pl.plajer.buildbattle3.handlers.PlaceholderManager;
 import pl.plajer.buildbattle3.handlers.SignManager;
-import pl.plajer.buildbattle3.buildbattleapi.StatsStorage;
-import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.items.SpecialItem;
 import pl.plajer.buildbattle3.language.LanguageManager;
 import pl.plajer.buildbattle3.particles.ParticleHandler;
 import pl.plajer.buildbattle3.particles.ParticleMenu;
 import pl.plajer.buildbattle3.playerheads.PlayerHeadsMenu;
+import pl.plajer.buildbattle3.plots.Plot;
 import pl.plajer.buildbattle3.stats.FileStats;
 import pl.plajer.buildbattle3.stats.MySQLDatabase;
 import pl.plajer.buildbattle3.user.User;
+import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.MessageUtils;
 import pl.plajer.buildbattle3.utils.Metrics;
 import pl.plajer.buildbattle3.utils.UpdateChecker;
@@ -71,10 +71,10 @@ public class Main extends JavaPlugin {
 
     private static Economy econ = null;
     private static Permission perms = null;
+    private static boolean debug;
     private boolean databaseActivated = false;
     private boolean forceDisable = false;
     private boolean dataEnabled = true;
-    private static boolean debug;
     private MySQLDatabase database;
     private FileStats fileStats;
     private BungeeManager bungeeManager;
@@ -92,6 +92,16 @@ public class Main extends JavaPlugin {
 
     public static Economy getEcon() {
         return econ;
+    }
+
+    public static void debug(String thing, long millis) {
+        long elapsed = System.currentTimeMillis() - millis;
+        if(debug) {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[Village Debugger] Running task '" + thing + "'");
+        }
+        if(elapsed > 15) {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Village Debugger] Slow server response, games may be affected.");
+        }
     }
 
     public BungeeManager getBungeeManager() {
@@ -132,16 +142,6 @@ public class Main extends JavaPlugin {
 
     public void setDataEnabled(boolean dataEnabled) {
         this.dataEnabled = dataEnabled;
-    }
-
-    public static void debug(String thing, long millis) {
-        long elapsed = System.currentTimeMillis() - millis;
-        if(debug) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[Village Debugger] Running task '" + thing + "'");
-        }
-        if(elapsed > 15) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Village Debugger] Slow server response, games may be affected.");
-        }
     }
 
     @Override
@@ -337,7 +337,7 @@ public class Main extends JavaPlugin {
             }
             if(config.contains(s + "plots")) {
                 for(String plotName : config.getConfigurationSection(s + "plots").getKeys(false)) {
-                    if(config.isSet(s + "plots." + plotName + ".maxpoint") && config.isSet(s + "plots." + plotName + ".minpoint")){
+                    if(config.isSet(s + "plots." + plotName + ".maxpoint") && config.isSet(s + "plots." + plotName + ".minpoint")) {
                         Plot buildPlot = new Plot();
                         buildPlot.setMaxPoint(Util.getLocation(false, config.getString(s + "plots." + plotName + ".maxpoint")));
                         buildPlot.setMinPoint(Util.getLocation(false, config.getString(s + "plots." + plotName + ".minpoint")));

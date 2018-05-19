@@ -18,7 +18,6 @@
 
 package pl.plajer.buildbattle3.buildbattleapi;
 
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import pl.plajer.buildbattle3.arena.Arena;
 

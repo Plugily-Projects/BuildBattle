@@ -26,8 +26,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import pl.plajer.buildbattle3.ConfigPreferences;
-import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.user.User;
+import pl.plajer.buildbattle3.user.UserManager;
 
 import java.util.HashMap;
 import java.util.UUID;

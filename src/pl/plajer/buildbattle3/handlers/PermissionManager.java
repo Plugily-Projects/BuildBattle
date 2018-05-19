@@ -31,7 +31,7 @@ public class PermissionManager {
     private static String joinPerm = "buildbattle.join.<arena>";
     private static String editGames = "buildbattle.editgames";
 
-    public static void init(){
+    public static void init() {
         setupPermissions();
     }
 
@@ -39,20 +39,20 @@ public class PermissionManager {
         return joinFullGames;
     }
 
-    public static String getJoinPerm() {
-        return joinPerm;
-    }
-
-    public static String getEditGames() {
-        return editGames;
-    }
-
     public static void setJoinFullGames(String joinFullGames) {
         PermissionManager.joinFullGames = joinFullGames;
     }
 
+    public static String getJoinPerm() {
+        return joinPerm;
+    }
+
     public static void setJoinPerm(String joinPerm) {
         PermissionManager.joinPerm = joinPerm;
+    }
+
+    public static String getEditGames() {
+        return editGames;
     }
 
     public static void setEditGames(String editGames) {
