@@ -20,7 +20,6 @@ package pl.plajer.buildbattle3.commands;
 
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import com.sk89q.worldedit.bukkit.selections.Selection;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -65,9 +64,9 @@ public class AdminCommands extends MainCommand {
                 Util.saveLocation("instances." + arena + ".plots.0.maxpoint", selection.getMaximumPoint());
             }
             ConfigurationManager.saveConfig(config, "arenas");
-            player.sendMessage(ChatColor.GREEN + "Plot added to instance " + ChatColor.RED + arena);
+            player.sendMessage("§aPlot added to instance§c " + arena);
         } else {
-            player.sendMessage(ChatColor.RED + "You don't have the right selection!");
+            player.sendMessage("§cYou don't have the right selection!");
         }
     }
 
@@ -94,7 +93,7 @@ public class AdminCommands extends MainCommand {
         ConfigPreferences.loadEndGameCommands();
         ConfigPreferences.loadWhitelistedCommands();
         plugin.loadArenas();
-        player.sendMessage(ChatColor.GREEN + "Plugin reloaded!");
+        player.sendMessage("§aPlugin reloaded!");
     }
 
     public void addSign(Player player, String arenaName) {
@@ -112,7 +111,7 @@ public class AdminCommands extends MainCommand {
                 plugin.getSignManager().getLoadedSigns().put((Sign) loc.getBlock().getState(), arena);
                 player.sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("Signs.Sign-Created"));
             } else {
-                player.sendMessage(ChatColor.RED + "You have to look at a sign to perform this command!");
+                player.sendMessage("§cYou have to look at a sign to perform this command!");
             }
 
         }

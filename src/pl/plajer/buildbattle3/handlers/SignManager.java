@@ -125,7 +125,7 @@ public class SignManager implements Listener {
                 }
             }
         }
-        e.getPlayer().sendMessage(ChatManager.PREFIX + "" + ChatColor.RED + "Couldn't remove sign from configuration! Please do this manually!");
+        e.getPlayer().sendMessage(ChatManager.PREFIX + "§cCouldn't remove sign from configuration! Please do this manually!");
     }
 
     @EventHandler

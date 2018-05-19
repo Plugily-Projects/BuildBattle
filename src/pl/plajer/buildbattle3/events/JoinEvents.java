@@ -19,7 +19,6 @@
 package pl.plajer.buildbattle3.events;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -62,13 +61,14 @@ public class JoinEvents implements Listener {
     @EventHandler
     public void onJoinCheckVersion(final PlayerJoinEvent event) {
         //we want to be the first :)
+        Player p = event.getPlayer();
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            if(event.getPlayer().isOp() && !plugin.isDataEnabled()) {
-                event.getPlayer().sendMessage(ChatColor.RED + "[BuildBattle] It seems that you've disabled bStats statistics.");
-                event.getPlayer().sendMessage(ChatColor.RED + "Please consider enabling it to help us develop our plugins better!");
-                event.getPlayer().sendMessage(ChatColor.RED + "Enable it in plugins/bStats/config.yml file");
+            if(p.isOp() && !plugin.isDataEnabled()) {
+                p.sendMessage("§c[BuildBattle] It seems that you've disabled bStats statistics.");
+                p.sendMessage("§cPlease consider enabling it to help us develop our plugins better!");
+                p.sendMessage("§cEnable it in plugins/bStats/config.yml file");
             }
-            if(event.getPlayer().hasPermission("buildbattle.updatenotify")) {
+            if(p.hasPermission("buildbattle.updatenotify")) {
                 if(plugin.getConfig().getBoolean("Update-Notifier.Enabled")) {
                     String currentVersion = "v" + Bukkit.getPluginManager().getPlugin("BuildBattle").getDescription().getVersion();
                     String latestVersion;
@@ -78,21 +78,21 @@ public class JoinEvents implements Listener {
                         if(latestVersion != null) {
                             latestVersion = "v" + latestVersion;
                             if(latestVersion.contains("b")) {
-                                event.getPlayer().sendMessage("");
-                                event.getPlayer().sendMessage(ChatColor.BOLD + "BUILD BATTLE UPDATE NOTIFY");
-                                event.getPlayer().sendMessage(ChatColor.RED + "BETA version of software is ready for update! Proceed with caution.");
-                                event.getPlayer().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + currentVersion + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + latestVersion);
+                                p.sendMessage("");
+                                p.sendMessage("§lBUILD BATTLE UPDATE NOTIFY");
+                                p.sendMessage("§cBETA version of software is ready for update! Proceed with caution.");
+                                p.sendMessage("§eCurrent version:§c " + currentVersion + "§e Latest version:§a " + latestVersion);
                             } else {
-                                event.getPlayer().sendMessage("");
-                                event.getPlayer().sendMessage(ChatColor.BOLD + "BUILD BATTLE UPDATE NOTIFY");
-                                event.getPlayer().sendMessage(ChatColor.GREEN + "Software is ready for update! Download it to keep with latest changes and fixes.");
-                                event.getPlayer().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + currentVersion + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + latestVersion);
+                                p.sendMessage("");
+                                p.sendMessage("§lBUILD BATTLE UPDATE NOTIFY");
+                                p.sendMessage("§aSoftware is ready for update! Download it to keep with latest changes and fixes.");
+                                p.sendMessage("§eCurrent version:§c " + currentVersion + "§e Latest version:§a " + latestVersion);
                             }
                         }
                     } catch(Exception ex) {
-                        event.getPlayer().sendMessage(ChatColor.RED + "[BuildBattle] An error occured while checking for update!");
-                        event.getPlayer().sendMessage(ChatColor.RED + "Please check internet connection or check for update via WWW site directly!");
-                        event.getPlayer().sendMessage(ChatColor.RED + "WWW site https://www.spigotmc.org/resources/minigame-village-defence-1-12-and-1-8-8.41869/");
+                        p.sendMessage("§c[BuildBattle] An error occured while checking for update!");
+                        p.sendMessage("§cPlease check internet connection or check for update via WWW site directly!");
+                        p.sendMessage("§cWWW site https://www.spigotmc.org/resources/minigame-village-defence-1-12-and-1-8-8.41869/");
                     }
                 }
             }

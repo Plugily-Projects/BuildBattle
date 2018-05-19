@@ -50,9 +50,9 @@ public class ParticleRemoveMenu {
             itemStack.setItemMeta(itemMeta);
             //todo translatable
             Util.addLore(itemStack, ChatManager.colorMessage("Menus.Location-Message"));
-            Util.addLore(itemStack, ChatColor.GRAY + "  x: " + Math.round(location.getX()));
-            Util.addLore(itemStack, ChatColor.GRAY + "  y: " + Math.round(location.getY()));
-            Util.addLore(itemStack, ChatColor.GRAY + "  z: " + Math.round(location.getZ()));
+            Util.addLore(itemStack, "§7  x: " + Math.round(location.getX()));
+            Util.addLore(itemStack, "§7  y: " + Math.round(location.getY()));
+            Util.addLore(itemStack, "§7  z: " + Math.round(location.getZ()));
             inventory.addItem(itemStack);
         }
 
