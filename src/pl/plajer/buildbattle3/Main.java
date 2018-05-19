@@ -22,7 +22,6 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -97,10 +96,10 @@ public class Main extends JavaPlugin {
     public static void debug(String thing, long millis) {
         long elapsed = System.currentTimeMillis() - millis;
         if(debug) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[Village Debugger] Running task '" + thing + "'");
+            Bukkit.getConsoleSender().sendMessage("§e[Village Debugger] Running task '" + thing + "'");
         }
         if(elapsed > 15) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Village Debugger] Slow server response, games may be affected.");
+            Bukkit.getConsoleSender().sendMessage("§c[Village Debugger] Slow server response, games may be affected.");
         }
     }
 
@@ -151,16 +150,16 @@ public class Main extends JavaPlugin {
             Class.forName("org.spigotmc.SpigotConfig");
         } catch(Exception e) {
             MessageUtils.thisVersionIsNotSupported();
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server software is not supported by Build Battle!");
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "We support only Spigot and Spigot forks only! Shutting off...");
+            Bukkit.getConsoleSender().sendMessage("§cYour server software is not supported by Build Battle!");
+            Bukkit.getConsoleSender().sendMessage("§cWe support only Spigot and Spigot forks only! Shutting off...");
             forceDisable = true;
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
         if(!(version.equalsIgnoreCase("v1_8_R1") || version.equalsIgnoreCase("v1_8_R2") || version.contains("v1_7") || version.contains("v1_6"))) {
             MessageUtils.thisVersionIsNotSupported();
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by BuildBattle!");
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider updating your server version?");
+            Bukkit.getConsoleSender().sendMessage("§cYour server version is not supported by BuildBattle!");
+            Bukkit.getConsoleSender().sendMessage("§cSadly, we must shut off. Maybe you consider updating your server version?");
             forceDisable = true;
             getServer().getPluginManager().disablePlugin(this);
             return;
@@ -222,19 +221,19 @@ public class Main extends JavaPlugin {
                 if(latestVersion != null) {
                     latestVersion = "v" + latestVersion;
                     if(latestVersion.contains("b")) {
-                        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
-                        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Current version %old%, latest version %new%".replaceAll("%old%", currentVersion).replaceAll("%new%", latestVersion));
+                        Bukkit.getConsoleSender().sendMessage("§c[BuildBattle] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
+                        Bukkit.getConsoleSender().sendMessage("§c[BuildBattle] Current version %old%, latest version %new%".replaceAll("%old%", currentVersion).replaceAll("%new%", latestVersion));
                     } else {
                         //MessageUtils.updateIsHere();
-                        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Your Build Battle plugin is outdated! Download it to keep with latest changes and fixes.");
-                        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Disable this option in config.yml if you wish.");
-                        Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + currentVersion + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + latestVersion);
+                        Bukkit.getConsoleSender().sendMessage("§aYour Build Battle plugin is outdated! Download it to keep with latest changes and fixes.");
+                        Bukkit.getConsoleSender().sendMessage("§aDisable this option in config.yml if you wish.");
+                        Bukkit.getConsoleSender().sendMessage("§eCurrent version:§c " + currentVersion + "§e Latest version:§a " + latestVersion);
                     }
                 }
             } catch(Exception ex) {
-                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] An error occured while checking for update!");
-                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Please check internet connection or check for update via WWW site directly!");
-                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "WWW site https://www.spigotmc.org/resources/buildbattle-1-8.44703/");
+                Bukkit.getConsoleSender().sendMessage("§c[BuildBattle] An error occured while checking for update!");
+                Bukkit.getConsoleSender().sendMessage("§cPlease check internet connection or check for update via WWW site directly!");
+                Bukkit.getConsoleSender().sendMessage("§cWWW site https://www.spigotmc.org/resources/buildbattle-1-8.44703/");
             }
         }
     }
