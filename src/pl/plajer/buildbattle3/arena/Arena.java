@@ -461,6 +461,10 @@ public class Arena extends BukkitRunnable {
     }
 
     public void start() {
+        if(!plugin.getServer().getPluginManager().isPluginEnabled("BossBarAPI")){
+            Main.debug("BossBarAPI for 1.8 not found! Disabling BossBar support!", System.currentTimeMillis());
+            bossBarEnabled = false;
+        }
         this.runTaskTimer(plugin, 20L, 20L);
     }
 
