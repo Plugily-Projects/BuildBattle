@@ -80,16 +80,16 @@ public class SetupInventoryEvents implements Listener {
         if(event.getCurrentItem().getType() == Material.NAME_TAG && event.getCursor().getType() == Material.NAME_TAG) {
             event.setCancelled(true);
             if(!event.getCursor().hasItemMeta()) {
-                player.sendMessage(ChatColor.RED + "This item doesn't has a name!");
+                player.sendMessage("§cThis item doesn't has a name!");
                 return;
             }
             if(!event.getCursor().getItemMeta().hasDisplayName()) {
-                player.sendMessage(ChatColor.RED + "This item doesn't has a name!");
+                player.sendMessage("§cThis item doesn't has a name!");
                 return;
             }
 
             player.performCommand("bb " + arena.getID() + " set MAPNAME " + event.getCursor().getItemMeta().getDisplayName());
-            event.getCurrentItem().getItemMeta().setDisplayName(ChatColor.GOLD + "Set a mapname (currently: " + event.getCursor().getItemMeta().getDisplayName());
+            event.getCurrentItem().getItemMeta().setDisplayName("§6Set a mapname (currently: " + event.getCursor().getItemMeta().getDisplayName());
             return;
         }
         ClickType clickType = event.getClick();
@@ -153,18 +153,18 @@ public class SetupInventoryEvents implements Listener {
             event.setCancelled(true);
             event.getWhoClicked().closeInventory();
             if(arena.isReady()) {
-                event.getWhoClicked().sendMessage(ChatColor.GREEN + "This arena was already validated and is ready to use!");
+                event.getWhoClicked().sendMessage("§aThis arena was already validated and is ready to use!");
                 return;
             }
             String[] locations = new String[]{"lobbylocation", "Endlocation"};
             for(String s : locations) {
                 if(!ConfigurationManager.getConfig("arenas").isSet("instances." + arena.getID() + "." + s) || ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + "." + s).equals(Util.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
-                    event.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure following spawn properly: " + s + " (cannot be world spawn location)");
+                    event.getWhoClicked().sendMessage("§cArena validation failed! Please configure following spawn properly: " + s + " (cannot be world spawn location)");
                     return;
                 }
             }
             if(ConfigurationManager.getConfig("arenas").getConfigurationSection("instances." + arena.getID() + ".plots") == null) {
-                event.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure plots properly");
+                event.getWhoClicked().sendMessage("§cArena validation failed! Please configure plots properly");
                 return;
             } else {
                 for(String plotName : ConfigurationManager.getConfig("arenas").getConfigurationSection(arena.getID() + "plots").getKeys(false)) {
@@ -175,12 +175,12 @@ public class SetupInventoryEvents implements Listener {
                         buildPlot.reset();
                         arena.getPlotManager().addBuildPlot(buildPlot);
                     } else {
-                        event.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Plots are not configured properly! (missing selection values)");
+                        event.getWhoClicked().sendMessage("§cArena validation failed! Plots are not configured properly! (missing selection values)");
                         return;
                     }
                 }
             }
-            event.getWhoClicked().sendMessage(ChatColor.GREEN + "Validation succeeded! Registering new arena instance: " + arena.getID());
+            event.getWhoClicked().sendMessage("§aValidation succeeded! Registering new arena instance: " + arena.getID());
             FileConfiguration config = ConfigurationManager.getConfig("arenas");
             config.set("instances." + arena.getID() + ".isdone", true);
             ConfigurationManager.saveConfig(config, "arenas");
