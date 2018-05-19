@@ -31,6 +31,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.inventivetalent.bossbar.BossBarAPI;
 import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.Main;
+import pl.plajer.buildbattle3.handlers.PermissionManager;
 import pl.plajer.buildbattle3.plots.PlotManager;
 import pl.plajer.buildbattle3.plots.Plot;
 import pl.plajer.buildbattle3.user.User;
@@ -92,6 +93,7 @@ public class Arena extends BukkitRunnable {
     private String mapName = "";
     private int timer;
     private String ID;
+    private boolean ready = true;
     private Location lobbyLoc = null;
     private Location startLoc = null;
     private Location endLoc = null;
@@ -110,6 +112,14 @@ public class Arena extends BukkitRunnable {
 
     public static void addToBlackList(int ID) {
         blacklist.add(ID);
+    }
+
+    public boolean isReady() {
+        return ready;
+    }
+
+    public void setReady(boolean ready) {
+        this.ready = ready;
     }
 
     public static Main getPlugin() {
@@ -430,7 +440,20 @@ public class Arena extends BukkitRunnable {
     }
 
     public void joinAttempt(Player p) {
-        if((getGameState() == ArenaState.IN_GAME || getGameState() == ArenaState.ENDING || getGameState() == ArenaState.RESTARTING)) return;
+        if(!isReady()) {
+            p.sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("In-Game.Arena-Not-Configured"));
+            return;
+        }
+        if(!plugin.isBungeeActivated()) {
+            if(!(p.hasPermission(PermissionManager.getJoinPerm().replaceAll("<arena>", "*")) || p.hasPermission(PermissionManager.getJoinPerm().replaceAll("<arena>", getID())))) {
+                p.sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("In-Game.Join-No-Permission"));
+                return;
+            }
+        }
+        if((getGameState() == ArenaState.IN_GAME || getGameState() == ArenaState.ENDING || getGameState() == ArenaState.RESTARTING)){
+            p.sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("Commands.Arena-Started"));
+            return;
+        }
         if(plugin.isInventoryManagerEnabled()) plugin.getInventoryManager().saveInventoryToFile(p);
         teleportToLobby(p);
         this.addPlayer(p);

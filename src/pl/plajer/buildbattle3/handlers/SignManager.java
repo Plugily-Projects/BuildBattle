@@ -141,10 +141,10 @@ public class SignManager implements Listener {
                     }
                 }
                 if(arena.getMaximumPlayers() <= arena.getPlayers().size()) {
-                    if((e.getPlayer().hasPermission(PermissionManager.getVip()) || e.getPlayer().hasPermission(PermissionManager.getJoinFullGames()))) {
+                    if(( e.getPlayer().hasPermission(PermissionManager.getJoinFullGames()))) {
                         boolean b = false;
                         for(Player player : arena.getPlayers()) {
-                            if(!player.hasPermission(PermissionManager.getVip()) || !player.hasPermission(PermissionManager.getJoinFullGames())) {
+                            if(!player.hasPermission(PermissionManager.getJoinFullGames())) {
                                 if((arena.getGameState() == ArenaState.STARTING || arena.getGameState() == ArenaState.WAITING_FOR_PLAYERS)) {
                                     arena.leaveAttempt(player);
                                     player.sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.You-Were-Kicked-For-Premium-Slot"));

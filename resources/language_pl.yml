@@ -43,6 +43,7 @@ In-Game:
   Particle-Removed: "&cParticle successfully removed!"
   Full-Game-No-Permission: "&cYou don't have the permission to join full games!"
   No-Slots-For-Premium: "&cThis game is already full of premium players! Sorry!"
+  Arena-Not-Configured: "&cArena nie zostala skonfigurowana! Poinformuj admina!"
   Messages:
     Time-Left-To-Build: "&6%FORMATTEDTIME% &7time left to build!"
     Plot-Leave-Error: "&cYou can't fly out of the plot!"

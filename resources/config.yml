@@ -29,6 +29,16 @@ BungeeActivated: false
 # Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions
 InventoryManager: false
 
+# Basic game permissions
+Basic-Permissions:
+  # Permissions to edit/create arenas
+  Arena-Edit-Permission: "buildbattle.editgames"
+  # Permission to join full games, only if not started already!
+  Full-Games-Permission: "buildbattle.fullgames"
+  # <arena> represents arena name (NOT MAP NAME!), for example: 'buildbattle.join.Build1'
+  # use 'buildbattle.join.*' to enable access to all arenas
+  Join-Permission: "buildbattle.join.<arena>"
+
 # Should /bb leave command be disabled?
 Disable-Leave-Command: false
 Build-Time-In-Seconds: 480

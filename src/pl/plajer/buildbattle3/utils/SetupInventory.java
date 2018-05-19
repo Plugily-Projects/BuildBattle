@@ -37,6 +37,8 @@ public class SetupInventory {
     public SetupInventory(Arena arena) {
         this.inventory = Bukkit.createInventory(null, 9 * 2, "Arena: " + arena.getID());
 
+
+
         addItem(new ItemBuilder(new ItemStack(Material.REDSTONE_BLOCK)).name(ChatColor.GOLD + "Set End Location").lore(ChatColor.GRAY + "Click to set the end location.").lore(ChatColor.GRAY + "on the place where you are standing").build(), "bb " + arena.getID() + " set ENDLOC");
         addItem(new ItemBuilder(new ItemStack(Material.LAPIS_BLOCK)).name(ChatColor.GOLD + "Set Lobby Location").lore(ChatColor.GRAY + "Click to set the lobby location").lore(ChatColor.GRAY + "on the place where you are standing").build(), "bb " + arena.getID() + " set LOBBYLOC");
         //todo later addItem(new ItemBuilder(new ItemStack(Material.CHEST)).name(ChatColor.GOLD + "Add new plot"));

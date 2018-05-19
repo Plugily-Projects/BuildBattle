@@ -30,6 +30,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
+import pl.plajer.buildbattle3.handlers.PermissionManager;
 import pl.plajer.buildbattle3.plots.Plot;
 import pl.plajer.buildbattle3.commands.MainCommand;
 import pl.plajer.buildbattle3.entities.EntityItem;
@@ -260,6 +261,7 @@ public class Main extends JavaPlugin {
     private void initializeClasses() {
         Arena.plugin = this;
         User.plugin = this;
+        PermissionManager.init();
         new SetupInventoryEvents(this);
         bungeeActivated = getConfig().getBoolean("BungeeActivated");
         new GameEvents(this);
@@ -319,30 +321,32 @@ public class Main extends JavaPlugin {
             if(config.contains(s + "mapname")) arena.setMapName(config.getString(s + "mapname"));
             else arena.setMapName(config.getString("instances.default.mapname"));
             if(config.contains(s + "lobbylocation")) arena.setLobbyLocation(Util.getLocation(false, config.getString(s + "lobbylocation")));
-            if(config.contains(s + "Startlocation")) arena.setStartLocation(Util.getLocation(false, config.getString(s + "Startlocation")));
-            else {
-                System.out.print(ID + " doesn't contains an start location!");
-                ArenaRegistry.registerArena(arena);
-                continue;
-            }
             if(config.contains(s + "Endlocation")) arena.setEndLocation(Util.getLocation(false, config.getString(s + "Endlocation")));
             else {
                 if(!bungeeActivated) {
                     System.out.print(ID + " doesn't contains an end location!");
+                    arena.setReady(false);
                     ArenaRegistry.registerArena(arena);
                     continue;
                 }
             }
             if(config.contains(s + "plots")) {
                 for(String plotName : config.getConfigurationSection(s + "plots").getKeys(false)) {
-                    Plot buildPlot = new Plot();
-                    buildPlot.setMaxPoint(Util.getLocation(false, config.getString(s + "plots." + plotName + ".maxpoint")));
-                    buildPlot.setMinPoint(Util.getLocation(false, config.getString(s + "plots." + plotName + ".minpoint")));
-                    buildPlot.reset();
-                    arena.getPlotManager().addBuildPlot(buildPlot);
+                    if(config.isSet(s + "plots." + plotName + ".maxpoint") && config.isSet(s + "plots." + plotName + ".minpoint")){
+                        Plot buildPlot = new Plot();
+                        buildPlot.setMaxPoint(Util.getLocation(false, config.getString(s + "plots." + plotName + ".maxpoint")));
+                        buildPlot.setMinPoint(Util.getLocation(false, config.getString(s + "plots." + plotName + ".minpoint")));
+                        buildPlot.reset();
+                        arena.getPlotManager().addBuildPlot(buildPlot);
+                    } else {
+                        System.out.println("Non configured plot instances found!");
+                        arena.setReady(false);
+                        break;
+                    }
                 }
             } else {
                 System.out.print("Instance doesn't contains plots!");
+                arena.setReady(false);
             }
             ArenaRegistry.registerArena(arena);
             arena.start();

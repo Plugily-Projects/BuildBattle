@@ -34,6 +34,8 @@ import pl.plajer.buildbattle3.arena.ArenaState;
 import pl.plajer.buildbattle3.events.PlayerAddCommandEvent;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
+import pl.plajer.buildbattle3.handlers.PermissionManager;
+import pl.plajer.buildbattle3.plots.Plot;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.SetupInventory;
 import pl.plajer.buildbattle3.utils.Util;
@@ -112,7 +114,7 @@ public class MainCommand implements CommandExecutor {
                     player.sendMessage(ChatManager.colorMessage("Commands.No-Arena-Like-That"));
                     return true;
                 } else {
-                    if(arena.getPlayers().size() >= arena.getMaximumPlayers() && !UserManager.getUser(player.getUniqueId()).isPremium()) {
+                    if(arena.getPlayers().size() >= arena.getMaximumPlayers() && !player.hasPermission(PermissionManager.getJoinFullGames())) {
                         player.sendMessage(ChatManager.colorMessage("Commands.Arena-Is-Full"));
                         return true;
                     } else if(arena.getGameState() == ArenaState.IN_GAME) {
@@ -144,10 +146,6 @@ public class MainCommand implements CommandExecutor {
             }
             if(args[1].equalsIgnoreCase("addsign")) {
                 adminCommands.addSign(player, args[0]);
-                return true;
-            }
-            if(args[0].equalsIgnoreCase("tp") && args.length == 3) {
-                onTpCommand(player, args[1], args[2]);
                 return true;
             }
             if(args[1].equalsIgnoreCase("setup") || args[1].equals("edit")) {
@@ -252,64 +250,28 @@ public class MainCommand implements CommandExecutor {
     private void createInstanceInConfig(String ID) {
         String path = "instances." + ID + ".";
         Util.saveLocation(path + "lobbylocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
-        Util.saveLocation(path + "Startlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
         Util.saveLocation(path + "Endlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
         FileConfiguration config = ConfigurationManager.getConfig("arenas");
         config.set(path + "minimumplayers", config.getInt("instances.default.minimumplayers"));
         config.set(path + "maximumplayers", config.getInt("instances.default.maximumplayers"));
         config.set(path + "mapname", config.getInt("instances.default.mapname"));
         config.set(path + "signs", new ArrayList<>());
-
+        config.set(path + "plots", new ArrayList<>());
+        config.set(path + "isdone", false);
         config.set(path + "world", config.getString("instances.default.world"));
         ConfigurationManager.saveConfig(config, "arenas");
+
+        Arena arena = new Arena(ID);
+
+        arena.setMinimumPlayers(ConfigurationManager.getConfig("arenas").getInt(path + "minimumplayers"));
+        arena.setMaximumPlayers(ConfigurationManager.getConfig("arenas").getInt(path + "maximumplayers"));
+        arena.setMapName(ConfigurationManager.getConfig("arenas").getString(path + "mapname"));
+        arena.setLobbyLocation(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString(path + "lobbylocation")));
+        arena.setEndLocation(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString(path + "Endlocation")));
+        arena.setReady(false);
+        ArenaRegistry.registerArena(arena);
+
         plugin.loadInstances();
-    }
-
-    private boolean onTpCommand(Player player, String ID, String str) {
-        LocationType type = null;
-        if(str.equalsIgnoreCase("Endlocation") || str.equalsIgnoreCase("end")) type = LocationType.END;
-        if(str.equalsIgnoreCase("lobby") || str.equalsIgnoreCase("lobbylocation")) type = LocationType.LOBBY;
-        if(str.equalsIgnoreCase("Startlocation") || str.equalsIgnoreCase("start")) type = LocationType.START;
-        if(type == null) {
-            player.sendMessage(ChatColor.RED + "Usage: /bb tp <ARENA> <START|END|LOBBY>");
-            return true;
-        }
-        Arena arena = ArenaRegistry.getArena(ID);
-        if(!ConfigurationManager.getConfig("arenas").contains("instances." + ID) || arena == null) {
-            player.sendMessage(ChatColor.RED + "That arena doesn't exists!");
-            return true;
-        }
-        switch(type) {
-            case LOBBY:
-                if(arena.getLobbyLocation() == null) {
-                    player.sendMessage(ChatColor.RED + "Lobby location isn't set for this arena!");
-                    return true;
-                }
-                arena.teleportToLobby(player);
-                player.sendMessage(ChatColor.GRAY + "Teleported to LOBBY location from arena" + ID);
-                break;
-            case START:
-                if(arena.getLobbyLocation() == null) {
-                    player.sendMessage(ChatColor.RED + "Start location isn't set for this arena!");
-                    return true;
-                }
-                arena.teleportToStartLocation(player);
-                player.sendMessage(ChatColor.GRAY + "Teleported to START location from arena" + ID);
-                break;
-            case END:
-                if(arena.getLobbyLocation() == null) {
-                    player.sendMessage(ChatColor.RED + "End location isn't set for this arena!");
-                    return true;
-                }
-                arena.teleportToEndLocation(player);
-                player.sendMessage(ChatColor.GRAY + "Teleported to END location from arena" + ID);
-                break;
-        }
-        return true;
-    }
-
-    private enum LocationType {
-        LOBBY, END, START
     }
 
 }

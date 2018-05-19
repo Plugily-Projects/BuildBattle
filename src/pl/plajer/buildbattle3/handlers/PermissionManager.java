@@ -18,36 +18,52 @@
 
 package pl.plajer.buildbattle3.handlers;
 
+import org.bukkit.plugin.java.JavaPlugin;
+import pl.plajer.buildbattle3.Main;
+
 /**
  * Created by Tom on 14/08/2014.
  */
 public class PermissionManager {
 
+    private static Main plugin = JavaPlugin.getPlugin(Main.class);
+    private static String joinFullGames = "buildbattle.fullgames";
+    private static String joinPerm = "buildbattle.join.<arena>";
+    private static String editGames = "buildbattle.editgames";
 
-    //todo perm
-    private static String joinFullGames = "minigames.fullgames";
-    private static String VIP = "minigames.VIP";
-    private static String MVP = "minigames.MVP";
-    private static String ELITE = "minigames.ELITE";
-    private static String editGames = "minigames.edit";
+    public static void init(){
+        setupPermissions();
+    }
 
     public static String getJoinFullGames() {
         return joinFullGames;
     }
 
-    public static String getVip() {
-        return VIP;
-    }
-
-    public static String getMvp() {
-        return MVP;
-    }
-
-    public static String getElite() {
-        return ELITE;
+    public static String getJoinPerm() {
+        return joinPerm;
     }
 
     public static String getEditGames() {
         return editGames;
     }
+
+    public static void setJoinFullGames(String joinFullGames) {
+        PermissionManager.joinFullGames = joinFullGames;
+    }
+
+    public static void setJoinPerm(String joinPerm) {
+        PermissionManager.joinPerm = joinPerm;
+    }
+
+    public static void setEditGames(String editGames) {
+        PermissionManager.editGames = editGames;
+    }
+
+    private static void setupPermissions() {
+        setEditGames(plugin.getConfig().getString("Basic-Permissions.Arena-Edit-Permission"));
+        setJoinFullGames(plugin.getConfig().getString("Basic-Permissions.Full-Games-Permission"));
+        setJoinPerm(plugin.getConfig().getString("Basic-Permissions.Join-Permission"));
+        Main.debug("Basic permissions registered", System.currentTimeMillis());
+    }
+
 }

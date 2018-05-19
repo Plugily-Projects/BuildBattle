@@ -50,6 +50,7 @@ In-Game:
   Particle-Removed: "&aPartikel erfolgreich entfernt!"
   Full-Game-No-Permission: "&cDu hast nicht die Permission um einem vollen Spiel beizutreten!"
   No-Slots-For-Premium: "&cDie Runde ist bereits voll mit Premium-Spielern! Entschuldigung!"
+  Arena-Not-Configured: "&cArena ist nicht konfiguriert ! Kontaktiere Teammitglieder!"
   Messages:
     Time-Left-To-Build: "&6%FORMATTEDTIME% &7Zeit übrig zum Bauen!"
     Plot-Leave-Error: "&cDu kannst nicht aus deinen Plot gehen!"

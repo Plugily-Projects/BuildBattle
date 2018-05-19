@@ -97,14 +97,6 @@ public class User {
         ints.put(s, i);
     }
 
-    public boolean isPremium() {
-        if(this.toPlayer().hasPermission(PermissionManager.getVip()) || this.toPlayer().hasPermission(PermissionManager.getMvp()) || this.toPlayer().hasPermission(PermissionManager.getElite())) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public void addInt(String s, int i) {
         ints.put(s, getInt(s) + i);
     }
