@@ -19,7 +19,6 @@
 package pl.plajer.buildbattle3.language;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
@@ -49,23 +48,23 @@ public class LanguageManager {
         } else if(locale.equalsIgnoreCase("de") || locale.equalsIgnoreCase("deutsch")) {
             pluginLocale = VDLocale.DEUTSCH;
             if(!ConfigurationManager.getConfig("language_de").get("File-Version-Do-Not-Edit").equals(ConfigurationManager.getConfig("language_de").get("Language-Version"))) {
-                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Village Defense] Locale DEUTSCH is outdated! Not every message will be in german.");
+                Bukkit.getConsoleSender().sendMessage("§c[Village Defense] Locale DEUTSCH is outdated! Not every message will be in german.");
             }
             if(!LanguageManager.getDefaultLanguageMessage("File-Version-Do-Not-Edit").equals(LanguageManager.getLanguageMessage("File-Version-Do-Not-Edit"))) {
-                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Village Defense] Locale DEUTSCH is invalid! Using DEFAULT locale instead...");
+                Bukkit.getConsoleSender().sendMessage("§c[Village Defense] Locale DEUTSCH is invalid! Using DEFAULT locale instead...");
                 pluginLocale = VDLocale.DEFAULT;
             }
         } else if(locale.equalsIgnoreCase("pl") || locale.equalsIgnoreCase("polski")) {
             pluginLocale = VDLocale.POLSKI;
             if(!ConfigurationManager.getConfig("language_pl").get("File-Version-Do-Not-Edit").equals(ConfigurationManager.getConfig("language_pl").get("Language-Version"))) {
-                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Village Defense] Locale POLSKI is outdated! Not every message will be in polish.");
+                Bukkit.getConsoleSender().sendMessage("§c[Village Defense] Locale POLSKI is outdated! Not every message will be in polish.");
             }
             if(!LanguageManager.getDefaultLanguageMessage("File-Version-Do-Not-Edit").equals(LanguageManager.getLanguageMessage("File-Version-Do-Not-Edit"))) {
-                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Village Defense] Locale POLSKI is invalid! Using DEFAULT locale instead...");
+                Bukkit.getConsoleSender().sendMessage("§c[Village Defense] Locale POLSKI is invalid! Using DEFAULT locale instead...");
                 pluginLocale = VDLocale.DEFAULT;
             }
         } else {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Village Defense] Plugin locale is invalid! Using default one...");
+            Bukkit.getConsoleSender().sendMessage("§c[Village Defense] Plugin locale is invalid! Using default one...");
             pluginLocale = VDLocale.DEFAULT;
         }
     }
