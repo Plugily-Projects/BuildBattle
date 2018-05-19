@@ -24,6 +24,9 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -31,20 +34,20 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.inventivetalent.bossbar.BossBarAPI;
 import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.Main;
-import pl.plajer.buildbattle3.handlers.PermissionManager;
-import pl.plajer.buildbattle3.plots.PlotManager;
-import pl.plajer.buildbattle3.plots.Plot;
-import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.VoteItems;
-import pl.plajer.buildbattle3.handlers.ChatManager;
-import pl.plajer.buildbattle3.handlers.MessageHandler;
-import pl.plajer.buildbattle3.user.UserManager;
-import pl.plajer.buildbattle3.items.SpecialItem;
-import pl.plajer.buildbattle3.items.SpecialItemManager;
-import pl.plajer.buildbattle3.scoreboards.ScoreboardHandler;
 import pl.plajer.buildbattle3.buildbattleapi.BBGameChangeStateEvent;
 import pl.plajer.buildbattle3.buildbattleapi.BBGameEndEvent;
 import pl.plajer.buildbattle3.buildbattleapi.BBGameStartEvent;
+import pl.plajer.buildbattle3.handlers.ChatManager;
+import pl.plajer.buildbattle3.handlers.MessageHandler;
+import pl.plajer.buildbattle3.handlers.PermissionManager;
+import pl.plajer.buildbattle3.items.SpecialItem;
+import pl.plajer.buildbattle3.items.SpecialItemManager;
+import pl.plajer.buildbattle3.plots.Plot;
+import pl.plajer.buildbattle3.plots.PlotManager;
+import pl.plajer.buildbattle3.scoreboards.ScoreboardHandler;
+import pl.plajer.buildbattle3.user.User;
+import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.IngameMenu;
 import pl.plajer.buildbattle3.utils.Util;
 
@@ -79,7 +82,7 @@ public class Arena extends BukkitRunnable {
     private Plot votingPlot = null;
     private boolean voteTime;
     private boolean scoreboardDisabled = ConfigPreferences.isScoreboardDisabled();
-    private boolean BAR_ENABLED = ConfigPreferences.isBarEnabled();
+    private boolean bossBarEnabled = ConfigPreferences.isBarEnabled();
     private int BUILD_TIME = ConfigPreferences.getBuildTime();
     private boolean PLAYERS_OUTSIDE_GAME_ENABLED = ConfigPreferences.isHidePlayersOutsideGameEnabled();
     private int LOBBY_STARTING_TIMER = ConfigPreferences.getLobbyTimer();
@@ -98,10 +101,16 @@ public class Arena extends BukkitRunnable {
     private Location startLoc = null;
     private Location endLoc = null;
     private Set<UUID> players = new HashSet<>();
+    private BossBar gameBar;
 
     public Arena(String ID) {
         gameState = ArenaState.WAITING_FOR_PLAYERS;
         this.ID = ID;
+        if(ConfigPreferences.isBarEnabled()) {
+            if(!plugin.is1_8_R3()) {
+                gameBar = Bukkit.createBossBar(ChatManager.colorMessage("Bossbar.Waiting-For-Players"), BarColor.BLUE, BarStyle.SOLID);
+            }
+        }
         plotManager = new PlotManager(this);
         scoreboardHandler = new ScoreboardHandler(this);
     }
@@ -114,6 +123,10 @@ public class Arena extends BukkitRunnable {
         blacklist.add(ID);
     }
 
+    public static Main getPlugin() {
+        return plugin;
+    }
+
     public boolean isReady() {
         return ready;
     }
@@ -122,16 +135,16 @@ public class Arena extends BukkitRunnable {
         this.ready = ready;
     }
 
-    public static Main getPlugin() {
-        return plugin;
-    }
-
     public boolean isVoting() {
         return voteTime;
     }
 
     private void setVoting(boolean voting) {
         voteTime = voting;
+    }
+
+    public BossBar getGameBar() {
+        return gameBar;
     }
 
     public PlotManager getPlotManager() {
@@ -156,6 +169,7 @@ public class Arena extends BukkitRunnable {
         p.setFoodLevel(20);
         p.setFlying(false);
         p.setAllowFlight(false);
+        gameBar.removePlayer(p);
         Util.clearArmor(p);
         p.getInventory().clear();
         for(PotionEffect effect : p.getActivePotionEffects()) {
@@ -181,8 +195,8 @@ public class Arena extends BukkitRunnable {
         //idle task
         if(getPlayers().size() == 0 && getGameState() == ArenaState.WAITING_FOR_PLAYERS) return;
         if(!this.scoreboardDisabled) updateScoreboard();
-        if(BAR_ENABLED) {
-            updateBar();
+        if(bossBarEnabled) {
+            updateBossBar();
         }
         switch(getGameState()) {
             case WAITING_FOR_PLAYERS:
@@ -194,14 +208,14 @@ public class Arena extends BukkitRunnable {
                         setTimer(LOBBY_STARTING_TIMER);
                         String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players")
                                 .replaceAll("%MINPLAYERS%", String.valueOf(getMinimumPlayers()));
-                        for(Player p : getPlayers()){
+                        for(Player p : getPlayers()) {
                             p.sendMessage(ChatManager.PREFIX + message);
                         }
                         return;
                     }
                 } else {
                     String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start");
-                    for(Player p : getPlayers()){
+                    for(Player p : getPlayers()) {
                         p.sendMessage(ChatManager.PREFIX + message);
                     }
                     setGameState(ArenaState.STARTING);
@@ -229,7 +243,7 @@ public class Arena extends BukkitRunnable {
                     }
                     setRandomTheme();
                     String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started");
-                    for(Player p : getPlayers()){
+                    for(Player p : getPlayers()) {
                         p.sendMessage(ChatManager.PREFIX + message);
                     }
                 }
@@ -245,7 +259,7 @@ public class Arena extends BukkitRunnable {
                 }
                 if(getPlayers().size() <= 1) {
                     String message = ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Only-You-Playing");
-                    for(Player p : getPlayers()){
+                    for(Player p : getPlayers()) {
                         p.sendMessage(ChatManager.PREFIX + message);
                     }
                     setGameState(ArenaState.ENDING);
@@ -367,21 +381,41 @@ public class Arena extends BukkitRunnable {
         }
     }
 
-    private void updateBar() {
-        for(Player player : getPlayers()) {
-            BossBarAPI.removeBar(player);
+    private void updateBossBar() {
+        if(plugin.is1_8_R3()) {
+            for(Player player : getPlayers()) {
+                if(plugin.is1_8_R3()) {
+                    BossBarAPI.removeBar(player);
+                    switch(getGameState()) {
+                        case WAITING_FOR_PLAYERS:
+                            BossBarAPI.setMessage(player, ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
+                            break;
+                        case STARTING:
+                            BossBarAPI.setMessage(player, ChatManager.colorMessage("Bossbar.Starting-In").replaceAll("%time%", String.valueOf(getTimer())));
+                            break;
+                        case IN_GAME:
+                            if(!isVoting()) {
+                                BossBarAPI.setMessage(player, ChatManager.colorMessage("Bossbar.Time-Left").replaceAll("%time%", String.valueOf(getTimer())));
+                            } else {
+                                BossBarAPI.setMessage(player, ChatManager.colorMessage("Bossbar.Vote-Time-Left").replaceAll("%time%", String.valueOf(getTimer())));
+                            }
+                            break;
+                    }
+                }
+            }
+        } else {
             switch(getGameState()) {
                 case WAITING_FOR_PLAYERS:
-                    BossBarAPI.setMessage(player, ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
+                    gameBar.setTitle(ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
                     break;
                 case STARTING:
-                    BossBarAPI.setMessage(player, ChatManager.colorMessage("Bossbar.Starting-In").replaceAll("%time%", String.valueOf(getTimer())));
+                    gameBar.setTitle(ChatManager.colorMessage("Bossbar.Starting-In").replaceAll("%time%", String.valueOf(getTimer())));
                     break;
                 case IN_GAME:
                     if(!isVoting()) {
-                        BossBarAPI.setMessage(player, ChatManager.colorMessage("Bossbar.Time-Left").replaceAll("%time%", String.valueOf(getTimer())));
+                        gameBar.setTitle(ChatManager.colorMessage("Bossbar.Time-Left").replaceAll("%time%", String.valueOf(getTimer())));
                     } else {
-                        BossBarAPI.setMessage(player, ChatManager.colorMessage("Bossbar.Vote-Time-Left").replaceAll("%time%", String.valueOf(getTimer())));
+                        gameBar.setTitle(ChatManager.colorMessage("Bossbar.Vote-Time-Left").replaceAll("%time%", String.valueOf(getTimer())));
                     }
                     break;
             }
@@ -450,7 +484,7 @@ public class Arena extends BukkitRunnable {
                 return;
             }
         }
-        if((getGameState() == ArenaState.IN_GAME || getGameState() == ArenaState.ENDING || getGameState() == ArenaState.RESTARTING)){
+        if((getGameState() == ArenaState.IN_GAME || getGameState() == ArenaState.ENDING || getGameState() == ArenaState.RESTARTING)) {
             p.sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("Commands.Arena-Started"));
             return;
         }
