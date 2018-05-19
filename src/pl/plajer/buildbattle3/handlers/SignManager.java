@@ -148,7 +148,7 @@ public class SignManager implements Listener {
                                 if((arena.getGameState() == ArenaState.STARTING || arena.getGameState() == ArenaState.WAITING_FOR_PLAYERS)) {
                                     arena.leaveAttempt(player);
                                     player.sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.You-Were-Kicked-For-Premium-Slot"));
-                                    String message = ChatManager.formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Kicked-For-Premium-Slot"), player);
+                                    String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Kicked-For-Premium-Slot").replace("%PLAYER%", player.getName());
                                     for(Player p : arena.getPlayers()) {
                                         p.sendMessage(ChatManager.PREFIX + message);
                                     }
