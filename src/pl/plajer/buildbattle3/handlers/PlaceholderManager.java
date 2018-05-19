@@ -49,7 +49,6 @@ public class PlaceholderManager extends PlaceholderExpansion {
         return "1.0.0";
     }
 
-    //todo rework me
     public String onPlaceholderRequest(Player player, String id) {
         if(player == null) return null;
         switch(id) {

@@ -66,7 +66,7 @@ public class SignManager implements Listener {
 
     @EventHandler
     public void onSignChange(SignChangeEvent e) {
-        //todo permission check if(!e.getPlayer().hasPermission("buildbattle.admin.sign.create")) return;
+        if(!e.getPlayer().hasPermission("buildbattle.admin.sign.create")) return;
         if(e.getLine(0).equalsIgnoreCase("[buildbattle]")) {
             if(e.getLine(1).isEmpty()) {
                 e.getPlayer().sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("Signs.Please-Type-Arena-Name"));
@@ -187,7 +187,7 @@ public class SignManager implements Listener {
                 if(loc.getBlock().getState() instanceof Sign) {
                     loadedSigns.put((Sign) loc.getBlock().getState(), ArenaRegistry.getArena(path));
                 } else {
-                    //todo DEBUGGGG Main.debug("Block at loc " + loc + " for arena " + path + " not a sign", System.currentTimeMillis());
+                    Main.debug("Block at loc " + loc + " for arena " + path + " not a sign", System.currentTimeMillis());
                 }
             }
         }
@@ -203,8 +203,7 @@ public class SignManager implements Listener {
                 } else {
                     arenaState = arena.getGameState();
                 }
-                //todo locale based
-                FileConfiguration config = ConfigurationManager.getConfig("language");
+                FileConfiguration config = LanguageManager.getLocaleFile();
                 s.setLine(0, ChatColor.translateAlternateColorCodes('&', config.getStringList("Signs.Lines").get(0)));
                 if(arena.getPlayers().size() == arena.getMaximumPlayers()) {
                     s.setLine(1, ChatColor.translateAlternateColorCodes('&', config.getStringList("Signs.Lines").get(1).replaceAll("%state%", ChatManager.colorMessage("Signs.Game-States.Full-Game"))));

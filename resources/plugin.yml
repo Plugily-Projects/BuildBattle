@@ -13,6 +13,9 @@ commands:
 
 permissions:
   buildbattle.admin.*:
+    default: op
     children:
       buildbattle.updatenotify: true
+      buildbattle.admin.command: true
       buildbattle.admin.commands.override: true
+      buildbattle.admin.sign.create: true

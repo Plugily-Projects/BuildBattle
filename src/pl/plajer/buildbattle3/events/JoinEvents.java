@@ -39,7 +39,7 @@ import java.util.List;
 /**
  * Created by Tom on 10/07/2015.
  */
-//TODO update checker
+
 public class JoinEvents implements Listener {
 
     private Main plugin;
@@ -68,7 +68,6 @@ public class JoinEvents implements Listener {
                 event.getPlayer().sendMessage(ChatColor.RED + "Please consider enabling it to help us develop our plugins better!");
                 event.getPlayer().sendMessage(ChatColor.RED + "Enable it in plugins/bStats/config.yml file");
             }
-            //todo perm
             if(event.getPlayer().hasPermission("buildbattle.updatenotify")) {
                 if(plugin.getConfig().getBoolean("Update-Notifier.Enabled")) {
                     String currentVersion = "v" + Bukkit.getPluginManager().getPlugin("BuildBattle").getDescription().getVersion();

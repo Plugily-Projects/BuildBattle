@@ -89,8 +89,7 @@ public class MainCommand implements CommandExecutor {
                 player.sendMessage(ChatColor.AQUA + "/bb stats: " + ChatColor.GRAY + "Shows your stats!");
                 player.sendMessage(ChatColor.AQUA + "/bb join <arena>: " + ChatColor.GRAY + "Join arena and play!");
                 player.sendMessage(ChatColor.AQUA + "/bb leave: " + ChatColor.GRAY + "Quit arena you're in");
-                //todo perm
-                if(player.hasPermission("buildbattle.admin")) {
+                if(player.hasPermission("buildbattle.admin.command")) {
                     player.sendMessage(ChatColor.AQUA + "/bb create <ARENAID>: " + ChatColor.GRAY + "Create an arena!");
                     player.sendMessage(ChatColor.AQUA + "/bb <ARENAID> edit: " + ChatColor.GRAY + "Opens the menu to edit the arena!");
                     player.sendMessage(ChatColor.AQUA + "/bb addplot <ARENAID>: " + ChatColor.GRAY + "Adds a plot to the arena");
@@ -106,7 +105,7 @@ public class MainCommand implements CommandExecutor {
             }
             if(args[0].equalsIgnoreCase("leave")) {
                 if(checkSenderIsConsole(sender)) return true;
-                gameCommands.leaveGame((Player) sender);
+                gameCommands.leaveGame(sender);
             }
             if(args.length == 2 && args[0].equalsIgnoreCase("join")) {
                 Arena arena = ArenaRegistry.getArena(args[1]);
@@ -125,8 +124,7 @@ public class MainCommand implements CommandExecutor {
                     }
                 }
             }
-            //todo different permissions
-            if(!hasPermission(sender, "minigames.edit")) return true;
+            if(!hasPermission(sender, PermissionManager.getEditGames())) return true;
             if(args.length == 2 && args[0].equalsIgnoreCase("addplot")) {
                 adminCommands.addPlot(player, args[1]);
                 return true;
