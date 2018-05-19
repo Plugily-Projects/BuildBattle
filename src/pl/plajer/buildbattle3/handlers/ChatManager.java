@@ -51,7 +51,6 @@ public class ChatManager {
         returnString = returnString.replaceAll("%PLAYERSIZE%", Integer.toString(arena.getPlayers().size()));
         returnString = returnString.replaceAll("%MAXPLAYERS%", Integer.toString(arena.getMaximumPlayers()));
         returnString = returnString.replaceAll("%MINPLAYERS%", Integer.toString(arena.getMinimumPlayers()));
-        //todo remember
         returnString = colorRawMessage(returnString);
         return returnString;
     }

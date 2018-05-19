@@ -151,7 +151,7 @@ public class MainCommand implements CommandExecutor {
             if(args[1].equalsIgnoreCase("setup") || args[1].equals("edit")) {
                 Arena arena = ArenaRegistry.getArena(args[0]);
                 if(arena == null) {
-                    player.sendMessage(ChatColor.RED + "ARENA DOES NOT EXIST!");
+                    player.sendMessage(ChatManager.colorMessage("Commands.No-Arena-Like-That"));
                     return true;
                 }
                 new SetupInventory(arena).openInventory(player);
@@ -160,7 +160,7 @@ public class MainCommand implements CommandExecutor {
             if(!(args.length > 2)) return true;
 
             if(!ConfigurationManager.getConfig("arenas").contains("instances." + args[0])) {
-                player.sendMessage(ChatColor.RED + "Arena doesn't exists!");
+                player.sendMessage(ChatManager.colorMessage("Commands.No-Arena-Like-That"));
                 player.sendMessage(ChatColor.RED + "Usage: /bb < ARENA ID > set <MINPLAYRS | MAXPLAYERS | MAPNAME | SCHEMATIC | LOBBYLOCATION | EndLOCATION | STARTLOCATION  >  < VALUE>");
                 return true;
             }
