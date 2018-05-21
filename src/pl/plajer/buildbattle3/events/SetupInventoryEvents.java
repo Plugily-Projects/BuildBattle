@@ -53,7 +53,6 @@ public class SetupInventoryEvents implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         if(event.getWhoClicked().getType() != EntityType.PLAYER)

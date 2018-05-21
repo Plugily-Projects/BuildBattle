@@ -53,6 +53,19 @@ public class GameCommands extends MainCommand {
         player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Footer"));
     }
 
+    public void showStatsOther(Player player, Player other) {
+        User user = UserManager.getUser(other.getUniqueId());
+        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Header-Other"));
+        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Wins") + user.getInt("wins"));
+        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Loses") + user.getInt("loses"));
+        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Games-Played") + user.getInt("gamesplayed"));
+        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Highest-Win") + user.getInt("highestwin"));
+        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Blocks-Placed") + user.getInt("blocksplaced"));
+        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Blocks-Broken") + user.getInt("blocksbroken"));
+        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Particles-Placed") + user.getInt("particles"));
+        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Footer"));
+    }
+
     public void leaveGame(CommandSender sender) {
         if(checkSenderIsConsole(sender)) return;
         if(!plugin.getConfig().getBoolean("Disable-Leave-Command")) {

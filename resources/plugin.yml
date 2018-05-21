@@ -1,5 +1,5 @@
 main: pl.plajer.buildbattle.Main
-version: 3.0.0-BETA
+version: 3.0.0 Beta 2
 name: BuildBattle
 depend: [WorldEdit]
 softdepend: [BossBarAPI, Vault, PlaceholderAPI]
@@ -10,12 +10,14 @@ commands:
     usage: /buildbattle
     description: The main command
     aliases: [buildb, bb]
+  buildbattleadmin:
+    aliases: [buildba, bba]
 
 permissions:
   buildbattle.admin.*:
     default: op
     children:
       buildbattle.updatenotify: true
-      buildbattle.admin.command: true
-      buildbattle.admin.commands.override: true
+      buildbattle.admin: true
       buildbattle.admin.sign.create: true
+      buildbattle.admin.sign.break: true

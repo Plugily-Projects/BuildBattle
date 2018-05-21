@@ -50,13 +50,6 @@ public class Util {
 
     private static Main plugin = JavaPlugin.getPlugin(Main.class);
 
-    public static void clearArmor(Player player) {
-        player.getInventory().setHelmet(null);
-        player.getInventory().setChestplate(null);
-        player.getInventory().setLeggings(null);
-        player.getInventory().setBoots(null);
-    }
-
     public static ItemStack getPlayerHead(OfflinePlayer player) {
         ItemStack itemStack = new ItemStack(Material.SKULL_ITEM);
         SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();

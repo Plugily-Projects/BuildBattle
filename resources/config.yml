@@ -41,23 +41,60 @@ Basic-Permissions:
 
 # Should /bb leave command be disabled?
 Disable-Leave-Command: false
+
+# Total time of building in game
 Build-Time-In-Seconds: 480
+
+# Total time of voting per player plot
 Voting-Time-In-Seconds: 20
+
+# Default floor material ID
 Default-Floor-Material: 17
+
+# Should mob spawners be disabled?
 Disable-Mob-Spawning-Completely: true
+
+# How many particle effects should have one spawned particle
 Amount-One-Particle-Effect-Contains: 20
+
+# Max amount of particles to spawn
 Max-Amount-Particles: 25
+
+# Time of refreshing particles
 Particle-Refresh-Per-Tick: 10
+
+# Should server be disabled after the game ends?
 Bungee-Shutdown-On-End: false
+
+# Offset of particles
 Particle-Offset: 1
+
+# Should win commands be activated?
 Win-Commands-Activated: false
+
+# Should end game commands be activated?
 End-Game-Commands-Activated: true
+
+# Should second place commands be activated?
 Second-Place-Commands-Activated: false
+
+# Should third place commands be activated?
 Third-Place-Commands-Activated: false
+
+# Should we save player names instead of their UUID's in database?
+# Remember changing this value when there are already player records may break them!
 Use-Name-Instead-Of-UUID-In-Database: false
+
+# Max amount of mobs to spawn per plot
 Mobs-Max-Amount-Per-Plot: 20
+
+# Should we hide players outside game?
 Hide-Players-Outside-Game: true
+
+# Should scoreboard in game be disabled?
 Disable-Scoreboard-Ingame: false
+
+# Should we hook into Vault?
 Hook-Into-Vault: false
 
 # Time in lobby to wait before start
@@ -76,8 +113,7 @@ Game-Themes:
 - School_Bus
 - Pixel_Art
 
-# Blacklisted items, you can't use them while building.
-# Currently ID's are only supported, todo to remove.
+# Blacklisted item ID's, you can't use them while building.
 Blacklisted-Items:
 - 46
 - 57
@@ -116,6 +152,7 @@ Update-Notifier:
   # BETA IS NOT ALWAYS AS STABLE AS NORMAL RELEASE!
   Notify-Beta-Versions: true
 
+# Disable or enable MySQL database here, see mysql.yml for more
 DatabaseActivated: false
 
 # Should plugin send 'debug spam' to console? IT CAN HELP IF YOU OCCUR SOME WEIRD BEHAVIOUR FROM PLUGIN

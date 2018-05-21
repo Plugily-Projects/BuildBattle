@@ -170,7 +170,7 @@ public class Arena extends BukkitRunnable {
         p.setFlying(false);
         p.setAllowFlight(false);
         gameBar.removePlayer(p);
-        Util.clearArmor(p);
+        p.getInventory().setArmorContents(null);
         p.getInventory().clear();
         for(PotionEffect effect : p.getActivePotionEffects()) {
             p.removePotionEffect(effect.getType());
@@ -347,7 +347,7 @@ public class Arena extends BukkitRunnable {
                         player.setGameMode(GameMode.SURVIVAL);
                         player.setFlying(false);
                         player.setAllowFlight(false);
-                        Util.clearArmor(player);
+                        player.getInventory().setArmorContents(null);
                         UserManager.getUser(player.getUniqueId()).addInt("gamesplayed", 1);
                         if(plugin.isInventoryManagerEnabled()) {
                             plugin.getInventoryManager().loadInventory(player);

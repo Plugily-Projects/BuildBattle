@@ -85,7 +85,6 @@ public class ScoreboardHandler {
         string = string.replaceAll("%MAPNAME%", buildInstance.getMapName());
         if(ConfigPreferences.isVaultEnabled()) {
             string = string.replaceAll("%MONEY%", Double.toString(Main.getEcon().getBalance(player.getName())));
-            string = string.replaceAll("%GROUP%", Main.getPerms().getPrimaryGroup(player));
         }
         return string;
     }

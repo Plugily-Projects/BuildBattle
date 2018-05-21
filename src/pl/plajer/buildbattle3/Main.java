@@ -70,7 +70,6 @@ import java.util.List;
 public class Main extends JavaPlugin {
 
     private static Economy econ = null;
-    private static Permission perms = null;
     private static boolean debug;
     private boolean databaseActivated = false;
     private boolean forceDisable = false;
@@ -85,10 +84,6 @@ public class Main extends JavaPlugin {
     private SignManager signManager;
     private String version;
     private List<String> filesToGenerate = Arrays.asList("arenas", "EntityMenu", "particles", "scoreboard", "SpecialItems", "stats", "voteItems", "mysql");
-
-    public static Permission getPerms() {
-        return perms;
-    }
 
     public static Economy getEcon() {
         return econ;

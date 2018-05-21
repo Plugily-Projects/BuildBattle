@@ -31,7 +31,6 @@ import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.arena.ArenaState;
-import pl.plajer.buildbattle3.events.PlayerAddCommandEvent;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
 import pl.plajer.buildbattle3.handlers.PermissionManager;
@@ -56,7 +55,7 @@ public class MainCommand implements CommandExecutor {
     public MainCommand(Main plugin) {
         this.plugin = plugin;
         plugin.getCommand("buildbattle").setExecutor(this);
-        //todo /bba command
+        plugin.getCommand("buildbattleadmin").setExecutor(this);
         this.adminCommands = new AdminCommands(plugin);
         this.gameCommands = new GameCommands(plugin);
     }
@@ -83,31 +82,53 @@ public class MainCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if(cmd.getName().equalsIgnoreCase("buildbattleadmin")) {
+            if(args.length == 0) {
+                adminCommands.sendHelp(sender);
+                return true;
+            }
+            if(checkSenderIsConsole(sender)) return true;
+            Player player = (Player) sender;
+            if(args[0].equalsIgnoreCase("forcestart")) {
+                adminCommands.forceStart(player);
+            } else if(args[0].equalsIgnoreCase("reload")) {
+                adminCommands.reloadPlugin(player);
+            } else if(args[0].equalsIgnoreCase("help")) {
+                adminCommands.sendHelp(sender);
+            }
+            return true;
+        }
         if(cmd.getName().equalsIgnoreCase("buildbattle")) {
             if(checkSenderIsConsole(sender)) return true;
             Player player = (Player) sender;
             if(args.length == 0) {
                 player.sendMessage(ChatColor.GOLD + "----------------{BuildBattle Commands}----------");
-                player.sendMessage(ChatColor.AQUA + "/bb stats: " + ChatColor.GRAY + "Shows your stats!");
-                player.sendMessage(ChatColor.AQUA + "/bb join <arena>: " + ChatColor.GRAY + "Join arena and play!");
-                player.sendMessage(ChatColor.AQUA + "/bb leave: " + ChatColor.GRAY + "Quit arena you're in");
-                if(player.hasPermission("buildbattle.admin.command")) {
-                    player.sendMessage(ChatColor.AQUA + "/bb create <ARENAID>: " + ChatColor.GRAY + "Create an arena!");
-                    player.sendMessage(ChatColor.AQUA + "/bb <ARENAID> edit: " + ChatColor.GRAY + "Opens the menu to edit the arena!");
-                    player.sendMessage(ChatColor.AQUA + "/bb addplot <ARENAID>: " + ChatColor.GRAY + "Adds a plot to the arena");
-                    player.sendMessage(ChatColor.AQUA + "/bb forcestart: " + ChatColor.GRAY + "Forcestarts the arena u are in");
-                    player.sendMessage(ChatColor.AQUA + "/bb reload: " + ChatColor.GRAY + "Reloads plugin");
+                player.sendMessage(ChatColor.AQUA + "/bb stats [player]" + ChatColor.GRAY + ": Shows your stats!");
+                player.sendMessage(ChatColor.AQUA + "/bb join <arena>" + ChatColor.GRAY + ": Join arena and play!");
+                player.sendMessage(ChatColor.AQUA + "/bb leave" + ChatColor.GRAY + ": Quit arena you're in");
+                if(player.hasPermission("buildbattle.admin")) {
+                    player.sendMessage(ChatColor.AQUA + "/bba help" + ChatColor.GRAY + ": Admin commands");
                 }
                 player.sendMessage(ChatColor.GOLD + "-------------------------------------------------");
                 return true;
             }
             if(args[0].equalsIgnoreCase("stats")) {
                 if(checkSenderIsConsole(sender)) return true;
-                gameCommands.showStats((Player) sender);
+                if(args.length == 1){
+                    gameCommands.showStats((Player) sender);
+                } else {
+                    if(Bukkit.getPlayer(args[1]) == null){
+                        player.sendMessage(ChatManager.colorMessage("Commands.Player-Not-Found"));
+                        return true;
+                    }
+                    gameCommands.showStatsOther((Player) sender, Bukkit.getPlayer(args[1]));
+                }
+                return true;
             }
             if(args[0].equalsIgnoreCase("leave")) {
                 if(checkSenderIsConsole(sender)) return true;
                 gameCommands.leaveGame(sender);
+                return true;
             }
             if(args.length == 2 && args[0].equalsIgnoreCase("join")) {
                 Arena arena = ArenaRegistry.getArena(args[1]);
@@ -138,14 +159,9 @@ public class MainCommand implements CommandExecutor {
                 adminCommands.reloadPlugin(player);
                 return true;
             }
-            //fixme xd
             if(!(args.length > 1)) return true;
             if(args[0].equalsIgnoreCase("create")) {
                 this.createArenaCommand((Player) sender, args);
-                return true;
-            }
-            if(args[1].equalsIgnoreCase("addsign")) {
-                adminCommands.addSign(player, args[0]);
                 return true;
             }
             if(args[1].equalsIgnoreCase("setup") || args[1].equals("edit")) {
@@ -164,12 +180,6 @@ public class MainCommand implements CommandExecutor {
                 player.sendMessage(ChatColor.RED + "Usage: /bb < ARENA ID > set <MINPLAYRS | MAXPLAYERS | MAPNAME | SCHEMATIC | LOBBYLOCATION | EndLOCATION | STARTLOCATION  >  < VALUE>");
                 return true;
             }
-            if(args[1].equalsIgnoreCase("add")) {
-                PlayerAddCommandEvent event = new PlayerAddCommandEvent(player, args, args[0]);
-                plugin.getServer().getPluginManager().callEvent(event);
-                plugin.saveConfig();
-                return true;
-            }
             if(!(args[1].equalsIgnoreCase("set"))) return true;
 
             FileConfiguration config = ConfigurationManager.getConfig("arenas");
@@ -177,15 +187,12 @@ public class MainCommand implements CommandExecutor {
                 if(args[2].equalsIgnoreCase("lobbylocation") || args[2].equalsIgnoreCase("lobbyloc")) {
                     Util.saveLocation("instances." + args[0] + ".lobbylocation", player.getLocation());
                     player.sendMessage("BuildBattle: Lobby location for arena/instance " + args[0] + " set to " + Util.locationToString(player.getLocation()));
-                } else if(args[2].equalsIgnoreCase("Startlocation") || args[2].equalsIgnoreCase("Startloc")) {
-                    Util.saveLocation("instances." + args[0] + ".Startlocation", player.getLocation());
-                    player.sendMessage("BuildBattle: Start location for arena/instance " + args[0] + " set to " + Util.locationToString(player.getLocation()));
                 } else if(args[2].equalsIgnoreCase("Endlocation") || args[2].equalsIgnoreCase("Endloc")) {
                     Util.saveLocation("instances." + args[0] + ".Endlocation", player.getLocation());
                     player.sendMessage("BuildBattle: End location for arena/instance " + args[0] + " set to " + Util.locationToString(player.getLocation()));
                 } else {
                     player.sendMessage(ChatColor.RED + "Invalid Command!");
-                    player.sendMessage(ChatColor.RED + "Usage: /bb <ARENA > set <StartLOCTION | LOBBYLOCATION | EndLOCATION>");
+                    player.sendMessage(ChatColor.RED + "Usage: /bb <ARENA > set <LOBBYLOCATION | EndLOCATION>");
                 }
             } else if(args.length == 4) {
                 if(args[2].equalsIgnoreCase("MAXPLAYERS") || args[2].equalsIgnoreCase("maximumplayers")) {
@@ -232,18 +239,11 @@ public class MainCommand implements CommandExecutor {
             player.sendMessage(ChatColor.DARK_RED + "Instance/Arena already exists! Use another ID or delete it first!");
         } else {
             createInstanceInConfig(args[1]);
-
-            player.sendMessage(ChatColor.GREEN + "Instances/Arena successfully created! Restart or reload the server to start the arena!");
-            player.sendMessage(ChatColor.BOLD + "--------------- INFORMATION --------------- ");
-            player.sendMessage(ChatColor.GREEN + "WORLD: " + ChatColor.RED + args[1]);
-            player.sendMessage(ChatColor.GREEN + "MAX PLAYERS: " + ChatColor.RED + config.getInt("instances.default.minimumplayers"));
-            player.sendMessage(ChatColor.GREEN + "MIN PLAYERS: " + ChatColor.RED + config.getInt("instances.default.maximumplayers"));
-            player.sendMessage(ChatColor.GREEN + "MAP NAME: " + ChatColor.RED + config.getInt("instances.default.mapname"));
-            player.sendMessage(ChatColor.GREEN + "LOBBY LOCATION " + ChatColor.RED + Util.locationToString(Util.getLocation(false, config.getString("instances." + args[1] + ".lobbylocation"))));
-            player.sendMessage(ChatColor.GREEN + "Start LOCATION " + ChatColor.RED + Util.locationToString(Util.getLocation(false, config.getString("instances." + args[1] + ".Startlocation"))));
-            player.sendMessage(ChatColor.GREEN + "End LOCATION " + ChatColor.RED + Util.locationToString(Util.getLocation(false, config.getString("instances." + args[1] + ".Endlocation"))));
+            player.sendMessage(ChatColor.BOLD + "------------------------------------------");
+            player.sendMessage(ChatColor.YELLOW + "      Instance " + args[1] + " created!");
+            player.sendMessage("");
+            player.sendMessage(ChatColor.GREEN + "Edit this arena via " + ChatColor.GOLD + "/bb " + args[1] + " edit" + ChatColor.GREEN + "!");
             player.sendMessage(ChatColor.BOLD + "------------------------------------------- ");
-            player.sendMessage(ChatColor.RED + "You can edit this game instances in the config!");
         }
     }
 

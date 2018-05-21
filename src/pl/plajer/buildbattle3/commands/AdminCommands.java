@@ -23,6 +23,7 @@ import com.sk89q.worldedit.bukkit.selections.Selection;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import pl.plajer.buildbattle3.ConfigPreferences;
@@ -47,6 +48,17 @@ public class AdminCommands extends MainCommand {
 
     public AdminCommands(Main plugin) {
         this.plugin = plugin;
+    }
+
+    public void sendHelp(CommandSender sender){
+        if(!sender.hasPermission("buildbattle.admin")) return;
+        sender.sendMessage(ChatColor.AQUA + "  " + ChatColor.BOLD + "BuildBattle " + ChatColor.GRAY + plugin.getDescription().getVersion());
+        sender.sendMessage(ChatColor.RED + " []" + ChatColor.GRAY + " = optional  " + ChatColor.GOLD + "<>" + ChatColor.GRAY + " = required");
+        sender.sendMessage(ChatColor.AQUA + "/bb create " + ChatColor.GOLD + "<arena>" + ChatColor.GRAY + ": Create an arena!");
+        sender.sendMessage(ChatColor.AQUA + "/bb " + ChatColor.GOLD + "<arena> " + ChatColor.AQUA + "edit" + ChatColor.GRAY + ": Opens the menu to edit the arena!");
+        sender.sendMessage(ChatColor.AQUA + "/bba addplot " + ChatColor.GOLD + " <arena>" + ChatColor.GRAY + ": Adds a plot to the arena");
+        sender.sendMessage(ChatColor.AQUA + "/bba forcestart" + ChatColor.GRAY + ": Force starts the arena you are in");
+        sender.sendMessage(ChatColor.AQUA + "/bba reload" + ChatColor.GRAY + ": Reloads plugin");
     }
 
     public void addPlot(Player player, String arena) {

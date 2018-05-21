@@ -14,6 +14,7 @@ Commands:
   Added-Plot: "&aAdded plot for arena &7%ARENA%"
   No-Selection: "&cPlease use WorldEdit selection first!"
   Plugin-Reloaded: "&aPlugin and configuration reloaded!"
+  Player-Not-Found: "&cPlayer not found!"
   Stats-Command:
     Header: "&l-----YOUR STATS-----"
     Header-Other: "&l-----STATS FOR %player%-----"
@@ -53,7 +54,7 @@ In-Game:
     Lobby-Messages:
       Waiting-For-Players: "&7Waiting for players... We need at least &b%MINPLAYERS%&7 players to start."
       Enough-Players-To-Start: "&7We now have enough players. The game is starting soon!"
-      Game-Started: "&7The game has started! Defend the village against waves of zombies!"
+      Game-Started: "&7The game has started! Build best you can!"
       Kicked-For-Premium-Slot: "&c%PLAYER% got removed from the game to make a place for premium players!"
       You-Were-Kicked-For-Premium-Slot: "&cYou got kicked out of the game to make a place for a premium player!"
     Voting-Messages:
@@ -95,9 +96,6 @@ Menus:
     Floor-Option: "&aChange floor material"
     Floor-Option-Lore: "&7Drag block here to change floor"
     Floor-Changed: "&aFloor material changed!"
-    Banners-Option: "&aCreate banners &7(soon)"
-    Banners-Option-Inventory-Name: "&aBanners menu"
-
 
 Signs:
   Please-Type-Arena-Name: "&cPlease type arena name in second line!"

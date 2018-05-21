@@ -353,7 +353,7 @@ public class GameEvents implements Listener {
         for(String string : ConfigPreferences.getWhitelistedCommands()) {
             if(event.getMessage().contains(string)) return;
         }
-        if(event.getPlayer().isOp() || event.getPlayer().hasPermission("buildbattle.admin.commands.override")) return;
+        if(event.getPlayer().isOp() || event.getPlayer().hasPermission("buildbattle.admin")) return;
         if(event.getMessage().contains("leave") || event.getMessage().contains("stats")) return;
         event.setCancelled(true);
         event.getPlayer().sendMessage(ChatManager.colorMessage("In-Game.Only-Command-Ingame-Is-Leave"));
