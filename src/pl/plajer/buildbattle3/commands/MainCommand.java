@@ -89,10 +89,18 @@ public class MainCommand implements CommandExecutor {
             }
             if(checkSenderIsConsole(sender)) return true;
             Player player = (Player) sender;
-            if(args[0].equalsIgnoreCase("forcestart")) {
+            if(args[0].equalsIgnoreCase("addplot")) {
+                if(args.length == 2) {
+                    adminCommands.addPlot(player, args[1]);
+                } else {
+                    player.sendMessage(ChatManager.colorMessage("Commands.Invalid-Args"));
+                }
+            } else if(args[0].equalsIgnoreCase("forcestart")) {
                 adminCommands.forceStart(player);
             } else if(args[0].equalsIgnoreCase("reload")) {
                 adminCommands.reloadPlugin(player);
+            } else if(args[0].equalsIgnoreCase("addnpc")) {
+                adminCommands.addNPC(player);
             } else if(args[0].equalsIgnoreCase("help")) {
                 adminCommands.sendHelp(sender);
             }
@@ -114,10 +122,10 @@ public class MainCommand implements CommandExecutor {
             }
             if(args[0].equalsIgnoreCase("stats")) {
                 if(checkSenderIsConsole(sender)) return true;
-                if(args.length == 1){
+                if(args.length == 1) {
                     gameCommands.showStats((Player) sender);
                 } else {
-                    if(Bukkit.getPlayer(args[1]) == null){
+                    if(Bukkit.getPlayer(args[1]) == null) {
                         player.sendMessage(ChatManager.colorMessage("Commands.Player-Not-Found"));
                         return true;
                     }
@@ -130,35 +138,26 @@ public class MainCommand implements CommandExecutor {
                 gameCommands.leaveGame(sender);
                 return true;
             }
-            if(args.length == 2 && args[0].equalsIgnoreCase("join")) {
-                Arena arena = ArenaRegistry.getArena(args[1]);
-                if(arena == null) {
-                    player.sendMessage(ChatManager.colorMessage("Commands.No-Arena-Like-That"));
-                    return true;
-                } else {
-                    if(arena.getPlayers().size() >= arena.getMaximumPlayers() && !player.hasPermission(PermissionManager.getJoinFullGames())) {
-                        player.sendMessage(ChatManager.colorMessage("Commands.Arena-Is-Full"));
-                        return true;
-                    } else if(arena.getGameState() == ArenaState.IN_GAME) {
-                        player.sendMessage(ChatManager.colorMessage("Commands.Arena-Started"));
-                        return true;
+            if(args[0].equalsIgnoreCase("join")) {
+                if(args.length == 2) {
+                    Arena arena = ArenaRegistry.getArena(args[1]);
+                    if(arena == null) {
+                        player.sendMessage(ChatManager.colorMessage("Commands.No-Arena-Like-That"));
                     } else {
-                        arena.joinAttempt(player);
+                        if(arena.getPlayers().size() >= arena.getMaximumPlayers() && !player.hasPermission(PermissionManager.getJoinFullGames())) {
+                            player.sendMessage(ChatManager.colorMessage("Commands.Arena-Is-Full"));
+                        } else if(arena.getGameState() == ArenaState.IN_GAME) {
+                            player.sendMessage(ChatManager.colorMessage("Commands.Arena-Started"));
+                        } else {
+                            arena.joinAttempt(player);
+                        }
                     }
+                    return true;
                 }
+                player.sendMessage(ChatManager.colorMessage("Commands.Invalid-Args"));
+                return true;
             }
             if(!hasPermission(sender, PermissionManager.getEditGames())) return true;
-            if(args.length == 2 && args[0].equalsIgnoreCase("addplot")) {
-                adminCommands.addPlot(player, args[1]);
-                return true;
-            }
-            if(args.length == 1 && args[0].equalsIgnoreCase("forcestart")) {
-                adminCommands.forceStart(player);
-            }
-            if(args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-                adminCommands.reloadPlugin(player);
-                return true;
-            }
             if(!(args.length > 1)) return true;
             if(args[0].equalsIgnoreCase("create")) {
                 this.createArenaCommand((Player) sender, args);
@@ -187,9 +186,11 @@ public class MainCommand implements CommandExecutor {
                 if(args[2].equalsIgnoreCase("lobbylocation") || args[2].equalsIgnoreCase("lobbyloc")) {
                     Util.saveLocation("instances." + args[0] + ".lobbylocation", player.getLocation());
                     player.sendMessage("BuildBattle: Lobby location for arena/instance " + args[0] + " set to " + Util.locationToString(player.getLocation()));
+                    return true;
                 } else if(args[2].equalsIgnoreCase("Endlocation") || args[2].equalsIgnoreCase("Endloc")) {
                     Util.saveLocation("instances." + args[0] + ".Endlocation", player.getLocation());
                     player.sendMessage("BuildBattle: End location for arena/instance " + args[0] + " set to " + Util.locationToString(player.getLocation()));
+                    return true;
                 } else {
                     player.sendMessage(ChatColor.RED + "Invalid Command!");
                     player.sendMessage(ChatColor.RED + "Usage: /bb <ARENA > set <LOBBYLOCATION | EndLOCATION>");
@@ -256,7 +257,7 @@ public class MainCommand implements CommandExecutor {
         config.set(path + "maximumplayers", config.getInt("instances.default.maximumplayers"));
         config.set(path + "mapname", config.getInt("instances.default.mapname"));
         config.set(path + "signs", new ArrayList<>());
-        config.set(path + "plots", new ArrayList<>());
+        config.createSection(path + "plots");
         config.set(path + "isdone", false);
         config.set(path + "world", config.getString("instances.default.world"));
         ConfigurationManager.saveConfig(config, "arenas");

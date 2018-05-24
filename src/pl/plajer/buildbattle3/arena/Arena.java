@@ -106,10 +106,8 @@ public class Arena extends BukkitRunnable {
     public Arena(String ID) {
         gameState = ArenaState.WAITING_FOR_PLAYERS;
         this.ID = ID;
-        if(ConfigPreferences.isBarEnabled()) {
-            if(!plugin.is1_8_R3()) {
+        if(ConfigPreferences.isBarEnabled() && !plugin.is1_8_R3()) {
                 gameBar = Bukkit.createBossBar(ChatManager.colorMessage("Bossbar.Waiting-For-Players"), BarColor.BLUE, BarStyle.SOLID);
-            }
         }
         plotManager = new PlotManager(this);
         scoreboardHandler = new ScoreboardHandler(this);
@@ -169,7 +167,9 @@ public class Arena extends BukkitRunnable {
         p.setFoodLevel(20);
         p.setFlying(false);
         p.setAllowFlight(false);
-        gameBar.removePlayer(p);
+        if(!plugin.is1_8_R3() && ConfigPreferences.isBarEnabled()) {
+            gameBar.removePlayer(p);
+        }
         p.getInventory().setArmorContents(null);
         p.getInventory().clear();
         for(PotionEffect effect : p.getActivePotionEffects()) {
@@ -463,7 +463,7 @@ public class Arena extends BukkitRunnable {
     }
 
     public void start() {
-        if(!plugin.getServer().getPluginManager().isPluginEnabled("BossBarAPI")){
+        if(!plugin.getServer().getPluginManager().isPluginEnabled("BossBarAPI")) {
             Main.debug("BossBarAPI for 1.8 not found! Disabling BossBar support!", System.currentTimeMillis());
             bossBarEnabled = false;
         }
@@ -495,6 +495,9 @@ public class Arena extends BukkitRunnable {
             return;
         }
         if(plugin.isInventoryManagerEnabled()) plugin.getInventoryManager().saveInventoryToFile(p);
+        if(!plugin.is1_8_R3() && ConfigPreferences.isBarEnabled()){
+            gameBar.addPlayer(p);
+        }
         teleportToLobby(p);
         this.addPlayer(p);
         p.setHealth(20.0);
@@ -753,16 +756,6 @@ public class Arena extends BukkitRunnable {
 
     public Location getStartLocation() {
         return startLoc;
-    }
-
-
-    public void setStartLocation(Location location) {
-        startLoc = location;
-    }
-
-    public void teleportToStartLocation(Player player) {
-        if(startLoc != null) player.teleport(startLoc);
-        else System.out.print("Startlocation for arena " + getID() + " isn't intialized!");
     }
 
     public void teleportAllToEndLocation() {

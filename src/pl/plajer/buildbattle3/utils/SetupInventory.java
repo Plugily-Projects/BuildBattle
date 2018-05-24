@@ -38,7 +38,7 @@ public class SetupInventory {
 
     //todo better
     public SetupInventory(Arena arena) {
-        this.inventory = Bukkit.createInventory(null, 9 * 2, "Arena: " + arena.getID());
+        this.inventory = Bukkit.createInventory(null, 9 * 2, "BB Arena: " + arena.getID());
         addItem(new ItemBuilder(new ItemStack(Material.REDSTONE_BLOCK))
                 .name(ChatColor.GOLD + "► Set" + ChatColor.RED + " ending " + ChatColor.GOLD + "location")
                 .lore(ChatColor.GRAY + "Click to set the ending location")
@@ -53,7 +53,8 @@ public class SetupInventory {
                 .lore(ChatColor.GRAY + "on the place where you are standing")
                 .lore(isOptionDoneBool("instances." + arena.getID() + ".lobbylocation"))
                 .build());
-        addItem(new ItemBuilder(new ItemStack(Material.COAL, ConfigurationManager.getConfig("arenas").getInt("instances." + arena.getID() + ".minimumplayers")))
+        int min = ConfigurationManager.getConfig("arenas").getInt("instances." + arena.getID() + ".minimumplayers");
+        addItem(new ItemBuilder(new ItemStack(Material.COAL, min == 0 ? 1 : min))
                 .name(ChatColor.GOLD + "► Set" + ChatColor.DARK_GREEN + " minimum players " + ChatColor.GOLD + "size")
                 .lore(ChatColor.GRAY + "LEFT click to decrease")
                 .lore(ChatColor.GRAY + "RIGHT click to increase")
@@ -61,7 +62,8 @@ public class SetupInventory {
                 .lore(ChatColor.DARK_GRAY + "for game to start lobby countdown)")
                 .lore(isOptionDone("instances." + arena.getID() + ".minimumplayers"))
                 .build());
-        addItem(new ItemBuilder(new ItemStack(Material.REDSTONE, ConfigurationManager.getConfig("arenas").getInt("instances." + arena.getID() + ".maximumplayers")))
+        int max = ConfigurationManager.getConfig("arenas").getInt("instances." + arena.getID() + ".maximumplayers");
+        addItem(new ItemBuilder(new ItemStack(Material.REDSTONE, max == 0 ? 1 : max))
                 .name(ChatColor.GOLD + "► Set" + ChatColor.GREEN + " maximum players " + ChatColor.GOLD + "size")
                 .lore(ChatColor.GRAY + "LEFT click to decrease")
                 .lore(ChatColor.GRAY + "RIGHT click to increase")

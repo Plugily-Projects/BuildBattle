@@ -16,6 +16,7 @@ Commands:
   No-Selection: "&cUzyj wpierw zaznaczenia WorldEditem!"
   Plugin-Reloaded: "&aPlugin i konfiguracja zostaly przeladowane!"
   Player-Not-Found: "&cNie ma takiego gracza!"
+  Invalid-Args: "&cInvalid arguments! Make sure you typed the command correctly!"
   Stats-Command:
     Header: "&l-----TWOJE STATY-----"
     Header-Other: "&l-----STATY %player%-----"
@@ -45,6 +46,9 @@ In-Game:
   Full-Game-No-Permission: "&cNie masz uprawnien by dolaczyc na pelne areny!"
   No-Slots-For-Premium: "&cTa gra jest juz pelna graczy premium! Przepraszamy!"
   Arena-Not-Configured: "&cArena nie zostala skonfigurowana! Poinformuj admina!"
+  Floor-Change-NPC-Name: "&aZmien blok podlogi"
+  NPC-Created: "&aNPC zostal stworzony pomyslnie!"
+  Install-Citizens: "&cZainstaluj wpierw plugin Citizens by moc tworzyc NPC!"
   Messages:
     Time-Left-To-Build: "&7Pozostalo &6%FORMATTEDTIME% &7czasu do zakonczenia budowy!"
     Plot-Leave-Error: "&cNie mozesz wyleciec z dzialki!"

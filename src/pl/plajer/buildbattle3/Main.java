@@ -39,6 +39,7 @@ import pl.plajer.buildbattle3.events.JoinEvents;
 import pl.plajer.buildbattle3.events.SetupInventoryEvents;
 import pl.plajer.buildbattle3.events.SpectatorEvents;
 import pl.plajer.buildbattle3.handlers.BungeeManager;
+import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
 import pl.plajer.buildbattle3.handlers.InventoryManager;
 import pl.plajer.buildbattle3.handlers.PermissionManager;
@@ -267,6 +268,7 @@ public class Main extends JavaPlugin {
     }
 
     private void initializeClasses() {
+        new ChatManager();
         Arena.plugin = this;
         User.plugin = this;
         PermissionManager.init();
@@ -368,21 +370,25 @@ public class Main extends JavaPlugin {
                 }
             }
             if(config.contains(s + "plots")) {
-                for(String plotName : config.getConfigurationSection(s + "plots").getKeys(false)) {
-                    if(config.isSet(s + "plots." + plotName + ".maxpoint") && config.isSet(s + "plots." + plotName + ".minpoint")) {
-                        Plot buildPlot = new Plot();
-                        buildPlot.setMaxPoint(Util.getLocation(false, config.getString(s + "plots." + plotName + ".maxpoint")));
-                        buildPlot.setMinPoint(Util.getLocation(false, config.getString(s + "plots." + plotName + ".minpoint")));
-                        buildPlot.reset();
-                        arena.getPlotManager().addBuildPlot(buildPlot);
-                    } else {
-                        System.out.println("Non configured plot instances found!");
-                        arena.setReady(false);
-                        break;
+                if(config.isConfigurationSection(s + "plots")) {
+                    for(String plotName : config.getConfigurationSection(s + "plots").getKeys(false)) {
+                        if(config.isSet(s + "plots." + plotName + ".maxpoint") && config.isSet(s + "plots." + plotName + ".minpoint")) {
+                            Plot buildPlot = new Plot();
+                            buildPlot.setMaxPoint(Util.getLocation(false, config.getString(s + "plots." + plotName + ".maxpoint")));
+                            buildPlot.setMinPoint(Util.getLocation(false, config.getString(s + "plots." + plotName + ".minpoint")));
+                            buildPlot.reset();
+                            arena.getPlotManager().addBuildPlot(buildPlot);
+                        } else {
+                            System.out.println("Non configured plot instances found for arena " + ID);
+                            arena.setReady(false);
+                        }
                     }
+                } else {
+                    System.out.println("Non configured plots in arena " + ID);
+                    arena.setReady(false);
                 }
             } else {
-                System.out.print("Instance doesn't contains plots!");
+                System.out.print("Instance " + ID + " doesn't contains plots!");
                 arena.setReady(false);
             }
             ArenaRegistry.registerArena(arena);
