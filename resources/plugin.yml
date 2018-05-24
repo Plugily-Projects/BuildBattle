@@ -1,4 +1,4 @@
-main: pl.plajer.buildbattle.Main
+main: pl.plajer.buildbattle3.Main
 version: 3.0.0 Beta 2
 name: BuildBattle
 depend: [WorldEdit]

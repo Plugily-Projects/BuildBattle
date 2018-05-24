@@ -152,7 +152,7 @@ public class Main extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-        if(!(version.equalsIgnoreCase("v1_8_R1") || version.equalsIgnoreCase("v1_8_R2") || version.contains("v1_7") || version.contains("v1_6"))) {
+        if(version.equalsIgnoreCase("v1_8_R1") || version.equalsIgnoreCase("v1_8_R2") || version.contains("v1_7") || version.contains("v1_6")) {
             MessageUtils.thisVersionIsNotSupported();
             Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by BuildBattle!");
             Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider updating your server version?");

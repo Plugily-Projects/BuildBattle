@@ -101,7 +101,6 @@ Hook-Into-Vault: false
 Lobby-Starting-Time: 60
 
 # All game themes, type here everything you want your players to build.
-# Do not use spaces, use underscore character "_" instead
 Game-Themes:
 - Bees
 - Pirates
@@ -110,8 +109,8 @@ Game-Themes:
 - Love
 - Hate
 - Ugly
-- School_Bus
-- Pixel_Art
+- School Bus
+- Pixel Art
 
 # Blacklisted item ID's, you can't use them while building.
 Blacklisted-Items:

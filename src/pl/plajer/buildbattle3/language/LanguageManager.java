@@ -24,6 +24,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
 
+import java.io.File;
+
 /**
  * @author Plajer
  * <p>
@@ -36,7 +38,9 @@ public class LanguageManager {
 
     public static void init(Main pl) {
         plugin = pl;
-        ConfigurationManager.getConfig("language");
+        if(!new File(plugin.getDataFolder() + File.separator + "language.yml").exists()) {
+            plugin.saveResource("language.yml", false);
+        }
         setupLocale();
     }
 

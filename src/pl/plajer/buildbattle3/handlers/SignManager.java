@@ -140,7 +140,7 @@ public class SignManager implements Listener {
                 e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Already-Playing"));
                 return;
             }
-            if(!(arena.getPlayers().size() >= arena.getMaximumPlayers())){
+            if(!(arena.getPlayers().size() >= arena.getMaximumPlayers())) {
                 arena.joinAttempt(e.getPlayer());
                 return;
             }
@@ -156,7 +156,7 @@ public class SignManager implements Listener {
                             arena.joinAttempt(e.getPlayer());
                             return;
                         } else {
-                           arena.joinAttempt(e.getPlayer());
+                            arena.joinAttempt(e.getPlayer());
                             return;
                         }
                     }
@@ -193,4 +193,7 @@ public class SignManager implements Listener {
         }, 10, 10);
     }
 
+    public Map<Sign, Arena> getLoadedSigns() {
+        return loadedSigns;
+    }
 }
