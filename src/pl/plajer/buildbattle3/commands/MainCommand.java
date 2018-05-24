@@ -76,7 +76,7 @@ public class MainCommand implements CommandExecutor {
         if(sender.hasPermission(perm)) {
             return true;
         }
-        sender.sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("Commands.No-Permission"));
+        sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Permission"));
         return false;
     }
 

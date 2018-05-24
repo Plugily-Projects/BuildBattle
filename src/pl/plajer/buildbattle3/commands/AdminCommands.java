@@ -63,7 +63,7 @@ public class AdminCommands extends MainCommand {
 
     public void addPlot(Player player, String arena) {
         if(ArenaRegistry.getArena(arena) == null) {
-            player.sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
             return;
         }
         Selection selection = plugin.getWorldEditPlugin().getSelection(player);
@@ -90,7 +90,7 @@ public class AdminCommands extends MainCommand {
             arena.setGameState(ArenaState.STARTING);
             arena.setTimer(0);
             for(Player p : arena.getPlayers()) {
-                p.sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("In-Game.Messages.Admin-Messages.Set-Starting-In-To-0"));
+                p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Admin-Messages.Set-Starting-In-To-0"));
             }
         }
     }
@@ -112,7 +112,7 @@ public class AdminCommands extends MainCommand {
     public void addSign(Player player, String arenaName) {
         Arena arena = ArenaRegistry.getArena(arenaName);
         if(arena == null) {
-            player.sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
         } else {
             Location loc = player.getTargetBlock(null, 10).getLocation();
             if(loc.getBlock().getState() instanceof Sign) {
@@ -122,7 +122,7 @@ public class AdminCommands extends MainCommand {
                 config.set("instances." + arena.getID() + ".signs", signs);
                 ConfigurationManager.saveConfig(config, "arenas");
                 plugin.getSignManager().getLoadedSigns().put((Sign) loc.getBlock().getState(), arena);
-                player.sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("Signs.Sign-Created"));
+                player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Created"));
             } else {
                 player.sendMessage(ChatColor.RED + "You have to look at a sign to perform this command!");
             }

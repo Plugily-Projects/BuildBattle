@@ -209,14 +209,14 @@ public class Arena extends BukkitRunnable {
                         String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players")
                                 .replaceAll("%MINPLAYERS%", String.valueOf(getMinimumPlayers()));
                         for(Player p : getPlayers()) {
-                            p.sendMessage(ChatManager.PREFIX + message);
+                            p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
                         }
                         return;
                     }
                 } else {
                     String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start");
                     for(Player p : getPlayers()) {
-                        p.sendMessage(ChatManager.PREFIX + message);
+                        p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
                     }
                     setGameState(ArenaState.STARTING);
                     Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
@@ -246,7 +246,7 @@ public class Arena extends BukkitRunnable {
                     setRandomTheme();
                     String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started");
                     for(Player p : getPlayers()) {
-                        p.sendMessage(ChatManager.PREFIX + message);
+                        p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
                     }
                 }
                 setTimer(getTimer() - 1);
@@ -262,7 +262,7 @@ public class Arena extends BukkitRunnable {
                 if(getPlayers().size() <= 1) {
                     String message = ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Only-You-Playing");
                     for(Player p : getPlayers()) {
-                        p.sendMessage(ChatManager.PREFIX + message);
+                        p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
                     }
                     setGameState(ArenaState.ENDING);
                     Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
@@ -271,7 +271,7 @@ public class Arena extends BukkitRunnable {
                 if((getTimer() == (4 * 60) || getTimer() == (3 * 60) || getTimer() == 5 * 60 || getTimer() == 30 || getTimer() == 2 * 60 || getTimer() == 60 || getTimer() == 15) && !this.isVoting()) {
                     String message = ChatManager.colorMessage("In-Game.Messages.Time-Left-To-Build").replaceAll("%FORMATTEDTIME%", Util.formatIntoMMSS(getTimer()));
                     for(Player p : getPlayers()) {
-                        p.sendMessage(ChatManager.PREFIX + message);
+                        p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
                     }
                 }
                 if(getTimer() != 0 && !receivedVoteItems) {
@@ -283,7 +283,7 @@ public class Arena extends BukkitRunnable {
                             if(buildPlot != null) {
                                 if(!buildPlot.isInFlyRange(player)) {
                                     player.teleport(buildPlot.getTeleportLocation());
-                                    player.sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("In-Game.Messages.Cant-Fly-Outside-Plot"));
+                                    player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Cant-Fly-Outside-Plot"));
                                 }
                             }
                         }
@@ -481,17 +481,17 @@ public class Arena extends BukkitRunnable {
 
     public void joinAttempt(Player p) {
         if(!isReady()) {
-            p.sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("In-Game.Arena-Not-Configured"));
+            p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Arena-Not-Configured"));
             return;
         }
         if(!plugin.isBungeeActivated()) {
             if(!(p.hasPermission(PermissionManager.getJoinPerm().replaceAll("<arena>", "*")) || p.hasPermission(PermissionManager.getJoinPerm().replaceAll("<arena>", getID())))) {
-                p.sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("In-Game.Join-No-Permission"));
+                p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Join-No-Permission"));
                 return;
             }
         }
         if((getGameState() == ArenaState.IN_GAME || getGameState() == ArenaState.ENDING || getGameState() == ArenaState.RESTARTING)) {
-            p.sendMessage(ChatManager.PREFIX + ChatManager.colorMessage("Commands.Arena-Started"));
+            p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Started"));
             return;
         }
         if(plugin.isInventoryManagerEnabled()) plugin.getInventoryManager().saveInventoryToFile(p);
@@ -550,7 +550,7 @@ public class Arena extends BukkitRunnable {
                 for(Player p : getPlayers()) {
                     p.teleport(getVotingPlot().getTeleportLocation());
                     MessageHandler.sendTitleMessage(p, ChatManager.colorMessage("In-Game.Voting-Messages.Plot-Owner-Title").replaceAll("%player%", player.getName()), 5, 20, 5, ChatColor.BLACK);
-                    p.sendMessage(ChatManager.PREFIX + message);
+                    p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
                 }
             }
         }

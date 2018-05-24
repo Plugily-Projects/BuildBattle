@@ -30,10 +30,10 @@ import pl.plajer.buildbattle3.utils.Util;
  */
 public class ChatManager {
 
-    public static String PREFIX;
+    public static String PLUGIN_PREFIX;
 
     public ChatManager() {
-        PREFIX = colorMessage("In-Game.Plugin-Prefix");
+        PLUGIN_PREFIX = colorMessage("In-Game.Plugin-Prefix");
     }
 
     public static String colorMessage(String message) {
