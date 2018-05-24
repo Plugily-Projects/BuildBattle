@@ -179,10 +179,10 @@ public class Arena extends BukkitRunnable {
         if(getPlayers().size() == 0) {
             this.setGameState(ArenaState.RESTARTING);
         }
+        p.setGameMode(GameMode.SURVIVAL);
         if(plugin.isInventoryManagerEnabled()) {
             plugin.getInventoryManager().loadInventory(p);
         }
-        p.setGameMode(GameMode.SURVIVAL);
         for(Player player : plugin.getServer().getOnlinePlayers()) {
             if(!getPlayers().contains(player)) {
                 p.showPlayer(player);
@@ -240,6 +240,8 @@ public class Arena extends BukkitRunnable {
                         player.setGameMode(GameMode.CREATIVE);
                         if(PLAYERS_OUTSIDE_GAME_ENABLED) hidePlayersOutsideTheGame(player);
                         player.getInventory().setItem(8, IngameMenu.getMenuItem());
+                        //to prevent Multiverse chaning gamemode bug
+                        Bukkit.getScheduler().runTaskLater(plugin, () -> player.setGameMode(GameMode.CREATIVE), 20);
                     }
                     setRandomTheme();
                     String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started");

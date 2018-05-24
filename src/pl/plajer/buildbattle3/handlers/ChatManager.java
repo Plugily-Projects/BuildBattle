@@ -23,6 +23,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.language.LanguageManager;
+import pl.plajer.buildbattle3.utils.Util;
 
 /**
  * Created by Tom on 27/07/2014.
@@ -49,6 +50,23 @@ public class ChatManager {
 
     public static String colorRawMessage(String msg) {
         return ChatColor.translateAlternateColorCodes('&', msg);
+    }
+
+    public static String formatMessage(Arena arena, String message, Player player) {
+        String returnString = message;
+        returnString = returnString.replaceAll("%PLAYER%", player.getName());
+        returnString = colorRawMessage(formatPlaceholders(returnString, arena));
+        return returnString;
+    }
+
+    private static String formatPlaceholders(String message, Arena arena) {
+        String returnstring = message;
+        returnstring = returnstring.replaceAll("%TIME%", Integer.toString(arena.getTimer()));
+        returnstring = returnstring.replaceAll("%FORMATTEDTIME%", Util.formatIntoMMSS((arena.getTimer())));
+        returnstring = returnstring.replaceAll("%PLAYERSIZE%", Integer.toString(arena.getPlayers().size()));
+        returnstring = returnstring.replaceAll("%MAXPLAYERS%", Integer.toString(arena.getMaximumPlayers()));
+        returnstring = returnstring.replaceAll("%MINPLAYERS%", Integer.toString(arena.getMinimumPlayers()));
+        return returnstring;
     }
 
     public static void broadcastAction(Arena arena, Player p, ActionType action) {
