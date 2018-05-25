@@ -42,6 +42,39 @@ Bossbar:
   Time-Left: "&f&lZeit übrig: &e&l%time%"
   Vote-Time-Left: "&e&lAbstimmungs Zeit übrig: &f&e%time%"
 
+Scoreboard:
+  Title: "&6BuildBattle"
+  Content:
+    Playing:
+      - "&5Time left;"
+      - "&b %FORMATTED_TIME_LEFT%"
+      - ""
+      - "&5Players:"
+      - "&b %PLAYERS%/%MAX_PLAYERS%"
+      - ""
+      - "&5Theme:"
+      - "&b %THEME%"
+      - ""
+      - "&5Arena:"
+      - "&b %ARENA_ID%"
+    Starting:
+      - "&5Players:"
+      - " &b%PLAYERS%"
+      - ""
+      - "&5Players needed:"
+      - "&b %MIN_PLAYERS%"
+      - " "
+      - "&5&bStarting in:"
+      - "&d %TIMER%"
+    Ending:
+      - "&5 Game ended!"
+    Waiting:
+      - "&5Players:"
+      - " &b%PLAYERS%"
+      - ""
+      - "&5Players needed:"
+      - "&b %MIN_PLAYERS%"
+
 In-Game:
   Plugin-Prefix: "&6[&bBuildBattle&6] "
   Only-Command-Ingame-Is-Leave: "&cDu must das Spiel verlassen um Commands benutzen zu können. Nur /leave funktioniert!"

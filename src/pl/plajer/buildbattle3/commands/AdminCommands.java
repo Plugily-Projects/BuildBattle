@@ -90,7 +90,7 @@ public class AdminCommands extends MainCommand {
     public void forceStart(Player player) {
         Arena arena = ArenaRegistry.getArena(player);
         if(arena == null) return;
-        if(arena.getGameState() == ArenaState.WAITING_FOR_PLAYERS || arena.getGameState() == ArenaState.STARTING) {
+        if(arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) {
             arena.setGameState(ArenaState.STARTING);
             arena.setTimer(0);
             for(Player p : arena.getPlayers()) {

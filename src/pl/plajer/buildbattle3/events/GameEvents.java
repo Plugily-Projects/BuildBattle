@@ -85,7 +85,7 @@ public class GameEvents implements Listener {
         if(event.getItem() == null) return;
         Arena arena = ArenaRegistry.getArena(event.getPlayer());
         if(arena == null) return;
-        if(arena.getGameState() != ArenaState.IN_GAME) return;
+        if(arena.getArenaState() != ArenaState.IN_GAME) return;
 
         if(!event.getItem().hasItemMeta()) return;
         if(!event.getItem().getItemMeta().hasDisplayName()) return;
@@ -128,7 +128,7 @@ public class GameEvents implements Listener {
         if(event.getItem() == null) return;
         Arena arena = ArenaRegistry.getArena(event.getPlayer());
         if(arena == null) return;
-        if(arena.getGameState() != ArenaState.IN_GAME) return;
+        if(arena.getArenaState() != ArenaState.IN_GAME) return;
         ItemStack itemStack = event.getItem();
         if(!itemStack.hasItemMeta()) return;
         if(!itemStack.getItemMeta().hasDisplayName()) return;
@@ -268,7 +268,7 @@ public class GameEvents implements Listener {
         Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
         if(arena == null) return;
 
-        if(arena.getGameState() != ArenaState.IN_GAME) return;
+        if(arena.getArenaState() != ArenaState.IN_GAME) return;
         if(displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Particle-Option"))) {
             e.getWhoClicked().closeInventory();
             ParticleMenu.openMenu(player);
@@ -437,7 +437,7 @@ public class GameEvents implements Listener {
     public void onBreak(BlockBreakEvent event) {
         Arena arena = ArenaRegistry.getArena(event.getPlayer());
         if(arena == null) return;
-        if(arena.getGameState() != ArenaState.IN_GAME) {
+        if(arena.getArenaState() != ArenaState.IN_GAME) {
             event.setCancelled(true);
             return;
         }
@@ -466,7 +466,7 @@ public class GameEvents implements Listener {
     public void onPlace(BlockPlaceEvent event) {
         Arena arena = ArenaRegistry.getArena(event.getPlayer());
         if(arena == null) return;
-        if(arena.getGameState() != ArenaState.IN_GAME) {
+        if(arena.getArenaState() != ArenaState.IN_GAME) {
             event.setCancelled(true);
             return;
         }
@@ -495,7 +495,7 @@ public class GameEvents implements Listener {
     public void onInventoryClick(InventoryClickEvent event) {
         Arena arena = ArenaRegistry.getArena((Player) event.getWhoClicked());
         if(arena == null) return;
-        if(arena.getGameState() != ArenaState.IN_GAME) {
+        if(arena.getArenaState() != ArenaState.IN_GAME) {
             event.setCancelled(true);
             return;
         }

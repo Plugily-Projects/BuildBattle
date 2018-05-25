@@ -99,7 +99,7 @@ public class SignManager implements Listener {
         if(a.getPlayers().size() >= a.getMaximumPlayers()) {
             formatted = formatted.replace("%state%", ChatManager.colorMessage("Signs.Game-States.Full-Game"));
         } else {
-            formatted = formatted.replace("%state%", gameStateToString.get(a.getGameState()));
+            formatted = formatted.replace("%state%", gameStateToString.get(a.getArenaState()));
         }
         formatted = formatted.replace("%playersize%", String.valueOf(a.getPlayers().size()));
         formatted = formatted.replace("%maxplayers%", String.valueOf(a.getMaximumPlayers()));
@@ -147,7 +147,7 @@ public class SignManager implements Listener {
             if(e.getPlayer().hasPermission(PermissionManager.getJoinFullGames())) {
                 for(Player player : arena.getPlayers()) {
                     if(!player.hasPermission(PermissionManager.getJoinFullGames())) {
-                        if(arena.getGameState() == ArenaState.STARTING || arena.getGameState() == ArenaState.WAITING_FOR_PLAYERS) {
+                        if(arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
                             arena.leaveAttempt(player);
                             player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.You-Were-Kicked-For-Premium-Slot"));
                             for(Player p : arena.getPlayers()) {

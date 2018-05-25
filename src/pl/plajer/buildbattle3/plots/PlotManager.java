@@ -23,6 +23,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import pl.plajer.buildbattle3.arena.Arena;
+import pl.plajer.buildbattle3.arena.ArenaManager;
 import pl.plajer.buildbattle3.arena.ArenaState;
 import pl.plajer.buildbattle3.user.UserManager;
 
@@ -62,7 +63,7 @@ public class PlotManager {
         if(!players.isEmpty()) {
             System.out.print("YOU HAVENT SET ENOUGH PLOTS! SET FOR ARENA " + buildInstance.getID() + ". YOU HAVE TO SET " + players.size() + " MORE PLOTS!");
             System.out.print("STOPPING THE GAME");
-            buildInstance.setGameState(ArenaState.ENDING);
+            ArenaManager.stopGame(false, buildInstance);
         }
     }
 

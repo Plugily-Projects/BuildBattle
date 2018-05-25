@@ -60,25 +60,25 @@ public class ChatManager {
     }
 
     private static String formatPlaceholders(String message, Arena arena) {
-        String returnstring = message;
-        returnstring = returnstring.replaceAll("%TIME%", Integer.toString(arena.getTimer()));
-        returnstring = returnstring.replaceAll("%FORMATTEDTIME%", Util.formatIntoMMSS((arena.getTimer())));
-        returnstring = returnstring.replaceAll("%PLAYERSIZE%", Integer.toString(arena.getPlayers().size()));
-        returnstring = returnstring.replaceAll("%MAXPLAYERS%", Integer.toString(arena.getMaximumPlayers()));
-        returnstring = returnstring.replaceAll("%MINPLAYERS%", Integer.toString(arena.getMinimumPlayers()));
-        return returnstring;
+        String returnString = message;
+        returnString = returnString.replaceAll("%TIME%", Integer.toString(arena.getTimer()));
+        returnString = returnString.replaceAll("%FORMATTEDTIME%", Util.formatIntoMMSS((arena.getTimer())));
+        returnString = returnString.replaceAll("%PLAYERSIZE%", Integer.toString(arena.getPlayers().size()));
+        returnString = returnString.replaceAll("%MAXPLAYERS%", Integer.toString(arena.getMaximumPlayers()));
+        returnString = returnString.replaceAll("%MINPLAYERS%", Integer.toString(arena.getMinimumPlayers()));
+        return returnString;
     }
 
     public static void broadcastAction(Arena arena, Player p, ActionType action) {
         switch(action) {
             case JOIN:
-                String joinMsg = ChatManager.colorMessage("In-Game.Messages.Join").replace("%PLAYER%", p.getName());
+                String joinMsg = formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Join"), p);
                 for(Player player : arena.getPlayers()) {
                     player.sendMessage(joinMsg);
                 }
                 break;
             case LEAVE:
-                String leaveMsg = ChatManager.colorMessage("In-Game.Messages.Leave").replace("%PLAYER%", p.getName());
+                String leaveMsg = formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Leave"), p);
                 for(Player player : arena.getPlayers()) {
                     player.sendMessage(leaveMsg);
                 }
