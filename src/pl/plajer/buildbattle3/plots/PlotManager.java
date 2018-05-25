@@ -24,7 +24,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaManager;
-import pl.plajer.buildbattle3.arena.ArenaState;
 import pl.plajer.buildbattle3.user.UserManager;
 
 import java.util.ArrayList;
@@ -87,7 +86,7 @@ public class PlotManager {
 
     public void resetQeuedPlots() {
         for(Plot buildPlot : plotsToClear) {
-            buildPlot.reset();
+            buildPlot.fullyResetPlot();
         }
         plotsToClear.clear();
     }
@@ -99,7 +98,7 @@ public class PlotManager {
     public void resetPlotsGradually() {
         if(plotsToClear.isEmpty()) return;
 
-        plotsToClear.get(0).reset();
+        plotsToClear.get(0).fullyResetPlot();
         plotsToClear.remove(0);
     }
 

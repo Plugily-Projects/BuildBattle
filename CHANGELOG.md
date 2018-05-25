@@ -9,3 +9,4 @@
 * StatsStorage API reworked
 * Added Java Docs
 * Removed /addsigns command
+* Plot reset option added

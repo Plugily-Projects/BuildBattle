@@ -20,7 +20,6 @@ package pl.plajer.buildbattle3;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -376,7 +375,7 @@ public class Main extends JavaPlugin {
                             Plot buildPlot = new Plot();
                             buildPlot.setMaxPoint(Util.getLocation(false, config.getString(s + "plots." + plotName + ".maxpoint")));
                             buildPlot.setMinPoint(Util.getLocation(false, config.getString(s + "plots." + plotName + ".minpoint")));
-                            buildPlot.reset();
+                            buildPlot.fullyResetPlot();
                             arena.getPlotManager().addBuildPlot(buildPlot);
                         } else {
                             System.out.println("Non configured plot instances found for arena " + ID);

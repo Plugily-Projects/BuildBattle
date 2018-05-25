@@ -137,7 +137,7 @@ public class SignManager implements Listener {
             Arena arena = loadedSigns.get(e.getClickedBlock().getState());
             if(arena == null) return;
             if(ArenaRegistry.getArena(e.getPlayer()) != null) {
-                e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Already-Playing"));
+                e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Already-Playing"));
                 return;
             }
             if(!(arena.getPlayers().size() >= arena.getMaximumPlayers())) {

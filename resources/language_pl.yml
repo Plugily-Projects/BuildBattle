@@ -75,6 +75,7 @@ In-Game:
   Max-Particles-Limit-Reached: "&cNie mozesz stworzyc wiecej efektow!"
   No-Permission-For-Particle: "&cNie masz uprawnien do tego efektu!"
   Particle-Added: "&aPomyslnie dodales efekt!"
+  Join-No-Permission: "&cYou don't have permission to join this arena!"
   Particle-Removed: "&cPomyslnie usunales efekt!"
   Full-Game-No-Permission: "&cNie masz uprawnien by dolaczyc na pelne areny!"
   No-Slots-For-Premium: "&cTa gra jest juz pelna graczy premium! Przepraszamy!"
@@ -134,6 +135,10 @@ Menus:
     Floor-Option: "&aZmien podloge"
     Floor-Option-Lore: "&7Przenies blok tutaj by zmienic podloge"
     Floor-Changed: "&aMaterial podlogi zmieniony!"
+    #todo
+    Reset-Option: "&cReset plot"
+    Reset-Option-Lore: "&7Fully reset plot, &c&lcan't be undone!"
+    Reset-Option-Done: "&cPlot fully reset!"
 
 Signs:
   Please-Type-Arena-Name: "&cPodaj nazwe areny w drugiej linii!"

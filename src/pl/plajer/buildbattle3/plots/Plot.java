@@ -19,13 +19,16 @@
 package pl.plajer.buildbattle3.plots;
 
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
+import net.citizensnpcs.api.CitizensAPI;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle3.ConfigPreferences;
+import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
 
@@ -91,7 +94,7 @@ public class Plot {
         this.uuid = player;
     }
 
-    public void reset() {
+    public void fullyResetPlot() {
         CuboidSelection cuboidSelection = new CuboidSelection(getMaxPoint().getWorld(), getMaxPoint(), getMinPoint());
         com.sk89q.worldedit.Vector min = cuboidSelection.getNativeMinimumPoint();
         com.sk89q.worldedit.Vector max = cuboidSelection.getNativeMaximumPoint();
@@ -115,9 +118,44 @@ public class Plot {
         }
         getParticles().clear();
         for(Entity entity : getCenter().getWorld().getEntities()) {
-            if(isInPlotRange(entity.getLocation(), 3)) if(entity.getType() != EntityType.PLAYER) entity.remove();
+            if(isInPlotRange(entity.getLocation(), 3)) {
+                if(JavaPlugin.getPlugin(Main.class).getServer().getPluginManager().isPluginEnabled("Citizens")){
+                    if(CitizensAPI.getNPCRegistry().isNPC(entity)) return;
+                }
+                if(entity.getType() != EntityType.PLAYER){
+                    entity.remove();
+                }
+            }
         }
+    }
 
+    public void resetPlot(){
+        CuboidSelection cuboidSelection = new CuboidSelection(getMaxPoint().getWorld(), getMaxPoint(), getMinPoint());
+        com.sk89q.worldedit.Vector min = cuboidSelection.getNativeMinimumPoint();
+        com.sk89q.worldedit.Vector max = cuboidSelection.getNativeMaximumPoint();
+        for(int x = min.getBlockX(); x <= max.getBlockX(); x = x + 1) {
+            for(int y = min.getBlockY(); y <= max.getBlockY(); y = y + 1) {
+                for(int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
+                    Location tmpblock = new Location(getMaxPoint().getWorld(), x, y, z);
+                    if(tmpblock.getBlock().getType() != Material.AIR) {
+                        tmpblock.getBlock().setType(Material.AIR);
+
+                    }
+                }
+            }
+        }
+        changeFloor(Material.getMaterial(ConfigPreferences.getDefaultFloorMaterial()));
+        getParticles().clear();
+        for(Entity entity : getCenter().getWorld().getEntities()) {
+            if(isInPlotRange(entity.getLocation(), 3)) {
+                if(JavaPlugin.getPlugin(Main.class).getServer().getPluginManager().isPluginEnabled("Citizens")){
+                    if(CitizensAPI.getNPCRegistry().isNPC(entity)) return;
+                }
+                if(entity.getType() != EntityType.PLAYER){
+                    entity.remove();
+                }
+            }
+        }
     }
 
     public Location getCenter() {

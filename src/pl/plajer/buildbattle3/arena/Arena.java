@@ -48,7 +48,7 @@ import pl.plajer.buildbattle3.plots.Plot;
 import pl.plajer.buildbattle3.plots.PlotManager;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
-import pl.plajer.buildbattle3.utils.IngameMenu;
+import pl.plajer.buildbattle3.utils.OptionsMenu;
 import pl.plajer.buildbattle3.utils.Util;
 
 import java.util.ArrayList;
@@ -238,7 +238,7 @@ public class Arena extends BukkitRunnable {
                         player.getInventory().clear();
                         player.setGameMode(GameMode.CREATIVE);
                         if(PLAYERS_OUTSIDE_GAME_ENABLED) hidePlayersOutsideTheGame(player);
-                        player.getInventory().setItem(8, IngameMenu.getMenuItem());
+                        player.getInventory().setItem(8, OptionsMenu.getMenuItem());
                         //to prevent Multiverse chaning gamemode bug
                         Bukkit.getScheduler().runTaskLater(plugin, () -> player.setGameMode(GameMode.CREATIVE), 20);
                     }

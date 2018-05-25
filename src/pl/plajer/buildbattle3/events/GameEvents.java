@@ -63,7 +63,7 @@ import pl.plajer.buildbattle3.playerheads.PlayerHeadsMenu;
 import pl.plajer.buildbattle3.plots.Plot;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
-import pl.plajer.buildbattle3.utils.IngameMenu;
+import pl.plajer.buildbattle3.utils.OptionsMenu;
 
 import java.util.ArrayList;
 
@@ -133,8 +133,8 @@ public class GameEvents implements Listener {
         if(!itemStack.hasItemMeta()) return;
         if(!itemStack.getItemMeta().hasDisplayName()) return;
         if(arena.isVoting()) return;
-        if(!IngameMenu.getMenuItem().getItemMeta().getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())) return;
-        IngameMenu.openMenu(event.getPlayer(), arena.getPlotManager().getPlot(event.getPlayer()));
+        if(!OptionsMenu.getMenuItem().getItemMeta().getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())) return;
+        OptionsMenu.openMenu(event.getPlayer(), arena.getPlotManager().getPlot(event.getPlayer()));
     }
 
     @EventHandler
@@ -273,7 +273,13 @@ public class GameEvents implements Listener {
             e.getWhoClicked().closeInventory();
             ParticleMenu.openMenu(player);
             return;
-        } else if(e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Particle-Remove"))) {
+        } else if(displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Reset-Option"))) {
+            e.getWhoClicked().closeInventory();
+            arena.getPlotManager().getPlot((Player) e.getWhoClicked()).resetPlot();
+            e.getWhoClicked().sendMessage(ChatManager.colorMessage("Menus.Option-Menu.Reset-Option-Done"));
+            return;
+        }
+        if(e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Particle-Remove"))) {
             ParticleRemoveMenu.onClick(e.getInventory(), e.getCurrentItem(), arena.getPlotManager().getPlot(player));
             return;
         } else if(e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Players-Heads-Inventory-Name"))) {

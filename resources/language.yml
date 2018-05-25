@@ -74,6 +74,7 @@ In-Game:
   Max-Particles-Limit-Reached: "&cYou can't spawn more particles!"
   No-Permission-For-Particle: "&cYou don't have permission for this particle!"
   Particle-Added: "&aParticle successfully added!"
+  Join-No-Permission: "&cYou don't have permission to join this arena!"
   Particle-Removed: "&cParticle successfully removed!"
   Full-Game-No-Permission: "&cYou don't have the permission to join full games!"
   No-Slots-For-Premium: "&cThis game is already full of premium players! Sorry!"
@@ -133,6 +134,9 @@ Menus:
     Floor-Option: "&aChange floor material"
     Floor-Option-Lore: "&7Drag block here to change floor"
     Floor-Changed: "&aFloor material changed!"
+    Reset-Option: "&cReset plot"
+    Reset-Option-Lore: "&7Fully reset plot, &c&lcan't be undone!"
+    Reset-Option-Done: "&cPlot fully reset!"
 
 Signs:
   Please-Type-Arena-Name: "&cPlease type arena name in second line!"

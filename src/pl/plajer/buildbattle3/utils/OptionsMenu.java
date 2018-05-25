@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * Created by Tom on 18/08/2015.
  */
-public class IngameMenu {
+public class OptionsMenu {
 
     public static ItemStack getMenuItem() {
         return new ItemBuilder(Material.NETHER_STAR).name(ChatManager.colorMessage("Menus.Option-Menu.Option-Item")).lore(ChatManager.colorMessage("Menus.Option-Menu.Option-Item-Lore")).build();
@@ -67,6 +67,13 @@ public class IngameMenu {
         floorMeta.setLore(lore);
         floorOption.setItemMeta(floorMeta);
         inv.setItem(15, floorOption);
+
+        ItemStack resetOption = new ItemStack(Material.BARRIER, 1);
+        ItemMeta resetMeta = resetOption.getItemMeta();
+        resetMeta.setDisplayName(ChatManager.colorMessage("Menus.Option-Menu.Reset-Option"));
+        resetMeta.setLore(Collections.singletonList(ChatManager.colorMessage("Menus.Option-Menu.Floor-Option-Lore")));
+        resetOption.setItemMeta(resetMeta);
+        inv.setItem(31, resetOption);
 
         /*ItemStack bannerOption = new ItemStack(Material.BANNER, 1);
         ItemMeta bannerMeta = bannerOption.getItemMeta();

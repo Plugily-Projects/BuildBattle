@@ -140,7 +140,7 @@ public class SetupInventoryEvents implements Listener {
             event.setCancelled(true);
         }
         if(name.contains("Add game plot")) {
-            player.performCommand("bb addplot " + arena.getID());
+            player.performCommand("bba addplot " + arena.getID());
         }
         if(name.contains("Register arena")) {
             event.setCancelled(true);
@@ -160,12 +160,12 @@ public class SetupInventoryEvents implements Listener {
                 event.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure plots properly");
                 return;
             } else {
-                for(String plotName : ConfigurationManager.getConfig("arenas").getConfigurationSection(arena.getID() + "plots").getKeys(false)) {
-                    if(ConfigurationManager.getConfig("arenas").isSet(arena.getID() + "plots." + plotName + ".maxpoint") && ConfigurationManager.getConfig("arenas").isSet(arena.getID() + "plots." + plotName + ".minpoint")) {
+                for(String plotName : ConfigurationManager.getConfig("arenas").getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false)) {
+                    if(ConfigurationManager.getConfig("arenas").isSet("instances." +  arena.getID() + "plots." + plotName + ".maxpoint") && ConfigurationManager.getConfig("arenas").isSet("instances." + arena.getID() + ".plots." + plotName + ".minpoint")) {
                         Plot buildPlot = new Plot();
-                        buildPlot.setMaxPoint(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString(arena.getID() + "plots." + plotName + ".maxpoint")));
-                        buildPlot.setMinPoint(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString(arena.getID() + "plots." + plotName + ".minpoint")));
-                        buildPlot.reset();
+                        buildPlot.setMaxPoint(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint")));
+                        buildPlot.setMinPoint(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint")));
+                        buildPlot.fullyResetPlot();
                         arena.getPlotManager().addBuildPlot(buildPlot);
                     } else {
                         event.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Plots are not configured properly! (missing selection values)");
@@ -198,7 +198,7 @@ public class SetupInventoryEvents implements Listener {
                 Plot buildPlot = new Plot();
                 buildPlot.setMaxPoint(Util.getLocation(false, config.getString(arena.getID() + "plots." + plotName + ".maxpoint")));
                 buildPlot.setMinPoint(Util.getLocation(false, config.getString(arena.getID() + "plots." + plotName + ".minpoint")));
-                buildPlot.reset();
+                buildPlot.fullyResetPlot();
                 arena.getPlotManager().addBuildPlot(buildPlot);
             }
             ArenaRegistry.registerArena(arena);

@@ -74,13 +74,12 @@ public class AdminCommands extends MainCommand {
         if(selection instanceof CuboidSelection) {
             FileConfiguration config = ConfigurationManager.getConfig("arenas");
             if(config.contains("instances." + arena + ".plots")) {
-                Util.saveLocation("instances." + arena + ".plots." + (config.getConfigurationSection("instances." + arena + ".plots").getKeys(false).size() + 1) + ".minpoint", selection.getMinimumPoint());
+                Util.saveLocation("instances." + arena + ".plots." + (config.getConfigurationSection("instances." + arena + ".plots").getKeys(false).size()) + ".minpoint", selection.getMinimumPoint());
                 Util.saveLocation("instances." + arena + ".plots." + (config.getConfigurationSection("instances." + arena + ".plots").getKeys(false).size()) + ".maxpoint", selection.getMaximumPoint());
             } else {
                 Util.saveLocation("instances." + arena + ".plots.0.minpoint", selection.getMinimumPoint());
                 Util.saveLocation("instances." + arena + ".plots.0.maxpoint", selection.getMaximumPoint());
             }
-            ConfigurationManager.saveConfig(config, "arenas");
             player.sendMessage(ChatColor.GREEN + "Plot added to instance " + ChatColor.RED + arena);
         } else {
             player.sendMessage(ChatColor.RED + "You don't have the right selection!");
