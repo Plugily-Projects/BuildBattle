@@ -308,7 +308,6 @@ public class Main extends JavaPlugin {
             }
         }));
         new JoinEvents(this);
-        new GameEvents(this);
         StatsStorage.plugin = this;
         if(getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new PlaceholderManager().register();

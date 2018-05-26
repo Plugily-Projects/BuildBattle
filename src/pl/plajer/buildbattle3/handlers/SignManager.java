@@ -30,6 +30,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
@@ -131,6 +132,7 @@ public class SignManager implements Listener {
 
     @EventHandler
     public void onJoinAttempt(PlayerInteractEvent e) {
+        if(!plugin.is1_8_R3()) if(e.getHand() == EquipmentSlot.OFF_HAND) return;
         if(e.getAction() == Action.RIGHT_CLICK_BLOCK &&
                 e.getClickedBlock().getState() instanceof Sign && loadedSigns.containsKey(e.getClickedBlock().getState())) {
 

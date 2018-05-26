@@ -35,37 +35,36 @@ Bossbar:
   Vote-Time-Left: "&e&lVote time left: &f&e%time%"
 
 Scoreboard:
-  Title: "&6BuildBattle"
+  Title: "&b&lBuildBattle"
   Content:
     Playing:
-      - "&5Time left;"
-      - "&b %FORMATTED_TIME_LEFT%"
+      - "&fTime Left: &e%FORMATTED_TIME_LEFT%"
       - ""
-      - "&5Players:"
-      - "&b %PLAYERS%/%MAX_PLAYERS%"
+      - "&fPlayers: &e%PLAYERS%/%MAX_PLAYERS%"
       - ""
-      - "&5Theme:"
-      - "&b %THEME%"
+      - "&fTheme: &e%THEME%"
       - ""
-      - "&5Arena:"
-      - "&b %ARENA_ID%"
+      - "&fArena: &e%ARENA_ID%"
+      - ""
+      - "&ewww.spigotmc.org"
     Starting:
-      - "&5Players:"
-      - " &b%PLAYERS%"
+      - "&fPlayers: &e%PLAYERS%"
       - ""
-      - "&5Players needed:"
-      - "&b %MIN_PLAYERS%"
-      - " "
-      - "&5&bStarting in:"
-      - "&d %TIMER%"
+      - "&fPlayers Needed: &e%MIN_PLAYERS%"
+      - ""
+      - "&fStarting In: &e%TIMER%"
+      - ""
+      - "&ewww.spigotmc.org"
     Ending:
-      - "&5 Game ended!"
-    Waiting:
-      - "&5Players:"
-      - " &b%PLAYERS%"
+      - "&e&lGAME ENDED"
       - ""
-      - "&5Players needed:"
-      - "&b %MIN_PLAYERS%"
+      - "&ewww.spigotmc.org"
+    Waiting:
+      - "&fPlayers: &e%PLAYERS%"
+      - ""
+      - "&fPlayers Needed: &e%MIN_PLAYERS%"
+      - ""
+      - "&ewww.spigotmc.org"
 
 In-Game:
   Plugin-Prefix: "&6[&bBuildBattle&6] "

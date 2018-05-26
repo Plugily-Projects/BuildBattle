@@ -73,7 +73,7 @@ public class OptionsMenu {
         resetMeta.setDisplayName(ChatManager.colorMessage("Menus.Option-Menu.Reset-Option"));
         resetMeta.setLore(Collections.singletonList(ChatManager.colorMessage("Menus.Option-Menu.Floor-Option-Lore")));
         resetOption.setItemMeta(resetMeta);
-        inv.setItem(31, resetOption);
+        inv.setItem(21, resetOption);
 
         /*ItemStack bannerOption = new ItemStack(Material.BANNER, 1);
         ItemMeta bannerMeta = bannerOption.getItemMeta();

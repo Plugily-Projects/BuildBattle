@@ -29,7 +29,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
@@ -54,6 +56,7 @@ public class EntityMenuEvents implements Listener {
 
     @EventHandler
     public void onRightClickEntity(PlayerInteractEntityEvent event) {
+        if(!JavaPlugin.getPlugin(Main.class).is1_8_R3()) if(event.getHand() == EquipmentSlot.OFF_HAND) return;
         Player player = event.getPlayer();
         Arena arena = ArenaRegistry.getArena(player);
         if(arena == null) return;
@@ -66,6 +69,7 @@ public class EntityMenuEvents implements Listener {
                 type == EntityType.MINECART_COMMAND || type == EntityType.MINECART_HOPPER || type == EntityType.MINECART_MOB_SPAWNER || type == EntityType.MINECART_TNT
                 || type == EntityType.PLAYER || type == EntityType.PAINTING || type == EntityType.WITHER_SKULL)
             return;
+        if(event.getRightClicked().getCustomName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Floor-Change-NPC-Name"))) return;
         BuildBattleEntity buildBattleEntity = new BuildBattleEntity(((LivingEntity) event.getRightClicked()));
         player.openInventory(buildBattleEntity.getMenu());
         links.put(player.getUniqueId(), buildBattleEntity);
@@ -120,7 +124,7 @@ public class EntityMenuEvents implements Listener {
             arena.getPlotManager().getPlot(player).removeEntity();
 
         } else if(key.equals("Profession-Villager-Selecting")) {
-            Inventory inventory = Bukkit.createInventory(null, 9, ChatManager.colorMessage("Menus.Villager-Proffesion-Menu-Name"));
+            Inventory inventory = Bukkit.createInventory(null, 9, ChatManager.colorMessage("Menus.Villager-Profession-Menu-Name"));
             Set<String> professions = new HashSet<>();
             professions.add("Blacksmith");
             professions.add("Librarian");
@@ -144,7 +148,7 @@ public class EntityMenuEvents implements Listener {
         Player player = (Player) event.getWhoClicked();
         Arena arena = ArenaRegistry.getArena(player);
         if(arena == null) return;
-        if(!event.getInventory().getTitle().equals(ChatManager.colorMessage("Menus.Villager-Proffesion-Menu-Name"))) return;
+        if(!event.getInventory().getTitle().equals(ChatManager.colorMessage("Menus.Villager-Profession-Menu-Name"))) return;
         if(event.getCurrentItem() == null) return;
         if(!event.getCurrentItem().hasItemMeta()) return;
         if(!event.getCurrentItem().getItemMeta().hasDisplayName()) return;

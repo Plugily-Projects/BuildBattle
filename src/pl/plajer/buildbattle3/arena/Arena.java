@@ -347,6 +347,7 @@ public class Arena extends BukkitRunnable {
                         player.setFlying(false);
                         player.setAllowFlight(false);
                         player.getInventory().setArmorContents(null);
+                        player.sendMessage(ChatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
                         UserManager.getUser(player.getUniqueId()).addInt("gamesplayed", 1);
                         if(plugin.isInventoryManagerEnabled()) {
                             plugin.getInventoryManager().loadInventory(player);

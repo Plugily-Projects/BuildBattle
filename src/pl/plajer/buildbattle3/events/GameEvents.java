@@ -18,12 +18,14 @@
 
 package pl.plajer.buildbattle3.events;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -45,8 +47,10 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.StructureGrowEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.Main;
@@ -81,6 +85,7 @@ public class GameEvents implements Listener {
 
     @EventHandler
     public void onVote(PlayerInteractEvent event) {
+        if(!plugin.is1_8_R3()) if(event.getHand() == EquipmentSlot.OFF_HAND) return;
         if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) return;
         if(event.getItem() == null) return;
         Arena arena = ArenaRegistry.getArena(event.getPlayer());
@@ -102,6 +107,7 @@ public class GameEvents implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onLeave(PlayerInteractEvent event) {
+        if(!plugin.is1_8_R3()) if(event.getHand() == EquipmentSlot.OFF_HAND) return;
         if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) return;
         Arena arena = ArenaRegistry.getArena(event.getPlayer());
         if(arena == null) return;
@@ -124,6 +130,7 @@ public class GameEvents implements Listener {
 
     @EventHandler
     public void onOpenOptionMenu(PlayerInteractEvent event) {
+        if(!plugin.is1_8_R3()) if(event.getHand() == EquipmentSlot.OFF_HAND) return;
         if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) return;
         if(event.getItem() == null) return;
         Arena arena = ArenaRegistry.getArena(event.getPlayer());
@@ -188,6 +195,7 @@ public class GameEvents implements Listener {
 
     @EventHandler
     public void onTNTInteract(PlayerInteractEvent event) {
+        if(!plugin.is1_8_R3()) if(event.getHand() == EquipmentSlot.OFF_HAND) return;
         Player player = event.getPlayer();
         Arena arena = ArenaRegistry.getArena(player);
         if(arena == null) return;
@@ -250,7 +258,6 @@ public class GameEvents implements Listener {
                     event.setCancelled(true);
                 }
             }
-
         }
     }
 
@@ -276,7 +283,7 @@ public class GameEvents implements Listener {
         } else if(displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Reset-Option"))) {
             e.getWhoClicked().closeInventory();
             arena.getPlotManager().getPlot((Player) e.getWhoClicked()).resetPlot();
-            e.getWhoClicked().sendMessage(ChatManager.colorMessage("Menus.Option-Menu.Reset-Option-Done"));
+            e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Reset-Option-Done"));
             return;
         }
         if(e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Particle-Remove"))) {
@@ -297,6 +304,7 @@ public class GameEvents implements Listener {
                 ParticleRemoveMenu.openMenu(player, arena.getPlotManager().getPlot((Player) e.getWhoClicked()));
                 return;
             }
+            e.setCancelled(true);
             ParticleMenu.onClick(player, e.getCurrentItem(), arena.getPlotManager().getPlot((Player) e.getWhoClicked()));
             return;
         } else if(e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Banners-Option-Inventory-Name"))) {
@@ -310,9 +318,7 @@ public class GameEvents implements Listener {
         if(!((e.getCursor().getType().isBlock() && e.getCursor().getType().isSolid()) || e.getCursor().getType() == Material.WATER_BUCKET || e.getCursor().getType() == Material.LAVA_BUCKET)) {
             return;
         }
-
         if(e.getCursor().getType() == null || e.getCursor().getType() == Material.SAPLING || e.getCursor().getType() == Material.TRAP_DOOR || e.getCursor().getType() == Material.WOOD_DOOR || e.getCursor().getType() == Material.IRON_TRAPDOOR || e.getCursor().getType() == Material.WOODEN_DOOR || e.getCursor().getType() == Material.ACACIA_DOOR || e.getCursor().getType() == Material.BIRCH_DOOR || e.getCursor().getType() == Material.WOOD_DOOR || e.getCursor().getType() == Material.JUNGLE_DOOR || e.getCursor().getType() == Material.SPRUCE_DOOR || e.getCursor().getType() == Material.IRON_DOOR || e.getCursor().getType() == Material.CHEST || e.getCursor().getType() == Material.TRAPPED_CHEST || e.getCursor().getType() == Material.FENCE_GATE || e.getCursor().getType() == Material.BED || e.getCursor().getType() == Material.LADDER || e.getCursor().getType() == Material.JUNGLE_FENCE_GATE || e.getCursor().getType() == Material.JUNGLE_DOOR_ITEM || e.getCursor().getType() == Material.SIGN || e.getCursor().getType() == Material.SIGN_POST || e.getCursor().getType() == Material.WALL_SIGN || e.getCursor().getType() == Material.CACTUS || e.getCursor().getType() == Material.ENDER_CHEST || e.getCursor().getType() == Material.PISTON_BASE
-
                 || e.getCursor().getType() == Material.TNT || e.getCursor().getType() == Material.AIR) {
             e.setCancelled(true);
             return;
@@ -330,7 +336,6 @@ public class GameEvents implements Listener {
                     entity.remove();
                 }
             }
-            e.setCancelled(true);
         }
 
     }
@@ -387,37 +392,34 @@ public class GameEvents implements Listener {
 
     @EventHandler
     public void onWitherBoss(CreatureSpawnEvent event) {
-        if(plugin.isBungeeActivated() && event.getEntity().getType() == EntityType.WITHER) {
+        if(event.getEntity().getType() == EntityType.WITHER || ConfigPreferences.isMobSpawningDisabled()) {
             event.setCancelled(true);
             return;
         }
-        if(event.getEntity().getType() == EntityType.WITHER || ConfigPreferences.isMobSpawningDisabled()) {
-            for(Arena arena : ArenaRegistry.getArenas()) {
-                for(Plot buildplot : arena.getPlotManager().getPlots()) {
-                    if(buildplot.isInPlotRange(event.getEntity().getLocation(), 10)) event.setCancelled(true);
-                }
+        for(Arena arena : ArenaRegistry.getArenas()) {
+            for(Plot buildplot : arena.getPlotManager().getPlots()) {
+                if(buildplot.isInPlotRange(event.getEntity().getLocation(), 10)) event.setCancelled(true);
             }
-        } else {
-            for(Arena arena : ArenaRegistry.getArenas()) {
-                for(Plot buildplot : arena.getPlotManager().getPlots()) {
-                    if(buildplot.isInPlotRange(event.getEntity().getLocation(), 1)) {
-                        if(buildplot.getEntities() >= ConfigPreferences.getMaxMobs()) {
-                            plugin.getServer().getPlayer(buildplot.getOwner()).sendMessage(ChatManager.colorMessage("In-Game.Max-Entities-Limit-Reached"));
-                            event.setCancelled(true);
-                            return;
-                        } else {
-                            buildplot.addEntity();
-                            new BuildBattleEntity(event.getEntity()).toggleMoveable();
-                        }
-
+        }
+        for(Arena arena : ArenaRegistry.getArenas()) {
+            for(Plot buildplot : arena.getPlotManager().getPlots()) {
+                if(buildplot.isInPlotRange(event.getEntity().getLocation(), 1)) {
+                    if(buildplot.getEntities() >= ConfigPreferences.getMaxMobs()) {
+                        plugin.getServer().getPlayer(buildplot.getOwner()).sendMessage(ChatManager.colorMessage("In-Game.Max-Entities-Limit-Reached"));
+                        event.setCancelled(true);
+                        return;
+                    } else {
+                        buildplot.addEntity();
+                        new BuildBattleEntity(event.getEntity()).toggleMoveable();
                     }
+
                 }
             }
         }
     }
 
     @EventHandler
-    public void LeaveDecay(LeavesDecayEvent event) {
+    public void onLeavesDecay(LeavesDecayEvent event) {
         for(Arena arena : ArenaRegistry.getArenas()) {
             for(Plot buildPlot : arena.getPlotManager().getPlots()) {
                 if(buildPlot.isInPlotRange(event.getBlock().getLocation(), 5)) {
@@ -521,6 +523,19 @@ public class GameEvents implements Listener {
         }
         event.getRecipients().clear();
         event.getRecipients().addAll(ArenaRegistry.getArena(event.getPlayer()).getPlayers());
+    }
+
+    @EventHandler
+    public void onNPCClick(PlayerInteractEntityEvent e) {
+        if(!plugin.is1_8_R3()) if(e.getHand() == EquipmentSlot.OFF_HAND) return;
+        if(e.getPlayer().getItemInHand() == null || e.getPlayer().getItemInHand().getType() == Material.AIR) return;
+        if(e.getRightClicked() instanceof Villager && e.getRightClicked().getCustomName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Floor-Change-NPC-Name"))) {
+            Arena arena = ArenaRegistry.getArena(e.getPlayer());
+            if(arena == null) return;
+            if(!e.getPlayer().getItemInHand().getType().isBlock()) return;
+            arena.getPlotManager().getPlot(e.getPlayer()).changeFloor(e.getPlayer().getItemInHand().getType(), e.getPlayer().getItemInHand().getData().getData());
+            e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Floor-Changed"));
+        }
     }
 
 }

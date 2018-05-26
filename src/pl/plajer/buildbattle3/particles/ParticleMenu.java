@@ -89,14 +89,14 @@ public class ParticleMenu {
         for(ParticleItem particleItem : particleItems) {
             if(particleItem.getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName()) && particleItem.getMaterial() == itemStack.getType()) {
                 if(!player.hasPermission(particleItem.getPermission())) {
-                    player.sendMessage(ChatManager.colorMessage("In-Game.No-Permission-For-Particle"));
+                    player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.No-Permission-For-Particle"));
                 } else {
                     if(buildPlot.getParticles().size() >= ConfigPreferences.getMaxParticles()) {
-                        player.sendMessage(ChatManager.colorMessage("In-Game.Max-Particles-Limit-Reached"));
+                        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Max-Particles-Limit-Reached"));
                     } else {
                         buildPlot.addParticle(player.getLocation(), particleItem.getEffect());
                         UserManager.getUser(player.getUniqueId()).addInt("particles", 1);
-                        player.sendMessage(ChatManager.colorMessage("In-Game.Particle-Added"));
+                        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Particle-Added"));
                     }
                 }
             }
