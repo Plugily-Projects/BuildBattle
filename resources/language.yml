@@ -136,6 +136,10 @@ Menus:
     Reset-Option: "&cReset plot"
     Reset-Option-Lore: "&7Fully reset plot, &c&lcan't be undone!"
     Reset-Option-Done: "&cPlot fully reset!"
+    Mob-Option-Inventory-Name: "&aSpawn mobs"
+    Mob-Spawned: "&aMob successfully spawned!"
+    Mob-Option: "&aSpawn mobs"
+    Mob-Option-Lore: "&7Click to spawn some mobs"
 
 Signs:
   Please-Type-Arena-Name: "&cPlease type arena name in second line!"

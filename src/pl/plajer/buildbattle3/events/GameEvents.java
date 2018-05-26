@@ -19,6 +19,7 @@
 package pl.plajer.buildbattle3.events;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -285,6 +286,8 @@ public class GameEvents implements Listener {
             arena.getPlotManager().getPlot((Player) e.getWhoClicked()).resetPlot();
             e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Reset-Option-Done"));
             return;
+        } else if(displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Mob-Option"))){
+            //todo finish
         }
         if(e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Particle-Remove"))) {
             ParticleRemoveMenu.onClick(e.getInventory(), e.getCurrentItem(), arena.getPlotManager().getPlot(player));
@@ -307,9 +310,11 @@ public class GameEvents implements Listener {
             e.setCancelled(true);
             ParticleMenu.onClick(player, e.getCurrentItem(), arena.getPlotManager().getPlot((Player) e.getWhoClicked()));
             return;
-        } else if(e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Banners-Option-Inventory-Name"))) {
+        } else if(e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Mob-Option-Inventory-Name"))) {
+            String mob = ChatColor.stripColor(displayName);
+            e.getWhoClicked().getWorld().spawnEntity(e.getWhoClicked().getLocation(), EntityType.valueOf(mob.toUpperCase()));
+            e.getWhoClicked().sendMessage(ChatManager.colorMessage("Menus.Option-Menu.Mob-Spawned"));
             e.getWhoClicked().closeInventory();
-            e.getWhoClicked().sendMessage("Soon :)");
             return;
         }
         if(e.getCursor() == null) {

@@ -75,12 +75,12 @@ public class OptionsMenu {
         resetOption.setItemMeta(resetMeta);
         inv.setItem(21, resetOption);
 
-        /*ItemStack bannerOption = new ItemStack(Material.BANNER, 1);
-        ItemMeta bannerMeta = bannerOption.getItemMeta();
-        bannerMeta.setDisplayName(ChatManager.getSingleMessage("Banner-Option-Name", ChatColor.GREEN + "Banner Creator"));
-        particleMeta.setLore(Collections.singletonList(ChatManager.getSingleMessage("Banner-Option-Lore", ChatColor.GRAY + "Click to open banner creator")));
-        bannerOption.setItemMeta(bannerMeta);
-        inv.setItem(29, bannerOption);*/
+        ItemStack mobOption = new ItemStack(Material.MOB_SPAWNER, 1);
+        ItemMeta mobMeta = mobOption.getItemMeta();
+        mobMeta.setDisplayName(ChatManager.colorMessage("Menus.Option-Menu.Mob-Option"));
+        particleMeta.setLore(Collections.singletonList(ChatManager.colorMessage("Menus.Option-Menu.Mob-Option-Lore")));
+        mobOption.setItemMeta(mobMeta);
+        inv.setItem(23, mobOption);
         return inv;
     }
 
