@@ -42,7 +42,7 @@ public class OptionsMenu {
     }
 
     private static Inventory createMenu(Plot plot) {
-        Inventory inv = Bukkit.createInventory(null, 4 * 9, ChatManager.colorMessage("Menus.Option-Menu.Inventory-Name"));
+        Inventory inv = Bukkit.createInventory(null, 5 * 9, ChatManager.colorMessage("Menus.Option-Menu.Inventory-Name"));
 
         ItemStack headOption = new ItemStack(Material.SKULL_ITEM, 1);
         headOption.setTypeId((byte) SkullType.PLAYER.ordinal());
@@ -73,14 +73,7 @@ public class OptionsMenu {
         resetMeta.setDisplayName(ChatManager.colorMessage("Menus.Option-Menu.Reset-Option"));
         resetMeta.setLore(Collections.singletonList(ChatManager.colorMessage("Menus.Option-Menu.Floor-Option-Lore")));
         resetOption.setItemMeta(resetMeta);
-        inv.setItem(21, resetOption);
-
-        ItemStack mobOption = new ItemStack(Material.MOB_SPAWNER, 1);
-        ItemMeta mobMeta = mobOption.getItemMeta();
-        mobMeta.setDisplayName(ChatManager.colorMessage("Menus.Option-Menu.Mob-Option"));
-        particleMeta.setLore(Collections.singletonList(ChatManager.colorMessage("Menus.Option-Menu.Mob-Option-Lore")));
-        mobOption.setItemMeta(mobMeta);
-        inv.setItem(23, mobOption);
+        inv.setItem(31, resetOption);
         return inv;
     }
 

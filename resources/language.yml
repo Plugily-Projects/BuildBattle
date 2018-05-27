@@ -5,6 +5,7 @@
 #               like %player% etc.
 
 Commands:
+  Did-You-Mean: "&6Did you mean &e/%command%&6?"
   Only-By-Player: "&cYou can execute this command only as player!"
   Teleported-To-The-Lobby: "&aYou've been teleported to the lobby!"
   No-Permission: "&cYou don't have permission to use this command!"
@@ -16,6 +17,11 @@ Commands:
   Plugin-Reloaded: "&aPlugin and configuration reloaded!"
   Player-Not-Found: "&cPlayer not found!"
   Invalid-Args: "&cInvalid arguments! Make sure you typed the command correctly!"
+  Admin-Commands:
+    List-Command:
+      Header: "&bBuildBattle &7arenas:"
+      Format: "&b%arena% &e%status% &7%players%/%maxplayers%"
+      No-Arenas: "&cThere are no game instances!"
   Stats-Command:
     Header: "&l-----YOUR STATS-----"
     Header-Other: "&l-----STATS FOR %player%-----"
@@ -136,10 +142,6 @@ Menus:
     Reset-Option: "&cReset plot"
     Reset-Option-Lore: "&7Fully reset plot, &c&lcan't be undone!"
     Reset-Option-Done: "&cPlot fully reset!"
-    Mob-Option-Inventory-Name: "&aSpawn mobs"
-    Mob-Spawned: "&aMob successfully spawned!"
-    Mob-Option: "&aSpawn mobs"
-    Mob-Option-Lore: "&7Click to spawn some mobs"
 
 Signs:
   Please-Type-Arena-Name: "&cPlease type arena name in second line!"

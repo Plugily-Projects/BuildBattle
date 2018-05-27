@@ -19,7 +19,7 @@
 package pl.plajer.buildbattle3.events;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -52,7 +52,9 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.VoteItems;
@@ -71,6 +73,9 @@ import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.OptionsMenu;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -78,6 +83,9 @@ import java.util.ArrayList;
 public class GameEvents implements Listener {
 
     private Main plugin;
+    //mob spawning option spawn overriding
+    private boolean spawnOverride;
+    private List<EntityType> blacklistedEntities = Arrays.asList(EntityType.AREA_EFFECT_CLOUD, EntityType.ARMOR_STAND, EntityType.ARROW, EntityType.COMPLEX_PART, EntityType.BOAT, EntityType.DRAGON_FIREBALL, EntityType.DROPPED_ITEM, EntityType.EGG, EntityType.ENDER_CRYSTAL, EntityType.ENDER_DRAGON, EntityType.ENDER_PEARL, EntityType.ENDER_SIGNAL, EntityType.EXPERIENCE_ORB, EntityType.FALLING_BLOCK, EntityType.FIREBALL, EntityType.SNOWBALL, EntityType.LEASH_HITCH, EntityType.LEASH_HITCH, EntityType.ITEM_FRAME, EntityType.LIGHTNING, EntityType.LINGERING_POTION, EntityType.PAINTING);
 
     public GameEvents(Main plugin) {
         this.plugin = plugin;
@@ -286,8 +294,27 @@ public class GameEvents implements Listener {
             arena.getPlotManager().getPlot((Player) e.getWhoClicked()).resetPlot();
             e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Reset-Option-Done"));
             return;
-        } else if(displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Mob-Option"))){
+        } else if(displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Mob-Option"))) {
             //todo finish
+            e.getWhoClicked().closeInventory();
+            Inventory inv;
+            List<EntityType> entities = new ArrayList<>();
+            for(EntityType en : EntityType.values()) {
+                if(en.isSpawnable()) entities.add(en);
+            }
+            inv = Bukkit.createInventory(null, 9 * 8, ChatManager.colorMessage("Menus.Option-Menu.Mob-Option-Inventory-Name"));
+            int i = 0;
+            for(EntityType en : entities) {
+                if(blacklistedEntities.contains(en)) continue;
+                ItemStack is = new ItemStack(Material.MONSTER_EGG, i + 1);
+                ItemMeta meta = is.getItemMeta();
+                meta.setDisplayName(en.toString().toLowerCase());
+                meta.setLore(Collections.singletonList(ChatManager.colorMessage("Menus.Option-Menu.Mob-Option-Spawn-Lore")));
+                is.setItemMeta(meta);
+                inv.addItem(is);
+                i++;
+            }
+            e.getWhoClicked().openInventory(inv);
         }
         if(e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Particle-Remove"))) {
             ParticleRemoveMenu.onClick(e.getInventory(), e.getCurrentItem(), arena.getPlotManager().getPlot(player));
@@ -309,12 +336,6 @@ public class GameEvents implements Listener {
             }
             e.setCancelled(true);
             ParticleMenu.onClick(player, e.getCurrentItem(), arena.getPlotManager().getPlot((Player) e.getWhoClicked()));
-            return;
-        } else if(e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Mob-Option-Inventory-Name"))) {
-            String mob = ChatColor.stripColor(displayName);
-            e.getWhoClicked().getWorld().spawnEntity(e.getWhoClicked().getLocation(), EntityType.valueOf(mob.toUpperCase()));
-            e.getWhoClicked().sendMessage(ChatManager.colorMessage("Menus.Option-Menu.Mob-Spawned"));
-            e.getWhoClicked().closeInventory();
             return;
         }
         if(e.getCursor() == null) {
@@ -342,7 +363,6 @@ public class GameEvents implements Listener {
                 }
             }
         }
-
     }
 
     @EventHandler
@@ -355,16 +375,13 @@ public class GameEvents implements Listener {
             }
             return;
         }
-
         Arena arena = ArenaRegistry.getArena(event.getPlayer());
         event.getRecipients().clear();
         event.getRecipients().addAll(new ArrayList<>(arena.getPlayers()));
-
-
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void disableCommands(PlayerCommandPreprocessEvent event) {
+    public void onPreCommand(PlayerCommandPreprocessEvent event) {
         if(ArenaRegistry.getArena(event.getPlayer()) == null) return;
         for(String string : ConfigPreferences.getWhitelistedCommands()) {
             if(event.getMessage().contains(string)) return;
@@ -376,7 +393,7 @@ public class GameEvents implements Listener {
     }
 
     @EventHandler
-    public void playerEmtpyBucket(PlayerBucketEmptyEvent event) {
+    public void onBucketEmpty(PlayerBucketEmptyEvent event) {
         Arena arena = ArenaRegistry.getArena(event.getPlayer());
         if(arena == null) return;
         Plot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
@@ -395,32 +412,32 @@ public class GameEvents implements Listener {
         }
     }
 
-    @EventHandler
-    public void onWitherBoss(CreatureSpawnEvent event) {
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onCreatureSpawn(CreatureSpawnEvent event) {
         if(event.getEntity().getType() == EntityType.WITHER || ConfigPreferences.isMobSpawningDisabled()) {
             event.setCancelled(true);
             return;
         }
-        for(Arena arena : ArenaRegistry.getArenas()) {
-            for(Plot buildplot : arena.getPlotManager().getPlots()) {
-                if(buildplot.isInPlotRange(event.getEntity().getLocation(), 10)) event.setCancelled(true);
-            }
-        }
-        for(Arena arena : ArenaRegistry.getArenas()) {
-            for(Plot buildplot : arena.getPlotManager().getPlots()) {
-                if(buildplot.isInPlotRange(event.getEntity().getLocation(), 1)) {
-                    if(buildplot.getEntities() >= ConfigPreferences.getMaxMobs()) {
-                        plugin.getServer().getPlayer(buildplot.getOwner()).sendMessage(ChatManager.colorMessage("In-Game.Max-Entities-Limit-Reached"));
-                        event.setCancelled(true);
-                        return;
-                    } else {
-                        buildplot.addEntity();
-                        new BuildBattleEntity(event.getEntity()).toggleMoveable();
-                    }
-
+            for(Arena arena : ArenaRegistry.getArenas()) {
+                for(Plot buildplot : arena.getPlotManager().getPlots()) {
+                    if(buildplot.isInPlotRange(event.getEntity().getLocation(), 10)) event.setCancelled(true);
                 }
             }
-        }
+            for(Arena arena : ArenaRegistry.getArenas()) {
+                for(Plot buildplot : arena.getPlotManager().getPlots()) {
+                    if(buildplot.isInPlotRange(event.getEntity().getLocation(), 1)) {
+                        if(buildplot.getEntities() >= ConfigPreferences.getMaxMobs()) {
+                            plugin.getServer().getPlayer(buildplot.getOwner()).sendMessage(ChatManager.colorMessage("In-Game.Max-Entities-Limit-Reached"));
+                            event.setCancelled(true);
+                            return;
+                        } else {
+                            buildplot.addEntity();
+                            event.setCancelled(false);
+                            new BuildBattleEntity(event.getEntity()).toggleMoveable();
+                        }
+                    }
+                }
+            }
     }
 
     @EventHandler

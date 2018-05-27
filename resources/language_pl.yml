@@ -6,6 +6,7 @@
 
 # todo translate me
 Commands:
+  Did-You-Mean: "&6Did you mean &e/%command%&6?"
   Only-By-Player: "&cTylko gracze maja dostep do tej komendy!"
   Teleported-To-The-Lobby: "&aZostales przeniesiony do lobby!"
   No-Permission: "&cNie masz uprawnien do tej komendy!"
@@ -17,6 +18,11 @@ Commands:
   Plugin-Reloaded: "&aPlugin i konfiguracja zostaly przeladowane!"
   Player-Not-Found: "&cNie ma takiego gracza!"
   Invalid-Args: "&cInvalid arguments! Make sure you typed the command correctly!"
+  Admin-Commands:
+    List-Command:
+      Header: "&bBuildBattle &7arenas:"
+      Format: "&b%arena% &e%status% &7%players%/%maxplayers%"
+      No-Arenas: "&cThere are no game instances!"
   Stats-Command:
     Header: "&l-----TWOJE STATY-----"
     Header-Other: "&l-----STATY %player%-----"

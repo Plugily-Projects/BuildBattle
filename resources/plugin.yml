@@ -21,3 +21,11 @@ permissions:
       buildbattle.admin: true
       buildbattle.admin.sign.create: true
       buildbattle.admin.sign.break: true
+      buildbattle.admin.stopgame: true
+      buildbattle.admin.addnpc: true
+      buildbattle.admin.addsign: true
+      buildbattle.admin.reload: true
+      buildbattle.admin.forcestart: true
+      buildbattle.admin.addplot: true
+      buildbattle.admin.list: true
+      buildbattle.admin.delete: true

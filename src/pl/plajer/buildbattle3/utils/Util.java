@@ -123,6 +123,13 @@ public class Util {
         fw.setFireworkMeta(fwm);
     }
 
+    public static int serializeInt(Integer i) {
+        if((i % 9) == 0)
+            return i;
+        else
+            return (int) ((Math.ceil(i / 9) * 9) + 9);
+    }
+
     public static Location getLocation(boolean configUsage, String path) {
         String[] loc;
         if(configUsage) {

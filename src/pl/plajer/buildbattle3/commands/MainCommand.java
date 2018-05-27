@@ -35,9 +35,12 @@ import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
 import pl.plajer.buildbattle3.handlers.PermissionManager;
 import pl.plajer.buildbattle3.utils.SetupInventory;
+import pl.plajer.buildbattle3.utils.StringMatcher;
 import pl.plajer.buildbattle3.utils.Util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Plajer
@@ -54,8 +57,11 @@ public class MainCommand implements CommandExecutor {
 
     public MainCommand(Main plugin) {
         this.plugin = plugin;
+        TabCompletion completion = new TabCompletion();
         plugin.getCommand("buildbattle").setExecutor(this);
+        plugin.getCommand("buildbattle").setTabCompleter(completion);
         plugin.getCommand("buildbattleadmin").setExecutor(this);
+        plugin.getCommand("buildbattleadmin").setTabCompleter(completion);
         this.adminCommands = new AdminCommands(plugin);
         this.gameCommands = new GameCommands(plugin);
     }
@@ -101,8 +107,23 @@ public class MainCommand implements CommandExecutor {
                 adminCommands.reloadPlugin(player);
             } else if(args[0].equalsIgnoreCase("addnpc")) {
                 adminCommands.addNPC(player);
+            } else if(args[0].equalsIgnoreCase("stop")) {
+                adminCommands.stopGame(sender);
+            } else if(args[0].equalsIgnoreCase("list")){
+                adminCommands.printList(sender);
+            } else if(args[0].equalsIgnoreCase("delete")){
+                if(args.length == 2) {
+                    adminCommands.deleteArena(sender, args[1]);
+                } else {
+                    player.sendMessage(ChatManager.colorMessage("Commands.Invalid-Args"));
+                }
             } else if(args[0].equalsIgnoreCase("help")) {
                 adminCommands.sendHelp(sender);
+            }
+            adminCommands.sendHelp(sender);
+            List<StringMatcher.Match> matches = StringMatcher.match(args[0], Arrays.asList("stop", "list", "forcestart", "reload", "addsign", "delete"));
+            if(!matches.isEmpty()) {
+                sender.sendMessage(ChatManager.colorMessage("Commands.Did-You-Mean").replaceAll("%command%", "bba " + matches.get(0).getMatch()));
             }
             return true;
         }

@@ -32,6 +32,7 @@ import org.bukkit.entity.Player;
 import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
+import pl.plajer.buildbattle3.arena.ArenaManager;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.arena.ArenaState;
 import pl.plajer.buildbattle3.handlers.ChatManager;
@@ -66,6 +67,7 @@ public class AdminCommands extends MainCommand {
     }
 
     public void addPlot(Player player, String arena) {
+        if(!hasPermission(player, "buildbattle.admin.addplot")) return;
         if(ArenaRegistry.getArena(arena) == null) {
             player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
             return;
@@ -87,6 +89,7 @@ public class AdminCommands extends MainCommand {
     }
 
     public void forceStart(Player player) {
+        if(!hasPermission(player, "buildbattle.admin.forcestart")) return;
         Arena arena = ArenaRegistry.getArena(player);
         if(arena == null) return;
         if(arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) {
@@ -99,6 +102,7 @@ public class AdminCommands extends MainCommand {
     }
 
     public void reloadPlugin(Player player) {
+        if(!hasPermission(player, "buildbattle.admin.reload")) return;
         ConfigPreferences.loadOptions();
         ConfigPreferences.loadOptions();
         ConfigPreferences.loadThemes();
@@ -113,6 +117,7 @@ public class AdminCommands extends MainCommand {
     }
 
     public void addSign(Player player, String arenaName) {
+        if(!hasPermission(player, "buildbattle.admin.addsign")) return;
         Arena arena = ArenaRegistry.getArena(arenaName);
         if(arena == null) {
             player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
@@ -133,7 +138,16 @@ public class AdminCommands extends MainCommand {
         }
     }
 
+    public void stopGame(CommandSender sender) {
+        if(checkSenderIsConsole(sender)) return;
+        if(!hasPermission(sender, "buildbattle.admin.stopgame")) return;
+        Arena a = ArenaRegistry.getArena((Player) sender);
+        if(a == null) return;
+        ArenaManager.stopGame(false, a);
+    }
+
     public void addNPC(Player player) {
+        if(!hasPermission(player, "buildbattle.admin.addnpc")) return;
         if(plugin.getServer().getPluginManager().isPluginEnabled("Citizens")) {
             NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.VILLAGER, ChatManager.colorMessage("In-Game.Floor-Change-NPC-Name"));
             npc.spawn(player.getLocation());
@@ -142,6 +156,35 @@ public class AdminCommands extends MainCommand {
         } else {
             player.sendMessage(ChatManager.colorMessage("In-Game.Install-Citizens"));
         }
+    }
+
+    public void printList(CommandSender sender) {
+        if(!hasPermission(sender, "buildbattle.admin.list")) return;
+        sender.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.List-Command.Header"));
+        int i = 0;
+        for(Arena arena : ArenaRegistry.getArenas()) {
+            sender.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.List-Command.Format").replaceAll("%arena%", arena.getID())
+                    .replaceAll("%status%", arena.getArenaState().getFormattedName()).replaceAll("%players%", String.valueOf(arena.getPlayers().size()))
+                    .replaceAll("%maxplayers%", String.valueOf(arena.getMaximumPlayers())));
+            i++;
+        }
+        if(i == 0) sender.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.List-Command.No-Arenas"));
+    }
+
+    public void deleteArena(CommandSender sender, String arenaString) {
+        if(checkSenderIsConsole(sender)) return;
+        if(!hasPermission(sender, "buildbattle.admin.delete")) return;
+        Arena arena = ArenaRegistry.getArena(arenaString);
+        if(arena == null) {
+            sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+            return;
+        }
+        ArenaManager.stopGame(false, arena);
+        FileConfiguration config = ConfigurationManager.getConfig("arenas");
+        config.set("instances." + arenaString, null);
+        ConfigurationManager.saveConfig(config, "arenas");
+        ArenaRegistry.unregisterArena(arena);
+        sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatColor.RED + "Successfully removed game instance!");
     }
 
 }
