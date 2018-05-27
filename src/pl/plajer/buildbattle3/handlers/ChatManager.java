@@ -18,6 +18,7 @@
 
 package pl.plajer.buildbattle3.handlers;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -54,18 +55,18 @@ public class ChatManager {
 
     public static String formatMessage(Arena arena, String message, Player player) {
         String returnString = message;
-        returnString = returnString.replaceAll("%PLAYER%", player.getName());
+        returnString = StringUtils.replace(returnString,"%PLAYER%", player.getName());
         returnString = colorRawMessage(formatPlaceholders(returnString, arena));
         return returnString;
     }
 
     private static String formatPlaceholders(String message, Arena arena) {
         String returnString = message;
-        returnString = returnString.replaceAll("%TIME%", Integer.toString(arena.getTimer()));
-        returnString = returnString.replaceAll("%FORMATTEDTIME%", Util.formatIntoMMSS((arena.getTimer())));
-        returnString = returnString.replaceAll("%PLAYERSIZE%", Integer.toString(arena.getPlayers().size()));
-        returnString = returnString.replaceAll("%MAXPLAYERS%", Integer.toString(arena.getMaximumPlayers()));
-        returnString = returnString.replaceAll("%MINPLAYERS%", Integer.toString(arena.getMinimumPlayers()));
+        returnString = StringUtils.replace(returnString,"%TIME%", Integer.toString(arena.getTimer()));
+        returnString = StringUtils.replace(returnString,"%FORMATTEDTIME%", Util.formatIntoMMSS((arena.getTimer())));
+        returnString = StringUtils.replace(returnString,"%PLAYERSIZE%", Integer.toString(arena.getPlayers().size()));
+        returnString = StringUtils.replace(returnString,"%MAXPLAYERS%", Integer.toString(arena.getMaximumPlayers()));
+        returnString = StringUtils.replace(returnString,"%MINPLAYERS%", Integer.toString(arena.getMinimumPlayers()));
         return returnString;
     }
 
