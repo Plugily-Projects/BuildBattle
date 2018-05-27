@@ -101,24 +101,32 @@ public class MainCommand implements CommandExecutor {
                 } else {
                     player.sendMessage(ChatManager.colorMessage("Commands.Invalid-Args"));
                 }
+                return true;
             } else if(args[0].equalsIgnoreCase("forcestart")) {
                 adminCommands.forceStart(player);
+                return true;
             } else if(args[0].equalsIgnoreCase("reload")) {
                 adminCommands.reloadPlugin(player);
+                return true;
             } else if(args[0].equalsIgnoreCase("addnpc")) {
                 adminCommands.addNPC(player);
+                return true;
             } else if(args[0].equalsIgnoreCase("stop")) {
                 adminCommands.stopGame(sender);
+                return true;
             } else if(args[0].equalsIgnoreCase("list")){
                 adminCommands.printList(sender);
+                return true;
             } else if(args[0].equalsIgnoreCase("delete")){
                 if(args.length == 2) {
                     adminCommands.deleteArena(sender, args[1]);
                 } else {
                     player.sendMessage(ChatManager.colorMessage("Commands.Invalid-Args"));
                 }
+                return true;
             } else if(args[0].equalsIgnoreCase("help")) {
                 adminCommands.sendHelp(sender);
+                return true;
             }
             adminCommands.sendHelp(sender);
             List<StringMatcher.Match> matches = StringMatcher.match(args[0], Arrays.asList("stop", "list", "forcestart", "reload", "addsign", "delete"));

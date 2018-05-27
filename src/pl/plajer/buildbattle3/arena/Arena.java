@@ -577,7 +577,7 @@ public class Arena extends BukkitRunnable {
             } else {
                 // getPlotManager().teleportAllToPlot(plotManager.getPlot(player.getUniqueId()));
                 setVotingPlot(plotManager.getPlot(player.getUniqueId()));
-                String message = ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Voting-For-Players-Plot").replaceAll("%PLAYER%", player.getName());
+                String message = ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Voting-For-Player-Plot").replaceAll("%PLAYER%", player.getName());
                 for(Player p : getPlayers()) {
                     p.teleport(getVotingPlot().getTeleportLocation());
                     MessageHandler.sendTitleMessage(p, ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title").replaceAll("%player%", player.getName()), 5, 20, 5, ChatColor.BLACK);
