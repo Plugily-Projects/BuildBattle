@@ -46,6 +46,7 @@ import pl.plajer.buildbattle3.handlers.PlaceholderManager;
 import pl.plajer.buildbattle3.handlers.SignManager;
 import pl.plajer.buildbattle3.items.SpecialItem;
 import pl.plajer.buildbattle3.language.LanguageManager;
+import pl.plajer.buildbattle3.language.LanguageMigrator;
 import pl.plajer.buildbattle3.particles.ParticleHandler;
 import pl.plajer.buildbattle3.particles.ParticleMenu;
 import pl.plajer.buildbattle3.playerheads.PlayerHeadsMenu;
@@ -160,7 +161,10 @@ public class Main extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-        //todo migrations
+        //check if using 2.0.0 releases
+        if(ConfigurationManager.getConfig("language").isSet("PREFIX") && ConfigurationManager.getConfig("language").isSet("Unlocks-at-level")) {
+            LanguageMigrator.migrateToNewFormat();
+        }
         debug = getConfig().getBoolean("Debug");
         debug("Main setup start", System.currentTimeMillis());
         saveDefaultConfig();
