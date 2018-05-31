@@ -88,6 +88,7 @@ public class SetupInventoryEvents implements Listener {
             }
 
             player.performCommand("bb " + arena.getID() + " set MAPNAME " + event.getCursor().getItemMeta().getDisplayName());
+            arena.setMapName(event.getCursor().getItemMeta().getDisplayName());
             event.getCurrentItem().getItemMeta().setDisplayName(ChatColor.GOLD + "Set a mapname (currently: " + event.getCursor().getItemMeta().getDisplayName());
             return;
         }
@@ -161,7 +162,7 @@ public class SetupInventoryEvents implements Listener {
                 return;
             } else {
                 for(String plotName : ConfigurationManager.getConfig("arenas").getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false)) {
-                    if(ConfigurationManager.getConfig("arenas").isSet("instances." + arena.getID() + "plots." + plotName + ".maxpoint") && ConfigurationManager.getConfig("arenas").isSet("instances." + arena.getID() + ".plots." + plotName + ".minpoint")) {
+                    if(ConfigurationManager.getConfig("arenas").isSet("instances." + arena.getID() + ".plots." + plotName + ".maxpoint") && ConfigurationManager.getConfig("arenas").isSet("instances." + arena.getID() + ".plots." + plotName + ".minpoint")) {
                         Plot buildPlot = new Plot();
                         buildPlot.setMaxPoint(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint")));
                         buildPlot.setMinPoint(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint")));
