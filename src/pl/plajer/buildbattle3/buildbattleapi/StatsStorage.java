@@ -32,9 +32,10 @@ import java.util.TreeMap;
 import java.util.UUID;
 
 /**
- * @author Plajer
+ * @author Plajer, TomTheDeveloper
+ * @since 2.0.0
  * <p>
- * Created at 14.05.2018
+ * Class for accessing users statistics.
  */
 public class StatsStorage {
 

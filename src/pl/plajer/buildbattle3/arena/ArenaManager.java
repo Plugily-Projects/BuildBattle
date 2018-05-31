@@ -46,7 +46,8 @@ public class ArenaManager {
      * Attempts player to leave arena.
      * Calls BBGameLeaveEvent event.
      *
-     * @param p player to join
+     * @param p player to leave
+     * @param a arena to leave
      * @see BBGameLeaveEvent
      */
     public static void leaveAttempt(Player p, Arena a) {
@@ -92,6 +93,7 @@ public class ArenaManager {
      * Stops current arena. Calls BBGameEndEvent event
      *
      * @param quickStop should arena be stopped immediately? (use only in important cases)
+     * @param arena arena to stop
      * @see BBGameEndEvent
      */
     public static void stopGame(boolean quickStop, Arena arena) {

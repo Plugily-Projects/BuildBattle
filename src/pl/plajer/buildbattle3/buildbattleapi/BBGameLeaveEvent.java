@@ -22,9 +22,7 @@ import org.bukkit.event.HandlerList;
 import pl.plajer.buildbattle3.arena.Arena;
 
 /**
- * @author Plajer
- * <p>
- * Created at 31.05.2018
+ * Called when players leaves arena
  */
 public class BBGameLeaveEvent extends BBEvent {
 

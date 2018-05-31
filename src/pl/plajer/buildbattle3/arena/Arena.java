@@ -515,7 +515,6 @@ public class Arena extends BukkitRunnable {
         p.getInventory().setItem(leaveItem.getSlot(), leaveItem.getItemStack());
     }
 
-
     public long getTimeLeft() {
         return getTimer();
     }
