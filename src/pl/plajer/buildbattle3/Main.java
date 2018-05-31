@@ -163,6 +163,7 @@ public class Main extends JavaPlugin {
         //todo migrations
         debug = getConfig().getBoolean("Debug");
         debug("Main setup start", System.currentTimeMillis());
+        saveDefaultConfig();
         new ConfigurationManager(this);
         LanguageManager.init(this);
         initializeClasses();
