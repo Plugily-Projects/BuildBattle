@@ -195,10 +195,10 @@ public class SetupInventoryEvents implements Listener {
             arena.setLobbyLocation(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + ".lobbylocation")));
             arena.setEndLocation(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + ".Endlocation")));
 
-            for(String plotName : config.getConfigurationSection(arena.getID() + "plots").getKeys(false)) {
+            for(String plotName : config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false)) {
                 Plot buildPlot = new Plot();
-                buildPlot.setMaxPoint(Util.getLocation(false, config.getString(arena.getID() + "plots." + plotName + ".maxpoint")));
-                buildPlot.setMinPoint(Util.getLocation(false, config.getString(arena.getID() + "plots." + plotName + ".minpoint")));
+                buildPlot.setMaxPoint(Util.getLocation(false, config.getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint")));
+                buildPlot.setMinPoint(Util.getLocation(false, config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint")));
                 buildPlot.fullyResetPlot();
                 arena.getPlotManager().addBuildPlot(buildPlot);
             }
