@@ -114,9 +114,10 @@ public class SignManager implements Listener {
         if(!e.getPlayer().hasPermission("buildbattle.admin.sign.break")) return;
         if(loadedSigns.get(e.getBlock().getState()) == null) return;
         loadedSigns.remove(e.getBlock().getState());
-        String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + "," + e.getBlock().getY() + "," + e.getBlock().getZ() + "," + "0.0,0.0";
+        String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + ".0," + e.getBlock().getY() + ".0," + e.getBlock().getZ() + ".0," + "0.0,0.0";
         for(String arena : ConfigurationManager.getConfig("arenas").getConfigurationSection("instances").getKeys(false)) {
             for(String sign : ConfigurationManager.getConfig("arenas").getStringList("instances." + arena + ".signs")) {
+                Bukkit.broadcastMessage(sign + " config, sign " + location);
                 if(sign.equals(location)) {
                     List<String> signs = ConfigurationManager.getConfig("arenas").getStringList("instances." + arena + ".signs");
                     signs.remove(location);

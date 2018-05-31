@@ -22,6 +22,7 @@ import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
@@ -152,6 +153,7 @@ public class AdminCommands extends MainCommand {
             NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.VILLAGER, ChatManager.colorMessage("In-Game.Floor-Change-NPC-Name"));
             npc.spawn(player.getLocation());
             npc.setProtected(true);
+            npc.setName(ChatManager.colorMessage("In-Game.Floor-Change-NPC-Name"));
             player.sendMessage(ChatManager.colorMessage("In-Game.NPC-Created"));
         } else {
             player.sendMessage(ChatManager.colorMessage("In-Game.Install-Citizens"));

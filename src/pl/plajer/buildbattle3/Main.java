@@ -389,6 +389,7 @@ public class Main extends JavaPlugin {
                 System.out.print("Instance " + ID + " doesn't contains plots!");
                 arena.setReady(false);
             }
+            arena.setReady(config.getBoolean("instances." + ID + ".isdone"));
             ArenaRegistry.registerArena(arena);
             arena.start();
         }

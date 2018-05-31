@@ -19,7 +19,6 @@
 package pl.plajer.buildbattle3.events;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -418,26 +417,26 @@ public class GameEvents implements Listener {
             event.setCancelled(true);
             return;
         }
-            for(Arena arena : ArenaRegistry.getArenas()) {
-                for(Plot buildplot : arena.getPlotManager().getPlots()) {
-                    if(buildplot.isInPlotRange(event.getEntity().getLocation(), 10)) event.setCancelled(true);
-                }
+        for(Arena arena : ArenaRegistry.getArenas()) {
+            for(Plot buildplot : arena.getPlotManager().getPlots()) {
+                if(buildplot.isInPlotRange(event.getEntity().getLocation(), 10)) event.setCancelled(true);
             }
-            for(Arena arena : ArenaRegistry.getArenas()) {
-                for(Plot buildplot : arena.getPlotManager().getPlots()) {
-                    if(buildplot.isInPlotRange(event.getEntity().getLocation(), 1)) {
-                        if(buildplot.getEntities() >= ConfigPreferences.getMaxMobs()) {
-                            plugin.getServer().getPlayer(buildplot.getOwner()).sendMessage(ChatManager.colorMessage("In-Game.Max-Entities-Limit-Reached"));
-                            event.setCancelled(true);
-                            return;
-                        } else {
-                            buildplot.addEntity();
-                            event.setCancelled(false);
-                            new BuildBattleEntity(event.getEntity()).toggleMoveable();
-                        }
+        }
+        for(Arena arena : ArenaRegistry.getArenas()) {
+            for(Plot buildplot : arena.getPlotManager().getPlots()) {
+                if(buildplot.isInPlotRange(event.getEntity().getLocation(), 1)) {
+                    if(buildplot.getEntities() >= ConfigPreferences.getMaxMobs()) {
+                        plugin.getServer().getPlayer(buildplot.getOwner()).sendMessage(ChatManager.colorMessage("In-Game.Max-Entities-Limit-Reached"));
+                        event.setCancelled(true);
+                        return;
+                    } else {
+                        buildplot.addEntity();
+                        event.setCancelled(false);
+                        new BuildBattleEntity(event.getEntity()).toggleMoveable();
                     }
                 }
             }
+        }
     }
 
     @EventHandler

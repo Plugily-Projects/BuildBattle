@@ -114,10 +114,10 @@ public class MainCommand implements CommandExecutor {
             } else if(args[0].equalsIgnoreCase("stop")) {
                 adminCommands.stopGame(sender);
                 return true;
-            } else if(args[0].equalsIgnoreCase("list")){
+            } else if(args[0].equalsIgnoreCase("list")) {
                 adminCommands.printList(sender);
                 return true;
-            } else if(args[0].equalsIgnoreCase("delete")){
+            } else if(args[0].equalsIgnoreCase("delete")) {
                 if(args.length == 2) {
                     adminCommands.deleteArena(sender, args[1]);
                 } else {
@@ -129,7 +129,7 @@ public class MainCommand implements CommandExecutor {
                 return true;
             }
             adminCommands.sendHelp(sender);
-            List<StringMatcher.Match> matches = StringMatcher.match(args[0], Arrays.asList("stop", "list", "forcestart", "reload", "addsign", "delete"));
+            List<StringMatcher.Match> matches = StringMatcher.match(args[0], Arrays.asList("stop", "list", "forcestart", "reload", "delete"));
             if(!matches.isEmpty()) {
                 sender.sendMessage(ChatManager.colorMessage("Commands.Did-You-Mean").replaceAll("%command%", "bba " + matches.get(0).getMatch()));
             }
@@ -148,8 +148,7 @@ public class MainCommand implements CommandExecutor {
                 }
                 player.sendMessage(ChatColor.GOLD + "-------------------------------------------------");
                 return true;
-            }
-            if(args[0].equalsIgnoreCase("stats")) {
+            } else if(args[0].equalsIgnoreCase("stats")) {
                 if(checkSenderIsConsole(sender)) return true;
                 if(args.length == 1) {
                     gameCommands.showStats((Player) sender);
@@ -161,13 +160,11 @@ public class MainCommand implements CommandExecutor {
                     gameCommands.showStatsOther((Player) sender, Bukkit.getPlayer(args[1]));
                 }
                 return true;
-            }
-            if(args[0].equalsIgnoreCase("leave")) {
+            } else if(args[0].equalsIgnoreCase("leave")) {
                 if(checkSenderIsConsole(sender)) return true;
                 gameCommands.leaveGame(sender);
                 return true;
-            }
-            if(args[0].equalsIgnoreCase("join")) {
+            } else if(args[0].equalsIgnoreCase("join")) {
                 if(args.length == 2) {
                     Arena arena = ArenaRegistry.getArena(args[1]);
                     if(arena == null) {
@@ -184,6 +181,12 @@ public class MainCommand implements CommandExecutor {
                     return true;
                 }
                 player.sendMessage(ChatManager.colorMessage("Commands.Invalid-Args"));
+                return true;
+            } else if(!args[0].equalsIgnoreCase("create") && !(args.length > 1)) {
+                List<StringMatcher.Match> matches = StringMatcher.match(args[0], Arrays.asList("stats", "join", "leave"));
+                if(!matches.isEmpty()) {
+                    sender.sendMessage(ChatManager.colorMessage("Commands.Did-You-Mean").replaceAll("%command%", "bb " + matches.get(0).getMatch()));
+                }
                 return true;
             }
             if(!hasPermission(sender, PermissionManager.getEditGames())) return true;
