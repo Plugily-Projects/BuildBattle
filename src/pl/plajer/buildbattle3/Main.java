@@ -166,7 +166,9 @@ public class Main extends JavaPlugin {
         new ConfigurationManager(this);
         LanguageManager.init(this);
         initializeClasses();
-        bungeeManager = new BungeeManager(this);
+        if(getConfig().getBoolean("BungeeActivated")) {
+            bungeeManager = new BungeeManager(this);
+        }
         inventoryManager = new InventoryManager(this);
         inventoryManagerEnabled = getConfig().getBoolean("InventoryManager");
         for(String s : filesToGenerate) {
@@ -196,7 +198,6 @@ public class Main extends JavaPlugin {
         new EntityMenuEvents(this);
         ParticleHandler particleHandler = new ParticleHandler(this);
         particleHandler.start();
-        this.saveConfig();
         databaseActivated = this.getConfig().getBoolean("DatabaseActivated");
         if(databaseActivated) this.database = new MySQLDatabase(this);
         else {
@@ -341,7 +342,6 @@ public class Main extends JavaPlugin {
     }
 
     public void loadArenas() {
-        this.saveConfig();
         ArenaRegistry.getArenas().clear();
         FileConfiguration config = ConfigurationManager.getConfig("arenas");
         for(String ID : config.getConfigurationSection("instances").getKeys(false)) {

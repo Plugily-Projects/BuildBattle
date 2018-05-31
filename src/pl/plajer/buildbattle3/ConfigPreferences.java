@@ -210,7 +210,6 @@ public class ConfigPreferences {
                     options.put(option, config.getInt(option));
                 }
             }
-            saveConfig();
         }
     }
 
@@ -220,10 +219,6 @@ public class ConfigPreferences {
 
     public static long getParticleRefreshTick() {
         return options.get("Particle-Refresh-Per-Tick");
-    }
-
-    private static void saveConfig() {
-        main.saveConfig();
     }
 
 }
