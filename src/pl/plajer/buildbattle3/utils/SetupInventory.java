@@ -36,7 +36,6 @@ public class SetupInventory {
 
     private Inventory inventory;
 
-    //todo better
     public SetupInventory(Arena arena) {
         this.inventory = Bukkit.createInventory(null, 9 * 2, "BB Arena: " + arena.getID());
         addItem(new ItemBuilder(new ItemStack(Material.REDSTONE_BLOCK))

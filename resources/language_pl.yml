@@ -122,7 +122,6 @@ In-Game:
 Menus:
   Entity-Menu-Name: "&aMenu mobow"
   Villager-Profession-Menu-Name: "&7Wybierz profesje wiesniaka"
-  #todo more here
   Location-Message: "&aLokalizacja: "
   Option-Menu:
     Inventory-Name: "&aMenu opcji"

@@ -294,27 +294,6 @@ public class GameEvents implements Listener {
             arena.getPlotManager().getPlot((Player) e.getWhoClicked()).resetPlot();
             e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Reset-Option-Done"));
             return;
-        } else if(displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Mob-Option"))) {
-            //todo finish
-            e.getWhoClicked().closeInventory();
-            Inventory inv;
-            List<EntityType> entities = new ArrayList<>();
-            for(EntityType en : EntityType.values()) {
-                if(en.isSpawnable()) entities.add(en);
-            }
-            inv = Bukkit.createInventory(null, 9 * 8, ChatManager.colorMessage("Menus.Option-Menu.Mob-Option-Inventory-Name"));
-            int i = 0;
-            for(EntityType en : entities) {
-                if(blacklistedEntities.contains(en)) continue;
-                ItemStack is = new ItemStack(Material.MONSTER_EGG, i + 1);
-                ItemMeta meta = is.getItemMeta();
-                meta.setDisplayName(en.toString().toLowerCase());
-                meta.setLore(Collections.singletonList(ChatManager.colorMessage("Menus.Option-Menu.Mob-Option-Spawn-Lore")));
-                is.setItemMeta(meta);
-                inv.addItem(is);
-                i++;
-            }
-            e.getWhoClicked().openInventory(inv);
         }
         if(e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Particle-Remove"))) {
             ParticleRemoveMenu.onClick(e.getInventory(), e.getCurrentItem(), arena.getPlotManager().getPlot(player));
@@ -352,7 +331,6 @@ public class GameEvents implements Listener {
         if(displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Floor-Option"))) {
             arena.getPlotManager().getPlot(player).changeFloor(e.getCursor().getType(), e.getCursor().getData().getData());
             player.sendMessage(ChatManager.colorMessage("Menus.Option-Menu.Floor-Changed"));
-            //todo wtf
             e.getCursor().setAmount(0);
             e.getCursor().setType(Material.AIR);
             e.getCurrentItem().setType(Material.AIR);

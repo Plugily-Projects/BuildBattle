@@ -48,7 +48,6 @@ public class ParticleRemoveMenu {
             ItemMeta itemMeta = itemStack.getItemMeta();
             itemMeta.setLore(new ArrayList<>());
             itemStack.setItemMeta(itemMeta);
-            //todo translatable
             Util.addLore(itemStack, ChatManager.colorMessage("Menus.Location-Message"));
             Util.addLore(itemStack, ChatColor.GRAY + "  x: " + Math.round(location.getX()));
             Util.addLore(itemStack, ChatColor.GRAY + "  y: " + Math.round(location.getY()));

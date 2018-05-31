@@ -569,7 +569,6 @@ public class Arena extends BukkitRunnable {
             player.sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Message.First-Winner")
                     .replaceAll("%player%", plugin.getServer().getOfflinePlayer(topList.get(1)).getName())
                     .replaceAll("%number%", String.valueOf(getPlotManager().getPlot(topList.get(1)).getPoints())));
-            //todo improve
             if(topList.containsKey(2) && topList.get(2) != null) {
                 if(getPlotManager().getPlot(topList.get(1)).getPoints() == getPlotManager().getPlot(topList.get(2)).getPoints()) {
                     player.sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Message.First-Winner")

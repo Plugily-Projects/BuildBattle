@@ -130,7 +130,6 @@ In-Game:
 Menus:
   Entity-Menu-Name: "&aEntity Menü"
   Villager-Profession-Menu-Name: "&7Wähle Villager Beruf"
-  #todo more here
   Location-Message: "&aPosition: "
   Option-Menu:
     Inventory-Name: "&aOptions Menü"
