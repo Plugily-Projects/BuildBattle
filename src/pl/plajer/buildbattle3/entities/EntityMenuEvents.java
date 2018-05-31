@@ -69,7 +69,7 @@ public class EntityMenuEvents implements Listener {
                 type == EntityType.MINECART_COMMAND || type == EntityType.MINECART_HOPPER || type == EntityType.MINECART_MOB_SPAWNER || type == EntityType.MINECART_TNT
                 || type == EntityType.PLAYER || type == EntityType.PAINTING || type == EntityType.WITHER_SKULL)
             return;
-        if(event.getRightClicked().getCustomName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Floor-Change-NPC-Name"))) return;
+        if(event.getRightClicked().getCustomName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.NPC.Floor-Change-NPC-Name"))) return;
         BuildBattleEntity buildBattleEntity = new BuildBattleEntity(((LivingEntity) event.getRightClicked()));
         player.openInventory(buildBattleEntity.getMenu());
         links.put(player.getUniqueId(), buildBattleEntity);

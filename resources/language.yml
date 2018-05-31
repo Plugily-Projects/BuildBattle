@@ -84,9 +84,10 @@ In-Game:
   Full-Game-No-Permission: "&cYou don't have the permission to join full games!"
   No-Slots-For-Premium: "&cThis game is already full of premium players! Sorry!"
   Arena-Not-Configured: "&cArena is not configured yet! Contact staff!"
-  Floor-Change-NPC-Name: "&aChange floor NPC"
-  NPC-Created: "&aFloor NPC created successfully!"
-  Install-Citizens: "&cPlease install Citizens plugin first to create NPC's!"
+  NPC:
+    Floor-Change-NPC-Name: "&aChange floor NPC"
+    NPC-Created: "&aFloor NPC created successfully!"
+    Install-Citizens: "&cPlease install Citizens plugin first to create NPC's!"
   Messages:
     Time-Left-To-Build: "&6%FORMATTEDTIME% &7time left to build!"
     Plot-Leave-Error: "&cYou can't fly out of the plot!"
@@ -121,7 +122,6 @@ In-Game:
 Menus:
   Entity-Menu-Name: "&aEntity menu"
   Villager-Profession-Menu-Name: "&7Choose villager profession"
-  #todo more here
   Location-Message: "&aLocation: "
   Option-Menu:
     Inventory-Name: "&aOptions menu"

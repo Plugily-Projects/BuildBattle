@@ -49,37 +49,36 @@ Bossbar:
   Vote-Time-Left: "&e&lAbstimmungs Zeit übrig: &f&e%time%"
 
 Scoreboard:
-  Title: "&6BuildBattle"
+  Title: "&b&lBuildBattle"
   Content:
     Playing:
-      - "&5Time left;"
-      - "&b %FORMATTED_TIME_LEFT%"
+      - "&fTime Left: &e%FORMATTED_TIME_LEFT%"
       - ""
-      - "&5Players:"
-      - "&b %PLAYERS%/%MAX_PLAYERS%"
+      - "&fPlayers: &e%PLAYERS%/%MAX_PLAYERS%"
       - ""
-      - "&5Theme:"
-      - "&b %THEME%"
+      - "&fTheme: &e%THEME%"
       - ""
-      - "&5Arena:"
-      - "&b %ARENA_ID%"
+      - "&fArena: &e%ARENA_ID%"
+      - ""
+      - "&ewww.spigotmc.org"
     Starting:
-      - "&5Players:"
-      - " &b%PLAYERS%"
+      - "&fPlayers: &e%PLAYERS%"
       - ""
-      - "&5Players needed:"
-      - "&b %MIN_PLAYERS%"
-      - " "
-      - "&5&bStarting in:"
-      - "&d %TIMER%"
+      - "&fPlayers Needed: &e%MIN_PLAYERS%"
+      - ""
+      - "&fStarting In: &e%TIMER%"
+      - ""
+      - "&ewww.spigotmc.org"
     Ending:
-      - "&5 Game ended!"
-    Waiting:
-      - "&5Players:"
-      - " &b%PLAYERS%"
+      - "&e&lGAME ENDED"
       - ""
-      - "&5Players needed:"
-      - "&b %MIN_PLAYERS%"
+      - "&ewww.spigotmc.org"
+    Waiting:
+      - "&fPlayers: &e%PLAYERS%"
+      - ""
+      - "&fPlayers Needed: &e%MIN_PLAYERS%"
+      - ""
+      - "&ewww.spigotmc.org"
 
 In-Game:
   Plugin-Prefix: "&6[&bBuildBattle&6] "
@@ -93,9 +92,10 @@ In-Game:
   Full-Game-No-Permission: "&cDu hast nicht die Permission um einem vollen Spiel beizutreten!"
   No-Slots-For-Premium: "&cDie Runde ist bereits voll mit Premium-Spielern! Entschuldigung!"
   Arena-Not-Configured: "&cArena ist nicht konfiguriert ! Kontaktiere Teammitglieder!"
-  Floor-Change-NPC-Name: "&aChange floor NPC"
-  NPC-Created: "&aBoden NPC wurde erfolgreich erstellt!"
-  Install-Citizens: "&cBitte installiere Citiziens Plugin um NPC zu erstellen!"
+  NPC:
+    Floor-Change-NPC-Name: "&aChange floor NPC"
+    NPC-Created: "&aBoden NPC wurde erfolgreich erstellt!"
+    Install-Citizens: "&cBitte installiere Citiziens Plugin um NPC zu erstellen!"
   Messages:
     Time-Left-To-Build: "&6%FORMATTEDTIME% &7Zeit übrig zum Bauen!"
     Plot-Leave-Error: "&cDu kannst nicht aus deinen Plot gehen!"
@@ -148,7 +148,7 @@ Menus:
     Floor-Option: "&aÄndere Boden-Material"
     Floor-Option-Lore: "&7Siehe einen Block hierher um den Boden zu ändern"
     Floor-Changed: "&aBoden geändert!"
-    #todo
+
     Reset-Option: "&cReset plot"
     Reset-Option-Lore: "&7Fully reset plot, &c&lcan't be undone!"
     Reset-Option-Done: "&cPlot fully reset!"

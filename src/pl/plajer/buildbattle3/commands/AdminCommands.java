@@ -149,13 +149,13 @@ public class AdminCommands extends MainCommand {
     public void addNPC(Player player) {
         if(!hasPermission(player, "buildbattle.admin.addnpc")) return;
         if(plugin.getServer().getPluginManager().isPluginEnabled("Citizens")) {
-            NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.VILLAGER, ChatManager.colorMessage("In-Game.Floor-Change-NPC-Name"));
+            NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.VILLAGER, ChatManager.colorMessage("In-Game.NPC.Floor-Change-NPC-Name"));
             npc.spawn(player.getLocation());
             npc.setProtected(true);
             npc.setName(ChatManager.colorMessage("In-Game.Floor-Change-NPC-Name"));
-            player.sendMessage(ChatManager.colorMessage("In-Game.NPC-Created"));
+            player.sendMessage(ChatManager.colorMessage("In-Game.NPC.NPC-Created"));
         } else {
-            player.sendMessage(ChatManager.colorMessage("In-Game.Install-Citizens"));
+            player.sendMessage(ChatManager.colorMessage("In-Game.NPC.Install-Citizens"));
         }
     }
 

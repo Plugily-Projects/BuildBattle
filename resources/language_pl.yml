@@ -6,7 +6,7 @@
 
 # todo translate me
 Commands:
-  Did-You-Mean: "&6Did you mean &e/%command%&6?"
+  Did-You-Mean: "&6Czy chodzilo ci o &e/%command%&6?"
   Only-By-Player: "&cTylko gracze maja dostep do tej komendy!"
   Teleported-To-The-Lobby: "&aZostales przeniesiony do lobby!"
   No-Permission: "&cNie masz uprawnien do tej komendy!"
@@ -17,12 +17,12 @@ Commands:
   No-Selection: "&cUzyj wpierw zaznaczenia WorldEditem!"
   Plugin-Reloaded: "&aPlugin i konfiguracja zostaly przeladowane!"
   Player-Not-Found: "&cNie ma takiego gracza!"
-  Invalid-Args: "&cInvalid arguments! Make sure you typed the command correctly!"
+  Invalid-Args: "&cBledne argumenty! Upewnij sie ze wpisales wszystko poprawnie!"
   Admin-Commands:
     List-Command:
       Header: "&bBuildBattle &7arenas:"
       Format: "&b%arena% &e%status% &7%players%/%maxplayers%"
-      No-Arenas: "&cThere are no game instances!"
+      No-Arenas: "&cNie ma zadnych aren!"
   Stats-Command:
     Header: "&l-----TWOJE STATY-----"
     Header-Other: "&l-----STATY %player%-----"
@@ -42,37 +42,36 @@ Bossbar:
   Vote-Time-Left: "&e&lPozostalo glosowania: &f&e%time%"
 
 Scoreboard:
-  Title: "&6BuildBattle"
+  Title: "&b&lBuildBattle"
   Content:
     Playing:
-      - "&5Time left;"
-      - "&b %FORMATTED_TIME_LEFT%"
+      - "&fPozostalo: &e%FORMATTED_TIME_LEFT%"
       - ""
-      - "&5Players:"
-      - "&b %PLAYERS%/%MAX_PLAYERS%"
+      - "&fGraczy: &e%PLAYERS%/%MAX_PLAYERS%"
       - ""
-      - "&5Theme:"
-      - "&b %THEME%"
+      - "&fTemat: &e%THEME%"
       - ""
-      - "&5Arena:"
-      - "&b %ARENA_ID%"
+      - "&fArena: &e%ARENA_ID%"
+      - ""
+      - "&ewww.spigotmc.org"
     Starting:
-      - "&5Players:"
-      - " &b%PLAYERS%"
+      - "&fGraczy: &e%PLAYERS%"
       - ""
-      - "&5Players needed:"
-      - "&b %MIN_PLAYERS%"
-      - " "
-      - "&5&bStarting in:"
-      - "&d %TIMER%"
+      - "&fPotrzeba: &e%MIN_PLAYERS%"
+      - ""
+      - "&fStart Za: &e%TIMER%"
+      - ""
+      - "&ewww.spigotmc.org"
     Ending:
-      - "&5 Game ended!"
-    Waiting:
-      - "&5Players:"
-      - " &b%PLAYERS%"
+      - "&e&lKONIEC GRY"
       - ""
-      - "&5Players needed:"
-      - "&b %MIN_PLAYERS%"
+      - "&ewww.spigotmc.org"
+    Waiting:
+      - "&fGraczy: &e%PLAYERS%"
+      - ""
+      - "&fPotrzeba: &e%MIN_PLAYERS%"
+      - ""
+      - "&ewww.spigotmc.org"
 
 In-Game:
   Plugin-Prefix: "&6[&bBuildBattle&6] "
@@ -81,14 +80,15 @@ In-Game:
   Max-Particles-Limit-Reached: "&cNie mozesz stworzyc wiecej efektow!"
   No-Permission-For-Particle: "&cNie masz uprawnien do tego efektu!"
   Particle-Added: "&aPomyslnie dodales efekt!"
-  Join-No-Permission: "&cYou don't have permission to join this arena!"
+  Join-No-Permission: "&cNie masz uprawnien by dolaczyc na ta arene!"
   Particle-Removed: "&cPomyslnie usunales efekt!"
   Full-Game-No-Permission: "&cNie masz uprawnien by dolaczyc na pelne areny!"
   No-Slots-For-Premium: "&cTa gra jest juz pelna graczy premium! Przepraszamy!"
   Arena-Not-Configured: "&cArena nie zostala skonfigurowana! Poinformuj admina!"
-  Floor-Change-NPC-Name: "&aZmien blok podlogi"
-  NPC-Created: "&aNPC zostal stworzony pomyslnie!"
-  Install-Citizens: "&cZainstaluj wpierw plugin Citizens by moc tworzyc NPC!"
+  NPC:
+    Floor-Change-NPC-Name: "&aZmien blok podlogi"
+    NPC-Created: "&aNPC zostal stworzony pomyslnie!"
+    Install-Citizens: "&cZainstaluj wpierw plugin Citizens by moc tworzyc NPC!"
   Messages:
     Time-Left-To-Build: "&7Pozostalo &6%FORMATTEDTIME% &7czasu do zakonczenia budowy!"
     Plot-Leave-Error: "&cNie mozesz wyleciec z dzialki!"
@@ -141,10 +141,9 @@ Menus:
     Floor-Option: "&aZmien podloge"
     Floor-Option-Lore: "&7Przenies blok tutaj by zmienic podloge"
     Floor-Changed: "&aMaterial podlogi zmieniony!"
-    #todo
-    Reset-Option: "&cReset plot"
-    Reset-Option-Lore: "&7Fully reset plot, &c&lcan't be undone!"
-    Reset-Option-Done: "&cPlot fully reset!"
+    Reset-Option: "&cResetuj dzialke"
+    Reset-Option-Lore: "&7Calkowicie zresetuj dzialke, &c&lnie mozna tego confnac!"
+    Reset-Option-Done: "&cDzialka pomyslnie wyczyszczona!"
 
 Signs:
   Please-Type-Arena-Name: "&cPodaj nazwe areny w drugiej linii!"

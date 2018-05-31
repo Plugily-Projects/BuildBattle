@@ -36,7 +36,7 @@ import java.util.List;
  */
 public class LanguageMigrator {
 
-    public static final int LANGUAGE_FILE_VERSION = 5;
+    public static final int LANGUAGE_FILE_VERSION = 0;
     private static Main plugin = JavaPlugin.getPlugin(Main.class);
     private static List<String> migratable = Arrays.asList("bungee", "config", "language", "MySQL");
 

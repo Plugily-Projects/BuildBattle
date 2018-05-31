@@ -551,7 +551,7 @@ public class GameEvents implements Listener {
     public void onNPCClick(PlayerInteractEntityEvent e) {
         if(!plugin.is1_8_R3()) if(e.getHand() == EquipmentSlot.OFF_HAND) return;
         if(e.getPlayer().getItemInHand() == null || e.getPlayer().getItemInHand().getType() == Material.AIR) return;
-        if(e.getRightClicked() instanceof Villager && e.getRightClicked().getCustomName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Floor-Change-NPC-Name"))) {
+        if(e.getRightClicked() instanceof Villager && e.getRightClicked().getCustomName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.NPC.Floor-Change-NPC-Name"))) {
             Arena arena = ArenaRegistry.getArena(e.getPlayer());
             if(arena == null) return;
             if(!e.getPlayer().getItemInHand().getType().isBlock()) return;
