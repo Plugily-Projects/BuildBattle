@@ -51,7 +51,7 @@ Voting-Time-In-Seconds: 20
 # Default floor material ID
 Default-Floor-Material: 17
 
-# Should mob spawners be disabled?
+# Should mob spawning be disabled?
 Disable-Mob-Spawning-Completely: true
 
 # How many particle effects should have one spawned particle

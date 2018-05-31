@@ -413,6 +413,7 @@ public class GameEvents implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
+        if(event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) return;
         if(event.getEntity().getType() == EntityType.WITHER || ConfigPreferences.isMobSpawningDisabled()) {
             event.setCancelled(true);
             return;
