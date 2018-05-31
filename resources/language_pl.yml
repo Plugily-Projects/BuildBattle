@@ -4,7 +4,6 @@
 #     Some messages support their own placeholders
 #               like %player% etc.
 
-# todo translate me
 Commands:
   Did-You-Mean: "&6Czy chodzilo ci o &e/%command%&6?"
   Only-By-Player: "&cTylko gracze maja dostep do tej komendy!"

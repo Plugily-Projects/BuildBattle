@@ -13,7 +13,7 @@
 #               Thanks a lot!!
 
 Commands:
-  Did-You-Mean: "&6Did you mean &e/%command%&6?"
+  Did-You-Mean: "&6Meintest du &e/%command%&6?"
   Only-By-Player: "&cDu kannst diesen Command nur als Spieler ausführen!"
   Teleported-To-The-Lobby: "&aDu wurdest zur Lobby teleportiert!"
   No-Permission: "&cDu hast keine Rechte, um diesen Command auszuführen!"
@@ -27,9 +27,9 @@ Commands:
   Invalid-Args: "&cFalsche Argumente! Bist du dir sicher das der Commadn richtig ist!"
   Admin-Commands:
     List-Command:
-      Header: "&bBuildBattle &7arenas:"
+      Header: "&bBuildBattle &7Arenen:"
       Format: "&b%arena% &e%status% &7%players%/%maxplayers%"
-      No-Arenas: "&cThere are no game instances!"
+      No-Arenas: "&cKeine Spiel Instanzen gefunden!"
   Stats-Command:
     Header: "&l-----DEINE STATISTIK-----"
     Header-Other: "&l-----STATISTIK für %player%-----"
@@ -52,31 +52,31 @@ Scoreboard:
   Title: "&b&lBuildBattle"
   Content:
     Playing:
-      - "&fTime Left: &e%FORMATTED_TIME_LEFT%"
+      - "&fZeit übrig: &e%FORMATTED_TIME_LEFT%"
       - ""
-      - "&fPlayers: &e%PLAYERS%/%MAX_PLAYERS%"
+      - "&fSpieler: &e%PLAYERS%/%MAX_PLAYERS%"
       - ""
-      - "&fTheme: &e%THEME%"
+      - "&fThema: &e%THEME%"
       - ""
       - "&fArena: &e%ARENA_ID%"
       - ""
       - "&ewww.spigotmc.org"
     Starting:
-      - "&fPlayers: &e%PLAYERS%"
+      - "&fSpieler: &e%PLAYERS%"
       - ""
-      - "&fPlayers Needed: &e%MIN_PLAYERS%"
+      - "&fBenötigte Spiele: &e%MIN_PLAYERS%"
       - ""
-      - "&fStarting In: &e%TIMER%"
+      - "&fStarte in: &e%TIMER%"
       - ""
       - "&ewww.spigotmc.org"
     Ending:
-      - "&e&lGAME ENDED"
+      - "&e&lSPIEL ZU ENDE"
       - ""
       - "&ewww.spigotmc.org"
     Waiting:
-      - "&fPlayers: &e%PLAYERS%"
+      - "&fSpieler: &e%PLAYERS%"
       - ""
-      - "&fPlayers Needed: &e%MIN_PLAYERS%"
+      - "&fBenötigte Spiele: &e%MIN_PLAYERS%"
       - ""
       - "&ewww.spigotmc.org"
 
@@ -87,14 +87,14 @@ In-Game:
   Max-Particles-Limit-Reached: "&cDu kannst nicht mehr Partikel spawnen!"
   No-Permission-For-Particle: "&cDu hast keine Rechte für diesen Partikel!"
   Particle-Added: "&aPartikel erfolgreich hinzugefügt!"
-  Join-No-Permission: "&cYou don't have permission to join this arena!"
+  Join-No-Permission: "&cDu hast keine Permission um diese Arena zu betreten!"
   Particle-Removed: "&aPartikel erfolgreich entfernt!"
   Full-Game-No-Permission: "&cDu hast nicht die Permission um einem vollen Spiel beizutreten!"
   No-Slots-For-Premium: "&cDie Runde ist bereits voll mit Premium-Spielern! Entschuldigung!"
   Arena-Not-Configured: "&cArena ist nicht konfiguriert ! Kontaktiere Teammitglieder!"
   NPC:
-    Floor-Change-NPC-Name: "&aChange floor NPC"
-    NPC-Created: "&aBoden NPC wurde erfolgreich erstellt!"
+    Floor-Change-NPC-Name: "&aÄndere Boden-NPC"
+    NPC-Created: "&aBoden-NPC wurde erfolgreich erstellt!"
     Install-Citizens: "&cBitte installiere Citiziens Plugin um NPC zu erstellen!"
   Messages:
     Time-Left-To-Build: "&6%FORMATTEDTIME% &7Zeit übrig zum Bauen!"
@@ -149,9 +149,9 @@ Menus:
     Floor-Option-Lore: "&7Siehe einen Block hierher um den Boden zu ändern"
     Floor-Changed: "&aBoden geändert!"
 
-    Reset-Option: "&cReset plot"
-    Reset-Option-Lore: "&7Fully reset plot, &c&lcan't be undone!"
-    Reset-Option-Done: "&cPlot fully reset!"
+    Reset-Option: "&cPlot zurücksetzen"
+    Reset-Option-Lore: "&7Setze dein Plot komplett zurück, &c&lkann nicht rückgängig gemacht werden!"
+    Reset-Option-Done: "&cPlot erfolgreich zurückgesetzt!"
 
 Signs:
   Please-Type-Arena-Name: "&cBitte Schreibe den Arena-Namen in die 2. Zeile!"
