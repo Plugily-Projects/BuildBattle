@@ -40,7 +40,7 @@ public class TabCompletion implements TabCompleter {
             return Arrays.asList("stop", "list", "forcestart", "reload", "addsign", "delete");
         }
         if(cmd.getName().equalsIgnoreCase("buildbattle") && args.length == 1) {
-                return Arrays.asList("join", "leave", "stats", "create");
+            return Arrays.asList("join", "leave", "stats", "create");
         }
         return null;
     }

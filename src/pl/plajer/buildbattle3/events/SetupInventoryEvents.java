@@ -161,7 +161,7 @@ public class SetupInventoryEvents implements Listener {
                 return;
             } else {
                 for(String plotName : ConfigurationManager.getConfig("arenas").getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false)) {
-                    if(ConfigurationManager.getConfig("arenas").isSet("instances." +  arena.getID() + "plots." + plotName + ".maxpoint") && ConfigurationManager.getConfig("arenas").isSet("instances." + arena.getID() + ".plots." + plotName + ".minpoint")) {
+                    if(ConfigurationManager.getConfig("arenas").isSet("instances." + arena.getID() + "plots." + plotName + ".maxpoint") && ConfigurationManager.getConfig("arenas").isSet("instances." + arena.getID() + ".plots." + plotName + ".minpoint")) {
                         Plot buildPlot = new Plot();
                         buildPlot.setMaxPoint(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint")));
                         buildPlot.setMinPoint(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint")));

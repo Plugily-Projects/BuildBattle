@@ -119,17 +119,17 @@ public class Plot {
         getParticles().clear();
         for(Entity entity : getCenter().getWorld().getEntities()) {
             if(isInPlotRange(entity.getLocation(), 3)) {
-                if(JavaPlugin.getPlugin(Main.class).getServer().getPluginManager().isPluginEnabled("Citizens")){
+                if(JavaPlugin.getPlugin(Main.class).getServer().getPluginManager().isPluginEnabled("Citizens")) {
                     if(CitizensAPI.getNPCRegistry().isNPC(entity)) return;
                 }
-                if(entity.getType() != EntityType.PLAYER){
+                if(entity.getType() != EntityType.PLAYER) {
                     entity.remove();
                 }
             }
         }
     }
 
-    public void resetPlot(){
+    public void resetPlot() {
         CuboidSelection cuboidSelection = new CuboidSelection(getMaxPoint().getWorld(), getMaxPoint(), getMinPoint());
         com.sk89q.worldedit.Vector min = cuboidSelection.getNativeMinimumPoint();
         com.sk89q.worldedit.Vector max = cuboidSelection.getNativeMaximumPoint();
@@ -148,10 +148,10 @@ public class Plot {
         getParticles().clear();
         for(Entity entity : getCenter().getWorld().getEntities()) {
             if(isInPlotRange(entity.getLocation(), 3)) {
-                if(JavaPlugin.getPlugin(Main.class).getServer().getPluginManager().isPluginEnabled("Citizens")){
+                if(JavaPlugin.getPlugin(Main.class).getServer().getPluginManager().isPluginEnabled("Citizens")) {
                     if(CitizensAPI.getNPCRegistry().isNPC(entity)) return;
                 }
-                if(entity.getType() != EntityType.PLAYER){
+                if(entity.getType() != EntityType.PLAYER) {
                     entity.remove();
                 }
             }

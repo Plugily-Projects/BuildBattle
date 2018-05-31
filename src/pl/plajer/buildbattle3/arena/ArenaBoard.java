@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author Marcel S.
  * @version 1.0
  * @website https://marcely.de/
@@ -48,7 +47,7 @@ public class ArenaBoard {
     private List<Row> rowCache = new ArrayList<>();
     private boolean finished = false;
 
-    public ArenaBoard(String name, String criterion, String title){
+    public ArenaBoard(String name, String criterion, String title) {
         this.name = name;
         this.criterion = criterion;
         this.title = title;
@@ -60,7 +59,7 @@ public class ArenaBoard {
         this.obj.setDisplayName(title);
     }
 
-    public void display(Player player){
+    public void display(Player player) {
         player.setScoreboard(this.bukkitScoreboard);
     }
 
@@ -80,37 +79,38 @@ public class ArenaBoard {
         return rows;
     }
 
-    public @Nullable Row addRow(String message){
-        if(this.finished){
+    public @Nullable
+    Row addRow(String message) {
+        if(this.finished) {
             new NullPointerException("Can not add rows if scoreboard is already finished").printStackTrace();
             return null;
         }
 
-        try{
+        try {
             final Row row = new Row(this, message, rows.length);
 
             this.rowCache.add(row);
 
             return row;
-        }catch(Exception e){
+        } catch(Exception e) {
             return null;
         }
     }
 
-    public void finish(){
-        if(this.finished){
+    public void finish() {
+        if(this.finished) {
             new NullPointerException("Can not finish if scoreboard is already finished").printStackTrace();
             return;
         }
 
         this.finished = true;
 
-        for(int i=rowCache.size()-1; i>=0; i--){
+        for(int i = rowCache.size() - 1; i >= 0; i--) {
             final Row row = rowCache.get(i);
 
-            final Team team = this.bukkitScoreboard.registerNewTeam(name + "." + criterion + "." + (i+1));
+            final Team team = this.bukkitScoreboard.registerNewTeam(name + "." + criterion + "." + (i + 1));
             team.addEntry(ChatColor.values()[i] + "");
-            this.obj.getScore(ChatColor.values()[i] + "").setScore(rowCache.size()-i);
+            this.obj.getScore(ChatColor.values()[i] + "").setScore(rowCache.size() - i);
 
             row.team = team;
             row.setMessage(row.message);
@@ -123,25 +123,63 @@ public class ArenaBoard {
     public static class Row {
 
         private final ArenaBoard scoreboard;
-        private Team team;
         private final int rowInScoreboard;
+        private Team team;
         private String message;
 
-        public Row(ArenaBoard sb, String message, int row){
+        public Row(ArenaBoard sb, String message, int row) {
             this.scoreboard = sb;
             this.rowInScoreboard = row;
             this.message = message;
         }
 
-        public void setMessage(String message){
-            this.message = message;
+        private static String[] splitStringWithChatcolorInHalf(String str) {
+            final String[] strs = new String[2];
 
-            if(scoreboard.finished){
-                final String[] parts = splitStringWithChatcolorInHalf(message);
+            ChatColor cc1 = ChatColor.WHITE, cc2 = null;
+            Character lastChar = null;
 
-                this.team.setPrefix(parts[0]);
-                this.team.setSuffix(parts[1]);
+            strs[0] = "";
+            for(int i = 0; i < str.length() / 2; i++) {
+                final char c = str.charAt(i);
+
+                if(lastChar != null) {
+                    final ChatColor cc = charsToChatColor(new char[]{lastChar, c});
+
+                    if(cc != null) {
+                        if(cc.isFormat())
+                            cc2 = cc;
+                        else {
+                            cc1 = cc;
+                            cc2 = null;
+                        }
+                    }
+                }
+
+                strs[0] += c;
+                lastChar = c;
             }
+
+            strs[1] = (cc1 != null ? cc1 : "") + "" + (cc2 != null ? cc2 : "") + str.substring(str.length() / 2);
+
+            return strs;
+        }
+
+        private static @Nullable
+        ChatColor charsToChatColor(char[] chars) {
+            for(ChatColor cc : ChatColor.values()) {
+                final char[] ccChars = cc.toString().toCharArray();
+
+                int same = 0;
+                for(int i = 0; i < 2; i++) {
+                    if(ccChars[i] == chars[i])
+                        same++;
+                }
+
+                if(same == 2) return cc;
+            }
+
+            return null;
         }
 
         public ArenaBoard getScoreboard() {
@@ -156,52 +194,15 @@ public class ArenaBoard {
             return message;
         }
 
-        private static String[] splitStringWithChatcolorInHalf(String str){
-            final String[] strs = new String[2];
+        public void setMessage(String message) {
+            this.message = message;
 
-            ChatColor cc1 = ChatColor.WHITE, cc2 = null;
-            Character lastChar = null;
+            if(scoreboard.finished) {
+                final String[] parts = splitStringWithChatcolorInHalf(message);
 
-            strs[0] = "";
-            for(int i=0; i<str.length()/2; i++){
-                final char c = str.charAt(i);
-
-                if(lastChar != null){
-                    final ChatColor cc = charsToChatColor(new char[]{ lastChar, c });
-
-                    if(cc != null){
-                        if(cc.isFormat())
-                            cc2 = cc;
-                        else{
-                            cc1 = cc;
-                            cc2 = null;
-                        }
-                    }
-                }
-
-                strs[0] += c;
-                lastChar = c;
+                this.team.setPrefix(parts[0]);
+                this.team.setSuffix(parts[1]);
             }
-
-            strs[1] = (cc1 != null ? cc1 : "") + "" + (cc2 != null ? cc2 : "") + str.substring(str.length()/2);
-
-            return strs;
-        }
-
-        private static @Nullable ChatColor charsToChatColor(char[] chars){
-            for(ChatColor cc:ChatColor.values()){
-                final char[] ccChars = cc.toString().toCharArray();
-
-                int same=0;
-                for(int i=0; i<2; i++){
-                    if(ccChars[i] == chars[i])
-                        same++;
-                }
-
-                if(same == 2) return cc;
-            }
-
-            return null;
         }
     }
 }

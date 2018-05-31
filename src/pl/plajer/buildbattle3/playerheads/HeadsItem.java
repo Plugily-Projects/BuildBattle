@@ -140,13 +140,13 @@ class HeadsItem {
         return lorelist;
     }
 
-    public void setLore(String[] lore) {
-        this.lore = lore;
-    }
-
     public void setLore(List<String> lore) {
 
         this.lore = lore.toArray(new String[lore.size()]);
+    }
+
+    public void setLore(String[] lore) {
+        this.lore = lore;
     }
 
     private String getDisplayName() {

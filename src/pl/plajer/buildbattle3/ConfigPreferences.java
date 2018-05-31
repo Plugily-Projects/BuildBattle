@@ -20,7 +20,6 @@ package pl.plajer.buildbattle3;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import pl.plajer.buildbattle3.arena.Arena;
-import pl.plajer.buildbattle3.handlers.ConfigurationManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;

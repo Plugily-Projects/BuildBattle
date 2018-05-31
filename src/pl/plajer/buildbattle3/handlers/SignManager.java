@@ -97,14 +97,14 @@ public class SignManager implements Listener {
 
     private String formatSign(String msg, Arena a) {
         String formatted = msg;
-        formatted = StringUtils.replace(formatted,"%mapname%", a.getMapName());
+        formatted = StringUtils.replace(formatted, "%mapname%", a.getMapName());
         if(a.getPlayers().size() >= a.getMaximumPlayers()) {
-            formatted = StringUtils.replace(formatted,"%state%", ChatManager.colorMessage("Signs.Game-States.Full-Game"));
+            formatted = StringUtils.replace(formatted, "%state%", ChatManager.colorMessage("Signs.Game-States.Full-Game"));
         } else {
-            formatted = StringUtils.replace(formatted,"%state%", gameStateToString.get(a.getArenaState()));
+            formatted = StringUtils.replace(formatted, "%state%", gameStateToString.get(a.getArenaState()));
         }
-        formatted = StringUtils.replace(formatted,"%playersize%", String.valueOf(a.getPlayers().size()));
-        formatted = StringUtils.replace(formatted,"%maxplayers%", String.valueOf(a.getMaximumPlayers()));
+        formatted = StringUtils.replace(formatted, "%playersize%", String.valueOf(a.getPlayers().size()));
+        formatted = StringUtils.replace(formatted, "%maxplayers%", String.valueOf(a.getMaximumPlayers()));
         formatted = ChatManager.colorRawMessage(formatted);
         return formatted;
     }
