@@ -207,7 +207,7 @@ public class MainCommand implements CommandExecutor {
             if(!(args.length > 2)) return true;
 
             if(!ConfigurationManager.getConfig("arenas").contains("instances." + args[0])) {
-                player.sendMessage(ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+                player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
                 player.sendMessage(ChatColor.RED + "Usage: /bb < ARENA ID > set <MINPLAYRS | MAXPLAYERS | MAPNAME | SCHEMATIC | LOBBYLOCATION | EndLOCATION | STARTLOCATION  >  < VALUE>");
                 return true;
             }
@@ -269,7 +269,7 @@ public class MainCommand implements CommandExecutor {
         }
         FileConfiguration config = ConfigurationManager.getConfig("arenas");
         if(config.contains("instances." + args[1])) {
-            player.sendMessage(ChatColor.DARK_RED + "Instance/Arena already exists! Use another ID or delete it first!");
+            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatColor.DARK_RED + "Instance/Arena already exists! Use another ID or delete it first!");
         } else {
             createInstanceInConfig(args[1]);
             player.sendMessage(ChatColor.BOLD + "------------------------------------------");
