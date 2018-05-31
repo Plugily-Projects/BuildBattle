@@ -93,6 +93,12 @@ public class SetupInventory {
                 .lore(ChatColor.RED + "DO NOT SELECT THE FLOOR!")
                 .lore(isOptionDoneList("instances." + arena.getID() + ".plots"))
                 .build());
+        addItem(new ItemBuilder(new ItemStack(Material.BARRIER))
+                .name(ChatColor.GOLD + "► Add floor changer NPC")
+                .lore(ChatColor.GRAY + "Add floor changer NPC to your plot.")
+                .lore(ChatColor.RED + "Requires Citizens plugin!")
+                .lore(isOptionDoneList("instances." + arena.getID() + ".plots"))
+                .build());
         addItem(new ItemBuilder(new ItemStack(Material.FIREWORK))
                 .name(ChatColor.GOLD + "► " + ChatColor.GREEN + "Register arena")
                 .lore(ChatColor.GRAY + "Click this when you're done with configuration.")

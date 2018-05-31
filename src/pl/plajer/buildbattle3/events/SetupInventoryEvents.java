@@ -143,6 +143,9 @@ public class SetupInventoryEvents implements Listener {
         if(name.contains("Add game plot")) {
             player.performCommand("bba addplot " + arena.getID());
         }
+        if(name.contains("Add floor changer NPC")) {
+            player.performCommand("bba addnpc");
+        }
         if(name.contains("Register arena")) {
             event.setCancelled(true);
             event.getWhoClicked().closeInventory();
