@@ -29,6 +29,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerListPingEvent;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
+import pl.plajer.buildbattle3.arena.ArenaManager;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.arena.ArenaState;
 
@@ -85,7 +86,7 @@ public class BungeeManager implements Listener {
     public void onQuit(PlayerQuitEvent event) {
         event.setQuitMessage("");
         if(ArenaRegistry.getArena(event.getPlayer()) != null)
-            ArenaRegistry.getArenas().get(0).leaveAttempt(event.getPlayer());
+            ArenaManager.leaveAttempt(event.getPlayer(), ArenaRegistry.getArenas().get(0));
 
     }
 

@@ -58,6 +58,7 @@ import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.VoteItems;
 import pl.plajer.buildbattle3.arena.Arena;
+import pl.plajer.buildbattle3.arena.ArenaManager;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.arena.ArenaState;
 import pl.plajer.buildbattle3.entities.BuildBattleEntity;
@@ -130,7 +131,7 @@ public class GameEvents implements Listener {
             if(plugin.isBungeeActivated()) {
                 plugin.getBungeeManager().connectToHub(event.getPlayer());
             } else {
-                arena.leaveAttempt(event.getPlayer());
+                ArenaManager.leaveAttempt(event.getPlayer(), arena);
             }
         }
     }

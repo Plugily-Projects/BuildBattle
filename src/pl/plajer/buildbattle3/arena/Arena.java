@@ -139,10 +139,6 @@ public class Arena extends BukkitRunnable {
         voteTime = voting;
     }
 
-    public BossBar getGameBar() {
-        return gameBar;
-    }
-
     public PlotManager getPlotManager() {
         return plotManager;
     }
@@ -151,43 +147,12 @@ public class Arena extends BukkitRunnable {
         setTheme(themes.get(random.nextInt(themes.size() - 1)));
     }
 
-    public void leaveAttempt(Player p) {
-        queue.remove(p.getUniqueId());
-        User user = UserManager.getUser(p.getUniqueId());
-        if(getArenaState() == ArenaState.IN_GAME || getArenaState() == ArenaState.ENDING)
-            UserManager.getUser(p.getUniqueId()).addInt("gamesplayed", 1);
-        this.teleportToEndLocation(p);
-        this.removePlayer(p);
-        if(!user.isSpectator()) ChatManager.broadcastAction(this, p, ChatManager.ActionType.LEAVE);
-        user.setSpectator(false);
-        user.removeScoreboard();
+    public BossBar getGameBar() {
+        return gameBar;
+    }
 
-        p.setMaxHealth(20.0);
-        p.setFoodLevel(20);
-        p.setFlying(false);
-        p.setAllowFlight(false);
-        if(!plugin.is1_8_R3() && ConfigPreferences.isBarEnabled()) {
-            gameBar.removePlayer(p);
-        }
-        p.getInventory().setArmorContents(null);
-        p.getInventory().clear();
-        for(PotionEffect effect : p.getActivePotionEffects()) {
-            p.removePotionEffect(effect.getType());
-        }
-        p.setFireTicks(0);
-        if(getPlayers().size() == 0) {
-            this.setGameState(ArenaState.RESTARTING);
-        }
-        p.setGameMode(GameMode.SURVIVAL);
-        if(plugin.isInventoryManagerEnabled()) {
-            plugin.getInventoryManager().loadInventory(p);
-        }
-        for(Player player : plugin.getServer().getOnlinePlayers()) {
-            if(!getPlayers().contains(player)) {
-                p.showPlayer(player);
-                player.showPlayer(p);
-            }
-        }
+    public Queue<UUID> getQueue() {
+        return queue;
     }
 
     public void run() {

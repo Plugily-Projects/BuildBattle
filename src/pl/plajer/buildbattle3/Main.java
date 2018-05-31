@@ -28,6 +28,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle3.arena.Arena;
+import pl.plajer.buildbattle3.arena.ArenaManager;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.buildbattleapi.StatsStorage;
 import pl.plajer.buildbattle3.commands.MainCommand;
@@ -246,7 +247,7 @@ public class Main extends JavaPlugin {
         for(final Player player : getServer().getOnlinePlayers()) {
             Arena arena = ArenaRegistry.getArena(player);
             if(arena != null) {
-                arena.leaveAttempt(player);
+                ArenaManager.leaveAttempt(player, arena);
             }
             final User user = UserManager.getUser(player.getUniqueId());
             for(StatsStorage.StatisticType s : StatsStorage.StatisticType.values()) {

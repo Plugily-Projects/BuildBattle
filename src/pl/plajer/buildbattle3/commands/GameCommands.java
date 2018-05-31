@@ -22,6 +22,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
+import pl.plajer.buildbattle3.arena.ArenaManager;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.user.User;
@@ -78,7 +79,7 @@ public class GameCommands extends MainCommand {
                 System.out.print(p.getName() + " is teleported to the Hub Server");
             } else {
                 arena.teleportToEndLocation(p);
-                arena.leaveAttempt(p);
+                ArenaManager.leaveAttempt(p, arena);
                 System.out.print(p.getName() + " has left the arena! He is teleported to the end location.");
             }
         }

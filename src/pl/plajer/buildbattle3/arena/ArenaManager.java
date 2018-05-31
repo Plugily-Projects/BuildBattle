@@ -19,11 +19,17 @@
 package pl.plajer.buildbattle3.arena;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
+import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.buildbattleapi.BBGameEndEvent;
+import pl.plajer.buildbattle3.buildbattleapi.BBGameLeaveEvent;
+import pl.plajer.buildbattle3.handlers.ChatManager;
+import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.Util;
 
@@ -34,6 +40,60 @@ import pl.plajer.buildbattle3.utils.Util;
  */
 public class ArenaManager {
 
+    private static Main plugin = JavaPlugin.getPlugin(Main.class);
+
+    /**
+     * Attempts player to leave arena.
+     * Calls BBGameLeaveEvent event.
+     *
+     * @param p player to join
+     * @see BBGameLeaveEvent
+     */
+    public static void leaveAttempt(Player p, Arena a) {
+        a.getQueue().remove(p.getUniqueId());
+        User user = UserManager.getUser(p.getUniqueId());
+        if(a.getArenaState() == ArenaState.IN_GAME || a.getArenaState() == ArenaState.ENDING)
+            UserManager.getUser(p.getUniqueId()).addInt("gamesplayed", 1);
+        a.teleportToEndLocation(p);
+        a.removePlayer(p);
+        if(!user.isSpectator()) ChatManager.broadcastAction(a, p, ChatManager.ActionType.LEAVE);
+        user.setSpectator(false);
+        user.removeScoreboard();
+
+        p.setMaxHealth(20.0);
+        p.setFoodLevel(20);
+        p.setFlying(false);
+        p.setAllowFlight(false);
+        if(!plugin.is1_8_R3() && ConfigPreferences.isBarEnabled()) {
+            a.getGameBar().removePlayer(p);
+        }
+        p.getInventory().setArmorContents(null);
+        p.getInventory().clear();
+        for(PotionEffect effect : p.getActivePotionEffects()) {
+            p.removePotionEffect(effect.getType());
+        }
+        p.setFireTicks(0);
+        if(a.getPlayers().size() == 0) {
+            a.setGameState(ArenaState.RESTARTING);
+        }
+        p.setGameMode(GameMode.SURVIVAL);
+        if(plugin.isInventoryManagerEnabled()) {
+            plugin.getInventoryManager().loadInventory(p);
+        }
+        for(Player player : plugin.getServer().getOnlinePlayers()) {
+            if(!a.getPlayers().contains(player)) {
+                p.showPlayer(player);
+                player.showPlayer(p);
+            }
+        }
+    }
+
+    /**
+     * Stops current arena. Calls BBGameEndEvent event
+     *
+     * @param quickStop should arena be stopped immediately? (use only in important cases)
+     * @see BBGameEndEvent
+     */
     public static void stopGame(boolean quickStop, Arena arena) {
         Main.debug("Game stop event initiate, arena " + arena.getID(), System.currentTimeMillis());
         BBGameEndEvent gameEndEvent = new BBGameEndEvent(arena);

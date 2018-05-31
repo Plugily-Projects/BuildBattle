@@ -24,6 +24,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import pl.plajer.buildbattle3.Main;
+import pl.plajer.buildbattle3.arena.Arena;
+import pl.plajer.buildbattle3.arena.ArenaManager;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.buildbattleapi.StatsStorage;
 import pl.plajer.buildbattle3.user.User;
@@ -44,15 +46,17 @@ public class QuitEvents implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        if(ArenaRegistry.getArena(event.getPlayer()) == null) return;
+        Arena a = ArenaRegistry.getArena(event.getPlayer());
+        if(a == null) return;
         if(!plugin.isBungeeActivated())
-            ArenaRegistry.getArena(event.getPlayer()).leaveAttempt(event.getPlayer());
+            ArenaManager.leaveAttempt(event.getPlayer(),a);
     }
 
     @EventHandler
     public void onQuitSaveStats(PlayerQuitEvent event) {
-        if(ArenaRegistry.getArena(event.getPlayer()) != null) {
-            ArenaRegistry.getArena(event.getPlayer()).leaveAttempt(event.getPlayer());
+        Arena a = ArenaRegistry.getArena(event.getPlayer());
+        if(a != null) {
+            ArenaManager.leaveAttempt(event.getPlayer(), a);
         }
         final User user = UserManager.getUser(event.getPlayer().getUniqueId());
         final Player player = event.getPlayer();
