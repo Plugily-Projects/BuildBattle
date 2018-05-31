@@ -159,6 +159,7 @@ public class Main extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+        new ConfigurationManager(this);
         //check if using 2.0.0 releases
         if(ConfigurationManager.getConfig("language").isSet("PREFIX") && ConfigurationManager.getConfig("language").isSet("Unlocks-at-level")) {
             LanguageMigrator.migrateToNewFormat();
@@ -166,7 +167,6 @@ public class Main extends JavaPlugin {
         debug = getConfig().getBoolean("Debug");
         debug("Main setup start", System.currentTimeMillis());
         saveDefaultConfig();
-        new ConfigurationManager(this);
         LanguageManager.init(this);
         initializeClasses();
         if(getConfig().getBoolean("BungeeActivated")) {
