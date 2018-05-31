@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class ConfigPreferences {
 
-    private static FileConfiguration config = ConfigurationManager.getConfig("config");
+    private static FileConfiguration config;
     private static HashMap<String, Integer> options = new HashMap<>();
     private static Main main;
     private static List<String> winCommands = new ArrayList<>();
@@ -40,9 +40,9 @@ public class ConfigPreferences {
     private static List<String> whitelistedCommands = new ArrayList<>();
     private static List<String> thirdPlaceCommands = new ArrayList<>();
 
-    public ConfigPreferences(Main main) {
-        config = main.getConfig();
-        ConfigPreferences.main = main;
+    public ConfigPreferences(Main plugin) {
+        config = plugin.getConfig();
+        ConfigPreferences.main = plugin;
     }
 
 

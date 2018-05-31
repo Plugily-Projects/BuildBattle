@@ -83,7 +83,7 @@ public class Main extends JavaPlugin {
     private boolean inventoryManagerEnabled;
     private SignManager signManager;
     private String version;
-    private List<String> filesToGenerate = Arrays.asList("arenas", "EntityMenu", "particles", "scoreboard", "SpecialItems", "stats", "voteItems", "mysql");
+    private List<String> filesToGenerate = Arrays.asList("arenas", "EntityMenu", "particles", "SpecialItems", "stats", "voteItems", "mysql");
 
     public static Economy getEcon() {
         return econ;
@@ -267,6 +267,7 @@ public class Main extends JavaPlugin {
     }
 
     private void initializeClasses() {
+        new ConfigPreferences(this);
         new ChatManager();
         Arena.plugin = this;
         User.plugin = this;
@@ -312,7 +313,6 @@ public class Main extends JavaPlugin {
         if(getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new PlaceholderManager().register();
         }
-        new ConfigPreferences(this);
         checkUpdate();
     }
 
