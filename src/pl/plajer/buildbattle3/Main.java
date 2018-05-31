@@ -22,7 +22,6 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -51,7 +50,6 @@ import pl.plajer.buildbattle3.language.LanguageMigrator;
 import pl.plajer.buildbattle3.particles.ParticleHandler;
 import pl.plajer.buildbattle3.particles.ParticleMenu;
 import pl.plajer.buildbattle3.playerheads.PlayerHeadsMenu;
-import pl.plajer.buildbattle3.plots.Plot;
 import pl.plajer.buildbattle3.stats.FileStats;
 import pl.plajer.buildbattle3.stats.MySQLDatabase;
 import pl.plajer.buildbattle3.user.User;
@@ -59,7 +57,6 @@ import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.MessageUtils;
 import pl.plajer.buildbattle3.utils.Metrics;
 import pl.plajer.buildbattle3.utils.UpdateChecker;
-import pl.plajer.buildbattle3.utils.Util;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -195,7 +192,7 @@ public class Main extends JavaPlugin {
         saveResource("language.yml", false);
         ParticleMenu.loadFromConfig();
         PlayerHeadsMenu.loadHeadItems();
-        loadArenas();
+        ArenaRegistry.registerArenas();
         //load signs after arenas
         signManager = new SignManager(this);
         SpecialItem.loadAll();
@@ -346,61 +343,6 @@ public class Main extends JavaPlugin {
     public MySQLDatabase getMySQLDatabase() {
         return database;
     }
-
-    public void loadArenas() {
-        ArenaRegistry.getArenas().clear();
-        FileConfiguration config = ConfigurationManager.getConfig("arenas");
-        for(String ID : config.getConfigurationSection("instances").getKeys(false)) {
-            Arena arena;
-            String s = "instances." + ID + ".";
-            if(s.contains("default")) continue;
-
-            arena = new Arena(ID);
-
-            if(config.contains(s + "minimumplayers")) arena.setMinimumPlayers(config.getInt(s + "minimumplayers"));
-            else arena.setMinimumPlayers(config.getInt("instances.default.minimumplayers"));
-            if(config.contains(s + "maximumplayers")) arena.setMaximumPlayers(config.getInt(s + "maximumplayers"));
-            else arena.setMaximumPlayers(config.getInt("instances.default.maximumplayers"));
-            if(config.contains(s + "mapname")) arena.setMapName(config.getString(s + "mapname"));
-            else arena.setMapName(config.getString("instances.default.mapname"));
-            if(config.contains(s + "lobbylocation")) arena.setLobbyLocation(Util.getLocation(false, config.getString(s + "lobbylocation")));
-            if(config.contains(s + "Endlocation")) arena.setEndLocation(Util.getLocation(false, config.getString(s + "Endlocation")));
-            else {
-                if(!bungeeActivated) {
-                    System.out.print(ID + " doesn't contains an end location!");
-                    arena.setReady(false);
-                    ArenaRegistry.registerArena(arena);
-                    continue;
-                }
-            }
-            if(config.contains(s + "plots")) {
-                if(config.isConfigurationSection(s + "plots")) {
-                    for(String plotName : config.getConfigurationSection(s + "plots").getKeys(false)) {
-                        if(config.isSet(s + "plots." + plotName + ".maxpoint") && config.isSet(s + "plots." + plotName + ".minpoint")) {
-                            Plot buildPlot = new Plot();
-                            buildPlot.setMaxPoint(Util.getLocation(false, config.getString(s + "plots." + plotName + ".maxpoint")));
-                            buildPlot.setMinPoint(Util.getLocation(false, config.getString(s + "plots." + plotName + ".minpoint")));
-                            buildPlot.fullyResetPlot();
-                            arena.getPlotManager().addBuildPlot(buildPlot);
-                        } else {
-                            System.out.println("Non configured plot instances found for arena " + ID);
-                            arena.setReady(false);
-                        }
-                    }
-                } else {
-                    System.out.println("Non configured plots in arena " + ID);
-                    arena.setReady(false);
-                }
-            } else {
-                System.out.print("Instance " + ID + " doesn't contains plots!");
-                arena.setReady(false);
-            }
-            arena.setReady(config.getBoolean("instances." + ID + ".isdone"));
-            ArenaRegistry.registerArena(arena);
-            arena.start();
-        }
-    }
-
 
     private void loadStatsForPlayersOnline() {
         for(final Player player : getServer().getOnlinePlayers()) {

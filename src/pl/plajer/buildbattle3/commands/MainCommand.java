@@ -29,6 +29,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
+import pl.plajer.buildbattle3.arena.ArenaManager;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.arena.ArenaState;
 import pl.plajer.buildbattle3.handlers.ChatManager;
@@ -304,7 +305,7 @@ public class MainCommand implements CommandExecutor {
         arena.setReady(false);
         ArenaRegistry.registerArena(arena);
 
-        plugin.loadArenas();
+        ArenaRegistry.registerArenas();
     }
 
 }

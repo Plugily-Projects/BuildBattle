@@ -112,7 +112,7 @@ public class AdminCommands extends MainCommand {
         ConfigPreferences.loadThirdPlaceCommands();
         ConfigPreferences.loadEndGameCommands();
         ConfigPreferences.loadWhitelistedCommands();
-        plugin.loadArenas();
+        ArenaRegistry.registerArenas();
         player.sendMessage(ChatColor.GREEN + "Plugin reloaded!");
     }
 
