@@ -18,7 +18,6 @@
 
 package pl.plajer.buildbattle3.events;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -51,9 +50,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.VoteItems;
@@ -74,7 +71,6 @@ import pl.plajer.buildbattle3.utils.OptionsMenu;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -392,27 +388,28 @@ public class GameEvents implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
-        if(event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) return;
-        if(event.getEntity().getType() == EntityType.WITHER || ConfigPreferences.isMobSpawningDisabled()) {
-            event.setCancelled(true);
-            return;
-        }
         for(Arena arena : ArenaRegistry.getArenas()) {
-            for(Plot buildplot : arena.getPlotManager().getPlots()) {
-                if(buildplot.isInPlotRange(event.getEntity().getLocation(), 10)) event.setCancelled(true);
-            }
-        }
-        for(Arena arena : ArenaRegistry.getArenas()) {
-            for(Plot buildplot : arena.getPlotManager().getPlots()) {
-                if(buildplot.isInPlotRange(event.getEntity().getLocation(), 1)) {
-                    if(buildplot.getEntities() >= ConfigPreferences.getMaxMobs()) {
-                        plugin.getServer().getPlayer(buildplot.getOwner()).sendMessage(ChatManager.colorMessage("In-Game.Max-Entities-Limit-Reached"));
+            if(event.getEntity().getWorld().equals(arena.getStartLocation().getWorld())) {
+                if(event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) return;
+                if(event.getEntity().getType() == EntityType.WITHER || ConfigPreferences.isMobSpawningDisabled()) {
+                    event.setCancelled(true);
+                    return;
+                }
+                for(Plot buildplot : arena.getPlotManager().getPlots()) {
+                    if(buildplot.isInPlotRange(event.getEntity().getLocation(), 10)) {
                         event.setCancelled(true);
                         return;
-                    } else {
-                        buildplot.addEntity();
-                        event.setCancelled(false);
-                        new BuildBattleEntity(event.getEntity()).toggleMoveable();
+                    }
+                    if(buildplot.isInPlotRange(event.getEntity().getLocation(), 1)) {
+                        if(buildplot.getEntities() >= ConfigPreferences.getMaxMobs()) {
+                            plugin.getServer().getPlayer(buildplot.getOwner()).sendMessage(ChatManager.colorMessage("In-Game.Max-Entities-Limit-Reached"));
+                            event.setCancelled(true);
+                            return;
+                        } else {
+                            buildplot.addEntity();
+                            event.setCancelled(false);
+                            new BuildBattleEntity(event.getEntity()).toggleMoveable();
+                        }
                     }
                 }
             }
