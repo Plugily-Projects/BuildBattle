@@ -1,3 +1,6 @@
+# Vote items configuration
+# Number mean slot position, material, data and displayname are obvious
+
 '2':
   material: 159
   displayname: "§cPoop"
