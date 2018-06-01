@@ -130,7 +130,7 @@ public class MainCommand implements CommandExecutor {
                 return true;
             }
             adminCommands.sendHelp(sender);
-            List<StringMatcher.Match> matches = StringMatcher.match(args[0], Arrays.asList("stop", "list", "forcestart", "reload", "delete"));
+            List<StringMatcher.Match> matches = StringMatcher.match(args[0], Arrays.asList("addplot", "stop", "list", "forcestart", "reload", "delete"));
             if(!matches.isEmpty()) {
                 sender.sendMessage(ChatManager.colorMessage("Commands.Did-You-Mean").replaceAll("%command%", "bba " + matches.get(0).getMatch()));
             }

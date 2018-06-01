@@ -5,7 +5,7 @@
 #   You don't want to break anything, do you?
 #
 
-# Locale of VD 3 language. By default it's english.
+# Locale of BB 3 language. By default it's english.
 # Available localizations:
 # default - uses messages from 'language.yml' file
 # de - Deutsche sprache. Uses messages from 'language_de.yml' file

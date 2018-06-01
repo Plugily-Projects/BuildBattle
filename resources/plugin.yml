@@ -29,3 +29,4 @@ permissions:
       buildbattle.admin.addplot: true
       buildbattle.admin.list: true
       buildbattle.admin.delete: true
+      buildbattle.admin.create: true
