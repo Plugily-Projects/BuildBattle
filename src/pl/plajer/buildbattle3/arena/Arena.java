@@ -648,7 +648,7 @@ public class Arena extends BukkitRunnable {
     /**
      * Get map name, map name != ID
      * Map name is used in signs
-     * @return
+     * @return map name String
      */
     public String getMapName() {
         return mapName;
