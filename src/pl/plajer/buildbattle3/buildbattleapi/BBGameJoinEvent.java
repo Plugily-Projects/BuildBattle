@@ -1,5 +1,5 @@
 /*
- *  Village Defense 3 - Protect villagers from hordes of zombies
+ * BuildBattle 3 - Ultimate building competition minigame
  * Copyright (C) 2018  Plajer's Lair - maintained by Plajer
  *
  * This program is free software: you can redistribute it and/or modify

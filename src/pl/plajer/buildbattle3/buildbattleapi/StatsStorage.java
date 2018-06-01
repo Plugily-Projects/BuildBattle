@@ -1,5 +1,5 @@
 /*
- *  Village Defense 3 - Protect villagers from hordes of zombies
+ * BuildBattle 3 - Ultimate building competition minigame
  * Copyright (C) 2018  Plajer's Lair - maintained by Plajer
  *
  * This program is free software: you can redistribute it and/or modify
@@ -59,7 +59,7 @@ public class StatsStorage {
      * @return Map of UUID keys and Integer values sorted in ascending order of requested statistic type
      */
     public static Map<UUID, Integer> getStats(StatisticType stat) {
-        Main.debug("Village API getStats(" + stat.getName() + ") run", System.currentTimeMillis());
+        Main.debug("BuildBattle API getStats(" + stat.getName() + ") run", System.currentTimeMillis());
         if(plugin.isDatabaseActivated())
             return plugin.getMySQLDatabase().getColumn(stat.getName());
         else {
@@ -81,7 +81,7 @@ public class StatsStorage {
      * @see StatisticType
      */
     public static int getUserStats(Player player, StatisticType statisticType) {
-        Main.debug("Village API getUserStats(" + player.getName() + ", " + statisticType.getName() + ") run", System.currentTimeMillis());
+        Main.debug("BuildBattle API getUserStats(" + player.getName() + ", " + statisticType.getName() + ") run", System.currentTimeMillis());
         return UserManager.getUser(player.getUniqueId()).getInt(statisticType.name);
     }
 

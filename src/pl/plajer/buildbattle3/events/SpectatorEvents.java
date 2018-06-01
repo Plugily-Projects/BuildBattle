@@ -1,5 +1,5 @@
 /*
- *  Village Defense 3 - Protect villagers from hordes of zombies
+ * BuildBattle 3 - Ultimate building competition minigame
  * Copyright (C) 2018  Plajer's Lair - maintained by Plajer
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,7 +42,7 @@ import pl.plajer.buildbattle3.user.UserManager;
  * Created by Tom on 1/08/2014.
  */
 public class SpectatorEvents implements Listener {
-    
+
     public SpectatorEvents(Main plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
