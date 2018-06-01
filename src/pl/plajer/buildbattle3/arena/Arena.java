@@ -112,18 +112,26 @@ public class Arena extends BukkitRunnable {
         plotManager = new PlotManager(this);
     }
 
+    /**
+     * Adds new theme topic to the game
+     * @param string Theme topic
+     */
     public static void addTheme(String string) {
         themes.add(string);
     }
 
+    /**
+     * Adds item which can not be used in game
+     * @param ID item ID to blacklist
+     */
     public static void addToBlackList(int ID) {
         blacklist.add(ID);
     }
 
-    public static Main getPlugin() {
-        return plugin;
-    }
-
+    /**
+     * Checks if arena is validated and ready to play
+     * @return true = ready, false = not ready either you must validate it or it's wrongly created
+     */
     public boolean isReady() {
         return ready;
     }
@@ -132,6 +140,10 @@ public class Arena extends BukkitRunnable {
         this.ready = ready;
     }
 
+    /**
+     * Is voting time in game?
+     * @return true = voting time, false = no
+     */
     public boolean isVoting() {
         return voteTime;
     }
@@ -148,11 +160,11 @@ public class Arena extends BukkitRunnable {
         setTheme(themes.get(random.nextInt(themes.size() - 1)));
     }
 
-    public BossBar getGameBar() {
+    BossBar getGameBar() {
         return gameBar;
     }
 
-    public Queue<UUID> getQueue() {
+    Queue<UUID> getQueue() {
         return queue;
     }
 
@@ -473,10 +485,18 @@ public class Arena extends BukkitRunnable {
         return blacklist;
     }
 
+    /**
+     * Get arena's building time left
+     * @return building time left
+     */
     public long getTimeLeft() {
         return getTimer();
     }
 
+    /**
+     * Get current arena theme
+     * @return arena theme String
+     */
     public String getTheme() {
         return theme;
     }
@@ -510,6 +530,10 @@ public class Arena extends BukkitRunnable {
 
     }
 
+    /**
+     * Get plot where players are voting currently
+     * @return Plot object where players are voting
+     */
     public Plot getVotingPlot() {
         return votingPlot;
     }
@@ -600,10 +624,19 @@ public class Arena extends BukkitRunnable {
         if(!(rang > 10) && after != null) insertScore(rang + 1, after);
     }
 
+    /**
+     * Get arena ID, ID != map name
+     * ID is used to get and manage arenas
+     * @return arena ID
+     */
     public String getID() {
         return ID;
     }
 
+    /**
+     * Min players that are required to start arena
+     * @return min players size
+     */
     public int getMinimumPlayers() {
         return minimumPlayers;
     }
@@ -612,6 +645,11 @@ public class Arena extends BukkitRunnable {
         this.minimumPlayers = minimumPlayers;
     }
 
+    /**
+     * Get map name, map name != ID
+     * Map name is used in signs
+     * @return
+     */
     public String getMapName() {
         return mapName;
     }
@@ -620,20 +658,24 @@ public class Arena extends BukkitRunnable {
         this.mapName = mapname;
     }
 
-    public void addPlayer(Player player) {
+    void addPlayer(Player player) {
         players.add(player.getUniqueId());
     }
 
-    public void removePlayer(Player player) {
+    void removePlayer(Player player) {
         if(player == null) return;
         if(player.getUniqueId() == null) return;
         players.remove(player.getUniqueId());
     }
 
-    public void clearPlayers() {
+    private void clearPlayers() {
         players.clear();
     }
 
+    /**
+     * Global timer of arena
+     * @return timer of arena
+     */
     public int getTimer() {
         return timer;
     }
@@ -642,6 +684,10 @@ public class Arena extends BukkitRunnable {
         this.timer = timer;
     }
 
+    /**
+     * Max players size arena can hold
+     * @return max players size
+     */
     public int getMaximumPlayers() {
         return maximumPlayers;
     }
@@ -650,10 +696,21 @@ public class Arena extends BukkitRunnable {
         this.maximumPlayers = maximumPlayers;
     }
 
+    /**
+     * Arena state of arena
+     * @return arena state
+     * @see ArenaState
+     */
     public ArenaState getArenaState() {
         return gameState;
     }
 
+    /**
+     * Changes arena state of arena
+     * Calls BBGameChangeStateEvent
+     * @param gameState arena state to change
+     * @see BBGameChangeStateEvent
+     */
     public void setGameState(ArenaState gameState) {
         if(getArenaState() != null) {
             BBGameChangeStateEvent gameChangeStateEvent = new BBGameChangeStateEvent(gameState, this, getArenaState());
@@ -662,7 +719,7 @@ public class Arena extends BukkitRunnable {
         this.gameState = gameState;
     }
 
-    public void showPlayers() {
+    void showPlayers() {
         for(Player player : getPlayers()) {
             for(Player p : getPlayers()) {
                 player.showPlayer(p);
@@ -671,6 +728,10 @@ public class Arena extends BukkitRunnable {
         }
     }
 
+    /**
+     * Get players in game
+     * @return HashSet with players
+     */
     public HashSet<Player> getPlayers() {
         HashSet<Player> list = new HashSet<>();
         for(UUID uuid : players) {
@@ -680,7 +741,7 @@ public class Arena extends BukkitRunnable {
         return list;
     }
 
-    public void showPlayer(Player p) {
+    void showPlayer(Player p) {
         for(Player player : getPlayers()) {
             player.showPlayer(p);
         }
@@ -695,6 +756,10 @@ public class Arena extends BukkitRunnable {
 
     }
 
+    /**
+     * Lobby location of arena
+     * @return lobby loc of arena
+     */
     public Location getLobbyLocation() {
         return lobbyLoc;
     }
@@ -703,11 +768,15 @@ public class Arena extends BukkitRunnable {
         this.lobbyLoc = loc;
     }
 
+    /**
+     * Start location of arena
+     * @return start loc of arena
+     */
     public Location getStartLocation() {
         return startLoc;
     }
 
-    public void teleportAllToEndLocation() {
+    private void teleportAllToEndLocation() {
         if(plugin.isBungeeActivated()) {
             for(Player player : getPlayers()) {
                 plugin.getBungeeManager().connectToHub(player);
@@ -739,6 +808,10 @@ public class Arena extends BukkitRunnable {
         player.teleport(location);
     }
 
+    /**
+     * End location of arena
+     * @return end loc of arena
+     */
     public Location getEndLocation() {
         return endLoc;
     }
