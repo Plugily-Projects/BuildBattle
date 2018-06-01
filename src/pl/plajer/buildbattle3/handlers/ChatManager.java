@@ -73,13 +73,13 @@ public class ChatManager {
     public static void broadcastAction(Arena arena, Player p, ActionType action) {
         switch(action) {
             case JOIN:
-                String joinMsg = formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Join"), p);
+                String joinMsg = PLUGIN_PREFIX + formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Join"), p);
                 for(Player player : arena.getPlayers()) {
                     player.sendMessage(joinMsg);
                 }
                 break;
             case LEAVE:
-                String leaveMsg = formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Leave"), p);
+                String leaveMsg = PLUGIN_PREFIX + formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Leave"), p);
                 for(Player player : arena.getPlayers()) {
                     player.sendMessage(leaveMsg);
                 }
