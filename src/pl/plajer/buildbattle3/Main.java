@@ -35,6 +35,7 @@ import pl.plajer.buildbattle3.entities.EntityItem;
 import pl.plajer.buildbattle3.entities.EntityMenuEvents;
 import pl.plajer.buildbattle3.events.GameEvents;
 import pl.plajer.buildbattle3.events.JoinEvents;
+import pl.plajer.buildbattle3.events.QuitEvents;
 import pl.plajer.buildbattle3.events.SetupInventoryEvents;
 import pl.plajer.buildbattle3.events.SpectatorEvents;
 import pl.plajer.buildbattle3.handlers.BungeeManager;
@@ -312,6 +313,7 @@ public class Main extends JavaPlugin {
             }
         }));
         new JoinEvents(this);
+        new QuitEvents(this);
         StatsStorage.plugin = this;
         if(getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new PlaceholderManager().register();

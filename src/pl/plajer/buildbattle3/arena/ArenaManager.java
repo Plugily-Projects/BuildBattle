@@ -153,6 +153,7 @@ public class ArenaManager {
         p.setFireTicks(0);
         if(a.getPlayers().size() == 0) {
             a.setGameState(ArenaState.RESTARTING);
+            a.setTimer(0);
         }
         p.setGameMode(GameMode.SURVIVAL);
         if(plugin.isInventoryManagerEnabled()) {

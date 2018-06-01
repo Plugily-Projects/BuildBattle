@@ -106,7 +106,7 @@ public class Arena extends BukkitRunnable {
     public Arena(String ID) {
         gameState = ArenaState.WAITING_FOR_PLAYERS;
         this.ID = ID;
-        if(ConfigPreferences.isBarEnabled() && !plugin.is1_8_R3()) {
+        if(ConfigPreferences.isBarEnabled() && !plugin.is1_8_R3() && bossBarEnabled) {
             gameBar = Bukkit.createBossBar(ChatManager.colorMessage("Bossbar.Waiting-For-Players"), BarColor.BLUE, BarStyle.SOLID);
         }
         plotManager = new PlotManager(this);
@@ -362,7 +362,9 @@ public class Arena extends BukkitRunnable {
     }
 
     private void updateBossBar() {
+        Bukkit.broadcastMessage("call");
         if(plugin.is1_8_R3()) {
+            Bukkit.broadcastMessage("aha");
             for(Player player : getPlayers()) {
                 if(plugin.is1_8_R3()) {
                     BossBarAPI.removeBar(player);
@@ -384,6 +386,7 @@ public class Arena extends BukkitRunnable {
                 }
             }
         } else {
+            Bukkit.broadcastMessage(getArenaState().toString());
             switch(getArenaState()) {
                 case WAITING_FOR_PLAYERS:
                     gameBar.setTitle(ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
@@ -441,14 +444,20 @@ public class Arena extends BukkitRunnable {
     }
 
     public void start() {
-        if(!plugin.getServer().getPluginManager().isPluginEnabled("BossBarAPI")) {
-            Main.debug("BossBarAPI for 1.8 not found! Disabling BossBar support!", System.currentTimeMillis());
-            bossBarEnabled = false;
+        if(plugin.is1_8_R3()) {
+            if(!plugin.getServer().getPluginManager().isPluginEnabled("BossBarAPI")) {
+                Main.debug("BossBarAPI for 1.8 not found! Disabling BossBar support!", System.currentTimeMillis());
+                bossBarEnabled = false;
+            }
         }
         this.runTaskTimer(plugin, 20L, 20L);
     }
 
     private void updateScoreboard() {
+        Bukkit.broadcastMessage(getPlayers().size() + "");
+        for(Player p : getPlayers()){
+            Bukkit.broadcastMessage(p.getName());
+        }
         if(getPlayers().size() == 0 || getArenaState() == ArenaState.RESTARTING) return;
         for(Player p : getPlayers()) {
             ArenaBoard displayBoard = new ArenaBoard("BB3", "board", ChatManager.colorMessage("Scoreboard.Title"));
