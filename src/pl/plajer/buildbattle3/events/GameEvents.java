@@ -79,10 +79,7 @@ import java.util.List;
 public class GameEvents implements Listener {
 
     private Main plugin;
-    //mob spawning option spawn overriding
-    private boolean spawnOverride;
-    private List<EntityType> blacklistedEntities = Arrays.asList(EntityType.AREA_EFFECT_CLOUD, EntityType.ARMOR_STAND, EntityType.ARROW, EntityType.COMPLEX_PART, EntityType.BOAT, EntityType.DRAGON_FIREBALL, EntityType.DROPPED_ITEM, EntityType.EGG, EntityType.ENDER_CRYSTAL, EntityType.ENDER_DRAGON, EntityType.ENDER_PEARL, EntityType.ENDER_SIGNAL, EntityType.EXPERIENCE_ORB, EntityType.FALLING_BLOCK, EntityType.FIREBALL, EntityType.SNOWBALL, EntityType.LEASH_HITCH, EntityType.LEASH_HITCH, EntityType.ITEM_FRAME, EntityType.LIGHTNING, EntityType.LINGERING_POTION, EntityType.PAINTING);
-
+    
     public GameEvents(Main plugin) {
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
