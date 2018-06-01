@@ -180,27 +180,6 @@ public class Main extends JavaPlugin {
         if(getConfig().getBoolean("BungeeActivated")) {
             getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         }
-        ConfigPreferences.loadOptions();
-        ConfigPreferences.loadOptions();
-        ConfigPreferences.loadThemes();
-        ConfigPreferences.loadBlackList();
-        ConfigPreferences.loadWinCommands();
-        ConfigPreferences.loadSecondPlaceCommands();
-        ConfigPreferences.loadThirdPlaceCommands();
-        ConfigPreferences.loadEndGameCommands();
-        ConfigPreferences.loadWhitelistedCommands();
-        saveResource("language.yml", false);
-        ParticleMenu.loadFromConfig();
-        PlayerHeadsMenu.loadHeadItems();
-        ArenaRegistry.registerArenas();
-        //load signs after arenas
-        signManager = new SignManager(this);
-        SpecialItem.loadAll();
-        VoteItems.loadVoteItemsFromConfig();
-        EntityItem.loadAll();
-        new EntityMenuEvents(this);
-        ParticleHandler particleHandler = new ParticleHandler(this);
-        particleHandler.start();
         databaseActivated = this.getConfig().getBoolean("DatabaseActivated");
         if(databaseActivated) this.database = new MySQLDatabase(this);
         else {
@@ -278,9 +257,29 @@ public class Main extends JavaPlugin {
         PermissionManager.init();
         new SetupInventoryEvents(this);
         bungeeActivated = getConfig().getBoolean("BungeeActivated");
-        new GameEvents(this);
         mainCommand = new MainCommand(this);
         new SpectatorEvents(this);
+        ConfigPreferences.loadOptions();
+        ConfigPreferences.loadOptions();
+        ConfigPreferences.loadThemes();
+        ConfigPreferences.loadBlackList();
+        ConfigPreferences.loadWinCommands();
+        ConfigPreferences.loadSecondPlaceCommands();
+        ConfigPreferences.loadThirdPlaceCommands();
+        ConfigPreferences.loadEndGameCommands();
+        ConfigPreferences.loadWhitelistedCommands();
+        saveResource("language.yml", false);
+        ParticleMenu.loadFromConfig();
+        PlayerHeadsMenu.loadHeadItems();
+        ArenaRegistry.registerArenas();
+        //load signs after arenas
+        signManager = new SignManager(this);
+        SpecialItem.loadAll();
+        VoteItems.loadVoteItemsFromConfig();
+        EntityItem.loadAll();
+        new EntityMenuEvents(this);
+        ParticleHandler particleHandler = new ParticleHandler(this);
+        particleHandler.start();
         Metrics metrics = new Metrics(this);
         metrics.addCustomChart(new Metrics.SimplePie("bungeecord_hooked", () -> getConfig().getString("BungeeActivated", "false")));
         metrics.addCustomChart(new Metrics.SimplePie("locale_used", () -> {
@@ -318,6 +317,7 @@ public class Main extends JavaPlugin {
             new PlaceholderManager().register();
         }
         checkUpdate();
+        new GameEvents(this);
     }
 
     public boolean isDatabaseActivated() {

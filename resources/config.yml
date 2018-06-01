@@ -17,7 +17,7 @@
 locale: default
 
 # Enable boss bar for the game?
-# Requires BossBarAPI for now.
+# Requires BossBarAPI for 1.8 users.
 Boss-Bar-Enabled: false
 
 # Should we hook into bungee cord? (If you wanna use arena per server option)

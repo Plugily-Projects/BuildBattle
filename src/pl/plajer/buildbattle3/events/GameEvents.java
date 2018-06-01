@@ -389,7 +389,7 @@ public class GameEvents implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         for(Arena arena : ArenaRegistry.getArenas()) {
-            if(event.getEntity().getWorld().equals(arena.getStartLocation().getWorld())) {
+            if(arena.getStartLocation() != null && event.getEntity().getWorld().equals(arena.getStartLocation().getWorld())) {
                 if(event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) return;
                 if(event.getEntity().getType() == EntityType.WITHER || ConfigPreferences.isMobSpawningDisabled()) {
                     event.setCancelled(true);
