@@ -54,6 +54,7 @@ public class ArenaManager {
      * Can be cancelled only via above-mentioned event
      *
      * @param p player to join
+     * @param a arena to join
      * @see BBGameJoinEvent
      */
     public static void joinAttempt(Player p, Arena a) {
