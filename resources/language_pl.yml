@@ -81,8 +81,6 @@ In-Game:
   Particle-Added: "&aPomyslnie dodales efekt!"
   Join-No-Permission: "&cNie masz uprawnien by dolaczyc na ta arene!"
   Particle-Removed: "&cPomyslnie usunales efekt!"
-  Full-Game-No-Permission: "&cNie masz uprawnien by dolaczyc na pelne areny!"
-  No-Slots-For-Premium: "&cTa gra jest juz pelna graczy premium! Przepraszamy!"
   Arena-Not-Configured: "&cArena nie zostala skonfigurowana! Poinformuj admina!"
   NPC:
     Floor-Change-NPC-Name: "&aZmien blok podlogi"
@@ -99,8 +97,6 @@ In-Game:
       Waiting-For-Players: "&7Czekamy na wiecej graczy... Potrzeba co najmniej &b%MINPLAYERS%&7 graczy do startu."
       Enough-Players-To-Start: "&7Mamy juz wystarczajaco duzo graczy. Gra zaczyna sie wkrotce!"
       Game-Started: "&7Gra sie rozpoczela! Buduj jak najlepiej potrafisz!"
-      Kicked-For-Premium-Slot: "&c%PLAYER% zostal usuniety z gry by zrobic miejsce dla gracza premium!"
-      You-Were-Kicked-For-Premium-Slot: "&cZostales wyrzucony by zrobic miejsce dla gracza premium!"
     Voting-Messages:
       Plot-Owner-Title: "&aBudowal: &7%player%"
       Voting-For-Player-Plot: "&7Glosuj na dzialke gracza &e&l%PLAYER%!"

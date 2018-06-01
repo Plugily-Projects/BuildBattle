@@ -137,38 +137,7 @@ public class SignManager implements Listener {
         if(!plugin.is1_8_R3()) if(e.getHand() == EquipmentSlot.OFF_HAND) return;
         if(e.getAction() == Action.RIGHT_CLICK_BLOCK &&
                 e.getClickedBlock().getState() instanceof Sign && loadedSigns.containsKey(e.getClickedBlock().getState())) {
-
-            Arena arena = loadedSigns.get(e.getClickedBlock().getState());
-            if(arena == null) return;
-            if(ArenaRegistry.getArena(e.getPlayer()) != null) {
-                e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Already-Playing"));
-                return;
-            }
-            if(!(arena.getPlayers().size() >= arena.getMaximumPlayers())) {
-                arena.joinAttempt(e.getPlayer());
-                return;
-            }
-            if(e.getPlayer().hasPermission(PermissionManager.getJoinFullGames())) {
-                for(Player player : arena.getPlayers()) {
-                    if(!player.hasPermission(PermissionManager.getJoinFullGames())) {
-                        if(arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
-                            ArenaManager.leaveAttempt(player, arena);
-                            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.You-Were-Kicked-For-Premium-Slot"));
-                            for(Player p : arena.getPlayers()) {
-                                p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Kicked-For-Premium-Slot"), player));
-                            }
-                            arena.joinAttempt(e.getPlayer());
-                            return;
-                        } else {
-                            arena.joinAttempt(e.getPlayer());
-                            return;
-                        }
-                    }
-                }
-                e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.No-Slots-For-Premium"));
-            } else {
-                e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Full-Game-No-Permission"));
-            }
+            loadedSigns.get(e.getClickedBlock().getState()).joinAttempt(e.getPlayer());
         }
     }
 

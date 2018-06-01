@@ -171,7 +171,7 @@ public class MainCommand implements CommandExecutor {
                     if(arena == null) {
                         player.sendMessage(ChatManager.colorMessage("Commands.No-Arena-Like-That"));
                     } else {
-                        if(arena.getPlayers().size() >= arena.getMaximumPlayers() && !player.hasPermission(PermissionManager.getJoinFullGames())) {
+                        if(arena.getPlayers().size() >= arena.getMaximumPlayers()) {
                             player.sendMessage(ChatManager.colorMessage("Commands.Arena-Is-Full"));
                         } else if(arena.getArenaState() == ArenaState.IN_GAME) {
                             player.sendMessage(ChatManager.colorMessage("Commands.Arena-Started"));

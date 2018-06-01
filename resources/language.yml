@@ -81,8 +81,6 @@ In-Game:
   Particle-Added: "&aParticle successfully added!"
   Join-No-Permission: "&cYou don't have permission to join this arena!"
   Particle-Removed: "&cParticle successfully removed!"
-  Full-Game-No-Permission: "&cYou don't have the permission to join full games!"
-  No-Slots-For-Premium: "&cThis game is already full of premium players! Sorry!"
   Arena-Not-Configured: "&cArena is not configured yet! Contact staff!"
   NPC:
     Floor-Change-NPC-Name: "&aChange floor NPC"
@@ -99,8 +97,6 @@ In-Game:
       Waiting-For-Players: "&7Waiting for players... We need at least &b%MINPLAYERS%&7 players to start."
       Enough-Players-To-Start: "&7We now have enough players. The game is starting soon!"
       Game-Started: "&7The game has started! Build best you can!"
-      Kicked-For-Premium-Slot: "&c%PLAYER% got removed from the game to make a place for premium players!"
-      You-Were-Kicked-For-Premium-Slot: "&cYou got kicked out of the game to make a place for a premium player!"
     Voting-Messages:
       Plot-Owner-Title: "&aPlot owner: &7%player%"
       Voting-For-Player-Plot: "&7Now voting for &e&l%PLAYER%'s &7plot!"

@@ -89,8 +89,6 @@ In-Game:
   Particle-Added: "&aPartikel erfolgreich hinzugefügt!"
   Join-No-Permission: "&cDu hast keine Permission um diese Arena zu betreten!"
   Particle-Removed: "&aPartikel erfolgreich entfernt!"
-  Full-Game-No-Permission: "&cDu hast nicht die Permission um einem vollen Spiel beizutreten!"
-  No-Slots-For-Premium: "&cDie Runde ist bereits voll mit Premium-Spielern! Entschuldigung!"
   Arena-Not-Configured: "&cArena ist nicht konfiguriert ! Kontaktiere Teammitglieder!"
   NPC:
     Floor-Change-NPC-Name: "&aÄndere Boden-NPC"
@@ -107,8 +105,6 @@ In-Game:
       Waiting-For-Players: "&7Warte auf Spieler... Wir brauchen mindestens &b%MINPLAYERS%&7 Spieler zum starten."
       Enough-Players-To-Start: "&7Wir haben jetzt genug Spieler! Das Spiel startet gleich..."
       Game-Started: "&7Das Spiel hat begonnen! Bauen Sie so gut Sie können!"
-      Kicked-For-Premium-Slot: "&c%PLAYER% wurde entfernt um einen Premium-Spieler joinen zu lassen!"
-      You-Were-Kicked-For-Premium-Slot: "&cDu wurdest entfernt um einen Premium-Spieler joinen zu lassen!"
     Voting-Messages:
       Plot-Owner-Title: "&aPlot Owner: &7%player%"
       Voting-For-Player-Plot: "&7Bewerte für &e&l%PLAYER%'s &7Plot!"

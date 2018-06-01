@@ -483,9 +483,16 @@ public class Arena extends BukkitRunnable {
                 return;
             }
         }
+        if(ArenaRegistry.getArena(p) != null) {
+            p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Already-Playing"));
+            return;
+        }
         if((getArenaState() == ArenaState.IN_GAME || getArenaState() == ArenaState.ENDING || getArenaState() == ArenaState.RESTARTING)) {
             p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Started"));
             return;
+        }
+        if(getPlayers().size() == getMaximumPlayers()){
+            p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Is-Full"));
         }
         if(plugin.isInventoryManagerEnabled()) plugin.getInventoryManager().saveInventoryToFile(p);
         if(!plugin.is1_8_R3() && ConfigPreferences.isBarEnabled()) {
