@@ -19,18 +19,20 @@
 package pl.plajer.buildbattle3.buildbattleapi;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import pl.plajer.buildbattle3.arena.Arena;
 
 /**
- * Called when player leaves arena
+ * Called when player joins arena
  */
-public class BBGameLeaveEvent extends BBEvent {
+public class BBGameJoinEvent extends BBEvent implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
+    private boolean cancelled;
     private Player player;
 
-    public BBGameLeaveEvent(Player player, Arena arena) {
+    public BBGameJoinEvent(Player player, Arena arena) {
         super(arena);
         this.player = player;
     }
@@ -40,8 +42,13 @@ public class BBGameLeaveEvent extends BBEvent {
     }
 
     @Override
-    public HandlerList getHandlers() {
-        return handlers;
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 
     /**
@@ -51,4 +58,10 @@ public class BBGameLeaveEvent extends BBEvent {
     public Player getPlayer() {
         return player;
     }
+
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
 }

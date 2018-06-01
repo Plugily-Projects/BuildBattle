@@ -82,6 +82,7 @@ In-Game:
   Join-No-Permission: "&cNie masz uprawnien by dolaczyc na ta arene!"
   Particle-Removed: "&cPomyslnie usunales efekt!"
   Arena-Not-Configured: "&cArena nie zostala skonfigurowana! Poinformuj admina!"
+  Join-Cancelled-Via-API: "&cNie mozesz dolaczyc do gry!"
   NPC:
     Floor-Change-NPC-Name: "&aZmien blok podlogi"
     NPC-Created: "&aNPC zostal stworzony pomyslnie!"

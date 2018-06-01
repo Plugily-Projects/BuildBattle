@@ -20,15 +20,21 @@ package pl.plajer.buildbattle3.arena;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.buildbattleapi.BBGameEndEvent;
+import pl.plajer.buildbattle3.buildbattleapi.BBGameJoinEvent;
 import pl.plajer.buildbattle3.buildbattleapi.BBGameLeaveEvent;
 import pl.plajer.buildbattle3.handlers.ChatManager;
+import pl.plajer.buildbattle3.handlers.PermissionManager;
+import pl.plajer.buildbattle3.items.SpecialItem;
+import pl.plajer.buildbattle3.items.SpecialItemManager;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.Util;
@@ -43,6 +49,73 @@ public class ArenaManager {
     private static Main plugin = JavaPlugin.getPlugin(Main.class);
 
     /**
+     * Attempts player to join arena.
+     * Calls BBGameJoinEvent.
+     * Can be cancelled only via above-mentioned event
+     *
+     * @param p player to join
+     * @see BBGameJoinEvent
+     */
+    public static void joinAttempt(Player p, Arena a) {
+        Main.debug("Initial join attempt, " + p.getName(), System.currentTimeMillis());
+        BBGameJoinEvent bbGameJoinEvent = new BBGameJoinEvent(p, a);
+        Bukkit.getPluginManager().callEvent(bbGameJoinEvent);
+        if(!a.isReady()) {
+            p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Arena-Not-Configured"));
+            return;
+        }
+        if(bbGameJoinEvent.isCancelled()) {
+            p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Join-Cancelled-Via-API"));
+            return;
+        }
+        if(!plugin.isBungeeActivated()) {
+            if(!(p.hasPermission(PermissionManager.getJoinPerm().replaceAll("<arena>", "*")) || p.hasPermission(PermissionManager.getJoinPerm().replaceAll("<arena>", a.getID())))) {
+                p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Join-No-Permission"));
+                return;
+            }
+        }
+        if(ArenaRegistry.getArena(p) != null) {
+            p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Already-Playing"));
+            return;
+        }
+        if((a.getArenaState() == ArenaState.IN_GAME || a.getArenaState() == ArenaState.ENDING || a.getArenaState() == ArenaState.RESTARTING)) {
+            p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Started"));
+            return;
+        }
+        if(a.getPlayers().size() == a.getMaximumPlayers()){
+            p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Is-Full"));
+            return;
+        }
+        Main.debug("Final join attempt, " + p.getName(), System.currentTimeMillis());
+        if(plugin.isInventoryManagerEnabled()) plugin.getInventoryManager().saveInventoryToFile(p);
+        if(!plugin.is1_8_R3() && ConfigPreferences.isBarEnabled()) {
+            a.getGameBar().addPlayer(p);
+        }
+        a.teleportToLobby(p);
+        a.addPlayer(p);
+        p.setHealth(20.0);
+        p.setFoodLevel(20);
+        p.getInventory().setArmorContents(new ItemStack[]{new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
+        p.getInventory().clear();
+        a.showPlayers();
+        if(!UserManager.getUser(p.getUniqueId()).isSpectator()) ChatManager.broadcastAction(a, p, ChatManager.ActionType.JOIN);
+        p.updateInventory();
+        for(Player player : a.getPlayers()) {
+            a.showPlayer(player);
+        }
+        if(ConfigPreferences.isHidePlayersOutsideGameEnabled()) {
+            for(Player player : plugin.getServer().getOnlinePlayers()) {
+                if(!a.getPlayers().contains(player)) {
+                    p.hidePlayer(player);
+                    player.hidePlayer(p);
+                }
+            }
+        }
+        SpecialItem leaveItem = SpecialItemManager.getSpecialItem("Leave");
+        p.getInventory().setItem(leaveItem.getSlot(), leaveItem.getItemStack());
+    }
+
+    /**
      * Attempts player to leave arena.
      * Calls BBGameLeaveEvent event.
      *
@@ -51,6 +124,9 @@ public class ArenaManager {
      * @see BBGameLeaveEvent
      */
     public static void leaveAttempt(Player p, Arena a) {
+        Main.debug("Initial leave attempt, " + p.getName(), System.currentTimeMillis());
+        BBGameLeaveEvent bbGameLeaveEvent = new BBGameLeaveEvent(p, a);
+        Bukkit.getPluginManager().callEvent(bbGameLeaveEvent);
         a.getQueue().remove(p.getUniqueId());
         User user = UserManager.getUser(p.getUniqueId());
         if(a.getArenaState() == ArenaState.IN_GAME || a.getArenaState() == ArenaState.ENDING)

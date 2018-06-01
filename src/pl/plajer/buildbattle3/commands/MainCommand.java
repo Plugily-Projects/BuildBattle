@@ -176,7 +176,7 @@ public class MainCommand implements CommandExecutor {
                         } else if(arena.getArenaState() == ArenaState.IN_GAME) {
                             player.sendMessage(ChatManager.colorMessage("Commands.Arena-Started"));
                         } else {
-                            arena.joinAttempt(player);
+                            ArenaManager.joinAttempt(player, arena);
                         }
                     }
                     return true;

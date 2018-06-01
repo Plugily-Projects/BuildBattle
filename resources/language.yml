@@ -82,6 +82,8 @@ In-Game:
   Join-No-Permission: "&cYou don't have permission to join this arena!"
   Particle-Removed: "&cParticle successfully removed!"
   Arena-Not-Configured: "&cArena is not configured yet! Contact staff!"
+  # Join cancelled via external plugin that uses BB3 api.
+  Join-Cancelled-Via-API: "&cYou can't join this game!"
   NPC:
     Floor-Change-NPC-Name: "&aChange floor NPC"
     NPC-Created: "&aFloor NPC created successfully!"

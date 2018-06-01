@@ -90,6 +90,7 @@ In-Game:
   Join-No-Permission: "&cDu hast keine Permission um diese Arena zu betreten!"
   Particle-Removed: "&aPartikel erfolgreich entfernt!"
   Arena-Not-Configured: "&cArena ist nicht konfiguriert ! Kontaktiere Teammitglieder!"
+  Join-Cancelled-Via-API: "&cDu kannst dem Spiel nicht beitreten!"
   NPC:
     Floor-Change-NPC-Name: "&aÄndere Boden-NPC"
     NPC-Created: "&aBoden-NPC wurde erfolgreich erstellt!"

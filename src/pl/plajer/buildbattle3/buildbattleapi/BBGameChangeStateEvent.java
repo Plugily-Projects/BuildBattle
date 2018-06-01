@@ -27,7 +27,6 @@ import pl.plajer.buildbattle3.arena.ArenaState;
  */
 public class BBGameChangeStateEvent extends BBEvent {
 
-
     private static final HandlerList handlers = new HandlerList();
     private ArenaState gameState;
     private ArenaState previous;

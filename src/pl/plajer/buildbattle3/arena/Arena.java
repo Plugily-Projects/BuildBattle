@@ -37,6 +37,7 @@ import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.VoteItems;
 import pl.plajer.buildbattle3.buildbattleapi.BBGameChangeStateEvent;
 import pl.plajer.buildbattle3.buildbattleapi.BBGameEndEvent;
+import pl.plajer.buildbattle3.buildbattleapi.BBGameJoinEvent;
 import pl.plajer.buildbattle3.buildbattleapi.BBGameStartEvent;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.handlers.MessageHandler;
@@ -470,56 +471,6 @@ public class Arena extends BukkitRunnable {
 
     public List<Integer> getBlacklist() {
         return blacklist;
-    }
-
-    public void joinAttempt(Player p) {
-        if(!isReady()) {
-            p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Arena-Not-Configured"));
-            return;
-        }
-        if(!plugin.isBungeeActivated()) {
-            if(!(p.hasPermission(PermissionManager.getJoinPerm().replaceAll("<arena>", "*")) || p.hasPermission(PermissionManager.getJoinPerm().replaceAll("<arena>", getID())))) {
-                p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Join-No-Permission"));
-                return;
-            }
-        }
-        if(ArenaRegistry.getArena(p) != null) {
-            p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Already-Playing"));
-            return;
-        }
-        if((getArenaState() == ArenaState.IN_GAME || getArenaState() == ArenaState.ENDING || getArenaState() == ArenaState.RESTARTING)) {
-            p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Started"));
-            return;
-        }
-        if(getPlayers().size() == getMaximumPlayers()){
-            p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Is-Full"));
-        }
-        if(plugin.isInventoryManagerEnabled()) plugin.getInventoryManager().saveInventoryToFile(p);
-        if(!plugin.is1_8_R3() && ConfigPreferences.isBarEnabled()) {
-            gameBar.addPlayer(p);
-        }
-        teleportToLobby(p);
-        this.addPlayer(p);
-        p.setHealth(20.0);
-        p.setFoodLevel(20);
-        p.getInventory().setArmorContents(new ItemStack[]{new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
-        p.getInventory().clear();
-        showPlayers();
-        if(!UserManager.getUser(p.getUniqueId()).isSpectator()) ChatManager.broadcastAction(this, p, ChatManager.ActionType.JOIN);
-        p.updateInventory();
-        for(Player player : getPlayers()) {
-            showPlayer(player);
-        }
-        if(ConfigPreferences.isHidePlayersOutsideGameEnabled()) {
-            for(Player player : plugin.getServer().getOnlinePlayers()) {
-                if(!getPlayers().contains(player)) {
-                    p.hidePlayer(player);
-                    player.hidePlayer(p);
-                }
-            }
-        }
-        SpecialItem leaveItem = SpecialItemManager.getSpecialItem("Leave");
-        p.getInventory().setItem(leaveItem.getSlot(), leaveItem.getItemStack());
     }
 
     public long getTimeLeft() {
