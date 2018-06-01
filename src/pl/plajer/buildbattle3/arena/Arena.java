@@ -332,6 +332,7 @@ public class Arena extends BukkitRunnable {
                         if(plugin.isInventoryManagerEnabled()) {
                             plugin.getInventoryManager().loadInventory(player);
                         }
+                        plotManager.getPlot(player).fullyResetPlot();
                     }
                     clearPlayers();
                     setGameState(ArenaState.RESTARTING);
