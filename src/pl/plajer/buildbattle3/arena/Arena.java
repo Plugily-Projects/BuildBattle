@@ -316,6 +316,11 @@ public class Arena extends BukkitRunnable {
                 if(getTimer() <= 0) {
                     teleportAllToEndLocation();
                     for(Player player : getPlayers()) {
+                        if(!plugin.is1_8_R3() && bossBarEnabled) {
+                            gameBar.removePlayer(player);
+                        } else if(plugin.is1_8_R3() && bossBarEnabled){
+                            BossBarAPI.removeBar(player);
+                        }
                         player.getInventory().clear();
                         UserManager.getUser(player.getUniqueId()).removeScoreboard();
                         player.setGameMode(GameMode.SURVIVAL);
