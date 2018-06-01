@@ -42,11 +42,8 @@ import pl.plajer.buildbattle3.user.UserManager;
  * Created by Tom on 1/08/2014.
  */
 public class SpectatorEvents implements Listener {
-
-    private Main plugin;
-
+    
     public SpectatorEvents(Main plugin) {
-        this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
