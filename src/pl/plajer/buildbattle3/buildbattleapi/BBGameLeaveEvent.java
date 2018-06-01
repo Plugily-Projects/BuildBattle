@@ -46,6 +46,7 @@ public class BBGameLeaveEvent extends BBEvent {
 
     /**
      * Get player associated with this event
+     *
      * @return player
      */
     public Player getPlayer() {

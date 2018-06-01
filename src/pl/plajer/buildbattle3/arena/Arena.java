@@ -22,14 +22,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.inventivetalent.bossbar.BossBarAPI;
 import pl.plajer.buildbattle3.ConfigPreferences;
@@ -37,13 +34,9 @@ import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.VoteItems;
 import pl.plajer.buildbattle3.buildbattleapi.BBGameChangeStateEvent;
 import pl.plajer.buildbattle3.buildbattleapi.BBGameEndEvent;
-import pl.plajer.buildbattle3.buildbattleapi.BBGameJoinEvent;
 import pl.plajer.buildbattle3.buildbattleapi.BBGameStartEvent;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.handlers.MessageHandler;
-import pl.plajer.buildbattle3.handlers.PermissionManager;
-import pl.plajer.buildbattle3.items.SpecialItem;
-import pl.plajer.buildbattle3.items.SpecialItemManager;
 import pl.plajer.buildbattle3.language.LanguageManager;
 import pl.plajer.buildbattle3.plots.Plot;
 import pl.plajer.buildbattle3.plots.PlotManager;
@@ -114,6 +107,7 @@ public class Arena extends BukkitRunnable {
 
     /**
      * Adds new theme topic to the game
+     *
      * @param string Theme topic
      */
     public static void addTheme(String string) {
@@ -122,6 +116,7 @@ public class Arena extends BukkitRunnable {
 
     /**
      * Adds item which can not be used in game
+     *
      * @param ID item ID to blacklist
      */
     public static void addToBlackList(int ID) {
@@ -130,6 +125,7 @@ public class Arena extends BukkitRunnable {
 
     /**
      * Checks if arena is validated and ready to play
+     *
      * @return true = ready, false = not ready either you must validate it or it's wrongly created
      */
     public boolean isReady() {
@@ -142,6 +138,7 @@ public class Arena extends BukkitRunnable {
 
     /**
      * Is voting time in game?
+     *
      * @return true = voting time, false = no
      */
     public boolean isVoting() {
@@ -489,6 +486,7 @@ public class Arena extends BukkitRunnable {
 
     /**
      * Get arena's building time left
+     *
      * @return building time left
      */
     public long getTimeLeft() {
@@ -497,6 +495,7 @@ public class Arena extends BukkitRunnable {
 
     /**
      * Get current arena theme
+     *
      * @return arena theme String
      */
     public String getTheme() {
@@ -534,6 +533,7 @@ public class Arena extends BukkitRunnable {
 
     /**
      * Get plot where players are voting currently
+     *
      * @return Plot object where players are voting
      */
     public Plot getVotingPlot() {
@@ -629,6 +629,7 @@ public class Arena extends BukkitRunnable {
     /**
      * Get arena ID, ID != map name
      * ID is used to get and manage arenas
+     *
      * @return arena ID
      */
     public String getID() {
@@ -637,6 +638,7 @@ public class Arena extends BukkitRunnable {
 
     /**
      * Min players that are required to start arena
+     *
      * @return min players size
      */
     public int getMinimumPlayers() {
@@ -650,6 +652,7 @@ public class Arena extends BukkitRunnable {
     /**
      * Get map name, map name != ID
      * Map name is used in signs
+     *
      * @return map name String
      */
     public String getMapName() {
@@ -676,6 +679,7 @@ public class Arena extends BukkitRunnable {
 
     /**
      * Global timer of arena
+     *
      * @return timer of arena
      */
     public int getTimer() {
@@ -688,6 +692,7 @@ public class Arena extends BukkitRunnable {
 
     /**
      * Max players size arena can hold
+     *
      * @return max players size
      */
     public int getMaximumPlayers() {
@@ -700,6 +705,7 @@ public class Arena extends BukkitRunnable {
 
     /**
      * Arena state of arena
+     *
      * @return arena state
      * @see ArenaState
      */
@@ -710,6 +716,7 @@ public class Arena extends BukkitRunnable {
     /**
      * Changes arena state of arena
      * Calls BBGameChangeStateEvent
+     *
      * @param gameState arena state to change
      * @see BBGameChangeStateEvent
      */
@@ -732,6 +739,7 @@ public class Arena extends BukkitRunnable {
 
     /**
      * Get players in game
+     *
      * @return HashSet with players
      */
     public HashSet<Player> getPlayers() {
@@ -760,6 +768,7 @@ public class Arena extends BukkitRunnable {
 
     /**
      * Lobby location of arena
+     *
      * @return lobby loc of arena
      */
     public Location getLobbyLocation() {
@@ -772,6 +781,7 @@ public class Arena extends BukkitRunnable {
 
     /**
      * Start location of arena
+     *
      * @return start loc of arena
      */
     public Location getStartLocation() {
@@ -812,6 +822,7 @@ public class Arena extends BukkitRunnable {
 
     /**
      * End location of arena
+     *
      * @return end loc of arena
      */
     public Location getEndLocation() {

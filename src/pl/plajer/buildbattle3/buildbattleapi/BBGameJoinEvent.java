@@ -53,6 +53,7 @@ public class BBGameJoinEvent extends BBEvent implements Cancellable {
 
     /**
      * Get player associated with this event
+     *
      * @return player
      */
     public Player getPlayer() {

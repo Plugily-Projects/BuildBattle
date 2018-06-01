@@ -49,7 +49,7 @@ public class QuitEvents implements Listener {
         Arena a = ArenaRegistry.getArena(event.getPlayer());
         if(a == null) return;
         if(!plugin.isBungeeActivated())
-            ArenaManager.leaveAttempt(event.getPlayer(),a);
+            ArenaManager.leaveAttempt(event.getPlayer(), a);
     }
 
     @EventHandler

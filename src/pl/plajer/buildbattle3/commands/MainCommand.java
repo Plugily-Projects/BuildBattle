@@ -34,7 +34,6 @@ import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.arena.ArenaState;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
-import pl.plajer.buildbattle3.handlers.PermissionManager;
 import pl.plajer.buildbattle3.utils.SetupInventory;
 import pl.plajer.buildbattle3.utils.StringMatcher;
 import pl.plajer.buildbattle3.utils.Util;
@@ -203,7 +202,7 @@ public class MainCommand implements CommandExecutor {
         return false;
     }
 
-    private void performSetup(CommandSender sender, String[] args){
+    private void performSetup(CommandSender sender, String[] args) {
         if(!(args.length > 1)) return;
         if(args[0].equalsIgnoreCase("create")) {
             if(!hasPermission(sender, "buildbattle.admin.create")) return;

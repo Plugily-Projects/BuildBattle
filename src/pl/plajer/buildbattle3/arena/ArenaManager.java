@@ -83,7 +83,7 @@ public class ArenaManager {
             p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Started"));
             return;
         }
-        if(a.getPlayers().size() == a.getMaximumPlayers()){
+        if(a.getPlayers().size() == a.getMaximumPlayers()) {
             p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Is-Full"));
             return;
         }
@@ -171,7 +171,7 @@ public class ArenaManager {
      * Stops current arena. Calls BBGameEndEvent event
      *
      * @param quickStop should arena be stopped immediately? (use only in important cases)
-     * @param arena arena to stop
+     * @param arena     arena to stop
      * @see BBGameEndEvent
      */
     public static void stopGame(boolean quickStop, Arena arena) {
