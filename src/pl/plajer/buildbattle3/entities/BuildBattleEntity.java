@@ -18,12 +18,9 @@
 
 package pl.plajer.buildbattle3.entities;
 
-import net.minecraft.server.v1_8_R3.EntityLiving;
-import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Cow;
@@ -94,30 +91,11 @@ public class BuildBattleEntity {
     }
 
     private boolean isMoveable() {
-        if(plugin.is1_8_R3()) {
-            net.minecraft.server.v1_8_R3.Entity nmsEntity = ((CraftEntity) entity).getHandle();
-
-            NBTTagCompound tag = new NBTTagCompound();
-
-            nmsEntity.c(tag);
-            return !tag.getBoolean("NoAI");
-        } else {
-            return entity.hasAI();
-        }
+        return entity.hasAI();
     }
 
     public void toggleMoveable() {
-        if(plugin.is1_8_R3()) {
-            net.minecraft.server.v1_8_R3.Entity nmsEntity = ((CraftEntity) entity).getHandle();
-
-            NBTTagCompound tag = new NBTTagCompound();
-            nmsEntity.c(tag);
-            tag.setInt("NoAI", isMoveable() ? 1 : 0);
-            EntityLiving el = (EntityLiving) nmsEntity;
-            el.a(tag);
-        } else {
-            entity.setAI(!isMoveable());
-        }
+        entity.setAI(!isMoveable());
     }
 
     public void switchSaddle() {
@@ -176,17 +154,7 @@ public class BuildBattleEntity {
 
     public void setLook(Location location) {
         entity.teleport(new Location(entity.getLocation().getWorld(), entity.getLocation().getX(), entity.getLocation().getY(), entity.getLocation().getZ(), location.getYaw(), -location.getPitch()));
-
-        if(plugin.is1_8_R3()) {
-            net.minecraft.server.v1_8_R3.Entity nmsEntity = ((CraftEntity) entity).getHandle();
-            NBTTagCompound tag = new NBTTagCompound();
-            nmsEntity.c(tag);
-            tag.setInt("NoAI", 1);
-            EntityLiving el = (EntityLiving) nmsEntity;
-            el.a(tag);
-        } else {
-            entity.setAI(false);
-        }
+        entity.setAI(false);
     }
 
     public class InventoryBuilder {

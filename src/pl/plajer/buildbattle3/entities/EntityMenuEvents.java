@@ -31,7 +31,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
@@ -56,7 +55,7 @@ public class EntityMenuEvents implements Listener {
 
     @EventHandler
     public void onRightClickEntity(PlayerInteractEntityEvent event) {
-        if(!JavaPlugin.getPlugin(Main.class).is1_8_R3()) if(event.getHand() == EquipmentSlot.OFF_HAND) return;
+        if(event.getHand() == EquipmentSlot.OFF_HAND) return;
         Player player = event.getPlayer();
         Arena arena = ArenaRegistry.getArena(player);
         if(arena == null) return;

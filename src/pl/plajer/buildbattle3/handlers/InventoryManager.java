@@ -21,6 +21,7 @@ package pl.plajer.buildbattle3.handlers;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -61,7 +62,7 @@ public class InventoryManager {
 
             invConfig.set("Exp", player.getExpToLevel());
             invConfig.set("Current health", player.getHealth());
-            invConfig.set("Max health", player.getMaxHealth());
+            invConfig.set("Max health", player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
             invConfig.set("Food", player.getFoodLevel());
             invConfig.set("Saturation", player.getSaturation());
             invConfig.set("Fire ticks", player.getFireTicks());
@@ -147,7 +148,7 @@ public class InventoryManager {
                     else armor[i] = new ItemStack(Material.AIR);
                 }
                 player.getInventory().setArmorContents(armor);
-                player.setMaxHealth(invConfig.getDouble("Max health"));
+                player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(invConfig.getDouble("Max health"));
                 player.setHealth(invConfig.getDouble("Current health"));
                 player.setFoodLevel(invConfig.getInt("Food"));
                 player.setSaturation((float) invConfig.get("Saturation"));

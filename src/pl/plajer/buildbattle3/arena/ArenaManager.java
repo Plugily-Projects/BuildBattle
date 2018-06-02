@@ -21,6 +21,7 @@ package pl.plajer.buildbattle3.arena;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -89,7 +90,7 @@ public class ArenaManager {
         }
         Main.debug("Final join attempt, " + p.getName(), System.currentTimeMillis());
         if(plugin.isInventoryManagerEnabled()) plugin.getInventoryManager().saveInventoryToFile(p);
-        if(!plugin.is1_8_R3() && ConfigPreferences.isBarEnabled()) {
+        if(ConfigPreferences.isBarEnabled()) {
             a.getGameBar().addPlayer(p);
         }
         a.teleportToLobby(p);
@@ -139,11 +140,11 @@ public class ArenaManager {
         user.removeScoreboard();
         a.getPlotManager().getPlot(p).fullyResetPlot();
 
-        p.setMaxHealth(20.0);
+        p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
         p.setFoodLevel(20);
         p.setFlying(false);
         p.setAllowFlight(false);
-        if(!plugin.is1_8_R3() && ConfigPreferences.isBarEnabled()) {
+        if(ConfigPreferences.isBarEnabled()) {
             a.getGameBar().removePlayer(p);
         }
         p.getInventory().setArmorContents(null);

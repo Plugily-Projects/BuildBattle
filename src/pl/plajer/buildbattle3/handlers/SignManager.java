@@ -133,7 +133,7 @@ public class SignManager implements Listener {
 
     @EventHandler
     public void onJoinAttempt(PlayerInteractEvent e) {
-        if(!plugin.is1_8_R3()) if(e.getHand() == EquipmentSlot.OFF_HAND) return;
+        if(e.getHand() == EquipmentSlot.OFF_HAND) return;
         if(e.getAction() == Action.RIGHT_CLICK_BLOCK &&
                 e.getClickedBlock().getState() instanceof Sign && loadedSigns.containsKey(e.getClickedBlock().getState())) {
             ArenaManager.joinAttempt(e.getPlayer(), loadedSigns.get(e.getClickedBlock().getState()));

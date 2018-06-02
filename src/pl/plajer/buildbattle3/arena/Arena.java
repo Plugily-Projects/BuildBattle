@@ -19,7 +19,6 @@
 package pl.plajer.buildbattle3.arena;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -28,7 +27,6 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.inventivetalent.bossbar.BossBarAPI;
 import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.VoteItems;
@@ -99,7 +97,7 @@ public class Arena extends BukkitRunnable {
     public Arena(String ID) {
         gameState = ArenaState.WAITING_FOR_PLAYERS;
         this.ID = ID;
-        if(ConfigPreferences.isBarEnabled() && !plugin.is1_8_R3() && bossBarEnabled) {
+        if(bossBarEnabled) {
             gameBar = Bukkit.createBossBar(ChatManager.colorMessage("Bossbar.Waiting-For-Players"), BarColor.BLUE, BarStyle.SOLID);
         }
         plotManager = new PlotManager(this);
@@ -316,10 +314,8 @@ public class Arena extends BukkitRunnable {
                 if(getTimer() <= 0) {
                     teleportAllToEndLocation();
                     for(Player player : getPlayers()) {
-                        if(!plugin.is1_8_R3() && bossBarEnabled) {
+                        if(bossBarEnabled) {
                             gameBar.removePlayer(player);
-                        } else if(plugin.is1_8_R3() && bossBarEnabled){
-                            BossBarAPI.removeBar(player);
                         }
                         player.getInventory().clear();
                         UserManager.getUser(player.getUniqueId()).removeScoreboard();
@@ -365,43 +361,20 @@ public class Arena extends BukkitRunnable {
     }
 
     private void updateBossBar() {
-        if(plugin.is1_8_R3()) {
-            for(Player player : getPlayers()) {
-                if(plugin.is1_8_R3()) {
-                    BossBarAPI.removeBar(player);
-                    switch(getArenaState()) {
-                        case WAITING_FOR_PLAYERS:
-                            BossBarAPI.setMessage(player, ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
-                            break;
-                        case STARTING:
-                            BossBarAPI.setMessage(player, ChatManager.colorMessage("Bossbar.Starting-In").replaceAll("%time%", String.valueOf(getTimer())));
-                            break;
-                        case IN_GAME:
-                            if(!isVoting()) {
-                                BossBarAPI.setMessage(player, ChatManager.colorMessage("Bossbar.Time-Left").replaceAll("%time%", String.valueOf(getTimer())));
-                            } else {
-                                BossBarAPI.setMessage(player, ChatManager.colorMessage("Bossbar.Vote-Time-Left").replaceAll("%time%", String.valueOf(getTimer())));
-                            }
-                            break;
-                    }
+        switch(getArenaState()) {
+            case WAITING_FOR_PLAYERS:
+                gameBar.setTitle(ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
+                break;
+            case STARTING:
+                gameBar.setTitle(ChatManager.colorMessage("Bossbar.Starting-In").replaceAll("%time%", String.valueOf(getTimer())));
+                break;
+            case IN_GAME:
+                if(!isVoting()) {
+                    gameBar.setTitle(ChatManager.colorMessage("Bossbar.Time-Left").replaceAll("%time%", String.valueOf(getTimer())));
+                } else {
+                    gameBar.setTitle(ChatManager.colorMessage("Bossbar.Vote-Time-Left").replaceAll("%time%", String.valueOf(getTimer())));
                 }
-            }
-        } else {
-            switch(getArenaState()) {
-                case WAITING_FOR_PLAYERS:
-                    gameBar.setTitle(ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
-                    break;
-                case STARTING:
-                    gameBar.setTitle(ChatManager.colorMessage("Bossbar.Starting-In").replaceAll("%time%", String.valueOf(getTimer())));
-                    break;
-                case IN_GAME:
-                    if(!isVoting()) {
-                        gameBar.setTitle(ChatManager.colorMessage("Bossbar.Time-Left").replaceAll("%time%", String.valueOf(getTimer())));
-                    } else {
-                        gameBar.setTitle(ChatManager.colorMessage("Bossbar.Vote-Time-Left").replaceAll("%time%", String.valueOf(getTimer())));
-                    }
-                    break;
-            }
+                break;
         }
     }
 
@@ -444,12 +417,6 @@ public class Arena extends BukkitRunnable {
     }
 
     public void start() {
-        if(plugin.is1_8_R3()) {
-            if(!plugin.getServer().getPluginManager().isPluginEnabled("BossBarAPI")) {
-                Main.debug("BossBarAPI for 1.8 not found! Disabling BossBar support!", System.currentTimeMillis());
-                bossBarEnabled = false;
-            }
-        }
         this.runTaskTimer(plugin, 20L, 20L);
     }
 
@@ -480,7 +447,7 @@ public class Arena extends BukkitRunnable {
         returnString = returnString.replaceAll("%ARENA_ID%", getID());
         returnString = returnString.replaceAll("%MAPNAME%", getMapName());
         if(ConfigPreferences.isVaultEnabled()) {
-            returnString = returnString.replaceAll("%MONEY%", Double.toString(Main.getEcon().getBalance(player.getName())));
+            returnString = returnString.replaceAll("%MONEY%", Double.toString(Main.getEcon().getBalance(player)));
         }
         returnString = ChatManager.colorRawMessage(returnString);
         return returnString;
@@ -529,7 +496,7 @@ public class Arena extends BukkitRunnable {
                 String message = ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Voting-For-Player-Plot").replaceAll("%PLAYER%", player.getName());
                 for(Player p : getPlayers()) {
                     p.teleport(getVotingPlot().getTeleportLocation());
-                    MessageHandler.sendTitleMessage(p, ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title").replaceAll("%player%", player.getName()), 5, 20, 5, ChatColor.BLACK);
+                    MessageHandler.sendTitleMessage(p, ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title").replaceAll("%player%", player.getName()), 5, 20, 5);
                     p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
                 }
             }
@@ -552,7 +519,7 @@ public class Arena extends BukkitRunnable {
 
     private void announceResults() {
         for(Player player : getPlayers()) {
-            MessageHandler.sendTitleMessage(player, ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Title").replaceAll("%player%", plugin.getServer().getOfflinePlayer(topList.get(1)).getName()), 5, 40, 5, ChatColor.BLACK);
+            MessageHandler.sendTitleMessage(player, ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Title").replaceAll("%player%", plugin.getServer().getOfflinePlayer(topList.get(1)).getName()), 5, 40, 5);
         }
         for(Player player : getPlayers()) {
             player.sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Message.Header"));

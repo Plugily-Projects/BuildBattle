@@ -70,8 +70,6 @@ import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.OptionsMenu;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -87,7 +85,7 @@ public class GameEvents implements Listener {
 
     @EventHandler
     public void onVote(PlayerInteractEvent event) {
-        if(!plugin.is1_8_R3()) if(event.getHand() == EquipmentSlot.OFF_HAND) return;
+        if(event.getHand() == EquipmentSlot.OFF_HAND) return;
         if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) return;
         if(event.getItem() == null) return;
         Arena arena = ArenaRegistry.getArena(event.getPlayer());
@@ -109,11 +107,11 @@ public class GameEvents implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onLeave(PlayerInteractEvent event) {
-        if(!plugin.is1_8_R3()) if(event.getHand() == EquipmentSlot.OFF_HAND) return;
+        if(event.getHand() == EquipmentSlot.OFF_HAND) return;
         if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) return;
         Arena arena = ArenaRegistry.getArena(event.getPlayer());
         if(arena == null) return;
-        ItemStack itemStack = event.getPlayer().getItemInHand();
+        ItemStack itemStack = event.getPlayer().getInventory().getItemInMainHand();
         if(itemStack == null) return;
         if(itemStack.getItemMeta() == null) return;
         if(itemStack.getItemMeta().getDisplayName() == null) return;
@@ -132,7 +130,7 @@ public class GameEvents implements Listener {
 
     @EventHandler
     public void onOpenOptionMenu(PlayerInteractEvent event) {
-        if(!plugin.is1_8_R3()) if(event.getHand() == EquipmentSlot.OFF_HAND) return;
+        if(event.getHand() == EquipmentSlot.OFF_HAND) return;
         if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) return;
         if(event.getItem() == null) return;
         Arena arena = ArenaRegistry.getArena(event.getPlayer());
@@ -197,12 +195,12 @@ public class GameEvents implements Listener {
 
     @EventHandler
     public void onTNTInteract(PlayerInteractEvent event) {
-        if(!plugin.is1_8_R3()) if(event.getHand() == EquipmentSlot.OFF_HAND) return;
+        if(event.getHand() == EquipmentSlot.OFF_HAND) return;
         Player player = event.getPlayer();
         Arena arena = ArenaRegistry.getArena(player);
         if(arena == null) return;
-        if(player.getItemInHand() == null) return;
-        if(player.getItemInHand().getType() != Material.FLINT_AND_STEEL) {
+        if(player.getInventory().getItemInMainHand() == null) return;
+        if(player.getInventory().getItemInMainHand().getType() != Material.FLINT_AND_STEEL) {
             return;
         }
         if(event.getClickedBlock() == null) return;
@@ -522,13 +520,13 @@ public class GameEvents implements Listener {
 
     @EventHandler
     public void onNPCClick(PlayerInteractEntityEvent e) {
-        if(!plugin.is1_8_R3()) if(e.getHand() == EquipmentSlot.OFF_HAND) return;
-        if(e.getPlayer().getItemInHand() == null || e.getPlayer().getItemInHand().getType() == Material.AIR) return;
+        if(e.getHand() == EquipmentSlot.OFF_HAND) return;
+        if(e.getPlayer().getInventory().getItemInMainHand() == null || e.getPlayer().getInventory().getItemInMainHand().getType() == Material.AIR) return;
         if(e.getRightClicked() instanceof Villager && e.getRightClicked().getCustomName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.NPC.Floor-Change-NPC-Name"))) {
             Arena arena = ArenaRegistry.getArena(e.getPlayer());
             if(arena == null) return;
-            if(!e.getPlayer().getItemInHand().getType().isBlock()) return;
-            arena.getPlotManager().getPlot(e.getPlayer()).changeFloor(e.getPlayer().getItemInHand().getType(), e.getPlayer().getItemInHand().getData().getData());
+            if(!e.getPlayer().getInventory().getItemInMainHand().getType().isBlock()) return;
+            arena.getPlotManager().getPlot(e.getPlayer()).changeFloor(e.getPlayer().getInventory().getItemInMainHand().getType(), e.getPlayer().getInventory().getItemInMainHand().getData().getData());
             e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Floor-Changed"));
         }
     }

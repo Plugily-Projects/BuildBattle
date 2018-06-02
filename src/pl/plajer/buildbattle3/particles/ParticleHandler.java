@@ -25,7 +25,6 @@ import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.plots.Plot;
-import pl.plajer.buildbattle3.utils.ParticleUtils;
 
 /**
  * Created by Tom on 23/08/2015.
@@ -55,7 +54,7 @@ public class ParticleHandler extends BukkitRunnable {
                 for(Location location : buildPlot.getParticles().keySet()) {
                     if(!arena.getPlayers().isEmpty())
                         //per player?
-                        ParticleUtils.displayParticle(location, buildPlot.getParticles().get(location), (float) particleOffset, (float) particleOffset, (float) particleOffset, amount);
+                        location.getWorld().spawnParticle(buildPlot.getParticles().get(location), location, amount, (float) particleOffset, (float) particleOffset, (float) particleOffset);
                     //buildPlot.getParticles().get(location).display((float) particleOffset, (float) particleOffset, (float) particleOffset, (float) 1, amount, location, new ArrayList<>(arena.getPlayers()));
                 }
             }
