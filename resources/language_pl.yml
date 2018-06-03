@@ -10,8 +10,10 @@ Commands:
   Teleported-To-The-Lobby: "&aZostales przeniesiony do lobby!"
   No-Permission: "&cNie masz uprawnien do tej komendy!"
   No-Arena-Like-That: "&cArena o takim ID nie istnieje!"
+  No-Playing: "&cNie grasz na arenie!"
   Arena-Is-Full: "&cTa arena jest pelna!"
   Arena-Started: "&cTa gra juz wystartowala!"
+  Wait-For-Start: "&cMusisz poczekac az gra sie rozpocznie!"
   Added-Plot: "&aDodano dzialke do areny &7%ARENA%"
   No-Selection: "&cUzyj wpierw zaznaczenia WorldEditem!"
   Plugin-Reloaded: "&aPlugin i konfiguracja zostaly przeladowane!"
@@ -115,6 +117,7 @@ In-Game:
       Only-You-Playing: "&7Jestes jedynym graczem w grze. Zostaniesz przedniesiony do lobby."
     Admin-Messages:
       Set-Starting-In-To-0: "&bAdmin ustawil czas oczekiwania na 0. Gra rozpoczyna sie!"
+      Changed-Theme: "&bAdmin zmienil temat na %THEME%"
 
 Menus:
   Entity-Menu-Name: "&aMenu mobow"
@@ -158,5 +161,5 @@ Signs:
     - "%mapname%"
     - "&5[%playersize%/%maxplayers%]"
 
-File-Version-Do-Not-Edit: 0
-Translation-Version: 0
+File-Version-Do-Not-Edit: 1
+Translation-Version: 1

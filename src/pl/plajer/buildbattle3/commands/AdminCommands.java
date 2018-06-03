@@ -64,6 +64,10 @@ public class AdminCommands extends MainCommand {
         sender.sendMessage(ChatColor.AQUA + "/bba addnpc" + ChatColor.GRAY + ": Adds new floor change NPC (Citizens required)");
         sender.sendMessage(ChatColor.AQUA + "/bba forcestart" + ChatColor.GRAY + ": Force starts the arena you are in");
         sender.sendMessage(ChatColor.AQUA + "/bba reload" + ChatColor.GRAY + ": Reloads plugin");
+        sender.sendMessage(ChatColor.AQUA + "/bba delete " + ChatColor.GOLD + "<arena>" + ChatColor.GRAY + ": Deletes existing arena");
+        sender.sendMessage(ChatColor.AQUA + "/bba settheme " + ChatColor.GOLD + "<theme>" + ChatColor.GRAY + ": Change theme in arena you're in");
+        sender.sendMessage(ChatColor.AQUA + "/bba stop " + ChatColor.GRAY + ": Stop arena you're in");
+        sender.sendMessage(ChatColor.AQUA + "/bba list " + ChatColor.GRAY + ": Prints list of all arenas");
     }
 
     public void addPlot(Player player, String arena) {
@@ -186,6 +190,28 @@ public class AdminCommands extends MainCommand {
         ConfigurationManager.saveConfig(config, "arenas");
         ArenaRegistry.unregisterArena(arena);
         sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatColor.RED + "Successfully removed game instance!");
+    }
+
+    public void setArenaTheme(CommandSender sender, String theme) {
+        if(checkSenderIsConsole(sender)) return;
+        if(!hasPermission(sender, "buildbattle.admin.settheme")) return;
+        Arena arena = ArenaRegistry.getArena((Player) sender);
+        if(arena == null) {
+            sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Playing"));
+            return;
+        }
+        if(arena.getArenaState() == ArenaState.IN_GAME && (arena.getBuildTime() - arena.getTimer()) <= 20) {
+            arena.setTheme(theme);
+            for(Player p : arena.getPlayers()) {
+                p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Admin-Messages.Changed-Theme").replace("%THEME%", theme));
+            }
+        } else {
+            if(arena.getArenaState() == ArenaState.STARTING) {
+                sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Wait-For-Start"));
+            } else {
+                sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Started"));
+            }
+        }
     }
 
 }

@@ -221,6 +221,7 @@ public class Main extends JavaPlugin {
             Arena arena = ArenaRegistry.getArena(player);
             if(arena != null) {
                 ArenaManager.leaveAttempt(player, arena);
+                arena.getGameBar().removePlayer(player);
             }
             final User user = UserManager.getUser(player.getUniqueId());
             for(StatsStorage.StatisticType s : StatsStorage.StatisticType.values()) {

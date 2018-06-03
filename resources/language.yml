@@ -10,8 +10,10 @@ Commands:
   Teleported-To-The-Lobby: "&aYou've been teleported to the lobby!"
   No-Permission: "&cYou don't have permission to use this command!"
   No-Arena-Like-That: "&cNo arena with that ID!"
+  No-Playing: "&cYou're not playing!"
   Arena-Is-Full: "&cThis arena is full, sorry!"
   Arena-Started: "&cThis arena already started, sorry!"
+  Wait-For-Start: "&cYou must wait for arena start!"
   Added-Plot: "&aAdded plot for arena &7%ARENA%"
   No-Selection: "&cPlease use WorldEdit selection first!"
   Plugin-Reloaded: "&aPlugin and configuration reloaded!"
@@ -116,6 +118,7 @@ In-Game:
       Only-You-Playing: "&7You're the only player left. You'll be teleported to the lobby."
     Admin-Messages:
       Set-Starting-In-To-0: "&bAn admin set waiting time to 0. The game starts now!"
+      Changed-Theme: "&bAdmin has changed theme to %THEME%"
 
 Menus:
   Entity-Menu-Name: "&aEntity menu"
@@ -160,4 +163,4 @@ Signs:
     - "&5[%playersize%/%maxplayers%]"
 
 # Do not modify!
-File-Version-Do-Not-Edit: 0
+File-Version-Do-Not-Edit: 1

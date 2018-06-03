@@ -18,8 +18,10 @@ Commands:
   Teleported-To-The-Lobby: "&aDu wurdest zur Lobby teleportiert!"
   No-Permission: "&cDu hast keine Rechte, um diesen Command auszuführen!"
   No-Arena-Like-That: "&cKeine Arena mit dieser ID gefunden!"
+  No-Playing: "&cDu bist nicht am Spielen!"
   Arena-Is-Full: "&cDie Arena ist voll! Entschuldigung!"
   Arena-Started: "&cDie Arena existiert bereits!"
+  Wait-For-Start: "&cDu must auf den Arena Start warten!"
   Added-Plot: "&aPlot zur Arena &7%ARENA% &ahinzugefügt"
   No-Selection: "&cBitte benutze WorldEdit Makierungen!"
   Plugin-Reloaded: "&aPlugin und Config reloadet!"
@@ -123,6 +125,7 @@ In-Game:
       Only-You-Playing: "&7Du bist der einzigste übrige Spieler. Du wirst zur Lobby teleportiert!"
     Admin-Messages:
       Set-Starting-In-To-0: "&bEin Team-Mitglied hat die Zeit auf 0 gesetzt! Das Spiel startet jetzt!"
+      Changed-Theme: "&bAdmin hat das Thema geändert zu %THEME%"
 
 Menus:
   Entity-Menu-Name: "&aEntity Menü"
@@ -167,5 +170,5 @@ Signs:
     - "%mapname%"
     - "&5[%playersize%/%maxplayers%]"
 
-File-Version-Do-Not-Edit: 0
-Translation-Version: 0
+File-Version-Do-Not-Edit: 1
+Translation-Version: 1

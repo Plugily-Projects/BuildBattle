@@ -155,8 +155,12 @@ public class Arena extends BukkitRunnable {
         setTheme(themes.get(random.nextInt(themes.size() - 1)));
     }
 
-    BossBar getGameBar() {
+    public BossBar getGameBar() {
         return gameBar;
+    }
+
+    public int getBuildTime() {
+        return BUILD_TIME;
     }
 
     Queue<UUID> getQueue() {
@@ -475,7 +479,7 @@ public class Arena extends BukkitRunnable {
         return theme;
     }
 
-    private void setTheme(String theme) {
+    public void setTheme(String theme) {
         this.theme = theme;
     }
 

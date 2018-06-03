@@ -42,6 +42,7 @@ public class LanguageManager {
             plugin.saveResource("language.yml", false);
         }
         setupLocale();
+        LanguageMigrator.languageFileUpdate();
     }
 
     private static void setupLocale() {

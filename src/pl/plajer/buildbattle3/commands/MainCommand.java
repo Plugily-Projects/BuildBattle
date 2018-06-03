@@ -124,12 +124,19 @@ public class MainCommand implements CommandExecutor {
                     player.sendMessage(ChatManager.colorMessage("Commands.Invalid-Args"));
                 }
                 return true;
+            } else if(args[0].equalsIgnoreCase("settheme")){
+                if(args.length == 2) {
+                    adminCommands.setArenaTheme(sender, args[1]);
+                } else {
+                    player.sendMessage(ChatManager.colorMessage("Commands.Invalid-Args"));
+                }
+                return true;
             } else if(args[0].equalsIgnoreCase("help")) {
                 adminCommands.sendHelp(sender);
                 return true;
             }
             adminCommands.sendHelp(sender);
-            List<StringMatcher.Match> matches = StringMatcher.match(args[0], Arrays.asList("addplot", "stop", "list", "forcestart", "reload", "delete"));
+            List<StringMatcher.Match> matches = StringMatcher.match(args[0], Arrays.asList("addplot", "stop", "list", "forcestart", "reload", "delete", "settheme"));
             if(!matches.isEmpty()) {
                 sender.sendMessage(ChatManager.colorMessage("Commands.Did-You-Mean").replaceAll("%command%", "bba " + matches.get(0).getMatch()));
             }
@@ -150,7 +157,7 @@ public class MainCommand implements CommandExecutor {
                 return true;
             }
             if(args.length > 1) {
-                if(args[1].equalsIgnoreCase("set") || args[1].equalsIgnoreCase("edit")) {
+                if(args[1].equalsIgnoreCase("set") || args[1].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("create")) {
                     if(checkSenderIsConsole(sender)) return true;
                     if(!hasPermission(sender, "buildbattle.admin.create")) return true;
                     performSetup(sender, args);

@@ -1,5 +1,5 @@
 main: pl.plajer.buildbattle3.Main
-version: 3.0.1
+version: 3.0.2
 name: BuildBattle
 depend: [WorldEdit]
 softdepend: [Vault, PlaceholderAPI, Citizens]
@@ -30,3 +30,4 @@ permissions:
       buildbattle.admin.list: true
       buildbattle.admin.delete: true
       buildbattle.admin.create: true
+      buildbattle.admin.settheme: true
