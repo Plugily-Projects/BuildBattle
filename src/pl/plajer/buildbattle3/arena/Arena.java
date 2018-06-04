@@ -501,7 +501,7 @@ public class Arena extends BukkitRunnable {
                 String message = ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Voting-For-Player-Plot").replaceAll("%PLAYER%", player.getName());
                 for(Player p : getPlayers()) {
                     p.teleport(getVotingPlot().getTeleportLocation());
-                    MessageHandler.sendTitleMessage(p, ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title").replaceAll("%player%", player.getName()), 5, 20, 5);
+                    MessageHandler.sendTitleMessage(p, ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title").replaceAll("%player%", player.getName()), 5, 40, 5);
                     p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
                 }
             }
@@ -527,7 +527,9 @@ public class Arena extends BukkitRunnable {
             MessageHandler.sendTitleMessage(player, ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Title").replaceAll("%player%", plugin.getServer().getOfflinePlayer(topList.get(1)).getName()), 5, 40, 5);
         }
         for(Player player : getPlayers()) {
-            MessageUtils.sendCenteredMessage(player, ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Message.Header"));
+            for(String msg : ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Message.Header").split("\n")){
+                MessageUtils.sendCenteredMessage(player, msg);
+            }
             MessageUtils.sendCenteredMessage(player, ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Message.First-Winner")
                     .replaceAll("%player%", plugin.getServer().getOfflinePlayer(topList.get(1)).getName())
                     .replaceAll("%number%", String.valueOf(getPlotManager().getPlot(topList.get(1)).getPoints())));
@@ -557,7 +559,9 @@ public class Arena extends BukkitRunnable {
                             .replaceAll("%number%", String.valueOf(getPlotManager().getPlot(topList.get(3)).getPoints())));
                 }
             }
-            MessageUtils.sendCenteredMessage(player, ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Message.Footer"));
+            for(String msg : ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Message.Footer").split("\n")){
+                MessageUtils.sendCenteredMessage(player, msg);
+            }
         }
         for(Integer rang : topList.keySet()) {
             if(topList.get(rang) != null) {
