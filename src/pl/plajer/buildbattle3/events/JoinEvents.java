@@ -51,12 +51,6 @@ public class JoinEvents implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onJoinCacheHeads(PlayerJoinEvent e){
-        PlayerHeadsMenu.openMenu(e.getPlayer());
-        e.getPlayer().closeInventory();
-    }
-
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         if(plugin.isBungeeActivated()) return;

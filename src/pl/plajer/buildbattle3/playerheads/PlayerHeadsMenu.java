@@ -18,6 +18,7 @@
 
 package pl.plajer.buildbattle3.playerheads;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -26,6 +27,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
+import pl.plajer.buildbattle3.utils.Util;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,15 +35,18 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
  * Created by Tom on 26/08/2015.
  */
+//todo texture loading
 public class PlayerHeadsMenu {
 
     private static List<HeadsItem> headsItems = new ArrayList<>();
-    private static HashMap<String, List<HeadsItem>> playerheadmenus = new HashMap<>();
+    private static Map<String, List<HeadsItem>> playerheadmenus = new HashMap<>();
+    private static Map<String, Inventory> inventories = new HashMap<>();
 
     public static void loadHeadItems() {
         FileConfiguration config = ConfigurationManager.getConfig("playerheadmenu/mainmenu");
@@ -80,6 +85,7 @@ public class PlayerHeadsMenu {
         }
         for(HeadsItem headsItem : headsItems) {
             config = headsItem.getConfig();
+            Inventory inv;
             List<HeadsItem> list = new ArrayList<>();
             if(!config.contains("example")) {
                 config.set("example.data", SkullType.PLAYER.ordinal());
@@ -108,6 +114,11 @@ public class PlayerHeadsMenu {
                 if(heads.isEnabled()) list.add(heads);
             }
             playerheadmenus.put(headsItem.getMenuName(), list);
+            inv = Bukkit.createInventory(null, Util.serializeInt(list.size()), headsItem.getMenuName());
+            for(HeadsItem item : list){
+                if(item.isEnabled()) inv.setItem(item.getSlot(), item.getItemStack());
+            }
+            inventories.put(headsItem.getMenuName(), inv);
         }
     }
 
@@ -130,12 +141,13 @@ public class PlayerHeadsMenu {
                     player.sendMessage(ChatManager.colorMessage("Menus.Option-Menu.Players-Heads-No-Permission"));
                     return;
                 } else {
-                    Inventory inventory = player.getServer().createInventory(player, headsItem.getSize(), headsItem.getMenuName());
+                    player.openInventory(inventories.get(headsItem.getMenuName()));
+                    /*Inventory inventory = player.getServer().createInventory(player, headsItem.getSize(), headsItem.getMenuName());
                     List<HeadsItem> list = playerheadmenus.get(headsItem.getMenuName());
                     for(HeadsItem headsItem1 : list) {
                         if(headsItem.isEnabled()) inventory.setItem(headsItem1.getSlot(), headsItem1.getItemStack());
                     }
-                    player.openInventory(inventory);
+                    player.openInventory(inventory);*/
                     return;
                 }
             }
