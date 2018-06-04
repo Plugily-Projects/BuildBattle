@@ -40,6 +40,7 @@ import pl.plajer.buildbattle3.plots.Plot;
 import pl.plajer.buildbattle3.plots.PlotManager;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
+import pl.plajer.buildbattle3.utils.MessageUtils;
 import pl.plajer.buildbattle3.utils.OptionsMenu;
 import pl.plajer.buildbattle3.utils.Util;
 
@@ -526,37 +527,37 @@ public class Arena extends BukkitRunnable {
             MessageHandler.sendTitleMessage(player, ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Title").replaceAll("%player%", plugin.getServer().getOfflinePlayer(topList.get(1)).getName()), 5, 40, 5);
         }
         for(Player player : getPlayers()) {
-            player.sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Message.Header"));
-            player.sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Message.First-Winner")
+            MessageUtils.sendCenteredMessage(player, ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Message.Header"));
+            MessageUtils.sendCenteredMessage(player, ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Message.First-Winner")
                     .replaceAll("%player%", plugin.getServer().getOfflinePlayer(topList.get(1)).getName())
                     .replaceAll("%number%", String.valueOf(getPlotManager().getPlot(topList.get(1)).getPoints())));
             if(topList.containsKey(2) && topList.get(2) != null) {
                 if(getPlotManager().getPlot(topList.get(1)).getPoints() == getPlotManager().getPlot(topList.get(2)).getPoints()) {
-                    player.sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Message.First-Winner")
+                    MessageUtils.sendCenteredMessage(player, ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Message.First-Winner")
                             .replaceAll("%player%", plugin.getServer().getOfflinePlayer(topList.get(2)).getName())
                             .replaceAll("%number%", String.valueOf(getPlotManager().getPlot(topList.get(2)).getPoints())));
                 } else {
-                    player.sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Message.Second-Winner")
+                    MessageUtils.sendCenteredMessage(player, ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Message.Second-Winner")
                             .replaceAll("%player%", plugin.getServer().getOfflinePlayer(topList.get(2)).getName())
                             .replaceAll("%number%", String.valueOf(getPlotManager().getPlot(topList.get(2)).getPoints())));
                 }
             }
             if(topList.containsKey(3) && topList.get(3) != null) {
                 if(getPlotManager().getPlot(topList.get(1)).getPoints() == getPlotManager().getPlot(topList.get(3)).getPoints()) {
-                    player.sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Message.First-Winner")
+                    MessageUtils.sendCenteredMessage(player, ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Message.First-Winner")
                             .replaceAll("%player%", plugin.getServer().getOfflinePlayer(topList.get(3)).getName())
                             .replaceAll("%number%", String.valueOf(getPlotManager().getPlot(topList.get(3)).getPoints())));
                 } else if(getPlotManager().getPlot(topList.get(2)).getPoints() == getPlotManager().getPlot(topList.get(3)).getPoints()) {
-                    player.sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Message.Second-Winner")
+                    MessageUtils.sendCenteredMessage(player, ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Message.Second-Winner")
                             .replaceAll("%player%", plugin.getServer().getOfflinePlayer(topList.get(3)).getName())
                             .replaceAll("%number%", String.valueOf(getPlotManager().getPlot(topList.get(3)).getPoints())));
                 } else {
-                    player.sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Message.Third-Winner")
+                    MessageUtils.sendCenteredMessage(player, ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Message.Third-Winner")
                             .replaceAll("%player%", plugin.getServer().getOfflinePlayer(topList.get(3)).getName())
                             .replaceAll("%number%", String.valueOf(getPlotManager().getPlot(topList.get(3)).getPoints())));
                 }
             }
-            player.sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Message.Footer"));
+            MessageUtils.sendCenteredMessage(player, ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Message.Footer"));
         }
         for(Integer rang : topList.keySet()) {
             if(topList.get(rang) != null) {

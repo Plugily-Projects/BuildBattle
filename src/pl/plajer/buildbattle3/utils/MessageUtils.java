@@ -20,6 +20,7 @@ package pl.plajer.buildbattle3.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 /**
  * @author Plajer
@@ -27,6 +28,8 @@ import org.bukkit.ChatColor;
  * Created at 14.05.2018
  */
 public class MessageUtils {
+
+    private final static int CENTER_PX = 154;
 
     public static void thisVersionIsNotSupported() {
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "  _   _           _                                                    _                _ ");
@@ -71,6 +74,43 @@ public class MessageUtils {
         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + " | |  | | | | | (_| | | |    | (_| | | |_  | | | | | | | (_| |  _   _   _ ");
         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + " |_|  |_| |_|  \\__, | |_|     \\__,_|  \\__| |_| |_| |_|  \\__, | (_) (_) (_)");
         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "               |___/                                    |___/             ");
+    }
+
+    public static void sendCenteredMessage(Player player, String message) {
+        if(message == null || message.equals("")) player.sendMessage("");
+        message = ChatColor.translateAlternateColorCodes('&', message);
+
+        int messagePxSize = 0;
+        boolean previousCode = false;
+        boolean isBold = false;
+
+        for(char c : message.toCharArray()) {
+            if(c == '§') {
+                previousCode = true;
+                continue;
+            } else if(previousCode) {
+                previousCode = false;
+                if(c == 'l' || c == 'L') {
+                    isBold = true;
+                    continue;
+                } else isBold = false;
+            } else {
+                DefaultFontInfo dFI = DefaultFontInfo.getDefaultFontInfo(c);
+                messagePxSize += isBold ? dFI.getBoldLength() : dFI.getLength();
+                messagePxSize++;
+            }
+        }
+
+        int halvedMessageSize = messagePxSize / 2;
+        int toCompensate = CENTER_PX - halvedMessageSize;
+        int spaceLength = DefaultFontInfo.SPACE.getLength() + 1;
+        int compensated = 0;
+        StringBuilder sb = new StringBuilder();
+        while(compensated < toCompensate) {
+            sb.append(" ");
+            compensated += spaceLength;
+        }
+        player.sendMessage(sb.toString() + message);
     }
 
 }
