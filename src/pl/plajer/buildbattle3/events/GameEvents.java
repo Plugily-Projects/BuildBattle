@@ -97,12 +97,12 @@ public class GameEvents implements Listener {
         if(!event.getItem().getItemMeta().hasDisplayName()) return;
         if(!arena.isVoting()) return;
         if(arena.getVotingPlot().getOwner() == event.getPlayer().getUniqueId()) {
-            event.getPlayer().sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Cant-Vote-Own-Plot"));
+            event.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Cant-Vote-Own-Plot"));
             event.setCancelled(true);
             return;
         }
         UserManager.getUser(event.getPlayer().getUniqueId()).setInt("points", VoteItems.getPoints(event.getItem()));
-        event.getPlayer().sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Vote-Successful"));
+        event.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Vote-Successful"));
         event.setCancelled(true);
     }
 
