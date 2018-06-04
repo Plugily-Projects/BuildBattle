@@ -275,8 +275,8 @@ public class Arena extends BukkitRunnable {
                         VoteItems.giveVoteItems(player);
                     }
                     receivedVoteItems = true;
-                    setTimer(1);
-                } else if(getTimer() == 0 && receivedVoteItems) {
+                }
+                if(getTimer() == 0 && receivedVoteItems) {
                     setVoting(true);
                     if(!queue.isEmpty()) {
                         if(getVotingPlot() != null) {
