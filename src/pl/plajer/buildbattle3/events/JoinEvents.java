@@ -22,10 +22,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
+import pl.plajer.buildbattle3.playerheads.PlayerHeadsMenu;
 import pl.plajer.buildbattle3.stats.MySQLDatabase;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
@@ -47,6 +49,12 @@ public class JoinEvents implements Listener {
     public JoinEvents(Main plugin) {
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onJoinCacheHeads(PlayerJoinEvent e){
+        PlayerHeadsMenu.openMenu(e.getPlayer());
+        e.getPlayer().closeInventory();
     }
 
     @EventHandler
