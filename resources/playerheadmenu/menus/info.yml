@@ -3,10 +3,7 @@ example:
   displayname: '&6Question'
   owner: MHF_QUESTION
   lore:
-  - "\xc4\u201a\xe2\u20ac\u017e\u0102\u02d8\xe2\u201a\xac\u0139\u02c7\xc4\u201a\xcb\
-    \ufffd\u0102\u02d8\xe2\u20ac\u0161\xc2\xac\xc4\u0105\xcb\u2021\u0102\u201e\xe2\
-    \u20ac\u0161\u0102\u02d8\xe2\u201a\xac\u0139\u02c7\xc4\u201a\xe2\u20ac\u0161\u0102\
-    \u201a\xc2\xa77Click to select"
+  - "&7Click to select"
   material: 397
   enabled: true
   slot: 0
@@ -15,10 +12,7 @@ arrowup:
   displayname: '&6Arrow up'
   owner: MHF_ArrowUp
   lore:
-  - "\xc4\u201a\xe2\u20ac\u017e\u0102\u02d8\xe2\u201a\xac\u0139\u02c7\xc4\u201a\xcb\
-    \ufffd\u0102\u02d8\xe2\u20ac\u0161\xc2\xac\xc4\u0105\xcb\u2021\u0102\u201e\xe2\
-    \u20ac\u0161\u0102\u02d8\xe2\u201a\xac\u0139\u02c7\xc4\u201a\xe2\u20ac\u0161\u0102\
-    \u201a\xc2\xa77Click to select"
+  - "&7Click to select"
   material: 397
   enabled: true
   slot: 1
@@ -27,10 +21,7 @@ arrowdown:
   displayname: '&6Arrow Down'
   owner: MHF_ArrowDown
   lore:
-  - "\xc4\u201a\xe2\u20ac\u017e\u0102\u02d8\xe2\u201a\xac\u0139\u02c7\xc4\u201a\xcb\
-    \ufffd\u0102\u02d8\xe2\u20ac\u0161\xc2\xac\xc4\u0105\xcb\u2021\u0102\u201e\xe2\
-    \u20ac\u0161\u0102\u02d8\xe2\u201a\xac\u0139\u02c7\xc4\u201a\xe2\u20ac\u0161\u0102\
-    \u201a\xc2\xa77Click to select"
+  - "&7Click to select"
   material: 397
   enabled: true
   slot: 2
@@ -39,10 +30,7 @@ arrowleft:
   displayname: '&6Arrow Left'
   owner: MHF_ArrowLeft
   lore:
-  - "\xc4\u201a\xe2\u20ac\u017e\u0102\u02d8\xe2\u201a\xac\u0139\u02c7\xc4\u201a\xcb\
-    \ufffd\u0102\u02d8\xe2\u20ac\u0161\xc2\xac\xc4\u0105\xcb\u2021\u0102\u201e\xe2\
-    \u20ac\u0161\u0102\u02d8\xe2\u201a\xac\u0139\u02c7\xc4\u201a\xe2\u20ac\u0161\u0102\
-    \u201a\xc2\xa77Click to select"
+  - "&7Click to select"
   material: 397
   enabled: true
   slot: 3
@@ -51,10 +39,7 @@ arrowright:
   displayname: '&6Arrow Right'
   owner: MHF_ArrowRight
   lore:
-  - "\xc4\u201a\xe2\u20ac\u017e\u0102\u02d8\xe2\u201a\xac\u0139\u02c7\xc4\u201a\xcb\
-    \ufffd\u0102\u02d8\xe2\u20ac\u0161\xc2\xac\xc4\u0105\xcb\u2021\u0102\u201e\xe2\
-    \u20ac\u0161\u0102\u02d8\xe2\u201a\xac\u0139\u02c7\xc4\u201a\xe2\u20ac\u0161\u0102\
-    \u201a\xc2\xa77Click to select"
+  - "&7Click to select"
   material: 397
   enabled: true
   slot: 4
@@ -63,10 +48,7 @@ uitroepteken:
   displayname: '&6Arrow Right'
   owner: MHF_Exclamation
   lore:
-  - "\xc4\u201a\xe2\u20ac\u017e\u0102\u02d8\xe2\u201a\xac\u0139\u02c7\xc4\u201a\xcb\
-    \ufffd\u0102\u02d8\xe2\u20ac\u0161\xc2\xac\xc4\u0105\xcb\u2021\u0102\u201e\xe2\
-    \u20ac\u0161\u0102\u02d8\xe2\u201a\xac\u0139\u02c7\xc4\u201a\xe2\u20ac\u0161\u0102\
-    \u201a\xc2\xa77Click to select"
+  - "&7Click to select"
   material: 397
   enabled: true
   slot: 5
