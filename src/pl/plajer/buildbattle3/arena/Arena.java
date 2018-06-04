@@ -315,6 +315,7 @@ public class Arena extends BukkitRunnable {
                     showPlayers();
                 }
                 if(getTimer() <= 0) {
+                    giveRewards();
                     teleportAllToEndLocation();
                     for(Player player : getPlayers()) {
                         if(bossBarEnabled) {
@@ -341,7 +342,6 @@ public class Arena extends BukkitRunnable {
                         }
                     }
                 }
-                giveRewards();
                 setTimer(getTimer() - 1);
                 break;
             case RESTARTING:
