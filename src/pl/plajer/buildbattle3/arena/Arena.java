@@ -294,7 +294,6 @@ public class Arena extends BukkitRunnable {
                         }
                         calculateResults();
                         announceResults();
-                        giveRewards();
                         Plot winnerPlot = getPlotManager().getPlot(topList.get(1));
 
                         for(Player player : getPlayers()) {
@@ -342,6 +341,7 @@ public class Arena extends BukkitRunnable {
                         }
                     }
                 }
+                giveRewards();
                 setTimer(getTimer() - 1);
                 break;
             case RESTARTING:

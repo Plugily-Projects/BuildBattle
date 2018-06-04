@@ -71,7 +71,7 @@ public class OptionsMenu {
         ItemStack resetOption = new ItemStack(Material.BARRIER, 1);
         ItemMeta resetMeta = resetOption.getItemMeta();
         resetMeta.setDisplayName(ChatManager.colorMessage("Menus.Option-Menu.Reset-Option"));
-        resetMeta.setLore(Collections.singletonList(ChatManager.colorMessage("Menus.Option-Menu.Floor-Option-Lore")));
+        resetMeta.setLore(Collections.singletonList(ChatManager.colorMessage("Menus.Option-Menu.Reset-Option-Lore")));
         resetOption.setItemMeta(resetMeta);
         inv.setItem(31, resetOption);
         return inv;

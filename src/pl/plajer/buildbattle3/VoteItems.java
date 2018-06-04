@@ -34,7 +34,7 @@ import java.util.HashMap;
 public class VoteItems {
 
     private static HashMap<ItemStack, Integer> voteItems = new HashMap<>();
-    private static FileConfiguration config = ConfigurationManager.getConfig("VoteItems");
+    private static FileConfiguration config = ConfigurationManager.getConfig("voteItems");
 
     public static void giveVoteItems(Player player) {
         for(ItemStack itemStack : voteItems.keySet()) {

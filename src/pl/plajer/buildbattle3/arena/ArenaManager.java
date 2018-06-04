@@ -197,6 +197,8 @@ public class ArenaManager {
                 }
             }
         }
+        arena.setGameState(ArenaState.ENDING);
+        arena.setTimer(10);
         arena.setVoting(false);
         Main.debug("Game stop event finish, arena " + arena.getID(), System.currentTimeMillis());
     }

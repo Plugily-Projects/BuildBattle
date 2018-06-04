@@ -25,6 +25,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -263,6 +264,13 @@ public class GameEvents implements Listener {
 
     @EventHandler
     public void onOptionMenuClick(InventoryClickEvent e) {
+        if(e.getWhoClicked() instanceof Player && ArenaRegistry.getArena((Player) e.getWhoClicked()) != null && e.getCurrentItem() != null &&
+                e.getCurrentItem().getType() == Material.NETHER_STAR && e.getCurrentItem().getItemMeta().hasDisplayName() &&
+                e.getCurrentItem().getItemMeta().getDisplayName().equals(ChatManager.colorMessage("Menus.Option-Menu.Option-Item"))) {
+            e.setResult(Event.Result.DENY);
+            e.setCursor(null);
+            e.setCancelled(true);
+        }
         if(e.getInventory() == null) return;
         if(e.getCurrentItem() == null) return;
         if(!e.getCurrentItem().hasItemMeta()) return;
@@ -526,6 +534,8 @@ public class GameEvents implements Listener {
             Arena arena = ArenaRegistry.getArena(e.getPlayer());
             if(arena == null) return;
             if(!e.getPlayer().getInventory().getItemInMainHand().getType().isBlock()) return;
+            if(arena.getBlacklist().contains(e.getPlayer().getInventory().getItemInMainHand().getTypeId())) return;
+            if(arena.getArenaState() != ArenaState.IN_GAME) return;
             arena.getPlotManager().getPlot(e.getPlayer()).changeFloor(e.getPlayer().getInventory().getItemInMainHand().getType(), e.getPlayer().getInventory().getItemInMainHand().getData().getData());
             e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Floor-Changed"));
         }

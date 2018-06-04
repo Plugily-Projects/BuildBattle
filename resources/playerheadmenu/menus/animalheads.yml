@@ -1,0 +1,174 @@
+Pig:
+  data: 3
+  displayname: '&6Pig'
+  owner: MHF_Pig
+  lore:
+  - '&7Click to select'
+  material: 397
+  enabled: true
+  slot: 0
+cow:
+  data: 3
+  displayname: '&6Cow'
+  owner: MHF_Cow
+  lore:
+  - '&7Click to select'
+  material: 397
+  enabled: true
+  slot: 2
+chicken:
+  data: 3
+  displayname: '&6Chicken'
+  owner: MHF_Chicken
+  lore:
+  - '&7Click to select'
+  material: 397
+  enabled: true
+  slot: 3
+wolf:
+  data: 3
+  displayname: '&6WOlf'
+  owner: MHF_Wolf
+  lore:
+  - '&7Click to select'
+  material: 397
+  enabled: true
+  slot: 4
+Ocelot:
+  data: 3
+  displayname: '&6Ocelot'
+  owner: MHF_Ocelot
+  lore:
+  - '&7Click to select'
+  material: 397
+  enabled: true
+  slot: 5
+Sheep:
+  data: 3
+  displayname: '&6Sheep'
+  owner: MHF_Sheep
+  lore:
+  - '&7Click to select'
+  material: 397
+  enabled: true
+  slot: 6
+Squid:
+  data: 3
+  displayname: '&6Squid'
+  owner: MHF_Squid
+  lore:
+  - '&7Click to select'
+  material: 397
+  enabled: true
+  slot: 7
+Villager:
+  data: 3
+  displayname: '&6Villager'
+  owner: MHF_Villager
+  lore:
+  - '&7Click to select'
+  material: 397
+  enabled: true
+  slot: 8
+Creeper:
+  data: 3
+  displayname: '&6Creeper'
+  owner: MHF_Creeper
+  lore:
+  - '&7Click to select'
+  material: 397
+  enabled: true
+  slot: 9
+ombie:
+  data: 3
+  displayname: '&6Zombie'
+  owner: MHF_Zombie
+  lore:
+  - '&7Click to select'
+  material: 397
+  enabled: true
+  slot: 10
+Skeleton:
+  data: 3
+  displayname: '&6Skeleton'
+  owner: MHF_Skeleton
+  lore:
+  - '&7Click to select'
+  material: 397
+  enabled: true
+  slot: 11
+witherskeleton:
+  data: 3
+  displayname: '&6Wither Skeleton'
+  owner: MHF_WSkeleton
+  lore:
+  - '&7Click to select'
+  material: 397
+  enabled: true
+  slot: 12
+wither:
+  data: 3
+  displayname: '&6Wither'
+  owner: MHF_Wither
+  lore:
+  - '&7Click to select'
+  material: 397
+  enabled: true
+  slot: 13
+enderman:
+  data: 3
+  displayname: '&6Enderman'
+  owner: MHF_Enderman
+  lore:
+  - '&7Click to select'
+  material: 397
+  enabled: true
+  slot: 14
+Golem:
+  data: 3
+  displayname: '&6Golem'
+  owner: MHF_Golem
+  lore:
+  - '&7Click to select'
+  material: 397
+  enabled: true
+  slot: 15
+Blzae:
+  data: 3
+  displayname: '&6Blaze'
+  owner: MHF_Blaze
+  lore:
+  - '&7Click to select'
+  material: 397
+  enabled: true
+  slot: 16
+PigZombie:
+  data: 3
+  displayname: '&6PigZombie'
+  owner: MHF_PigZombie
+  lore:
+  - '&7Click to select'
+  material: 397
+  enabled: true
+  slot: 17
+Witch:
+  data: 3
+  displayname: '&6Witch'
+  owner: MHF_Witch
+  lore:
+  - '&7Click to select'
+  material: 397
+  enabled: true
+  slot: 1
+example:
+  data: 3
+  displayname: '&6Animals'
+  owner: MHF_Pig
+  lore:
+  - "\xc4\u201a\xe2\u20ac\u017e\u0102\u02d8\xe2\u201a\xac\u0139\u02c7\xc4\u201a\xcb\
+    \ufffd\u0102\u02d8\xe2\u20ac\u0161\xc2\xac\xc4\u0105\xcb\u2021\u0102\u201e\xe2\
+    \u20ac\u0161\u0102\u02d8\xe2\u201a\xac\u0139\u02c7\xc4\u201a\xe2\u20ac\u0161\u0102\
+    \u201a\xc2\xa77Click to select"
+  material: 397
+  enabled: false
+  slot: 7
