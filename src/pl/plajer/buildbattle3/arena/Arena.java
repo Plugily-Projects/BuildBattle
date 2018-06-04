@@ -562,7 +562,9 @@ public class Arena extends BukkitRunnable {
         for(Integer rang : topList.keySet()) {
             if(topList.get(rang) != null) {
                 if(plugin.getServer().getPlayer(topList.get(rang)) != null) {
-                    plugin.getServer().getPlayer(topList.get(rang)).sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Message.You-Became-Other").replaceAll("%number%", String.valueOf(rang)));
+                    if(rang > 3) {
+                        plugin.getServer().getPlayer(topList.get(rang)).sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Message.You-Became-Other").replaceAll("%number%", String.valueOf(rang)));
+                    }
                     if(rang == 1) {
                         UserManager.getUser(plugin.getServer().getPlayer(topList.get(rang)).getUniqueId()).addInt("wins", 1);
                         if(getPlotManager().getPlot(topList.get(rang)).getPoints() > UserManager.getUser(topList.get(rang)).getInt("highestwin")) {
