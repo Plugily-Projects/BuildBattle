@@ -156,10 +156,7 @@ example:
   displayname: '&6Animals'
   owner: MHF_Pig
   lore:
-  - "\xc4\u201a\xe2\u20ac\u017e\u0102\u02d8\xe2\u201a\xac\u0139\u02c7\xc4\u201a\xcb\
-    \ufffd\u0102\u02d8\xe2\u20ac\u0161\xc2\xac\xc4\u0105\xcb\u2021\u0102\u201e\xe2\
-    \u20ac\u0161\u0102\u02d8\xe2\u201a\xac\u0139\u02c7\xc4\u201a\xe2\u20ac\u0161\u0102\
-    \u201a\xc2\xa77Click to select"
+  - "&7Click to select"
   material: 397
   enabled: false
   slot: 7
