@@ -114,13 +114,17 @@ In-Game:
       Cant-Vote-Own-Plot: "&cNie mozesz glosowac na wlasna dzialke!"
       Vote-Successful: "&aZaglosowano pomyslnie!"
       Winner-Title: "&eZWYCIEZCA: &a%player%"
-      Winner-Message:
-        Header: "&a==============================\n&f&lBuildBattle\n"
-        First-Winner: "&e1 zwyciezca &7- %player% (Dzialka nr %number%)"
-        Second-Winner: "&62 zwyciezca &7- %player% (Dzialka nr %number%)"
-        Third-Winner: "&c3 zwyciezca &7- %player% (Dzialka nr %number%)"
-        Footer: "\n&a=============================="
-        You-Became-Other: "&aJestes na miejscu &7%number%"
+      Summary-Message:
+        - "&a&l&m-------------------------------------------"
+        - "&f&lBuildBattle"
+        - "%place_one%"
+        - "%place_two%"
+        - "%place_three%"
+        - "&a&l&m-------------------------------------------"
+      Place-One: "&e1 zwyciezca &7- %player% (Dzialka nr %number%)"
+      Place-Two: "&62 zwyciezca &7- %player% (Dzialka nr %number%)"
+      Place-Three: "&c3 zwyciezca &7- %player% (Dzialka nr %number%)"
+      Summary-Other-Place: "&aJestes na miejscu &7%number%"
     Game-End-Messages:
       Only-You-Playing: "&7Jestes jedynym graczem w grze. Zostaniesz przedniesiony do lobby."
     Admin-Messages:

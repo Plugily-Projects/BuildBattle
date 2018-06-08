@@ -122,13 +122,17 @@ In-Game:
       Cant-Vote-Own-Plot: "&cDu kannst nicht für dein Plot abstimmen!"
       Vote-Successful: "&aStimme erfolgreich!"
       Winner-Title: "&eGewinner: &a%player%"
-      Winner-Message:
-        Header: "&a==============================\n&f&lBuildBattle\n"
-        First-Winner: "&e1er Gewinner &7- %player% (Plot %number%)"
-        Second-Winner: "&62er Gewinner &7- %player% (Plot %number%)"
-        Third-Winner: "&c3er Gewinner &7- %player% (Plot %number%)"
-        Footer: "\n&a=============================="
-        You-Became-Other: "&aDu bist &7%number%er geworden!"
+      Summary-Message:
+        - "&a&l&m-------------------------------------------"
+        - "&f&lBuildBattle"
+        - "%place_one%"
+        - "%place_two%"
+        - "%place_three%"
+        - "&a&l&m-------------------------------------------"
+      Place-One: "&e1er Gewinner &7- %player% (Plot %number%)"
+      Place-Two: "&62er Gewinner &7- %player% (Plot %number%)"
+      Place-Three: "&c3er Gewinner &7- %player% (Plot %number%)"
+      Summary-Other-Place: "&aDu bist &7%number%er geworden!"
     Game-End-Messages:
       Only-You-Playing: "&7Du bist der einzigste übrige Spieler. Du wirst zur Lobby teleportiert!"
     Admin-Messages:
