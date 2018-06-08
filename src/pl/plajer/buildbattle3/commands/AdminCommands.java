@@ -77,9 +77,8 @@ public class AdminCommands extends MainCommand {
         command.add(new CommandData("/bba reload", "/bba reload", gray + "Reload all game arenas\n" + gray + "" + ChatColor.BOLD +
                 "They will be stopped!\n" + gold + "Permission: " + gray + "buildbattle.admin.reload"));
         command.add(new CommandData(ChatColor.STRIKETHROUGH + "/bba addsign " + ChatColor.GOLD + "<arena>", "/bba addsign <arena>",
-                gray + "Set sign you look at as a target arena sign\n" + gold + "Permission: " + gray + "buildbattle.admin.addsign\n" +
-                        gold + "Permission: " + gray + "buildbattle.admin.sign.create (for creating signs manually)\n" + gold + "Permission: " +
-                        gray + "buildbattle.admin.sign.break (for breaking arena signs)\n" + ChatColor.BOLD + "" + ChatColor.RED + "Currently unused, use Setup menu instead"));
+                gray + "Set sign you look at as a target arena sign\n" + gold + "Permission: " + gray + "buildbattle.admin.sign.create (for creating signs manually)\n" +
+                        gold + "Permission: " + gray + "buildbattle.admin.sign.break (for breaking arena signs)\n" + ChatColor.BOLD + "" + ChatColor.RED + "Currently unused, use Setup menu instead"));
         command.add(new CommandData("/bba delete " + ChatColor.GOLD + "<arena>", "/bba delete <arena>",
                 gray + "Deletes specified arena\n" + gold + "Permission: " + gray + "buildbattle.admin.delete"));
     }
