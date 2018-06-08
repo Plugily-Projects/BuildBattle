@@ -536,6 +536,7 @@ public class GameEvents implements Listener {
             if(!e.getPlayer().getInventory().getItemInMainHand().getType().isBlock()) return;
             if(arena.getBlacklist().contains(e.getPlayer().getInventory().getItemInMainHand().getTypeId())) return;
             if(arena.getArenaState() != ArenaState.IN_GAME) return;
+            if(arena.isVoting()) return;
             arena.getPlotManager().getPlot(e.getPlayer()).changeFloor(e.getPlayer().getInventory().getItemInMainHand().getType(), e.getPlayer().getInventory().getItemInMainHand().getData().getData());
             e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Floor-Changed"));
         }
