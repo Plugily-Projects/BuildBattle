@@ -146,14 +146,12 @@ public class MainCommand implements CommandExecutor {
             if(checkSenderIsConsole(sender)) return true;
             Player player = (Player) sender;
             if(args.length == 0) {
-                player.sendMessage(ChatColor.GOLD + "----------------{BuildBattle Commands}----------");
-                player.sendMessage(ChatColor.AQUA + "/bb stats [player]" + ChatColor.GRAY + ": Shows your stats!");
-                player.sendMessage(ChatColor.AQUA + "/bb join <arena>" + ChatColor.GRAY + ": Join arena and play!");
-                player.sendMessage(ChatColor.AQUA + "/bb leave" + ChatColor.GRAY + ": Quit arena you're in");
-                if(player.hasPermission("buildbattle.admin")) {
-                    player.sendMessage(ChatColor.AQUA + "/bba help" + ChatColor.GRAY + ": Admin commands");
+                sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Header"));
+                sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Description"));
+                if(sender.hasPermission("villagedefense.admin")) {
+                    sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Admin-Bonus-Description"));
                 }
-                player.sendMessage(ChatColor.GOLD + "-------------------------------------------------");
+                sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Footer"));
                 return true;
             }
             if(args.length > 1) {

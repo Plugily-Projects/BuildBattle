@@ -43,6 +43,14 @@ Commands:
     Blocks-Placed: "&aBlöcke platziert: &e"
     Blocks-Broken: "&aBlöcke zerstört: &e"
     Particles-Placed: "&aPartikel platziert: &e"
+  Main-Command:
+    Header: "&6----------------{BuildBattle commands}----------"
+    Description: "&aSpiel Commands:\n
+    &b/bb stats: &7Zeige deine Statistik!\n
+    &b/bb leave: &7Verlasse die aktuellen Arena!\n
+    &b/bb join <arena>: &7Betrete die spezifische Arena!"
+    Admin-Bonus-Description: "\n&b/bba help: &7Zeige alle Admin-Commands"
+    Footer: "&6-------------------------------------------------"
 
 Bossbar:
   Waiting-For-Players: "&4&lWarte auf mehr Spieler..."
@@ -147,7 +155,6 @@ Menus:
     Floor-Option: "&aÄndere Boden-Material"
     Floor-Option-Lore: "&7Siehe einen Block hierher um den Boden zu ändern"
     Floor-Changed: "&aBoden geändert!"
-
     Reset-Option: "&cPlot zurücksetzen"
     Reset-Option-Lore: "&7Setze dein Plot komplett zurück, &c&lkann nicht rückgängig gemacht werden!"
     Reset-Option-Done: "&cPlot erfolgreich zurückgesetzt!"
@@ -170,5 +177,5 @@ Signs:
     - "%mapname%"
     - "&5[%playersize%/%maxplayers%]"
 
-File-Version-Do-Not-Edit: 1
-Translation-Version: 1
+File-Version-Do-Not-Edit: 2
+Translation-Version: 2

@@ -35,6 +35,14 @@ Commands:
     Blocks-Placed: "&aPostawionych blokow: &e"
     Blocks-Broken: "&aZniszczonych blokow: &e"
     Particles-Placed: "&aPostawionych efektow: &e"
+  Main-Command:
+    Header: "&6----------------{Komendy BuildBattle}----------"
+    Description: "&aKomendy gry:\n
+    &b/bb stats: &7Pokazuje twoje statystyki!\n
+    &b/bb leave: &7Opuszcza aktualna arene!\n
+    &b/bb join <arena>: &7Dolacza na podana arene!"
+    Admin-Bonus-Description: "\n&b/bba help: &7Pokazuje komendy administratora"
+    Footer: "&6-------------------------------------------------"
 
 Bossbar:
   Waiting-For-Players: "&4&lOczekuje na wiecej graczy..."
@@ -161,5 +169,5 @@ Signs:
     - "%mapname%"
     - "&5[%playersize%/%maxplayers%]"
 
-File-Version-Do-Not-Edit: 1
-Translation-Version: 1
+File-Version-Do-Not-Edit: 2
+Translation-Version: 2
