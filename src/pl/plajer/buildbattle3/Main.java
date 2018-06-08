@@ -266,7 +266,6 @@ public class Main extends JavaPlugin {
         ConfigPreferences.loadThirdPlaceCommands();
         ConfigPreferences.loadEndGameCommands();
         ConfigPreferences.loadWhitelistedCommands();
-        saveResource("language.yml", false);
         ParticleMenu.loadFromConfig();
         PlayerHeadsMenu.loadHeadItems();
         ArenaRegistry.registerArenas();
