@@ -22,6 +22,8 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
@@ -159,6 +161,29 @@ public class SignManager implements Listener {
             for(Sign s : loadedSigns.keySet()) {
                 for(int i = 0; i < signLines.size(); i++) {
                     s.setLine(i, formatSign(signLines.get(i), loadedSigns.get(s)));
+                    if(plugin.getConfig().getBoolean("Signs-Block-States-Enabled")) {
+                        if(s.getType() == Material.SIGN_POST || s.getType() == Material.WALL_SIGN) {
+                            Block behind = s.getBlock().getRelative(((org.bukkit.material.Sign) s.getData()).getAttachedFace());
+                            behind.setType(Material.STAINED_GLASS);
+                            switch(loadedSigns.get(s).getArenaState()) {
+                                case WAITING_FOR_PLAYERS:
+                                    behind.setData((byte) 0);
+                                    break;
+                                case STARTING:
+                                    behind.setData((byte) 4);
+                                    break;
+                                case IN_GAME:
+                                    behind.setData((byte) 1);
+                                    break;
+                                case ENDING:
+                                    behind.setData((byte) 7);
+                                    break;
+                                case RESTARTING:
+                                    behind.setData((byte) 15);
+                                    break;
+                            }
+                        }
+                    }
                 }
                 s.update();
             }

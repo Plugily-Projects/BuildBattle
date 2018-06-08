@@ -43,6 +43,7 @@ import java.util.stream.Collectors;
 public class LanguageMigrator {
 
     public static final int LANGUAGE_FILE_VERSION = 1;
+    public static final int CONFIG_FILE_VERSION = 1;
     private static Main plugin = JavaPlugin.getPlugin(Main.class);
     private static List<String> migratable = Arrays.asList("bungee", "config", "language", "MySQL");
 
@@ -57,6 +58,26 @@ public class LanguageMigrator {
             }
         }
         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Done! Enabling BB2...");
+    }
+
+    public static void configUpdate(){
+        if(plugin.getConfig().getInt("Version") == CONFIG_FILE_VERSION) return;
+        Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[BuildBattle] System notify >> Your config file is outdated! Updating...");
+        File file = new File(plugin.getDataFolder() + "/config.yml");
+
+        LanguageMigrator.removeLineFromFile(file, "# Don't modify.");
+        LanguageMigrator.removeLineFromFile(file, "Version: " + plugin.getConfig().getInt("Version"));
+        LanguageMigrator.removeLineFromFile(file, "# No way! You've reached the end! But... where's the dragon!?");
+        switch(plugin.getConfig().getInt("Version")) {
+            case 0:
+                LanguageMigrator.addNewLines(file, "# Should blocks behind game signs change their color based on game state?\r\n# They will change color to:\r\n" +
+                        "# - white (waiting for players) stained glass\r\n# - yellow (starting) stained glass\r\n# - orange (in game) stained glass\r\n# - gray (ending) stained glass\r\n" +
+                        "# - black (restarting) stained glass\r\nSigns-Block-States-Enabled: true\r\n\r\n" +
+                        "# Don't modify\r\nVersion: 1\r\n\r\n# No way! You've reached the end! But... where's the dragon!?");
+                break;
+        }
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] System notify >> Config updated, no comments were removed :)");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] System notify >> You're using latest config file version! Nice!");
     }
 
     public static void languageFileUpdate() {

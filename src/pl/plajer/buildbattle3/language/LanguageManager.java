@@ -43,6 +43,7 @@ public class LanguageManager {
         }
         setupLocale();
         LanguageMigrator.languageFileUpdate();
+        LanguageMigrator.configUpdate();
     }
 
     private static void setupLocale() {
