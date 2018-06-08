@@ -306,7 +306,7 @@ public class MainCommand implements CommandExecutor {
         FileConfiguration config = ConfigurationManager.getConfig("arenas");
         config.set(path + "minimumplayers", config.getInt("instances.default.minimumplayers"));
         config.set(path + "maximumplayers", config.getInt("instances.default.maximumplayers"));
-        config.set(path + "mapname", config.getInt("instances.default.mapname"));
+        config.set(path + "mapname", ID);
         config.set(path + "signs", new ArrayList<>());
         config.createSection(path + "plots");
         config.set(path + "isdone", false);
