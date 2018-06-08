@@ -1,5 +1,15 @@
 ## BuildBattle 3 changelog
 
+### 3.1.0 Release (08.06.2018)
+* New good looking summary message at the end of the game
+* Added game sign block states
+* /bb command is now translatable via language.yml
+* Admin commands (/bba) are now better with hover and click event (JSON messages)
+* Default map name when creating new arena is arena ID not "0" now
+* Now warning message "can't save language.yml because already exists!" won't occur anymore
+* Fixed error in console when player left the arena and his plot was cleared even if he didn't have it
+* Now you can't change your floor by NPC during the voting time
+
 ### 3.0.4 Release (04.06.2018)
 * Rewards will be given now only once after the game
 * Now you can leave started game without spamming infinitely errors in console
