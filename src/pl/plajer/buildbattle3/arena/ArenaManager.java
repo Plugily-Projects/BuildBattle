@@ -138,7 +138,9 @@ public class ArenaManager {
         if(!user.isSpectator()) ChatManager.broadcastAction(a, p, ChatManager.ActionType.LEAVE);
         user.setSpectator(false);
         user.removeScoreboard();
-        a.getPlotManager().getPlot(p).fullyResetPlot();
+        if(a.getPlotManager().getPlot(p) != null) {
+            a.getPlotManager().getPlot(p).fullyResetPlot();
+        }
 
         p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
         p.setFoodLevel(20);
