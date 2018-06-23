@@ -1,4 +1,4 @@
-![](https://i.imgur.com/A3B216G.png)
+![](https://i.imgur.com/dplq0h0.png)
 # BuildBattle [![](https://img.shields.io/badge/javadocs-latest-green.svg)](https://plajer-lair.github.io/BuildBattle/) [![](https://img.shields.io/badge/wiki-click-blue.svg)](https://github.com/Plajer/BuildBattle/wiki)
 BuildBattle is a Minecraft minigame designed for small and big servers. This minigame is unique and very configurable, 100% free and open source! 
 
