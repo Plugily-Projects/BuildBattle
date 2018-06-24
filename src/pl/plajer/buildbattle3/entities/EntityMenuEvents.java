@@ -61,6 +61,7 @@ public class EntityMenuEvents implements Listener {
         if(arena == null) return;
         event.setCancelled(true);
         if(arena.getArenaState() != ArenaState.IN_GAME || arena.isVoting()) return;
+        if(event.getRightClicked().getCustomName() == null) return;
         EntityType type = event.getRightClicked().getType();
         if(type == EntityType.ITEM_FRAME || type == EntityType.ARMOR_STAND || type == EntityType.DROPPED_ITEM || type == EntityType.PRIMED_TNT
                 || type == EntityType.FALLING_BLOCK || type == EntityType.COMPLEX_PART || type == EntityType.ENDER_CRYSTAL ||

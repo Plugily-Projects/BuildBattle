@@ -149,7 +149,7 @@ public class Plot {
         for(Entity entity : getCenter().getWorld().getEntities()) {
             if(isInPlotRange(entity.getLocation(), 3)) {
                 if(JavaPlugin.getPlugin(Main.class).getServer().getPluginManager().isPluginEnabled("Citizens")) {
-                    if(CitizensAPI.getNPCRegistry().isNPC(entity)) return;
+                    if(CitizensAPI.getNPCRegistry().isNPC(entity)) continue;
                 }
                 if(entity.getType() != EntityType.PLAYER) {
                     entity.remove();
