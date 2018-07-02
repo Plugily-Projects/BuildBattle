@@ -342,21 +342,6 @@ public class GameEvents implements Listener {
         }
     }
 
-    @EventHandler
-    public void onChatIngame(AsyncPlayerChatEvent event) {
-        if(ArenaRegistry.getArena(event.getPlayer()) == null) {
-            for(Arena arena : ArenaRegistry.getArenas()) {
-                for(Player player : arena.getPlayers()) {
-                    event.getRecipients().remove(player);
-                }
-            }
-            return;
-        }
-        Arena arena = ArenaRegistry.getArena(event.getPlayer());
-        event.getRecipients().clear();
-        event.getRecipients().addAll(new ArrayList<>(arena.getPlayers()));
-    }
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPreCommand(PlayerCommandPreprocessEvent event) {
         if(ArenaRegistry.getArena(event.getPlayer()) == null) return;
