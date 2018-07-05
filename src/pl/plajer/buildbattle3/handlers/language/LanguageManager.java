@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle3.language;
+package pl.plajer.buildbattle3.handlers.language;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

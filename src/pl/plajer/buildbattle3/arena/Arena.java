@@ -35,7 +35,7 @@ import pl.plajer.buildbattle3.buildbattleapi.BBGameEndEvent;
 import pl.plajer.buildbattle3.buildbattleapi.BBGameStartEvent;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.handlers.MessageHandler;
-import pl.plajer.buildbattle3.language.LanguageManager;
+import pl.plajer.buildbattle3.handlers.language.LanguageManager;
 import pl.plajer.buildbattle3.plots.Plot;
 import pl.plajer.buildbattle3.plots.PlotManager;
 import pl.plajer.buildbattle3.user.User;
@@ -247,8 +247,14 @@ public class Arena extends BukkitRunnable {
                 }
                 if((getTimer() == (4 * 60) || getTimer() == (3 * 60) || getTimer() == 5 * 60 || getTimer() == 30 || getTimer() == 2 * 60 || getTimer() == 60 || getTimer() == 15) && !this.isVoting()) {
                     String message = ChatManager.colorMessage("In-Game.Messages.Time-Left-To-Build").replaceAll("%FORMATTEDTIME%", Util.formatIntoMMSS(getTimer()));
+                    String subtitle = ChatManager.colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", Util.formatIntoMMSS(getTimer()));
                     for(Player p : getPlayers()) {
                         p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
+                        if(plugin.is1_9_R1()) {
+                            p.sendTitle(null, subtitle);
+                        } else {
+                            p.sendTitle(null, subtitle, 5, 30, 5);
+                        }
                     }
                 }
                 if(getTimer() != 0 && !receivedVoteItems) {
@@ -385,8 +391,10 @@ public class Arena extends BukkitRunnable {
 
     private void giveRewards() {
         if(WIN_COMMANDS_ENABLED) {
-            for(String string : ConfigPreferences.getWinCommands()) {
-                plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), string.replaceAll("%PLAYER%", plugin.getServer().getOfflinePlayer(topList.get(1)).getName()));
+            if(topList.get(1) != null) {
+                for(String string : ConfigPreferences.getWinCommands()) {
+                    plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), string.replaceAll("%PLAYER%", plugin.getServer().getOfflinePlayer(topList.get(1)).getName()));
+                }
             }
         }
         if(SECOND_PLACE_COMMANDS_ENABLED) {

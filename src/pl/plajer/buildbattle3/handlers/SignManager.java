@@ -38,7 +38,7 @@ import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaManager;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.arena.ArenaState;
-import pl.plajer.buildbattle3.language.LanguageManager;
+import pl.plajer.buildbattle3.handlers.language.LanguageManager;
 import pl.plajer.buildbattle3.utils.Util;
 
 import java.util.HashMap;

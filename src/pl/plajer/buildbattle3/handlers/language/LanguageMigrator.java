@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle3.language;
+package pl.plajer.buildbattle3.handlers.language;
 
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
  */
 public class LanguageMigrator {
 
-    public static final int LANGUAGE_FILE_VERSION = 2;
+    public static final int LANGUAGE_FILE_VERSION = 3;
     public static final int CONFIG_FILE_VERSION = 1;
 
     private static Main plugin = JavaPlugin.getPlugin(Main.class);
@@ -103,6 +103,7 @@ public class LanguageMigrator {
                         "        - \"&f&lBuildBattle\"\r\n        - \"%place_one%\"\r\n        - \"%place_two%\"        - \"%place_three%\"\r\n        - \"&a&l&m-------------------------------------------\"\r\n" +
                         "      Place-One: \"&e1st Winner &7- %player% (Plot %number%)\"\r\n      Place-Two: \"&62nd Winner &7- %player% (Plot %number%)\"\r\n" +
                         "      Place-Three: \"&c3rd Winner &7- %player% (Plot %number%)\"\r\n      Summary-Other-Place: \"&aYou became &7%number%th\"");
+                LanguageMigrator.insertAfterLine(file, "Time-Left-To-Build:", "    Time-Left-Subtitle: \"&c%FORMATTEDTIME% seconds left\"");
                 break;
             case 1:
                 LanguageMigrator.insertAfterLine(file, "Particles-Placed:", "  Main-Command:\r\n    Header: \"&6----------------{BuildBattle commands}----------\"\r\n" +
@@ -113,6 +114,10 @@ public class LanguageMigrator {
                         "        - \"&f&lBuildBattle\"\r\n        - \"%place_one%\"\r\n        - \"%place_two%\"        - \"%place_three%\"\r\n        - \"&a&l&m-------------------------------------------\"\r\n" +
                         "      Place-One: \"&e1st Winner &7- %player% (Plot %number%)\"\r\n      Place-Two: \"&62nd Winner &7- %player% (Plot %number%)\"\r\n" +
                         "      Place-Three: \"&c3rd Winner &7- %player% (Plot %number%)\"\r\n      Summary-Other-Place: \"&aYou became &7%number%th\"");
+                LanguageMigrator.insertAfterLine(file, "Time-Left-To-Build:", "    Time-Left-Subtitle: \"&c%FORMATTEDTIME% seconds left\"");
+                break;
+            case 2:
+                LanguageMigrator.insertAfterLine(file, "Time-Left-To-Build:", "    Time-Left-Subtitle: \"&c%FORMATTEDTIME% seconds left\"");
                 break;
         }
         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] System notify >> Language file updated! Nice!");

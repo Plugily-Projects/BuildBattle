@@ -23,7 +23,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import pl.plajer.buildbattle3.arena.Arena;
-import pl.plajer.buildbattle3.language.LanguageManager;
+import pl.plajer.buildbattle3.handlers.language.LanguageManager;
 import pl.plajer.buildbattle3.utils.Util;
 
 /**

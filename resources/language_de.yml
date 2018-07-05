@@ -106,6 +106,7 @@ In-Game:
     NPC-Created: "&aBoden-NPC wurde erfolgreich erstellt!"
     Install-Citizens: "&cBitte installiere Citiziens Plugin um NPC zu erstellen!"
   Messages:
+    Time-Left-Subtitle: "&c%FORMATTEDTIME% Sekunden noch"
     Time-Left-To-Build: "&6%FORMATTEDTIME% &7Zeit übrig zum Bauen!"
     Plot-Leave-Error: "&cDu kannst nicht aus deinen Plot gehen!"
     Already-Playing: "&cDu spielst bereits!"
@@ -181,5 +182,5 @@ Signs:
     - "%mapname%"
     - "&5[%playersize%/%maxplayers%]"
 
-File-Version-Do-Not-Edit: 2
-Translation-Version: 2
+File-Version-Do-Not-Edit: 3
+Translation-Version: 3

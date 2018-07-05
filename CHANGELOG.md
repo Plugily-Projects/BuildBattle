@@ -1,5 +1,9 @@
 ## BuildBattle 3 changelog
 
+### 3.1.2 Release (05.07.2018)
+* Fixed error when 1st winner UUID was null (somehow)
+* Added subtitle "x seconds left" in game
+
 ### 3.1.0 Release (08.06.2018)
 * New good looking summary message at the end of the game
 * Added game sign block states

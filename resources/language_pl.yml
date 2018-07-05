@@ -98,6 +98,7 @@ In-Game:
     NPC-Created: "&aNPC zostal stworzony pomyslnie!"
     Install-Citizens: "&cZainstaluj wpierw plugin Citizens by moc tworzyc NPC!"
   Messages:
+    Time-Left-Subtitle: "&cPozostalo %FORMATTEDTIME% sekund"
     Time-Left-To-Build: "&7Pozostalo &6%FORMATTEDTIME% &7czasu do zakonczenia budowy!"
     Plot-Leave-Error: "&cNie mozesz wyleciec z dzialki!"
     Already-Playing: "&cJuz grasz! Mozesz wyjsc wpisujac /bb leave"
@@ -173,5 +174,5 @@ Signs:
     - "%mapname%"
     - "&5[%playersize%/%maxplayers%]"
 
-File-Version-Do-Not-Edit: 2
-Translation-Version: 2
+File-Version-Do-Not-Edit: 3
+Translation-Version: 3

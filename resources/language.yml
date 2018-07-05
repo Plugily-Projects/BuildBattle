@@ -99,6 +99,7 @@ In-Game:
     NPC-Created: "&aFloor NPC created successfully!"
     Install-Citizens: "&cPlease install Citizens plugin first to create NPC's!"
   Messages:
+    Time-Left-Subtitle: "&c%FORMATTEDTIME% seconds left"
     Time-Left-To-Build: "&6%FORMATTEDTIME% &7time left to build!"
     Plot-Leave-Error: "&cYou can't fly out of the plot!"
     Already-Playing: "&cYou're playing already!"
@@ -175,4 +176,4 @@ Signs:
     - "&5[%playersize%/%maxplayers%]"
 
 # Do not modify!
-File-Version-Do-Not-Edit: 2
+File-Version-Do-Not-Edit: 3
