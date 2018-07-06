@@ -564,8 +564,8 @@ public class Arena extends BukkitRunnable {
                                         .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(2).get(0)).getPoints())));
                             } else {
                                 message = message.replace("%place_two%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Two")
-                                        .replace("%player%", formatTeamMates(topList.get(2))
-                                        .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(2).get(0)).getPoints()))));
+                                        .replace("%player%", formatTeamMates(topList.get(2)))
+                                        .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(2).get(0)).getPoints())));
                             }
                         } else {
                             message = message.replace("%place_two%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Two")
