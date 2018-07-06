@@ -27,13 +27,14 @@ import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Tom on 17/08/2015.
  */
 public class VoteItems {
 
-    private static HashMap<ItemStack, Integer> voteItems = new HashMap<>();
+    private static Map<ItemStack, Integer> voteItems = new HashMap<>();
     private static FileConfiguration config = ConfigurationManager.getConfig("voteItems");
 
     public static void giveVoteItems(Player player) {
@@ -52,17 +53,16 @@ public class VoteItems {
                 itemMeta.setDisplayName(ChatManager.colorRawMessage(config.getString(s + ".displayname")));
                 item.setItemMeta(itemMeta);
                 voteItems.put(item, Integer.parseInt(s));
-
             }
         }
     }
 
     public static int getPoints(ItemStack itemStack) {
-        for(ItemStack voteitem : voteItems.keySet()) {
-            if(itemStack.getType() == voteitem.getType() && itemStack.getItemMeta().getDisplayName().equalsIgnoreCase(voteitem.getItemMeta().getDisplayName()))
-                return voteItems.get(voteitem);
+        for(ItemStack voteItem : voteItems.keySet()) {
+            if(itemStack.getType() == voteItem.getType() && itemStack.getItemMeta().getDisplayName().equalsIgnoreCase(voteItem.getItemMeta().getDisplayName()))
+                return voteItems.get(voteItem) + 1;
         }
-        return 0;
+        return 1;
     }
 
 }

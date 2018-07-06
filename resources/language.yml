@@ -123,9 +123,9 @@ In-Game:
         - "%place_two%"
         - "%place_three%"
         - "&a&l&m-------------------------------------------"
-      Place-One: "&e1st Winner &7- %player% (Plot %number%)"
-      Place-Two: "&62nd Winner &7- %player% (Plot %number%)"
-      Place-Three: "&c3rd Winner &7- %player% (Plot %number%)"
+      Place-One: "&e1st Winner &7- %player% (%number% points)"
+      Place-Two: "&62nd Winner &7- %player% (%number% points)"
+      Place-Three: "&c3rd Winner &7- %player% (%number% points)"
       Summary-Other-Place: "&aYou became &7%number%th"
     Game-End-Messages:
       Only-You-Playing: "&7You're the only player left. You'll be teleported to the lobby."

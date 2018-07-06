@@ -1,27 +1,27 @@
 # Vote items configuration
 # Number mean slot position, material, data and displayname are obvious
 
+'0':
+  material: 159
+  displayname: "&4&lSUPER POOP"
+  data: 14
+'1':
+  material: 172
+  displayname: "&c&lPOOP"
+  data: 0
 '2':
   material: 159
-  displayname: "§cPoop"
-  data: 14
+  displayname: "&a&lOK"
+  data: 5
 '3':
   material: 159
-  displayname: "§cNot good"
-  data: 6
+  displayname: "&2&lGOOD"
+  data: 13
 '4':
   material: 159
-  displayname: "§eOk"
-  data: 1
+  displayname: "&5&lEPIC"
+  data: 11
 '5':
   material: 159
-  displayname: "§aGood"
-  data: 13
-'6':
-  material: 159
-  displayname: "§aAwesome"
+  displayname: "&6&lLEGENDARY"
   data: 4
-'7':
-  material: 159
-  displayname: "§5EPIC"
-  data: 10

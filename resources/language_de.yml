@@ -130,9 +130,9 @@ In-Game:
         - "%place_two%"
         - "%place_three%"
         - "&a&l&m-------------------------------------------"
-      Place-One: "&e1er Gewinner &7- %player% (Plot %number%)"
-      Place-Two: "&62er Gewinner &7- %player% (Plot %number%)"
-      Place-Three: "&c3er Gewinner &7- %player% (Plot %number%)"
+      Place-One: "&e1er Gewinner &7- %player% (%number% Punkte)"
+      Place-Two: "&62er Gewinner &7- %player% (%number% Punkte)"
+      Place-Three: "&c3er Gewinner &7- %player% (%number% Punkte)"
       Summary-Other-Place: "&aDu bist &7%number%er geworden!"
     Game-End-Messages:
       Only-You-Playing: "&7Du bist der einzigste übrige Spieler. Du wirst zur Lobby teleportiert!"
