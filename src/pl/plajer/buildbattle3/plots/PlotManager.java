@@ -49,14 +49,18 @@ public class PlotManager {
 
     public void distributePlots() {
         List<Player> players = new ArrayList<>(buildInstance.getPlayers());
-        for(Plot buildPlot : plots) {
-            if(!players.isEmpty() && buildPlot.getOwner() == null && getPlot(players.get(0)) == null) {
-                buildPlot.setOwner(players.get(0).getUniqueId());
-                UserManager.getUser(players.get(0).getUniqueId()).setObject(buildPlot, "plot");
+        int times = 1;
+        if(buildInstance.getArenaType() == Arena.ArenaType.TEAM) times++;
+        for(int i = 0; i < times; i++) {
+            for(Plot buildPlot : plots) {
+                if(!players.isEmpty() && buildPlot.getOwners() == null || buildPlot.getOwners().isEmpty() && getPlot(players.get(0)) == null) {
+                    buildPlot.addOwner(players.get(0).getUniqueId());
+                    UserManager.getUser(players.get(0).getUniqueId()).setObject(buildPlot, "plot");
 
-                players.remove(0);
-            } else {
-                break;
+                    players.remove(0);
+                } else {
+                    break;
+                }
             }
         }
         if(!players.isEmpty()) {
@@ -68,8 +72,8 @@ public class PlotManager {
 
     public Plot getPlot(Player player) {
         for(Plot buildPlot : plots) {
-            if(buildPlot.getOwner() != null) {
-                if(buildPlot.getOwner() == player.getUniqueId()) return buildPlot;
+            if(buildPlot.getOwners() != null || !buildPlot.getOwners().isEmpty()) {
+                if(buildPlot.getOwners().contains(player.getUniqueId())) return buildPlot;
             }
         }
         return null;
@@ -77,8 +81,8 @@ public class PlotManager {
 
     public Plot getPlot(UUID uuid) {
         for(Plot buildPlot : plots) {
-            if(buildPlot.getOwner() != null) {
-                if(buildPlot.getOwner().equals(uuid)) return buildPlot;
+            if(buildPlot.getOwners() != null || !buildPlot.getOwners().isEmpty()) {
+                if(buildPlot.getOwners().contains(uuid)) return buildPlot;
             }
         }
         return null;
@@ -104,12 +108,14 @@ public class PlotManager {
 
     public void teleportToPlots() {
         for(Plot buildPlot : plots) {
-            if(buildPlot.getOwner() != null) {
+            if(buildPlot.getOwners() != null || !buildPlot.getOwners().isEmpty()) {
                 Location tploc = buildPlot.getCenter();
                 while(tploc.getBlock().getType() != Material.AIR) tploc = tploc.add(0, 1, 0);
-                Player player = Bukkit.getServer().getPlayer(buildPlot.getOwner());
-                if(player != null) {
-                    player.teleport(buildPlot.getCenter());
+                for(UUID u : buildPlot.getOwners()) {
+                    Player player = Bukkit.getServer().getPlayer(u);
+                    if(player != null) {
+                        player.teleport(buildPlot.getCenter());
+                    }
                 }
             }
         }

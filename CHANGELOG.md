@@ -1,5 +1,9 @@
 ## BuildBattle 3 changelog
 
+### 3.2.0 Beta (06.07.2018)
+* Added video tutorial link while creating new arena
+* Added new game mode: TEAM
+
 ### 3.1.2 Release (05.07.2018)
 * Fixed error when 1st winner UUID was null (somehow)
 * Added subtitle "x seconds left" in game

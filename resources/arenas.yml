@@ -7,4 +7,6 @@ instances:
     maximumplayers: 10
     mapname: mapname
     world: worldname
+    gametype: solo
+    isdone: false
     signs: {}

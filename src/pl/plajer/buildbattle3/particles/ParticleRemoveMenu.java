@@ -58,7 +58,7 @@ public class ParticleRemoveMenu {
         player.openInventory(inventory);
     }
 
-    public static void onClick(Inventory inventory, ItemStack itemStack, Plot buildPlot) {
+    public static void onClick(Player p, Inventory inventory, ItemStack itemStack, Plot buildPlot) {
         List<String> lore = itemStack.getItemMeta().getLore();
         double x = 0, y = 0, z = 0;
         for(String string : lore) {
@@ -75,9 +75,9 @@ public class ParticleRemoveMenu {
         for(Location location : buildPlot.getParticles().keySet()) {
             if(Math.round(location.getX()) == x && Math.round(location.getY()) == y && Math.round(location.getZ()) == z) {
                 buildPlot.getParticles().remove(location);
-                Bukkit.getServer().getPlayer(buildPlot.getOwner()).sendMessage(ChatManager.colorMessage("In-Game.Particle-Removed"));
+                p.sendMessage(ChatManager.colorMessage("In-Game.Particle-Removed"));
                 inventory.remove(itemStack);
-                Bukkit.getServer().getPlayer(buildPlot.getOwner()).updateInventory();
+                p.updateInventory();
                 break;
             }
         }

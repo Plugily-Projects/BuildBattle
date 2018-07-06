@@ -293,6 +293,8 @@ public class MainCommand implements CommandExecutor {
             player.sendMessage(ChatColor.YELLOW + "      Instance " + args[1] + " created!");
             player.sendMessage("");
             player.sendMessage(ChatColor.GREEN + "Edit this arena via " + ChatColor.GOLD + "/bb " + args[1] + " edit" + ChatColor.GREEN + "!");
+            player.sendMessage(ChatColor.GOLD + "Don't know where to start? Check out tutorial video:");
+            player.sendMessage(ChatColor.GOLD + "https://bit.ly/2Nuwd0s");
             player.sendMessage(ChatColor.BOLD + "------------------------------------------- ");
         }
     }
@@ -307,6 +309,7 @@ public class MainCommand implements CommandExecutor {
         config.set(path + "mapname", ID);
         config.set(path + "signs", new ArrayList<>());
         config.createSection(path + "plots");
+        config.set(path + "gametype", "SOLO");
         config.set(path + "isdone", false);
         config.set(path + "world", config.getString("instances.default.world"));
         ConfigurationManager.saveConfig(config, "arenas");
@@ -318,6 +321,7 @@ public class MainCommand implements CommandExecutor {
         arena.setMapName(ConfigurationManager.getConfig("arenas").getString(path + "mapname"));
         arena.setLobbyLocation(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString(path + "lobbylocation")));
         arena.setEndLocation(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString(path + "Endlocation")));
+        arena.setArenaType(Arena.ArenaType.valueOf(ConfigurationManager.getConfig("arenas").getString(path + "gametype").toUpperCase()));
         arena.setReady(false);
         ArenaRegistry.registerArena(arena);
 

@@ -64,7 +64,7 @@ public class Arena extends BukkitRunnable {
     public static Main plugin;
     private static List<String> themes = new ArrayList<>();
     private static List<Integer> blacklist = new ArrayList<>();
-    private Map<Integer, UUID> topList = new HashMap<>();
+    private Map<Integer, List<UUID>> topList = new HashMap<>();
     private String theme = "Theme";
     private PlotManager plotManager;
     private boolean receivedVoteItems;
@@ -94,6 +94,7 @@ public class Arena extends BukkitRunnable {
     private Location endLoc = null;
     private Set<UUID> players = new HashSet<>();
     private BossBar gameBar;
+    private ArenaType arenaType;
 
     public Arena(String ID) {
         gameState = ArenaState.WAITING_FOR_PLAYERS;
@@ -166,6 +167,14 @@ public class Arena extends BukkitRunnable {
 
     Queue<UUID> getQueue() {
         return queue;
+    }
+
+    public ArenaType getArenaType() {
+        return arenaType;
+    }
+
+    public void setArenaType(ArenaType arenaType) {
+        this.arenaType = arenaType;
     }
 
     public void run() {
@@ -301,7 +310,7 @@ public class Arena extends BukkitRunnable {
                         }
                         calculateResults();
                         announceResults();
-                        Plot winnerPlot = getPlotManager().getPlot(topList.get(1));
+                        Plot winnerPlot = getPlotManager().getPlot(topList.get(1).get(0));
 
                         for(Player player : getPlayers()) {
                             player.teleport(winnerPlot.getTeleportLocation());
@@ -393,21 +402,24 @@ public class Arena extends BukkitRunnable {
         if(WIN_COMMANDS_ENABLED) {
             if(topList.get(1) != null) {
                 for(String string : ConfigPreferences.getWinCommands()) {
-                    plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), string.replaceAll("%PLAYER%", plugin.getServer().getOfflinePlayer(topList.get(1)).getName()));
+                    for(UUID u : topList.get(1))
+                        plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), string.replaceAll("%PLAYER%", plugin.getServer().getOfflinePlayer(u).getName()));
                 }
             }
         }
         if(SECOND_PLACE_COMMANDS_ENABLED) {
             if(topList.get(2) != null) {
                 for(String string : ConfigPreferences.getSecondPlaceCommands()) {
-                    plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), string.replaceAll("%PLAYER%", plugin.getServer().getOfflinePlayer(topList.get(2)).getName()));
+                    for(UUID u : topList.get(2))
+                        plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), string.replaceAll("%PLAYER%", plugin.getServer().getOfflinePlayer(u).getName()));
                 }
             }
         }
         if(THIRD_PLACE_COMMANDS_ENABLED) {
             if(topList.get(3) != null) {
                 for(String string : ConfigPreferences.getThirdPlaceCommands()) {
-                    plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), string.replaceAll("%PLAYER%", plugin.getServer().getOfflinePlayer(topList.get(3)).getName()));
+                    for(UUID u : topList.get(3))
+                        plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), string.replaceAll("%PLAYER%", plugin.getServer().getOfflinePlayer(u).getName()));
                 }
             }
         }
@@ -422,7 +434,7 @@ public class Arena extends BukkitRunnable {
 
     private Integer getRang(Player player) {
         for(int i : topList.keySet()) {
-            if(topList.get(i).equals(player.getUniqueId())) {
+            if(topList.get(i).contains(player.getUniqueId())) {
                 return i;
             }
         }
@@ -530,51 +542,98 @@ public class Arena extends BukkitRunnable {
         votingPlot = buildPlot;
     }
 
+    //fixme wtf
     private void announceResults() {
         for(Player player : getPlayers()) {
             for(String summary : LanguageManager.getLocaleFile().getStringList("In-Game.Messages.Voting-Messages.Summary-Message")) {
                 String message = summary;
-                if(message.contains("%place_one%")) {
-                    message = message.replace("%place_one%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-One")
-                            .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(1)).getName())
-                            .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(1)).getPoints())));
-                }
-                if(message.contains("%place_two%")) {
-                    if(topList.containsKey(2) && topList.get(2) != null) {
-                        if(getPlotManager().getPlot(topList.get(1)).getPoints() == getPlotManager().getPlot(topList.get(2)).getPoints()) {
-                            message = message.replace("%place_two%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Two")
-                                    .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(2)).getName())
-                                    .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(2)).getPoints())));
-                        } else {
-                            message = message.replace("%place_two%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Two")
-                                    .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(2)).getName())
-                                    .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(2)).getPoints())));
-                        }
-                    } else {
-                        message = message.replace("%place_two%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Two")
-                                .replace("%player%", "None")
-                                .replace("%number%", "none"));
+                if(arenaType == ArenaType.TEAM) {
+                    if(message.contains("%place_one%")) {
+                        message = message.replace("%place_one%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-One")
+                                .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(1).get(0)).getName())
+                                .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(1).get(0)).getPoints())));
                     }
-                }
-                if(message.contains("%place_three%")) {
-                    if(topList.containsKey(3) && topList.get(3) != null) {
-                        if(getPlotManager().getPlot(topList.get(1)).getPoints() == getPlotManager().getPlot(topList.get(3)).getPoints()) {
-                            message = message.replace("%place_three%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Three")
-                                    .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(3)).getName())
-                                    .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(3)).getPoints())));
-                        } else if(getPlotManager().getPlot(topList.get(2)).getPoints() == getPlotManager().getPlot(topList.get(3)).getPoints()) {
-                            message = message.replace("%place_three%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Three")
-                                    .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(3)).getName())
-                                    .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(3)).getPoints())));
+                    if(message.contains("%place_two%")) {
+                        if(topList.containsKey(2) && topList.get(2) != null) {
+                            if(getPlotManager().getPlot(topList.get(1).get(0)).getPoints() == getPlotManager().getPlot(topList.get(2).get(0)).getPoints()) {
+                                message = message.replace("%place_two%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Two")
+                                        .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(2).get(0)).getName() + " & " + plugin.getServer().getOfflinePlayer(topList.get(2).get(1)).getName())
+                                        .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(2).get(0)).getPoints())));
+                            } else {
+                                message = message.replace("%place_two%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Two")
+                                        .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(2).get(0)).getName() + " & " + plugin.getServer().getOfflinePlayer(topList.get(2).get(1)).getName())
+                                        .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(2).get(0)).getPoints())));
+                            }
+                        } else {
+                            message = message.replace("%place_two%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Two")
+                                    .replace("%player%", "None")
+                                    .replace("%number%", "none"));
+                        }
+                    }
+                    if(message.contains("%place_three%")) {
+                        if(topList.containsKey(3) && topList.get(3) != null) {
+                            if(getPlotManager().getPlot(topList.get(1).get(0)).getPoints() == getPlotManager().getPlot(topList.get(3).get(0)).getPoints()) {
+                                message = message.replace("%place_three%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Three")
+                                        .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(3).get(0)).getName()  + " & " + plugin.getServer().getOfflinePlayer(topList.get(3).get(1)).getName())
+                                        .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(3).get(0)).getPoints())));
+                            } else if(getPlotManager().getPlot(topList.get(2).get(0)).getPoints() == getPlotManager().getPlot(topList.get(3).get(0)).getPoints()) {
+                                message = message.replace("%place_three%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Three")
+                                        .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(3).get(0)).getName()  + " & " + plugin.getServer().getOfflinePlayer(topList.get(3).get(1)).getName())
+                                        .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(3).get(0)).getPoints())));
+                            } else {
+                                message = message.replace("%place_three%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Three")
+                                        .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(3).get(0)).getName()  + " & " + plugin.getServer().getOfflinePlayer(topList.get(3).get(1)).getName())
+                                        .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(3).get(0)).getPoints())));
+                            }
                         } else {
                             message = message.replace("%place_three%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Three")
-                                    .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(3)).getName())
-                                    .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(3)).getPoints())));
+                                    .replace("%player%", "None")
+                                    .replace("%number%", "none"));
                         }
-                    } else {
-                        message = message.replace("%place_three%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Three")
-                                .replace("%player%", "None")
-                                .replace("%number%", "none"));
+                    }
+                } else if(arenaType == ArenaType.SOLO){
+                    if(message.contains("%place_one%")) {
+                        message = message.replace("%place_one%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-One")
+                                .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(1).get(0)).getName())
+                                .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(1).get(0)).getPoints())));
+                    }
+                    if(message.contains("%place_two%")) {
+                        if(topList.containsKey(2) && topList.get(2) != null) {
+                            if(getPlotManager().getPlot(topList.get(1).get(0)).getPoints() == getPlotManager().getPlot(topList.get(2).get(0)).getPoints()) {
+                                message = message.replace("%place_two%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Two")
+                                        .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(2).get(0)).getName())
+                                        .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(2).get(0)).getPoints())));
+                            } else {
+                                message = message.replace("%place_two%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Two")
+                                        .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(2).get(0)).getName())
+                                        .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(2).get(0)).getPoints())));
+                            }
+                        } else {
+                            message = message.replace("%place_two%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Two")
+                                    .replace("%player%", "None")
+                                    .replace("%number%", "none"));
+                        }
+                    }
+                    if(message.contains("%place_three%")) {
+                        if(topList.containsKey(3) && topList.get(3) != null) {
+                            if(getPlotManager().getPlot(topList.get(1).get(0)).getPoints() == getPlotManager().getPlot(topList.get(3).get(0)).getPoints()) {
+                                message = message.replace("%place_three%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Three")
+                                        .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(3).get(0)).getName())
+                                        .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(3).get(0)).getPoints())));
+                            } else if(getPlotManager().getPlot(topList.get(2).get(0)).getPoints() == getPlotManager().getPlot(topList.get(3).get(0)).getPoints()) {
+                                message = message.replace("%place_three%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Three")
+                                        .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(3).get(0)).getName())
+                                        .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(3).get(0)).getPoints())));
+                            } else {
+                                message = message.replace("%place_three%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Three")
+                                        .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(3).get(0)).getName())
+                                        .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(3).get(0)).getPoints())));
+                            }
+                        } else {
+                            message = message.replace("%place_three%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Three")
+                                    .replace("%player%", "None")
+                                    .replace("%number%", "none"));
+                        }
                     }
                 }
                 MessageUtils.sendCenteredMessage(player, message);
@@ -582,17 +641,20 @@ public class Arena extends BukkitRunnable {
         }
         for(Integer rang : topList.keySet()) {
             if(topList.get(rang) != null) {
-                if(plugin.getServer().getPlayer(topList.get(rang)) != null) {
-                    if(rang > 3) {
-                        plugin.getServer().getPlayer(topList.get(rang)).sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Summary-Other-Place").replaceAll("%number%", String.valueOf(rang)));
-                    }
-                    if(rang == 1) {
-                        UserManager.getUser(plugin.getServer().getPlayer(topList.get(rang)).getUniqueId()).addInt("wins", 1);
-                        if(getPlotManager().getPlot(topList.get(rang)).getPoints() > UserManager.getUser(topList.get(rang)).getInt("highestwin")) {
-                            UserManager.getUser(plugin.getServer().getPlayer(topList.get(rang)).getUniqueId()).setInt("highestwin", getPlotManager().getPlot(topList.get(rang)).getPoints());
+                for(UUID u : topList.get(rang)) {
+                    Player p = plugin.getServer().getPlayer(u);
+                    if(p != null) {
+                        if(rang > 3) {
+                            p.sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Summary-Other-Place").replaceAll("%number%", String.valueOf(rang)));
                         }
-                    } else {
-                        UserManager.getUser(plugin.getServer().getPlayer(topList.get(rang)).getUniqueId()).addInt("loses", 1);
+                        if(rang == 1) {
+                            UserManager.getUser(p.getUniqueId()).addInt("wins", 1);
+                            if(getPlotManager().getPlot(u).getPoints() > UserManager.getUser(u).getInt("highestwin")) {
+                                UserManager.getUser(p.getUniqueId()).setInt("highestwin", getPlotManager().getPlot(u).getPoints());
+                            }
+                        } else {
+                            UserManager.getUser(p.getUniqueId()).addInt("loses", 1);
+                        }
                     }
                 }
             }
@@ -609,21 +671,21 @@ public class Arena extends BukkitRunnable {
             while(it.hasNext()) {
                 Map.Entry pair = (Map.Entry) it.next();
                 Integer rang = (Integer) pair.getKey();
-                if(topList.get(rang) == null || getPlotManager().getPlot(topList.get(rang)) == null) {
-                    topList.put(rang, buildPlot.getOwner());
+                if(topList.get(rang) == null || getPlotManager().getPlot(topList.get(rang).get(0)) == null) {
+                    topList.put(rang, buildPlot.getOwners());
                     break;
                 }
-                if(i > getPlotManager().getPlot(topList.get(rang)).getPoints()) {
-                    insertScore(rang, buildPlot.getOwner());
+                if(i > getPlotManager().getPlot(topList.get(rang).get(0)).getPoints()) {
+                    insertScore(rang, buildPlot.getOwners());
                     break;
                 }
             }
         }
     }
 
-    private void insertScore(int rang, UUID uuid) {
-        UUID after = topList.get(rang);
-        topList.put(rang, uuid);
+    private void insertScore(int rang, List<UUID> uuids) {
+        List<UUID> after = topList.get(rang);
+        topList.put(rang, uuids);
         if(!(rang > 10) && after != null) insertScore(rang + 1, after);
     }
 
@@ -832,6 +894,10 @@ public class Arena extends BukkitRunnable {
 
     public void setEndLocation(Location endLoc) {
         this.endLoc = endLoc;
+    }
+
+    public enum ArenaType {
+        SOLO, TEAM
     }
 
 }

@@ -71,6 +71,7 @@ import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.OptionsMenu;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -96,7 +97,7 @@ public class GameEvents implements Listener {
         if(!event.getItem().hasItemMeta()) return;
         if(!event.getItem().getItemMeta().hasDisplayName()) return;
         if(!arena.isVoting()) return;
-        if(arena.getVotingPlot().getOwner() == event.getPlayer().getUniqueId()) {
+        if(arena.getVotingPlot().getOwners().contains(event.getPlayer().getUniqueId())) {
             event.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Cant-Vote-Own-Plot"));
             event.setCancelled(true);
             return;
@@ -295,7 +296,7 @@ public class GameEvents implements Listener {
             return;
         }
         if(e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Particle-Remove"))) {
-            ParticleRemoveMenu.onClick(e.getInventory(), e.getCurrentItem(), arena.getPlotManager().getPlot(player));
+            ParticleRemoveMenu.onClick((Player) e.getWhoClicked(), e.getInventory(), e.getCurrentItem(), arena.getPlotManager().getPlot(player));
             return;
         } else if(e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Players-Heads-Inventory-Name"))) {
             PlayerHeadsMenu.onClickInMainMenu(player, e.getCurrentItem());
@@ -390,7 +391,10 @@ public class GameEvents implements Listener {
                     }
                     if(buildplot.isInPlotRange(event.getEntity().getLocation(), 1)) {
                         if(buildplot.getEntities() >= ConfigPreferences.getMaxMobs()) {
-                            plugin.getServer().getPlayer(buildplot.getOwner()).sendMessage(ChatManager.colorMessage("In-Game.Max-Entities-Limit-Reached"));
+                            //todo maybe only for spawner player?
+                            for(UUID u : buildplot.getOwners()) {
+                                plugin.getServer().getPlayer(u).sendMessage(ChatManager.colorMessage("In-Game.Max-Entities-Limit-Reached"));
+                            }
                             event.setCancelled(true);
                             return;
                         } else {

@@ -32,7 +32,10 @@ import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -43,8 +46,8 @@ public class Plot {
     private Location maxPoint;
     private Location minPoint;
     private int points;
-    private UUID uuid;
-    private HashMap<Location, Particle> particles = new HashMap<>();
+    private List<UUID> uuids = new ArrayList<>();
+    private Map<Location, Particle> particles = new HashMap<>();
     private int entities = 0;
 
     public Plot() {}
@@ -62,7 +65,7 @@ public class Plot {
         entities--;
     }
 
-    public HashMap<Location, Particle> getParticles() {
+    public Map<Location, Particle> getParticles() {
         return particles;
     }
 
@@ -86,12 +89,16 @@ public class Plot {
         this.minPoint = minPoint;
     }
 
-    public UUID getOwner() {
-        return uuid;
+    public List<UUID> getOwners() {
+        return uuids;
     }
 
-    public void setOwner(UUID player) {
-        this.uuid = player;
+    public void setOwners(List<UUID> players) {
+        this.uuids = players;
+    }
+
+    public void addOwner(UUID player) {
+        this.uuids.add(player);
     }
 
     public void fullyResetPlot() {
@@ -110,11 +117,13 @@ public class Plot {
             }
         }
         changeFloor(Material.getMaterial(ConfigPreferences.getDefaultFloorMaterial()));
-        if(uuid != null) {
-            User user = UserManager.getUser(uuid);
-            user.setObject(null, "plot");
-            this.setOwner(null);
-            this.setPoints(0);
+        if(uuids != null || !uuids.isEmpty()) {
+            for(UUID u : uuids) {
+                User user = UserManager.getUser(u);
+                user.setObject(null, "plot");
+                this.setOwners(new ArrayList<>());
+                this.setPoints(0);
+            }
         }
         getParticles().clear();
         for(Entity entity : getCenter().getWorld().getEntities()) {

@@ -59,6 +59,7 @@ public class SetupInventory {
                 .lore(ChatColor.GRAY + "RIGHT click to increase")
                 .lore(ChatColor.DARK_GRAY + "(how many players are needed")
                 .lore(ChatColor.DARK_GRAY + "for game to start lobby countdown)")
+                .lore(ChatColor.RED + "Set it minimum 3 when using TEAM game type!!!")
                 .lore(isOptionDone("instances." + arena.getID() + ".minimumplayers"))
                 .build());
         int max = ConfigurationManager.getConfig("arenas").getInt("instances." + arena.getID() + ".maximumplayers");
@@ -76,6 +77,14 @@ public class SetupInventory {
                     .lore(ChatColor.DARK_GRAY + "(this will set target sign as game sign)")
                     .build());
         }
+        addItem(new ItemBuilder(new ItemStack(Material.WATCH))
+                .name(ChatColor.GOLD + "► Set game type")
+                .lore(ChatColor.GRAY + "Set game mode of build battle arena.")
+                .lore(ChatColor.GRAY + "Valid types: SOLO, TEAM, PRO")
+                .lore(ChatColor.GRAY + "SOLO - 1 player per plot")
+                .lore(ChatColor.GRAY + "TEAM - 2 players per plot")
+                .lore(ChatColor.GRAY + "PRO - unknown builders when voting, 1 player per plot")
+                .build());
         addItem(new ItemBuilder(new ItemStack(Material.NAME_TAG))
                 .name(ChatColor.GOLD + "► Set" + ChatColor.RED + " map name " + ChatColor.GOLD + "(currently: " + arena.getMapName() + ")")
                 .lore(ChatColor.GRAY + "Replace this name tag with named name tag.")
