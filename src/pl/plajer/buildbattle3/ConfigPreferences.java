@@ -32,7 +32,6 @@ public class ConfigPreferences {
 
     private static FileConfiguration config;
     private static HashMap<String, Integer> options = new HashMap<>();
-    private static Main main;
     private static List<String> winCommands = new ArrayList<>();
     private static List<String> endGameCommands = new ArrayList<>();
     private static List<String> secondPlaceCommands = new ArrayList<>();
@@ -41,7 +40,6 @@ public class ConfigPreferences {
 
     public ConfigPreferences(Main plugin) {
         config = plugin.getConfig();
-        ConfigPreferences.main = plugin;
     }
 
 

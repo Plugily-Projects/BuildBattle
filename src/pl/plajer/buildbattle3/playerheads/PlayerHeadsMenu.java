@@ -154,7 +154,7 @@ public class PlayerHeadsMenu {
         }
     }
 
-    public static void onClickInDeeperMenu(Player player, ItemStack itemStack, String menuname) {
+    public static void onClickInDeeperMenu(Player player, ItemStack itemStack) {
         player.getInventory().addItem(itemStack.clone());
         player.closeInventory();
     }

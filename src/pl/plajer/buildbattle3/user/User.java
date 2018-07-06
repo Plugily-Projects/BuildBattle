@@ -21,9 +21,6 @@ package pl.plajer.buildbattle3.user;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.ScoreboardManager;
-import pl.plajer.buildbattle3.Main;
-import pl.plajer.buildbattle3.arena.Arena;
-import pl.plajer.buildbattle3.arena.ArenaRegistry;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -33,7 +30,6 @@ import java.util.UUID;
  */
 public class User {
 
-    public static Main plugin;
     private ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
     private UUID uuid;
     private boolean spectator = false;
@@ -51,18 +47,6 @@ public class User {
 
     public void setObject(Object object, String s) {
         objects.put(s, object);
-    }
-
-    public Arena getArena() {
-        return ArenaRegistry.getArena(Bukkit.getPlayer(uuid));
-    }
-
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
     }
 
     public Player toPlayer() {

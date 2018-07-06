@@ -18,7 +18,6 @@
 
 package pl.plajer.buildbattle3.particles;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.inventory.ItemStack;
@@ -39,16 +38,7 @@ public class ParticleItem {
     private Particle effect;
     private String permission;
     private boolean enabled = true;
-    private Location location;
     private int slot;
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
 
     public String getPermission() {
         return permission;
@@ -64,10 +54,6 @@ public class ParticleItem {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-    }
-
-    public void setData(Byte data) {
-        this.data = data;
     }
 
     public Material getMaterial() {
@@ -86,16 +72,8 @@ public class ParticleItem {
         this.data = data.byteValue();
     }
 
-    public String[] getLore() {
-        return lore;
-    }
-
     public void setLore(List<String> lore) {
-        this.lore = lore.toArray(new String[lore.size()]);
-    }
-
-    public void setLore(String[] lore) {
-        this.lore = lore;
+        this.lore = lore.toArray(new String[0]);
     }
 
     public String getDisplayName() {

@@ -19,9 +19,7 @@
 package pl.plajer.buildbattle3.entities;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import pl.plajer.buildbattle3.handlers.ChatManager;
@@ -41,8 +39,6 @@ public class EntityItem {
     private Byte data = null;
     private String[] lore;
     private String displayName;
-    private Particle effect;
-    private Location location;
     private int slot;
     private String name;
 
@@ -93,18 +89,6 @@ public class EntityItem {
 
     }
 
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-    public void setData(Byte data) {
-        this.data = data;
-    }
-
     public Material getMaterial() {
         return material;
     }
@@ -121,16 +105,8 @@ public class EntityItem {
         this.data = data.byteValue();
     }
 
-    public String[] getLore() {
-        return lore;
-    }
-
     private void setLore(List<String> lore) {
-        this.lore = lore.toArray(new String[lore.size()]);
-    }
-
-    public void setLore(String[] lore) {
-        this.lore = lore;
+        this.lore = lore.toArray(new String[0]);
     }
 
     private String getDisplayName() {

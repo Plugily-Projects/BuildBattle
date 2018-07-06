@@ -47,7 +47,6 @@ import pl.plajer.buildbattle3.utils.Util;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -678,10 +677,7 @@ public class Arena extends BukkitRunnable {
         }
         for(Plot buildPlot : getPlotManager().getPlots()) {
             long i = buildPlot.getPoints();
-            Iterator it = topList.entrySet().iterator();
-            while(it.hasNext()) {
-                Map.Entry pair = (Map.Entry) it.next();
-                Integer rang = (Integer) pair.getKey();
+            for(int rang : topList.keySet()){
                 if(topList.get(rang) == null || getPlotManager().getPlot(topList.get(rang).get(0)) == null) {
                     topList.put(rang, buildPlot.getOwners());
                     break;

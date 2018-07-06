@@ -19,7 +19,6 @@
 package pl.plajer.buildbattle3.playerheads;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -43,7 +42,6 @@ class HeadsItem {
     private String displayName;
     private String permission;
     private boolean enabled = true;
-    private Location location;
     private int slot;
     private String owner;
     private String config;
@@ -79,20 +77,8 @@ class HeadsItem {
         return config;
     }
 
-    public int getSize() {
-        return size;
-    }
-
     public void setSize(int size) {
         this.size = size;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
     }
 
     public String getPermission() {
@@ -109,10 +95,6 @@ class HeadsItem {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-    }
-
-    public void setData(Byte data) {
-        this.data = data;
     }
 
     private Material getMaterial() {
@@ -141,12 +123,7 @@ class HeadsItem {
     }
 
     public void setLore(List<String> lore) {
-
-        this.lore = lore.toArray(new String[lore.size()]);
-    }
-
-    public void setLore(String[] lore) {
-        this.lore = lore;
+        this.lore = lore.toArray(new String[0]);
     }
 
     private String getDisplayName() {
@@ -180,7 +157,7 @@ class HeadsItem {
                     itemStack = Util.getPlayerHead(Bukkit.getOfflinePlayer(getOwner()));
                 }
             }
-            Util.setItemNameAndLore(itemStack, ChatManager.colorRawMessage(this.getDisplayName()), getLore().toArray(new String[getLore().size()]));
+            Util.setItemNameAndLore(itemStack, ChatManager.colorRawMessage(this.getDisplayName()), getLore().toArray(new String[0]));
 
             return itemStack;
         } else {

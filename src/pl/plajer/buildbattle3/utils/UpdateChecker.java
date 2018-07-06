@@ -70,9 +70,10 @@ public class UpdateChecker {
 
     private static String toReadable(String version) {
         String[] split = Pattern.compile(".", Pattern.LITERAL).split(version.replace("v", ""));
-        version = "";
+        StringBuilder versionBuilder = new StringBuilder();
         for(String s : split)
-            version += String.format("%4s", s);
+            versionBuilder.append(String.format("%4s", s));
+        version = versionBuilder.toString();
         return version;
     }
 }

@@ -18,7 +18,6 @@
 
 package pl.plajer.buildbattle3.items;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -37,9 +36,6 @@ public class SpecialItem {
     private Byte data = null;
     private String[] lore;
     private String displayName;
-    private String permission;
-    private boolean enabled = true;
-    private Location location;
     private int slot;
     private String name;
 
@@ -55,42 +51,11 @@ public class SpecialItem {
         FileConfiguration config = ConfigurationManager.getConfig("SpecialItems");
         SpecialItem particleItem = new SpecialItem(name);
         particleItem.setData(config.getInt(name + ".data"));
-        particleItem.setEnabled(config.getBoolean(name + ".enabled"));
         particleItem.setMaterial(org.bukkit.Material.getMaterial(config.getInt(name + ".material")));
         particleItem.setLore(config.getStringList(name + ".lore"));
         particleItem.setDisplayName(config.getString(name + ".displayname"));
-        particleItem.setPermission(config.getString(name + ".permission"));
         particleItem.setSlot(config.getInt(name + ".slot"));
         SpecialItemManager.addEntityItem(name, particleItem);
-
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-    public String getPermission() {
-        return permission;
-    }
-
-    private void setPermission(String permission) {
-        this.permission = permission;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    private void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public void setData(Byte data) {
-        this.data = data;
     }
 
     public Material getMaterial() {
@@ -109,16 +74,8 @@ public class SpecialItem {
         this.data = data.byteValue();
     }
 
-    public String[] getLore() {
-        return lore;
-    }
-
     private void setLore(List<String> lore) {
-        this.lore = lore.toArray(new String[lore.size()]);
-    }
-
-    public void setLore(String[] lore) {
-        this.lore = lore;
+        this.lore = lore.toArray(new String[0]);
     }
 
     private String getDisplayName() {

@@ -37,8 +37,6 @@ import org.bukkit.entity.Wolf;
 import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 
 import java.util.HashSet;
@@ -49,7 +47,6 @@ import java.util.HashSet;
 public class BuildBattleEntity {
 
     private LivingEntity entity;
-    private Main plugin = JavaPlugin.getPlugin(Main.class);
 
     public BuildBattleEntity(LivingEntity entity) {
         this.entity = entity;
@@ -84,10 +81,6 @@ public class BuildBattleEntity {
 
     private Boolean isSaddled() {
         return entity.getType() == EntityType.HORSE && ((Horse) entity).getInventory().getSaddle() == null;
-    }
-
-    public EntityType getType() {
-        return entity.getType();
     }
 
     private boolean isMoveable() {

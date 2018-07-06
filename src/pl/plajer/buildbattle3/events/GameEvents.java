@@ -39,7 +39,6 @@ import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -70,7 +69,6 @@ import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.OptionsMenu;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 /**
@@ -282,7 +280,7 @@ public class GameEvents implements Listener {
             PlayerHeadsMenu.onClickInMainMenu(player, e.getCurrentItem());
             return;
         } else if(PlayerHeadsMenu.getMenuNames().contains(e.getInventory().getName())) {
-            PlayerHeadsMenu.onClickInDeeperMenu(player, e.getCurrentItem(), e.getInventory().getName());
+            PlayerHeadsMenu.onClickInDeeperMenu(player, e.getCurrentItem());
             return;
         } else if(displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Players-Heads-Option"))) {
             PlayerHeadsMenu.openMenu(player);

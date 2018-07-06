@@ -49,14 +49,12 @@ import java.util.List;
  */
 public class MainCommand implements CommandExecutor {
 
-    private Main plugin;
     private AdminCommands adminCommands;
     private GameCommands gameCommands;
 
     public MainCommand() {}
 
     public MainCommand(Main plugin) {
-        this.plugin = plugin;
         TabCompletion completion = new TabCompletion();
         plugin.getCommand("buildbattle").setExecutor(this);
         plugin.getCommand("buildbattle").setTabCompleter(completion);

@@ -34,13 +34,7 @@ public class StringMatcher {
             if(o1.length() == o2.length()) {
                 return 0;
             }
-            if(o1.length() > o2.length()) {
-                return -1;
-            }
-            if(o1.length() < o2.length()) {
-                return 1;
-            }
-            return 0;
+            return Integer.compare(o2.length(), o1.length());
         });
         int baseLength = base.length();
 

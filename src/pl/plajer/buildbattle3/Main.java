@@ -253,7 +253,6 @@ public class Main extends JavaPlugin {
         new ConfigPreferences(this);
         new ChatManager();
         Arena.plugin = this;
-        User.plugin = this;
         PermissionManager.init();
         new SetupInventoryEvents(this);
         bungeeActivated = getConfig().getBoolean("BungeeActivated");

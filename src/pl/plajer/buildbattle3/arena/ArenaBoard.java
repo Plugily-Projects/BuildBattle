@@ -42,15 +42,12 @@ public class ArenaBoard {
 
     private final Scoreboard bukkitScoreboard;
     private final Objective obj;
-    private String title;
-    private Row[] rows = new Row[0];
     private List<Row> rowCache = new ArrayList<>();
     private boolean finished = false;
 
     public ArenaBoard(String name, String criterion, String title) {
         this.name = name;
         this.criterion = criterion;
-        this.title = title;
 
         this.bukkitScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         this.obj = this.bukkitScoreboard.registerNewObjective(name, criterion);
@@ -63,22 +60,6 @@ public class ArenaBoard {
         player.setScoreboard(this.bukkitScoreboard);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getCriterion() {
-        return criterion;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public Row[] getRows() {
-        return rows;
-    }
-
     public @Nullable
     Row addRow(String message) {
         if(this.finished) {
@@ -87,7 +68,7 @@ public class ArenaBoard {
         }
 
         try {
-            final Row row = new Row(this, message, rows.length);
+            final Row row = new Row(this, message);
 
             this.rowCache.add(row);
 
@@ -116,20 +97,17 @@ public class ArenaBoard {
             row.setMessage(row.message);
         }
 
-        this.rows = rowCache.toArray(new Row[rowCache.size()]);
     }
 
 
     public static class Row {
 
         private final ArenaBoard scoreboard;
-        private final int rowInScoreboard;
         private Team team;
         private String message;
 
-        public Row(ArenaBoard sb, String message, int row) {
+        public Row(ArenaBoard sb, String message) {
             this.scoreboard = sb;
-            this.rowInScoreboard = row;
             this.message = message;
         }
 
@@ -160,7 +138,7 @@ public class ArenaBoard {
                 lastChar = c;
             }
 
-            strs[1] = (cc1 != null ? cc1 : "") + "" + (cc2 != null ? cc2 : "") + str.substring(str.length() / 2);
+            strs[1] = cc1 + "" + (cc2 != null ? cc2 : "") + str.substring(str.length() / 2);
 
             return strs;
         }
@@ -180,18 +158,6 @@ public class ArenaBoard {
             }
 
             return null;
-        }
-
-        public ArenaBoard getScoreboard() {
-            return scoreboard;
-        }
-
-        public int getRowInScoreboard() {
-            return rowInScoreboard;
-        }
-
-        public String getMessage() {
-            return message;
         }
 
         public void setMessage(String message) {
