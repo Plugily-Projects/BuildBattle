@@ -209,7 +209,6 @@ public class GameEvents implements Listener {
         if(event.getClickedBlock().getType() == Material.TNT) {
             event.setCancelled(true);
         }
-
     }
 
     @EventHandler
@@ -220,25 +219,6 @@ public class GameEvents implements Listener {
         if(arena == null) return;
         event.setCancelled(true);
     }
-
-    @EventHandler
-    public void onGetDamaged(EntityDamageByEntityEvent event) {
-        if(event.getDamager().getType() != EntityType.PLAYER) return;
-        Player player = (Player) event.getDamager();
-        Arena arena = ArenaRegistry.getArena(player);
-        if(arena == null) return;
-        event.setCancelled(true);
-    }
-
-    @EventHandler
-    public void onDamage(EntityDamageEvent event) {
-        if(event.getEntity().getType() != EntityType.PLAYER) return;
-        Player player = (Player) event.getEntity();
-        Arena arena = ArenaRegistry.getArena(player);
-        if(arena == null) return;
-        event.setCancelled(true);
-    }
-
 
     @EventHandler
     public void onTreeGrow(StructureGrowEvent event) {
