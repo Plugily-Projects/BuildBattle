@@ -84,6 +84,7 @@ public class SetupInventory {
                 .lore(ChatColor.GRAY + "SOLO - 1 player per plot")
                 .lore(ChatColor.GRAY + "TEAM - 2 players per plot")
                 .lore(ChatColor.GRAY + "PRO - unknown builders when voting, 1 player per plot")
+                .lore(isOptionDoneList("instances." + arena.getID() + ".gametype"))
                 .build());
         addItem(new ItemBuilder(new ItemStack(Material.NAME_TAG))
                 .name(ChatColor.GOLD + "► Set" + ChatColor.RED + " map name " + ChatColor.GOLD + "(currently: " + arena.getMapName() + ")")

@@ -77,13 +77,13 @@ public class LanguageMigrator {
                         "# Don't modify\r\nVersion: 1\r\n\r\n# No way! You've reached the end! But... where's the dragon!?");
                 break;
         }
-        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] System notify >> Config updated, no comments were removed :)");
-        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] System notify >> You're using latest config file version! Nice!");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] [System notify] Config updated, no comments were removed :)");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] [System notify] You're using latest config file version! Nice!");
     }
 
     public static void languageFileUpdate() {
         if(LanguageManager.getDefaultLanguageMessage("File-Version-Do-Not-Edit").equals(String.valueOf(LANGUAGE_FILE_VERSION))) return;
-        Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[BuildBattle] System notify >> Your language file is outdated! Updating...");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[BuildBattle] [System notify] Your language file is outdated! Updating...");
 
         int version = Integer.valueOf(LanguageManager.getDefaultLanguageMessage("File-Version-Do-Not-Edit"));
         LanguageMigrator.updateLanguageVersionControl(version);
@@ -120,8 +120,8 @@ public class LanguageMigrator {
                 LanguageMigrator.insertAfterLine(file, "Time-Left-To-Build:", "    Time-Left-Subtitle: \"&c%FORMATTEDTIME% seconds left\"");
                 break;
         }
-        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] System notify >> Language file updated! Nice!");
-        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] System notify >> You're using latest language file version! Nice!");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] [System notify] Language file updated! Nice!");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] [System notify] You're using latest language file version! Nice!");
     }
 
     private static void removeLineFromFile(File file, String lineToRemove) {

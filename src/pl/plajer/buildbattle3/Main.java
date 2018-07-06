@@ -220,7 +220,9 @@ public class Main extends JavaPlugin {
         for(final Player player : getServer().getOnlinePlayers()) {
             Arena arena = ArenaRegistry.getArena(player);
             if(arena != null) {
-                arena.getGameBar().removePlayer(player);
+                if(ConfigPreferences.isBarEnabled()) {
+                    arena.getGameBar().removePlayer(player);
+                }
                 ArenaManager.leaveAttempt(player, arena);
             }
             final User user = UserManager.getUser(player.getUniqueId());

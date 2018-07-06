@@ -348,7 +348,10 @@ public class Arena extends BukkitRunnable {
                         if(plugin.isInventoryManagerEnabled()) {
                             plugin.getInventoryManager().loadInventory(player);
                         }
-                        plotManager.getPlot(player).fullyResetPlot();
+                        //plot might be already deleted by team mate in TEAM game mode
+                        if(plotManager.getPlot(player) != null) {
+                            plotManager.getPlot(player).fullyResetPlot();
+                        }
                     }
                     clearPlayers();
                     setGameState(ArenaState.RESTARTING);
@@ -557,12 +560,12 @@ public class Arena extends BukkitRunnable {
                         if(topList.containsKey(2) && topList.get(2) != null) {
                             if(getPlotManager().getPlot(topList.get(1).get(0)).getPoints() == getPlotManager().getPlot(topList.get(2).get(0)).getPoints()) {
                                 message = message.replace("%place_two%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Two")
-                                        .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(2).get(0)).getName() + " & " + plugin.getServer().getOfflinePlayer(topList.get(2).get(1)).getName())
+                                        .replace("%player%", formatTeamMates(topList.get(2)))
                                         .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(2).get(0)).getPoints())));
                             } else {
                                 message = message.replace("%place_two%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Two")
-                                        .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(2).get(0)).getName() + " & " + plugin.getServer().getOfflinePlayer(topList.get(2).get(1)).getName())
-                                        .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(2).get(0)).getPoints())));
+                                        .replace("%player%", formatTeamMates(topList.get(2))
+                                        .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(2).get(0)).getPoints()))));
                             }
                         } else {
                             message = message.replace("%place_two%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Two")
@@ -574,15 +577,15 @@ public class Arena extends BukkitRunnable {
                         if(topList.containsKey(3) && topList.get(3) != null) {
                             if(getPlotManager().getPlot(topList.get(1).get(0)).getPoints() == getPlotManager().getPlot(topList.get(3).get(0)).getPoints()) {
                                 message = message.replace("%place_three%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Three")
-                                        .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(3).get(0)).getName()  + " & " + plugin.getServer().getOfflinePlayer(topList.get(3).get(1)).getName())
+                                        .replace("%player%", formatTeamMates(topList.get(3)))
                                         .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(3).get(0)).getPoints())));
                             } else if(getPlotManager().getPlot(topList.get(2).get(0)).getPoints() == getPlotManager().getPlot(topList.get(3).get(0)).getPoints()) {
                                 message = message.replace("%place_three%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Three")
-                                        .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(3).get(0)).getName()  + " & " + plugin.getServer().getOfflinePlayer(topList.get(3).get(1)).getName())
+                                        .replace("%player%", formatTeamMates(topList.get(3)))
                                         .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(3).get(0)).getPoints())));
                             } else {
                                 message = message.replace("%place_three%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Three")
-                                        .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(3).get(0)).getName()  + " & " + plugin.getServer().getOfflinePlayer(topList.get(3).get(1)).getName())
+                                        .replace("%player%", formatTeamMates(topList.get(3)))
                                         .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(3).get(0)).getPoints())));
                             }
                         } else {
@@ -659,6 +662,14 @@ public class Arena extends BukkitRunnable {
                 }
             }
         }
+    }
+
+    private String formatTeamMates(List<UUID> uuids){
+        String msg = plugin.getServer().getOfflinePlayer(uuids.get(0)).getName();
+        if(uuids.size() == 2){
+            msg += " & " + plugin.getServer().getOfflinePlayer(uuids.get(1)).getName();
+        }
+        return msg;
     }
 
     private void calculateResults() {
