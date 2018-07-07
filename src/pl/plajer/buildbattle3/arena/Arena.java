@@ -68,7 +68,6 @@ public class Arena extends BukkitRunnable {
     private PlotManager plotManager;
     private boolean receivedVoteItems;
     private Queue<UUID> queue = new LinkedList<>();
-    private Random random = new Random();
     private int extraCounter;
     private Plot votingPlot = null;
     private boolean voteTime;
@@ -153,7 +152,7 @@ public class Arena extends BukkitRunnable {
     }
 
     private void setRandomTheme() {
-        setTheme(themes.get(random.nextInt(themes.size() - 1)));
+        setTheme(themes.get(new Random().nextInt(themes.size() - 1)));
     }
 
     public BossBar getGameBar() {
