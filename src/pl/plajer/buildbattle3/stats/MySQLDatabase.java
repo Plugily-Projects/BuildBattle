@@ -21,6 +21,7 @@ package pl.plajer.buildbattle3.stats;
 import org.bukkit.Bukkit;
 import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.Main;
+import pl.plajer.buildbattle3.utils.MessageUtils;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -108,7 +109,10 @@ public class MySQLDatabase {
             if(!set.next()) return 0;
             return (set.getInt(1));
         } catch(SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
+            MessageUtils.errorOccured();
+            Bukkit.getConsoleSender().sendMessage("Cannot get contents from MySQL database!");
+            Bukkit.getConsoleSender().sendMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
             return 0;
         }
     }
@@ -122,6 +126,9 @@ public class MySQLDatabase {
             }
         } catch(SQLException e) {
             e.printStackTrace();
+            MessageUtils.errorOccured();
+            Bukkit.getConsoleSender().sendMessage("Cannot get contents from MySQL database!");
+            Bukkit.getConsoleSender().sendMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
         }
         return column;
     }

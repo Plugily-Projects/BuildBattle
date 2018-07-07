@@ -18,11 +18,13 @@
 
 package pl.plajer.buildbattle3.stats;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
+import pl.plajer.buildbattle3.utils.MessageUtils;
 
 import java.io.IOException;
 
@@ -45,6 +47,9 @@ public class FileStats {
             config.save(ConfigurationManager.getFile("stats"));
         } catch(IOException e) {
             e.printStackTrace();
+            MessageUtils.errorOccured();
+            Bukkit.getConsoleSender().sendMessage("Cannot save stats.yml file!");
+            Bukkit.getConsoleSender().sendMessage("Restart the server, file COULD BE OVERRIDDEN!");
         }
     }
 
