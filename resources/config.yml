@@ -140,13 +140,32 @@ Whitelisted-Commands:
 - help
 
 # Should blocks behind game signs change their color based on game state?
-# They will change color to:
-# - white (waiting for players) stained glass
-# - yellow (starting) stained glass
-# - orange (in game) stained glass
-# - gray (ending) stained glass
-# - black (restarting) stained glass
-Signs-Block-States-Enabled: true
+Signs-Block-States:
+  Enabled: true
+  # Block types: glass, clay, wool
+  Block-Type: glass
+  # Block colors.
+  Colors:
+    Waiting-For-Players:
+      Glass: 0
+      Clay: 0
+      Wool: 0
+    Starting:
+      Glass: 4
+      Clay: 4
+      Wool: 4
+    In-Game:
+      Glass: 1
+      Clay: 1
+      Wool: 1
+    Ending:
+      Glass: 7
+      Clay: 7
+      Wool: 7
+    Restarting:
+      Glass: 15
+      Clay: 15
+      Wool: 15
 
 Update-Notifier:
   # Should we check for updates on plugin start/after admin join?
@@ -163,6 +182,6 @@ DatabaseActivated: false
 Debug: false
 
 # Don't modify.
-Version: 1
+Version: 2
 
 # No way! You've reached the end! But... where's the dragon!?
