@@ -163,6 +163,12 @@ Menus:
     Reset-Option: "&cPlot zurücksetzen"
     Reset-Option-Lore: "&7Setze dein Plot komplett zurück, &c&lkann nicht rückgängig gemacht werden!"
     Reset-Option-Done: "&cPlot erfolgreich zurückgesetzt!"
+  Theme-Voting:
+    Inventory-Name: "Welches Thema??"
+    Theme-Item-Name: "&6%theme%"
+    Theme-Item-Lore: "&7Stimme für Thema &b%theme%;;&7Zeit übrig: &c%time-left%;&7Aktuelle Stimmen: &c%percent%%!;;&8&oLive-Stimmen Prozentsätze;&8&osind rechts in ;&8&oBalkenform dargestellt.;;&eKlicke um Abzustimmen für &b%theme%&e!"
+    Voted-Successfully: "&aErfolgreich abgestimmt!"
+    Already-Voted: "&cDu hast bereits für dieses Thema gestimmt!"
 
 Signs:
   Please-Type-Arena-Name: "&cBitte Schreibe den Arena-Namen in die 2. Zeile!"
@@ -182,5 +188,5 @@ Signs:
     - "%mapname%"
     - "&5[%playersize%/%maxplayers%]"
 
-File-Version-Do-Not-Edit: 3
-Translation-Version: 3
+File-Version-Do-Not-Edit: 4
+Translation-Version: 4

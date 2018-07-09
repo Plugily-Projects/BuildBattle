@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
  */
 public class LanguageMigrator {
 
-    public static final int LANGUAGE_FILE_VERSION = 3;
+    public static final int LANGUAGE_FILE_VERSION = 4;
     public static final int CONFIG_FILE_VERSION = 1;
 
     private static Main plugin = JavaPlugin.getPlugin(Main.class);
@@ -118,6 +118,15 @@ public class LanguageMigrator {
                 break;
             case 2:
                 LanguageMigrator.insertAfterLine(file, "Time-Left-To-Build:", "    Time-Left-Subtitle: \"&c%FORMATTEDTIME% seconds left\"");
+                break;
+            case 3:
+                LanguageMigrator.insertAfterLine(file, "Menus:", "  Theme-Voting:\r\n" +
+                        "    Inventory-Name: \"What theme?\"\r\n" +
+                        "    Theme-Item-Name: \"&6%theme%\"\r\n" +
+                        "    #use ; to move to next line\r\n" +
+                        "    Theme-Item-Lore: \"&7Vote for theme &b%theme%;;&7Time remaining: &c%time-left%;&7Current votes: &c%percent%%!;;&8&oLive vote percentages;&8&oare shown on the right in;&8&obar form.;;&eClick to vote &b%theme%&e!\"\r\n" +
+                        "    Voted-Successfully: \"&aVoted successfully!\"\r\n" +
+                        "    Already-Voted: \"&cYou've already voted for this theme!\"");
                 break;
         }
         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] [System notify] Language file updated! Nice!");

@@ -23,6 +23,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ItemBuilder {
@@ -51,6 +52,18 @@ public class ItemBuilder {
             lore = new ArrayList<>();
         }
         lore.add(name);
+        meta.setLore(lore);
+        is.setItemMeta(meta);
+        return this;
+    }
+
+    public ItemBuilder lore(final String[] name) {
+        final ItemMeta meta = is.getItemMeta();
+        List<String> lore = meta.getLore();
+        if(lore == null) {
+            lore = new ArrayList<>();
+        }
+        lore.addAll(Arrays.asList(name));
         meta.setLore(lore);
         is.setItemMeta(meta);
         return this;

@@ -156,6 +156,13 @@ Menus:
     Reset-Option: "&cReset plot"
     Reset-Option-Lore: "&7Fully reset plot, &c&lcan't be undone!"
     Reset-Option-Done: "&cPlot fully reset!"
+  Theme-Voting:
+    Inventory-Name: "What theme?"
+    Theme-Item-Name: "&6%theme%"
+    #use ; to move to next line
+    Theme-Item-Lore: "&7Vote for theme &b%theme%;;&7Time remaining: &c%time-left%;&7Current votes: &c%percent%%!;;&8&oLive vote percentages;&8&oare shown on the right in;&8&obar form.;;&eClick to vote &b%theme%&e!"
+    Voted-Successfully: "&aVoted successfully!"
+    Already-Voted: "&cYou've already voted for this theme!"
 
 Signs:
   Please-Type-Arena-Name: "&cPlease type arena name in second line!"

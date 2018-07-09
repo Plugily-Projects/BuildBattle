@@ -38,6 +38,8 @@ import pl.plajer.buildbattle3.handlers.MessageHandler;
 import pl.plajer.buildbattle3.handlers.language.LanguageManager;
 import pl.plajer.buildbattle3.plots.Plot;
 import pl.plajer.buildbattle3.plots.PlotManager;
+import pl.plajer.buildbattle3.themevoter.VoteMenu;
+import pl.plajer.buildbattle3.themevoter.VotePoll;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.MessageUtils;
@@ -71,6 +73,7 @@ public class Arena extends BukkitRunnable {
     private int extraCounter;
     private Plot votingPlot = null;
     private boolean voteTime;
+    private boolean themeVoteTime = true;
     private boolean scoreboardDisabled = ConfigPreferences.isScoreboardDisabled();
     private boolean bossBarEnabled = ConfigPreferences.isBarEnabled();
     private int BUILD_TIME = ConfigPreferences.getBuildTime();
@@ -93,6 +96,8 @@ public class Arena extends BukkitRunnable {
     private Set<UUID> players = new HashSet<>();
     private BossBar gameBar;
     private ArenaType arenaType;
+    private VotePoll votePoll;
+    private VoteMenu voteMenu;
 
     public Arena(String ID) {
         gameState = ArenaState.WAITING_FOR_PLAYERS;
@@ -101,6 +106,8 @@ public class Arena extends BukkitRunnable {
             gameBar = Bukkit.createBossBar(ChatManager.colorMessage("Bossbar.Waiting-For-Players"), BarColor.BLUE, BarStyle.SOLID);
         }
         plotManager = new PlotManager(this);
+        voteMenu = new VoteMenu(this);
+        voteMenu.insertThemes();
     }
 
     /**
@@ -134,6 +141,14 @@ public class Arena extends BukkitRunnable {
         this.ready = ready;
     }
 
+    public VotePoll getVotePoll() {
+        return votePoll;
+    }
+
+    public VoteMenu getVoteMenu() {
+        return voteMenu;
+    }
+
     /**
      * Is voting time in game?
      *
@@ -145,6 +160,14 @@ public class Arena extends BukkitRunnable {
 
     void setVoting(boolean voting) {
         voteTime = voting;
+    }
+
+    public boolean isThemeVoteTime() {
+        return themeVoteTime;
+    }
+
+    public void setThemeVoteTime(boolean themeVoteTime) {
+        this.themeVoteTime = themeVoteTime;
     }
 
     public PlotManager getPlotManager() {
@@ -210,6 +233,17 @@ public class Arena extends BukkitRunnable {
                 setTimer(getTimer() - 1);
                 break;
             case STARTING:
+                if(isThemeVoteTime()){
+                    votePoll = voteMenu.getVotePoll();
+                    for(Player p : getPlayers()){
+                        voteMenu.updateInventory(p);
+                    }
+                    if(getTimer() == 0){
+                        setThemeVoteTime(false);
+                        String votedTheme = votePoll.getVotedTheme();
+                        setTheme(votedTheme);
+                    }
+                }
                 if(getTimer() == 0) {
                     extraCounter = 0;
                     if(!getPlotManager().isPlotsCleared()) {
@@ -227,7 +261,7 @@ public class Arena extends BukkitRunnable {
                         //to prevent Multiverse chaning gamemode bug
                         Bukkit.getScheduler().runTaskLater(plugin, () -> player.setGameMode(GameMode.CREATIVE), 20);
                     }
-                    setRandomTheme();
+                    //setRandomTheme();
                     String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started");
                     for(Player p : getPlayers()) {
                         p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
@@ -370,6 +404,7 @@ public class Arena extends BukkitRunnable {
                 }
                 setGameState(ArenaState.WAITING_FOR_PLAYERS);
                 topList.clear();
+                voteMenu.insertThemes();
         }
     }
 

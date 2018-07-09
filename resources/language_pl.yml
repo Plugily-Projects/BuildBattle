@@ -155,6 +155,12 @@ Menus:
     Reset-Option: "&cResetuj dzialke"
     Reset-Option-Lore: "&7Calkowicie zresetuj dzialke, &c&lnie mozna tego confnac!"
     Reset-Option-Done: "&cDzialka pomyslnie wyczyszczona!"
+  Theme-Voting:
+    Inventory-Name: "Jaki temat?"
+    Theme-Item-Name: "&6%theme%"
+    Theme-Item-Lore: "&7Zaglosuj na &b%theme%;;&7Pozostaly czas: &c%time-left%;&7Aktualnie glosow: &c%percent%%!;;&8&oProcenty glosow oddanych;&8&osa pokazane po prawej;&8&ostronie slupkow.;;&eZaglosuj na &b%theme%&e!"
+    Voted-Successfully: "&aZaglosowano pomyslnie!"
+    Already-Voted: "&cJuz zaglosowales na ten temat!"
 
 Signs:
   Please-Type-Arena-Name: "&cPodaj nazwe areny w drugiej linii!"
@@ -174,5 +180,5 @@ Signs:
     - "%mapname%"
     - "&5[%playersize%/%maxplayers%]"
 
-File-Version-Do-Not-Edit: 3
-Translation-Version: 3
+File-Version-Do-Not-Edit: 4
+Translation-Version: 4

@@ -24,6 +24,7 @@ import pl.plajer.buildbattle3.arena.Arena;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -31,7 +32,8 @@ import java.util.List;
 public class ConfigPreferences {
 
     private static FileConfiguration config;
-    private static HashMap<String, Integer> options = new HashMap<>();
+    private static List<String> themes = new ArrayList<>();
+    private static Map<String, Integer> options = new HashMap<>();
     private static List<String> winCommands = new ArrayList<>();
     private static List<String> endGameCommands = new ArrayList<>();
     private static List<String> secondPlaceCommands = new ArrayList<>();
@@ -42,11 +44,12 @@ public class ConfigPreferences {
         config = plugin.getConfig();
     }
 
-
     public static void loadThemes() {
-        for(String theme : config.getStringList("Game-Themes")) {
-            Arena.addTheme(theme);
-        }
+        themes.addAll(config.getStringList("Game-Themes"));
+    }
+
+    public static List<String> getThemes() {
+        return themes;
     }
 
     public static void loadWinCommands() {
