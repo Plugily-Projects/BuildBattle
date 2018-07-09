@@ -161,25 +161,61 @@ public class SignManager implements Listener {
             for(Sign s : loadedSigns.keySet()) {
                 for(int i = 0; i < signLines.size(); i++) {
                     s.setLine(i, formatSign(signLines.get(i), loadedSigns.get(s)));
-                    if(plugin.getConfig().getBoolean("Signs-Block-States-Enabled")) {
+                    if(plugin.getConfig().getBoolean("Signs-Block-States.Enabled")) {
                         if(s.getType() == Material.SIGN_POST || s.getType() == Material.WALL_SIGN) {
                             Block behind = s.getBlock().getRelative(((org.bukkit.material.Sign) s.getData()).getAttachedFace());
-                            behind.setType(Material.STAINED_GLASS);
+                            if(plugin.getConfig().getString("Signs-Block-States.Block-Type").equalsIgnoreCase("glass")) {
+                                behind.setType(Material.STAINED_GLASS);
+                            }else if(plugin.getConfig().getString("Signs-Block-States.Block-Type").equalsIgnoreCase("clay")) {
+                                behind.setType(Material.STAINED_CLAY);
+                            }else if(plugin.getConfig().getString("Signs-Block-States.Block-Type").equalsIgnoreCase("wool")) {
+                                behind.setType(Material.WOOL);
+                            }
                             switch(loadedSigns.get(s).getArenaState()) {
                                 case WAITING_FOR_PLAYERS:
-                                    behind.setData((byte) 0);
+                                    if(plugin.getConfig().getString("Signs-Block-States.Block-Type").equalsIgnoreCase("glass")) {
+                                        behind.setData((byte) plugin.getConfig().getInt("Signs-Block-States.Colors.Waiting-For-Players.Glass")));
+                                    }else if(plugin.getConfig().getString("Signs-Block-States.Block-Type").equalsIgnoreCase("clay")) {
+                                        behind.setData((byte) plugin.getConfig().getInt("Signs-Block-States.Colors.Waiting-For-Players.Clay")));
+                                    }else if(plugin.getConfig().getString("Signs-Block-States.Block-Type").equalsIgnoreCase("wool")) {
+                                        behind.setData((byte) plugin.getConfig().getInt("Signs-Block-States.Colors.Waiting-For-Players.Wool")));
+                                    }
                                     break;
                                 case STARTING:
-                                    behind.setData((byte) 4);
+                                    if(plugin.getConfig().getString("Signs-Block-States.Block-Type").equalsIgnoreCase("glass")) {
+                                        behind.setData((byte) plugin.getConfig().getInt("Signs-Block-States.Colors.Starting.Glass")));
+                                    }else if(plugin.getConfig().getString("Signs-Block-States.Block-Type").equalsIgnoreCase("clay")) {
+                                        behind.setData((byte) plugin.getConfig().getInt("Signs-Block-States.Colors.Starting.Clay")));
+                                    }else if(plugin.getConfig().getString("Signs-Block-States.Block-Type").equalsIgnoreCase("wool")) {
+                                        behind.setData((byte) plugin.getConfig().getInt("Signs-Block-States.Colors.Starting.Wool")));
+                                    }
                                     break;
                                 case IN_GAME:
-                                    behind.setData((byte) 1);
+                                    if(plugin.getConfig().getString("Signs-Block-States.Block-Type").equalsIgnoreCase("glass")) {
+                                        behind.setData((byte) plugin.getConfig().getInt("Signs-Block-States.Colors.In-Game.Glass")));
+                                    }else if(plugin.getConfig().getString("Signs-Block-States.Block-Type").equalsIgnoreCase("clay")) {
+                                        behind.setData((byte) plugin.getConfig().getInt("Signs-Block-States.Colors.In-Game.Clay")));
+                                    }else if(plugin.getConfig().getString("Signs-Block-States.Block-Type").equalsIgnoreCase("wool")) {
+                                        behind.setData((byte) plugin.getConfig().getInt("Signs-Block-States.Colors.In-Game.Wool")));
+                                    }
                                     break;
                                 case ENDING:
-                                    behind.setData((byte) 7);
+                                    if(plugin.getConfig().getString("Signs-Block-States.Block-Type").equalsIgnoreCase("glass")) {
+                                        behind.setData((byte) plugin.getConfig().getInt("Signs-Block-States.Colors.Ending.Glass")));
+                                    }else if(plugin.getConfig().getString("Signs-Block-States.Block-Type").equalsIgnoreCase("clay")) {
+                                        behind.setData((byte) plugin.getConfig().getInt("Signs-Block-States.Colors.Ending.Clay")));
+                                    }else if(plugin.getConfig().getString("Signs-Block-States.Block-Type").equalsIgnoreCase("wool")) {
+                                        behind.setData((byte) plugin.getConfig().getInt("Signs-Block-States.Colors.Ending.Wool")));
+                                    }
                                     break;
                                 case RESTARTING:
-                                    behind.setData((byte) 15);
+                                    if(plugin.getConfig().getString("Signs-Block-States.Block-Type").equalsIgnoreCase("glass")) {
+                                        behind.setData((byte) plugin.getConfig().getInt("Signs-Block-States.Colors.Restarting.Glass")));
+                                    }else if(plugin.getConfig().getString("Signs-Block-States.Block-Type").equalsIgnoreCase("clay")) {
+                                        behind.setData((byte) plugin.getConfig().getInt("Signs-Block-States.Colors.Restarting.Clay")));
+                                    }else if(plugin.getConfig().getString("Signs-Block-States.Block-Type").equalsIgnoreCase("wool")) {
+                                        behind.setData((byte) plugin.getConfig().getInt("Signs-Block-States.Colors.Restarting.Wool")));
+                                    }
                                     break;
                             }
                         }
