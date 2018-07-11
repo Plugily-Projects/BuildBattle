@@ -37,6 +37,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -151,6 +153,13 @@ public class Util {
         String location = loc.getWorld().getName() + "," + loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getYaw() + "," + loc.getPitch();
         config.set(path, location);
         ConfigurationManager.saveConfig(config, "arenas");
+    }
+
+    public static double round(double value, int places) {
+        if(places < 0) return value;
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 
 }

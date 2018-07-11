@@ -18,13 +18,21 @@
 
 package pl.plajer.buildbattle3.handlers.language;
 
+import com.earth2me.essentials.Essentials;
+import com.wasteofplastic.askyblock.ASLocale;
+import com.wasteofplastic.askyblock.ASkyBlock;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
+import pl.plajer.buildbattle3.utils.MessageUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.util.Properties;
 
 /**
  * @author Plajer
@@ -34,7 +42,8 @@ import java.io.File;
 public class LanguageManager {
 
     private static Main plugin;
-    private static BBLocale pluginLocale;
+    private static Locale pluginLocale;
+    private static Properties properties = new Properties();
 
     public static void init(Main pl) {
         plugin = pl;
@@ -42,87 +51,116 @@ public class LanguageManager {
             plugin.saveResource("language.yml", false);
         }
         setupLocale();
-        LanguageMigrator.languageFileUpdate();
-        LanguageMigrator.configUpdate();
+        //we will wait until server is loaded, we won't soft depend those plugins
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if(pluginLocale == Locale.ENGLISH) suggestLocale();
+        }, 100);
+    }
+
+    private static void loadProperties() {
+        if(pluginLocale == Locale.ENGLISH) return;
+        try {
+            properties.load(new InputStreamReader(plugin.getResource("/locales/" + pluginLocale.getPrefix() + ".properties"), Charset.forName("UTF-8")));
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void setupLocale() {
-        plugin.saveResource("language_de.yml", true);
-        plugin.saveResource("language_pl.yml", true);
-        String locale = plugin.getConfig().getString("locale");
-        if(locale.equalsIgnoreCase("default") || locale.equalsIgnoreCase("english")) {
-            pluginLocale = BBLocale.DEFAULT;
-        } else if(locale.equalsIgnoreCase("de") || locale.equalsIgnoreCase("deutsch")) {
-            pluginLocale = BBLocale.DEUTSCH;
-            if(!ConfigurationManager.getConfig("language_de").get("File-Version-Do-Not-Edit").equals(ConfigurationManager.getConfig("language_de").get("Language-Version"))) {
-                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Locale DEUTSCH is outdated! Not every message will be in german.");
+        String locale = plugin.getConfig().getString("locale", "default");
+        switch(locale.toLowerCase()) {
+            case "default":
+            case "english":
+            case "en":
+                pluginLocale = Locale.ENGLISH;
+                break;
+            case "german":
+            case "deutsch":
+            case "de":
+                pluginLocale = Locale.GERMAN;
+                break;
+            case "polish":
+            case "polski":
+            case "pl":
+                pluginLocale = Locale.POLISH;
+                break;
+            default:
+                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Plugin locale is invalid! Using default one...");
+                pluginLocale = Locale.ENGLISH;
+                break;
+        }
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] Loaded locale " + pluginLocale.getFormattedName() + " (" + pluginLocale.getPrefix() + ") by " + pluginLocale.getAuthor());
+        loadProperties();
+    }
+
+    private static void suggestLocale() {
+        //we will catch any exceptions in case of api changes
+        boolean hasLocale = false;
+        String localeName = "";
+        try {
+            if(plugin.getServer().getPluginManager().isPluginEnabled("ASkyBlock")) {
+                ASLocale locale = ASkyBlock.getPlugin().myLocale();
+                switch(locale.getLocaleName()) {
+                    case "pl-PL":
+                    case "de-DE":
+                        hasLocale = true;
+                        localeName = locale.getLocaleName();
+                }
             }
-            if(!LanguageManager.getDefaultLanguageMessage("File-Version-Do-Not-Edit").equals(LanguageManager.getLanguageMessage("File-Version-Do-Not-Edit"))) {
-                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Locale DEUTSCH is invalid! Using DEFAULT locale instead...");
-                pluginLocale = BBLocale.DEFAULT;
+            if(plugin.getServer().getPluginManager().isPluginEnabled("Essentials")) {
+                Essentials ess = (Essentials) plugin.getServer().getPluginManager().getPlugin("Essentials");
+                java.util.Locale locale = ess.getI18n().getCurrentLocale();
+                switch(locale.getCountry()) {
+                    case "PL":
+                    case "DE":
+                        hasLocale = true;
+                        localeName = locale.getDisplayName();
+                }
             }
-        } else if(locale.equalsIgnoreCase("pl") || locale.equalsIgnoreCase("polski")) {
-            pluginLocale = BBLocale.POLSKI;
-            if(!ConfigurationManager.getConfig("language_pl").get("File-Version-Do-Not-Edit").equals(ConfigurationManager.getConfig("language_pl").get("Language-Version"))) {
-                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Locale POLSKI is outdated! Not every message will be in polish.");
-            }
-            if(!LanguageManager.getDefaultLanguageMessage("File-Version-Do-Not-Edit").equals(LanguageManager.getLanguageMessage("File-Version-Do-Not-Edit"))) {
-                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Locale POLSKI is invalid! Using DEFAULT locale instead...");
-                pluginLocale = BBLocale.DEFAULT;
-            }
-        } else {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Plugin locale is invalid! Using default one...");
-            pluginLocale = BBLocale.DEFAULT;
+        } catch(Exception e) {
+            Main.debug("[WARN] Plugin has occured a problem suggesting locale, probably API change.", System.currentTimeMillis());
+        }
+        if(hasLocale) {
+            MessageUtils.info();
+            Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[BuildBattle] We've found that you use locale " + localeName + " in other plugins.");
+            Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "We recommend you to change plugin's locale to " + localeName + " to have best plugin experience.");
+            Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "You can change plugin's locale in config.yml in locale section!");
         }
     }
 
-    public static FileConfiguration getLocaleFile() {
-        switch(pluginLocale) {
-            case DEFAULT:
-                return ConfigurationManager.getConfig("language");
-            case DEUTSCH:
-                return ConfigurationManager.getConfig("language_de");
-            case POLSKI:
-                return ConfigurationManager.getConfig("language_pl");
-            default:
-                return ConfigurationManager.getConfig("language");
-        }
+    //todo do something with me
+    public static FileConfiguration getLanguageFile() {
+        return ConfigurationManager.getConfig("language");
     }
 
     public static String getDefaultLanguageMessage(String message) {
         if(ConfigurationManager.getConfig("language").isSet(message)) {
             return ConfigurationManager.getConfig("language").getString(message);
         }
-        return "NULL_MESSAGE";
+        MessageUtils.errorOccured();
+        Bukkit.getConsoleSender().sendMessage("Game message not found!");
+        Bukkit.getConsoleSender().sendMessage("Please regenerate your language.yml file! If error still occurs report it to the developer!");
+        Bukkit.getConsoleSender().sendMessage("Access string: " + message);
+        return "ERR_MESSAGE_NOT_FOUND";
     }
 
     public static String getLanguageMessage(String message) {
-        switch(pluginLocale) {
-            case DEFAULT:
-                if(ConfigurationManager.getConfig("language").isSet(message)) {
-                    return ConfigurationManager.getConfig("language").getString(message);
-                }
-                return null;
-            case DEUTSCH:
-                if(ConfigurationManager.getConfig("language_de").isSet(message)) {
-                    return ConfigurationManager.getConfig("language_de").getString(message);
-                }
-                return null;
-            case POLSKI:
-                if(ConfigurationManager.getConfig("language_pl").isSet(message)) {
-                    return ConfigurationManager.getConfig("language_pl").getString(message);
-                }
-                return null;
-            default:
-                if(ConfigurationManager.getConfig("language").isSet(message)) {
-                    return ConfigurationManager.getConfig("language").getString(message);
-                }
-                return null;
+        if(pluginLocale != Locale.ENGLISH) {
+            try {
+                return properties.getProperty(ChatColor.translateAlternateColorCodes('&', message));
+            } catch(NullPointerException ex) {
+                MessageUtils.errorOccured();
+                Bukkit.getConsoleSender().sendMessage("Game message not found!");
+                Bukkit.getConsoleSender().sendMessage("Please regenerate your language.yml file! If error still occurs report it to the developer!");
+                Bukkit.getConsoleSender().sendMessage("Access string: " + message);
+                return "ERR_MESSAGE_NOT_FOUND";
+            }
         }
+        return ConfigurationManager.getConfig("language").getString(message);
     }
 
-    private enum BBLocale {
-        DEFAULT, DEUTSCH, POLSKI
+    public static Locale getPluginLocale() {
+        return pluginLocale;
     }
 
 }

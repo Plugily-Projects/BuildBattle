@@ -101,6 +101,10 @@ public class ConfigPreferences {
         return options.get("Default-Floor-Material");
     }
 
+    public static int getThemeVoteTimer() {
+        return options.get("Theme-Voting-Time-In-Seconds");
+    }
+
     public static int getLobbyTimer() {
         return options.get("Lobby-Starting-Time");
     }
@@ -196,6 +200,7 @@ public class ConfigPreferences {
         loadOptions.add("Disable-Scoreboard-Ingame");
         loadOptions.add("Hook-Into-Vault");
         loadOptions.add("Lobby-Starting-Time");
+        loadOptions.add("Theme-Voting-Time-In-Seconds");
 
         for(String option : loadOptions) {
             if(config.contains(option)) {

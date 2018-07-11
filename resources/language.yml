@@ -19,6 +19,7 @@ Commands:
   Plugin-Reloaded: "&aPlugin and configuration reloaded!"
   Player-Not-Found: "&cPlayer not found!"
   Invalid-Args: "&cInvalid arguments! Make sure you typed the command correctly!"
+  No-Free-Arenas: "&cThere are no free arenas!"
   Admin-Commands:
     List-Command:
       Header: "&bBuildBattle &7arenas:"
@@ -40,7 +41,8 @@ Commands:
     Description: "&aGame commands:\n
     &b/bb stats: &7Shows your stats!\n
     &b/bb leave: &7Quits current arena!\n
-    &b/bb join <arena>: &7Joins specified arena!"
+    &b/bb join <arena>: &7Joins specified arena!\n
+    &b/bb randomjoin <solo/team>: &7Randomly joins free arena!"
     Admin-Bonus-Description: "\n&b/bba help: &7Shows all the admin commands"
     Footer: "&6-------------------------------------------------"
 
@@ -61,6 +63,18 @@ Scoreboard:
       - "&fTheme: &e%THEME%"
       - ""
       - "&fArena: &e%ARENA_ID%"
+      - ""
+      - "&ewww.spigotmc.org"
+    Playing-Teams:
+      - "&7Teams Mode"
+      - "&fTime Left: &e%FORMATTED_TIME_LEFT%"
+      - ""
+      - "&fTheme: &e%THEME%"
+      - ""
+      - "&fArena: &e%ARENA_ID%"
+      - ""
+      - "&fTeammate:"
+      - "&e%TEAMMATE%"
       - ""
       - "&ewww.spigotmc.org"
     Starting:
@@ -94,6 +108,8 @@ In-Game:
   Arena-Not-Configured: "&cArena is not configured yet! Contact staff!"
   # Join cancelled via external plugin that uses BB3 api.
   Join-Cancelled-Via-API: "&cYou can't join this game!"
+  Nobody: "&eNobody"
+  No-Theme-Yet: "&cVoting"
   NPC:
     Floor-Change-NPC-Name: "&aChange floor NPC"
     NPC-Created: "&aFloor NPC created successfully!"
@@ -183,4 +199,4 @@ Signs:
     - "&5[%playersize%/%maxplayers%]"
 
 # Do not modify!
-File-Version-Do-Not-Edit: 3
+File-Version-Do-Not-Edit: 4

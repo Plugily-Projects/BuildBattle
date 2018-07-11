@@ -18,6 +18,7 @@
 
 package pl.plajer.buildbattle3.arena;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -36,6 +37,7 @@ import pl.plajer.buildbattle3.buildbattleapi.BBGameStartEvent;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.handlers.MessageHandler;
 import pl.plajer.buildbattle3.handlers.language.LanguageManager;
+import pl.plajer.buildbattle3.handlers.language.Locale;
 import pl.plajer.buildbattle3.plots.Plot;
 import pl.plajer.buildbattle3.plots.PlotManager;
 import pl.plajer.buildbattle3.themevoter.VoteMenu;
@@ -47,13 +49,13 @@ import pl.plajer.buildbattle3.utils.OptionsMenu;
 import pl.plajer.buildbattle3.utils.Util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
@@ -63,7 +65,6 @@ import java.util.UUID;
 public class Arena extends BukkitRunnable {
 
     public static Main plugin;
-    private static List<String> themes = new ArrayList<>();
     private static List<Integer> blacklist = new ArrayList<>();
     private Map<Integer, List<UUID>> topList = new HashMap<>();
     private String theme = "Theme";
@@ -74,6 +75,7 @@ public class Arena extends BukkitRunnable {
     private Plot votingPlot = null;
     private boolean voteTime;
     private boolean themeVoteTime = true;
+    private boolean themeTimerSet = false;
     private boolean scoreboardDisabled = ConfigPreferences.isScoreboardDisabled();
     private boolean bossBarEnabled = ConfigPreferences.isBarEnabled();
     private int BUILD_TIME = ConfigPreferences.getBuildTime();
@@ -111,15 +113,6 @@ public class Arena extends BukkitRunnable {
     }
 
     /**
-     * Adds new theme topic to the game
-     *
-     * @param string Theme topic
-     */
-    public static void addTheme(String string) {
-        themes.add(string);
-    }
-
-    /**
      * Adds item which can not be used in game
      *
      * @param ID item ID to blacklist
@@ -145,10 +138,6 @@ public class Arena extends BukkitRunnable {
         return votePoll;
     }
 
-    public VoteMenu getVoteMenu() {
-        return voteMenu;
-    }
-
     /**
      * Is voting time in game?
      *
@@ -172,10 +161,6 @@ public class Arena extends BukkitRunnable {
 
     public PlotManager getPlotManager() {
         return plotManager;
-    }
-
-    private void setRandomTheme() {
-        setTheme(themes.get(new Random().nextInt(themes.size() - 1)));
     }
 
     public BossBar getGameBar() {
@@ -233,17 +218,6 @@ public class Arena extends BukkitRunnable {
                 setTimer(getTimer() - 1);
                 break;
             case STARTING:
-                if(isThemeVoteTime()){
-                    votePoll = voteMenu.getVotePoll();
-                    for(Player p : getPlayers()){
-                        voteMenu.updateInventory(p);
-                    }
-                    if(getTimer() == 0){
-                        setThemeVoteTime(false);
-                        String votedTheme = votePoll.getVotedTheme();
-                        setTheme(votedTheme);
-                    }
-                }
                 if(getTimer() == 0) {
                     extraCounter = 0;
                     if(!getPlotManager().isPlotsCleared()) {
@@ -261,11 +235,6 @@ public class Arena extends BukkitRunnable {
                         //to prevent Multiverse chaning gamemode bug
                         Bukkit.getScheduler().runTaskLater(plugin, () -> player.setGameMode(GameMode.CREATIVE), 20);
                     }
-                    //setRandomTheme();
-                    String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started");
-                    for(Player p : getPlayers()) {
-                        p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
-                    }
                 }
                 setTimer(getTimer() - 1);
                 break;
@@ -275,6 +244,32 @@ public class Arena extends BukkitRunnable {
                         plugin.getServer().setWhitelist(true);
                     } else {
                         plugin.getServer().setWhitelist(false);
+                    }
+                }
+                if(isThemeVoteTime()) {
+                    if(!themeTimerSet) {
+                        setTimer(ConfigPreferences.getThemeVoteTimer());
+                        themeTimerSet = true;
+                    }
+                    votePoll = voteMenu.getVotePoll();
+                    for(Player p : getPlayers()) {
+                        voteMenu.updateInventory(p);
+                    }
+                    if(getTimer() == 0) {
+                        setThemeVoteTime(false);
+                        String votedTheme = votePoll.getVotedTheme();
+                        setTheme(votedTheme);
+                        setTimer(ConfigPreferences.getBuildTime());
+                        String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started");
+                        for(Player p : getPlayers()) {
+                            p.closeInventory();
+                            p.teleport(getPlotManager().getPlot(p).getTeleportLocation());
+                            p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
+                        }
+                        break;
+                    } else {
+                        setTimer(getTimer() - 1);
+                        break;
                     }
                 }
                 if(getPlayers().size() <= 1) {
@@ -346,6 +341,26 @@ public class Arena extends BukkitRunnable {
 
                         for(Player player : getPlayers()) {
                             player.teleport(winnerPlot.getTeleportLocation());
+                            String winner = ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Title");
+                            if(getArenaType() == ArenaType.TEAM) {
+                                if(winnerPlot.getOwners().size() == 1){
+                                    winner = winner.replace("%player%", Bukkit.getOfflinePlayer(topList.get(1).get(0)).getName());
+                                } else {
+                                    winner = winner.replace("%player%", Bukkit.getOfflinePlayer(topList.get(1).get(0)).getName() + " & " + Bukkit.getOfflinePlayer(topList.get(1).get(1)).getName());
+                                }
+                                if(plugin.is1_9_R1()) {
+                                    player.sendTitle(winner, null);
+                                } else {
+                                    player.sendTitle(winner, null, 5, 35, 5);
+                                }
+                            } else {
+                                winner = winner.replace("%player%", Bukkit.getOfflinePlayer(topList.get(1).get(0)).getName());
+                                if(plugin.is1_9_R1()) {
+                                    player.sendTitle(winner, null);
+                                } else {
+                                    player.sendTitle(winner, null, 5, 35, 5);
+                                }
+                            }
                         }
                         this.setGameState(ArenaState.ENDING);
                         Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
@@ -358,6 +373,7 @@ public class Arena extends BukkitRunnable {
                 if(plugin.isBungeeActivated())
                     plugin.getServer().setWhitelist(false);
                 setVoting(false);
+                themeTimerSet = false;
                 for(Player player : getPlayers()) {
                     Util.spawnRandomFirework(player.getLocation());
                     showPlayers();
@@ -485,7 +501,19 @@ public class Arena extends BukkitRunnable {
         if(getPlayers().size() == 0 || getArenaState() == ArenaState.RESTARTING) return;
         for(Player p : getPlayers()) {
             ArenaBoard displayBoard = new ArenaBoard("BB3", "board", ChatManager.colorMessage("Scoreboard.Title"));
-            List<String> lines = LanguageManager.getLocaleFile().getStringList("Scoreboard.Content." + getArenaState().getFormattedName());
+            List<String> lines;
+            if(LanguageManager.getPluginLocale() == Locale.ENGLISH) {
+                lines = LanguageManager.getLanguageFile().getStringList("Scoreboard.Content." + getArenaState().getFormattedName());
+            } else {
+                lines = Arrays.asList(ChatManager.colorMessage("Scoreboard.Content." + getArenaState().getFormattedName()).split(";"));
+            }
+            if(getArenaState() == ArenaState.IN_GAME && getArenaType() == ArenaType.TEAM) {
+                if(LanguageManager.getPluginLocale() == Locale.ENGLISH) {
+                    lines = LanguageManager.getLanguageFile().getStringList("Scoreboard.Content." + getArenaState().getFormattedName() + "-Teams");
+                } else {
+                    lines = Arrays.asList(ChatManager.colorMessage("Scoreboard.Content." + getArenaState().getFormattedName() + "-Teams").split(";"));
+                }
+            }
             for(String line : lines) {
                 displayBoard.addRow(formatScoreboardLine(line, p));
             }
@@ -496,19 +524,38 @@ public class Arena extends BukkitRunnable {
 
     private String formatScoreboardLine(String string, Player player) {
         String returnString = string;
-        returnString = returnString.replaceAll("%MIN_PLAYERS%", Integer.toString(getMinimumPlayers()));
-        returnString = returnString.replaceAll("%PLAYERS%", Integer.toString(getPlayers().size()));
-        returnString = returnString.replaceAll("%PLAYER%", player.getName());
-        returnString = returnString.replaceAll("%THEME%", getTheme());
-        returnString = returnString.replaceAll("%MIN_PLAYERS%", Integer.toString(getMinimumPlayers()));
-        returnString = returnString.replaceAll("%MAX_PLAYERS%", Integer.toString(getMaximumPlayers()));
-        returnString = returnString.replaceAll("%TIMER%", Integer.toString(getTimer()));
-        returnString = returnString.replaceAll("%TIME_LEFT%", Long.toString(getTimeLeft()));
-        returnString = returnString.replaceAll("%FORMATTED_TIME_LEFT%", Util.formatIntoMMSS(getTimer()));
-        returnString = returnString.replaceAll("%ARENA_ID%", getID());
-        returnString = returnString.replaceAll("%MAPNAME%", getMapName());
+        returnString = StringUtils.replace(returnString, "%MIN_PLAYERS%", Integer.toString(getMinimumPlayers()));
+        returnString = StringUtils.replace(returnString, "%PLAYERS%", Integer.toString(getPlayers().size()));
+        returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());
+        if(isThemeVoteTime()) {
+            returnString = StringUtils.replace(returnString, "%THEME%", ChatManager.colorMessage("In-Game.No-Theme-Yet"));
+        } else {
+            returnString = StringUtils.replace(returnString, "%THEME%", getTheme());
+        }
+        returnString = StringUtils.replace(returnString, "%MIN_PLAYERS%", Integer.toString(getMinimumPlayers()));
+        returnString = StringUtils.replace(returnString, "%MAX_PLAYERS%", Integer.toString(getMaximumPlayers()));
+        returnString = StringUtils.replace(returnString, "%TIMER%", Integer.toString(getTimer()));
+        returnString = StringUtils.replace(returnString, "%TIME_LEFT%", Long.toString(getTimeLeft()));
+        returnString = StringUtils.replace(returnString, "%FORMATTED_TIME_LEFT%", Util.formatIntoMMSS(getTimer()));
+        returnString = StringUtils.replace(returnString, "%ARENA_ID%", getID());
+        returnString = StringUtils.replace(returnString, "%MAPNAME%", getMapName());
+        if(!isThemeVoteTime()) {
+            if(getArenaType() == ArenaType.TEAM && getPlotManager().getPlot(player) != null) {
+                if(getPlotManager().getPlot(player).getOwners().size() == 2) {
+                    if(getPlotManager().getPlot(player).getOwners().get(0).equals(player.getUniqueId())) {
+                        returnString = StringUtils.replace(returnString, "%TEAMMATE%", Bukkit.getOfflinePlayer(getPlotManager().getPlot(player).getOwners().get(1)).getName());
+                    } else {
+                        returnString = StringUtils.replace(returnString, "%TEAMMATE%", Bukkit.getOfflinePlayer(getPlotManager().getPlot(player).getOwners().get(0)).getName());
+                    }
+                } else {
+                    returnString = StringUtils.replace(returnString, "%TEAMMATE%", ChatManager.colorMessage("In-Game.Nobody"));
+                }
+            }
+        } else {
+            returnString = StringUtils.replace(returnString, "%TEAMMATE%", ChatManager.colorMessage("In-Game.Nobody"));
+        }
         if(ConfigPreferences.isVaultEnabled()) {
-            returnString = returnString.replaceAll("%MONEY%", Double.toString(Main.getEcon().getBalance(player)));
+            returnString = StringUtils.replace(returnString, "%MONEY%", Double.toString(Main.getEcon().getBalance(player)));
         }
         returnString = ChatManager.colorRawMessage(returnString);
         return returnString;
@@ -557,7 +604,18 @@ public class Arena extends BukkitRunnable {
                 String message = ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Voting-For-Player-Plot").replaceAll("%PLAYER%", player.getName());
                 for(Player p : getPlayers()) {
                     p.teleport(getVotingPlot().getTeleportLocation());
-                    MessageHandler.sendTitleMessage(p, ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title").replaceAll("%player%", player.getName()), 5, 40, 5);
+                    String owner = ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
+                    if(getArenaType() == ArenaType.TEAM) {
+                        if(getVotingPlot().getOwners().size() == 1){
+                            owner = owner.replace("%player%", player.getName());
+                        } else {
+                            owner = owner.replace("%player%", Bukkit.getOfflinePlayer(getVotingPlot().getOwners().get(0)).getName() + " & " + Bukkit.getOfflinePlayer(getVotingPlot().getOwners().get(1)).getName());
+                        }
+                        MessageHandler.sendTitleMessage(p, owner, 5, 40, 5);
+                    } else {
+                        owner = owner.replace("%player%", player.getName());
+                        MessageHandler.sendTitleMessage(p, owner, 5, 40, 5);
+                    }
                     p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
                 }
             }
@@ -580,8 +638,14 @@ public class Arena extends BukkitRunnable {
 
     //fixme wtf
     private void announceResults() {
+        List<String> msgs;
+        if(LanguageManager.getPluginLocale() == Locale.ENGLISH) {
+            msgs = LanguageManager.getLanguageFile().getStringList("In-Game.Messages.Voting-Messages.Summary-Message");
+        } else {
+            msgs = Arrays.asList(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Summary-Message").split(";"));
+        }
         for(Player player : getPlayers()) {
-            for(String summary : LanguageManager.getLocaleFile().getStringList("In-Game.Messages.Voting-Messages.Summary-Message")) {
+            for(String summary : msgs) {
                 String message = summary;
                 if(arenaType == ArenaType.TEAM) {
                     if(message.contains("%place_one%")) {
@@ -590,7 +654,7 @@ public class Arena extends BukkitRunnable {
                                 .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(1).get(0)).getPoints())));
                     }
                     if(message.contains("%place_two%")) {
-                        if(topList.containsKey(2) && topList.get(2) != null) {
+                        if(topList.containsKey(2) && topList.get(2) != null && !topList.get(2).isEmpty()) {
                             if(getPlotManager().getPlot(topList.get(1).get(0)).getPoints() == getPlotManager().getPlot(topList.get(2).get(0)).getPoints()) {
                                 message = message.replace("%place_two%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Two")
                                         .replace("%player%", formatTeamMates(topList.get(2)))
@@ -607,7 +671,7 @@ public class Arena extends BukkitRunnable {
                         }
                     }
                     if(message.contains("%place_three%")) {
-                        if(topList.containsKey(3) && topList.get(3) != null) {
+                        if(topList.containsKey(3) && topList.get(3) != null && !topList.get(3).isEmpty()) {
                             if(getPlotManager().getPlot(topList.get(1).get(0)).getPoints() == getPlotManager().getPlot(topList.get(3).get(0)).getPoints()) {
                                 message = message.replace("%place_three%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Three")
                                         .replace("%player%", formatTeamMates(topList.get(3)))
@@ -627,7 +691,7 @@ public class Arena extends BukkitRunnable {
                                     .replace("%number%", "none"));
                         }
                     }
-                } else if(arenaType == ArenaType.SOLO){
+                } else if(arenaType == ArenaType.SOLO) {
                     if(message.contains("%place_one%")) {
                         message = message.replace("%place_one%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-One")
                                 .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(1).get(0)).getName())
@@ -697,9 +761,9 @@ public class Arena extends BukkitRunnable {
         }
     }
 
-    private String formatTeamMates(List<UUID> uuids){
+    private String formatTeamMates(List<UUID> uuids) {
         String msg = plugin.getServer().getOfflinePlayer(uuids.get(0)).getName();
-        if(uuids.size() == 2){
+        if(uuids.size() == 2) {
             msg += " & " + plugin.getServer().getOfflinePlayer(uuids.get(1)).getName();
         }
         return msg;
@@ -707,12 +771,12 @@ public class Arena extends BukkitRunnable {
 
     private void calculateResults() {
         for(int b = 1; b <= 10; b++) {
-            topList.put(b, null);
+            topList.put(b, new ArrayList<>());
         }
         for(Plot buildPlot : getPlotManager().getPlots()) {
             long i = buildPlot.getPoints();
-            for(int rang : topList.keySet()){
-                if(topList.get(rang) == null || getPlotManager().getPlot(topList.get(rang).get(0)) == null) {
+            for(int rang : topList.keySet()) {
+                if(topList.get(rang) == null || topList.get(rang).isEmpty() || topList.get(rang).get(0) == null || getPlotManager().getPlot(topList.get(rang).get(0)) == null) {
                     topList.put(rang, buildPlot.getOwners());
                     break;
                 }
@@ -867,7 +931,6 @@ public class Arena extends BukkitRunnable {
             System.out.print("LobbyLocation isn't intialized for arena " + getID());
         }
         player.teleport(location);
-
     }
 
     /**

@@ -54,9 +54,9 @@ public class VoteMenuListener implements Listener {
             displayName = ChatColor.stripColor(displayName);
             boolean success = arena.getVotePoll().addVote((Player) e.getWhoClicked(), displayName);
             if(!success) {
-                e.getWhoClicked().sendMessage(ChatManager.colorMessage("Menus.Theme-Voting.Already-Voted"));
+                e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Theme-Voting.Already-Voted"));
             } else {
-                e.getWhoClicked().sendMessage(ChatManager.colorMessage("Menus.Theme-Voting.Voted-Successfully"));
+                e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Theme-Voting.Voted-Successfully"));
             }
         }
     }

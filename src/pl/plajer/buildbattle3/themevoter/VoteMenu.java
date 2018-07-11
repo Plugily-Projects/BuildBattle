@@ -29,6 +29,7 @@ import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.utils.Glow;
 import pl.plajer.buildbattle3.utils.ItemBuilder;
+import pl.plajer.buildbattle3.utils.Util;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,11 +45,9 @@ public class VoteMenu {
 
     private Inventory inventory;
     private VotePoll votePoll;
-    private List<String> themesQueue;
     private Arena arena;
 
     public VoteMenu(Arena arena) {
-        //TODO migrator for messages
         this.arena = arena;
         this.inventory = Bukkit.createInventory(null, 9 * 5, ChatManager.colorMessage("Menus.Theme-Voting.Inventory-Name"));
     }
@@ -88,7 +87,6 @@ public class VoteMenu {
                 setItem(new ItemBuilder(new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte) 14)).build(), (i * 9) + 1 + j + 1);
             }
         }
-        themesQueue = randomThemes;
         votePoll = new VotePoll(arena, randomThemes);
     }
 
@@ -96,33 +94,25 @@ public class VoteMenu {
         return inventory;
     }
 
-    public void openInventory(Player player) {
-        player.openInventory(inventory);
-    }
-
     public VotePoll getVotePoll() {
         return votePoll;
-    }
-
-    public List<String> getThemesQueue() {
-        return themesQueue;
     }
 
     public void updateInventory(Player player) {
         int totalVotes = votePoll.getPlayerVote().size();
         int i = 0;
         for(String theme : votePoll.getVotedThemes().keySet()) {
-            String percent;
+            double percent;
             if(votePoll.getVotedThemes().get(theme) == Double.NaN || votePoll.getVotedThemes().get(theme) == 0) {
-                percent = "0.0";
+                percent = 0.0;
             } else {
-                percent = String.valueOf(((double) votePoll.getVotedThemes().get(theme) / (double) totalVotes) * 100);
+                percent = ((double) votePoll.getVotedThemes().get(theme) / (double) totalVotes) * 100;
             }
             ItemStack stack = new ItemBuilder(new ItemStack(Material.SIGN))
                     .name(ChatManager.colorMessage("Menus.Theme-Voting.Theme-Item-Name").replace("%theme%", theme))
                     .lore(ChatManager.colorMessage("Menus.Theme-Voting.Theme-Item-Lore").replace("%theme%", theme)
                             //todo timer time for theme voting
-                            .replace("%percent%", percent).replace("%time-left%", String.valueOf(arena.getTimer())).split(";"))
+                            .replace("%percent%", String.valueOf(Util.round(percent, 2))).replace("%time-left%", String.valueOf(arena.getTimer())).split(";"))
                     .build();
             if(votePoll.getPlayerVote().containsKey(player) && votePoll.getPlayerVote().get(player).equals(theme)) {
                 ItemMeta meta = stack.getItemMeta();
@@ -136,7 +126,7 @@ public class VoteMenu {
             if(votePoll.getVotedThemes().get(theme) > 0) {
                 double vote = 0;
                 for(int j = 0; j < 7; j++) {
-                    if(vote > (((double) votePoll.getVotedThemes().get(theme) / (double) totalVotes)) * 100) {
+                    if(vote > percent) {
                         break;
                     }
                     setItem(new ItemBuilder(new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte) 5)).build(), (i * 9) + 1 + j + 1);

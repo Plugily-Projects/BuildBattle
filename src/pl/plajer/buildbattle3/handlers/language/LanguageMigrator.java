@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
 public class LanguageMigrator {
 
     public static final int LANGUAGE_FILE_VERSION = 4;
-    public static final int CONFIG_FILE_VERSION = 1;
+    public static final int CONFIG_FILE_VERSION = 2;
 
     private static Main plugin = JavaPlugin.getPlugin(Main.class);
     private static List<String> migratable = Arrays.asList("bungee", "config", "language", "MySQL");
@@ -73,8 +73,17 @@ public class LanguageMigrator {
             case 0:
                 LanguageMigrator.addNewLines(file, "# Should blocks behind game signs change their color based on game state?\r\n# They will change color to:\r\n" +
                         "# - white (waiting for players) stained glass\r\n# - yellow (starting) stained glass\r\n# - orange (in game) stained glass\r\n# - gray (ending) stained glass\r\n" +
-                        "# - black (restarting) stained glass\r\nSigns-Block-States-Enabled: true\r\n\r\n" +
-                        "# Don't modify\r\nVersion: 1\r\n\r\n# No way! You've reached the end! But... where's the dragon!?");
+                        "# - black (restarting) stained glass\r\nSigns-Block-States-Enabled: true\r\n\r\n");
+                LanguageMigrator.addNewLines(file, "# Total time of building in game in TEAM game mode\n" +
+                        "Team-Build-Time-In-Seconds: 540\r\n\r\n# Total time of voting for themes before starting\n" +
+                        "Theme-Voting-Time-In-Seconds: 25\r\n\r\n" +
+                        "# Don't modify\r\nVersion: 2\r\n\r\n# No way! You've reached the end! But... where's the dragon!?");
+                break;
+            case 1:
+                LanguageMigrator.addNewLines(file, "# Total time of building in game in TEAM game mode\n" +
+                        "Team-Build-Time-In-Seconds: 540\r\n\r\n# Total time of voting for themes before starting\n" +
+                        "Theme-Voting-Time-In-Seconds: 25\r\n\r\n" +
+                        "# Don't modify\r\nVersion: 2\r\n\r\n# No way! You've reached the end! But... where's the dragon!?");
                 break;
         }
         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] [System notify] Config updated, no comments were removed :)");
@@ -104,6 +113,19 @@ public class LanguageMigrator {
                         "      Place-One: \"&e1st Winner &7- %player% (Plot %number%)\"\r\n      Place-Two: \"&62nd Winner &7- %player% (Plot %number%)\"\r\n" +
                         "      Place-Three: \"&c3rd Winner &7- %player% (Plot %number%)\"\r\n      Summary-Other-Place: \"&aYou became &7%number%th\"");
                 LanguageMigrator.insertAfterLine(file, "Time-Left-To-Build:", "    Time-Left-Subtitle: \"&c%FORMATTEDTIME% seconds left\"");
+                LanguageMigrator.insertAfterLine(file, "Menus:", "  Theme-Voting:\r\n" +
+                        "    Inventory-Name: \"What theme?\"\r\n" +
+                        "    Theme-Item-Name: \"&6%theme%\"\r\n" +
+                        "    #use ; to move to next line\r\n" +
+                        "    Theme-Item-Lore: \"&7Vote for theme &b%theme%;;&7Time remaining: &c%time-left%;&7Current votes: &c%percent%%!;;&8&oLive vote percentages;&8&oare shown on the right in;&8&obar form.;;&eClick to vote &b%theme%&e!\"\r\n" +
+                        "    Voted-Successfully: \"&aVoted successfully!\"\r\n" +
+                        "    Already-Voted: \"&cYou've already voted for this theme!\"");
+                LanguageMigrator.insertAfterLine(file, "Content:", "    Playing-Teams:\r\n" +
+                        "      - \"&7Teams Mode\"\r\n" + "      - \"&fTime Left: &e%FORMATTED_TIME_LEFT%\"\r\n" + "      - \"\"\r\n" +
+                        "      - \"&fTheme: &e%THEME%\"\r\n" + "      - \"\"\r\n" + "      - \"&fArena: &e%ARENA_ID%\"\r\n" + "      - \"\"\r\n" +
+                        "      - \"&fTeammate:\"\r\n" + "      - \"&e%TEAMMATE%\"\r\n" + "      - \"\"\r\n" + "      - \"&ewww.spigotmc.org\"");
+                LanguageMigrator.insertAfterLine(file, "Join-Cancelled-Via-API:", "  Nobody: \"&eNobody\"\r\n  No-Theme-Yet: \"&cVoting for theme\"\r\n");
+                LanguageMigrator.insertAfterLine(file, "Commands:", "  No-Free-Arenas: \"&cThere are no free arenas!\"\r\n");
                 break;
             case 1:
                 LanguageMigrator.insertAfterLine(file, "Particles-Placed:", "  Main-Command:\r\n    Header: \"&6----------------{BuildBattle commands}----------\"\r\n" +
@@ -115,9 +137,35 @@ public class LanguageMigrator {
                         "      Place-One: \"&e1st Winner &7- %player% (Plot %number%)\"\r\n      Place-Two: \"&62nd Winner &7- %player% (Plot %number%)\"\r\n" +
                         "      Place-Three: \"&c3rd Winner &7- %player% (Plot %number%)\"\r\n      Summary-Other-Place: \"&aYou became &7%number%th\"");
                 LanguageMigrator.insertAfterLine(file, "Time-Left-To-Build:", "    Time-Left-Subtitle: \"&c%FORMATTEDTIME% seconds left\"");
+                LanguageMigrator.insertAfterLine(file, "Menus:", "  Theme-Voting:\r\n" +
+                        "    Inventory-Name: \"What theme?\"\r\n" +
+                        "    Theme-Item-Name: \"&6%theme%\"\r\n" +
+                        "    #use ; to move to next line\r\n" +
+                        "    Theme-Item-Lore: \"&7Vote for theme &b%theme%;;&7Time remaining: &c%time-left%;&7Current votes: &c%percent%%!;;&8&oLive vote percentages;&8&oare shown on the right in;&8&obar form.;;&eClick to vote &b%theme%&e!\"\r\n" +
+                        "    Voted-Successfully: \"&aVoted successfully!\"\r\n" +
+                        "    Already-Voted: \"&cYou've already voted for this theme!\"");
+                LanguageMigrator.insertAfterLine(file, "Content:", "    Playing-Teams:\r\n" +
+                        "      - \"&7Teams Mode\"\r\n" + "      - \"&fTime Left: &e%FORMATTED_TIME_LEFT%\"\r\n" + "      - \"\"\r\n" +
+                        "      - \"&fTheme: &e%THEME%\"\r\n" + "      - \"\"\r\n" + "      - \"&fArena: &e%ARENA_ID%\"\r\n" + "      - \"\"\r\n" +
+                        "      - \"&fTeammate:\"\r\n" + "      - \"&e%TEAMMATE%\"\r\n" + "      - \"\"\r\n" + "      - \"&ewww.spigotmc.org\"");
+                LanguageMigrator.insertAfterLine(file, "Join-Cancelled-Via-API:", "  Nobody: \"&eNobody\"\r\n  No-Theme-Yet: \"&cVoting for theme\"\r\n");
+                LanguageMigrator.insertAfterLine(file, "Commands:", "  No-Free-Arenas: \"&cThere are no free arenas!\"\r\n");
                 break;
             case 2:
                 LanguageMigrator.insertAfterLine(file, "Time-Left-To-Build:", "    Time-Left-Subtitle: \"&c%FORMATTEDTIME% seconds left\"");
+                LanguageMigrator.insertAfterLine(file, "Menus:", "  Theme-Voting:\r\n" +
+                        "    Inventory-Name: \"What theme?\"\r\n" +
+                        "    Theme-Item-Name: \"&6%theme%\"\r\n" +
+                        "    #use ; to move to next line\r\n" +
+                        "    Theme-Item-Lore: \"&7Vote for theme &b%theme%;;&7Time remaining: &c%time-left%;&7Current votes: &c%percent%%!;;&8&oLive vote percentages;&8&oare shown on the right in;&8&obar form.;;&eClick to vote &b%theme%&e!\"\r\n" +
+                        "    Voted-Successfully: \"&aVoted successfully!\"\r\n" +
+                        "    Already-Voted: \"&cYou've already voted for this theme!\"");
+                LanguageMigrator.insertAfterLine(file, "Content:", "    Playing-Teams:\r\n" +
+                        "      - \"&7Teams Mode\"\r\n" + "      - \"&fTime Left: &e%FORMATTED_TIME_LEFT%\"\r\n" + "      - \"\"\r\n" +
+                        "      - \"&fTheme: &e%THEME%\"\r\n" + "      - \"\"\r\n" + "      - \"&fArena: &e%ARENA_ID%\"\r\n" + "      - \"\"\r\n" +
+                        "      - \"&fTeammate:\"\r\n" + "      - \"&e%TEAMMATE%\"\r\n" + "      - \"\"\r\n" + "      - \"&ewww.spigotmc.org\"");
+                LanguageMigrator.insertAfterLine(file, "Join-Cancelled-Via-API:", "  Nobody: \"&eNobody\"\r\n  No-Theme-Yet: \"&cVoting for theme\"\r\n");
+                LanguageMigrator.insertAfterLine(file, "Commands:", "  No-Free-Arenas: \"&cThere are no free arenas!\"\r\n");
                 break;
             case 3:
                 LanguageMigrator.insertAfterLine(file, "Menus:", "  Theme-Voting:\r\n" +
@@ -127,6 +175,12 @@ public class LanguageMigrator {
                         "    Theme-Item-Lore: \"&7Vote for theme &b%theme%;;&7Time remaining: &c%time-left%;&7Current votes: &c%percent%%!;;&8&oLive vote percentages;&8&oare shown on the right in;&8&obar form.;;&eClick to vote &b%theme%&e!\"\r\n" +
                         "    Voted-Successfully: \"&aVoted successfully!\"\r\n" +
                         "    Already-Voted: \"&cYou've already voted for this theme!\"");
+                LanguageMigrator.insertAfterLine(file, "Content:", "    Playing-Teams:\r\n" +
+                        "      - \"&7Teams Mode\"\r\n" + "      - \"&fTime Left: &e%FORMATTED_TIME_LEFT%\"\r\n" + "      - \"\"\r\n" +
+                        "      - \"&fTheme: &e%THEME%\"\r\n" + "      - \"\"\r\n" + "      - \"&fArena: &e%ARENA_ID%\"\r\n" + "      - \"\"\r\n" +
+                        "      - \"&fTeammate:\"\r\n" + "      - \"&e%TEAMMATE%\"\r\n" + "      - \"\"\r\n" + "      - \"&ewww.spigotmc.org\"");
+                LanguageMigrator.insertAfterLine(file, "Join-Cancelled-Via-API:", "  Nobody: \"&eNobody\"\r\n  No-Theme-Yet: \"&cVoting for theme\"\r\n");
+                LanguageMigrator.insertAfterLine(file, "Commands:", "  No-Free-Arenas: \"&cThere are no free arenas!\"\r\n");
                 break;
         }
         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] [System notify] Language file updated! Nice!");

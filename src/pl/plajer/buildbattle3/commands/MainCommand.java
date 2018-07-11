@@ -49,12 +49,14 @@ import java.util.List;
  */
 public class MainCommand implements CommandExecutor {
 
+    private Main plugin;
     private AdminCommands adminCommands;
     private GameCommands gameCommands;
 
     public MainCommand() {}
 
     public MainCommand(Main plugin) {
+        this.plugin = plugin;
         TabCompletion completion = new TabCompletion();
         plugin.getCommand("buildbattle").setExecutor(this);
         plugin.getCommand("buildbattle").setTabCompleter(completion);
@@ -122,7 +124,7 @@ public class MainCommand implements CommandExecutor {
                     player.sendMessage(ChatManager.colorMessage("Commands.Invalid-Args"));
                 }
                 return true;
-            } else if(args[0].equalsIgnoreCase("settheme")){
+            } else if(args[0].equalsIgnoreCase("settheme")) {
                 if(args.length == 2) {
                     adminCommands.setArenaTheme(sender, args[1]);
                 } else {
@@ -194,6 +196,32 @@ public class MainCommand implements CommandExecutor {
                 }
                 player.sendMessage(ChatManager.colorMessage("Commands.Invalid-Args"));
                 return true;
+            } else if(args[0].equalsIgnoreCase("randomjoin")) {
+                if(!plugin.isBungeeActivated()) {
+                    if(args.length == 2) {
+                        switch(args[1].toLowerCase()) {
+                            case "solo":
+                            case "team":
+                                Arena.ArenaType type = Arena.ArenaType.valueOf(args[1].toUpperCase());
+                                for(Arena arena : ArenaRegistry.getArenas()) {
+                                    if(arena.getArenaType() == type) {
+                                        if(arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS){
+                                            ArenaManager.joinAttempt(player, arena);
+                                            return true;
+                                        }
+                                    }
+                                }
+                                player.sendMessage(ChatManager.colorMessage("Commands.No-Free-Arenas"));
+                                return true;
+                            default:
+                                player.sendMessage(ChatManager.colorMessage("Commands.Invalid-Args"));
+                                return true;
+                        }
+                    } else {
+                        player.sendMessage(ChatManager.colorMessage("Commands.Invalid-Args"));
+                        return true;
+                    }
+                }
             } else if(!args[0].equalsIgnoreCase("create") && !(args.length > 1)) {
                 List<StringMatcher.Match> matches = StringMatcher.match(args[0], Arrays.asList("stats", "join", "leave"));
                 if(!matches.isEmpty()) {
