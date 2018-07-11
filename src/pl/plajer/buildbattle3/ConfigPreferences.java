@@ -143,6 +143,10 @@ public class ConfigPreferences {
         return options.get("Disable-Scoreboard-Ingame") == 1;
     }
 
+    public static int getTeamBuildTime() {
+        return options.get("Team-Build-Time-In-Seconds");
+    }
+
     public static int getBuildTime() {
         return options.get("Build-Time-In-Seconds");
     }
@@ -180,6 +184,7 @@ public class ConfigPreferences {
     public static void loadOptions() {
         List<String> loadOptions = new ArrayList<>();
         loadOptions.add("Build-Time-In-Seconds");
+        loadOptions.add("Team-Build-Time-In-Seconds");
         loadOptions.add("Voting-Time-In-Seconds");
         loadOptions.add("Boss-Bar-Enabled");
         loadOptions.add("Fly-Range-Out-Plot");

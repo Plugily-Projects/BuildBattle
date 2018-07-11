@@ -78,7 +78,7 @@ public class Arena extends BukkitRunnable {
     private boolean themeTimerSet = false;
     private boolean scoreboardDisabled = ConfigPreferences.isScoreboardDisabled();
     private boolean bossBarEnabled = ConfigPreferences.isBarEnabled();
-    private int BUILD_TIME = ConfigPreferences.getBuildTime();
+    private int BUILD_TIME;
     private boolean PLAYERS_OUTSIDE_GAME_ENABLED = ConfigPreferences.isHidePlayersOutsideGameEnabled();
     private int LOBBY_STARTING_TIMER = ConfigPreferences.getLobbyTimer();
     private boolean WIN_COMMANDS_ENABLED = ConfigPreferences.isWinCommandsEnabled();
@@ -181,6 +181,14 @@ public class Arena extends BukkitRunnable {
 
     public void setArenaType(ArenaType arenaType) {
         this.arenaType = arenaType;
+        switch(arenaType){
+            case SOLO:
+                BUILD_TIME = ConfigPreferences.getBuildTime();
+                break;
+            case TEAM:
+                BUILD_TIME = ConfigPreferences.getTeamBuildTime();
+                break;
+        }
     }
 
     public void run() {
@@ -589,7 +597,6 @@ public class Arena extends BukkitRunnable {
 
     private void voteRoutine() {
         if(!queue.isEmpty()) {
-            setTimer(ConfigPreferences.getVotingTime());
             setTimer(ConfigPreferences.getVotingTime());
             OfflinePlayer player = plugin.getServer().getOfflinePlayer(queue.poll());
             while(getPlotManager().getPlot(player.getUniqueId()) == null && !queue.isEmpty()) {

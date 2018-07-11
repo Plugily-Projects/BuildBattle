@@ -287,11 +287,15 @@ public class Main extends JavaPlugin {
         metrics.addCustomChart(new Metrics.SimplePie("locale_used", () -> {
             switch(getConfig().getString("locale", "default")) {
                 case "default":
-                    return "English";
+                case "english":
                 case "en":
                     return "English";
+                case "polski":
+                case "polish":
                 case "pl":
                     return "Polish";
+                case "german":
+                case "deutsch":
                 case "de":
                     return "German";
                 default:

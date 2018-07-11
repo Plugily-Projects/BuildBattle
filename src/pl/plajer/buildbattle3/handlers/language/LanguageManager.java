@@ -51,6 +51,8 @@ public class LanguageManager {
             plugin.saveResource("language.yml", false);
         }
         setupLocale();
+        LanguageMigrator.configUpdate();
+        LanguageMigrator.languageFileUpdate();
         //we will wait until server is loaded, we won't soft depend those plugins
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if(pluginLocale == Locale.ENGLISH) suggestLocale();
@@ -60,7 +62,7 @@ public class LanguageManager {
     private static void loadProperties() {
         if(pluginLocale == Locale.ENGLISH) return;
         try {
-            properties.load(new InputStreamReader(plugin.getResource("/locales/" + pluginLocale.getPrefix() + ".properties"), Charset.forName("UTF-8")));
+            properties.load(new InputStreamReader(plugin.getResource("locales/" + pluginLocale.getPrefix() + ".properties"), Charset.forName("UTF-8")));
         } catch(IOException e) {
             e.printStackTrace();
         }

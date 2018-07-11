@@ -8,11 +8,8 @@
 # Locale of BB 3 language. By default it's english.
 # Available localizations:
 # default - uses messages from 'language.yml' file
-# de - Deutsche sprache. Uses messages from 'language_de.yml' file
-# pl - Jezyk Polski. Uses messages from 'language_pl.yml' file
-#
-# DO NOT MODIFY LOCALE FILES (language_de/pl.yml), THEY ARE OVERRIDDEN EVERY RESTART
-# TO EDIT THEM, COPY THEIR CONTENTS INTO language.yml FILE!
+# de - Deutsche sprache
+# pl - Jezyk Polski
 #
 locale: default
 

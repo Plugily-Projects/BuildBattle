@@ -67,7 +67,7 @@ public class SignManager implements Listener {
         gameStateToString.put(ArenaState.ENDING, ChatManager.colorMessage("Signs.Game-States.Ending"));
         gameStateToString.put(ArenaState.RESTARTING, ChatManager.colorMessage("Signs.Game-States.Restarting"));
         if(LanguageManager.getPluginLocale() == Locale.ENGLISH) {
-            signLines = LanguageManager.getLocaleFile().getStringList("Signs.Lines");
+            signLines = LanguageManager.getLanguageFile().getStringList("Signs.Lines");
         } else {
             signLines = Arrays.asList(ChatManager.colorMessage("Signs.Lines").split(";"));
         }
