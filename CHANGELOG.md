@@ -1,6 +1,6 @@
 ## BuildBattle 3 changelog
 
-### 3.2.0 Release (06/11.07.2018)
+### 3.2.0 Release (06/12.07.2018)
 * Added video tutorial link while creating new arena
 * Added new game mode: TEAM
 * Fixed error on disabling caused by disabled boss bar feature
@@ -11,6 +11,7 @@
 * Added localization support via POEditor
 * Fixed language migration from version 1 (very old)
 * Added missing plugin prefixes to some command messages
+* Added Spanish locale (thanks to TheLordDarkYT for POEditor contribution!)
 
 ### 3.1.2 Release (05.07.2018)
 * Fixed error when 1st winner UUID was null (somehow)
