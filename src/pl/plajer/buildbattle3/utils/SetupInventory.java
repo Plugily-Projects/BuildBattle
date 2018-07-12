@@ -80,10 +80,9 @@ public class SetupInventory {
         addItem(new ItemBuilder(new ItemStack(Material.WATCH))
                 .name(ChatColor.GOLD + "► Set game type")
                 .lore(ChatColor.GRAY + "Set game mode of build battle arena.")
-                .lore(ChatColor.GRAY + "Valid types: SOLO, TEAM, PRO")
+                .lore(ChatColor.GRAY + "Valid types: SOLO, TEAM")
                 .lore(ChatColor.GRAY + "SOLO - 1 player per plot")
                 .lore(ChatColor.GRAY + "TEAM - 2 players per plot")
-                .lore(ChatColor.GRAY + "PRO - unknown builders when voting, 1 player per plot")
                 .lore(isOptionDone("instances." + arena.getID() + ".gametype"))
                 .build());
         addItem(new ItemBuilder(new ItemStack(Material.NAME_TAG))

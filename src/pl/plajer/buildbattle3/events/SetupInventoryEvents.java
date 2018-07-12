@@ -29,6 +29,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
@@ -39,6 +42,8 @@ import pl.plajer.buildbattle3.utils.SetupInventory;
 import pl.plajer.buildbattle3.utils.Util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -54,13 +59,51 @@ public class SetupInventoryEvents implements Listener {
     }
 
     @EventHandler
+    public void onGameTypeSetClick(InventoryClickEvent e){
+        if(e.getWhoClicked().getType() != EntityType.PLAYER)
+            return;
+        Player player = (Player) e.getWhoClicked();
+        if(!player.hasPermission(PermissionManager.getEditGames()))
+            return;
+        if(!e.getInventory().getName().contains("Game type:"))
+            return;
+        if(e.getInventory().getHolder() != null)
+            return;
+        if(e.getCurrentItem() == null)
+            return;
+        if(!e.getCurrentItem().hasItemMeta())
+            return;
+        if(!e.getCurrentItem().getItemMeta().hasDisplayName())
+            return;
+        String name = e.getCurrentItem().getItemMeta().getDisplayName();
+        name = ChatColor.stripColor(name);
+        Arena arena = ArenaRegistry.getArena(e.getInventory().getName().replace("Game type: ", ""));
+        if(arena == null) return;
+        e.setCancelled(true);
+        if(name.contains("Solo")){
+            player.closeInventory();
+            arena.setArenaType(Arena.ArenaType.SOLO);
+            FileConfiguration config = ConfigurationManager.getConfig("arenas");
+            config.set("instances." + arena.getID() + ".gametype", "SOLO");
+            ConfigurationManager.saveConfig(config, "arenas");
+        } else if(name.contains("Team")){
+            player.closeInventory();
+            arena.setArenaType(Arena.ArenaType.TEAM);
+            FileConfiguration config = ConfigurationManager.getConfig("arenas");
+            config.set("instances." + arena.getID() + ".gametype", "TEAM");
+            ConfigurationManager.saveConfig(config, "arenas");
+        }
+        player.sendMessage(ChatColor.GREEN + "Game type of arena set to " + ChatColor.GRAY + name);
+    }
+
+    @EventHandler
     public void onClick(InventoryClickEvent event) {
         if(event.getWhoClicked().getType() != EntityType.PLAYER)
             return;
         Player player = (Player) event.getWhoClicked();
         if(!player.hasPermission(PermissionManager.getEditGames()))
             return;
-        if(!event.getInventory().getName().contains("Arena:"))
+        if(!event.getInventory().getName().contains("BB Arena:"))
             return;
         if(event.getInventory().getHolder() != null)
             return;
@@ -146,6 +189,25 @@ public class SetupInventoryEvents implements Listener {
         if(name.contains("Add floor changer NPC")) {
             player.performCommand("bba addnpc");
         }
+        if(name.contains("Set game type")){
+            player.closeInventory();
+            Inventory inv = Bukkit.createInventory(null, 9, "Game type: " + arena.getID());
+            ItemStack solo = new ItemStack(Material.NAME_TAG, 1);
+            ItemMeta soloMeta = solo.getItemMeta();
+            soloMeta.setDisplayName(ChatColor.GREEN + "Solo game mode");
+            soloMeta.setLore(Collections.singletonList(ChatColor.GRAY + "1 player per plot"));
+            solo.setItemMeta(soloMeta);
+            inv.addItem(solo);
+
+            ItemStack team = new ItemStack(Material.NAME_TAG, 1);
+            ItemMeta teamMeta = team.getItemMeta();
+            teamMeta.setDisplayName(ChatColor.GREEN + "Team game mode");
+            teamMeta.setLore(Collections.singletonList(ChatColor.GRAY + "2 players per plot"));
+            team.setItemMeta(teamMeta);
+            inv.addItem(team);
+
+            player.openInventory(inv);
+        }
         if(name.contains("Register arena")) {
             event.setCancelled(true);
             event.getWhoClicked().closeInventory();
@@ -197,6 +259,7 @@ public class SetupInventoryEvents implements Listener {
             arena.setMapName(ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + ".mapname"));
             arena.setLobbyLocation(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + ".lobbylocation")));
             arena.setEndLocation(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + ".Endlocation")));
+            arena.setArenaType(Arena.ArenaType.valueOf(ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + ".gametype").toUpperCase()));
 
             for(String plotName : config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false)) {
                 Plot buildPlot = new Plot();
