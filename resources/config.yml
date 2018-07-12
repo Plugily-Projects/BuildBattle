@@ -10,6 +10,7 @@
 # default - uses messages from 'language.yml' file
 # de - Deutsche sprache
 # pl - Jezyk Polski
+#    es - Idioma español
 #
 locale: default
 

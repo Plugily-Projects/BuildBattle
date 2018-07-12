@@ -86,6 +86,12 @@ public class LanguageManager {
             case "pl":
                 pluginLocale = Locale.POLISH;
                 break;
+            case "spanish":
+            case "espanol":
+            case "español":
+            case "es":
+                pluginLocale = Locale.SPANISH;
+                break;
             default:
                 Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Plugin locale is invalid! Using default one...");
                 pluginLocale = Locale.ENGLISH;
@@ -104,6 +110,7 @@ public class LanguageManager {
                 ASLocale locale = ASkyBlock.getPlugin().myLocale();
                 switch(locale.getLocaleName()) {
                     case "pl-PL":
+                    case "es-ES":
                     case "de-DE":
                         hasLocale = true;
                         localeName = locale.getLocaleName();
@@ -114,6 +121,7 @@ public class LanguageManager {
                 java.util.Locale locale = ess.getI18n().getCurrentLocale();
                 switch(locale.getCountry()) {
                     case "PL":
+                    case "ES":
                     case "DE":
                         hasLocale = true;
                         localeName = locale.getDisplayName();

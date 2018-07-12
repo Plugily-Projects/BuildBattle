@@ -27,7 +27,8 @@ public enum Locale {
 
     ENGLISH("English", "en_GB", "Plajer"),
     GERMAN("Deutsch", "de_DE", "Tigerkatze"),
-    POLISH("Polski", "pl_PL", "Plajer");
+    POLISH("Polski", "pl_PL", "Plajer"),
+    SPANISH("Español", "es_ES", "POEditor contributors (TheLordDarkYT)");
 
     String formattedName;
     String prefix;

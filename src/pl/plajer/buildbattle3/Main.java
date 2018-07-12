@@ -298,6 +298,11 @@ public class Main extends JavaPlugin {
                 case "deutsch":
                 case "de":
                     return "German";
+                case "spanish":
+                case "espanol":
+                case "español":
+                case "es":
+                    return "Spanish";
                 default:
                     return "English";
             }
