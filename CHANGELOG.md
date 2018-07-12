@@ -10,6 +10,7 @@
 * Implemented theme voting feature like hypixel, before game starts players will vote for theme
 * Added localization support via POEditor
 * Fixed language migration from version 1 (very old)
+* Added missing plugin prefixes to some command messages
 
 ### 3.1.2 Release (05.07.2018)
 * Fixed error when 1st winner UUID was null (somehow)

@@ -98,7 +98,6 @@ public class Arena extends BukkitRunnable {
     private Set<UUID> players = new HashSet<>();
     private BossBar gameBar;
     private ArenaType arenaType;
-    private VotePoll votePoll;
     private VoteMenu voteMenu;
 
     public Arena(String ID) {
@@ -109,7 +108,7 @@ public class Arena extends BukkitRunnable {
         }
         plotManager = new PlotManager(this);
         voteMenu = new VoteMenu(this);
-        voteMenu.insertThemes();
+        voteMenu.resetPoll();
     }
 
     /**
@@ -135,7 +134,7 @@ public class Arena extends BukkitRunnable {
     }
 
     public VotePoll getVotePoll() {
-        return votePoll;
+        return voteMenu.getVotePoll();
     }
 
     /**
@@ -181,7 +180,7 @@ public class Arena extends BukkitRunnable {
 
     public void setArenaType(ArenaType arenaType) {
         this.arenaType = arenaType;
-        switch(arenaType){
+        switch(arenaType) {
             case SOLO:
                 BUILD_TIME = ConfigPreferences.getBuildTime();
                 break;
@@ -259,15 +258,18 @@ public class Arena extends BukkitRunnable {
                         setTimer(ConfigPreferences.getThemeVoteTimer());
                         themeTimerSet = true;
                     }
-                    votePoll = voteMenu.getVotePoll();
                     for(Player p : getPlayers()) {
                         voteMenu.updateInventory(p);
                     }
                     if(getTimer() == 0) {
                         setThemeVoteTime(false);
-                        String votedTheme = votePoll.getVotedTheme();
+                        String votedTheme = voteMenu.getVotePoll().getVotedTheme();
                         setTheme(votedTheme);
-                        setTimer(ConfigPreferences.getBuildTime());
+                        if(arenaType == ArenaType.SOLO) {
+                            setTimer(ConfigPreferences.getBuildTime());
+                        } else {
+                            setTimer(ConfigPreferences.getTeamBuildTime());
+                        }
                         String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started");
                         for(Player p : getPlayers()) {
                             p.closeInventory();
@@ -280,18 +282,21 @@ public class Arena extends BukkitRunnable {
                         break;
                     }
                 }
-                if(getPlayers().size() <= 1) {
-                    String message = ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Only-You-Playing");
-                    for(Player p : getPlayers()) {
-                        p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
+                if(getPlayers().size() <= 2) {
+                    if((getPlayers().size() == 1 && arenaType == ArenaType.SOLO) || (getPlayers().size() == 2 && arenaType == ArenaType.TEAM
+                            && getPlotManager().getPlot(((Player) getPlayers().toArray()[0]).getUniqueId()).getOwners().contains(((Player) getPlayers().toArray()[1]).getUniqueId()))) {
+                        String message = ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Only-You-Playing");
+                        for(Player p : getPlayers()) {
+                            p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
+                        }
+                        setGameState(ArenaState.ENDING);
+                        Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
+                        setTimer(10);
                     }
-                    setGameState(ArenaState.ENDING);
-                    Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
-                    setTimer(10);
                 }
                 if((getTimer() == (4 * 60) || getTimer() == (3 * 60) || getTimer() == 5 * 60 || getTimer() == 30 || getTimer() == 2 * 60 || getTimer() == 60 || getTimer() == 15) && !this.isVoting()) {
                     String message = ChatManager.colorMessage("In-Game.Messages.Time-Left-To-Build").replaceAll("%FORMATTEDTIME%", Util.formatIntoMMSS(getTimer()));
-                    String subtitle = ChatManager.colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", Util.formatIntoMMSS(getTimer()));
+                    String subtitle = ChatManager.colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", String.valueOf(getTimer()));
                     for(Player p : getPlayers()) {
                         p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
                         if(plugin.is1_9_R1()) {
@@ -335,6 +340,14 @@ public class Arena extends BukkitRunnable {
                                 UserManager.getUser(player.getUniqueId()).setInt("points", 0);
                             }
                         }
+                        if(arenaType == ArenaType.TEAM) {
+                            for(Plot p : getPlotManager().getPlots()){
+                                if(p.getOwners() != null && p.getOwners().size() == 2){
+                                    //removing second owner to not vote for same plot twice
+                                    queue.remove(p.getOwners().get(1));
+                                }
+                            }
+                        }
                         voteRoutine();
                     } else {
                         if(getVotingPlot() != null) {
@@ -351,7 +364,7 @@ public class Arena extends BukkitRunnable {
                             player.teleport(winnerPlot.getTeleportLocation());
                             String winner = ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Title");
                             if(getArenaType() == ArenaType.TEAM) {
-                                if(winnerPlot.getOwners().size() == 1){
+                                if(winnerPlot.getOwners().size() == 1) {
                                     winner = winner.replace("%player%", Bukkit.getOfflinePlayer(topList.get(1).get(0)).getName());
                                 } else {
                                     winner = winner.replace("%player%", Bukkit.getOfflinePlayer(topList.get(1).get(0)).getName() + " & " + Bukkit.getOfflinePlayer(topList.get(1).get(1)).getName());
@@ -428,7 +441,9 @@ public class Arena extends BukkitRunnable {
                 }
                 setGameState(ArenaState.WAITING_FOR_PLAYERS);
                 topList.clear();
-                voteMenu.insertThemes();
+                themeTimerSet = false;
+                setThemeVoteTime(true);
+                voteMenu.resetPoll();
         }
     }
 
@@ -613,7 +628,7 @@ public class Arena extends BukkitRunnable {
                     p.teleport(getVotingPlot().getTeleportLocation());
                     String owner = ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
                     if(getArenaType() == ArenaType.TEAM) {
-                        if(getVotingPlot().getOwners().size() == 1){
+                        if(getVotingPlot().getOwners().size() == 1) {
                             owner = owner.replace("%player%", player.getName());
                         } else {
                             owner = owner.replace("%player%", Bukkit.getOfflinePlayer(getVotingPlot().getOwners().get(0)).getName() + " & " + Bukkit.getOfflinePlayer(getVotingPlot().getOwners().get(1)).getName());
@@ -657,7 +672,7 @@ public class Arena extends BukkitRunnable {
                 if(arenaType == ArenaType.TEAM) {
                     if(message.contains("%place_one%")) {
                         message = message.replace("%place_one%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-One")
-                                .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(1).get(0)).getName())
+                                .replace("%player%", formatTeamMates(topList.get(1)))
                                 .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(1).get(0)).getPoints())));
                     }
                     if(message.contains("%place_two%")) {

@@ -56,7 +56,7 @@ public class VoteMenu {
         inventory.setItem(pos, itemStack);
     }
 
-    public void insertThemes() {
+    public void resetPoll() {
         List<String> themesTotal = ConfigPreferences.getThemes();
         //random themes order
         Collections.shuffle(themesTotal);

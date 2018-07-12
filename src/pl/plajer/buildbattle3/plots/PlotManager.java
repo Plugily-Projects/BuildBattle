@@ -52,22 +52,25 @@ public class PlotManager {
 
     public void distributePlots() {
         List<Player> players = new ArrayList<>(buildInstance.getPlayers());
-        for(Plot plot : plots){
-            if(players.isEmpty()) break;
-            if(plot.getOwners() != null){
-                 if(buildInstance.getArenaType() == Arena.ArenaType.SOLO || buildInstance.getPlayers().size() == 2 /* in case of 2 min players set for team mode*/) {
-                    if(plot.getOwners().size() == 0){
-                        plot.addOwner(players.get(0).getUniqueId());
-                        UserManager.getUser(players.get(0).getUniqueId()).setObject(plot, "plot");
+        int times = buildInstance.getArenaType() == Arena.ArenaType.SOLO ? 1 : 2;
+        for(int i = 0; i < times; i++) {
+            for(Plot plot : plots) {
+                if(players.isEmpty()) break;
+                if(plot.getOwners() != null) {
+                    if(buildInstance.getArenaType() == Arena.ArenaType.SOLO || buildInstance.getPlayers().size() == 2 /* in case of 2 min players set for team mode*/) {
+                        if(plot.getOwners().size() == 0) {
+                            plot.addOwner(players.get(0).getUniqueId());
+                            UserManager.getUser(players.get(0).getUniqueId()).setObject(plot, "plot");
 
-                        players.remove(0);
-                    }
-                } else if(buildInstance.getArenaType() == Arena.ArenaType.TEAM) {
-                    if(plot.getOwners().size() < 2) {
-                        plot.addOwner(players.get(0).getUniqueId());
-                        UserManager.getUser(players.get(0).getUniqueId()).setObject(plot, "plot");
+                            players.remove(0);
+                        }
+                    } else if(buildInstance.getArenaType() == Arena.ArenaType.TEAM) {
+                        if(plot.getOwners().size() < 2) {
+                            plot.addOwner(players.get(0).getUniqueId());
+                            UserManager.getUser(players.get(0).getUniqueId()).setObject(plot, "plot");
 
-                        players.remove(0);
+                            players.remove(0);
+                        }
                     }
                 }
             }
@@ -75,7 +78,7 @@ public class PlotManager {
         if(!players.isEmpty()) {
             MessageUtils.errorOccured();
             Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] [PLOT WARNING] Not enough plots in arena " + buildInstance.getID() + "!");
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[PLOT WARNING] Required " + (buildInstance.getArenaType() == Arena.ArenaType.TEAM ? buildInstance.getPlayers().size() / 2 : buildInstance.getPlayers().size()) + " but have " + plots.size());
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[PLOT WARNING] Required " + (buildInstance.getArenaType() == Arena.ArenaType.TEAM ? Math.ceil((double) buildInstance.getPlayers().size() / 2) : buildInstance.getPlayers().size()) + " but have " + plots.size());
             Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[PLOT WARNING] Instance was stopped!");
             ArenaManager.stopGame(false, buildInstance);
         }

@@ -99,7 +99,7 @@ public class MainCommand implements CommandExecutor {
                 if(args.length == 2) {
                     adminCommands.addPlot(player, args[1]);
                 } else {
-                    player.sendMessage(ChatManager.colorMessage("Commands.Invalid-Args"));
+                    player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
                 }
                 return true;
             } else if(args[0].equalsIgnoreCase("forcestart")) {
@@ -121,14 +121,14 @@ public class MainCommand implements CommandExecutor {
                 if(args.length == 2) {
                     adminCommands.deleteArena(sender, args[1]);
                 } else {
-                    player.sendMessage(ChatManager.colorMessage("Commands.Invalid-Args"));
+                    player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
                 }
                 return true;
             } else if(args[0].equalsIgnoreCase("settheme")) {
                 if(args.length == 2) {
                     adminCommands.setArenaTheme(sender, args[1]);
                 } else {
-                    player.sendMessage(ChatManager.colorMessage("Commands.Invalid-Args"));
+                    player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
                 }
                 return true;
             } else if(args[0].equalsIgnoreCase("help")) {
@@ -168,7 +168,7 @@ public class MainCommand implements CommandExecutor {
                     gameCommands.showStats((Player) sender);
                 } else {
                     if(Bukkit.getPlayer(args[1]) == null) {
-                        player.sendMessage(ChatManager.colorMessage("Commands.Player-Not-Found"));
+                        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Player-Not-Found"));
                         return true;
                     }
                     gameCommands.showStatsOther((Player) sender, Bukkit.getPlayer(args[1]));
@@ -182,19 +182,19 @@ public class MainCommand implements CommandExecutor {
                 if(args.length == 2) {
                     Arena arena = ArenaRegistry.getArena(args[1]);
                     if(arena == null) {
-                        player.sendMessage(ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+                        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
                     } else {
                         if(arena.getPlayers().size() >= arena.getMaximumPlayers()) {
-                            player.sendMessage(ChatManager.colorMessage("Commands.Arena-Is-Full"));
+                            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Is-Full"));
                         } else if(arena.getArenaState() == ArenaState.IN_GAME) {
-                            player.sendMessage(ChatManager.colorMessage("Commands.Arena-Started"));
+                            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Started"));
                         } else {
                             ArenaManager.joinAttempt(player, arena);
                         }
                     }
                     return true;
                 }
-                player.sendMessage(ChatManager.colorMessage("Commands.Invalid-Args"));
+                player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
                 return true;
             } else if(args[0].equalsIgnoreCase("randomjoin")) {
                 if(!plugin.isBungeeActivated()) {
@@ -211,14 +211,14 @@ public class MainCommand implements CommandExecutor {
                                         }
                                     }
                                 }
-                                player.sendMessage(ChatManager.colorMessage("Commands.No-Free-Arenas"));
+                                player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Free-Arenas"));
                                 return true;
                             default:
-                                player.sendMessage(ChatManager.colorMessage("Commands.Invalid-Args"));
+                                player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
                                 return true;
                         }
                     } else {
-                        player.sendMessage(ChatManager.colorMessage("Commands.Invalid-Args"));
+                        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
                         return true;
                     }
                 }
@@ -243,7 +243,7 @@ public class MainCommand implements CommandExecutor {
         if(args[1].equalsIgnoreCase("setup") || args[1].equals("edit")) {
             Arena arena = ArenaRegistry.getArena(args[0]);
             if(arena == null) {
-                sender.sendMessage(ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+                sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
                 return;
             }
             new SetupInventory(arena).openInventory((Player) sender);
