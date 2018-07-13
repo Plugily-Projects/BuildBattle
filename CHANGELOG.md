@@ -12,6 +12,7 @@
 * Fixed language migration from version 1 (very old)
 * Added missing plugin prefixes to some command messages
 * Added Spanish locale (thanks to TheLordDarkYT for POEditor contribution!)
+* Separate game timer for team mode
 
 ### 3.1.2 Release (05.07.2018)
 * Fixed error when 1st winner UUID was null (somehow)

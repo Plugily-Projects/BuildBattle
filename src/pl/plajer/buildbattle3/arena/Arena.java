@@ -720,7 +720,7 @@ public class Arena extends BukkitRunnable {
                                 .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(1).get(0)).getPoints())));
                     }
                     if(message.contains("%place_two%")) {
-                        if(topList.containsKey(2) && topList.get(2) != null) {
+                        if(topList.containsKey(2) && topList.get(2) != null && !topList.get(2).isEmpty()) {
                             if(getPlotManager().getPlot(topList.get(1).get(0)).getPoints() == getPlotManager().getPlot(topList.get(2).get(0)).getPoints()) {
                                 message = message.replace("%place_two%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Two")
                                         .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(2).get(0)).getName())
@@ -737,7 +737,7 @@ public class Arena extends BukkitRunnable {
                         }
                     }
                     if(message.contains("%place_three%")) {
-                        if(topList.containsKey(3) && topList.get(3) != null) {
+                        if(topList.containsKey(3) && topList.get(3) != null && !topList.get(3).isEmpty()) {
                             if(getPlotManager().getPlot(topList.get(1).get(0)).getPoints() == getPlotManager().getPlot(topList.get(3).get(0)).getPoints()) {
                                 message = message.replace("%place_three%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Three")
                                         .replace("%player%", plugin.getServer().getOfflinePlayer(topList.get(3).get(0)).getName())
