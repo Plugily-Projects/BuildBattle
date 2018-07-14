@@ -547,7 +547,6 @@ public class Arena extends BukkitRunnable {
 
     private String formatScoreboardLine(String string, Player player) {
         String returnString = string;
-        returnString = StringUtils.replace(returnString, "%MIN_PLAYERS%", Integer.toString(getMinimumPlayers()));
         returnString = StringUtils.replace(returnString, "%PLAYERS%", Integer.toString(getPlayers().size()));
         returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());
         if(isThemeVoteTime()) {

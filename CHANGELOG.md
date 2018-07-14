@@ -4,7 +4,7 @@
 * Added video tutorial link while creating new arena
 * Added new game mode: TEAM
 * Fixed error on disabling caused by disabled boss bar feature
-* Item rewards at the end of the game now will be properly given after clearing in-game inventory  of players
+* Item rewards at the end of the game now will be properly given after clearing in-game inventory of players
 * Vote items now look like Hypixel ones
 * Worst vote will now count as 1 point not 0 (so every other vote is +1 point now)
 * Implemented theme voting feature like hypixel, before game starts players will vote for theme
