@@ -1,5 +1,9 @@
 ## BuildBattle 3 changelog
 
+### 3.2.1 Release (14.07.2018)
+* Fixed NPE when clicking not named Villager
+* Fixed migration error
+
 ### 3.2.0 Release (06/12.07.2018)
 * Added video tutorial link while creating new arena
 * Added new game mode: TEAM
