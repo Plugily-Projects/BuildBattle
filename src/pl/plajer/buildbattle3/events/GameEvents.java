@@ -60,14 +60,14 @@ import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.arena.ArenaState;
 import pl.plajer.buildbattle3.entities.BuildBattleEntity;
 import pl.plajer.buildbattle3.handlers.ChatManager;
-import pl.plajer.buildbattle3.items.SpecialItemManager;
-import pl.plajer.buildbattle3.particles.ParticleMenu;
-import pl.plajer.buildbattle3.particles.ParticleRemoveMenu;
-import pl.plajer.buildbattle3.playerheads.PlayerHeadsMenu;
-import pl.plajer.buildbattle3.plots.Plot;
+import pl.plajer.buildbattle3.handlers.items.SpecialItemManager;
+import pl.plajer.buildbattle3.menus.particles.ParticleMenu;
+import pl.plajer.buildbattle3.menus.particles.ParticleRemoveMenu;
+import pl.plajer.buildbattle3.menus.playerheads.PlayerHeadsMenu;
+import pl.plajer.buildbattle3.arena.plots.ArenaPlot;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
-import pl.plajer.buildbattle3.utils.OptionsMenu;
+import pl.plajer.buildbattle3.menus.OptionsMenu;
 
 import java.util.UUID;
 
@@ -147,7 +147,7 @@ public class GameEvents implements Listener {
     @EventHandler
     public void onPistonExtendEvent(BlockPistonExtendEvent event) {
         for(Arena arena : ArenaRegistry.getArenas()) {
-            for(Plot buildPlot : arena.getPlotManager().getPlots()) {
+            for(ArenaPlot buildPlot : arena.getPlotManager().getPlots()) {
                 for(Block block : event.getBlocks()) {
                     if(!buildPlot.isInPlotRange(block.getLocation(), -1) && buildPlot.isInPlot(event.getBlock().getLocation())) {
                         event.setCancelled(true);
@@ -169,7 +169,7 @@ public class GameEvents implements Listener {
     @EventHandler
     public void onWaterFlowEvent(BlockFromToEvent event) {
         for(Arena arena : ArenaRegistry.getArenas()) {
-            for(Plot buildPlot : arena.getPlotManager().getPlots()) {
+            for(ArenaPlot buildPlot : arena.getPlotManager().getPlots()) {
                 if(!buildPlot.isInPlot(event.getToBlock().getLocation()) && buildPlot.isInPlot(event.getBlock().getLocation())) {
                     event.setCancelled(true);
                 }
@@ -180,7 +180,7 @@ public class GameEvents implements Listener {
     @EventHandler
     public void onTNTExplode(EntityExplodeEvent event) {
         for(Arena arena : ArenaRegistry.getArenas()) {
-            for(Plot buildPlot : arena.getPlotManager().getPlots()) {
+            for(ArenaPlot buildPlot : arena.getPlotManager().getPlots()) {
                 if(buildPlot.isInPlotRange(event.getEntity().getLocation(), 0)) {
                     event.blockList().clear();
                     event.setCancelled(true);
@@ -222,7 +222,7 @@ public class GameEvents implements Listener {
     public void onTreeGrow(StructureGrowEvent event) {
         Arena arena = ArenaRegistry.getArena(event.getPlayer());
         if(arena == null) return;
-        Plot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
+        ArenaPlot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
         if(buildPlot == null) return;
         for(BlockState blockState : event.getBlocks()) {
             if(!buildPlot.isInPlot(blockState.getLocation())) blockState.setType(Material.AIR);
@@ -233,7 +233,7 @@ public class GameEvents implements Listener {
     @EventHandler
     public void onDispense(BlockDispenseEvent event) {
         for(Arena arena : ArenaRegistry.getArenas()) {
-            for(Plot buildPlot : arena.getPlotManager().getPlots()) {
+            for(ArenaPlot buildPlot : arena.getPlotManager().getPlots()) {
                 if(!buildPlot.isInPlotRange(event.getBlock().getLocation(), -1) && buildPlot.isInPlotRange(event.getBlock().getLocation(), 5)) {
                     event.setCancelled(true);
                 }
@@ -337,7 +337,7 @@ public class GameEvents implements Listener {
     public void onBucketEmpty(PlayerBucketEmptyEvent event) {
         Arena arena = ArenaRegistry.getArena(event.getPlayer());
         if(arena == null) return;
-        Plot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
+        ArenaPlot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
         if(buildPlot == null) return;
         if(!buildPlot.isInPlot(event.getBlockClicked().getRelative(event.getBlockFace()).getLocation())) event.setCancelled(true);
     }
@@ -362,7 +362,7 @@ public class GameEvents implements Listener {
                     event.setCancelled(true);
                     return;
                 }
-                for(Plot buildplot : arena.getPlotManager().getPlots()) {
+                for(ArenaPlot buildplot : arena.getPlotManager().getPlots()) {
                     if(buildplot.isInPlotRange(event.getEntity().getLocation(), 10)) {
                         event.setCancelled(true);
                         return;
@@ -389,7 +389,7 @@ public class GameEvents implements Listener {
     @EventHandler
     public void onLeavesDecay(LeavesDecayEvent event) {
         for(Arena arena : ArenaRegistry.getArenas()) {
-            for(Plot buildPlot : arena.getPlotManager().getPlots()) {
+            for(ArenaPlot buildPlot : arena.getPlotManager().getPlots()) {
                 if(buildPlot.isInPlotRange(event.getBlock().getLocation(), 5)) {
                     event.setCancelled(true);
                 }
@@ -426,7 +426,7 @@ public class GameEvents implements Listener {
             return;
         }
         User user = UserManager.getUser(event.getPlayer().getUniqueId());
-        Plot buildPlot = (Plot) user.getObject("plot");
+        ArenaPlot buildPlot = (ArenaPlot) user.getObject("plot");
         if(buildPlot == null) {
             event.setCancelled(true);
             return;
@@ -455,7 +455,7 @@ public class GameEvents implements Listener {
             return;
         }
         User user = UserManager.getUser(event.getPlayer().getUniqueId());
-        Plot buildPlot = (Plot) user.getObject("plot");
+        ArenaPlot buildPlot = (ArenaPlot) user.getObject("plot");
         if(buildPlot == null) {
             event.setCancelled(true);
             return;

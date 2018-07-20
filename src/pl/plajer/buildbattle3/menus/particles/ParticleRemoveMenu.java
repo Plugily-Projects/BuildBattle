@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle3.particles;
+package pl.plajer.buildbattle3.menus.particles;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -25,7 +25,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import pl.plajer.buildbattle3.handlers.ChatManager;
-import pl.plajer.buildbattle3.plots.Plot;
+import pl.plajer.buildbattle3.arena.plots.ArenaPlot;
 import pl.plajer.buildbattle3.utils.Util;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
  */
 public class ParticleRemoveMenu {
 
-    public static void openMenu(Player player, Plot buildPlot) {
+    public static void openMenu(Player player, ArenaPlot buildPlot) {
         Inventory inventory = player.getServer().createInventory(player, 6 * 9, ChatManager.colorMessage("Menus.Option-Menu.Particle-Remove"));
 
         for(Location location : buildPlot.getParticles().keySet()) {
@@ -57,7 +57,7 @@ public class ParticleRemoveMenu {
         player.openInventory(inventory);
     }
 
-    public static void onClick(Player p, Inventory inventory, ItemStack itemStack, Plot buildPlot) {
+    public static void onClick(Player p, Inventory inventory, ItemStack itemStack, ArenaPlot buildPlot) {
         List<String> lore = itemStack.getItemMeta().getLore();
         double x = 0, y = 0, z = 0;
         for(String string : lore) {

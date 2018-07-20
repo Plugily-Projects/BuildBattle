@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle3.themevoter;
+package pl.plajer.buildbattle3.menus.themevoter;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

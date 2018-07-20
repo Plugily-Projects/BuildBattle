@@ -38,14 +38,14 @@ import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.handlers.MessageHandler;
 import pl.plajer.buildbattle3.handlers.language.LanguageManager;
 import pl.plajer.buildbattle3.handlers.language.Locale;
-import pl.plajer.buildbattle3.plots.Plot;
-import pl.plajer.buildbattle3.plots.PlotManager;
-import pl.plajer.buildbattle3.themevoter.VoteMenu;
-import pl.plajer.buildbattle3.themevoter.VotePoll;
+import pl.plajer.buildbattle3.arena.plots.ArenaPlot;
+import pl.plajer.buildbattle3.arena.plots.ArenaPlotManager;
+import pl.plajer.buildbattle3.menus.themevoter.VoteMenu;
+import pl.plajer.buildbattle3.menus.themevoter.VotePoll;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.MessageUtils;
-import pl.plajer.buildbattle3.utils.OptionsMenu;
+import pl.plajer.buildbattle3.menus.OptionsMenu;
 import pl.plajer.buildbattle3.utils.Util;
 
 import java.util.ArrayList;
@@ -68,11 +68,11 @@ public class Arena extends BukkitRunnable {
     private static List<Integer> blacklist = new ArrayList<>();
     private Map<Integer, List<UUID>> topList = new HashMap<>();
     private String theme = "Theme";
-    private PlotManager plotManager;
+    private ArenaPlotManager plotManager;
     private boolean receivedVoteItems;
     private Queue<UUID> queue = new LinkedList<>();
     private int extraCounter;
-    private Plot votingPlot = null;
+    private ArenaPlot votingPlot = null;
     private boolean voteTime;
     private boolean themeVoteTime = true;
     private boolean themeTimerSet = false;
@@ -106,7 +106,7 @@ public class Arena extends BukkitRunnable {
         if(bossBarEnabled) {
             gameBar = Bukkit.createBossBar(ChatManager.colorMessage("Bossbar.Waiting-For-Players"), BarColor.BLUE, BarStyle.SOLID);
         }
-        plotManager = new PlotManager(this);
+        plotManager = new ArenaPlotManager(this);
         voteMenu = new VoteMenu(this);
         voteMenu.resetPoll();
     }
@@ -158,7 +158,7 @@ public class Arena extends BukkitRunnable {
         this.themeVoteTime = themeVoteTime;
     }
 
-    public PlotManager getPlotManager() {
+    public ArenaPlotManager getPlotManager() {
         return plotManager;
     }
 
@@ -311,7 +311,7 @@ public class Arena extends BukkitRunnable {
                         extraCounter = 0;
                         for(Player player : getPlayers()) {
                             User user = UserManager.getUser(player.getUniqueId());
-                            Plot buildPlot = (Plot) user.getObject("plot");
+                            ArenaPlot buildPlot = (ArenaPlot) user.getObject("plot");
                             if(buildPlot != null) {
                                 if(!buildPlot.isInFlyRange(player)) {
                                     player.teleport(buildPlot.getTeleportLocation());
@@ -341,7 +341,7 @@ public class Arena extends BukkitRunnable {
                             }
                         }
                         if(arenaType == ArenaType.TEAM) {
-                            for(Plot p : getPlotManager().getPlots()){
+                            for(ArenaPlot p : getPlotManager().getPlots()){
                                 if(p.getOwners() != null && p.getOwners().size() == 2){
                                     //removing second owner to not vote for same plot twice
                                     queue.remove(p.getOwners().get(1));
@@ -358,7 +358,7 @@ public class Arena extends BukkitRunnable {
                         }
                         calculateResults();
                         announceResults();
-                        Plot winnerPlot = getPlotManager().getPlot(topList.get(1).get(0));
+                        ArenaPlot winnerPlot = getPlotManager().getPlot(topList.get(1).get(0));
 
                         for(Player player : getPlayers()) {
                             player.teleport(winnerPlot.getTeleportLocation());
@@ -641,11 +641,11 @@ public class Arena extends BukkitRunnable {
      *
      * @return Plot object where players are voting
      */
-    public Plot getVotingPlot() {
+    public ArenaPlot getVotingPlot() {
         return votingPlot;
     }
 
-    private void setVotingPlot(Plot buildPlot) {
+    private void setVotingPlot(ArenaPlot buildPlot) {
         votingPlot = buildPlot;
     }
 
@@ -786,7 +786,7 @@ public class Arena extends BukkitRunnable {
         for(int b = 1; b <= 10; b++) {
             topList.put(b, new ArrayList<>());
         }
-        for(Plot buildPlot : getPlotManager().getPlots()) {
+        for(ArenaPlot buildPlot : getPlotManager().getPlots()) {
             long i = buildPlot.getPoints();
             for(int rang : topList.keySet()) {
                 if(topList.get(rang) == null || topList.get(rang).isEmpty() || topList.get(rang).get(0) == null || getPlotManager().getPlot(topList.get(rang).get(0)) == null) {

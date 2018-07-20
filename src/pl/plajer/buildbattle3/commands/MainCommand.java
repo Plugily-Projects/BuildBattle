@@ -34,7 +34,7 @@ import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.arena.ArenaState;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
-import pl.plajer.buildbattle3.utils.SetupInventory;
+import pl.plajer.buildbattle3.menus.SetupInventory;
 import pl.plajer.buildbattle3.utils.StringMatcher;
 import pl.plajer.buildbattle3.utils.Util;
 

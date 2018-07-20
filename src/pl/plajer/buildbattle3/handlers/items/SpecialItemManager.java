@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle3.items;
+package pl.plajer.buildbattle3.handlers.items;
 
 import org.bukkit.inventory.ItemStack;
 

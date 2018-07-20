@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle3.particles;
+package pl.plajer.buildbattle3.menus.particles;
 
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -27,7 +27,7 @@ import org.bukkit.inventory.ItemStack;
 import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
-import pl.plajer.buildbattle3.plots.Plot;
+import pl.plajer.buildbattle3.arena.plots.ArenaPlot;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.Util;
 
@@ -85,7 +85,7 @@ public class ParticleMenu {
     }
 
 
-    public static void onClick(Player player, ItemStack itemStack, Plot buildPlot) {
+    public static void onClick(Player player, ItemStack itemStack, ArenaPlot buildPlot) {
         for(ParticleItem particleItem : particleItems) {
             if(particleItem.getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName()) && particleItem.getMaterial() == itemStack.getType()) {
                 if(!player.hasPermission(particleItem.getPermission())) {

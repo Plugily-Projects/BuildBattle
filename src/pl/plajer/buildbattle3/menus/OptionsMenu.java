@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle3.utils;
+package pl.plajer.buildbattle3.menus;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -26,7 +26,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import pl.plajer.buildbattle3.handlers.ChatManager;
-import pl.plajer.buildbattle3.plots.Plot;
+import pl.plajer.buildbattle3.arena.plots.ArenaPlot;
+import pl.plajer.buildbattle3.utils.ItemBuilder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,7 +42,7 @@ public class OptionsMenu {
         return new ItemBuilder(Material.NETHER_STAR).name(ChatManager.colorMessage("Menus.Option-Menu.Option-Item")).lore(ChatManager.colorMessage("Menus.Option-Menu.Option-Item-Lore")).build();
     }
 
-    private static Inventory createMenu(Plot plot) {
+    private static Inventory createMenu(ArenaPlot plot) {
         Inventory inv = Bukkit.createInventory(null, 5 * 9, ChatManager.colorMessage("Menus.Option-Menu.Inventory-Name"));
 
         ItemStack headOption = new ItemStack(Material.SKULL_ITEM, 1);
@@ -77,7 +78,7 @@ public class OptionsMenu {
         return inv;
     }
 
-    public static void openMenu(Player player, Plot buildPlot) {
+    public static void openMenu(Player player, ArenaPlot buildPlot) {
         player.openInventory(createMenu(buildPlot));
     }
 

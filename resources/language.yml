@@ -172,6 +172,11 @@ Menus:
     Reset-Option: "&cReset plot"
     Reset-Option-Lore: "&7Fully reset plot, &c&lcan't be undone!"
     Reset-Option-Done: "&cPlot fully reset!"
+    Weather-Inventory-Name: "&aSet weather"
+    Weather-Option-Item: "&aChange plot weather"
+    Weather-Option-Lore: "&7Right click to open menu"
+    Weather-Downfall: "&eDownfall"
+    Weather-Clear: "&eClear"
   Theme-Voting:
     Inventory-Name: "What theme?"
     Theme-Item-Name: "&6%theme%"

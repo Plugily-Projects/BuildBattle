@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle3.plots;
+package pl.plajer.buildbattle3.arena.plots;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -25,7 +25,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaManager;
-import pl.plajer.buildbattle3.handlers.MessageHandler;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.MessageUtils;
 
@@ -36,17 +35,17 @@ import java.util.UUID;
 /**
  * Created by Tom on 17/08/2015.
  */
-public class PlotManager {
+public class ArenaPlotManager {
 
-    private List<Plot> plots = new ArrayList<>();
-    private List<Plot> plotsToClear = new ArrayList<>();
+    private List<ArenaPlot> plots = new ArrayList<>();
+    private List<ArenaPlot> plotsToClear = new ArrayList<>();
     private Arena buildInstance;
 
-    public PlotManager(Arena buildInstance) {
+    public ArenaPlotManager(Arena buildInstance) {
         this.buildInstance = buildInstance;
     }
 
-    public void addBuildPlot(Plot buildPlot) {
+    public void addBuildPlot(ArenaPlot buildPlot) {
         plots.add(buildPlot);
     }
 
@@ -54,7 +53,7 @@ public class PlotManager {
         List<Player> players = new ArrayList<>(buildInstance.getPlayers());
         int times = buildInstance.getArenaType() == Arena.ArenaType.SOLO ? 1 : 2;
         for(int i = 0; i < times; i++) {
-            for(Plot plot : plots) {
+            for(ArenaPlot plot : plots) {
                 if(players.isEmpty()) break;
                 if(plot.getOwners() != null) {
                     if(buildInstance.getArenaType() == Arena.ArenaType.SOLO || buildInstance.getPlayers().size() == 2 /* in case of 2 min players set for team mode*/) {
@@ -84,8 +83,8 @@ public class PlotManager {
         }
     }
 
-    public Plot getPlot(Player player) {
-        for(Plot buildPlot : plots) {
+    public ArenaPlot getPlot(Player player) {
+        for(ArenaPlot buildPlot : plots) {
             if(buildPlot.getOwners() != null || !buildPlot.getOwners().isEmpty()) {
                 if(buildPlot.getOwners().contains(player.getUniqueId())) return buildPlot;
             }
@@ -93,8 +92,8 @@ public class PlotManager {
         return null;
     }
 
-    public Plot getPlot(UUID uuid) {
-        for(Plot buildPlot : plots) {
+    public ArenaPlot getPlot(UUID uuid) {
+        for(ArenaPlot buildPlot : plots) {
             if(buildPlot.getOwners() != null || !buildPlot.getOwners().isEmpty()) {
                 if(buildPlot.getOwners().contains(uuid)) return buildPlot;
             }
@@ -103,7 +102,7 @@ public class PlotManager {
     }
 
     public void resetQeuedPlots() {
-        for(Plot buildPlot : plotsToClear) {
+        for(ArenaPlot buildPlot : plotsToClear) {
             buildPlot.fullyResetPlot();
         }
         plotsToClear.clear();
@@ -121,7 +120,7 @@ public class PlotManager {
     }
 
     public void teleportToPlots() {
-        for(Plot buildPlot : plots) {
+        for(ArenaPlot buildPlot : plots) {
             if(buildPlot.getOwners() != null || !buildPlot.getOwners().isEmpty()) {
                 Location tploc = buildPlot.getCenter();
                 while(tploc.getBlock().getType() != Material.AIR) tploc = tploc.add(0, 1, 0);
@@ -135,7 +134,7 @@ public class PlotManager {
         }
     }
 
-    public List<Plot> getPlots() {
+    public List<ArenaPlot> getPlots() {
         return plots;
     }
 

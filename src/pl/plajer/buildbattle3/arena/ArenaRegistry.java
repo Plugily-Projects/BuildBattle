@@ -23,7 +23,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
-import pl.plajer.buildbattle3.plots.Plot;
+import pl.plajer.buildbattle3.arena.plots.ArenaPlot;
 import pl.plajer.buildbattle3.utils.Util;
 
 import javax.annotation.Nullable;
@@ -122,7 +122,7 @@ public class ArenaRegistry {
                 if(config.isConfigurationSection(s + "plots")) {
                     for(String plotName : config.getConfigurationSection(s + "plots").getKeys(false)) {
                         if(config.isSet(s + "plots." + plotName + ".maxpoint") && config.isSet(s + "plots." + plotName + ".minpoint")) {
-                            Plot buildPlot = new Plot();
+                            ArenaPlot buildPlot = new ArenaPlot();
                             buildPlot.setMaxPoint(Util.getLocation(false, config.getString(s + "plots." + plotName + ".maxpoint")));
                             buildPlot.setMinPoint(Util.getLocation(false, config.getString(s + "plots." + plotName + ".minpoint")));
                             buildPlot.fullyResetPlot();

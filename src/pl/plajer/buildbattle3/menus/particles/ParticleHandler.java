@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle3.particles;
+package pl.plajer.buildbattle3.menus.particles;
 
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -24,7 +24,7 @@ import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
-import pl.plajer.buildbattle3.plots.Plot;
+import pl.plajer.buildbattle3.arena.plots.ArenaPlot;
 
 /**
  * Created by Tom on 23/08/2015.
@@ -50,7 +50,7 @@ public class ParticleHandler extends BukkitRunnable {
     @Override
     public void run() {
         for(Arena arena : ArenaRegistry.getArenas()) {
-            for(Plot buildPlot : arena.getPlotManager().getPlots()) {
+            for(ArenaPlot buildPlot : arena.getPlotManager().getPlots()) {
                 for(Location location : buildPlot.getParticles().keySet()) {
                     if(!arena.getPlayers().isEmpty())
                         //per player?

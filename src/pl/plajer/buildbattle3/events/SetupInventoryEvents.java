@@ -37,12 +37,11 @@ import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
 import pl.plajer.buildbattle3.handlers.PermissionManager;
-import pl.plajer.buildbattle3.plots.Plot;
-import pl.plajer.buildbattle3.utils.SetupInventory;
+import pl.plajer.buildbattle3.arena.plots.ArenaPlot;
+import pl.plajer.buildbattle3.menus.SetupInventory;
 import pl.plajer.buildbattle3.utils.Util;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -228,7 +227,7 @@ public class SetupInventoryEvents implements Listener {
             } else {
                 for(String plotName : ConfigurationManager.getConfig("arenas").getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false)) {
                     if(ConfigurationManager.getConfig("arenas").isSet("instances." + arena.getID() + ".plots." + plotName + ".maxpoint") && ConfigurationManager.getConfig("arenas").isSet("instances." + arena.getID() + ".plots." + plotName + ".minpoint")) {
-                        Plot buildPlot = new Plot();
+                        ArenaPlot buildPlot = new ArenaPlot();
                         buildPlot.setMaxPoint(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint")));
                         buildPlot.setMinPoint(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint")));
                         buildPlot.fullyResetPlot();
@@ -262,7 +261,7 @@ public class SetupInventoryEvents implements Listener {
             arena.setArenaType(Arena.ArenaType.valueOf(ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + ".gametype").toUpperCase()));
 
             for(String plotName : config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false)) {
-                Plot buildPlot = new Plot();
+                ArenaPlot buildPlot = new ArenaPlot();
                 buildPlot.setMaxPoint(Util.getLocation(false, config.getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint")));
                 buildPlot.setMinPoint(Util.getLocation(false, config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint")));
                 buildPlot.fullyResetPlot();

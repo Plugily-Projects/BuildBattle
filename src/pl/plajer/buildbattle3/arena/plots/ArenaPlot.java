@@ -16,13 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle3.plots;
+package pl.plajer.buildbattle3.arena.plots;
 
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import net.citizensnpcs.api.CitizensAPI;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.WeatherType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -41,16 +42,18 @@ import java.util.UUID;
 /**
  * Created by Tom on 17/08/2015.
  */
-public class Plot {
+public class ArenaPlot {
 
     private Location maxPoint;
     private Location minPoint;
     private int points;
     private List<UUID> uuids = new ArrayList<>();
     private Map<Location, Particle> particles = new HashMap<>();
+    private WeatherType weatherType;
+    private int time;
     private int entities = 0;
 
-    public Plot() {}
+    public ArenaPlot() {}
 
     public int getEntities() {
         return entities;
@@ -71,6 +74,22 @@ public class Plot {
 
     public void addParticle(Location location, Particle effect) {
         particles.put(location, effect);
+    }
+
+    public WeatherType getWeatherType() {
+        return weatherType;
+    }
+
+    public void setWeatherType(WeatherType weatherType) {
+        this.weatherType = weatherType;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
     }
 
     private Location getMaxPoint() {

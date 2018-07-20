@@ -16,53 +16,51 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle3.items;
+package pl.plajer.buildbattle3.menus.particles;
 
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.Particle;
 import org.bukkit.inventory.ItemStack;
 import pl.plajer.buildbattle3.handlers.ChatManager;
-import pl.plajer.buildbattle3.handlers.ConfigurationManager;
 import pl.plajer.buildbattle3.utils.Util;
 
 import java.util.List;
 
 /**
- * Created by Tom on 5/02/2016.
+ * Created by Tom on 23/08/2015.
  */
-public class SpecialItem {
+public class ParticleItem {
 
     private Material material;
     private Byte data = null;
     private String[] lore;
     private String displayName;
+    private Particle effect;
+    private String permission;
+    private boolean enabled = true;
     private int slot;
-    private String name;
 
-    private SpecialItem(String name) {
-        this.name = name;
+    public String getPermission() {
+        return permission;
     }
 
-    public static void loadAll() {
-        new SpecialItem("Leave").load();
+    public void setPermission(String permission) {
+        this.permission = permission;
     }
 
-    private void load() {
-        FileConfiguration config = ConfigurationManager.getConfig("SpecialItems");
-        SpecialItem particleItem = new SpecialItem(name);
-        particleItem.setData(config.getInt(name + ".data"));
-        particleItem.setMaterial(org.bukkit.Material.getMaterial(config.getInt(name + ".material")));
-        particleItem.setLore(config.getStringList(name + ".lore"));
-        particleItem.setDisplayName(config.getString(name + ".displayname"));
-        particleItem.setSlot(config.getInt(name + ".slot"));
-        SpecialItemManager.addEntityItem(name, particleItem);
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public Material getMaterial() {
         return material;
     }
 
-    private void setMaterial(Material material) {
+    public void setMaterial(Material material) {
         this.material = material;
     }
 
@@ -70,27 +68,35 @@ public class SpecialItem {
         return data;
     }
 
-    private void setData(Integer data) {
+    public void setData(Integer data) {
         this.data = data.byteValue();
     }
 
-    private void setLore(List<String> lore) {
+    public void setLore(List<String> lore) {
         this.lore = lore.toArray(new String[0]);
     }
 
-    private String getDisplayName() {
+    public String getDisplayName() {
         return ChatManager.colorRawMessage(displayName);
     }
 
-    private void setDisplayName(String displayName) {
+    public void setDisplayName(String displayName) {
         this.displayName = displayName;
+    }
+
+    public Particle getEffect() {
+        return effect;
+    }
+
+    public void setEffect(Particle effect) {
+        this.effect = effect;
     }
 
     public int getSlot() {
         return slot;
     }
 
-    private void setSlot(int slot) {
+    public void setSlot(int slot) {
         this.slot = slot;
     }
 
@@ -105,6 +111,4 @@ public class SpecialItem {
         Util.setItemNameAndLore(itemStack, ChatManager.colorRawMessage(this.getDisplayName()), lore);
         return itemStack;
     }
-
-
 }

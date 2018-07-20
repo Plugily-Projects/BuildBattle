@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle3.utils;
+package pl.plajer.buildbattle3.menus;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -28,6 +28,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
+import pl.plajer.buildbattle3.utils.ItemBuilder;
+import pl.plajer.buildbattle3.utils.Util;
 
 /**
  * Created by Tom on 15/06/2015.
