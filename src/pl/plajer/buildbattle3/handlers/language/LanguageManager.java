@@ -71,6 +71,12 @@ public class LanguageManager {
     private static void setupLocale() {
         String locale = plugin.getConfig().getString("locale", "default");
         switch(locale.toLowerCase()) {
+            case "简体中文":
+            case "中文":
+            case "chinese":
+            case "zh":
+                pluginLocale = Locale.CHINESE_SIMPLIFIED;
+                break;
             case "default":
             case "english":
             case "en":
@@ -80,6 +86,11 @@ public class LanguageManager {
             case "deutsch":
             case "de":
                 pluginLocale = Locale.GERMAN;
+                break;
+            case "hungarian":
+            case "magyar":
+            case "hu":
+                pluginLocale = Locale.HUNGARIAN;
                 break;
             case "polish":
             case "polski":
@@ -91,6 +102,12 @@ public class LanguageManager {
             case "español":
             case "es":
                 pluginLocale = Locale.SPANISH;
+                break;
+            case "vietnamese":
+            case "việt":
+            case "viet":
+            case "vn":
+                pluginLocale = Locale.VIETNAMESE;
                 break;
             default:
                 Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Plugin locale is invalid! Using default one...");
@@ -112,6 +129,9 @@ public class LanguageManager {
                     case "pl-PL":
                     case "es-ES":
                     case "de-DE":
+                    case "zh-CN":
+                    case "vn-VN":
+                    case "hu_HU":
                         hasLocale = true;
                         localeName = locale.getLocaleName();
                 }
@@ -123,6 +143,9 @@ public class LanguageManager {
                     case "PL":
                     case "ES":
                     case "DE":
+                    case "HU":
+                    case "VN":
+                    case "ZH":
                         hasLocale = true;
                         localeName = locale.getDisplayName();
                 }

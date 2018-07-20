@@ -1,5 +1,9 @@
 ## BuildBattle 3 changelog
 
+### 3.2.2 Release (20.07.2018)
+* Fixed NoSuchMethod error in 1.9.4 for title
+* Added support for Vietnamese, Hungarian and Chinese simplified locales
+
 ### 3.2.1 Release (14.07.2018)
 * Fixed NPE when clicking not named Villager
 * Fixed migration error

@@ -131,6 +131,10 @@ public class Main extends JavaPlugin {
         return version.equalsIgnoreCase("v1_9_R1");
     }
 
+    public boolean is1_9_R2() {
+        return version.equalsIgnoreCase("v1_9_R2");
+    }
+
     public boolean isDataEnabled() {
         return dataEnabled;
     }

@@ -30,7 +30,7 @@ public class MessageHandler {
     private static Main plugin = JavaPlugin.getPlugin(Main.class);
 
     public static void sendTitleMessage(Player player, String text, int fadeInTime, int showTime, int fadeOutTime) {
-        if(plugin.is1_9_R1()) {
+        if(plugin.is1_9_R1() || plugin.is1_9_R2()) {
             player.sendTitle(text, null);
         } else {
             player.sendTitle(text, null, fadeInTime, showTime, fadeOutTime);

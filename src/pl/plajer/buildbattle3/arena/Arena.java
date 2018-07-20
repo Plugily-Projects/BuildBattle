@@ -299,7 +299,7 @@ public class Arena extends BukkitRunnable {
                     String subtitle = ChatManager.colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", String.valueOf(getTimer()));
                     for(Player p : getPlayers()) {
                         p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
-                        if(plugin.is1_9_R1()) {
+                        if(plugin.is1_9_R1() || plugin.is1_9_R2()) {
                             p.sendTitle(null, subtitle);
                         } else {
                             p.sendTitle(null, subtitle, 5, 30, 5);
@@ -369,18 +369,10 @@ public class Arena extends BukkitRunnable {
                                 } else {
                                     winner = winner.replace("%player%", Bukkit.getOfflinePlayer(topList.get(1).get(0)).getName() + " & " + Bukkit.getOfflinePlayer(topList.get(1).get(1)).getName());
                                 }
-                                if(plugin.is1_9_R1()) {
-                                    player.sendTitle(winner, null);
-                                } else {
-                                    player.sendTitle(winner, null, 5, 35, 5);
-                                }
+                                MessageHandler.sendTitleMessage(player, winner, 5, 35, 5);
                             } else {
                                 winner = winner.replace("%player%", Bukkit.getOfflinePlayer(topList.get(1).get(0)).getName());
-                                if(plugin.is1_9_R1()) {
-                                    player.sendTitle(winner, null);
-                                } else {
-                                    player.sendTitle(winner, null, 5, 35, 5);
-                                }
+                                MessageHandler.sendTitleMessage(player, winner, 5, 35, 5);
                             }
                         }
                         this.setGameState(ArenaState.ENDING);

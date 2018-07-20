@@ -25,10 +25,13 @@ package pl.plajer.buildbattle3.handlers.language;
  */
 public enum Locale {
 
+    CHINESE_SIMPLIFIED("简体中文", "zh_Hans", "POEditor contributors (Haoting)"),
     ENGLISH("English", "en_GB", "Plajer"),
     GERMAN("Deutsch", "de_DE", "Tigerkatze"),
+    HUNGARIAN("Magyar", "hu_HU", "POEditor contributors (montlikadani)"),
     POLISH("Polski", "pl_PL", "Plajer"),
-    SPANISH("Español", "es_ES", "POEditor contributors (TheLordDarkYT)");
+    SPANISH("Español", "es_ES", "POEditor contributors (TheLordDarkYT)"),
+    VIETNAMESE("Việt", "vn_VN", "POEditor contributors (HStreamGamer)");
 
     String formattedName;
     String prefix;
