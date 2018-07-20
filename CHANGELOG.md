@@ -3,6 +3,7 @@
 ### 3.2.2 Release (20.07.2018)
 * Fixed NoSuchMethod error in 1.9.4 for title
 * Added support for Vietnamese, Hungarian and Chinese simplified locales
+* Added ability to change weather in plot
 
 ### 3.2.1 Release (14.07.2018)
 * Fixed NPE when clicking not named Villager

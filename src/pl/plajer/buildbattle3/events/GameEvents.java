@@ -261,10 +261,10 @@ public class GameEvents implements Listener {
       }
       if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Weather-Downfall"))) {
         arena.getPlotManager().getPlot((Player) e.getWhoClicked()).setWeatherType(WeatherType.DOWNFALL);
-        e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Weather-Changed"));
+        e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Weather-Set"));
       } else if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Weather-Clear"))) {
         arena.getPlotManager().getPlot((Player) e.getWhoClicked()).setWeatherType(WeatherType.CLEAR);
-        e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Weather-Changed"));
+        e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Weather-Set"));
       }
       for (UUID owner : arena.getPlotManager().getPlot((Player) e.getWhoClicked()).getOwners()) {
         if (Bukkit.getPlayer(owner).isOnline()) {
