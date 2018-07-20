@@ -20,6 +20,7 @@ package pl.plajer.buildbattle3.menus.particles;
 
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;
+
 import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
@@ -32,32 +33,32 @@ import pl.plajer.buildbattle3.arena.plots.ArenaPlot;
 public class ParticleHandler extends BukkitRunnable {
 
 
-    private static int amount = ConfigPreferences.getAmountFromOneParticle();
-    private Main plugin;
-    private long tick;
-    private int particleOffset = ConfigPreferences.getParticlOffset();
+  private static int amount = ConfigPreferences.getAmountFromOneParticle();
+  private Main plugin;
+  private long tick;
+  private int particleOffset = ConfigPreferences.getParticlOffset();
 
 
-    public ParticleHandler(Main main) {
-        plugin = main;
-    }
+  public ParticleHandler(Main main) {
+    plugin = main;
+  }
 
-    public void start() {
-        tick = ConfigPreferences.getParticleRefreshTick();
-        this.runTaskTimer(plugin, tick, tick);
-    }
+  public void start() {
+    tick = ConfigPreferences.getParticleRefreshTick();
+    this.runTaskTimer(plugin, tick, tick);
+  }
 
-    @Override
-    public void run() {
-        for(Arena arena : ArenaRegistry.getArenas()) {
-            for(ArenaPlot buildPlot : arena.getPlotManager().getPlots()) {
-                for(Location location : buildPlot.getParticles().keySet()) {
-                    if(!arena.getPlayers().isEmpty())
-                        //per player?
-                        location.getWorld().spawnParticle(buildPlot.getParticles().get(location), location, amount, (float) particleOffset, (float) particleOffset, (float) particleOffset);
-                    //buildPlot.getParticles().get(location).display((float) particleOffset, (float) particleOffset, (float) particleOffset, (float) 1, amount, location, new ArrayList<>(arena.getPlayers()));
-                }
-            }
+  @Override
+  public void run() {
+    for (Arena arena : ArenaRegistry.getArenas()) {
+      for (ArenaPlot buildPlot : arena.getPlotManager().getPlots()) {
+        for (Location location : buildPlot.getParticles().keySet()) {
+          if (!arena.getPlayers().isEmpty())
+            //per player?
+            location.getWorld().spawnParticle(buildPlot.getParticles().get(location), location, amount, (float) particleOffset, (float) particleOffset, (float) particleOffset);
+          //buildPlot.getParticles().get(location).display((float) particleOffset, (float) particleOffset, (float) particleOffset, (float) 1, amount, location, new ArrayList<>(arena.getPlayers()));
         }
+      }
     }
+  }
 }

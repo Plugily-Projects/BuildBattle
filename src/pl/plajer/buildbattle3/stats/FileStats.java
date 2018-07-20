@@ -18,47 +18,48 @@
 
 package pl.plajer.buildbattle3.stats;
 
+import java.io.IOException;
+
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.MessageUtils;
-
-import java.io.IOException;
 
 /**
  * Created by Tom on 17/06/2015.
  */
 public class FileStats {
 
-    private FileConfiguration config;
+  private FileConfiguration config;
 
-    public FileStats() {
-        config = ConfigurationManager.getConfig("stats");
+  public FileStats() {
+    config = ConfigurationManager.getConfig("stats");
+  }
+
+
+  public void saveStat(Player player, String stat) {
+    User user = UserManager.getUser(player.getUniqueId());
+    config.set(player.getUniqueId().toString() + "." + stat, user.getInt(stat));
+    try {
+      config.save(ConfigurationManager.getFile("stats"));
+    } catch (IOException e) {
+      e.printStackTrace();
+      MessageUtils.errorOccured();
+      Bukkit.getConsoleSender().sendMessage("Cannot save stats.yml file!");
+      Bukkit.getConsoleSender().sendMessage("Restart the server, file COULD BE OVERRIDDEN!");
     }
+  }
 
-
-    public void saveStat(Player player, String stat) {
-        User user = UserManager.getUser(player.getUniqueId());
-        config.set(player.getUniqueId().toString() + "." + stat, user.getInt(stat));
-        try {
-            config.save(ConfigurationManager.getFile("stats"));
-        } catch(IOException e) {
-            e.printStackTrace();
-            MessageUtils.errorOccured();
-            Bukkit.getConsoleSender().sendMessage("Cannot save stats.yml file!");
-            Bukkit.getConsoleSender().sendMessage("Restart the server, file COULD BE OVERRIDDEN!");
-        }
-    }
-
-    public void loadStat(Player player, String stat) {
-        User user = UserManager.getUser(player.getUniqueId());
-        if(config.contains(player.getUniqueId().toString() + "." + stat))
-            user.setInt(stat, config.getInt(player.getUniqueId().toString() + "." + stat));
-        else user.setInt(stat, 0);
-    }
+  public void loadStat(Player player, String stat) {
+    User user = UserManager.getUser(player.getUniqueId());
+    if (config.contains(player.getUniqueId().toString() + "." + stat))
+      user.setInt(stat, config.getInt(player.getUniqueId().toString() + "." + stat));
+    else user.setInt(stat, 0);
+  }
 
 
 }

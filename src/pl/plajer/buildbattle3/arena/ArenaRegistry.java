@@ -18,133 +18,135 @@
 
 package pl.plajer.buildbattle3.arena;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajer.buildbattle3.Main;
-import pl.plajer.buildbattle3.handlers.ConfigurationManager;
-import pl.plajer.buildbattle3.arena.plots.ArenaPlot;
-import pl.plajer.buildbattle3.utils.Util;
 
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
+import pl.plajer.buildbattle3.Main;
+import pl.plajer.buildbattle3.arena.plots.ArenaPlot;
+import pl.plajer.buildbattle3.handlers.ConfigurationManager;
+import pl.plajer.buildbattle3.utils.Util;
 
 /**
  * Created by Tom on 27/07/2014.
  */
 public class ArenaRegistry {
 
-    private static List<Arena> arenas = new ArrayList<>();
-    private static Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static List<Arena> arenas = new ArrayList<>();
+  private static Main plugin = JavaPlugin.getPlugin(Main.class);
 
-    public static List<Arena> getArenas() {
-        return arenas;
-    }
+  public static List<Arena> getArenas() {
+    return arenas;
+  }
 
-    /**
-     * Returns arena where the player is
-     *
-     * @param p target player
-     * @return Arena or null if not playing
-     */
-    @Nullable
-    public static Arena getArena(Player p) {
-        if(p == null) return null;
-        if(!p.isOnline()) return null;
+  /**
+   * Returns arena where the player is
+   *
+   * @param p target player
+   * @return Arena or null if not playing
+   */
+  @Nullable
+  public static Arena getArena(Player p) {
+    if (p == null) return null;
+    if (!p.isOnline()) return null;
 
-        for(Arena arena : arenas) {
-            for(Player player : arena.getPlayers()) {
-                if(player.getUniqueId() == p.getUniqueId()) {
-                    return arena;
-                }
-            }
+    for (Arena arena : arenas) {
+      for (Player player : arena.getPlayers()) {
+        if (player.getUniqueId() == p.getUniqueId()) {
+          return arena;
         }
-        return null;
+      }
     }
+    return null;
+  }
 
-    public static void registerArena(Arena arena) {
-        Main.debug("Registering new game instance, " + arena.getID(), System.currentTimeMillis());
-        arenas.add(arena);
+  public static void registerArena(Arena arena) {
+    Main.debug("Registering new game instance, " + arena.getID(), System.currentTimeMillis());
+    arenas.add(arena);
+  }
+
+  public static void unregisterArena(Arena arena) {
+    Main.debug("Unegistering game instance, " + arena.getID(), System.currentTimeMillis());
+    arenas.remove(arena);
+  }
+
+  /**
+   * Returns arena based by ID
+   *
+   * @param ID name of arena
+   * @return Arena or null if not found
+   */
+  public static Arena getArena(String ID) {
+    for (Arena arena : arenas) {
+      if (arena.getID().equalsIgnoreCase(ID)) {
+        return arena;
+      }
     }
+    return null;
+  }
 
-    public static void unregisterArena(Arena arena) {
-        Main.debug("Unegistering game instance, " + arena.getID(), System.currentTimeMillis());
-        arenas.remove(arena);
-    }
+  public static void registerArenas() {
+    Main.debug("Initial arenas registration", System.currentTimeMillis());
+    ArenaRegistry.getArenas().clear();
+    FileConfiguration config = ConfigurationManager.getConfig("arenas");
+    for (String ID : config.getConfigurationSection("instances").getKeys(false)) {
+      Arena arena;
+      String s = "instances." + ID + ".";
+      if (s.contains("default")) continue;
 
-    /**
-     * Returns arena based by ID
-     *
-     * @param ID name of arena
-     * @return Arena or null if not found
-     */
-    public static Arena getArena(String ID) {
-        for(Arena arena : arenas) {
-            if(arena.getID().equalsIgnoreCase(ID)) {
-                return arena;
-            }
+      arena = new Arena(ID);
+
+      if (config.contains(s + "minimumplayers")) arena.setMinimumPlayers(config.getInt(s + "minimumplayers"));
+      else arena.setMinimumPlayers(config.getInt("instances.default.minimumplayers"));
+      if (config.contains(s + "maximumplayers")) arena.setMaximumPlayers(config.getInt(s + "maximumplayers"));
+      else arena.setMaximumPlayers(config.getInt("instances.default.maximumplayers"));
+      if (config.contains(s + "mapname")) arena.setMapName(config.getString(s + "mapname"));
+      else arena.setMapName(config.getString("instances.default.mapname"));
+      if (config.contains(s + "lobbylocation")) arena.setLobbyLocation(Util.getLocation(false, config.getString(s + "lobbylocation")));
+      if (config.contains(s + "Endlocation")) arena.setEndLocation(Util.getLocation(false, config.getString(s + "Endlocation")));
+      else {
+        if (!plugin.isBungeeActivated()) {
+          System.out.print(ID + " doesn't contains an end location!");
+          arena.setReady(false);
+          ArenaRegistry.registerArena(arena);
+          continue;
         }
-        return null;
-    }
-
-    public static void registerArenas() {
-        Main.debug("Initial arenas registration", System.currentTimeMillis());
-        ArenaRegistry.getArenas().clear();
-        FileConfiguration config = ConfigurationManager.getConfig("arenas");
-        for(String ID : config.getConfigurationSection("instances").getKeys(false)) {
-            Arena arena;
-            String s = "instances." + ID + ".";
-            if(s.contains("default")) continue;
-
-            arena = new Arena(ID);
-
-            if(config.contains(s + "minimumplayers")) arena.setMinimumPlayers(config.getInt(s + "minimumplayers"));
-            else arena.setMinimumPlayers(config.getInt("instances.default.minimumplayers"));
-            if(config.contains(s + "maximumplayers")) arena.setMaximumPlayers(config.getInt(s + "maximumplayers"));
-            else arena.setMaximumPlayers(config.getInt("instances.default.maximumplayers"));
-            if(config.contains(s + "mapname")) arena.setMapName(config.getString(s + "mapname"));
-            else arena.setMapName(config.getString("instances.default.mapname"));
-            if(config.contains(s + "lobbylocation")) arena.setLobbyLocation(Util.getLocation(false, config.getString(s + "lobbylocation")));
-            if(config.contains(s + "Endlocation")) arena.setEndLocation(Util.getLocation(false, config.getString(s + "Endlocation")));
-            else {
-                if(!plugin.isBungeeActivated()) {
-                    System.out.print(ID + " doesn't contains an end location!");
-                    arena.setReady(false);
-                    ArenaRegistry.registerArena(arena);
-                    continue;
-                }
-            }
-            if(config.contains(s + "gametype")) arena.setArenaType(Arena.ArenaType.valueOf(config.getString(s + "gametype").toUpperCase()));
-            //assuming that arena is from 3.1.x releases we set arena type to SOLO by default
-            else arena.setArenaType(Arena.ArenaType.SOLO);
-            if(config.contains(s + "plots")) {
-                if(config.isConfigurationSection(s + "plots")) {
-                    for(String plotName : config.getConfigurationSection(s + "plots").getKeys(false)) {
-                        if(config.isSet(s + "plots." + plotName + ".maxpoint") && config.isSet(s + "plots." + plotName + ".minpoint")) {
-                            ArenaPlot buildPlot = new ArenaPlot();
-                            buildPlot.setMaxPoint(Util.getLocation(false, config.getString(s + "plots." + plotName + ".maxpoint")));
-                            buildPlot.setMinPoint(Util.getLocation(false, config.getString(s + "plots." + plotName + ".minpoint")));
-                            buildPlot.fullyResetPlot();
-                            arena.getPlotManager().addBuildPlot(buildPlot);
-                        } else {
-                            System.out.println("Non configured plot instances found for arena " + ID);
-                            arena.setReady(false);
-                        }
-                    }
-                } else {
-                    System.out.println("Non configured plots in arena " + ID);
-                    arena.setReady(false);
-                }
+      }
+      if (config.contains(s + "gametype")) arena.setArenaType(Arena.ArenaType.valueOf(config.getString(s + "gametype").toUpperCase()));
+        //assuming that arena is from 3.1.x releases we set arena type to SOLO by default
+      else arena.setArenaType(Arena.ArenaType.SOLO);
+      if (config.contains(s + "plots")) {
+        if (config.isConfigurationSection(s + "plots")) {
+          for (String plotName : config.getConfigurationSection(s + "plots").getKeys(false)) {
+            if (config.isSet(s + "plots." + plotName + ".maxpoint") && config.isSet(s + "plots." + plotName + ".minpoint")) {
+              ArenaPlot buildPlot = new ArenaPlot();
+              buildPlot.setMaxPoint(Util.getLocation(false, config.getString(s + "plots." + plotName + ".maxpoint")));
+              buildPlot.setMinPoint(Util.getLocation(false, config.getString(s + "plots." + plotName + ".minpoint")));
+              buildPlot.fullyResetPlot();
+              arena.getPlotManager().addBuildPlot(buildPlot);
             } else {
-                System.out.print("Instance " + ID + " doesn't contains plots!");
-                arena.setReady(false);
+              System.out.println("Non configured plot instances found for arena " + ID);
+              arena.setReady(false);
             }
-            arena.setReady(config.getBoolean("instances." + ID + ".isdone"));
-            ArenaRegistry.registerArena(arena);
-            arena.start();
+          }
+        } else {
+          System.out.println("Non configured plots in arena " + ID);
+          arena.setReady(false);
         }
-        Main.debug("Arenas registration completed", System.currentTimeMillis());
+      } else {
+        System.out.print("Instance " + ID + " doesn't contains plots!");
+        arena.setReady(false);
+      }
+      arena.setReady(config.getBoolean("instances." + ID + ".isdone"));
+      ArenaRegistry.registerArena(arena);
+      arena.start();
     }
+    Main.debug("Arenas registration completed", System.currentTimeMillis());
+  }
 
 }

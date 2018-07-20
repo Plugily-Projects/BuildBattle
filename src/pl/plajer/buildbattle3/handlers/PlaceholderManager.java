@@ -19,7 +19,9 @@
 package pl.plajer.buildbattle3.handlers;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+
 import org.bukkit.entity.Player;
+
 import pl.plajer.buildbattle3.buildbattleapi.StatsStorage;
 
 /**
@@ -29,44 +31,44 @@ import pl.plajer.buildbattle3.buildbattleapi.StatsStorage;
  */
 public class PlaceholderManager extends PlaceholderExpansion {
 
-    public boolean persist() {
-        return true;
-    }
+  public boolean persist() {
+    return true;
+  }
 
-    public String getIdentifier() {
-        return "buildbattle";
-    }
+  public String getIdentifier() {
+    return "buildbattle";
+  }
 
-    public String getPlugin() {
-        return null;
-    }
+  public String getPlugin() {
+    return null;
+  }
 
-    public String getAuthor() {
-        return "Plajer";
-    }
+  public String getAuthor() {
+    return "Plajer";
+  }
 
-    public String getVersion() {
-        return "1.0.0";
-    }
+  public String getVersion() {
+    return "1.0.0";
+  }
 
-    public String onPlaceholderRequest(Player player, String id) {
-        if(player == null) return null;
-        switch(id) {
-            case "blocks_broken":
-                return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.BLOCKS_BROKEN));
-            case "blocks_placed":
-                return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.BLOCKS_PLACED));
-            case "games_played":
-                return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.GAMES_PLAYED));
-            case "wins":
-                return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.WINS));
-            case "loses":
-                return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.LOSES));
-            case "highest_win":
-                return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.HIGHEST_WIN));
-            case "particles_used":
-                return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.PARTICLES_USED));
-        }
-        return null;
+  public String onPlaceholderRequest(Player player, String id) {
+    if (player == null) return null;
+    switch (id) {
+      case "blocks_broken":
+        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.BLOCKS_BROKEN));
+      case "blocks_placed":
+        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.BLOCKS_PLACED));
+      case "games_played":
+        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.GAMES_PLAYED));
+      case "wins":
+        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.WINS));
+      case "loses":
+        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.LOSES));
+      case "highest_win":
+        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.HIGHEST_WIN));
+      case "particles_used":
+        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.PARTICLES_USED));
     }
+    return null;
+  }
 }

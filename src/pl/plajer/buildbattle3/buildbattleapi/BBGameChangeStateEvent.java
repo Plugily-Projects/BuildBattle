@@ -19,6 +19,7 @@
 package pl.plajer.buildbattle3.buildbattleapi;
 
 import org.bukkit.event.HandlerList;
+
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaState;
 
@@ -27,30 +28,30 @@ import pl.plajer.buildbattle3.arena.ArenaState;
  */
 public class BBGameChangeStateEvent extends BBEvent {
 
-    private static final HandlerList handlers = new HandlerList();
-    private ArenaState gameState;
-    private ArenaState previous;
+  private static final HandlerList handlers = new HandlerList();
+  private ArenaState gameState;
+  private ArenaState previous;
 
-    public BBGameChangeStateEvent(ArenaState gameState, Arena arena, ArenaState previous) {
-        super(arena);
-        this.gameState = gameState;
-        this.previous = previous;
-    }
+  public BBGameChangeStateEvent(ArenaState gameState, Arena arena, ArenaState previous) {
+    super(arena);
+    this.gameState = gameState;
+    this.previous = previous;
+  }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
+  public static HandlerList getHandlerList() {
+    return handlers;
+  }
 
-    public ArenaState getState() {
-        return gameState;
-    }
+  public ArenaState getState() {
+    return gameState;
+  }
 
-    public ArenaState getPreviousState() {
-        return previous;
-    }
+  public ArenaState getPreviousState() {
+    return previous;
+  }
 
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
+  @Override
+  public HandlerList getHandlers() {
+    return handlers;
+  }
 }

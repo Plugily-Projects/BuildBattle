@@ -18,14 +18,15 @@
 
 package pl.plajer.buildbattle3.menus.themevoter;
 
-import org.bukkit.entity.Player;
-import pl.plajer.buildbattle3.arena.Arena;
-
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import org.bukkit.entity.Player;
+
+import pl.plajer.buildbattle3.arena.Arena;
 
 /**
  * @author Plajer
@@ -34,56 +35,56 @@ import java.util.Map;
  */
 public class VotePoll {
 
-    private Arena arena;
-    private Map<String, Integer> votedThemes = new HashMap<>();
-    //todo cleaning
-    private Map<Player, String> playerVote = new HashMap<>();
+  private Arena arena;
+  private Map<String, Integer> votedThemes = new HashMap<>();
+  //todo cleaning
+  private Map<Player, String> playerVote = new HashMap<>();
 
-    public VotePoll(Arena arena, List<String> votedThemes) {
-        this.arena = arena;
-        for(String theme : votedThemes){
-            this.votedThemes.put(theme, 0);
-        }
+  public VotePoll(Arena arena, List<String> votedThemes) {
+    this.arena = arena;
+    for (String theme : votedThemes) {
+      this.votedThemes.put(theme, 0);
     }
+  }
 
-    public Arena getArena() {
-        return arena;
+  private static Map sortByValue(Map unsortMap) {
+    List list = new LinkedList(unsortMap.entrySet());
+    list.sort((o1, o2) -> ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue()));
+    Map sortedMap = new LinkedHashMap();
+    for (Object aList : list) {
+      Map.Entry entry = (Map.Entry) aList;
+      sortedMap.put(entry.getKey(), entry.getValue());
     }
+    return sortedMap;
+  }
 
-    public Map<String, Integer> getVotedThemes() {
-        return votedThemes;
-    }
+  public Arena getArena() {
+    return arena;
+  }
 
-    public boolean addVote(Player player, String theme) {
-        if(playerVote.containsKey(player)) {
-            if(playerVote.get(player).equals(theme)) {
-                return false;
-            }
-            votedThemes.put(playerVote.get(player), votedThemes.get(playerVote.get(player)) - 1);
-        }
-        votedThemes.put(theme, votedThemes.get(theme) + 1);
-        playerVote.put(player, theme);
-        return true;
-    }
+  public Map<String, Integer> getVotedThemes() {
+    return votedThemes;
+  }
 
-    public Map<Player, String> getPlayerVote() {
-        return playerVote;
+  public boolean addVote(Player player, String theme) {
+    if (playerVote.containsKey(player)) {
+      if (playerVote.get(player).equals(theme)) {
+        return false;
+      }
+      votedThemes.put(playerVote.get(player), votedThemes.get(playerVote.get(player)) - 1);
     }
+    votedThemes.put(theme, votedThemes.get(theme) + 1);
+    playerVote.put(player, theme);
+    return true;
+  }
 
-    public String getVotedTheme() {
-        LinkedHashMap<String, Integer> bestTheme = (LinkedHashMap<String, Integer>) sortByValue(votedThemes);
-        return (String) bestTheme.keySet().toArray()[bestTheme.keySet().toArray().length - 1];
-    }
+  public Map<Player, String> getPlayerVote() {
+    return playerVote;
+  }
 
-    private static Map sortByValue(Map unsortMap) {
-        List list = new LinkedList(unsortMap.entrySet());
-        list.sort((o1, o2) -> ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue()));
-        Map sortedMap = new LinkedHashMap();
-        for(Object aList : list) {
-            Map.Entry entry = (Map.Entry) aList;
-            sortedMap.put(entry.getKey(), entry.getValue());
-        }
-        return sortedMap;
-    }
+  public String getVotedTheme() {
+    LinkedHashMap<String, Integer> bestTheme = (LinkedHashMap<String, Integer>) sortByValue(votedThemes);
+    return (String) bestTheme.keySet().toArray()[bestTheme.keySet().toArray().length - 1];
+  }
 
 }

@@ -25,34 +25,34 @@ package pl.plajer.buildbattle3.handlers.language;
  */
 public enum Locale {
 
-    CHINESE_SIMPLIFIED("简体中文", "zh_Hans", "POEditor contributors (Haoting)"),
-    ENGLISH("English", "en_GB", "Plajer"),
-    GERMAN("Deutsch", "de_DE", "Tigerkatze"),
-    HUNGARIAN("Magyar", "hu_HU", "POEditor contributors (montlikadani)"),
-    POLISH("Polski", "pl_PL", "Plajer"),
-    SPANISH("Español", "es_ES", "POEditor contributors (TheLordDarkYT)"),
-    VIETNAMESE("Việt", "vn_VN", "POEditor contributors (HStreamGamer)");
+  CHINESE_SIMPLIFIED("简体中文", "zh_Hans", "POEditor contributors (Haoting)"),
+  ENGLISH("English", "en_GB", "Plajer"),
+  GERMAN("Deutsch", "de_DE", "Tigerkatze"),
+  HUNGARIAN("Magyar", "hu_HU", "POEditor contributors (montlikadani)"),
+  POLISH("Polski", "pl_PL", "Plajer"),
+  SPANISH("Español", "es_ES", "POEditor contributors (TheLordDarkYT)"),
+  VIETNAMESE("Việt", "vn_VN", "POEditor contributors (HStreamGamer)");
 
-    String formattedName;
-    String prefix;
-    String author;
+  String formattedName;
+  String prefix;
+  String author;
 
-    Locale(String formattedName, String prefix, String author) {
-        this.prefix = prefix;
-        this.formattedName = formattedName;
-        this.author = author;
-    }
+  Locale(String formattedName, String prefix, String author) {
+    this.prefix = prefix;
+    this.formattedName = formattedName;
+    this.author = author;
+  }
 
-    public String getFormattedName() {
-        return formattedName;
-    }
+  public String getFormattedName() {
+    return formattedName;
+  }
 
-    public String getAuthor() {
-        return author;
-    }
+  public String getAuthor() {
+    return author;
+  }
 
-    public String getPrefix() {
-        return prefix;
-    }
+  public String getPrefix() {
+    return prefix;
+  }
 
 }

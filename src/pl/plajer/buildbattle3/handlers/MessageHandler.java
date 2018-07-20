@@ -20,6 +20,7 @@ package pl.plajer.buildbattle3.handlers;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
 import pl.plajer.buildbattle3.Main;
 
 /**
@@ -27,13 +28,13 @@ import pl.plajer.buildbattle3.Main;
  */
 public class MessageHandler {
 
-    private static Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static Main plugin = JavaPlugin.getPlugin(Main.class);
 
-    public static void sendTitleMessage(Player player, String text, int fadeInTime, int showTime, int fadeOutTime) {
-        if(plugin.is1_9_R1() || plugin.is1_9_R2()) {
-            player.sendTitle(text, null);
-        } else {
-            player.sendTitle(text, null, fadeInTime, showTime, fadeOutTime);
-        }
+  public static void sendTitleMessage(Player player, String text, int fadeInTime, int showTime, int fadeOutTime) {
+    if (plugin.is1_9_R1() || plugin.is1_9_R2()) {
+      player.sendTitle(text, null);
+    } else {
+      player.sendTitle(text, null, fadeInTime, showTime, fadeOutTime);
     }
+  }
 }

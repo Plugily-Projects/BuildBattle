@@ -25,25 +25,25 @@ package pl.plajer.buildbattle3.commands;
  */
 public class CommandData {
 
-    private String text;
-    private String command;
-    private String description;
+  private String text;
+  private String command;
+  private String description;
 
-    public CommandData(String text, String command, String description) {
-        this.text = text;
-        this.command = command;
-        this.description = description;
-    }
+  public CommandData(String text, String command, String description) {
+    this.text = text;
+    this.command = command;
+    this.description = description;
+  }
 
-    public String getText() {
-        return text;
-    }
+  public String getText() {
+    return text;
+  }
 
-    public String getCommand() {
-        return command;
-    }
+  public String getCommand() {
+    return command;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public String getDescription() {
+    return description;
+  }
 }

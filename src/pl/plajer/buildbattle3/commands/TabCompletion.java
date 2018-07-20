@@ -18,15 +18,16 @@
 
 package pl.plajer.buildbattle3.commands;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajer.buildbattle3.Main;
 
-import java.util.Arrays;
-import java.util.List;
+import pl.plajer.buildbattle3.Main;
 
 /**
  * @author Plajer
@@ -35,21 +36,21 @@ import java.util.List;
  */
 public class TabCompletion implements TabCompleter {
 
-    private Main plugin = JavaPlugin.getPlugin(Main.class);
+  private Main plugin = JavaPlugin.getPlugin(Main.class);
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-        if(!(sender instanceof Player)) return null;
-        if(cmd.getName().equalsIgnoreCase("buildbattleadmin") && args.length == 1) {
-            return Arrays.asList("addplot", "addnpc", "stop", "list", "forcestart", "reload", "delete");
-        }
-        if(cmd.getName().equalsIgnoreCase("buildbattle") && args.length == 1) {
-            if(!plugin.isBungeeActivated()) {
-                return Arrays.asList("join", "leave", "stats", "create", "randomjoin");
-            } else {
-                return Arrays.asList("join", "leave", "stats", "create");
-            }
-        }
-        return null;
+  @Override
+  public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+    if (!(sender instanceof Player)) return null;
+    if (cmd.getName().equalsIgnoreCase("buildbattleadmin") && args.length == 1) {
+      return Arrays.asList("addplot", "addnpc", "stop", "list", "forcestart", "reload", "delete");
     }
+    if (cmd.getName().equalsIgnoreCase("buildbattle") && args.length == 1) {
+      if (!plugin.isBungeeActivated()) {
+        return Arrays.asList("join", "leave", "stats", "create", "randomjoin");
+      } else {
+        return Arrays.asList("join", "leave", "stats", "create");
+      }
+    }
+    return null;
+  }
 }

@@ -22,6 +22,7 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.handlers.language.LanguageManager;
 import pl.plajer.buildbattle3.utils.Util;
@@ -31,64 +32,64 @@ import pl.plajer.buildbattle3.utils.Util;
  */
 public class ChatManager {
 
-    public static String PLUGIN_PREFIX;
+  public static String PLUGIN_PREFIX;
 
-    public ChatManager() {
-        PLUGIN_PREFIX = colorMessage("In-Game.Plugin-Prefix");
+  public ChatManager() {
+    PLUGIN_PREFIX = colorMessage("In-Game.Plugin-Prefix");
+  }
+
+  public static String colorMessage(String message) {
+    try {
+      return ChatColor.translateAlternateColorCodes('&', LanguageManager.getLanguageMessage(message));
+    } catch (NullPointerException e1) {
+      e1.printStackTrace();
+      Bukkit.getConsoleSender().sendMessage("Game message not found!");
+      Bukkit.getConsoleSender().sendMessage("Please regenerate your language.yml file! If error still occurs report it to the developer!");
+      Bukkit.getConsoleSender().sendMessage("Access string: " + message);
+      return "ERR_MESSAGE_NOT_FOUND";
     }
+  }
 
-    public static String colorMessage(String message) {
-        try {
-            return ChatColor.translateAlternateColorCodes('&', LanguageManager.getLanguageMessage(message));
-        } catch(NullPointerException e1) {
-            e1.printStackTrace();
-            Bukkit.getConsoleSender().sendMessage("Game message not found!");
-            Bukkit.getConsoleSender().sendMessage("Please regenerate your language.yml file! If error still occurs report it to the developer!");
-            Bukkit.getConsoleSender().sendMessage("Access string: " + message);
-            return "ERR_MESSAGE_NOT_FOUND";
+  public static String colorRawMessage(String msg) {
+    return ChatColor.translateAlternateColorCodes('&', msg);
+  }
+
+  public static String formatMessage(Arena arena, String message, Player player) {
+    String returnString = message;
+    returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());
+    returnString = colorRawMessage(formatPlaceholders(returnString, arena));
+    return returnString;
+  }
+
+  private static String formatPlaceholders(String message, Arena arena) {
+    String returnString = message;
+    returnString = StringUtils.replace(returnString, "%TIME%", Integer.toString(arena.getTimer()));
+    returnString = StringUtils.replace(returnString, "%FORMATTEDTIME%", Util.formatIntoMMSS((arena.getTimer())));
+    returnString = StringUtils.replace(returnString, "%PLAYERSIZE%", Integer.toString(arena.getPlayers().size()));
+    returnString = StringUtils.replace(returnString, "%MAXPLAYERS%", Integer.toString(arena.getMaximumPlayers()));
+    returnString = StringUtils.replace(returnString, "%MINPLAYERS%", Integer.toString(arena.getMinimumPlayers()));
+    return returnString;
+  }
+
+  public static void broadcastAction(Arena arena, Player p, ActionType action) {
+    switch (action) {
+      case JOIN:
+        String joinMsg = PLUGIN_PREFIX + formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Join"), p);
+        for (Player player : arena.getPlayers()) {
+          player.sendMessage(joinMsg);
         }
-    }
-
-    public static String colorRawMessage(String msg) {
-        return ChatColor.translateAlternateColorCodes('&', msg);
-    }
-
-    public static String formatMessage(Arena arena, String message, Player player) {
-        String returnString = message;
-        returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());
-        returnString = colorRawMessage(formatPlaceholders(returnString, arena));
-        return returnString;
-    }
-
-    private static String formatPlaceholders(String message, Arena arena) {
-        String returnString = message;
-        returnString = StringUtils.replace(returnString, "%TIME%", Integer.toString(arena.getTimer()));
-        returnString = StringUtils.replace(returnString, "%FORMATTEDTIME%", Util.formatIntoMMSS((arena.getTimer())));
-        returnString = StringUtils.replace(returnString, "%PLAYERSIZE%", Integer.toString(arena.getPlayers().size()));
-        returnString = StringUtils.replace(returnString, "%MAXPLAYERS%", Integer.toString(arena.getMaximumPlayers()));
-        returnString = StringUtils.replace(returnString, "%MINPLAYERS%", Integer.toString(arena.getMinimumPlayers()));
-        return returnString;
-    }
-
-    public static void broadcastAction(Arena arena, Player p, ActionType action) {
-        switch(action) {
-            case JOIN:
-                String joinMsg = PLUGIN_PREFIX + formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Join"), p);
-                for(Player player : arena.getPlayers()) {
-                    player.sendMessage(joinMsg);
-                }
-                break;
-            case LEAVE:
-                String leaveMsg = PLUGIN_PREFIX + formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Leave"), p);
-                for(Player player : arena.getPlayers()) {
-                    player.sendMessage(leaveMsg);
-                }
-                break;
+        break;
+      case LEAVE:
+        String leaveMsg = PLUGIN_PREFIX + formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Leave"), p);
+        for (Player player : arena.getPlayers()) {
+          player.sendMessage(leaveMsg);
         }
+        break;
     }
+  }
 
-    public enum ActionType {
-        JOIN, LEAVE
-    }
+  public enum ActionType {
+    JOIN, LEAVE
+  }
 
 }

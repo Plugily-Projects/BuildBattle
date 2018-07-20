@@ -24,6 +24,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
 import pl.plajer.buildbattle3.handlers.ChatManager;
 
 /**
@@ -33,22 +34,22 @@ import pl.plajer.buildbattle3.handlers.ChatManager;
  */
 public class WeatherInventory {
 
-    public static void openWeatherInventory(Player p) {
-        Inventory inv = Bukkit.createInventory(null, 9, ChatManager.colorMessage("Menus.Option-Menu.Weather-Inventory-Name"));
+  public static void openWeatherInventory(Player p) {
+    Inventory inv = Bukkit.createInventory(null, 9, ChatManager.colorMessage("Menus.Option-Menu.Weather-Inventory-Name"));
 
-        ItemStack clear = new ItemStack(Material.BUCKET, 1);
-        ItemMeta clearMeta = clear.getItemMeta();
-        clearMeta.setDisplayName(ChatManager.colorMessage("Menus.Option-Menu.Weather-Clear"));
-        clear.setItemMeta(clearMeta);
-        inv.addItem(clear);
+    ItemStack clear = new ItemStack(Material.BUCKET, 1);
+    ItemMeta clearMeta = clear.getItemMeta();
+    clearMeta.setDisplayName(ChatManager.colorMessage("Menus.Option-Menu.Weather-Clear"));
+    clear.setItemMeta(clearMeta);
+    inv.addItem(clear);
 
-        ItemStack downfall = new ItemStack(Material.WATER_BUCKET, 1);
-        ItemMeta fallMeta = downfall.getItemMeta();
-        fallMeta.setDisplayName(ChatManager.colorMessage("Menus.Option-Menu.Weather-Downfall"));
-        downfall.setItemMeta(fallMeta);
-        inv.addItem(downfall);
+    ItemStack downfall = new ItemStack(Material.WATER_BUCKET, 1);
+    ItemMeta fallMeta = downfall.getItemMeta();
+    fallMeta.setDisplayName(ChatManager.colorMessage("Menus.Option-Menu.Weather-Downfall"));
+    downfall.setItemMeta(fallMeta);
+    inv.addItem(downfall);
 
-        p.openInventory(inv);
-    }
+    p.openInventory(inv);
+  }
 
 }

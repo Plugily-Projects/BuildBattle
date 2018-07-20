@@ -19,6 +19,7 @@
 package pl.plajer.buildbattle3.buildbattleapi;
 
 import org.bukkit.event.Event;
+
 import pl.plajer.buildbattle3.arena.Arena;
 
 /**
@@ -26,18 +27,18 @@ import pl.plajer.buildbattle3.arena.Arena;
  */
 public abstract class BBEvent extends Event {
 
-    protected Arena arena;
+  protected Arena arena;
 
-    public BBEvent(Arena eventArena) {
-        arena = eventArena;
-    }
+  public BBEvent(Arena eventArena) {
+    arena = eventArena;
+  }
 
-    /**
-     * Returns event arena
-     *
-     * @return event arena
-     */
-    public Arena getArena() {
-        return arena;
-    }
+  /**
+   * Returns event arena
+   *
+   * @return event arena
+   */
+  public Arena getArena() {
+    return arena;
+  }
 }

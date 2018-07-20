@@ -18,97 +18,98 @@
 
 package pl.plajer.buildbattle3.menus.particles;
 
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.inventory.ItemStack;
+
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.utils.Util;
-
-import java.util.List;
 
 /**
  * Created by Tom on 23/08/2015.
  */
 public class ParticleItem {
 
-    private Material material;
-    private Byte data = null;
-    private String[] lore;
-    private String displayName;
-    private Particle effect;
-    private String permission;
-    private boolean enabled = true;
-    private int slot;
+  private Material material;
+  private Byte data = null;
+  private String[] lore;
+  private String displayName;
+  private Particle effect;
+  private String permission;
+  private boolean enabled = true;
+  private int slot;
 
-    public String getPermission() {
-        return permission;
+  public String getPermission() {
+    return permission;
+  }
+
+  public void setPermission(String permission) {
+    this.permission = permission;
+  }
+
+  public boolean isEnabled() {
+    return enabled;
+  }
+
+  public void setEnabled(boolean enabled) {
+    this.enabled = enabled;
+  }
+
+  public Material getMaterial() {
+    return material;
+  }
+
+  public void setMaterial(Material material) {
+    this.material = material;
+  }
+
+  private byte getData() {
+    return data;
+  }
+
+  public void setData(Integer data) {
+    this.data = data.byteValue();
+  }
+
+  public void setLore(List<String> lore) {
+    this.lore = lore.toArray(new String[0]);
+  }
+
+  public String getDisplayName() {
+    return ChatManager.colorRawMessage(displayName);
+  }
+
+  public void setDisplayName(String displayName) {
+    this.displayName = displayName;
+  }
+
+  public Particle getEffect() {
+    return effect;
+  }
+
+  public void setEffect(Particle effect) {
+    this.effect = effect;
+  }
+
+  public int getSlot() {
+    return slot;
+  }
+
+  public void setSlot(int slot) {
+    this.slot = slot;
+  }
+
+  public ItemStack getItemStack() {
+    ItemStack itemStack;
+    if (data != null) {
+      itemStack = new ItemStack(getMaterial(), 1, getData());
+    } else {
+      itemStack = new ItemStack(getMaterial());
+
     }
-
-    public void setPermission(String permission) {
-        this.permission = permission;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public Material getMaterial() {
-        return material;
-    }
-
-    public void setMaterial(Material material) {
-        this.material = material;
-    }
-
-    private byte getData() {
-        return data;
-    }
-
-    public void setData(Integer data) {
-        this.data = data.byteValue();
-    }
-
-    public void setLore(List<String> lore) {
-        this.lore = lore.toArray(new String[0]);
-    }
-
-    public String getDisplayName() {
-        return ChatManager.colorRawMessage(displayName);
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public Particle getEffect() {
-        return effect;
-    }
-
-    public void setEffect(Particle effect) {
-        this.effect = effect;
-    }
-
-    public int getSlot() {
-        return slot;
-    }
-
-    public void setSlot(int slot) {
-        this.slot = slot;
-    }
-
-    public ItemStack getItemStack() {
-        ItemStack itemStack;
-        if(data != null) {
-            itemStack = new ItemStack(getMaterial(), 1, getData());
-        } else {
-            itemStack = new ItemStack(getMaterial());
-
-        }
-        Util.setItemNameAndLore(itemStack, ChatManager.colorRawMessage(this.getDisplayName()), lore);
-        return itemStack;
-    }
+    Util.setItemNameAndLore(itemStack, ChatManager.colorRawMessage(this.getDisplayName()), lore);
+    return itemStack;
+  }
 }

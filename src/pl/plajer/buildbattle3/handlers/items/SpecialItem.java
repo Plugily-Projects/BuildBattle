@@ -18,93 +18,94 @@
 
 package pl.plajer.buildbattle3.handlers.items;
 
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
+
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
 import pl.plajer.buildbattle3.utils.Util;
-
-import java.util.List;
 
 /**
  * Created by Tom on 5/02/2016.
  */
 public class SpecialItem {
 
-    private Material material;
-    private Byte data = null;
-    private String[] lore;
-    private String displayName;
-    private int slot;
-    private String name;
+  private Material material;
+  private Byte data = null;
+  private String[] lore;
+  private String displayName;
+  private int slot;
+  private String name;
 
-    private SpecialItem(String name) {
-        this.name = name;
+  private SpecialItem(String name) {
+    this.name = name;
+  }
+
+  public static void loadAll() {
+    new SpecialItem("Leave").load();
+  }
+
+  private void load() {
+    FileConfiguration config = ConfigurationManager.getConfig("SpecialItems");
+    SpecialItem particleItem = new SpecialItem(name);
+    particleItem.setData(config.getInt(name + ".data"));
+    particleItem.setMaterial(org.bukkit.Material.getMaterial(config.getInt(name + ".material")));
+    particleItem.setLore(config.getStringList(name + ".lore"));
+    particleItem.setDisplayName(config.getString(name + ".displayname"));
+    particleItem.setSlot(config.getInt(name + ".slot"));
+    SpecialItemManager.addEntityItem(name, particleItem);
+  }
+
+  public Material getMaterial() {
+    return material;
+  }
+
+  private void setMaterial(Material material) {
+    this.material = material;
+  }
+
+  private byte getData() {
+    return data;
+  }
+
+  private void setData(Integer data) {
+    this.data = data.byteValue();
+  }
+
+  private void setLore(List<String> lore) {
+    this.lore = lore.toArray(new String[0]);
+  }
+
+  private String getDisplayName() {
+    return ChatManager.colorRawMessage(displayName);
+  }
+
+  private void setDisplayName(String displayName) {
+    this.displayName = displayName;
+  }
+
+  public int getSlot() {
+    return slot;
+  }
+
+  private void setSlot(int slot) {
+    this.slot = slot;
+  }
+
+  public ItemStack getItemStack() {
+    ItemStack itemStack;
+    if (data != null) {
+      itemStack = new ItemStack(getMaterial(), 1, getData());
+    } else {
+      itemStack = new ItemStack(getMaterial());
+
     }
-
-    public static void loadAll() {
-        new SpecialItem("Leave").load();
-    }
-
-    private void load() {
-        FileConfiguration config = ConfigurationManager.getConfig("SpecialItems");
-        SpecialItem particleItem = new SpecialItem(name);
-        particleItem.setData(config.getInt(name + ".data"));
-        particleItem.setMaterial(org.bukkit.Material.getMaterial(config.getInt(name + ".material")));
-        particleItem.setLore(config.getStringList(name + ".lore"));
-        particleItem.setDisplayName(config.getString(name + ".displayname"));
-        particleItem.setSlot(config.getInt(name + ".slot"));
-        SpecialItemManager.addEntityItem(name, particleItem);
-    }
-
-    public Material getMaterial() {
-        return material;
-    }
-
-    private void setMaterial(Material material) {
-        this.material = material;
-    }
-
-    private byte getData() {
-        return data;
-    }
-
-    private void setData(Integer data) {
-        this.data = data.byteValue();
-    }
-
-    private void setLore(List<String> lore) {
-        this.lore = lore.toArray(new String[0]);
-    }
-
-    private String getDisplayName() {
-        return ChatManager.colorRawMessage(displayName);
-    }
-
-    private void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public int getSlot() {
-        return slot;
-    }
-
-    private void setSlot(int slot) {
-        this.slot = slot;
-    }
-
-    public ItemStack getItemStack() {
-        ItemStack itemStack;
-        if(data != null) {
-            itemStack = new ItemStack(getMaterial(), 1, getData());
-        } else {
-            itemStack = new ItemStack(getMaterial());
-
-        }
-        Util.setItemNameAndLore(itemStack, ChatManager.colorRawMessage(this.getDisplayName()), lore);
-        return itemStack;
-    }
+    Util.setItemNameAndLore(itemStack, ChatManager.colorRawMessage(this.getDisplayName()), lore);
+    return itemStack;
+  }
 
 
 }

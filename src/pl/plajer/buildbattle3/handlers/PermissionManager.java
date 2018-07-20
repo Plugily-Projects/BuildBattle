@@ -19,6 +19,7 @@
 package pl.plajer.buildbattle3.handlers;
 
 import org.bukkit.plugin.java.JavaPlugin;
+
 import pl.plajer.buildbattle3.Main;
 
 /**
@@ -26,34 +27,34 @@ import pl.plajer.buildbattle3.Main;
  */
 public class PermissionManager {
 
-    private static Main plugin = JavaPlugin.getPlugin(Main.class);
-    private static String joinPerm = "buildbattle.join.<arena>";
-    private static String editGames = "buildbattle.editgames";
+  private static Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static String joinPerm = "buildbattle.join.<arena>";
+  private static String editGames = "buildbattle.editgames";
 
-    public static void init() {
-        setupPermissions();
-    }
+  public static void init() {
+    setupPermissions();
+  }
 
-    public static String getJoinPerm() {
-        return joinPerm;
-    }
+  public static String getJoinPerm() {
+    return joinPerm;
+  }
 
-    public static void setJoinPerm(String joinPerm) {
-        PermissionManager.joinPerm = joinPerm;
-    }
+  public static void setJoinPerm(String joinPerm) {
+    PermissionManager.joinPerm = joinPerm;
+  }
 
-    public static String getEditGames() {
-        return editGames;
-    }
+  public static String getEditGames() {
+    return editGames;
+  }
 
-    public static void setEditGames(String editGames) {
-        PermissionManager.editGames = editGames;
-    }
+  public static void setEditGames(String editGames) {
+    PermissionManager.editGames = editGames;
+  }
 
-    private static void setupPermissions() {
-        setEditGames(plugin.getConfig().getString("Basic-Permissions.Arena-Edit-Permission"));
-        setJoinPerm(plugin.getConfig().getString("Basic-Permissions.Join-Permission"));
-        Main.debug("Basic permissions registered", System.currentTimeMillis());
-    }
+  private static void setupPermissions() {
+    setEditGames(plugin.getConfig().getString("Basic-Permissions.Arena-Edit-Permission"));
+    setJoinPerm(plugin.getConfig().getString("Basic-Permissions.Join-Permission"));
+    Main.debug("Basic permissions registered", System.currentTimeMillis());
+  }
 
 }

@@ -20,6 +20,7 @@ package pl.plajer.buildbattle3.handlers;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -27,6 +28,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerListPingEvent;
+
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaManager;
@@ -38,57 +40,57 @@ import pl.plajer.buildbattle3.arena.ArenaState;
  */
 public class BungeeManager implements Listener {
 
-    private Main plugin;
+  private Main plugin;
 
-    public BungeeManager(Main plugin) {
-        this.plugin = plugin;
-        plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+  public BungeeManager(Main plugin) {
+    this.plugin = plugin;
+    plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
+    plugin.getServer().getPluginManager().registerEvents(this, plugin);
+  }
+
+  public void connectToHub(Player player) {
+    ByteArrayDataOutput out = ByteStreams.newDataOutput();
+    out.writeUTF("Connect");
+    out.writeUTF(getHubServerName());
+    player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
+  }
+
+  private String getMOTD() {
+    Arena arena = ArenaRegistry.getArenas().get(0);
+    if (arena.getArenaState() == ArenaState.STARTING && (arena.getTimer() <= 3)) {
+      return ArenaState.IN_GAME.toString();
+    } else {
+      return arena.getArenaState().toString();
     }
-
-    public void connectToHub(Player player) {
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF("Connect");
-        out.writeUTF(getHubServerName());
-        player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
-    }
-
-    private String getMOTD() {
-        Arena arena = ArenaRegistry.getArenas().get(0);
-        if(arena.getArenaState() == ArenaState.STARTING && (arena.getTimer() <= 3)) {
-            return ArenaState.IN_GAME.toString();
-        } else {
-            return arena.getArenaState().toString();
-        }
-    }
+  }
 
 
-    public String getHubServerName() {
-        return ConfigurationManager.getConfig("bungee").getString("Hub");
-    }
+  public String getHubServerName() {
+    return ConfigurationManager.getConfig("bungee").getString("Hub");
+  }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onServerListPing(ServerListPingEvent event) {
-        if(ArenaRegistry.getArenas().isEmpty())
-            return;
-        event.setMaxPlayers(ArenaRegistry.getArenas().get(0).getMaximumPlayers());
-        event.setMotd(this.getMOTD());
-    }
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void onServerListPing(ServerListPingEvent event) {
+    if (ArenaRegistry.getArenas().isEmpty())
+      return;
+    event.setMaxPlayers(ArenaRegistry.getArenas().get(0).getMaximumPlayers());
+    event.setMotd(this.getMOTD());
+  }
 
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onJoin(final PlayerJoinEvent event) {
-        event.setJoinMessage("");
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> ArenaManager.joinAttempt(event.getPlayer(), ArenaRegistry.getArenas().get(0)), 1L);
-    }
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void onJoin(final PlayerJoinEvent event) {
+    event.setJoinMessage("");
+    plugin.getServer().getScheduler().runTaskLater(plugin, () -> ArenaManager.joinAttempt(event.getPlayer(), ArenaRegistry.getArenas().get(0)), 1L);
+  }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onQuit(PlayerQuitEvent event) {
-        event.setQuitMessage("");
-        if(ArenaRegistry.getArena(event.getPlayer()) != null)
-            ArenaManager.leaveAttempt(event.getPlayer(), ArenaRegistry.getArenas().get(0));
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void onQuit(PlayerQuitEvent event) {
+    event.setQuitMessage("");
+    if (ArenaRegistry.getArena(event.getPlayer()) != null)
+      ArenaManager.leaveAttempt(event.getPlayer(), ArenaRegistry.getArenas().get(0));
 
-    }
+  }
 
 
 }

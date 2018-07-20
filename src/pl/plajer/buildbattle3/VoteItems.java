@@ -18,51 +18,52 @@
 
 package pl.plajer.buildbattle3;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Tom on 17/08/2015.
  */
 public class VoteItems {
 
-    private static Map<ItemStack, Integer> voteItems = new HashMap<>();
-    private static FileConfiguration config = ConfigurationManager.getConfig("voteItems");
+  private static Map<ItemStack, Integer> voteItems = new HashMap<>();
+  private static FileConfiguration config = ConfigurationManager.getConfig("voteItems");
 
-    public static void giveVoteItems(Player player) {
-        for(ItemStack itemStack : voteItems.keySet()) {
-            player.getInventory().setItem(voteItems.get(itemStack), itemStack);
-        }
-        player.updateInventory();
+  public static void giveVoteItems(Player player) {
+    for (ItemStack itemStack : voteItems.keySet()) {
+      player.getInventory().setItem(voteItems.get(itemStack), itemStack);
     }
+    player.updateInventory();
+  }
 
 
-    public static void loadVoteItemsFromConfig() {
-        for(String s : config.getKeys(false)) {
-            if(StringUtils.isNumeric(s) && config.contains(s + ".material") && config.contains(s + ".data") && config.contains(s + ".displayname")) {
-                ItemStack item = new ItemStack(config.getInt(s + ".material"), 1, (byte) config.getInt(s + ".data"));
-                ItemMeta itemMeta = item.getItemMeta();
-                itemMeta.setDisplayName(ChatManager.colorRawMessage(config.getString(s + ".displayname")));
-                item.setItemMeta(itemMeta);
-                voteItems.put(item, Integer.parseInt(s));
-            }
-        }
+  public static void loadVoteItemsFromConfig() {
+    for (String s : config.getKeys(false)) {
+      if (StringUtils.isNumeric(s) && config.contains(s + ".material") && config.contains(s + ".data") && config.contains(s + ".displayname")) {
+        ItemStack item = new ItemStack(config.getInt(s + ".material"), 1, (byte) config.getInt(s + ".data"));
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setDisplayName(ChatManager.colorRawMessage(config.getString(s + ".displayname")));
+        item.setItemMeta(itemMeta);
+        voteItems.put(item, Integer.parseInt(s));
+      }
     }
+  }
 
-    public static int getPoints(ItemStack itemStack) {
-        for(ItemStack voteItem : voteItems.keySet()) {
-            if(itemStack.getType() == voteItem.getType() && itemStack.getItemMeta().getDisplayName().equalsIgnoreCase(voteItem.getItemMeta().getDisplayName()))
-                return voteItems.get(voteItem) + 1;
-        }
-        return 1;
+  public static int getPoints(ItemStack itemStack) {
+    for (ItemStack voteItem : voteItems.keySet()) {
+      if (itemStack.getType() == voteItem.getType() && itemStack.getItemMeta().getDisplayName().equalsIgnoreCase(voteItem.getItemMeta().getDisplayName()))
+        return voteItems.get(voteItem) + 1;
     }
+    return 1;
+  }
 
 }

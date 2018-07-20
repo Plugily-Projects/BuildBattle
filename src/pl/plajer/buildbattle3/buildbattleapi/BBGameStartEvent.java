@@ -19,6 +19,7 @@
 package pl.plajer.buildbattle3.buildbattleapi;
 
 import org.bukkit.event.HandlerList;
+
 import pl.plajer.buildbattle3.arena.Arena;
 
 /**
@@ -26,18 +27,18 @@ import pl.plajer.buildbattle3.arena.Arena;
  */
 public class BBGameStartEvent extends BBEvent {
 
-    private static final HandlerList handlers = new HandlerList();
+  private static final HandlerList handlers = new HandlerList();
 
-    public BBGameStartEvent(Arena arena) {
-        super(arena);
-    }
+  public BBGameStartEvent(Arena arena) {
+    super(arena);
+  }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
+  public static HandlerList getHandlerList() {
+    return handlers;
+  }
 
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
+  @Override
+  public HandlerList getHandlers() {
+    return handlers;
+  }
 }

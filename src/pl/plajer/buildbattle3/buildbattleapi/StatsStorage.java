@@ -18,18 +18,19 @@
 
 package pl.plajer.buildbattle3.buildbattleapi;
 
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import pl.plajer.buildbattle3.Main;
-import pl.plajer.buildbattle3.handlers.ConfigurationManager;
-import pl.plajer.buildbattle3.user.UserManager;
-
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
+
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
+import pl.plajer.buildbattle3.Main;
+import pl.plajer.buildbattle3.handlers.ConfigurationManager;
+import pl.plajer.buildbattle3.user.UserManager;
 
 /**
  * @author Plajer, TomTheDeveloper
@@ -39,67 +40,67 @@ import java.util.UUID;
  */
 public class StatsStorage {
 
-    public static Main plugin;
+  public static Main plugin;
 
-    private static Map sortByValue(Map unsortMap) {
-        List list = new LinkedList(unsortMap.entrySet());
-        list.sort((o1, o2) -> ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue()));
-        Map sortedMap = new LinkedHashMap();
-        for(Object aList : list) {
-            Map.Entry entry = (Map.Entry) aList;
-            sortedMap.put(entry.getKey(), entry.getValue());
-        }
-        return sortedMap;
+  private static Map sortByValue(Map unsortMap) {
+    List list = new LinkedList(unsortMap.entrySet());
+    list.sort((o1, o2) -> ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue()));
+    Map sortedMap = new LinkedHashMap();
+    for (Object aList : list) {
+      Map.Entry entry = (Map.Entry) aList;
+      sortedMap.put(entry.getKey(), entry.getValue());
+    }
+    return sortedMap;
+  }
+
+  /**
+   * Get all UUID's sorted ascending by Statistic Type
+   *
+   * @param stat Statistic type to get (kills, deaths etc.)
+   * @return Map of UUID keys and Integer values sorted in ascending order of requested statistic type
+   */
+  public static Map<UUID, Integer> getStats(StatisticType stat) {
+    Main.debug("BuildBattle API getStats(" + stat.getName() + ") run", System.currentTimeMillis());
+    if (plugin.isDatabaseActivated())
+      return plugin.getMySQLDatabase().getColumn(stat.getName());
+    else {
+      FileConfiguration config = ConfigurationManager.getConfig("stats");
+      Map<UUID, Integer> stats = new TreeMap<>();
+      for (String string : config.getKeys(false)) {
+        stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));
+      }
+      return sortByValue(stats);
+    }
+  }
+
+  /**
+   * Get user statistic based on StatisticType
+   *
+   * @param player        Online player to get data from
+   * @param statisticType Statistic type to get (blocks placed, wins etc.)
+   * @return int of statistic
+   * @see StatisticType
+   */
+  public static int getUserStats(Player player, StatisticType statisticType) {
+    Main.debug("BuildBattle API getUserStats(" + player.getName() + ", " + statisticType.getName() + ") run", System.currentTimeMillis());
+    return UserManager.getUser(player.getUniqueId()).getInt(statisticType.name);
+  }
+
+  /**
+   * Available statistics to get.
+   */
+  public enum StatisticType {
+    BLOCKS_PLACED("blocksplaced"), BLOCKS_BROKEN("blocksbroken"), GAMES_PLAYED("gamesplayed"), WINS("wins"), LOSES("loses"), HIGHEST_WIN("highestwin"), PARTICLES_USED("particles");
+
+    String name;
+
+    StatisticType(String name) {
+      this.name = name;
     }
 
-    /**
-     * Get all UUID's sorted ascending by Statistic Type
-     *
-     * @param stat Statistic type to get (kills, deaths etc.)
-     * @return Map of UUID keys and Integer values sorted in ascending order of requested statistic type
-     */
-    public static Map<UUID, Integer> getStats(StatisticType stat) {
-        Main.debug("BuildBattle API getStats(" + stat.getName() + ") run", System.currentTimeMillis());
-        if(plugin.isDatabaseActivated())
-            return plugin.getMySQLDatabase().getColumn(stat.getName());
-        else {
-            FileConfiguration config = ConfigurationManager.getConfig("stats");
-            Map<UUID, Integer> stats = new TreeMap<>();
-            for(String string : config.getKeys(false)) {
-                stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));
-            }
-            return sortByValue(stats);
-        }
+    public String getName() {
+      return name;
     }
-
-    /**
-     * Get user statistic based on StatisticType
-     *
-     * @param player        Online player to get data from
-     * @param statisticType Statistic type to get (blocks placed, wins etc.)
-     * @return int of statistic
-     * @see StatisticType
-     */
-    public static int getUserStats(Player player, StatisticType statisticType) {
-        Main.debug("BuildBattle API getUserStats(" + player.getName() + ", " + statisticType.getName() + ") run", System.currentTimeMillis());
-        return UserManager.getUser(player.getUniqueId()).getInt(statisticType.name);
-    }
-
-    /**
-     * Available statistics to get.
-     */
-    public enum StatisticType {
-        BLOCKS_PLACED("blocksplaced"), BLOCKS_BROKEN("blocksbroken"), GAMES_PLAYED("gamesplayed"), WINS("wins"), LOSES("loses"), HIGHEST_WIN("highestwin"), PARTICLES_USED("particles");
-
-        String name;
-
-        StatisticType(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
+  }
 
 }

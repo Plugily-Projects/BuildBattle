@@ -21,6 +21,7 @@ package pl.plajer.buildbattle3.buildbattleapi;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
+
 import pl.plajer.buildbattle3.arena.Arena;
 
 /**
@@ -28,41 +29,41 @@ import pl.plajer.buildbattle3.arena.Arena;
  */
 public class BBGameJoinEvent extends BBEvent implements Cancellable {
 
-    private static final HandlerList handlers = new HandlerList();
-    private boolean cancelled;
-    private Player player;
+  private static final HandlerList handlers = new HandlerList();
+  private boolean cancelled;
+  private Player player;
 
-    public BBGameJoinEvent(Player player, Arena arena) {
-        super(arena);
-        this.player = player;
-    }
+  public BBGameJoinEvent(Player player, Arena arena) {
+    super(arena);
+    this.player = player;
+  }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
+  public static HandlerList getHandlerList() {
+    return handlers;
+  }
 
-    @Override
-    public boolean isCancelled() {
-        return cancelled;
-    }
+  @Override
+  public boolean isCancelled() {
+    return cancelled;
+  }
 
-    @Override
-    public void setCancelled(boolean cancelled) {
-        this.cancelled = cancelled;
-    }
+  @Override
+  public void setCancelled(boolean cancelled) {
+    this.cancelled = cancelled;
+  }
 
-    /**
-     * Get player associated with this event
-     *
-     * @return player
-     */
-    public Player getPlayer() {
-        return player;
-    }
+  /**
+   * Get player associated with this event
+   *
+   * @return player
+   */
+  public Player getPlayer() {
+    return player;
+  }
 
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
+  @Override
+  public HandlerList getHandlers() {
+    return handlers;
+  }
 
 }

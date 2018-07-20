@@ -24,6 +24,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
@@ -36,29 +37,29 @@ import pl.plajer.buildbattle3.handlers.ChatManager;
  */
 public class VoteMenuListener implements Listener {
 
-    public VoteMenuListener(Main plugin) {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    }
+  public VoteMenuListener(Main plugin) {
+    plugin.getServer().getPluginManager().registerEvents(this, plugin);
+  }
 
-    @EventHandler
-    public void onInventoryClick(InventoryClickEvent e) {
-        if(e.getInventory() == null || e.getInventory().getName() == null) return;
-        if(e.getCurrentItem() == null) return;
-        if(e.getInventory().getName().equals(ChatManager.colorMessage("Menus.Theme-Voting.Inventory-Name"))) {
-            e.setCancelled(true);
-            Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
-            if(arena == null || e.getCurrentItem().getType() != Material.SIGN) {
-                return;
-            }
-            String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
-            displayName = ChatColor.stripColor(displayName);
-            boolean success = arena.getVotePoll().addVote((Player) e.getWhoClicked(), displayName);
-            if(!success) {
-                e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Theme-Voting.Already-Voted"));
-            } else {
-                e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Theme-Voting.Voted-Successfully"));
-            }
-        }
+  @EventHandler
+  public void onInventoryClick(InventoryClickEvent e) {
+    if (e.getInventory() == null || e.getInventory().getName() == null) return;
+    if (e.getCurrentItem() == null) return;
+    if (e.getInventory().getName().equals(ChatManager.colorMessage("Menus.Theme-Voting.Inventory-Name"))) {
+      e.setCancelled(true);
+      Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+      if (arena == null || e.getCurrentItem().getType() != Material.SIGN) {
+        return;
+      }
+      String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
+      displayName = ChatColor.stripColor(displayName);
+      boolean success = arena.getVotePoll().addVote((Player) e.getWhoClicked(), displayName);
+      if (!success) {
+        e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Theme-Voting.Already-Voted"));
+      } else {
+        e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Theme-Voting.Voted-Successfully"));
+      }
     }
+  }
 
 }

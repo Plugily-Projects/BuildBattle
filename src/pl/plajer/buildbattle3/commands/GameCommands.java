@@ -20,6 +20,7 @@ package pl.plajer.buildbattle3.commands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaManager;
@@ -35,54 +36,54 @@ import pl.plajer.buildbattle3.user.UserManager;
  */
 public class GameCommands extends MainCommand {
 
-    private Main plugin;
+  private Main plugin;
 
-    public GameCommands(Main plugin) {
-        this.plugin = plugin;
-    }
+  public GameCommands(Main plugin) {
+    this.plugin = plugin;
+  }
 
-    public void showStats(Player player) {
-        User user = UserManager.getUser(player.getUniqueId());
-        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Header"));
-        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Wins") + user.getInt("wins"));
-        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Loses") + user.getInt("loses"));
-        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Games-Played") + user.getInt("gamesplayed"));
-        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Highest-Win") + user.getInt("highestwin"));
-        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Blocks-Placed") + user.getInt("blocksplaced"));
-        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Blocks-Broken") + user.getInt("blocksbroken"));
-        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Particles-Placed") + user.getInt("particles"));
-        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Footer"));
-    }
+  public void showStats(Player player) {
+    User user = UserManager.getUser(player.getUniqueId());
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Header"));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Wins") + user.getInt("wins"));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Loses") + user.getInt("loses"));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Games-Played") + user.getInt("gamesplayed"));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Highest-Win") + user.getInt("highestwin"));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Blocks-Placed") + user.getInt("blocksplaced"));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Blocks-Broken") + user.getInt("blocksbroken"));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Particles-Placed") + user.getInt("particles"));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Footer"));
+  }
 
-    public void showStatsOther(Player player, Player other) {
-        User user = UserManager.getUser(other.getUniqueId());
-        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Header-Other"));
-        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Wins") + user.getInt("wins"));
-        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Loses") + user.getInt("loses"));
-        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Games-Played") + user.getInt("gamesplayed"));
-        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Highest-Win") + user.getInt("highestwin"));
-        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Blocks-Placed") + user.getInt("blocksplaced"));
-        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Blocks-Broken") + user.getInt("blocksbroken"));
-        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Particles-Placed") + user.getInt("particles"));
-        player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Footer"));
-    }
+  public void showStatsOther(Player player, Player other) {
+    User user = UserManager.getUser(other.getUniqueId());
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Header-Other"));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Wins") + user.getInt("wins"));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Loses") + user.getInt("loses"));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Games-Played") + user.getInt("gamesplayed"));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Highest-Win") + user.getInt("highestwin"));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Blocks-Placed") + user.getInt("blocksplaced"));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Blocks-Broken") + user.getInt("blocksbroken"));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Particles-Placed") + user.getInt("particles"));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Footer"));
+  }
 
-    public void leaveGame(CommandSender sender) {
-        if(checkSenderIsConsole(sender)) return;
-        if(!plugin.getConfig().getBoolean("Disable-Leave-Command")) {
-            Player p = (Player) sender;
-            Arena arena = ArenaRegistry.getArena(p);
-            if(arena == null) return;
-            p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
-            if(plugin.isBungeeActivated()) {
-                plugin.getBungeeManager().connectToHub(p);
-                System.out.print(p.getName() + " is teleported to the Hub Server");
-            } else {
-                arena.teleportToEndLocation(p);
-                ArenaManager.leaveAttempt(p, arena);
-                System.out.print(p.getName() + " has left the arena! He is teleported to the end location.");
-            }
-        }
+  public void leaveGame(CommandSender sender) {
+    if (checkSenderIsConsole(sender)) return;
+    if (!plugin.getConfig().getBoolean("Disable-Leave-Command")) {
+      Player p = (Player) sender;
+      Arena arena = ArenaRegistry.getArena(p);
+      if (arena == null) return;
+      p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
+      if (plugin.isBungeeActivated()) {
+        plugin.getBungeeManager().connectToHub(p);
+        System.out.print(p.getName() + " is teleported to the Hub Server");
+      } else {
+        arena.teleportToEndLocation(p);
+        ArenaManager.leaveAttempt(p, arena);
+        System.out.print(p.getName() + " has left the arena! He is teleported to the end location.");
+      }
     }
+  }
 
 }

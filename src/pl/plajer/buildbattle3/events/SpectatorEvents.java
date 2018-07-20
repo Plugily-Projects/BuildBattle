@@ -34,6 +34,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
+
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.user.UserManager;
@@ -43,82 +44,82 @@ import pl.plajer.buildbattle3.user.UserManager;
  */
 public class SpectatorEvents implements Listener {
 
-    public SpectatorEvents(Main plugin) {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    }
+  public SpectatorEvents(Main plugin) {
+    plugin.getServer().getPluginManager().registerEvents(this, plugin);
+  }
 
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onBlockPlace(BlockPlaceEvent event) {
-        if(UserManager.getUser(event.getPlayer().getUniqueId()).isSpectator()) event.setCancelled(true);
-    }
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onBlockPlace(BlockPlaceEvent event) {
+    if (UserManager.getUser(event.getPlayer().getUniqueId()).isSpectator()) event.setCancelled(true);
+  }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onBlockBreak(BlockBreakEvent event) {
-        if(UserManager.getUser(event.getPlayer().getUniqueId()).isSpectator()) event.setCancelled(true);
-    }
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onBlockBreak(BlockBreakEvent event) {
+    if (UserManager.getUser(event.getPlayer().getUniqueId()).isSpectator()) event.setCancelled(true);
+  }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onDropItem(PlayerDropItemEvent event) {
-        if(UserManager.getUser(event.getPlayer().getUniqueId()).isSpectator()) event.setCancelled(true);
-    }
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onDropItem(PlayerDropItemEvent event) {
+    if (UserManager.getUser(event.getPlayer().getUniqueId()).isSpectator()) event.setCancelled(true);
+  }
 
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onspectate(PlayerBucketEmptyEvent event) {
-        if(UserManager.getUser(event.getPlayer().getUniqueId()).isSpectator()) event.setCancelled(true);
-    }
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onspectate(PlayerBucketEmptyEvent event) {
+    if (UserManager.getUser(event.getPlayer().getUniqueId()).isSpectator()) event.setCancelled(true);
+  }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onspectate(PlayerInteractEntityEvent event) {
-        if(UserManager.getUser(event.getPlayer().getUniqueId()).isSpectator()) event.setCancelled(true);
-    }
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onspectate(PlayerInteractEntityEvent event) {
+    if (UserManager.getUser(event.getPlayer().getUniqueId()).isSpectator()) event.setCancelled(true);
+  }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onSpectate(PlayerShearEntityEvent event) {
-        if(UserManager.getUser(event.getPlayer().getUniqueId()).isSpectator()) event.setCancelled(true);
-    }
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onSpectate(PlayerShearEntityEvent event) {
+    if (UserManager.getUser(event.getPlayer().getUniqueId()).isSpectator()) event.setCancelled(true);
+  }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onSpectate(PlayerItemConsumeEvent event) {
-        if(UserManager.getUser(event.getPlayer().getUniqueId()).isSpectator()) event.setCancelled(true);
-    }
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onSpectate(PlayerItemConsumeEvent event) {
+    if (UserManager.getUser(event.getPlayer().getUniqueId()).isSpectator()) event.setCancelled(true);
+  }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onSpectate(FoodLevelChangeEvent event) {
-        if(!(event.getEntity() instanceof Player)) return;
-        Player player = (Player) event.getEntity();
-        if(UserManager.getUser(player.getUniqueId()).isSpectator()) event.setCancelled(true);
-    }
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onSpectate(FoodLevelChangeEvent event) {
+    if (!(event.getEntity() instanceof Player)) return;
+    Player player = (Player) event.getEntity();
+    if (UserManager.getUser(player.getUniqueId()).isSpectator()) event.setCancelled(true);
+  }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onSpectate(EntityDamageEvent event) {
-        if(!(event.getEntity() instanceof Player)) return;
-        Player player = (Player) event.getEntity();
-        if(!UserManager.getUser(player.getUniqueId()).isSpectator()) return;
-        if(ArenaRegistry.getArena(player) == null) return;
-        if(player.getLocation().getY() < 1) player.teleport(ArenaRegistry.getArena(player).getStartLocation());
-        event.setCancelled(true);
-    }
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onSpectate(EntityDamageEvent event) {
+    if (!(event.getEntity() instanceof Player)) return;
+    Player player = (Player) event.getEntity();
+    if (!UserManager.getUser(player.getUniqueId()).isSpectator()) return;
+    if (ArenaRegistry.getArena(player) == null) return;
+    if (player.getLocation().getY() < 1) player.teleport(ArenaRegistry.getArena(player).getStartLocation());
+    event.setCancelled(true);
+  }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onSpectate(EntityDamageByBlockEvent event) {
-        if(!(event.getEntity() instanceof Player)) return;
-        Player player = (Player) event.getEntity();
-        if(UserManager.getUser(player.getUniqueId()).isSpectator()) event.setCancelled(true);
-    }
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onSpectate(EntityDamageByBlockEvent event) {
+    if (!(event.getEntity() instanceof Player)) return;
+    Player player = (Player) event.getEntity();
+    if (UserManager.getUser(player.getUniqueId()).isSpectator()) event.setCancelled(true);
+  }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onSpectate(EntityDamageByEntityEvent event) {
-        if(!(event.getDamager() instanceof Player)) return;
-        Player player = (Player) event.getDamager();
-        if(UserManager.getUser(player.getUniqueId()).isSpectator()) event.setCancelled(true);
-    }
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onSpectate(EntityDamageByEntityEvent event) {
+    if (!(event.getDamager() instanceof Player)) return;
+    Player player = (Player) event.getDamager();
+    if (UserManager.getUser(player.getUniqueId()).isSpectator()) event.setCancelled(true);
+  }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onSpectate(PlayerPickupItemEvent event) {
-        if(UserManager.getUser(event.getPlayer().getUniqueId()).isSpectator()) event.setCancelled(true);
-    }
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onSpectate(PlayerPickupItemEvent event) {
+    if (UserManager.getUser(event.getPlayer().getUniqueId()).isSpectator()) event.setCancelled(true);
+  }
 
 
 }

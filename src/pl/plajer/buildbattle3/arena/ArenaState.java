@@ -24,15 +24,15 @@ package pl.plajer.buildbattle3.arena;
  * Contains all GameStates.
  */
 public enum ArenaState {
-    WAITING_FOR_PLAYERS("Waiting"), STARTING("Starting"), IN_GAME("Playing"), ENDING("Ending"), RESTARTING("Restarting");
+  WAITING_FOR_PLAYERS("Waiting"), STARTING("Starting"), IN_GAME("Playing"), ENDING("Ending"), RESTARTING("Restarting");
 
-    String formattedName;
+  String formattedName;
 
-    ArenaState(String formattedName) {
-        this.formattedName = formattedName;
-    }
+  ArenaState(String formattedName) {
+    this.formattedName = formattedName;
+  }
 
-    public String getFormattedName() {
-        return formattedName;
-    }
+  public String getFormattedName() {
+    return formattedName;
+  }
 }
