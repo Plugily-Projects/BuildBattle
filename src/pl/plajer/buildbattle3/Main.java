@@ -307,6 +307,20 @@ public class Main extends JavaPlugin {
                 case "español":
                 case "es":
                     return "Spanish";
+              case "vietnamese":
+              case "việt":
+              case "viet":
+              case "vn":
+                return "Vietnamese";
+              case "hungarian":
+              case "magyar":
+              case "hu":
+                return "Hungarian";
+              case "简体中文":
+              case "中文":
+              case "chinese":
+              case "zh":
+                return "Chinese (Simplified)";
                 default:
                     return "English";
             }

@@ -49,8 +49,7 @@ public class ArenaPlot {
     private int points;
     private List<UUID> uuids = new ArrayList<>();
     private Map<Location, Particle> particles = new HashMap<>();
-    private WeatherType weatherType;
-    private int time;
+    private WeatherType weatherType = WeatherType.CLEAR;
     private int entities = 0;
 
     public ArenaPlot() {}
@@ -82,14 +81,6 @@ public class ArenaPlot {
 
     public void setWeatherType(WeatherType weatherType) {
         this.weatherType = weatherType;
-    }
-
-    public int getTime() {
-        return time;
-    }
-
-    public void setTime(int time) {
-        this.time = time;
     }
 
     private Location getMaxPoint() {

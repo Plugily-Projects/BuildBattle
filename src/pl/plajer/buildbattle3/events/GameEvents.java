@@ -18,7 +18,10 @@
 
 package pl.plajer.buildbattle3.events;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.WeatherType;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
@@ -61,6 +64,7 @@ import pl.plajer.buildbattle3.arena.ArenaState;
 import pl.plajer.buildbattle3.entities.BuildBattleEntity;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.handlers.items.SpecialItemManager;
+import pl.plajer.buildbattle3.menus.WeatherInventory;
 import pl.plajer.buildbattle3.menus.particles.ParticleMenu;
 import pl.plajer.buildbattle3.menus.particles.ParticleRemoveMenu;
 import pl.plajer.buildbattle3.menus.playerheads.PlayerHeadsMenu;
@@ -242,6 +246,35 @@ public class GameEvents implements Listener {
     }
 
     @EventHandler
+    public void onWeatherMenuClick(InventoryClickEvent e){
+        if(e.getInventory() == null || e.getInventory().getName() == null || !(e.getWhoClicked() instanceof Player) || ArenaRegistry.getArena((Player) e.getWhoClicked()) == null){
+            return;
+        }
+        if(e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Weather-Inventory-Name"))){
+            e.setCancelled(true);
+            if(e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta() || !e.getCurrentItem().getItemMeta().hasDisplayName()){
+                return;
+            }
+            Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+            if(arena.getPlotManager().getPlot((Player) e.getWhoClicked()) == null){
+                return;
+            }
+            if(e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Weather-Downfall"))){
+                arena.getPlotManager().getPlot((Player) e.getWhoClicked()).setWeatherType(WeatherType.DOWNFALL);
+                e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Weather-Changed"));
+            } else if(e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Weather-Clear"))){
+                arena.getPlotManager().getPlot((Player) e.getWhoClicked()).setWeatherType(WeatherType.CLEAR);
+                e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Weather-Changed"));
+            }
+            for(UUID owner : arena.getPlotManager().getPlot((Player) e.getWhoClicked()).getOwners()){
+                if(Bukkit.getPlayer(owner).isOnline()){
+                    Bukkit.getPlayer(owner).setPlayerWeather(arena.getPlotManager().getPlot((Player) e.getWhoClicked()).getWeatherType());
+                }
+            }
+        }
+    }
+
+    @EventHandler
     public void onOptionMenuClick(InventoryClickEvent e) {
         if(e.getWhoClicked() instanceof Player && ArenaRegistry.getArena((Player) e.getWhoClicked()) != null && e.getCurrentItem() != null &&
                 e.getCurrentItem().getType() == Material.NETHER_STAR && e.getCurrentItem().getItemMeta().hasDisplayName() &&
@@ -271,6 +304,10 @@ public class GameEvents implements Listener {
             e.getWhoClicked().closeInventory();
             arena.getPlotManager().getPlot((Player) e.getWhoClicked()).resetPlot();
             e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Reset-Option-Done"));
+            return;
+        } else if(displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Weather-Option"))){
+            e.getWhoClicked().closeInventory();
+            WeatherInventory.openWeatherInventory((Player) e.getWhoClicked());
             return;
         }
         if(e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Particle-Remove"))) {

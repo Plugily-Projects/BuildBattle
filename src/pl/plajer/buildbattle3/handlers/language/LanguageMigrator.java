@@ -134,6 +134,14 @@ public class LanguageMigrator {
                     LanguageMigrator.insertAfterLine(file, "Join-Cancelled-Via-API:", "  Nobody: \"&eNobody\"\r\n  No-Theme-Yet: \"&cVoting\"");
                     LanguageMigrator.insertAfterLine(file, "Commands:", "  No-Free-Arenas: \"&cThere are no free arenas!\"");
                     break;
+                case 4:
+                    LanguageMigrator.insertAfterLine(file, "Option-Menu:", "    Weather-Inventory-Name: \"&aSet weather\"\n" +
+                            "    Weather-Option: \"&aChange plot weather\"\n" +
+                            "    Weather-Option-Lore: \"&7Right click to open menu\"\n" +
+                            "    Weather-Set: \"&eWeather has been changed\"\n" +
+                            "    Weather-Downfall: \"&eDownfall\"\n" +
+                            "    Weather-Clear: \"&eClear\"");
+                    break;
             }
             version++;
         }

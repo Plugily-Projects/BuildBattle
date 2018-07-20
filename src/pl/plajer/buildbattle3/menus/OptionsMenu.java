@@ -69,12 +69,19 @@ public class OptionsMenu {
         floorOption.setItemMeta(floorMeta);
         inv.setItem(15, floorOption);
 
+        ItemStack weatherOption = new ItemStack(Material.BUCKET, 1);
+        ItemMeta weatherMeta = weatherOption.getItemMeta();
+        weatherMeta.setDisplayName(ChatManager.colorMessage("Menus.Option-Menu.Weather-Option"));
+        weatherMeta.setLore(Collections.singletonList(ChatManager.colorMessage("Menus.Option-Menu.Weather-Option-Lore")));
+        weatherOption.setItemMeta(weatherMeta);
+        inv.setItem(30, weatherOption);
+
         ItemStack resetOption = new ItemStack(Material.BARRIER, 1);
         ItemMeta resetMeta = resetOption.getItemMeta();
         resetMeta.setDisplayName(ChatManager.colorMessage("Menus.Option-Menu.Reset-Option"));
         resetMeta.setLore(Collections.singletonList(ChatManager.colorMessage("Menus.Option-Menu.Reset-Option-Lore")));
         resetOption.setItemMeta(resetMeta);
-        inv.setItem(31, resetOption);
+        inv.setItem(32, resetOption);
         return inv;
     }
 

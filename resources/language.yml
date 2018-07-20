@@ -173,8 +173,9 @@ Menus:
     Reset-Option-Lore: "&7Fully reset plot, &c&lcan't be undone!"
     Reset-Option-Done: "&cPlot fully reset!"
     Weather-Inventory-Name: "&aSet weather"
-    Weather-Option-Item: "&aChange plot weather"
+    Weather-Option: "&aChange plot weather"
     Weather-Option-Lore: "&7Right click to open menu"
+    Weather-Set: "&eWeather has been changed"
     Weather-Downfall: "&eDownfall"
     Weather-Clear: "&eClear"
   Theme-Voting:
@@ -204,4 +205,4 @@ Signs:
     - "&5[%playersize%/%maxplayers%]"
 
 # Do not modify!
-File-Version-Do-Not-Edit: 4
+File-Version-Do-Not-Edit: 5
