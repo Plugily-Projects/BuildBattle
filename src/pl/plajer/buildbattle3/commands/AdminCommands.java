@@ -172,7 +172,6 @@ public class AdminCommands extends MainCommand {
         player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Created"));
       } else {
         player.sendMessage(ChatManager.colorMessage("Signs.Look-Sign"));
-          ChatColor.RED + "You have to look at a sign to perform this command!");
       }
 
     }
