@@ -370,3 +370,5 @@ WATER_DROP:
   enabled: true
   permission: particles.VIP
   slot: 36
+
+Version: 1

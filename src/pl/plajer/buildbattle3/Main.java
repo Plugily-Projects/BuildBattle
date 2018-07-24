@@ -47,7 +47,6 @@ import pl.plajer.buildbattle3.events.GameEvents;
 import pl.plajer.buildbattle3.events.JoinEvents;
 import pl.plajer.buildbattle3.events.QuitEvents;
 import pl.plajer.buildbattle3.events.SetupInventoryEvents;
-import pl.plajer.buildbattle3.events.SpectatorEvents;
 import pl.plajer.buildbattle3.handlers.BungeeManager;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
@@ -268,7 +267,6 @@ public class Main extends JavaPlugin {
     new SetupInventoryEvents(this);
     bungeeActivated = getConfig().getBoolean("BungeeActivated");
     mainCommand = new MainCommand(this);
-    new SpectatorEvents(this);
     ConfigPreferences.loadOptions();
     ConfigPreferences.loadOptions();
     ConfigPreferences.loadThemes();

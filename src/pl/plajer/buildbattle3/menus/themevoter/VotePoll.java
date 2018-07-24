@@ -37,7 +37,6 @@ public class VotePoll {
 
   private Arena arena;
   private Map<String, Integer> votedThemes = new HashMap<>();
-  //todo cleaning
   private Map<Player, String> playerVote = new HashMap<>();
 
   public VotePoll(Arena arena, List<String> votedThemes) {

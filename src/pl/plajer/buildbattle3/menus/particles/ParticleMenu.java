@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -34,6 +35,7 @@ import pl.plajer.buildbattle3.arena.plots.ArenaPlot;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
 import pl.plajer.buildbattle3.user.UserManager;
+import pl.plajer.buildbattle3.utils.MessageUtils;
 import pl.plajer.buildbattle3.utils.Util;
 
 /**
@@ -57,15 +59,26 @@ public class ParticleMenu {
 
   public static void loadFromConfig() {
     FileConfiguration config = ConfigurationManager.getConfig("particles");
+    if (!config.isSet("Version")) {
+      for (Particle particle : Particle.values()) {
+        if (particle == Particle.BLOCK_CRACK || particle == Particle.ITEM_CRACK || particle == Particle.BLOCK_DUST || particle == Particle.MOB_APPEARANCE)
+          continue;
+        MessageUtils.info();
+        Bukkit.getConsoleSender().sendMessage("[Build Battle] Detected outdated particles.yml file! Updating it to support 1.13 properly and work better at other versions!");
+        Bukkit.getConsoleSender().sendMessage("[Build Battle] Material names were changed so please modify them again if you changed it already!");
+        config.set(particle.toString() + ".material", org.bukkit.Material.PAPER);
+        ConfigurationManager.saveConfig(config, "particles");
+      }
+    }
     int slotCounter = 0;
     for (Particle particle : Particle.values()) {
-      if (particle == Particle.BLOCK_CRACK || particle == Particle.ITEM_CRACK || particle == Particle.ITEM_TAKE || particle == Particle.BLOCK_DUST || particle == Particle.MOB_APPEARANCE)
+      if (particle == Particle.BLOCK_CRACK || particle == Particle.ITEM_CRACK || particle == Particle.BLOCK_DUST || particle == Particle.MOB_APPEARANCE)
         continue;
       if (!config.contains(particle.toString())) {
         config.set(particle.toString() + ".data", 0);
         config.set(particle.toString() + ".displayname", "&6" + particle.toString());
         config.set(particle.toString() + ".lore", Arrays.asList("Click to activate", "on your location"));
-        config.set(particle.toString() + ".material", org.bukkit.Material.PAPER.getId());
+        config.set(particle.toString() + ".material", org.bukkit.Material.PAPER);
         config.set(particle.toString() + ".enabled", true);
         config.set(particle.toString() + ".permission", "particles.VIP");
         config.set(particle.toString() + ".slot", slotCounter);
@@ -74,7 +87,7 @@ public class ParticleMenu {
       ParticleItem particleItem = new ParticleItem();
       particleItem.setData(config.getInt(particle.toString() + ".data"));
       particleItem.setEnabled(config.getBoolean(particle.toString() + ".enabled"));
-      particleItem.setMaterial(org.bukkit.Material.getMaterial(config.getInt(particle.toString() + ".material")));
+      particleItem.setMaterial(org.bukkit.Material.getMaterial(config.getString(particle.toString() + ".material")));
       particleItem.setLore(config.getStringList(particle.toString() + ".lore"));
       particleItem.setDisplayName(config.getString(particle.toString() + ".displayname"));
       particleItem.setPermission(config.getString(particle.toString() + ".permission"));

@@ -102,7 +102,7 @@ public class ArenaManager {
     p.getInventory().setArmorContents(new ItemStack[]{new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
     p.getInventory().clear();
     a.showPlayers();
-    if (!UserManager.getUser(p.getUniqueId()).isSpectator()) ChatManager.broadcastAction(a, p, ChatManager.ActionType.JOIN);
+    ChatManager.broadcastAction(a, p, ChatManager.ActionType.JOIN);
     p.updateInventory();
     for (Player player : a.getPlayers()) {
       a.showPlayer(player);
@@ -137,8 +137,7 @@ public class ArenaManager {
       UserManager.getUser(p.getUniqueId()).addInt("gamesplayed", 1);
     a.teleportToEndLocation(p);
     a.removePlayer(p);
-    if (!user.isSpectator()) ChatManager.broadcastAction(a, p, ChatManager.ActionType.LEAVE);
-    user.setSpectator(false);
+    ChatManager.broadcastAction(a, p, ChatManager.ActionType.LEAVE);
     user.removeScoreboard();
     if (a.getPlotManager().getPlot(p) != null) {
       a.getPlotManager().getPlot(p).fullyResetPlot();

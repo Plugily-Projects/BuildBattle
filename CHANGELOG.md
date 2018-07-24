@@ -1,5 +1,10 @@
 ## BuildBattle 3 changelog
 
+### 3.2.3 Release (24.07.2018)
+* Now while teleporting to the plot you won't fall down
+* Fixed xp was given wrong using inventory manager
+* Removed unnecessary listeners from spectator code
+
 ### 3.2.2 Release (20.07.2018)
 * Fixed NoSuchMethod error in 1.9.4 for title
 * Added support for Vietnamese, Hungarian and Chinese simplified locales
