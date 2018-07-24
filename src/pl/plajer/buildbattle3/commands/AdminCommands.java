@@ -122,7 +122,6 @@ public class AdminCommands extends MainCommand {
         Util.saveLocation("instances." + arena + ".plots.0.maxpoint", selection.getMaximumPoint());
       }
       player.sendMessage(ChatManager.colorMessage("In-Game.Messages.Plot-Added-Instance").replace("%arena%", arena));
-                         ChatColor.GREEN + "Plot added to instance " + ChatColor.RED + arena);
     } else {
       player.sendMessage(ChatManager.colorMessage("In-Game.Messages.Not-Right-Selection"));
     }
