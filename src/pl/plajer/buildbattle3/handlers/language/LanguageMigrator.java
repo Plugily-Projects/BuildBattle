@@ -43,7 +43,7 @@ import pl.plajer.buildbattle3.utils.MessageUtils;
  */
 public class LanguageMigrator {
 
-  public static final int LANGUAGE_FILE_VERSION = 5;
+  public static final int LANGUAGE_FILE_VERSION = 6;
   public static final int CONFIG_FILE_VERSION = 3;
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
