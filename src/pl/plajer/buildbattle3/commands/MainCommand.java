@@ -150,7 +150,7 @@ public class MainCommand implements CommandExecutor {
       if (args.length == 0) {
         sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Header"));
         sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Description"));
-        if (sender.hasPermission("buildbattle.admin")) {
+        if (hasPermission(sender, "buildbattle.admin")) {
           sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Admin-Bonus-Description"));
         }
         sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Footer"));
