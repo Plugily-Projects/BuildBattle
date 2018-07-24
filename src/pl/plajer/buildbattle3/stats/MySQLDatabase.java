@@ -84,9 +84,6 @@ public class MySQLDatabase {
   }
 
   public void insertPlayer(String UUID) {
-    if (ConfigPreferences.isNameUsedInDatabase()) {
-      UUID = Bukkit.getOfflinePlayer(java.util.UUID.fromString(UUID)).getName();
-    }
     executeUpdate("INSERT INTO `buildbattlestats` (UUID,gamesplayed) VALUES ('" + UUID + "',0)");
   }
 
@@ -95,16 +92,10 @@ public class MySQLDatabase {
   }
 
   public void setStat(String UUID, String stat, int number) {
-    if (ConfigPreferences.isNameUsedInDatabase()) {
-      UUID = Bukkit.getOfflinePlayer(java.util.UUID.fromString(UUID)).getName();
-    }
     executeUpdate("UPDATE `buildbattlestats` SET " + stat + "=" + number + " WHERE UUID='" + UUID + "';");
   }
 
   public int getStat(String UUID, String stat) {
-    if (ConfigPreferences.isNameUsedInDatabase()) {
-      UUID = Bukkit.getOfflinePlayer(java.util.UUID.fromString(UUID)).getName();
-    }
     ResultSet set = executeQuery("SELECT " + stat + " FROM `buildbattlestats` WHERE UUID='" + UUID + "'");
     try {
       if (!set.next()) return 0;

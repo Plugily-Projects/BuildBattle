@@ -1,5 +1,5 @@
 main: pl.plajer.buildbattle3.Main
-version: 3.2.3
+version: 3.3.0
 name: BuildBattle
 depend: [WorldEdit]
 softdepend: [Vault, PlaceholderAPI, Citizens]

@@ -1,9 +1,19 @@
 ## BuildBattle 3 changelog
 
-### 3.2.3 Release (24.07.2018)
+### 3.3.0 Release (24.07.2018)
 * Now while teleporting to the plot you won't fall down
 * Fixed xp was given wrong using inventory manager
 * Removed unnecessary listeners from spectator code
+* Use-Name-Instead-Of-UUID-In-Database option was removed, it's no longer supported
+* Removed Particle-Offset option, was useless, default offset should stay same for every server
+* Removed Disable-Scoreboard-Ingame option as scoreboard is integral part of the game
+* Removed Hook-Into-Vault option as plugin automatically hooks with Vault if found
+(this hook really doesn't add anything except an extra placeholder on the scoreboard which is anyway medium useful in this game)
+* Using item flags instead of empty custom enchant which didn't work in 1.13
+* **Added 1.13 support**
+(still lots of code uses deprecated code which shouldn't be used in 1.13 but because 1.13 has got backwards compatibility
+we will keep that for a while as an temporary workaround)
+**Keep in mind that 1.13 forces me to do changes with ID's in BuildBattle and those changes will be done soon**
 
 ### 3.2.2 Release (20.07.2018)
 * Fixed NoSuchMethod error in 1.9.4 for title

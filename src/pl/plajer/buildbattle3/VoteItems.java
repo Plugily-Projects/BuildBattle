@@ -22,10 +22,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
@@ -49,7 +52,7 @@ public class VoteItems {
   public static void loadVoteItemsFromConfig() {
     for (String s : config.getKeys(false)) {
       if (StringUtils.isNumeric(s) && config.contains(s + ".material") && config.contains(s + ".data") && config.contains(s + ".displayname")) {
-        ItemStack item = new ItemStack(config.getInt(s + ".material"), 1, (byte) config.getInt(s + ".data"));
+        ItemStack item = new ItemStack(Material.getMaterial(config.getInt(s + ".material")), 1, (byte) config.getInt(s + ".data"));
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.setDisplayName(ChatManager.colorRawMessage(config.getString(s + ".displayname")));
         item.setItemMeta(itemMeta);

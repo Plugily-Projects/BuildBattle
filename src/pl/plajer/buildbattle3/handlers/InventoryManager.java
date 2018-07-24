@@ -156,7 +156,6 @@ public class InventoryManager {
         player.setFireTicks(invConfig.getInt("Fire ticks"));
         player.setGameMode(GameMode.valueOf(invConfig.getString("GameMode")));
         player.setAllowFlight(invConfig.getBoolean("Allow flight"));
-        player.setLevel(invConfig.getInt("Exp"));
         List<String> activePotions = invConfig.getStringList("Active potion effects");
         for (String potion : activePotions) {
           String[] splited = potion.split("#");
@@ -173,5 +172,6 @@ public class InventoryManager {
     }
 
     player.updateInventory();
+    player.setLevel(Integer.valueOf(inventory.getTitle()));
   }
 }

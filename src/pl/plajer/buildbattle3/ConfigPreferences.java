@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import pl.plajer.buildbattle3.arena.Arena;
@@ -55,22 +57,18 @@ public class ConfigPreferences {
 
   public static void loadWinCommands() {
     winCommands.addAll(config.getStringList("Win-Commands"));
-
   }
 
   public static void loadWhitelistedCommands() {
     whitelistedCommands.addAll(config.getStringList("Whitelisted-Commands"));
-
   }
 
   public static void loadThirdPlaceCommands() {
     thirdPlaceCommands.addAll(config.getStringList("Third-Place-Commands"));
-
   }
 
   public static void loadSecondPlaceCommands() {
     secondPlaceCommands.addAll(config.getStringList("Second-Place-Commands"));
-
   }
 
   public static List<String> getSecondPlaceCommands() {
@@ -98,8 +96,8 @@ public class ConfigPreferences {
     return options.get("Disable-Mob-Spawning-Completely") == 1;
   }
 
-  public static int getDefaultFloorMaterial() {
-    return options.get("Default-Floor-Material");
+  public static Material getDefaultFloorMaterial() {
+    return Material.getMaterial(config.getString("Default-Floor-Material-Name").toUpperCase());
   }
 
   public static int getThemeVoteTimer() {
@@ -111,8 +109,8 @@ public class ConfigPreferences {
   }
 
   public static void loadBlackList() {
-    for (int ID : config.getIntegerList("Blacklisted-Items")) {
-      Arena.addToBlackList(ID);
+    for (String item : config.getStringList("Blacklisted-Item-Names")) {
+      Arena.addToBlackList(Material.valueOf(item.toUpperCase()));
     }
   }
 
@@ -140,10 +138,6 @@ public class ConfigPreferences {
     return options.get("Voting-Time-In-Seconds");
   }
 
-  public static boolean isScoreboardDisabled() {
-    return options.get("Disable-Scoreboard-Ingame") == 1;
-  }
-
   public static int getTeamBuildTime() {
     return options.get("Team-Build-Time-In-Seconds");
   }
@@ -156,20 +150,12 @@ public class ConfigPreferences {
     return options.get("Bungee-Shutdown-On-End") == 1;
   }
 
-  public static int getParticlOffset() {
-    return options.get("Particle-Offset");
-  }
-
   public static int getMaxMobs() {
     return options.get("Mobs-Max-Amount-Per-Plot");
   }
 
   public static boolean isWinCommandsEnabled() {
     return options.get("Win-Commands-Activated") == 1;
-  }
-
-  public static boolean isNameUsedInDatabase() {
-    return options.get("Use-Name-Instead-Of-UUID-In-Database") == 1;
   }
 
   public static boolean isSecondPlaceCommandsEnabled() {
@@ -191,22 +177,18 @@ public class ConfigPreferences {
     loadOptions.add("Voting-Time-In-Seconds");
     loadOptions.add("Boss-Bar-Enabled");
     loadOptions.add("Fly-Range-Out-Plot");
-    loadOptions.add("Default-Floor-Material");
+    loadOptions.add("Default-Floor-Material-Name");
     loadOptions.add("Disable-Mob-Spawning-Completely");
     loadOptions.add("Amount-One-Particle-Effect-Contains");
     loadOptions.add("Max-Amount-Particles");
     loadOptions.add("Particle-Refresh-Per-Tick");
     loadOptions.add("Bungee-Shutdown-On-End");
-    loadOptions.add("Particle-Offset");
     loadOptions.add("Win-Commands-Activated");
     loadOptions.add("End-Game-Commands-Activated");
     loadOptions.add("Second-Place-Commands-Activated");
     loadOptions.add("Third-Place-Commands-Activated");
-    loadOptions.add("Use-Name-Instead-Of-UUID-In-Database");
     loadOptions.add("Mobs-Max-Amount-Per-Plot");
     loadOptions.add("Hide-Players-Outside-Game");
-    loadOptions.add("Disable-Scoreboard-Ingame");
-    loadOptions.add("Hook-Into-Vault");
     loadOptions.add("Lobby-Starting-Time");
     loadOptions.add("Theme-Voting-Time-In-Seconds");
 
@@ -224,10 +206,6 @@ public class ConfigPreferences {
         }
       }
     }
-  }
-
-  public static boolean isVaultEnabled() {
-    return options.get("Hook-Into-Vault") == 1;
   }
 
   public static long getParticleRefreshTick() {

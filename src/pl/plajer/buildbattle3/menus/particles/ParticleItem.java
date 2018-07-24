@@ -107,7 +107,6 @@ public class ParticleItem {
       itemStack = new ItemStack(getMaterial(), 1, getData());
     } else {
       itemStack = new ItemStack(getMaterial());
-
     }
     Util.setItemNameAndLore(itemStack, ChatManager.colorRawMessage(this.getDisplayName()), lore);
     return itemStack;

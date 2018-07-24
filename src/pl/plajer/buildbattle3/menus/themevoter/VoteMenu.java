@@ -25,15 +25,16 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.handlers.ChatManager;
-import pl.plajer.buildbattle3.utils.Glow;
 import pl.plajer.buildbattle3.utils.ItemBuilder;
 import pl.plajer.buildbattle3.utils.Util;
 
@@ -117,7 +118,8 @@ public class VoteMenu {
               .build();
       if (votePoll.getPlayerVote().containsKey(player) && votePoll.getPlayerVote().get(player).equals(theme)) {
         ItemMeta meta = stack.getItemMeta();
-        meta.addEnchant(new Glow(150), 1, true);
+        meta.addEnchant(Enchantment.DAMAGE_ALL, 1, true);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         stack.setItemMeta(meta);
       }
       setItem(stack, i * 9);

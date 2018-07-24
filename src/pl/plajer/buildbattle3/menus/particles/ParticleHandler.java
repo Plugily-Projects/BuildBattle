@@ -32,12 +32,9 @@ import pl.plajer.buildbattle3.arena.plots.ArenaPlot;
  */
 public class ParticleHandler extends BukkitRunnable {
 
-
   private static int amount = ConfigPreferences.getAmountFromOneParticle();
   private Main plugin;
   private long tick;
-  private int particleOffset = ConfigPreferences.getParticlOffset();
-
 
   public ParticleHandler(Main main) {
     plugin = main;
@@ -54,9 +51,7 @@ public class ParticleHandler extends BukkitRunnable {
       for (ArenaPlot buildPlot : arena.getPlotManager().getPlots()) {
         for (Location location : buildPlot.getParticles().keySet()) {
           if (!arena.getPlayers().isEmpty())
-            //per player?
-            location.getWorld().spawnParticle(buildPlot.getParticles().get(location), location, amount, (float) particleOffset, (float) particleOffset, (float) particleOffset);
-          //buildPlot.getParticles().get(location).display((float) particleOffset, (float) particleOffset, (float) particleOffset, (float) 1, amount, location, new ArrayList<>(arena.getPlayers()));
+            location.getWorld().spawnParticle(buildPlot.getParticles().get(location), location, amount, 1, 1, 1);
         }
       }
     }

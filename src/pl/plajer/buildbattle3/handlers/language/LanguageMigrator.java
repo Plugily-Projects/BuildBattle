@@ -44,7 +44,7 @@ import pl.plajer.buildbattle3.utils.MessageUtils;
 public class LanguageMigrator {
 
   public static final int LANGUAGE_FILE_VERSION = 5;
-  public static final int CONFIG_FILE_VERSION = 2;
+  public static final int CONFIG_FILE_VERSION = 3;
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
   private static List<String> migratable = Arrays.asList("bungee", "config", "language", "MySQL");
@@ -77,14 +77,29 @@ public class LanguageMigrator {
                 "# - black (restarting) stained glass\r\nSigns-Block-States-Enabled: true\r\n\r\n");
         LanguageMigrator.addNewLines(file, "# Total time of building in game in TEAM game mode\n" +
                 "Team-Build-Time-In-Seconds: 540\r\n\r\n# Total time of voting for themes before starting\n" +
-                "Theme-Voting-Time-In-Seconds: 25\r\n\r\n" +
-                "# Don't modify\r\nVersion: 2\r\n\r\n# No way! You've reached the end! But... where's the dragon!?");
+                "Theme-Voting-Time-In-Seconds: 25\r\n\r\n");
+        LanguageMigrator.addNewLines(file, "# Default floor material name\r\n" +
+                "Default-Floor-Material-Name: log\r\n\r\n");
+        LanguageMigrator.addNewLines(file, "# Blacklisted item names, you can't use them while building.\r\n" +
+                "Blacklisted-Item-Names:\r\n- tnt\r\n- diamond_block\r\n\r\n" +
+                "# Don't modify\r\nVersion: 3\r\n\r\n# No way! You've reached the end! But... where's the dragon!?");
         break;
       case 1:
         LanguageMigrator.addNewLines(file, "# Total time of building in game in TEAM game mode\n" +
                 "Team-Build-Time-In-Seconds: 540\r\n\r\n# Total time of voting for themes before starting\n" +
-                "Theme-Voting-Time-In-Seconds: 25\r\n\r\n" +
-                "# Don't modify\r\nVersion: 2\r\n\r\n# No way! You've reached the end! But... where's the dragon!?");
+                "Theme-Voting-Time-In-Seconds: 25\r\n\r\n");
+        LanguageMigrator.addNewLines(file, "# Default floor material name\r\n" +
+                "Default-Floor-Material-Name: log\r\n\r\n");
+        LanguageMigrator.addNewLines(file, "# Blacklisted item names, you can't use them while building.\r\n" +
+                "Blacklisted-Item-Names:\r\n- tnt\r\n- diamond_block\r\n\r\n" +
+                "# Don't modify\r\nVersion: 3\r\n\r\n# No way! You've reached the end! But... where's the dragon!?");
+        break;
+      case 2:
+        LanguageMigrator.addNewLines(file, "# Default floor material name\r\n" +
+                "Default-Floor-Material-Name: log\r\n\r\n");
+        LanguageMigrator.addNewLines(file, "# Blacklisted item names, you can't use them while building.\r\n" +
+                "Blacklisted-Item-Names:\r\n- tnt\r\n- diamond_block\r\n\r\n" +
+                "# Don't modify\r\nVersion: 3\r\n\r\n# No way! You've reached the end! But... where's the dragon!?");
         break;
     }
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] [System notify] Config updated, no comments were removed :)");

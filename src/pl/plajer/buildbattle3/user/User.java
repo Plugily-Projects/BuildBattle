@@ -53,6 +53,14 @@ public class User {
     return Bukkit.getServer().getPlayer(uuid);
   }
 
+  public boolean isSpectator() {
+    return spectator;
+  }
+
+  public void setSpectator(boolean b) {
+    spectator = b;
+  }
+
   public int getInt(String s) {
     if (!ints.containsKey(s)) {
       ints.put(s, 0);

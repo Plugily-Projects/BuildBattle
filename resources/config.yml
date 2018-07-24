@@ -53,8 +53,8 @@ Team-Build-Time-In-Seconds: 540
 # Total time of voting for themes before starting
 Theme-Voting-Time-In-Seconds: 25
 
-# Default floor material ID
-Default-Floor-Material: 17
+# Default floor material name
+Default-Floor-Material-Name: log
 
 # Should mob spawning be disabled?
 Disable-Mob-Spawning-Completely: true
@@ -71,9 +71,6 @@ Particle-Refresh-Per-Tick: 10
 # Should server be disabled after the game ends?
 Bungee-Shutdown-On-End: false
 
-# Offset of particles
-Particle-Offset: 1
-
 # Should win commands be activated?
 Win-Commands-Activated: false
 
@@ -86,21 +83,11 @@ Second-Place-Commands-Activated: false
 # Should third place commands be activated?
 Third-Place-Commands-Activated: false
 
-# Should we save player names instead of their UUID's in database?
-# Remember changing this value when there are already player records may break them!
-Use-Name-Instead-Of-UUID-In-Database: false
-
 # Max amount of mobs to spawn per plot
 Mobs-Max-Amount-Per-Plot: 20
 
 # Should we hide players outside game?
 Hide-Players-Outside-Game: true
-
-# Should scoreboard in game be disabled?
-Disable-Scoreboard-Ingame: false
-
-# Should we hook into Vault?
-Hook-Into-Vault: false
 
 # Time in lobby to wait before start
 Lobby-Starting-Time: 60
@@ -115,10 +102,10 @@ Game-Themes:
 - Hate
 - Ugly
 
-# Blacklisted item ID's, you can't use them while building.
-Blacklisted-Items:
-- 46
-- 57
+# Blacklisted item names, you can't use them while building.
+Blacklisted-Item-Names:
+- tnt
+- diamond_block
 
 # Commands executed when player wins
 # Use %PLAYER% placeholder to replace it with winner's name
@@ -170,6 +157,6 @@ DatabaseActivated: false
 Debug: false
 
 # Don't modify.
-Version: 2
+Version: 3
 
 # No way! You've reached the end! But... where's the dragon!?

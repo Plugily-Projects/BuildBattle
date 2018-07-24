@@ -130,7 +130,7 @@ public class ArenaPlot {
         }
       }
     }
-    changeFloor(Material.getMaterial(ConfigPreferences.getDefaultFloorMaterial()));
+    changeFloor(ConfigPreferences.getDefaultFloorMaterial());
     if (uuids != null || !uuids.isEmpty()) {
       for (UUID u : uuids) {
         User user = UserManager.getUser(u);
@@ -167,7 +167,7 @@ public class ArenaPlot {
         }
       }
     }
-    changeFloor(Material.getMaterial(ConfigPreferences.getDefaultFloorMaterial()));
+    changeFloor(ConfigPreferences.getDefaultFloorMaterial());
     getParticles().clear();
     for (Entity entity : getCenter().getWorld().getEntities()) {
       if (isInPlotRange(entity.getLocation(), 3)) {

@@ -33,6 +33,7 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -66,7 +67,7 @@ import pl.plajer.buildbattle3.utils.Util;
 public class Arena extends BukkitRunnable {
 
   public static Main plugin;
-  private static List<Integer> blacklist = new ArrayList<>();
+  private static List<Material> blacklist = new ArrayList<>();
   private Map<Integer, List<UUID>> topList = new HashMap<>();
   private String theme = "Theme";
   private ArenaPlotManager plotManager;
@@ -77,7 +78,6 @@ public class Arena extends BukkitRunnable {
   private boolean voteTime;
   private boolean themeVoteTime = true;
   private boolean themeTimerSet = false;
-  private boolean scoreboardDisabled = ConfigPreferences.isScoreboardDisabled();
   private boolean bossBarEnabled = ConfigPreferences.isBarEnabled();
   private int BUILD_TIME;
   private boolean PLAYERS_OUTSIDE_GAME_ENABLED = ConfigPreferences.isHidePlayersOutsideGameEnabled();
@@ -115,10 +115,10 @@ public class Arena extends BukkitRunnable {
   /**
    * Adds item which can not be used in game
    *
-   * @param ID item ID to blacklist
+   * @param mat Material to blacklist
    */
-  public static void addToBlackList(int ID) {
-    blacklist.add(ID);
+  public static void addToBlackList(Material mat) {
+    blacklist.add(mat);
   }
 
   /**
@@ -194,7 +194,7 @@ public class Arena extends BukkitRunnable {
   public void run() {
     //idle task
     if (getPlayers().size() == 0 && getArenaState() == ArenaState.WAITING_FOR_PLAYERS) return;
-    if (!this.scoreboardDisabled) updateScoreboard();
+    updateScoreboard();
     if (bossBarEnabled) {
       updateBossBar();
     }
@@ -571,14 +571,14 @@ public class Arena extends BukkitRunnable {
     } else {
       returnString = StringUtils.replace(returnString, "%TEAMMATE%", ChatManager.colorMessage("In-Game.Nobody"));
     }
-    if (ConfigPreferences.isVaultEnabled()) {
+    if (plugin.getServer().getPluginManager().isPluginEnabled("Vault") && Main.getEcon() != null) {
       returnString = StringUtils.replace(returnString, "%MONEY%", Double.toString(Main.getEcon().getBalance(player)));
     }
     returnString = ChatManager.colorRawMessage(returnString);
     return returnString;
   }
 
-  public List<Integer> getBlacklist() {
+  public List<Material> getBlacklist() {
     return blacklist;
   }
 

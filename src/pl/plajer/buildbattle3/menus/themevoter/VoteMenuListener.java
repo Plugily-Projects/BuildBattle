@@ -18,6 +18,7 @@
 
 package pl.plajer.buildbattle3.menus.themevoter;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -48,16 +49,18 @@ public class VoteMenuListener implements Listener {
     if (e.getInventory().getName().equals(ChatManager.colorMessage("Menus.Theme-Voting.Inventory-Name"))) {
       e.setCancelled(true);
       Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
-      if (arena == null || e.getCurrentItem().getType() != Material.SIGN) {
+      if (arena == null) {
         return;
       }
-      String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
-      displayName = ChatColor.stripColor(displayName);
-      boolean success = arena.getVotePoll().addVote((Player) e.getWhoClicked(), displayName);
-      if (!success) {
-        e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Theme-Voting.Already-Voted"));
-      } else {
-        e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Theme-Voting.Voted-Successfully"));
+      if(e.getCurrentItem().getType() == Material.SIGN || /*1.13*/ e.getCurrentItem().getType() == Material.SIGN_POST) {
+        String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
+        displayName = ChatColor.stripColor(displayName);
+        boolean success = arena.getVotePoll().addVote((Player) e.getWhoClicked(), displayName);
+        if (!success) {
+          e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Theme-Voting.Already-Voted"));
+        } else {
+          e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Theme-Voting.Voted-Successfully"));
+        }
       }
     }
   }

@@ -20,7 +20,6 @@ package pl.plajer.buildbattle3;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
-import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -30,7 +29,6 @@ import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -65,7 +63,6 @@ import pl.plajer.buildbattle3.stats.FileStats;
 import pl.plajer.buildbattle3.stats.MySQLDatabase;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
-import pl.plajer.buildbattle3.utils.Glow;
 import pl.plajer.buildbattle3.utils.MessageUtils;
 import pl.plajer.buildbattle3.utils.Metrics;
 import pl.plajer.buildbattle3.utils.UpdateChecker;
@@ -137,6 +134,10 @@ public class Main extends JavaPlugin {
     return version.equalsIgnoreCase("v1_9_R2");
   }
 
+  public boolean is1_13_R1() {
+    return version.equalsIgnoreCase("v1_13_R1");
+  }
+
   public boolean isDataEnabled() {
     return dataEnabled;
   }
@@ -193,8 +194,8 @@ public class Main extends JavaPlugin {
       fileStats = new FileStats();
     }
     loadStatsForPlayersOnline();
-    if (ConfigPreferences.isVaultEnabled()) {
-      if (setupEconomy()) System.out.print("NO ECONOMY RELATED TO VAULT FOUND!");
+    if (getServer().getPluginManager().isPluginEnabled("Vault")) {
+      setupEconomy();
     }
   }
 
@@ -208,7 +209,7 @@ public class Main extends JavaPlugin {
           latestVersion = "v" + latestVersion;
           if (latestVersion.contains("b")) {
             Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Current version %old%, latest version %new%".replaceAll("%old%", currentVersion).replaceAll("%new%", latestVersion));
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Current version %old%, latest version %new%" .replaceAll("%old%", currentVersion).replaceAll("%new%", latestVersion));
           } else {
             MessageUtils.updateIsHere();
             Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Your Build Battle plugin is outdated! Download it to keep with latest changes and fixes.");
@@ -348,7 +349,6 @@ public class Main extends JavaPlugin {
       new PlaceholderManager().register();
     }
     checkUpdate();
-    registerGlowEnchant();
     new GameEvents(this);
     new VoteMenuListener(this);
   }
@@ -434,23 +434,6 @@ public class Main extends JavaPlugin {
     Plugin p = Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
     if (p instanceof WorldEditPlugin) return (WorldEditPlugin) p;
     return null;
-  }
-
-  private void registerGlowEnchant() {
-    try {
-      Field f = Enchantment.class.getDeclaredField("acceptingNew");
-      f.setAccessible(true);
-      f.set(null, true);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    try {
-      Glow glow = new Glow(150);
-      Enchantment.registerEnchantment(glow);
-    } catch (IllegalArgumentException ignored) {
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
   }
 
 }
