@@ -35,6 +35,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.handlers.ChatManager;
+import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.ItemBuilder;
 import pl.plajer.buildbattle3.utils.Util;
 
@@ -80,14 +81,16 @@ public class VoteMenu {
       setItem(new ItemBuilder(new ItemStack(Material.SIGN))
               .name(ChatManager.colorMessage("Menus.Theme-Voting.Theme-Item-Name").replace("%theme%", randomThemes.get(i)))
               .lore(ChatManager.colorMessage("Menus.Theme-Voting.Theme-Item-Lore").replace("%theme%", randomThemes.get(i))
-                      //todo timer time for theme voting
                       .replace("%percent%", String.valueOf("0.0")).replace("%time-left%", String.valueOf(arena.getTimer())).split(";"))
               .build(), i * 9);
       setItem(new ItemBuilder(new ItemStack(Material.IRON_FENCE)).build(), (i * 9) + 1);
-      //super votes not supported yet
-      for (int j = 0; j < 7; j++) {
+      for (int j = 0; j < 6; j++) {
         setItem(new ItemBuilder(new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte) 14)).build(), (i * 9) + 1 + j + 1);
       }
+      setItem(new ItemBuilder(new ItemStack(Material.PAPER))
+              .name(ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Item-Name").replace("%theme%", randomThemes.get(i)))
+              .lore(ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Item-Lore").replace("%theme%", randomThemes.get(i)).split(";"))
+              .build(), (i * 9) + 8);
     }
     votePoll = new VotePoll(arena, randomThemes);
   }
@@ -113,7 +116,6 @@ public class VoteMenu {
       ItemStack stack = new ItemBuilder(new ItemStack(Material.SIGN))
               .name(ChatManager.colorMessage("Menus.Theme-Voting.Theme-Item-Name").replace("%theme%", theme))
               .lore(ChatManager.colorMessage("Menus.Theme-Voting.Theme-Item-Lore").replace("%theme%", theme)
-                      //todo timer time for theme voting
                       .replace("%percent%", String.valueOf(Util.round(percent, 2))).replace("%time-left%", String.valueOf(arena.getTimer())).split(";"))
               .build();
       if (votePoll.getPlayerVote().containsKey(player) && votePoll.getPlayerVote().get(player).equals(theme)) {
@@ -123,17 +125,22 @@ public class VoteMenu {
         stack.setItemMeta(meta);
       }
       setItem(stack, i * 9);
-      for (int j = 0; j < 7; j++) {
+      for (int j = 0; j < 6; j++) {
         setItem(new ItemBuilder(new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte) 14)).build(), (i * 9) + 1 + j + 1);
       }
+      setItem(new ItemBuilder(new ItemStack(Material.PAPER))
+              .name(ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Item-Name").replace("%theme%", theme))
+              .lore(ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Item-Lore").replace("%theme%", theme)
+                      .replace("%owned%", String.valueOf(UserManager.getUser(player.getUniqueId()).getInt("supervotes"))).split(";"))
+              .build(), (i * 9) + 8);
       if (votePoll.getVotedThemes().get(theme) > 0) {
         double vote = 0;
-        for (int j = 0; j < 7; j++) {
+        for (int j = 0; j < 6; j++) {
           if (vote > percent) {
             break;
           }
           setItem(new ItemBuilder(new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte) 5)).build(), (i * 9) + 1 + j + 1);
-          vote += 14.3;
+          vote += 16.7;
         }
       }
       i++;

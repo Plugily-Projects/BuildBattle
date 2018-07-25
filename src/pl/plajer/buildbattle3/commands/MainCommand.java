@@ -133,6 +133,20 @@ public class MainCommand implements CommandExecutor {
           player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
         }
         return true;
+      } else if(args[0].equalsIgnoreCase("addvotes")){
+        if (args.length == 3) {
+          adminCommands.addSuperVotes(sender, args[1], args[2]);
+        } else {
+          player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
+        }
+        return true;
+      } else if(args[0].equalsIgnoreCase("setvotes")){
+        if (args.length == 3) {
+          adminCommands.setSuperVotes(sender, args[1], args[2]);
+        } else {
+          player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
+        }
+        return true;
       } else if (args[0].equalsIgnoreCase("help")) {
         adminCommands.sendHelp(sender);
         return true;

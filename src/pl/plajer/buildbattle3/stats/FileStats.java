@@ -40,7 +40,6 @@ public class FileStats {
     config = ConfigurationManager.getConfig("stats");
   }
 
-
   public void saveStat(Player player, String stat) {
     User user = UserManager.getUser(player.getUniqueId());
     config.set(player.getUniqueId().toString() + "." + stat, user.getInt(stat));

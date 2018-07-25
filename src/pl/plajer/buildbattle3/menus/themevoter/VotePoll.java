@@ -36,7 +36,7 @@ import pl.plajer.buildbattle3.arena.Arena;
 public class VotePoll {
 
   private Arena arena;
-  private Map<String, Integer> votedThemes = new HashMap<>();
+  private Map<String, Integer> votedThemes = new LinkedHashMap<>();
   private Map<Player, String> playerVote = new HashMap<>();
 
   public VotePoll(Arena arena, List<String> votedThemes) {
@@ -84,6 +84,18 @@ public class VotePoll {
   public String getVotedTheme() {
     LinkedHashMap<String, Integer> bestTheme = (LinkedHashMap<String, Integer>) sortByValue(votedThemes);
     return (String) bestTheme.keySet().toArray()[bestTheme.keySet().toArray().length - 1];
+  }
+
+  public String getThemeByPosition(int position){
+    if(position % 9 != 0){
+      return "Incompatible operation";
+    }
+    int i = 1;
+    for(String theme : votedThemes.keySet()){
+      if(position / 9 == i) return theme;
+      i++;
+    }
+    return "none";
   }
 
 }

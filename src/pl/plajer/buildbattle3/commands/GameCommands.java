@@ -52,6 +52,7 @@ public class GameCommands extends MainCommand {
     player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Blocks-Placed") + user.getInt("blocksplaced"));
     player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Blocks-Broken") + user.getInt("blocksbroken"));
     player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Particles-Placed") + user.getInt("particles"));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Super-Votes") + user.getInt("supervotes"));
     player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Footer"));
   }
 
@@ -65,6 +66,7 @@ public class GameCommands extends MainCommand {
     player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Blocks-Placed") + user.getInt("blocksplaced"));
     player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Blocks-Broken") + user.getInt("blocksbroken"));
     player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Particles-Placed") + user.getInt("particles"));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Super-Votes") + user.getInt("supervotes"));
     player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Footer"));
   }
 

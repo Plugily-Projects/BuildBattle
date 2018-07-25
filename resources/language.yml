@@ -36,6 +36,7 @@ Commands:
     Blocks-Placed: "&aBlocks placed: &e"
     Blocks-Broken: "&aBlocks broken: &e"
     Particles-Placed: "&aParticles placed: &e"
+    Super-Votes: "&aSuper votes: &e"
   Main-Command:
     Header: "&6----------------{BuildBattle commands}----------"
     Description: "&aGame commands:\n
@@ -185,6 +186,9 @@ Menus:
     Theme-Item-Lore: "&7Vote for theme &b%theme%;;&7Time remaining: &c%time-left%;&7Current votes: &c%percent%%!;;&8&oLive vote percentages;&8&oare shown on the right in;&8&obar form.;;&eClick to vote &b%theme%&e!"
     Voted-Successfully: "&aVoted successfully!"
     Already-Voted: "&cYou've already voted for this theme!"
+    Super-Vote-Item-Name: "&bSuper vote"
+    Super-Vote-Item-Lore: "&7You have &b%owned% super votes;;&eClick to super vote &b%theme%&e!"
+    Super-Vote-Used: "&7Player &e%player% &7has used &bSuper vote &7for theme &b%theme%&7! Starting now..."
 
 Signs:
   Please-Type-Arena-Name: "&cPlease type arena name in second line!"
@@ -205,4 +209,4 @@ Signs:
     - "&5[%playersize%/%maxplayers%]"
 
 # Do not modify!
-File-Version-Do-Not-Edit: 5
+File-Version-Do-Not-Edit: 6

@@ -90,7 +90,8 @@ public class StatsStorage {
    * Available statistics to get.
    */
   public enum StatisticType {
-    BLOCKS_PLACED("blocksplaced"), BLOCKS_BROKEN("blocksbroken"), GAMES_PLAYED("gamesplayed"), WINS("wins"), LOSES("loses"), HIGHEST_WIN("highestwin"), PARTICLES_USED("particles");
+    BLOCKS_PLACED("blocksplaced"), BLOCKS_BROKEN("blocksbroken"), GAMES_PLAYED("gamesplayed"), WINS("wins"), LOSES("loses"), HIGHEST_WIN("highestwin"), PARTICLES_USED("particles"),
+    SUPER_VOTES("supervotes");
 
     String name;
 

@@ -1,5 +1,8 @@
 ## BuildBattle 3 changelog
 
+### 3.4.0 Release (25.07.2018)
+* Added super votes
+
 ### 3.3.0 Release (24.07.2018)
 * Now while teleporting to the plot you won't fall down
 * Fixed xp was given wrong using inventory manager

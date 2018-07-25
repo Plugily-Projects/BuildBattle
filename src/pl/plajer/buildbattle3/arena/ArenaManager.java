@@ -73,7 +73,7 @@ public class ArenaManager {
       return;
     }
     if (!plugin.isBungeeActivated()) {
-      if (!(p.hasPermission(PermissionManager.getJoinPerm().replaceAll("<arena>", "*")) || p.hasPermission(PermissionManager.getJoinPerm().replaceAll("<arena>", a.getID())))) {
+      if (!(p.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", "*")) || p.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", a.getID())))) {
         p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Join-No-Permission"));
         return;
       }

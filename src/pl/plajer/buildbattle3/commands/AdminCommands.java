@@ -31,6 +31,8 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
+import org.apache.commons.lang.math.NumberUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
@@ -47,6 +49,8 @@ import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.arena.ArenaState;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
+import pl.plajer.buildbattle3.user.User;
+import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.Util;
 
 /**
@@ -71,6 +75,10 @@ public class AdminCommands extends MainCommand {
             gray + "Add new NPC to the game plots\n" + gold + "Permission: " + gray + "buildbattle.admin.addnpc\n" + gold + "" + ChatColor.BOLD + "Requires Citizen plugin!"));
     command.add(new CommandData("/bba settheme " + gold + "<theme>", "/bba settheme <theme>",
             gray + "Set new arena theme\n" + gold + "Permission: " + gray + "buildbattle.admin.settheme\n" + gold + "You can set arena theme only when it started\n" + gold + "and only for 20 seconds after start!"));
+    command.add(new CommandData("/bba addvotes " + gold + "<player> <amount>", "/bba addvotes <player> <amount>",
+            gray + "Add super votes to target player\n" + gold + "Permission: " + gray + "buildbattle.admin.supervotes.add"));
+    command.add(new CommandData("/bba setvotes " + gold + "<player> <amount>", "/bba setvotes <player> <amount>",
+            gray + "Set super votes of target player\n" + gold + "Permission: " + gray + "buildbattle.admin.supervotes.set"));
     command.add(new CommandData("/bba list", "/bba list",
             gray + "Shows list with all loaded arenas\n" + gold + "Permission: " + gray + "buildbattle.admin.list"));
     command.add(new CommandData("/bba stop", "/bba stop",
@@ -203,9 +211,9 @@ public class AdminCommands extends MainCommand {
     sender.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.List-Command.Header"));
     int i = 0;
     for (Arena arena : ArenaRegistry.getArenas()) {
-      sender.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.List-Command.Format").replaceAll("%arena%", arena.getID())
-              .replaceAll("%status%", arena.getArenaState().getFormattedName()).replaceAll("%players%", String.valueOf(arena.getPlayers().size()))
-              .replaceAll("%maxplayers%", String.valueOf(arena.getMaximumPlayers())));
+      sender.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.List-Command.Format").replace("%arena%", arena.getID())
+              .replace("%status%", arena.getArenaState().getFormattedName()).replace("%players%", String.valueOf(arena.getPlayers().size()))
+              .replace("%maxplayers%", String.valueOf(arena.getMaximumPlayers())));
       i++;
     }
     if (i == 0) sender.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.List-Command.No-Arenas"));
@@ -247,6 +255,36 @@ public class AdminCommands extends MainCommand {
         sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Started"));
       }
     }
+  }
+
+  public void setSuperVotes(CommandSender sender, String who, String superVotes){
+    if (!hasPermission(sender, "buildbattle.admin.supervotes.set")) return;
+    if(!NumberUtils.isNumber(superVotes)){
+      sender.sendMessage(ChatManager.colorRawMessage("&cArgument isn't a number!"));
+      return;
+    }
+    if(Bukkit.getPlayer(who) == null || !Bukkit.getPlayer(who).isOnline()){
+      sender.sendMessage(ChatManager.colorMessage("Commands.Player-Not-Found"));
+      return;
+    }
+    User user = UserManager.getUser(Bukkit.getPlayer(who).getUniqueId());
+    user.setInt("supervotes", Integer.parseInt(superVotes));
+    sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&aSuper votes set."));
+  }
+
+  public void addSuperVotes(CommandSender sender, String who, String superVotes){
+    if (!hasPermission(sender, "buildbattle.admin.supervotes.add")) return;
+    if(!NumberUtils.isNumber(superVotes)){
+      sender.sendMessage(ChatManager.colorRawMessage("&cArgument isn't a number!"));
+      return;
+    }
+    if(Bukkit.getPlayer(who) == null || !Bukkit.getPlayer(who).isOnline()){
+      sender.sendMessage(ChatManager.colorMessage("Commands.Player-Not-Found"));
+      return;
+    }
+    User user = UserManager.getUser(Bukkit.getPlayer(who).getUniqueId());
+    user.addInt("supervotes", Integer.parseInt(superVotes));
+    sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&aSuper votes added."));
   }
 
 }

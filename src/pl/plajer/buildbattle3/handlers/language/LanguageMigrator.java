@@ -43,7 +43,7 @@ import pl.plajer.buildbattle3.utils.MessageUtils;
  */
 public class LanguageMigrator {
 
-  public static final int LANGUAGE_FILE_VERSION = 5;
+  public static final int LANGUAGE_FILE_VERSION = 6;
   public static final int CONFIG_FILE_VERSION = 3;
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
@@ -157,6 +157,12 @@ public class LanguageMigrator {
                   "    Weather-Set: \"&eWeather has been changed\"\n" +
                   "    Weather-Downfall: \"&eDownfall\"\n" +
                   "    Weather-Clear: \"&eClear\"");
+          break;
+        case 5:
+          LanguageMigrator.insertAfterLine(file, "Theme-Voting:", "    Super-Vote-Item-Name: \"&bSuper vote\"\r\n" +
+                  "    Super-Vote-Item-Lore: \"&7You have &b%owned% super votes;;&eClick to super vote &b%theme%&e!\"\r\n" +
+                  "    Super-Vote-Used: \"&7Player &e%player% &7has used &bSuper vote &7for theme &b%theme%&7! Starting now...\"");
+          LanguageMigrator.insertAfterLine(file, "Stats-Command:", "    Super-Votes: \"&aSuper votes: &e\"");
           break;
       }
       version++;

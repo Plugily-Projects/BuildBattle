@@ -1,5 +1,5 @@
 main: pl.plajer.buildbattle3.Main
-version: 3.3.0
+version: 3.4.0
 name: BuildBattle
 depend: [WorldEdit]
 softdepend: [Vault, PlaceholderAPI, Citizens]
@@ -31,3 +31,5 @@ permissions:
       buildbattle.admin.delete: true
       buildbattle.admin.create: true
       buildbattle.admin.settheme: true
+      buildbattle.admin.supervotes.set: true
+      buildbattle.admin.supervotes.add: true

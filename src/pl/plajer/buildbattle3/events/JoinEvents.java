@@ -112,6 +112,7 @@ public class JoinEvents implements Listener {
       temp.add("blocksplaced");
       temp.add("blocksbroken");
       temp.add("particles");
+      temp.add("supervotes");
       for (String s : temp) {
         plugin.getFileStats().loadStat(event.getPlayer(), s);
       }
@@ -135,6 +136,7 @@ public class JoinEvents implements Listener {
         int blocksPlaced;
         int blocksBroken;
         int particles;
+        int supervotes;
         gamesplayed = database.getStat(player.getUniqueId().toString(), "gamesplayed");
         wins = database.getStat(player.getUniqueId().toString(), "wins");
         loses = database.getStat(player.getUniqueId().toString(), "loses");
@@ -142,6 +144,7 @@ public class JoinEvents implements Listener {
         blocksPlaced = database.getStat(player.getUniqueId().toString(), "blocksplaced");
         blocksBroken = database.getStat(player.getUniqueId().toString(), "blocksbroken");
         particles = database.getStat(player.getUniqueId().toString(), "particles");
+        supervotes = database.getStat(player.getUniqueId().toString(), "supervotes");
         User user1 = UserManager.getUser(player.getUniqueId());
 
         user1.setInt("gamesplayed", gamesplayed);
@@ -151,6 +154,7 @@ public class JoinEvents implements Listener {
         user1.setInt("blocksplaced", blocksPlaced);
         user1.setInt("blocksbroken", blocksBroken);
         user1.setInt("particles", particles);
+        user1.setInt("supervotes", supervotes);
       } catch (SQLException e1) {
         System.out.print("CONNECTION FAILED FOR PLAYER " + playername);
       }
