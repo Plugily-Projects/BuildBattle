@@ -79,10 +79,10 @@ public class AdminCommands extends MainCommand {
             gray + "Force starts arena you're in\n" + gold + "Permission: " + gray + "buildbattle.admin.forcestart"));
     command.add(new CommandData("/bba reload", "/bba reload", gray + "Reload all game arenas\n" + gray + "" + ChatColor.BOLD +
             "They will be stopped!\n" + gold + "Permission: " + gray + "buildbattle.admin.reload"));
-    command.add(new CommandData(ChatColor.STRIKETHROUGH + "/bba addsign " + ChatColor.GOLD + "<arena>", "/bba addsign <arena>",
+    command.add(new CommandData(ChatColor.STRIKETHROUGH + "/bba addsign " + gold + "<arena>", "/bba addsign <arena>",
             gray + "Set sign you look at as a target arena sign\n" + gold + "Permission: " + gray + "buildbattle.admin.sign.create (for creating signs manually)\n" +
                     gold + "Permission: " + gray + "buildbattle.admin.sign.break (for breaking arena signs)\n" + ChatColor.BOLD + "" + ChatColor.RED + "Currently unused, use Setup menu instead"));
-    command.add(new CommandData("/bba delete " + ChatColor.GOLD + "<arena>", "/bba delete <arena>",
+    command.add(new CommandData("/bba delete " + gold + "<arena>", "/bba delete <arena>",
             gray + "Deletes specified arena\n" + gold + "Permission: " + gray + "buildbattle.admin.delete"));
   }
 
@@ -93,7 +93,7 @@ public class AdminCommands extends MainCommand {
   }
 
   public void sendHelp(CommandSender sender) {
-    if (!sender.hasPermission("buildbattle.admin")) return;
+    if (!hasPermission(sender, "buildbattle.admin")) return;
     sender.sendMessage(ChatColor.GREEN + "  " + ChatColor.BOLD + "BuildBattle " + ChatColor.GRAY + plugin.getDescription().getVersion());
     sender.sendMessage(ChatColor.RED + " []" + ChatColor.GRAY + " = optional  " + ChatColor.GOLD + "<>" + ChatColor.GRAY + " = required");
     sender.sendMessage(ChatColor.GRAY + "Hover command to see more, click command to suggest it.");
@@ -121,9 +121,9 @@ public class AdminCommands extends MainCommand {
         Util.saveLocation("instances." + arena + ".plots.0.minpoint", selection.getMinimumPoint());
         Util.saveLocation("instances." + arena + ".plots.0.maxpoint", selection.getMaximumPoint());
       }
-      player.sendMessage(ChatColor.GREEN + "Plot added to instance " + ChatColor.RED + arena);
+      player.sendMessage(ChatManager.colorMessage("In-Game.Messages.Plot-Added-Instance").replace("%arena%", arena));
     } else {
-      player.sendMessage(ChatColor.RED + "You don't have the right selection!");
+      player.sendMessage(ChatManager.colorMessage("In-Game.Messages.Not-Right-Selection"));
     }
   }
 
@@ -171,7 +171,7 @@ public class AdminCommands extends MainCommand {
         plugin.getSignManager().getLoadedSigns().put((Sign) loc.getBlock().getState(), arena);
         player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Created"));
       } else {
-        player.sendMessage(ChatColor.RED + "You have to look at a sign to perform this command!");
+        player.sendMessage(ChatManager.colorMessage("Signs.Look-Sign"));
       }
 
     }
@@ -224,7 +224,7 @@ public class AdminCommands extends MainCommand {
     config.set("instances." + arenaString, null);
     ConfigurationManager.saveConfig(config, "arenas");
     ArenaRegistry.unregisterArena(arena);
-    sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatColor.RED + "Successfully removed game instance!");
+    sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Removed-Game-Instance"));
   }
 
   public void setArenaTheme(CommandSender sender, String theme) {

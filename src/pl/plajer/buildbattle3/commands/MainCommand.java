@@ -150,7 +150,7 @@ public class MainCommand implements CommandExecutor {
       if (args.length == 0) {
         sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Header"));
         sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Description"));
-        if (sender.hasPermission("buildbattle.admin")) {
+        if (hasPermission(sender, "buildbattle.admin")) {
           sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Admin-Bonus-Description"));
         }
         sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Footer"));
@@ -256,7 +256,7 @@ public class MainCommand implements CommandExecutor {
     Player player = (Player) sender;
     if (!ConfigurationManager.getConfig("arenas").contains("instances." + args[0])) {
       sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
-      sender.sendMessage(ChatColor.RED + "Usage: /bb < ARENA ID > set <MINPLAYRS | MAXPLAYERS | MAPNAME | SCHEMATIC | LOBBYLOCATION | EndLOCATION | STARTLOCATION  >  < VALUE>");
+      sender.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.Arena.Setup-Usage"));
       return;
     }
     if (!(args[1].equalsIgnoreCase("set"))) return;
@@ -265,15 +265,17 @@ public class MainCommand implements CommandExecutor {
     if (args.length == 3) {
       if (args[2].equalsIgnoreCase("lobbylocation") || args[2].equalsIgnoreCase("lobbyloc")) {
         Util.saveLocation("instances." + args[0] + ".lobbylocation", player.getLocation());
-        player.sendMessage("BuildBattle: Lobby location for arena/instance " + args[0] + " set to " + Util.locationToString(player.getLocation()));
+        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Admin-Commands.Arena.Set-Arena-Lobby-Loc")
+                           .replace("%arena%", args[0]).replace("%location%", Util.locationToString(player.getLocation())));
         return;
       } else if (args[2].equalsIgnoreCase("Endlocation") || args[2].equalsIgnoreCase("Endloc")) {
         Util.saveLocation("instances." + args[0] + ".Endlocation", player.getLocation());
-        player.sendMessage("BuildBattle: End location for arena/instance " + args[0] + " set to " + Util.locationToString(player.getLocation()));
+        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Admin-Commands.Arena.Set-Arena-End-Loc")
+                           .replace("%arena%", args[0]).replace("%location%", Util.locationToString(player.getLocation())));
         return;
       } else {
-        player.sendMessage(ChatColor.RED + "Invalid Command!");
-        player.sendMessage(ChatColor.RED + "Usage: /bb <ARENA > set <LOBBYLOCATION | EndLOCATION>");
+        player.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.Arena.Invalid-Cmd"));
+        player.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.Arena.Lobby-End-Loc-Usage"));
       }
     } else if (args.length == 4) {
       if (args[2].equalsIgnoreCase("MAXPLAYERS") || args[2].equalsIgnoreCase("maximumplayers")) {
@@ -291,13 +293,13 @@ public class MainCommand implements CommandExecutor {
           if (world.getName().equalsIgnoreCase(args[3])) exists = true;
         }
         if (!exists) {
-          player.sendMessage(ChatColor.RED + "That world doesn't exists!");
+          player.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.Arena.World-Doesnt-Exist"));
           return;
         }
         config.set("instances." + args[0] + ".world", args[3]);
         player.sendMessage("BuildBattle: World for arena/instance " + args[0] + " set to " + args[3]);
       } else {
-        player.sendMessage(ChatColor.RED + "Invalid Command!");
+        player.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.Arena.Invalid-Cmd"));
         player.sendMessage(ChatColor.RED + "Usage: /bb set <MINPLAYERS | MAXPLAYERS> <value>");
       }
     }
