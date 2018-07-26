@@ -280,13 +280,16 @@ public class MainCommand implements CommandExecutor {
     } else if (args.length == 4) {
       if (args[2].equalsIgnoreCase("MAXPLAYERS") || args[2].equalsIgnoreCase("maximumplayers")) {
         config.set("instances." + args[0] + ".maximumplayers", Integer.parseInt(args[3]));
-        player.sendMessage("BuildBattle: Maximum players for arena/instance " + args[0] + " set to " + Integer.parseInt(args[3]));
+        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Admin-Commands.Arena.Set-Max-Players")
+                           .replace("%arena%", args[0]).replace("%players%", Integer.parseInt(args[3])));
       } else if (args[2].equalsIgnoreCase("MINPLAYERS") || args[2].equalsIgnoreCase("minimumplayers")) {
         config.set("instances." + args[0] + ".minimumplayers", Integer.parseInt(args[3]));
-        player.sendMessage("BuildBattle: Minimum players for arena/instance " + args[0] + " set to " + Integer.parseInt(args[3]));
+        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Admin-Commands.Arena.Set-Min-Players")
+                           .replace("%arena%", args[0]).replace("%players%", Integer.parseInt(args[3])));
       } else if (args[2].equalsIgnoreCase("MAPNAME") || args[2].equalsIgnoreCase("NAME")) {
         config.set("instances." + args[0] + ".mapname", args[3]);
-        player.sendMessage("BuildBattle: Map name for arena/instance " + args[0] + " set to " + args[3]);
+        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Admin-Commands.Arena.Set-Map-Name")
+                           .replace("%arena%", args[0]).replace("%map%", args[3]));
       } else if (args[2].equalsIgnoreCase("WORLD") || args[2].equalsIgnoreCase("MAP")) {
         boolean exists = false;
         for (World world : Bukkit.getWorlds()) {
@@ -297,10 +300,11 @@ public class MainCommand implements CommandExecutor {
           return;
         }
         config.set("instances." + args[0] + ".world", args[3]);
-        player.sendMessage("BuildBattle: World for arena/instance " + args[0] + " set to " + args[3]);
+        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Admin-Commands.Arena.World-Set")
+                           .replace("%arena%", args[0]).replace("%world%", args[3])));
       } else {
         player.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.Arena.Invalid-Cmd"));
-        player.sendMessage(ChatColor.RED + "Usage: /bb set <MINPLAYERS | MAXPLAYERS> <value>");
+        player.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.Arena.Min-Max-Players-Set-Usage"));
       }
     }
     ConfigurationManager.saveConfig(config, "arenas");
@@ -309,14 +313,14 @@ public class MainCommand implements CommandExecutor {
   private void createArenaCommand(Player player, String[] args) {
     for (Arena arena : ArenaRegistry.getArenas()) {
       if (arena.getID().equalsIgnoreCase(args[1])) {
-        player.sendMessage(ChatColor.DARK_RED + "Arena with that ID already exists!");
-        player.sendMessage(ChatColor.DARK_RED + "Usage: bb create <ID>");
+        player.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.Arena.Arena-ID-Already-Exists"));
+        player.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.Arena.Create-Arena-Usage"));
         return;
       }
     }
     FileConfiguration config = ConfigurationManager.getConfig("arenas");
     if (config.contains("instances." + args[1])) {
-      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatColor.DARK_RED + "Instance/Arena already exists! Use another ID or delete it first!");
+      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Admin-Commands.Arena.Arena-Already-Exists"));
     } else {
       createInstanceInConfig(args[1]);
       player.sendMessage(ChatColor.BOLD + "------------------------------------------");
