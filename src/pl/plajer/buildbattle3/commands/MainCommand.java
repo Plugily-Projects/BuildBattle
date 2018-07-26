@@ -190,6 +190,13 @@ public class MainCommand implements CommandExecutor {
           gameCommands.showStatsOther((Player) sender, Bukkit.getPlayer(args[1]));
         }
         return true;
+      } else if (args[0].equalsIgnoreCase("top")) {
+        if (args.length == 2) {
+          gameCommands.sendTopStatistics(sender, args[1]);
+        } else {
+          sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Type-Name"));
+        }
+        return true;
       } else if (args[0].equalsIgnoreCase("leave")) {
         if (checkSenderIsConsole(sender)) return true;
         gameCommands.leaveGame(sender);

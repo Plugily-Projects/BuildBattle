@@ -69,10 +69,17 @@ public class MySQLDatabase {
           e.printStackTrace();
         }
       }
+      try {
+        connection.createStatement().executeUpdate("ALTER TABLE buildbattlestats ADD name text NOT NULL DEFAULT 'Unknown Player'");
+      } catch (MySQLSyntaxErrorException e) {
+        if (!e.getMessage().contains("Duplicate column name")) {
+          e.printStackTrace();
+        }
+      }
 
       manager.closeConnection(connection);
     } catch (SQLException e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      e.printStackTrace();
     }
   }
 

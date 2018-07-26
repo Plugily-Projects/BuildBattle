@@ -1,7 +1,8 @@
 ## BuildBattle 3 changelog
 
-### 3.4.0 Release (25.07.2018)
+### 3.4.0 Release (25/26.07.2018)
 * Added super votes
+* Added /bb top command
 
 ### 3.3.0 Release (24.07.2018)
 * Now while teleporting to the plot you won't fall down

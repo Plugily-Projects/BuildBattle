@@ -18,6 +18,13 @@
 
 package pl.plajer.buildbattle3.commands;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.LinkedHashMap;
+import java.util.UUID;
+
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -25,6 +32,7 @@ import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaManager;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
+import pl.plajer.buildbattle3.buildbattleapi.StatsStorage;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
@@ -85,6 +93,53 @@ public class GameCommands extends MainCommand {
         ArenaManager.leaveAttempt(p, arena);
         System.out.print(p.getName() + " has left the arena! He is teleported to the end location.");
       }
+    }
+  }
+
+  public void sendTopStatistics(CommandSender sender, String stat) {
+    try {
+      StatsStorage.StatisticType statisticType = StatsStorage.StatisticType.valueOf(stat.toUpperCase());
+      LinkedHashMap<UUID, Integer> stats = (LinkedHashMap<UUID, Integer>) StatsStorage.getStats(statisticType);
+      sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Header"));
+      for (int i = 0; i < 10; i++) {
+        try {
+          UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
+          sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Format")
+                  .replace("%position%", String.valueOf(i + 1))
+                  .replace("%name%", Bukkit.getOfflinePlayer(current).getName())
+                  .replace("%value%", String.valueOf(stats.get(current)))
+                  .replace("%statistic%", StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " ")))); //Games_played > Games played etc
+          stats.remove(current);
+        } catch (IndexOutOfBoundsException ex) {
+          sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Format")
+                  .replace("%position%", String.valueOf(i + 1))
+                  .replace("%name%", "Empty")
+                  .replace("%value%", "0")
+                  .replace("%statistic%", StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "))));
+        } catch (NullPointerException ex) {
+          UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
+          if (plugin.isDatabaseActivated()) {
+            ResultSet set = plugin.getMySQLDatabase().executeQuery("SELECT name FROM buildbattlestats WHERE UUID='" + current.toString() + "'");
+            try {
+              if (set.next()) {
+                sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Format")
+                        .replace("%position%", String.valueOf(i + 1))
+                        .replace("%name%", set.getString(1))
+                        .replace("%value%", String.valueOf(stats.get(current)))
+                        .replace("%statistic%", StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "))));
+                return;
+              }
+            } catch (SQLException ignored) {}
+          }
+          sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Format")
+                  .replace("%position%", String.valueOf(i + 1))
+                  .replace("%name%", "Unknown Player")
+                  .replace("%value%", String.valueOf(stats.get(current)))
+                  .replace("%statistic%", StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "))));
+        }
+      }
+    } catch (IllegalArgumentException e) {
+      sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Invalid-Name"));
     }
   }
 

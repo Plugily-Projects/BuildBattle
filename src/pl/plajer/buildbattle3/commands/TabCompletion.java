@@ -46,9 +46,9 @@ public class TabCompletion implements TabCompleter {
     }
     if (cmd.getName().equalsIgnoreCase("buildbattle") && args.length == 1) {
       if (!plugin.isBungeeActivated()) {
-        return Arrays.asList("join", "leave", "stats", "create", "randomjoin");
+        return Arrays.asList("join", "leave", "stats", "top", "create", "randomjoin");
       } else {
-        return Arrays.asList("join", "leave", "stats", "create");
+        return Arrays.asList("join", "leave", "stats", "top", "create");
       }
     }
     return null;

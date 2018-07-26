@@ -20,6 +20,11 @@ Commands:
   Player-Not-Found: "&cPlayer not found!"
   Invalid-Args: "&cInvalid arguments! Make sure you typed the command correctly!"
   No-Free-Arenas: "&cThere are no free arenas!"
+  Statistics:
+    Type-Name: "&cPlease type statistic name to view!"
+    Invalid-Name: "&cName of statistic is invalid! Type: loses, wins, games_played, blocks_broken, blocks_placed, super_votes"
+    Header: "&8&m-------------------[&6 Top 10 &8&m]-------------------"
+    Format: "&e#%position% %name% - %value% &7%statistic%"
   Admin-Commands:
     List-Command:
       Header: "&bBuildBattle &7arenas:"
