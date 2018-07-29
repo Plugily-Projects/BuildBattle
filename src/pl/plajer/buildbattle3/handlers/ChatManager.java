@@ -25,6 +25,7 @@ import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.handlers.language.LanguageManager;
+import pl.plajer.buildbattle3.handlers.language.Locale;
 import pl.plajer.buildbattle3.utils.Util;
 
 /**
@@ -44,7 +45,11 @@ public class ChatManager {
     } catch (NullPointerException e1) {
       e1.printStackTrace();
       Bukkit.getConsoleSender().sendMessage("Game message not found!");
-      Bukkit.getConsoleSender().sendMessage("Please regenerate your language.yml file! If error still occurs report it to the developer!");
+      if(LanguageManager.getPluginLocale() == Locale.ENGLISH){
+        Bukkit.getConsoleSender().sendMessage("Please regenerate your language.yml file! If error still occurs report it to the developer!");
+      } else {
+        Bukkit.getConsoleSender().sendMessage("Locale message string not found! Please contact developer!");
+      }
       Bukkit.getConsoleSender().sendMessage("Access string: " + message);
       return "ERR_MESSAGE_NOT_FOUND";
     }
