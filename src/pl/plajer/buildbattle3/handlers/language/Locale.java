@@ -29,8 +29,9 @@ public enum Locale {
   ENGLISH("English", "en_GB", "Plajer"),
   GERMAN("Deutsch", "de_DE", "Tigerkatze"),
   HUNGARIAN("Magyar", "hu_HU", "POEditor contributors (montlikadani)"),
+  KOREAN("한국의", "ko_KR", "POEditor contributors"),
   POLISH("Polski", "pl_PL", "Plajer"),
-  SPANISH("Español", "es_ES", "POEditor contributors (TheLordDarkYT)"),
+  SPANISH("Español", "es_ES", "POEditor contributors"),
   VIETNAMESE("Việt", "vn_VN", "POEditor contributors (HStreamGamer)");
 
   String formattedName;

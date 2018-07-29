@@ -105,7 +105,11 @@ public class MainCommand implements CommandExecutor {
         }
         return true;
       } else if (args[0].equalsIgnoreCase("forcestart")) {
-        adminCommands.forceStart(player);
+        if(args.length == 2){
+          adminCommands.forceStartWithTheme(player, args[1]);
+        } else {
+          adminCommands.forceStart(player);
+        }
         return true;
       } else if (args[0].equalsIgnoreCase("reload")) {
         adminCommands.reloadPlugin(player);

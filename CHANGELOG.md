@@ -1,9 +1,11 @@
 ## BuildBattle 3 changelog
 
-### 3.4.0 Release (25/28.07.2018)
+### 3.4.0 Release (25/29.07.2018)
 * Added super votes
 * Added /bb top command
 * Fixed locales and updated them
+* Added Korean language (thanks to POEditor contributors!)
+* Added /bba forcestart <theme> to start with predefined theme (suggested by ColaIan)
 
 ### 3.3.0 Release (24.07.2018)
 * Now while teleporting to the plot you won't fall down

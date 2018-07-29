@@ -55,6 +55,7 @@ import pl.plajer.buildbattle3.handlers.SignManager;
 import pl.plajer.buildbattle3.handlers.items.SpecialItem;
 import pl.plajer.buildbattle3.handlers.language.LanguageManager;
 import pl.plajer.buildbattle3.handlers.language.LanguageMigrator;
+import pl.plajer.buildbattle3.handlers.language.Locale;
 import pl.plajer.buildbattle3.menus.particles.ParticleHandler;
 import pl.plajer.buildbattle3.menus.particles.ParticleMenu;
 import pl.plajer.buildbattle3.menus.playerheads.PlayerHeadsMenu;
@@ -318,6 +319,10 @@ public class Main extends JavaPlugin {
         case "magyar":
         case "hu":
           return "Hungarian";
+        case "korean":
+        case "한국의":
+        case "kr":
+          return "Korean";
         case "简体中文":
         case "中文":
         case "chinese":

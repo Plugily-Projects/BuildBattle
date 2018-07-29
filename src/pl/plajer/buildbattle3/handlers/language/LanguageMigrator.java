@@ -163,7 +163,7 @@ public class LanguageMigrator {
                   "    Super-Vote-Item-Lore: \"&7You have &b%owned% super votes;;&eClick to super vote &b%theme%&e!\"\r\n" +
                   "    Super-Vote-Used: \"&7Player &e%player% &7has used &bSuper vote &7for theme &b%theme%&7! Starting now...\"");
           LanguageMigrator.insertAfterLine(file, "Stats-Command:", "    Super-Votes: \"&aSuper votes: &e\"");
-          LanguageMigrator.insertAfterLine(file, "Stats-Command:","  Statistics:\n" +
+          LanguageMigrator.insertAfterLine(file, "No-Free-Arenas:","  Statistics:\n" +
                   "    Type-Name: \"&cPlease type statistic name to view!\"\n" +
                   "    Invalid-Name: \"&cName of statistic is invalid! Type: loses, wins, games_played, blocks_broken, blocks_placed, super_votes\"\n" +
                   "    Header: \"&8&m-------------------[&6 Top 10 &8&m]-------------------\"\n" +

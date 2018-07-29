@@ -148,6 +148,25 @@ public class AdminCommands extends MainCommand {
     }
   }
 
+  public void forceStartWithTheme(Player player, String theme) {
+    Arena arena = ArenaRegistry.getArena(player);
+    if (arena == null) return;
+    forceStart(player);
+    arena.setThemeVoteTime(false);
+    arena.setTheme(theme);
+    if (arena.getArenaType() == Arena.ArenaType.SOLO) {
+      arena.setTimer(ConfigPreferences.getBuildTime());
+    } else {
+      arena.setTimer(ConfigPreferences.getTeamBuildTime());
+    }
+    String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started");
+    for (Player p : arena.getPlayers()) {
+      p.closeInventory();
+      p.teleport(arena.getPlotManager().getPlot(p).getTeleportLocation());
+      p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
+    }
+  }
+
   public void reloadPlugin(Player player) {
     if (!hasPermission(player, "buildbattle.admin.reload")) return;
     ConfigPreferences.loadOptions();
