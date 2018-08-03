@@ -1,6 +1,6 @@
 ## BuildBattle 3 changelog
 
-### 3.4.1 Release (30.07.2018)
+### 3.4.1 Release (30.07/03.08.2018)
 * Added public access to MySQL executeUpdate method
 * Added BBPlayerStatisticChangeEvent event
 * Updated Spanish and Korean locales
