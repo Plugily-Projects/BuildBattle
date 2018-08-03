@@ -1,5 +1,12 @@
 ## BuildBattle 3 changelog
 
+### 3.4.1 Release (30.07.2018)
+* Added public access to MySQL executeUpdate method
+* Added BBPlayerStatisticChangeEvent event
+* Updated locales
+* Added French locale (thanks to POEditor contributors!)
+* Removed scoreboard saving in InventoryManager due to errors
+
 ### 3.4.0 Release (25/29.07.2018)
 * Added super votes
 * Added /bb top command

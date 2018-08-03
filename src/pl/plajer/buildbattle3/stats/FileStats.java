@@ -19,11 +19,14 @@
 package pl.plajer.buildbattle3.stats;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import pl.plajer.buildbattle3.buildbattleapi.StatsStorage;
 import pl.plajer.buildbattle3.handlers.ConfigurationManager;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
@@ -35,6 +38,18 @@ import pl.plajer.buildbattle3.utils.MessageUtils;
 public class FileStats {
 
   private FileConfiguration config;
+  public final static Map<String, StatsStorage.StatisticType> STATISTICS = new HashMap<>();
+
+  static {
+    STATISTICS.put("gamesplayed", StatsStorage.StatisticType.GAMES_PLAYED);
+    STATISTICS.put("wins", StatsStorage.StatisticType.WINS);
+    STATISTICS.put("highestwin", StatsStorage.StatisticType.HIGHEST_WIN);
+    STATISTICS.put("loses", StatsStorage.StatisticType.LOSES);
+    STATISTICS.put("particles", StatsStorage.StatisticType.PARTICLES_USED);
+    STATISTICS.put("blocksbroken", StatsStorage.StatisticType.BLOCKS_BROKEN);
+    STATISTICS.put("blocksplaced", StatsStorage.StatisticType.BLOCKS_PLACED);
+    STATISTICS.put("supervotes", StatsStorage.StatisticType.SUPER_VOTES);
+  }
 
   public FileStats() {
     config = ConfigurationManager.getConfig("stats");

@@ -73,7 +73,6 @@ public class InventoryManager {
 
       invConfig.set("Size", inventory.getSize());
       invConfig.set("Max stack size", inventory.getMaxStackSize());
-      invConfig.set("Scoreboard", player.getScoreboard());
       List<String> activePotions = new ArrayList<>();
       for (PotionEffect potion : player.getActivePotionEffects()) {
         activePotions.add(potion.getType().getName() + "#" + potion.getDuration() + "#" + potion.getAmplifier());
@@ -160,7 +159,6 @@ public class InventoryManager {
         player.setGameMode(GameMode.valueOf(invConfig.getString("GameMode")));
         player.setAllowFlight(invConfig.getBoolean("Allow flight"));
         List<String> activePotions = invConfig.getStringList("Active potion effects");
-        player.setScoreboard((Scoreboard) invConfig.get("Scoreboard"));
         for (String potion : activePotions) {
           String[] splited = potion.split("#");
           player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(splited[0]), Integer.valueOf(splited[1]), Integer.valueOf(splited[2])));

@@ -35,6 +35,7 @@ public abstract class BBEvent extends Event {
 
   /**
    * Returns event arena
+   * Returns null when called from BBPlayerStatisticChangeEvent when super votes are added via command
    *
    * @return event arena
    */

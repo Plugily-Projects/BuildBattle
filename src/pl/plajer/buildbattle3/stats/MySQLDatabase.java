@@ -84,7 +84,7 @@ public class MySQLDatabase {
   }
 
 
-  private void executeUpdate(String query) {
+  public void executeUpdate(String query) {
     try {
       Connection connection = manager.getConnection();
       Statement statement = connection.createStatement();
