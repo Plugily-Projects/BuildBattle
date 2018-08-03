@@ -3,7 +3,7 @@
 ### 3.4.1 Release (30.07.2018)
 * Added public access to MySQL executeUpdate method
 * Added BBPlayerStatisticChangeEvent event
-* Updated locales
+* Updated Spanish and Korean locales
 * Added French locale (thanks to POEditor contributors!)
 * Removed scoreboard saving in InventoryManager due to errors
 
