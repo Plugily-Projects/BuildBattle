@@ -27,6 +27,7 @@ public enum Locale {
 
   CHINESE_SIMPLIFIED("简体中文", "zh_Hans", "POEditor contributors (Haoting)"),
   ENGLISH("English", "en_GB", "Plajer"),
+  FRENCH("Français", "fr_FR", "POEditor contributors"),
   GERMAN("Deutsch", "de_DE", "Tigerkatze"),
   HUNGARIAN("Magyar", "hu_HU", "POEditor contributors (montlikadani)"),
   KOREAN("한국의", "ko_KR", "POEditor contributors"),

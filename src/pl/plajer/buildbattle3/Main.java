@@ -328,6 +328,11 @@ public class Main extends JavaPlugin {
         case "chinese":
         case "zh":
           return "Chinese (Simplified)";
+        case "french":
+        case "francais":
+        case "français":
+        case "fr":
+          return "French";
         default:
           return "English";
       }

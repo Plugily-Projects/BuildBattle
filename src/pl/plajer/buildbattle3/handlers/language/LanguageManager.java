@@ -94,6 +94,12 @@ public class LanguageManager {
       case "hu":
         pluginLocale = Locale.HUNGARIAN;
         break;
+      case "french":
+      case "francais":
+      case "français":
+      case "fr":
+        pluginLocale = Locale.FRENCH;
+        break;
       case "korean":
       case "한국의":
       case "kr":
@@ -140,6 +146,7 @@ public class LanguageManager {
           case "vn-VN":
           case "hu-HU":
           case "ko-KR":
+          case "fr-FR":
             hasLocale = true;
             localeName = locale.getLocaleName();
         }
@@ -155,6 +162,7 @@ public class LanguageManager {
           case "VN":
           case "ZH":
           case "KR":
+          case "FR":
             hasLocale = true;
             localeName = locale.getDisplayName();
         }
