@@ -47,15 +47,12 @@ import pl.plajer.buildbattle3.events.QuitEvents;
 import pl.plajer.buildbattle3.events.SetupInventoryEvents;
 import pl.plajer.buildbattle3.handlers.BungeeManager;
 import pl.plajer.buildbattle3.handlers.ChatManager;
-import pl.plajer.buildbattle3.handlers.ConfigurationManager;
-import pl.plajer.buildbattle3.handlers.InventoryManager;
 import pl.plajer.buildbattle3.handlers.PermissionManager;
 import pl.plajer.buildbattle3.handlers.PlaceholderManager;
 import pl.plajer.buildbattle3.handlers.SignManager;
 import pl.plajer.buildbattle3.handlers.items.SpecialItem;
 import pl.plajer.buildbattle3.handlers.language.LanguageManager;
 import pl.plajer.buildbattle3.handlers.language.LanguageMigrator;
-import pl.plajer.buildbattle3.handlers.language.Locale;
 import pl.plajer.buildbattle3.menus.particles.ParticleHandler;
 import pl.plajer.buildbattle3.menus.particles.ParticleMenu;
 import pl.plajer.buildbattle3.menus.playerheads.PlayerHeadsMenu;
@@ -66,7 +63,8 @@ import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.MessageUtils;
 import pl.plajer.buildbattle3.utils.Metrics;
-import pl.plajer.buildbattle3.utils.UpdateChecker;
+import pl.plajerlair.core.utils.ConfigUtils;
+import pl.plajerlair.core.utils.UpdateChecker;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -82,7 +80,6 @@ public class Main extends JavaPlugin {
   private FileStats fileStats;
   private BungeeManager bungeeManager;
   private boolean bungeeActivated;
-  private InventoryManager inventoryManager;
   private MainCommand mainCommand;
   private boolean inventoryManagerEnabled;
   private SignManager signManager;
@@ -117,10 +114,6 @@ public class Main extends JavaPlugin {
 
   public MainCommand getMainCommand() {
     return mainCommand;
-  }
-
-  public InventoryManager getInventoryManager() {
-    return inventoryManager;
   }
 
   public boolean isInventoryManagerEnabled() {
@@ -168,9 +161,8 @@ public class Main extends JavaPlugin {
       getServer().getPluginManager().disablePlugin(this);
       return;
     }
-    new ConfigurationManager(this);
     //check if using 2.0.0 releases
-    if (ConfigurationManager.getConfig("language").isSet("PREFIX") && ConfigurationManager.getConfig("language").isSet("Unlocks-at-level")) {
+    if (ConfigUtils.getConfig(this, "language").isSet("PREFIX") && ConfigUtils.getConfig(this, "language").isSet("Unlocks-at-level")) {
       LanguageMigrator.migrateToNewFormat();
     }
     debug = getConfig().getBoolean("Debug");
@@ -181,10 +173,9 @@ public class Main extends JavaPlugin {
     if (getConfig().getBoolean("BungeeActivated")) {
       bungeeManager = new BungeeManager(this);
     }
-    inventoryManager = new InventoryManager(this);
     inventoryManagerEnabled = getConfig().getBoolean("InventoryManager");
     for (String s : filesToGenerate) {
-      ConfigurationManager.getConfig(s);
+      ConfigUtils.getConfig(this, s);
     }
     if (getConfig().getBoolean("BungeeActivated")) {
       getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
@@ -204,13 +195,13 @@ public class Main extends JavaPlugin {
     String currentVersion = "v" + Bukkit.getPluginManager().getPlugin("BuildBattle").getDescription().getVersion();
     if (getConfig().getBoolean("Update-Notifier.Enabled")) {
       try {
-        UpdateChecker.checkUpdate(currentVersion);
+        UpdateChecker.checkUpdate(this, currentVersion, 44703);
         String latestVersion = UpdateChecker.getLatestVersion();
         if (latestVersion != null) {
           latestVersion = "v" + latestVersion;
           if (latestVersion.contains("b")) {
             Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Current version %old%, latest version %new%" .replace("%old%", currentVersion).replace("%new%", latestVersion));
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Current version %old%, latest version %new%".replace("%old%", currentVersion).replace("%new%", latestVersion));
           } else {
             MessageUtils.updateIsHere();
             Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Your Build Battle plugin is outdated! Download it to keep with latest changes and fixes.");

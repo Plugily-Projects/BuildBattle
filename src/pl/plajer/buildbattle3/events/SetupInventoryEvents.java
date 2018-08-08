@@ -41,10 +41,10 @@ import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.arena.plots.ArenaPlot;
-import pl.plajer.buildbattle3.handlers.ConfigurationManager;
 import pl.plajer.buildbattle3.handlers.PermissionManager;
 import pl.plajer.buildbattle3.menus.SetupInventory;
-import pl.plajer.buildbattle3.utils.Util;
+import pl.plajerlair.core.utils.ConfigUtils;
+import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
  * Created by Tom on 15/06/2015.
@@ -83,15 +83,15 @@ public class SetupInventoryEvents implements Listener {
     if (name.contains("Solo")) {
       player.closeInventory();
       arena.setArenaType(Arena.ArenaType.SOLO);
-      FileConfiguration config = ConfigurationManager.getConfig("arenas");
+      FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
       config.set("instances." + arena.getID() + ".gametype", "SOLO");
-      ConfigurationManager.saveConfig(config, "arenas");
+      ConfigUtils.saveConfig(plugin, config, "arenas");
     } else if (name.contains("Team")) {
       player.closeInventory();
       arena.setArenaType(Arena.ArenaType.TEAM);
-      FileConfiguration config = ConfigurationManager.getConfig("arenas");
+      FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
       config.set("instances." + arena.getID() + ".gametype", "TEAM");
-      ConfigurationManager.saveConfig(config, "arenas");
+      ConfigUtils.saveConfig(plugin, config, "arenas");
     }
     player.sendMessage(ChatColor.GREEN + "Game type of arena set to " + ChatColor.GRAY + name);
   }
@@ -216,21 +216,22 @@ public class SetupInventoryEvents implements Listener {
         return;
       }
       String[] locations = new String[]{"lobbylocation", "Endlocation"};
+      FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
       for (String s : locations) {
-        if (!ConfigurationManager.getConfig("arenas").isSet("instances." + arena.getID() + "." + s) || ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + "." + s).equals(Util.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
+        if (!config.isSet("instances." + arena.getID() + "." + s) || config.getString("instances." + arena.getID() + "." + s).equals(MinigameUtils.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
           event.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure following spawn properly: " + s + " (cannot be world spawn location)");
           return;
         }
       }
-      if (ConfigurationManager.getConfig("arenas").getConfigurationSection("instances." + arena.getID() + ".plots") == null) {
+      if (config.getConfigurationSection("instances." + arena.getID() + ".plots") == null) {
         event.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure plots properly");
         return;
       } else {
-        for (String plotName : ConfigurationManager.getConfig("arenas").getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false)) {
-          if (ConfigurationManager.getConfig("arenas").isSet("instances." + arena.getID() + ".plots." + plotName + ".maxpoint") && ConfigurationManager.getConfig("arenas").isSet("instances." + arena.getID() + ".plots." + plotName + ".minpoint")) {
+        for (String plotName : config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false)) {
+          if (config.isSet("instances." + arena.getID() + ".plots." + plotName + ".maxpoint") && config.isSet("instances." + arena.getID() + ".plots." + plotName + ".minpoint")) {
             ArenaPlot buildPlot = new ArenaPlot();
-            buildPlot.setMaxPoint(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint")));
-            buildPlot.setMinPoint(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint")));
+            buildPlot.setMaxPoint(MinigameUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint")));
+            buildPlot.setMinPoint(MinigameUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint")));
             buildPlot.fullyResetPlot();
             arena.getPlotManager().addBuildPlot(buildPlot);
           } else {
@@ -240,9 +241,8 @@ public class SetupInventoryEvents implements Listener {
         }
       }
       event.getWhoClicked().sendMessage(ChatColor.GREEN + "Validation succeeded! Registering new arena instance: " + arena.getID());
-      FileConfiguration config = ConfigurationManager.getConfig("arenas");
       config.set("instances." + arena.getID() + ".isdone", true);
-      ConfigurationManager.saveConfig(config, "arenas");
+      ConfigUtils.saveConfig(plugin, config, "arenas");
       List<Sign> signsToUpdate = new ArrayList<>();
       ArenaRegistry.unregisterArena(arena);
       if (plugin.getSignManager().getLoadedSigns().containsValue(arena)) {
@@ -254,17 +254,17 @@ public class SetupInventoryEvents implements Listener {
       }
       arena = new Arena(arena.getID());
       arena.setReady(true);
-      arena.setMinimumPlayers(ConfigurationManager.getConfig("arenas").getInt("instances." + arena.getID() + ".minimumplayers"));
-      arena.setMaximumPlayers(ConfigurationManager.getConfig("arenas").getInt("instances." + arena.getID() + ".maximumplayers"));
-      arena.setMapName(ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + ".mapname"));
-      arena.setLobbyLocation(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + ".lobbylocation")));
-      arena.setEndLocation(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + ".Endlocation")));
-      arena.setArenaType(Arena.ArenaType.valueOf(ConfigurationManager.getConfig("arenas").getString("instances." + arena.getID() + ".gametype").toUpperCase()));
+      arena.setMinimumPlayers(config.getInt("instances." + arena.getID() + ".minimumplayers"));
+      arena.setMaximumPlayers(config.getInt("instances." + arena.getID() + ".maximumplayers"));
+      arena.setMapName(config.getString("instances." + arena.getID() + ".mapname"));
+      arena.setLobbyLocation(MinigameUtils.getLocation(config.getString("instances." + arena.getID() + ".lobbylocation")));
+      arena.setEndLocation(MinigameUtils.getLocation(config.getString("instances." + arena.getID() + ".Endlocation")));
+      arena.setArenaType(Arena.ArenaType.valueOf(config.getString("instances." + arena.getID() + ".gametype").toUpperCase()));
 
       for (String plotName : config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false)) {
         ArenaPlot buildPlot = new ArenaPlot();
-        buildPlot.setMaxPoint(Util.getLocation(false, config.getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint")));
-        buildPlot.setMinPoint(Util.getLocation(false, config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint")));
+        buildPlot.setMaxPoint(MinigameUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint")));
+        buildPlot.setMinPoint(MinigameUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint")));
         buildPlot.fullyResetPlot();
         arena.getPlotManager().addBuildPlot(buildPlot);
       }

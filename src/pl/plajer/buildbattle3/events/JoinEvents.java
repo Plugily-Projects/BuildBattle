@@ -35,7 +35,7 @@ import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.stats.MySQLDatabase;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
-import pl.plajer.buildbattle3.utils.UpdateChecker;
+import pl.plajerlair.core.utils.UpdateChecker;
 
 /**
  * Created by Tom on 10/07/2015.
@@ -74,7 +74,7 @@ public class JoinEvents implements Listener {
           String currentVersion = "v" + Bukkit.getPluginManager().getPlugin("BuildBattle").getDescription().getVersion();
           String latestVersion;
           try {
-            UpdateChecker.checkUpdate(currentVersion);
+            UpdateChecker.checkUpdate(plugin, currentVersion, 44703);
             latestVersion = UpdateChecker.getLatestVersion();
             if (latestVersion != null) {
               latestVersion = "v" + latestVersion;

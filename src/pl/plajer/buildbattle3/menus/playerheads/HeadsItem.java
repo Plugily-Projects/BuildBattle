@@ -27,10 +27,12 @@ import org.bukkit.Material;
 import org.bukkit.SkullType;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
+import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.handlers.ChatManager;
-import pl.plajer.buildbattle3.handlers.ConfigurationManager;
-import pl.plajer.buildbattle3.utils.Util;
+import pl.plajer.buildbattle3.utils.Utils;
+import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
  * Created by Tom on 26/08/2015.
@@ -67,7 +69,7 @@ class HeadsItem {
   }
 
   public FileConfiguration getConfig() {
-    return ConfigurationManager.getConfig("playerheadmenu/menus/" + config);
+    return ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "playerheadmenu/menus/" + config);
   }
 
   public void setConfig(String config) {
@@ -153,12 +155,12 @@ class HeadsItem {
       }
       if (itemStack.getType() == Material.SKULL_ITEM && itemStack.getData().getData() == SkullType.PLAYER.ordinal()) {
         if (getOwner().matches("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[34][0-9a-fA-F]{3}-[89ab][0-9a-fA-F]{3}-[0-9a-fA-F]{12}")) {
-          itemStack = Util.getPlayerHead(Bukkit.getOfflinePlayer(UUID.fromString(getOwner())));
+          itemStack = Utils.getPlayerHead(Bukkit.getOfflinePlayer(UUID.fromString(getOwner())));
         } else {
-          itemStack = Util.getPlayerHead(Bukkit.getOfflinePlayer(getOwner()));
+          itemStack = Utils.getPlayerHead(Bukkit.getOfflinePlayer(getOwner()));
         }
       }
-      Util.setItemNameAndLore(itemStack, ChatManager.colorRawMessage(this.getDisplayName()), getLore().toArray(new String[0]));
+      Utils.setItemNameAndLore(itemStack, ChatManager.colorRawMessage(this.getDisplayName()), getLore().toArray(new String[0]));
 
       return itemStack;
     } else {

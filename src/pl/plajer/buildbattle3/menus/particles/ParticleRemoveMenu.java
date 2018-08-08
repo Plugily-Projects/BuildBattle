@@ -32,7 +32,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import pl.plajer.buildbattle3.arena.plots.ArenaPlot;
 import pl.plajer.buildbattle3.handlers.ChatManager;
-import pl.plajer.buildbattle3.utils.Util;
+import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
  * Created by Tom on 24/08/2015.
@@ -48,10 +48,10 @@ public class ParticleRemoveMenu {
       ItemMeta itemMeta = itemStack.getItemMeta();
       itemMeta.setLore(new ArrayList<>());
       itemStack.setItemMeta(itemMeta);
-      Util.addLore(itemStack, ChatManager.colorMessage("Menus.Location-Message"));
-      Util.addLore(itemStack, ChatColor.GRAY + "  x: " + Math.round(location.getX()));
-      Util.addLore(itemStack, ChatColor.GRAY + "  y: " + Math.round(location.getY()));
-      Util.addLore(itemStack, ChatColor.GRAY + "  z: " + Math.round(location.getZ()));
+      MinigameUtils.addLore(itemStack, ChatManager.colorMessage("Menus.Location-Message"));
+      MinigameUtils.addLore(itemStack, ChatColor.GRAY + "  x: " + Math.round(location.getX()));
+      MinigameUtils.addLore(itemStack, ChatColor.GRAY + "  y: " + Math.round(location.getY()));
+      MinigameUtils.addLore(itemStack, ChatColor.GRAY + "  z: " + Math.round(location.getZ()));
       inventory.addItem(itemStack);
     }
 

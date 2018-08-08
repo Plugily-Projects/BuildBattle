@@ -86,13 +86,13 @@ public class VotePoll {
     return (String) bestTheme.keySet().toArray()[bestTheme.keySet().toArray().length - 1];
   }
 
-  public String getThemeByPosition(int position){
-    if(position % 9 != 0){
+  public String getThemeByPosition(int position) {
+    if (position % 9 != 0) {
       return "Incompatible operation";
     }
     int i = 1;
-    for(String theme : votedThemes.keySet()){
-      if(position / 9 == i) return theme;
+    for (String theme : votedThemes.keySet()) {
+      if (position / 9 == i) return theme;
       i++;
     }
     return "none";

@@ -29,8 +29,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.plots.ArenaPlot;
-import pl.plajer.buildbattle3.handlers.ConfigurationManager;
-import pl.plajer.buildbattle3.utils.Util;
+import pl.plajerlair.core.utils.ConfigUtils;
+import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
  * Created by Tom on 27/07/2014.
@@ -93,7 +93,7 @@ public class ArenaRegistry {
   public static void registerArenas() {
     Main.debug("Initial arenas registration", System.currentTimeMillis());
     ArenaRegistry.getArenas().clear();
-    FileConfiguration config = ConfigurationManager.getConfig("arenas");
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
     for (String ID : config.getConfigurationSection("instances").getKeys(false)) {
       Arena arena;
       String s = "instances." + ID + ".";
@@ -107,8 +107,8 @@ public class ArenaRegistry {
       else arena.setMaximumPlayers(config.getInt("instances.default.maximumplayers"));
       if (config.contains(s + "mapname")) arena.setMapName(config.getString(s + "mapname"));
       else arena.setMapName(config.getString("instances.default.mapname"));
-      if (config.contains(s + "lobbylocation")) arena.setLobbyLocation(Util.getLocation(false, config.getString(s + "lobbylocation")));
-      if (config.contains(s + "Endlocation")) arena.setEndLocation(Util.getLocation(false, config.getString(s + "Endlocation")));
+      if (config.contains(s + "lobbylocation")) arena.setLobbyLocation(MinigameUtils.getLocation(config.getString(s + "lobbylocation")));
+      if (config.contains(s + "Endlocation")) arena.setEndLocation(MinigameUtils.getLocation(config.getString(s + "Endlocation")));
       else {
         if (!plugin.isBungeeActivated()) {
           System.out.print(ID + " doesn't contains an end location!");
@@ -125,8 +125,8 @@ public class ArenaRegistry {
           for (String plotName : config.getConfigurationSection(s + "plots").getKeys(false)) {
             if (config.isSet(s + "plots." + plotName + ".maxpoint") && config.isSet(s + "plots." + plotName + ".minpoint")) {
               ArenaPlot buildPlot = new ArenaPlot();
-              buildPlot.setMaxPoint(Util.getLocation(false, config.getString(s + "plots." + plotName + ".maxpoint")));
-              buildPlot.setMinPoint(Util.getLocation(false, config.getString(s + "plots." + plotName + ".minpoint")));
+              buildPlot.setMaxPoint(MinigameUtils.getLocation(config.getString(s + "plots." + plotName + ".maxpoint")));
+              buildPlot.setMinPoint(MinigameUtils.getLocation(config.getString(s + "plots." + plotName + ".minpoint")));
               buildPlot.fullyResetPlot();
               arena.getPlotManager().addBuildPlot(buildPlot);
             } else {

@@ -23,10 +23,12 @@ import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
+import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.handlers.ChatManager;
-import pl.plajer.buildbattle3.handlers.ConfigurationManager;
-import pl.plajer.buildbattle3.utils.Util;
+import pl.plajer.buildbattle3.utils.Utils;
+import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
  * Created by Tom on 5/02/2016.
@@ -49,7 +51,7 @@ public class SpecialItem {
   }
 
   private void load() {
-    FileConfiguration config = ConfigurationManager.getConfig("SpecialItems");
+    FileConfiguration config = ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "SpecialItems");
     SpecialItem particleItem = new SpecialItem(name);
     particleItem.setData(config.getInt(name + ".data"));
     particleItem.setMaterial(org.bukkit.Material.getMaterial(config.getInt(name + ".material")));
@@ -103,7 +105,7 @@ public class SpecialItem {
       itemStack = new ItemStack(getMaterial());
 
     }
-    Util.setItemNameAndLore(itemStack, ChatManager.colorRawMessage(this.getDisplayName()), lore);
+    Utils.setItemNameAndLore(itemStack, ChatManager.colorRawMessage(this.getDisplayName()), lore);
     return itemStack;
   }
 

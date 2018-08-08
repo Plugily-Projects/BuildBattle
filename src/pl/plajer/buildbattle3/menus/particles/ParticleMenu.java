@@ -28,13 +28,15 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle3.ConfigPreferences;
+import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.plots.ArenaPlot;
 import pl.plajer.buildbattle3.handlers.ChatManager;
-import pl.plajer.buildbattle3.handlers.ConfigurationManager;
 import pl.plajer.buildbattle3.user.UserManager;
-import pl.plajer.buildbattle3.utils.Util;
+import pl.plajer.buildbattle3.utils.Utils;
+import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
  * Created by Tom on 23/08/2015.
@@ -49,14 +51,14 @@ public class ParticleMenu {
       if (particleItem.isEnabled()) inventory.setItem(particleItem.getSlot(), particleItem.getItemStack());
     }
     ItemStack itemStack = new ItemStack(Material.REDSTONE_BLOCK);
-    Util.setItemNameAndLore(itemStack, ChatManager.colorMessage("Menus.Option-Menu.Particle-Remove"), new String[]{ChatManager.colorMessage("Menus.Option-Menu.Particle-Remove-Lore")});
+    Utils.setItemNameAndLore(itemStack, ChatManager.colorMessage("Menus.Option-Menu.Particle-Remove"), new String[]{ChatManager.colorMessage("Menus.Option-Menu.Particle-Remove-Lore")});
     inventory.setItem(53, itemStack);
     player.openInventory(inventory);
   }
 
 
   public static void loadFromConfig() {
-    FileConfiguration config = ConfigurationManager.getConfig("particles");
+    FileConfiguration config = ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "particles");
     int slotCounter = 0;
     for (Particle particle : Particle.values()) {
       if (particle.toString().equalsIgnoreCase("BLOCK_CRACK") || particle.toString().equalsIgnoreCase("ITEM_CRACK")
@@ -84,7 +86,7 @@ public class ParticleMenu {
       particleItem.setSlot(config.getInt(particle.toString() + ".slot"));
       particleItems.add(particleItem);
     }
-    ConfigurationManager.saveConfig(config, "particles");
+    ConfigUtils.saveConfig(JavaPlugin.getPlugin(Main.class), config, "particles");
   }
 
 

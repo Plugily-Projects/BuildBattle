@@ -18,7 +18,6 @@
 
 package pl.plajer.buildbattle3.menus.themevoter;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -55,7 +54,7 @@ public class VoteMenuListener implements Listener {
       if (arena == null) {
         return;
       }
-      if(e.getCurrentItem().getType() == Material.SIGN || /*1.13*/ e.getCurrentItem().getType() == Material.SIGN_POST) {
+      if (e.getCurrentItem().getType() == Material.SIGN || /*1.13*/ e.getCurrentItem().getType() == Material.SIGN_POST) {
         String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
         displayName = ChatColor.stripColor(displayName);
         boolean success = arena.getVotePoll().addVote((Player) e.getWhoClicked(), displayName);
@@ -65,11 +64,11 @@ public class VoteMenuListener implements Listener {
           e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Theme-Voting.Voted-Successfully"));
         }
       }
-      if(e.getCurrentItem().getType() == Material.PAPER){
+      if (e.getCurrentItem().getType() == Material.PAPER) {
         User u = UserManager.getUser(e.getWhoClicked().getUniqueId());
-        if(u.getInt("supervotes") > 0){
+        if (u.getInt("supervotes") > 0) {
           u.setInt("supervotes", u.getInt("supervotes") - 1);
-          for(Player p : arena.getPlayers()){
+          for (Player p : arena.getPlayers()) {
             p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Used")
                     .replace("%player%", e.getWhoClicked().getName()).replace("%theme%", arena.getVotePoll().getThemeByPosition(e.getSlot() + 1)));
           }

@@ -25,19 +25,20 @@ import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
+import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.buildbattleapi.StatsStorage;
-import pl.plajer.buildbattle3.handlers.ConfigurationManager;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.MessageUtils;
+import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
  * Created by Tom on 17/06/2015.
  */
 public class FileStats {
 
-  private FileConfiguration config;
   public final static Map<String, StatsStorage.StatisticType> STATISTICS = new HashMap<>();
 
   static {
@@ -51,15 +52,17 @@ public class FileStats {
     STATISTICS.put("supervotes", StatsStorage.StatisticType.SUPER_VOTES);
   }
 
+  private FileConfiguration config;
+
   public FileStats() {
-    config = ConfigurationManager.getConfig("stats");
+    config = ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "stats");
   }
 
   public void saveStat(Player player, String stat) {
     User user = UserManager.getUser(player.getUniqueId());
     config.set(player.getUniqueId().toString() + "." + stat, user.getInt(stat));
     try {
-      config.save(ConfigurationManager.getFile("stats"));
+      config.save(ConfigUtils.getFile(JavaPlugin.getPlugin(Main.class), "stats"));
     } catch (IOException e) {
       e.printStackTrace();
       MessageUtils.errorOccured();

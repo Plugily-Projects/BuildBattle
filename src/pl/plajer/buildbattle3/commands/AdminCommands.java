@@ -48,10 +48,10 @@ import pl.plajer.buildbattle3.arena.ArenaManager;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.arena.ArenaState;
 import pl.plajer.buildbattle3.handlers.ChatManager;
-import pl.plajer.buildbattle3.handlers.ConfigurationManager;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
-import pl.plajer.buildbattle3.utils.Util;
+import pl.plajerlair.core.utils.ConfigUtils;
+import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
  * @author Plajer
@@ -121,13 +121,15 @@ public class AdminCommands extends MainCommand {
     }
     Selection selection = plugin.getWorldEditPlugin().getSelection(player);
     if (selection instanceof CuboidSelection) {
-      FileConfiguration config = ConfigurationManager.getConfig("arenas");
+      FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
       if (config.contains("instances." + arena + ".plots")) {
-        Util.saveLocation("instances." + arena + ".plots." + (config.getConfigurationSection("instances." + arena + ".plots").getKeys(false).size()) + ".minpoint", selection.getMinimumPoint());
-        Util.saveLocation("instances." + arena + ".plots." + (config.getConfigurationSection("instances." + arena + ".plots").getKeys(false).size()) + ".maxpoint", selection.getMaximumPoint());
+        MinigameUtils.saveLoc(plugin, config, "arenas", "instances." + arena + ".plots." + (config.getConfigurationSection("instances." + arena + ".plots").getKeys(false).size()) + ".minpoint", selection
+                .getMinimumPoint());
+        MinigameUtils.saveLoc(plugin, config, "arenas", "instances." + arena + ".plots." + (config.getConfigurationSection("instances." + arena + ".plots").getKeys(false).size()) + ".maxpoint", selection
+                .getMaximumPoint());
       } else {
-        Util.saveLocation("instances." + arena + ".plots.0.minpoint", selection.getMinimumPoint());
-        Util.saveLocation("instances." + arena + ".plots.0.maxpoint", selection.getMaximumPoint());
+        MinigameUtils.saveLoc(plugin, config, "arenas", "instances." + arena + ".plots.0.minpoint", selection.getMinimumPoint());
+        MinigameUtils.saveLoc(plugin, config, "arenas", "instances." + arena + ".plots.0.maxpoint", selection.getMaximumPoint());
       }
       player.sendMessage(ChatColor.GREEN + "Plot added to instance " + ChatColor.RED + arena);
     } else {
@@ -179,11 +181,11 @@ public class AdminCommands extends MainCommand {
     } else {
       Location loc = player.getTargetBlock(null, 10).getLocation();
       if (loc.getBlock().getState() instanceof Sign) {
-        FileConfiguration config = ConfigurationManager.getConfig("arenas");
+        FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
         List<String> signs = config.getStringList("instances." + arena.getID() + ".signs");
         signs.add(loc.getWorld().getName() + "," + loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getYaw() + "," + loc.getPitch());
         config.set("instances." + arena.getID() + ".signs", signs);
-        ConfigurationManager.saveConfig(config, "arenas");
+        ConfigUtils.saveConfig(plugin, config, "arenas");
         plugin.getSignManager().getLoadedSigns().put((Sign) loc.getBlock().getState(), arena);
         player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Created"));
       } else {
@@ -236,9 +238,9 @@ public class AdminCommands extends MainCommand {
       return;
     }
     ArenaManager.stopGame(false, arena);
-    FileConfiguration config = ConfigurationManager.getConfig("arenas");
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
     config.set("instances." + arenaString, null);
-    ConfigurationManager.saveConfig(config, "arenas");
+    ConfigUtils.saveConfig(plugin, config, "arenas");
     ArenaRegistry.unregisterArena(arena);
     sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatColor.RED + "Successfully removed game instance!");
   }
@@ -265,13 +267,13 @@ public class AdminCommands extends MainCommand {
     }
   }
 
-  public void setSuperVotes(CommandSender sender, String who, String superVotes){
+  public void setSuperVotes(CommandSender sender, String who, String superVotes) {
     if (!hasPermission(sender, "buildbattle.admin.supervotes.set")) return;
-    if(!NumberUtils.isNumber(superVotes)){
+    if (!NumberUtils.isNumber(superVotes)) {
       sender.sendMessage(ChatManager.colorRawMessage("&cArgument isn't a number!"));
       return;
     }
-    if(Bukkit.getPlayer(who) == null || !Bukkit.getPlayer(who).isOnline()){
+    if (Bukkit.getPlayer(who) == null || !Bukkit.getPlayer(who).isOnline()) {
       sender.sendMessage(ChatManager.colorMessage("Commands.Player-Not-Found"));
       return;
     }
@@ -280,13 +282,13 @@ public class AdminCommands extends MainCommand {
     sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&aSuper votes set."));
   }
 
-  public void addSuperVotes(CommandSender sender, String who, String superVotes){
+  public void addSuperVotes(CommandSender sender, String who, String superVotes) {
     if (!hasPermission(sender, "buildbattle.admin.supervotes.add")) return;
-    if(!NumberUtils.isNumber(superVotes)){
+    if (!NumberUtils.isNumber(superVotes)) {
       sender.sendMessage(ChatManager.colorRawMessage("&cArgument isn't a number!"));
       return;
     }
-    if(Bukkit.getPlayer(who) == null || !Bukkit.getPlayer(who).isOnline()){
+    if (Bukkit.getPlayer(who) == null || !Bukkit.getPlayer(who).isOnline()) {
       sender.sendMessage(ChatManager.colorMessage("Commands.Player-Not-Found"));
       return;
     }

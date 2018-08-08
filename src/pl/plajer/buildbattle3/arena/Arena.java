@@ -59,7 +59,9 @@ import pl.plajer.buildbattle3.menus.themevoter.VotePoll;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.MessageUtils;
-import pl.plajer.buildbattle3.utils.Util;
+import pl.plajerlair.core.utils.InventoryUtils;
+import pl.plajerlair.core.utils.MinigameScoreboard;
+import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -298,7 +300,7 @@ public class Arena extends BukkitRunnable {
           }
         }
         if ((getTimer() == (4 * 60) || getTimer() == (3 * 60) || getTimer() == 5 * 60 || getTimer() == 30 || getTimer() == 2 * 60 || getTimer() == 60 || getTimer() == 15) && !this.isVoting()) {
-          String message = ChatManager.colorMessage("In-Game.Messages.Time-Left-To-Build").replaceAll("%FORMATTEDTIME%", Util.formatIntoMMSS(getTimer()));
+          String message = ChatManager.colorMessage("In-Game.Messages.Time-Left-To-Build").replaceAll("%FORMATTEDTIME%", MinigameUtils.formatIntoMMSS(getTimer()));
           String subtitle = ChatManager.colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", String.valueOf(getTimer()));
           for (Player p : getPlayers()) {
             p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
@@ -391,7 +393,7 @@ public class Arena extends BukkitRunnable {
         setVoting(false);
         themeTimerSet = false;
         for (Player player : getPlayers()) {
-          Util.spawnRandomFirework(player.getLocation());
+          MinigameUtils.spawnRandomFirework(player.getLocation());
           showPlayers();
         }
         if (getTimer() <= 0) {
@@ -409,7 +411,7 @@ public class Arena extends BukkitRunnable {
             player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
             UserManager.getUser(player.getUniqueId()).addInt("gamesplayed", 1);
             if (plugin.isInventoryManagerEnabled()) {
-              plugin.getInventoryManager().loadInventory(player);
+              InventoryUtils.loadInventory(plugin, player);
             }
             //plot might be already deleted by team mate in TEAM game mode
             if (plotManager.getPlot(player) != null) {
@@ -518,7 +520,7 @@ public class Arena extends BukkitRunnable {
   private void updateScoreboard() {
     if (getPlayers().size() == 0 || getArenaState() == ArenaState.RESTARTING) return;
     for (Player p : getPlayers()) {
-      ArenaBoard displayBoard = new ArenaBoard("BB3", "board", ChatManager.colorMessage("Scoreboard.Title"));
+      MinigameScoreboard scoreboard;
       List<String> lines;
       if (LanguageManager.getPluginLocale() == Locale.ENGLISH) {
         lines = LanguageManager.getLanguageFile().getStringList("Scoreboard.Content." + getArenaState().getFormattedName());
@@ -532,11 +534,11 @@ public class Arena extends BukkitRunnable {
           lines = Arrays.asList(ChatManager.colorMessage("Scoreboard.Content." + getArenaState().getFormattedName() + "-Teams").split(";"));
         }
       }
-      for (String line : lines) {
-        displayBoard.addRow(formatScoreboardLine(line, p));
+      scoreboard = new MinigameScoreboard(ChatManager.colorMessage("Scoreboard.Title"), lines);
+      for (int i = 0; i < lines.size(); i++) {
+        scoreboard.setValue(i, formatScoreboardLine(lines.get(i), p));
       }
-      displayBoard.finish();
-      displayBoard.display(p);
+      scoreboard.display(p);
     }
   }
 
@@ -553,7 +555,7 @@ public class Arena extends BukkitRunnable {
     returnString = StringUtils.replace(returnString, "%MAX_PLAYERS%", Integer.toString(getMaximumPlayers()));
     returnString = StringUtils.replace(returnString, "%TIMER%", Integer.toString(getTimer()));
     returnString = StringUtils.replace(returnString, "%TIME_LEFT%", Long.toString(getTimeLeft()));
-    returnString = StringUtils.replace(returnString, "%FORMATTED_TIME_LEFT%", Util.formatIntoMMSS(getTimer()));
+    returnString = StringUtils.replace(returnString, "%FORMATTED_TIME_LEFT%", MinigameUtils.formatIntoMMSS(getTimer()));
     returnString = StringUtils.replace(returnString, "%ARENA_ID%", getID());
     returnString = StringUtils.replace(returnString, "%MAPNAME%", getMapName());
     if (!isThemeVoteTime()) {

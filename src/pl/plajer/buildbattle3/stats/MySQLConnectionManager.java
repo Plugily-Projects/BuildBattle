@@ -28,7 +28,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import pl.plajer.buildbattle3.handlers.ConfigurationManager;
+import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
  * User: Ivan
@@ -47,7 +47,7 @@ public class MySQLConnectionManager {
   }
 
   public void configureConnPool() {
-    FileConfiguration databaseConfig = ConfigurationManager.getConfig("mysql");
+    FileConfiguration databaseConfig = ConfigUtils.getConfig(plugin, "mysql");
     try {
       Class.forName("com.mysql.jdbc.Driver"); //also you need the MySQL driver
       plugin.getLogger().info("Creating BoneCP Configuration...");

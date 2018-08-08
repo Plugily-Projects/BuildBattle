@@ -129,7 +129,8 @@ public class GameCommands extends MainCommand {
                         .replace("%statistic%", StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "))));
                 return;
               }
-            } catch (SQLException ignored) {}
+            } catch (SQLException ignored) {
+            }
           }
           sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Format")
                   .replace("%position%", String.valueOf(i + 1))

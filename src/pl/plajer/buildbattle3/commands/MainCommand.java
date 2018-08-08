@@ -38,10 +38,10 @@ import pl.plajer.buildbattle3.arena.ArenaManager;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.arena.ArenaState;
 import pl.plajer.buildbattle3.handlers.ChatManager;
-import pl.plajer.buildbattle3.handlers.ConfigurationManager;
 import pl.plajer.buildbattle3.menus.SetupInventory;
 import pl.plajer.buildbattle3.utils.StringMatcher;
-import pl.plajer.buildbattle3.utils.Util;
+import pl.plajerlair.core.utils.ConfigUtils;
+import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
  * @author Plajer
@@ -105,7 +105,7 @@ public class MainCommand implements CommandExecutor {
         }
         return true;
       } else if (args[0].equalsIgnoreCase("forcestart")) {
-        if(args.length == 2){
+        if (args.length == 2) {
           adminCommands.forceStartWithTheme(player, args[1]);
         } else {
           adminCommands.forceStart(player);
@@ -137,14 +137,14 @@ public class MainCommand implements CommandExecutor {
           player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
         }
         return true;
-      } else if(args[0].equalsIgnoreCase("addvotes")){
+      } else if (args[0].equalsIgnoreCase("addvotes")) {
         if (args.length == 3) {
           adminCommands.addSuperVotes(sender, args[1], args[2]);
         } else {
           player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
         }
         return true;
-      } else if(args[0].equalsIgnoreCase("setvotes")){
+      } else if (args[0].equalsIgnoreCase("setvotes")) {
         if (args.length == 3) {
           adminCommands.setSuperVotes(sender, args[1], args[2]);
         } else {
@@ -279,22 +279,22 @@ public class MainCommand implements CommandExecutor {
     if (!(args.length > 2)) return;
 
     Player player = (Player) sender;
-    if (!ConfigurationManager.getConfig("arenas").contains("instances." + args[0])) {
+    if (!ConfigUtils.getConfig(plugin, "arenas").contains("instances." + args[0])) {
       sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
       sender.sendMessage(ChatColor.RED + "Usage: /bb < ARENA ID > set <MINPLAYRS | MAXPLAYERS | MAPNAME | SCHEMATIC | LOBBYLOCATION | EndLOCATION | STARTLOCATION  >  < VALUE>");
       return;
     }
     if (!(args[1].equalsIgnoreCase("set"))) return;
 
-    FileConfiguration config = ConfigurationManager.getConfig("arenas");
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
     if (args.length == 3) {
       if (args[2].equalsIgnoreCase("lobbylocation") || args[2].equalsIgnoreCase("lobbyloc")) {
-        Util.saveLocation("instances." + args[0] + ".lobbylocation", player.getLocation());
-        player.sendMessage("BuildBattle: Lobby location for arena/instance " + args[0] + " set to " + Util.locationToString(player.getLocation()));
+        MinigameUtils.saveLoc(plugin, config, "arenas", "instances." + args[0] + ".lobbylocation", player.getLocation());
+        player.sendMessage("BuildBattle: Lobby location for arena/instance " + args[0] + " set to " + MinigameUtils.locationToString(player.getLocation()));
         return;
       } else if (args[2].equalsIgnoreCase("Endlocation") || args[2].equalsIgnoreCase("Endloc")) {
-        Util.saveLocation("instances." + args[0] + ".Endlocation", player.getLocation());
-        player.sendMessage("BuildBattle: End location for arena/instance " + args[0] + " set to " + Util.locationToString(player.getLocation()));
+        MinigameUtils.saveLoc(plugin, config, "arenas", "instances." + args[0] + ".Endlocation", player.getLocation());
+        player.sendMessage("BuildBattle: End location for arena/instance " + args[0] + " set to " + MinigameUtils.locationToString(player.getLocation()));
         return;
       } else {
         player.sendMessage(ChatColor.RED + "Invalid Command!");
@@ -326,7 +326,7 @@ public class MainCommand implements CommandExecutor {
         player.sendMessage(ChatColor.RED + "Usage: /bb set <MINPLAYERS | MAXPLAYERS> <value>");
       }
     }
-    ConfigurationManager.saveConfig(config, "arenas");
+    ConfigUtils.saveConfig(plugin, config, "arenas");
   }
 
   private void createArenaCommand(Player player, String[] args) {
@@ -337,7 +337,7 @@ public class MainCommand implements CommandExecutor {
         return;
       }
     }
-    FileConfiguration config = ConfigurationManager.getConfig("arenas");
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
     if (config.contains("instances." + args[1])) {
       player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatColor.DARK_RED + "Instance/Arena already exists! Use another ID or delete it first!");
     } else {
@@ -354,9 +354,9 @@ public class MainCommand implements CommandExecutor {
 
   private void createInstanceInConfig(String ID) {
     String path = "instances." + ID + ".";
-    Util.saveLocation(path + "lobbylocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
-    Util.saveLocation(path + "Endlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
-    FileConfiguration config = ConfigurationManager.getConfig("arenas");
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+    MinigameUtils.saveLoc(plugin, config, "arenas", path + "lobbylocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+    MinigameUtils.saveLoc(plugin, config, "arenas", path + "Endlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
     config.set(path + "minimumplayers", config.getInt("instances.default.minimumplayers"));
     config.set(path + "maximumplayers", config.getInt("instances.default.maximumplayers"));
     config.set(path + "mapname", ID);
@@ -365,16 +365,16 @@ public class MainCommand implements CommandExecutor {
     config.set(path + "gametype", "SOLO");
     config.set(path + "isdone", false);
     config.set(path + "world", config.getString("instances.default.world"));
-    ConfigurationManager.saveConfig(config, "arenas");
+    ConfigUtils.saveConfig(plugin, config, "arenas");
 
     Arena arena = new Arena(ID);
 
-    arena.setMinimumPlayers(ConfigurationManager.getConfig("arenas").getInt(path + "minimumplayers"));
-    arena.setMaximumPlayers(ConfigurationManager.getConfig("arenas").getInt(path + "maximumplayers"));
-    arena.setMapName(ConfigurationManager.getConfig("arenas").getString(path + "mapname"));
-    arena.setLobbyLocation(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString(path + "lobbylocation")));
-    arena.setEndLocation(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString(path + "Endlocation")));
-    arena.setArenaType(Arena.ArenaType.valueOf(ConfigurationManager.getConfig("arenas").getString(path + "gametype").toUpperCase()));
+    arena.setMinimumPlayers(ConfigUtils.getConfig(plugin, "arenas").getInt(path + "minimumplayers"));
+    arena.setMaximumPlayers(ConfigUtils.getConfig(plugin, "arenas").getInt(path + "maximumplayers"));
+    arena.setMapName(ConfigUtils.getConfig(plugin, "arenas").getString(path + "mapname"));
+    arena.setLobbyLocation(MinigameUtils.getLocation(ConfigUtils.getConfig(plugin, "arenas").getString(path + "lobbylocation")));
+    arena.setEndLocation(MinigameUtils.getLocation(ConfigUtils.getConfig(plugin, "arenas").getString(path + "Endlocation")));
+    arena.setArenaType(Arena.ArenaType.valueOf(ConfigUtils.getConfig(plugin, "arenas").getString(path + "gametype").toUpperCase()));
     arena.setReady(false);
     ArenaRegistry.registerArena(arena);
 

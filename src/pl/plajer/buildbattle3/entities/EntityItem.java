@@ -26,10 +26,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
+import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.handlers.ChatManager;
-import pl.plajer.buildbattle3.handlers.ConfigurationManager;
-import pl.plajer.buildbattle3.utils.Util;
+import pl.plajer.buildbattle3.utils.Utils;
+import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
  * Created by Tom on 23/08/2015.
@@ -67,7 +69,7 @@ public class EntityItem {
   }
 
   private void load(String displayName, String[] lore, Material material, int slot) {
-    FileConfiguration config = ConfigurationManager.getConfig("EntityMenu");
+    FileConfiguration config = ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "EntityMenu");
     if (!config.contains(name)) {
       config.set(name + ".data", 0);
       config.set(name + ".displayname", displayName);
@@ -76,7 +78,7 @@ public class EntityItem {
       config.set(name + ".slot", slot);
     }
     try {
-      config.save(ConfigurationManager.getFile("EntityMenu"));
+      config.save(ConfigUtils.getFile(JavaPlugin.getPlugin(Main.class), "EntityMenu"));
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -134,7 +136,7 @@ public class EntityItem {
       itemStack = new ItemStack(getMaterial());
 
     }
-    Util.setItemNameAndLore(itemStack, ChatManager.colorRawMessage(this.getDisplayName()), lore);
+    Utils.setItemNameAndLore(itemStack, ChatManager.colorRawMessage(this.getDisplayName()), lore);
     return itemStack;
   }
 }

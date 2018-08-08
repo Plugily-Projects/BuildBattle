@@ -28,15 +28,16 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
-import pl.plajer.buildbattle3.handlers.ConfigurationManager;
 import pl.plajer.buildbattle3.utils.ItemBuilder;
-import pl.plajer.buildbattle3.utils.Util;
+import pl.plajerlair.core.utils.ConfigUtils;
+import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
  * Created by Tom on 15/06/2015.
  */
 public class SetupInventory {
 
+  private static Main plugin = JavaPlugin.getPlugin(Main.class);
   private Inventory inventory;
 
   public SetupInventory(Arena arena) {
@@ -55,7 +56,7 @@ public class SetupInventory {
             .lore(ChatColor.GRAY + "on the place where you are standing")
             .lore(isOptionDoneBool("instances." + arena.getID() + ".lobbylocation"))
             .build());
-    int min = ConfigurationManager.getConfig("arenas").getInt("instances." + arena.getID() + ".minimumplayers");
+    int min = ConfigUtils.getConfig(plugin, "arenas").getInt("instances." + arena.getID() + ".minimumplayers");
     addItem(new ItemBuilder(new ItemStack(Material.COAL, min == 0 ? 1 : min))
             .name(ChatColor.GOLD + "► Set" + ChatColor.DARK_GREEN + " minimum players " + ChatColor.GOLD + "size")
             .lore(ChatColor.GRAY + "LEFT click to decrease")
@@ -65,7 +66,7 @@ public class SetupInventory {
             .lore(ChatColor.RED + "Set it minimum 3 when using TEAM game type!!!")
             .lore(isOptionDone("instances." + arena.getID() + ".minimumplayers"))
             .build());
-    int max = ConfigurationManager.getConfig("arenas").getInt("instances." + arena.getID() + ".maximumplayers");
+    int max = ConfigUtils.getConfig(plugin, "arenas").getInt("instances." + arena.getID() + ".maximumplayers");
     addItem(new ItemBuilder(new ItemStack(Material.REDSTONE, max == 0 ? 1 : max))
             .name(ChatColor.GOLD + "► Set" + ChatColor.GREEN + " maximum players " + ChatColor.GOLD + "size")
             .lore(ChatColor.GRAY + "LEFT click to decrease")
@@ -73,7 +74,7 @@ public class SetupInventory {
             .lore(ChatColor.DARK_GRAY + "(how many players arena can hold)")
             .lore(isOptionDone("instances." + arena.getID() + ".maximumplayers"))
             .build());
-    if (!JavaPlugin.getPlugin(Main.class).isBungeeActivated()) {
+    if (!plugin.isBungeeActivated()) {
       addItem(new ItemBuilder(new ItemStack(Material.SIGN))
               .name(ChatColor.GOLD + "► Add game" + ChatColor.AQUA + " sign")
               .lore(ChatColor.GRAY + "Target a sign and click this.")
@@ -117,22 +118,23 @@ public class SetupInventory {
   }
 
   private static String isOptionDone(String path) {
-    if (ConfigurationManager.getConfig("arenas").isSet(path)) {
-      return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.GREEN + "Yes " + ChatColor.GRAY + "(value: " + ConfigurationManager.getConfig("arenas").getString(path) + ")";
+    if (ConfigUtils.getConfig(plugin, "arenas").isSet(path)) {
+      return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.GREEN + "Yes " + ChatColor.GRAY + "(value: " + ConfigUtils.getConfig(plugin, "arenas").getString(path) + ")";
     }
     return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.RED + "No";
   }
 
   private String isOptionDoneList(String path) {
-    if (ConfigurationManager.getConfig("arenas").isSet(path)) {
-      return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.GREEN + "Yes " + ChatColor.GRAY + "(value: " + ConfigurationManager.getConfig("arenas").getConfigurationSection(path).getKeys(false).size() + ")";
+    if (ConfigUtils.getConfig(plugin, "arenas").isSet(path)) {
+      return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.GREEN + "Yes " + ChatColor.GRAY + "(value: " + ConfigUtils.getConfig(plugin, "arenas").getConfigurationSection(path).getKeys
+              (false).size() + ")";
     }
     return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.RED + "No";
   }
 
   private String isOptionDoneBool(String path) {
-    if (ConfigurationManager.getConfig("arenas").isSet(path)) {
-      if (Bukkit.getServer().getWorlds().get(0).getSpawnLocation().equals(Util.getLocation(false, ConfigurationManager.getConfig("arenas").getString(path)))) {
+    if (ConfigUtils.getConfig(plugin, "arenas").isSet(path)) {
+      if (Bukkit.getServer().getWorlds().get(0).getSpawnLocation().equals(MinigameUtils.getLocation(ConfigUtils.getConfig(plugin, "arenas").getString(path)))) {
         return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.RED + "No";
       }
       return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.GREEN + "Yes";

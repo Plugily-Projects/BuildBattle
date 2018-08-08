@@ -34,10 +34,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
+import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.handlers.ChatManager;
-import pl.plajer.buildbattle3.handlers.ConfigurationManager;
-import pl.plajer.buildbattle3.utils.Util;
+import pl.plajerlair.core.utils.ConfigUtils;
+import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
  * Created by Tom on 26/08/2015.
@@ -50,7 +52,7 @@ public class PlayerHeadsMenu {
   private static Map<String, Inventory> inventories = new HashMap<>();
 
   public static void loadHeadItems() {
-    FileConfiguration config = ConfigurationManager.getConfig("playerheadmenu/mainmenu");
+    FileConfiguration config = ConfigUtils.getConfig(Main.getPlugin(Main.class), "playerheadmenu/mainmenu");
     if (!config.contains("animals")) {
       config.set("animals.data", SkullType.PLAYER.ordinal());
       config.set("animals.displayname", "&6" + "Animals");
@@ -65,7 +67,7 @@ public class PlayerHeadsMenu {
       config.set("animals.menuname", "Animal Heads Menu");
     }
     try {
-      config.save(ConfigurationManager.getFile("playerheadmenu/mainmenu"));
+      config.save(ConfigUtils.getFile(JavaPlugin.getPlugin(Main.class), "playerheadmenu/mainmenu"));
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -97,7 +99,7 @@ public class PlayerHeadsMenu {
         config.set("example.enabled", true);
         config.set("example.slot", 7);
         try {
-          config.save(ConfigurationManager.getFile("playerheadmenu/menus/" + headsItem.getConfigName()));
+          config.save(ConfigUtils.getFile(JavaPlugin.getPlugin(Main.class), "playerheadmenu/menus/" + headsItem.getConfigName()));
         } catch (IOException e) {
           e.printStackTrace();
         }
@@ -115,7 +117,7 @@ public class PlayerHeadsMenu {
         if (heads.isEnabled()) list.add(heads);
       }
       playerheadmenus.put(headsItem.getMenuName(), list);
-      inv = Bukkit.createInventory(null, Util.serializeInt(list.size()), headsItem.getMenuName());
+      inv = Bukkit.createInventory(null, MinigameUtils.serializeInt(list.size()), headsItem.getMenuName());
       for (HeadsItem item : list) {
         if (item.isEnabled()) inv.setItem(item.getSlot(), item.getItemStack());
       }

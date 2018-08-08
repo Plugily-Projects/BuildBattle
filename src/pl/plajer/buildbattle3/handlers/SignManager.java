@@ -46,7 +46,8 @@ import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.arena.ArenaState;
 import pl.plajer.buildbattle3.handlers.language.LanguageManager;
 import pl.plajer.buildbattle3.handlers.language.Locale;
-import pl.plajer.buildbattle3.utils.Util;
+import pl.plajerlair.core.utils.ConfigUtils;
+import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
  * @author Plajer
@@ -93,11 +94,11 @@ public class SignManager implements Listener {
         loadedSigns.put((Sign) e.getBlock().getState(), arena);
         e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Created"));
         String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + "," + e.getBlock().getY() + "," + e.getBlock().getZ() + ",0.0,0.0";
-        List<String> locs = ConfigurationManager.getConfig("arenas").getStringList("instances." + arena.getID() + ".signs");
+        FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+        List<String> locs = config.getStringList("instances." + arena.getID() + ".signs");
         locs.add(location);
-        FileConfiguration config = ConfigurationManager.getConfig("arenas");
         config.set("instances." + arena.getID() + ".signs", locs);
-        ConfigurationManager.saveConfig(config, "arenas");
+        ConfigUtils.saveConfig(plugin, config, "arenas");
         return;
       }
     }
@@ -123,15 +124,15 @@ public class SignManager implements Listener {
     if (!e.getPlayer().hasPermission("buildbattle.admin.sign.break")) return;
     if (loadedSigns.get(e.getBlock().getState()) == null) return;
     loadedSigns.remove(e.getBlock().getState());
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
     String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + ".0," + e.getBlock().getY() + ".0," + e.getBlock().getZ() + ".0," + "0.0,0.0";
-    for (String arena : ConfigurationManager.getConfig("arenas").getConfigurationSection("instances").getKeys(false)) {
-      for (String sign : ConfigurationManager.getConfig("arenas").getStringList("instances." + arena + ".signs")) {
+    for (String arena : config.getConfigurationSection("instances").getKeys(false)) {
+      for (String sign : config.getStringList("instances." + arena + ".signs")) {
         if (sign.equals(location)) {
-          List<String> signs = ConfigurationManager.getConfig("arenas").getStringList("instances." + arena + ".signs");
+          List<String> signs = config.getStringList("instances." + arena + ".signs");
           signs.remove(location);
-          FileConfiguration config = ConfigurationManager.getConfig("arenas");
           config.set(arena + ".signs", signs);
-          ConfigurationManager.saveConfig(config, "arenas");
+          ConfigUtils.saveConfig(plugin, config, "arenas");
           e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Removed"));
           return;
         }
@@ -151,9 +152,9 @@ public class SignManager implements Listener {
 
   public void loadSigns() {
     loadedSigns.clear();
-    for (String path : ConfigurationManager.getConfig("arenas").getConfigurationSection("instances").getKeys(false)) {
-      for (String sign : ConfigurationManager.getConfig("arenas").getStringList("instances." + path + ".signs")) {
-        Location loc = Util.getLocation(false, sign);
+    for (String path : ConfigUtils.getConfig(plugin, "arenas").getConfigurationSection("instances").getKeys(false)) {
+      for (String sign : ConfigUtils.getConfig(plugin, "arenas").getStringList("instances." + path + ".signs")) {
+        Location loc = MinigameUtils.getLocation(sign);
         if (loc.getBlock().getState() instanceof Sign) {
           loadedSigns.put((Sign) loc.getBlock().getState(), ArenaRegistry.getArena(path));
         } else {

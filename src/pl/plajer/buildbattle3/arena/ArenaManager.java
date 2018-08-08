@@ -40,7 +40,8 @@ import pl.plajer.buildbattle3.handlers.items.SpecialItem;
 import pl.plajer.buildbattle3.handlers.items.SpecialItemManager;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
-import pl.plajer.buildbattle3.utils.Util;
+import pl.plajerlair.core.utils.InventoryUtils;
+import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
  * @author Plajer
@@ -91,7 +92,7 @@ public class ArenaManager {
       return;
     }
     Main.debug("Final join attempt, " + p.getName(), System.currentTimeMillis());
-    if (plugin.isInventoryManagerEnabled()) plugin.getInventoryManager().saveInventoryToFile(p);
+    if (plugin.isInventoryManagerEnabled()) InventoryUtils.saveInventoryToFile(plugin, p);
     if (ConfigPreferences.isBarEnabled()) {
       a.getGameBar().addPlayer(p);
     }
@@ -168,7 +169,7 @@ public class ArenaManager {
     }
     p.setGameMode(GameMode.SURVIVAL);
     if (plugin.isInventoryManagerEnabled()) {
-      plugin.getInventoryManager().loadInventory(p);
+      InventoryUtils.loadInventory(plugin, p);
     }
     for (Player player : plugin.getServer().getOnlinePlayers()) {
       if (!a.getPlayers().contains(player)) {
@@ -199,7 +200,7 @@ public class ArenaManager {
             public void run() {
               if (i == 4) this.cancel();
               if (!arena.getPlayers().contains(p)) this.cancel();
-              Util.spawnRandomFirework(p.getLocation());
+              MinigameUtils.spawnRandomFirework(p.getLocation());
               i++;
             }
           }.runTaskTimer(JavaPlugin.getPlugin(Main.class), 30, 30);

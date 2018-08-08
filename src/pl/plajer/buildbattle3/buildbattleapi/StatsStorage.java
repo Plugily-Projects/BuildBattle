@@ -29,8 +29,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle3.Main;
-import pl.plajer.buildbattle3.handlers.ConfigurationManager;
 import pl.plajer.buildbattle3.user.UserManager;
+import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
  * @author Plajer, TomTheDeveloper
@@ -64,7 +64,7 @@ public class StatsStorage {
     if (plugin.isDatabaseActivated())
       return plugin.getMySQLDatabase().getColumn(stat.getName());
     else {
-      FileConfiguration config = ConfigurationManager.getConfig("stats");
+      FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
       Map<UUID, Integer> stats = new TreeMap<>();
       for (String string : config.getKeys(false)) {
         stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));

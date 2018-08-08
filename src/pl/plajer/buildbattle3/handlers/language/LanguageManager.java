@@ -33,8 +33,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import pl.plajer.buildbattle3.Main;
-import pl.plajer.buildbattle3.handlers.ConfigurationManager;
 import pl.plajer.buildbattle3.utils.MessageUtils;
+import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
  * @author Plajer
@@ -180,12 +180,12 @@ public class LanguageManager {
 
   //todo do something with me
   public static FileConfiguration getLanguageFile() {
-    return ConfigurationManager.getConfig("language");
+    return ConfigUtils.getConfig(plugin, "language");
   }
 
   public static String getDefaultLanguageMessage(String message) {
-    if (ConfigurationManager.getConfig("language").isSet(message)) {
-      return ConfigurationManager.getConfig("language").getString(message);
+    if (ConfigUtils.getConfig(plugin, "language").isSet(message)) {
+      return ConfigUtils.getConfig(plugin, "language").getString(message);
     }
     MessageUtils.errorOccured();
     Bukkit.getConsoleSender().sendMessage("Game message not found!");
@@ -206,7 +206,7 @@ public class LanguageManager {
         return "ERR_MESSAGE_NOT_FOUND";
       }
     }
-    return ConfigurationManager.getConfig("language").getString(message);
+    return ConfigUtils.getConfig(plugin, "language").getString(message);
   }
 
   public static Locale getPluginLocale() {

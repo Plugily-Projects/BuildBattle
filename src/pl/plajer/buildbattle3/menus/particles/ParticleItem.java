@@ -25,7 +25,7 @@ import org.bukkit.Particle;
 import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.buildbattle3.handlers.ChatManager;
-import pl.plajer.buildbattle3.utils.Util;
+import pl.plajer.buildbattle3.utils.Utils;
 
 /**
  * Created by Tom on 23/08/2015.
@@ -108,7 +108,7 @@ public class ParticleItem {
     } else {
       itemStack = new ItemStack(getMaterial());
     }
-    Util.setItemNameAndLore(itemStack, ChatManager.colorRawMessage(this.getDisplayName()), lore);
+    Utils.setItemNameAndLore(itemStack, ChatManager.colorRawMessage(this.getDisplayName()), lore);
     return itemStack;
   }
 }

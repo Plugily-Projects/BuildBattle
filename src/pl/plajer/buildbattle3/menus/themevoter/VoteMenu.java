@@ -37,7 +37,7 @@ import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.ItemBuilder;
-import pl.plajer.buildbattle3.utils.Util;
+import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
  * @author Plajer
@@ -116,7 +116,7 @@ public class VoteMenu {
       ItemStack stack = new ItemBuilder(new ItemStack(Material.SIGN))
               .name(ChatManager.colorMessage("Menus.Theme-Voting.Theme-Item-Name").replace("%theme%", theme))
               .lore(ChatManager.colorMessage("Menus.Theme-Voting.Theme-Item-Lore").replace("%theme%", theme)
-                      .replace("%percent%", String.valueOf(Util.round(percent, 2))).replace("%time-left%", String.valueOf(arena.getTimer())).split(";"))
+                      .replace("%percent%", String.valueOf(MinigameUtils.round(percent, 2))).replace("%time-left%", String.valueOf(arena.getTimer())).split(";"))
               .build();
       if (votePoll.getPlayerVote().containsKey(player) && votePoll.getPlayerVote().get(player).equals(theme)) {
         ItemMeta meta = stack.getItemMeta();

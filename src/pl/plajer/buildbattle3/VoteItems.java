@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -31,7 +30,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle3.handlers.ChatManager;
-import pl.plajer.buildbattle3.handlers.ConfigurationManager;
+import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -39,7 +38,7 @@ import pl.plajer.buildbattle3.handlers.ConfigurationManager;
 public class VoteItems {
 
   private static Map<ItemStack, Integer> voteItems = new HashMap<>();
-  private static FileConfiguration config = ConfigurationManager.getConfig("voteItems");
+  private static FileConfiguration config = ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "voteItems");
 
   public static void giveVoteItems(Player player) {
     for (ItemStack itemStack : voteItems.keySet()) {

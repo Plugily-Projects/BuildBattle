@@ -34,6 +34,7 @@ import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaManager;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.arena.ArenaState;
+import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
  * Created by Tom on 31/08/2014.
@@ -66,7 +67,7 @@ public class BungeeManager implements Listener {
 
 
   public String getHubServerName() {
-    return ConfigurationManager.getConfig("bungee").getString("Hub");
+    return ConfigUtils.getConfig(plugin, "bungee").getString("Hub");
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)
