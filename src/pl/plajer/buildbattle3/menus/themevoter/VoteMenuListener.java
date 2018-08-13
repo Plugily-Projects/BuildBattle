@@ -24,6 +24,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.Main;
@@ -32,6 +33,7 @@ import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
+import pl.plajerlair.core.services.ReportedException;
 
 /**
  * @author Plajer
@@ -46,47 +48,51 @@ public class VoteMenuListener implements Listener {
 
   @EventHandler
   public void onInventoryClick(InventoryClickEvent e) {
-    if (e.getInventory() == null || e.getInventory().getName() == null) return;
-    if (e.getCurrentItem() == null) return;
-    if (e.getInventory().getName().equals(ChatManager.colorMessage("Menus.Theme-Voting.Inventory-Name"))) {
-      e.setCancelled(true);
-      Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
-      if (arena == null) {
-        return;
-      }
-      if (e.getCurrentItem().getType() == Material.SIGN || /*1.13*/ e.getCurrentItem().getType() == Material.SIGN_POST) {
-        String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
-        displayName = ChatColor.stripColor(displayName);
-        boolean success = arena.getVotePoll().addVote((Player) e.getWhoClicked(), displayName);
-        if (!success) {
-          e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Theme-Voting.Already-Voted"));
-        } else {
-          e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Theme-Voting.Voted-Successfully"));
+    try {
+      if (e.getInventory() == null || e.getInventory().getName() == null) return;
+      if (e.getCurrentItem() == null) return;
+      if (e.getInventory().getName().equals(ChatManager.colorMessage("Menus.Theme-Voting.Inventory-Name"))) {
+        e.setCancelled(true);
+        Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+        if (arena == null) {
+          return;
         }
-      }
-      if (e.getCurrentItem().getType() == Material.PAPER) {
-        User u = UserManager.getUser(e.getWhoClicked().getUniqueId());
-        if (u.getInt("supervotes") > 0) {
-          u.setInt("supervotes", u.getInt("supervotes") - 1);
-          for (Player p : arena.getPlayers()) {
-            p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Used")
-                    .replace("%player%", e.getWhoClicked().getName()).replace("%theme%", arena.getVotePoll().getThemeByPosition(e.getSlot() + 1)));
-          }
-          arena.setThemeVoteTime(false);
-          arena.setTheme(arena.getVotePoll().getThemeByPosition(e.getSlot() + 1));
-          if (arena.getArenaType() == Arena.ArenaType.SOLO) {
-            arena.setTimer(ConfigPreferences.getBuildTime());
+        if (e.getCurrentItem().getType() == Material.SIGN || /*1.13*/ e.getCurrentItem().getType() == Material.SIGN_POST) {
+          String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
+          displayName = ChatColor.stripColor(displayName);
+          boolean success = arena.getVotePoll().addVote((Player) e.getWhoClicked(), displayName);
+          if (!success) {
+            e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Theme-Voting.Already-Voted"));
           } else {
-            arena.setTimer(ConfigPreferences.getTeamBuildTime());
+            e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Theme-Voting.Voted-Successfully"));
           }
-          String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started");
-          for (Player p : arena.getPlayers()) {
-            p.closeInventory();
-            p.teleport(arena.getPlotManager().getPlot(p).getTeleportLocation());
-            p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
+        }
+        if (e.getCurrentItem().getType() == Material.PAPER) {
+          User u = UserManager.getUser(e.getWhoClicked().getUniqueId());
+          if (u.getInt("supervotes") > 0) {
+            u.setInt("supervotes", u.getInt("supervotes") - 1);
+            for (Player p : arena.getPlayers()) {
+              p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Used")
+                      .replace("%player%", e.getWhoClicked().getName()).replace("%theme%", arena.getVotePoll().getThemeByPosition(e.getSlot() + 1)));
+            }
+            arena.setThemeVoteTime(false);
+            arena.setTheme(arena.getVotePoll().getThemeByPosition(e.getSlot() + 1));
+            if (arena.getArenaType() == Arena.ArenaType.SOLO) {
+              arena.setTimer(ConfigPreferences.getBuildTime());
+            } else {
+              arena.setTimer(ConfigPreferences.getTeamBuildTime());
+            }
+            String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started");
+            for (Player p : arena.getPlayers()) {
+              p.closeInventory();
+              p.teleport(arena.getPlotManager().getPlot(p).getTeleportLocation());
+              p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
+            }
           }
         }
       }
+    } catch (Exception ex){
+      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
     }
   }
 

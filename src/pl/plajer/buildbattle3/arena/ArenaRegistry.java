@@ -29,6 +29,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.plots.ArenaPlot;
+import pl.plajerlair.core.services.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.MinigameUtils;
 
@@ -91,62 +92,66 @@ public class ArenaRegistry {
   }
 
   public static void registerArenas() {
-    Main.debug("Initial arenas registration", System.currentTimeMillis());
-    ArenaRegistry.getArenas().clear();
-    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    for (String ID : config.getConfigurationSection("instances").getKeys(false)) {
-      Arena arena;
-      String s = "instances." + ID + ".";
-      if (s.contains("default")) continue;
+    try {
+      Main.debug("Initial arenas registration", System.currentTimeMillis());
+      ArenaRegistry.getArenas().clear();
+      FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+      for (String ID : config.getConfigurationSection("instances").getKeys(false)) {
+        Arena arena;
+        String s = "instances." + ID + ".";
+        if (s.contains("default")) continue;
 
-      arena = new Arena(ID);
+        arena = new Arena(ID);
 
-      if (config.contains(s + "minimumplayers")) arena.setMinimumPlayers(config.getInt(s + "minimumplayers"));
-      else arena.setMinimumPlayers(config.getInt("instances.default.minimumplayers"));
-      if (config.contains(s + "maximumplayers")) arena.setMaximumPlayers(config.getInt(s + "maximumplayers"));
-      else arena.setMaximumPlayers(config.getInt("instances.default.maximumplayers"));
-      if (config.contains(s + "mapname")) arena.setMapName(config.getString(s + "mapname"));
-      else arena.setMapName(config.getString("instances.default.mapname"));
-      if (config.contains(s + "lobbylocation")) arena.setLobbyLocation(MinigameUtils.getLocation(config.getString(s + "lobbylocation")));
-      if (config.contains(s + "Endlocation")) arena.setEndLocation(MinigameUtils.getLocation(config.getString(s + "Endlocation")));
-      else {
-        if (!plugin.isBungeeActivated()) {
-          System.out.print(ID + " doesn't contains an end location!");
-          arena.setReady(false);
-          ArenaRegistry.registerArena(arena);
-          continue;
+        if (config.contains(s + "minimumplayers")) arena.setMinimumPlayers(config.getInt(s + "minimumplayers"));
+        else arena.setMinimumPlayers(config.getInt("instances.default.minimumplayers"));
+        if (config.contains(s + "maximumplayers")) arena.setMaximumPlayers(config.getInt(s + "maximumplayers"));
+        else arena.setMaximumPlayers(config.getInt("instances.default.maximumplayers"));
+        if (config.contains(s + "mapname")) arena.setMapName(config.getString(s + "mapname"));
+        else arena.setMapName(config.getString("instances.default.mapname"));
+        if (config.contains(s + "lobbylocation")) arena.setLobbyLocation(MinigameUtils.getLocation(config.getString(s + "lobbylocation")));
+        if (config.contains(s + "Endlocation")) arena.setEndLocation(MinigameUtils.getLocation(config.getString(s + "Endlocation")));
+        else {
+          if (!plugin.isBungeeActivated()) {
+            System.out.print(ID + " doesn't contains an end location!");
+            arena.setReady(false);
+            ArenaRegistry.registerArena(arena);
+            continue;
+          }
         }
-      }
-      if (config.contains(s + "gametype")) arena.setArenaType(Arena.ArenaType.valueOf(config.getString(s + "gametype").toUpperCase()));
-        //assuming that arena is from 3.1.x releases we set arena type to SOLO by default
-      else arena.setArenaType(Arena.ArenaType.SOLO);
-      if (config.contains(s + "plots")) {
-        if (config.isConfigurationSection(s + "plots")) {
-          for (String plotName : config.getConfigurationSection(s + "plots").getKeys(false)) {
-            if (config.isSet(s + "plots." + plotName + ".maxpoint") && config.isSet(s + "plots." + plotName + ".minpoint")) {
-              ArenaPlot buildPlot = new ArenaPlot();
-              buildPlot.setMaxPoint(MinigameUtils.getLocation(config.getString(s + "plots." + plotName + ".maxpoint")));
-              buildPlot.setMinPoint(MinigameUtils.getLocation(config.getString(s + "plots." + plotName + ".minpoint")));
-              buildPlot.fullyResetPlot();
-              arena.getPlotManager().addBuildPlot(buildPlot);
-            } else {
-              System.out.println("Non configured plot instances found for arena " + ID);
-              arena.setReady(false);
+        if (config.contains(s + "gametype")) arena.setArenaType(Arena.ArenaType.valueOf(config.getString(s + "gametype").toUpperCase()));
+          //assuming that arena is from 3.1.x releases we set arena type to SOLO by default
+        else arena.setArenaType(Arena.ArenaType.SOLO);
+        if (config.contains(s + "plots")) {
+          if (config.isConfigurationSection(s + "plots")) {
+            for (String plotName : config.getConfigurationSection(s + "plots").getKeys(false)) {
+              if (config.isSet(s + "plots." + plotName + ".maxpoint") && config.isSet(s + "plots." + plotName + ".minpoint")) {
+                ArenaPlot buildPlot = new ArenaPlot();
+                buildPlot.setMaxPoint(MinigameUtils.getLocation(config.getString(s + "plots." + plotName + ".maxpoint")));
+                buildPlot.setMinPoint(MinigameUtils.getLocation(config.getString(s + "plots." + plotName + ".minpoint")));
+                buildPlot.fullyResetPlot();
+                arena.getPlotManager().addBuildPlot(buildPlot);
+              } else {
+                System.out.println("Non configured plot instances found for arena " + ID);
+                arena.setReady(false);
+              }
             }
+          } else {
+            System.out.println("Non configured plots in arena " + ID);
+            arena.setReady(false);
           }
         } else {
-          System.out.println("Non configured plots in arena " + ID);
+          System.out.print("Instance " + ID + " doesn't contains plots!");
           arena.setReady(false);
         }
-      } else {
-        System.out.print("Instance " + ID + " doesn't contains plots!");
-        arena.setReady(false);
+        arena.setReady(config.getBoolean("instances." + ID + ".isdone"));
+        ArenaRegistry.registerArena(arena);
+        arena.start();
       }
-      arena.setReady(config.getBoolean("instances." + ID + ".isdone"));
-      ArenaRegistry.registerArena(arena);
-      arena.start();
+      Main.debug("Arenas registration completed", System.currentTimeMillis());
+    } catch (Exception ex){
+      new ReportedException(plugin, ex);
     }
-    Main.debug("Arenas registration completed", System.currentTimeMillis());
   }
 
 }

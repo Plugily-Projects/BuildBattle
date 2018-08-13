@@ -27,11 +27,14 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
+import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaManager;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.MessageUtils;
+import pl.plajerlair.core.services.ReportedException;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -51,36 +54,40 @@ public class ArenaPlotManager {
   }
 
   public void distributePlots() {
-    List<Player> players = new ArrayList<>(buildInstance.getPlayers());
-    int times = buildInstance.getArenaType() == Arena.ArenaType.SOLO ? 1 : 2;
-    for (int i = 0; i < times; i++) {
-      for (ArenaPlot plot : plots) {
-        if (players.isEmpty()) break;
-        if (plot.getOwners() != null) {
-          if (buildInstance.getArenaType() == Arena.ArenaType.SOLO || buildInstance.getPlayers().size() == 2 /* in case of 2 min players set for team mode*/) {
-            if (plot.getOwners().size() == 0) {
-              plot.addOwner(players.get(0).getUniqueId());
-              UserManager.getUser(players.get(0).getUniqueId()).setObject(plot, "plot");
+    try {
+      List<Player> players = new ArrayList<>(buildInstance.getPlayers());
+      int times = buildInstance.getArenaType() == Arena.ArenaType.SOLO ? 1 : 2;
+      for (int i = 0; i < times; i++) {
+        for (ArenaPlot plot : plots) {
+          if (players.isEmpty()) break;
+          if (plot.getOwners() != null) {
+            if (buildInstance.getArenaType() == Arena.ArenaType.SOLO || buildInstance.getPlayers().size() == 2 /* in case of 2 min players set for team mode*/) {
+              if (plot.getOwners().size() == 0) {
+                plot.addOwner(players.get(0).getUniqueId());
+                UserManager.getUser(players.get(0).getUniqueId()).setObject(plot, "plot");
 
-              players.remove(0);
-            }
-          } else if (buildInstance.getArenaType() == Arena.ArenaType.TEAM) {
-            if (plot.getOwners().size() < 2) {
-              plot.addOwner(players.get(0).getUniqueId());
-              UserManager.getUser(players.get(0).getUniqueId()).setObject(plot, "plot");
+                players.remove(0);
+              }
+            } else if (buildInstance.getArenaType() == Arena.ArenaType.TEAM) {
+              if (plot.getOwners().size() < 2) {
+                plot.addOwner(players.get(0).getUniqueId());
+                UserManager.getUser(players.get(0).getUniqueId()).setObject(plot, "plot");
 
-              players.remove(0);
+                players.remove(0);
+              }
             }
           }
         }
       }
-    }
-    if (!players.isEmpty()) {
-      MessageUtils.errorOccured();
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] [PLOT WARNING] Not enough plots in arena " + buildInstance.getID() + "!");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[PLOT WARNING] Required " + (buildInstance.getArenaType() == Arena.ArenaType.TEAM ? Math.ceil((double) buildInstance.getPlayers().size() / 2) : buildInstance.getPlayers().size()) + " but have " + plots.size());
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[PLOT WARNING] Instance was stopped!");
-      ArenaManager.stopGame(false, buildInstance);
+      if (!players.isEmpty()) {
+        MessageUtils.errorOccured();
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] [PLOT WARNING] Not enough plots in arena " + buildInstance.getID() + "!");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[PLOT WARNING] Required " + (buildInstance.getArenaType() == Arena.ArenaType.TEAM ? Math.ceil((double) buildInstance.getPlayers().size() / 2) : buildInstance.getPlayers().size()) + " but have " + plots.size());
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[PLOT WARNING] Instance was stopped!");
+        ArenaManager.stopGame(false, buildInstance);
+      }
+    } catch (Exception ex){
+      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
     }
   }
 
@@ -121,17 +128,21 @@ public class ArenaPlotManager {
   }
 
   public void teleportToPlots() {
-    for (ArenaPlot buildPlot : plots) {
-      if (buildPlot.getOwners() != null || !buildPlot.getOwners().isEmpty()) {
-        Location tploc = buildPlot.getCenter();
-        while (tploc.getBlock().getType() != Material.AIR) tploc = tploc.add(0, 1, 0);
-        for (UUID u : buildPlot.getOwners()) {
-          Player player = Bukkit.getServer().getPlayer(u);
-          if (player != null) {
-            player.teleport(buildPlot.getCenter());
+    try {
+      for (ArenaPlot buildPlot : plots) {
+        if (buildPlot.getOwners() != null || !buildPlot.getOwners().isEmpty()) {
+          Location tploc = buildPlot.getCenter();
+          while (tploc.getBlock().getType() != Material.AIR) tploc = tploc.add(0, 1, 0);
+          for (UUID u : buildPlot.getOwners()) {
+            Player player = Bukkit.getServer().getPlayer(u);
+            if (player != null) {
+              player.teleport(buildPlot.getCenter());
+            }
           }
         }
       }
+    } catch (Exception ex){
+      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
     }
   }
 

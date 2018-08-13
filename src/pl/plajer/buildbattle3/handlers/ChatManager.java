@@ -22,10 +22,13 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
+import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.handlers.language.LanguageManager;
 import pl.plajer.buildbattle3.handlers.language.Locale;
+import pl.plajerlair.core.services.ReportedException;
 import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
@@ -43,7 +46,7 @@ public class ChatManager {
     try {
       return ChatColor.translateAlternateColorCodes('&', LanguageManager.getLanguageMessage(message));
     } catch (NullPointerException e1) {
-      e1.printStackTrace();
+      new ReportedException(JavaPlugin.getPlugin(Main.class), e1);
       Bukkit.getConsoleSender().sendMessage("Game message not found!");
       if (LanguageManager.getPluginLocale() == Locale.ENGLISH) {
         Bukkit.getConsoleSender().sendMessage("Please regenerate your language.yml file! If error still occurs report it to the developer!");

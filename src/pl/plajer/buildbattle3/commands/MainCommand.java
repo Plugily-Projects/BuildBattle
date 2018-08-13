@@ -40,6 +40,7 @@ import pl.plajer.buildbattle3.arena.ArenaState;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.menus.SetupInventory;
 import pl.plajer.buildbattle3.utils.StringMatcher;
+import pl.plajerlair.core.services.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.MinigameUtils;
 
@@ -90,174 +91,179 @@ public class MainCommand implements CommandExecutor {
 
   @Override
   public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-    if (cmd.getName().equalsIgnoreCase("buildbattleadmin")) {
-      if (args.length == 0) {
-        adminCommands.sendHelp(sender);
-        return true;
-      }
-      if (checkSenderIsConsole(sender)) return true;
-      Player player = (Player) sender;
-      if (args[0].equalsIgnoreCase("addplot")) {
-        if (args.length == 2) {
-          adminCommands.addPlot(player, args[1]);
-        } else {
-          player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
-        }
-        return true;
-      } else if (args[0].equalsIgnoreCase("forcestart")) {
-        if (args.length == 2) {
-          adminCommands.forceStartWithTheme(player, args[1]);
-        } else {
-          adminCommands.forceStart(player);
-        }
-        return true;
-      } else if (args[0].equalsIgnoreCase("reload")) {
-        adminCommands.reloadPlugin(player);
-        return true;
-      } else if (args[0].equalsIgnoreCase("addnpc")) {
-        adminCommands.addNPC(player);
-        return true;
-      } else if (args[0].equalsIgnoreCase("stop")) {
-        adminCommands.stopGame(sender);
-        return true;
-      } else if (args[0].equalsIgnoreCase("list")) {
-        adminCommands.printList(sender);
-        return true;
-      } else if (args[0].equalsIgnoreCase("delete")) {
-        if (args.length == 2) {
-          adminCommands.deleteArena(sender, args[1]);
-        } else {
-          player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
-        }
-        return true;
-      } else if (args[0].equalsIgnoreCase("settheme")) {
-        if (args.length == 2) {
-          adminCommands.setArenaTheme(sender, args[1]);
-        } else {
-          player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
-        }
-        return true;
-      } else if (args[0].equalsIgnoreCase("addvotes")) {
-        if (args.length == 3) {
-          adminCommands.addSuperVotes(sender, args[1], args[2]);
-        } else {
-          player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
-        }
-        return true;
-      } else if (args[0].equalsIgnoreCase("setvotes")) {
-        if (args.length == 3) {
-          adminCommands.setSuperVotes(sender, args[1], args[2]);
-        } else {
-          player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
-        }
-        return true;
-      } else if (args[0].equalsIgnoreCase("help")) {
-        adminCommands.sendHelp(sender);
-        return true;
-      }
-      adminCommands.sendHelp(sender);
-      List<StringMatcher.Match> matches = StringMatcher.match(args[0], Arrays.asList("addplot", "stop", "list", "forcestart", "reload", "delete", "settheme"));
-      if (!matches.isEmpty()) {
-        sender.sendMessage(ChatManager.colorMessage("Commands.Did-You-Mean").replaceAll("%command%", "bba " + matches.get(0).getMatch()));
-      }
-      return true;
-    }
-    if (cmd.getName().equalsIgnoreCase("buildbattle")) {
-      if (checkSenderIsConsole(sender)) return true;
-      Player player = (Player) sender;
-      if (args.length == 0) {
-        sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Header"));
-        sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Description"));
-        if (sender.hasPermission("buildbattle.admin")) {
-          sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Admin-Bonus-Description"));
-        }
-        sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Footer"));
-        return true;
-      }
-      if (args.length > 1) {
-        if (args[1].equalsIgnoreCase("set") || args[1].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("create")) {
-          if (checkSenderIsConsole(sender)) return true;
-          if (!hasPermission(sender, "buildbattle.admin.create")) return true;
-          performSetup(sender, args);
+    try {
+      if (cmd.getName().equalsIgnoreCase("buildbattleadmin")) {
+        if (args.length == 0) {
+          adminCommands.sendHelp(sender);
           return true;
         }
-      }
-      if (args[0].equalsIgnoreCase("stats")) {
         if (checkSenderIsConsole(sender)) return true;
-        if (args.length == 1) {
-          gameCommands.showStats((Player) sender);
-        } else {
-          if (Bukkit.getPlayer(args[1]) == null) {
-            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Player-Not-Found"));
-            return true;
-          }
-          gameCommands.showStatsOther((Player) sender, Bukkit.getPlayer(args[1]));
-        }
-        return true;
-      } else if (args[0].equalsIgnoreCase("top")) {
-        if (args.length == 2) {
-          gameCommands.sendTopStatistics(sender, args[1]);
-        } else {
-          sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Type-Name"));
-        }
-        return true;
-      } else if (args[0].equalsIgnoreCase("leave")) {
-        if (checkSenderIsConsole(sender)) return true;
-        gameCommands.leaveGame(sender);
-        return true;
-      } else if (args[0].equalsIgnoreCase("join")) {
-        if (args.length == 2) {
-          Arena arena = ArenaRegistry.getArena(args[1]);
-          if (arena == null) {
-            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
-          } else {
-            if (arena.getPlayers().size() >= arena.getMaximumPlayers()) {
-              player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Is-Full"));
-            } else if (arena.getArenaState() == ArenaState.IN_GAME) {
-              player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Started"));
-            } else {
-              ArenaManager.joinAttempt(player, arena);
-            }
-          }
-          return true;
-        }
-        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
-        return true;
-      } else if (args[0].equalsIgnoreCase("randomjoin")) {
-        if (!plugin.isBungeeActivated()) {
+        Player player = (Player) sender;
+        if (args[0].equalsIgnoreCase("addplot")) {
           if (args.length == 2) {
-            switch (args[1].toLowerCase()) {
-              case "solo":
-              case "team":
-                Arena.ArenaType type = Arena.ArenaType.valueOf(args[1].toUpperCase());
-                for (Arena arena : ArenaRegistry.getArenas()) {
-                  if (arena.getArenaType() == type) {
-                    if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
-                      ArenaManager.joinAttempt(player, arena);
-                      return true;
-                    }
-                  }
-                }
-                player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Free-Arenas"));
-                return true;
-              default:
-                player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
-                return true;
-            }
+            adminCommands.addPlot(player, args[1]);
           } else {
             player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
+          }
+          return true;
+        } else if (args[0].equalsIgnoreCase("forcestart")) {
+          if (args.length == 2) {
+            adminCommands.forceStartWithTheme(player, args[1]);
+          } else {
+            adminCommands.forceStart(player);
+          }
+          return true;
+        } else if (args[0].equalsIgnoreCase("reload")) {
+          adminCommands.reloadPlugin(player);
+          return true;
+        } else if (args[0].equalsIgnoreCase("addnpc")) {
+          adminCommands.addNPC(player);
+          return true;
+        } else if (args[0].equalsIgnoreCase("stop")) {
+          adminCommands.stopGame(sender);
+          return true;
+        } else if (args[0].equalsIgnoreCase("list")) {
+          adminCommands.printList(sender);
+          return true;
+        } else if (args[0].equalsIgnoreCase("delete")) {
+          if (args.length == 2) {
+            adminCommands.deleteArena(sender, args[1]);
+          } else {
+            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
+          }
+          return true;
+        } else if (args[0].equalsIgnoreCase("settheme")) {
+          if (args.length == 2) {
+            adminCommands.setArenaTheme(sender, args[1]);
+          } else {
+            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
+          }
+          return true;
+        } else if (args[0].equalsIgnoreCase("addvotes")) {
+          if (args.length == 3) {
+            adminCommands.addSuperVotes(sender, args[1], args[2]);
+          } else {
+            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
+          }
+          return true;
+        } else if (args[0].equalsIgnoreCase("setvotes")) {
+          if (args.length == 3) {
+            adminCommands.setSuperVotes(sender, args[1], args[2]);
+          } else {
+            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
+          }
+          return true;
+        } else if (args[0].equalsIgnoreCase("help")) {
+          adminCommands.sendHelp(sender);
+          return true;
+        }
+        adminCommands.sendHelp(sender);
+        List<StringMatcher.Match> matches = StringMatcher.match(args[0], Arrays.asList("addplot", "stop", "list", "forcestart", "reload", "delete", "settheme"));
+        if (!matches.isEmpty()) {
+          sender.sendMessage(ChatManager.colorMessage("Commands.Did-You-Mean").replaceAll("%command%", "bba " + matches.get(0).getMatch()));
+        }
+        return true;
+      }
+      if (cmd.getName().equalsIgnoreCase("buildbattle")) {
+        if (checkSenderIsConsole(sender)) return true;
+        Player player = (Player) sender;
+        if (args.length == 0) {
+          sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Header"));
+          sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Description"));
+          if (sender.hasPermission("buildbattle.admin")) {
+            sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Admin-Bonus-Description"));
+          }
+          sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Footer"));
+          return true;
+        }
+        if (args.length > 1) {
+          if (args[1].equalsIgnoreCase("set") || args[1].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("create")) {
+            if (checkSenderIsConsole(sender)) return true;
+            if (!hasPermission(sender, "buildbattle.admin.create")) return true;
+            performSetup(sender, args);
             return true;
           }
         }
-      } else if (!args[0].equalsIgnoreCase("create") && !(args.length > 1)) {
-        List<StringMatcher.Match> matches = StringMatcher.match(args[0], Arrays.asList("stats", "join", "leave"));
-        if (!matches.isEmpty()) {
-          sender.sendMessage(ChatManager.colorMessage("Commands.Did-You-Mean").replaceAll("%command%", "bb " + matches.get(0).getMatch()));
+        if (args[0].equalsIgnoreCase("stats")) {
+          if (checkSenderIsConsole(sender)) return true;
+          if (args.length == 1) {
+            gameCommands.showStats((Player) sender);
+          } else {
+            if (Bukkit.getPlayer(args[1]) == null) {
+              player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Player-Not-Found"));
+              return true;
+            }
+            gameCommands.showStatsOther((Player) sender, Bukkit.getPlayer(args[1]));
+          }
+          return true;
+        } else if (args[0].equalsIgnoreCase("top")) {
+          if (args.length == 2) {
+            gameCommands.sendTopStatistics(sender, args[1]);
+          } else {
+            sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Type-Name"));
+          }
+          return true;
+        } else if (args[0].equalsIgnoreCase("leave")) {
+          if (checkSenderIsConsole(sender)) return true;
+          gameCommands.leaveGame(sender);
+          return true;
+        } else if (args[0].equalsIgnoreCase("join")) {
+          if (args.length == 2) {
+            Arena arena = ArenaRegistry.getArena(args[1]);
+            if (arena == null) {
+              player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+            } else {
+              if (arena.getPlayers().size() >= arena.getMaximumPlayers()) {
+                player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Is-Full"));
+              } else if (arena.getArenaState() == ArenaState.IN_GAME) {
+                player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Started"));
+              } else {
+                ArenaManager.joinAttempt(player, arena);
+              }
+            }
+            return true;
+          }
+          player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
+          return true;
+        } else if (args[0].equalsIgnoreCase("randomjoin")) {
+          if (!plugin.isBungeeActivated()) {
+            if (args.length == 2) {
+              switch (args[1].toLowerCase()) {
+                case "solo":
+                case "team":
+                  Arena.ArenaType type = Arena.ArenaType.valueOf(args[1].toUpperCase());
+                  for (Arena arena : ArenaRegistry.getArenas()) {
+                    if (arena.getArenaType() == type) {
+                      if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+                        ArenaManager.joinAttempt(player, arena);
+                        return true;
+                      }
+                    }
+                  }
+                  player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Free-Arenas"));
+                  return true;
+                default:
+                  player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
+                  return true;
+              }
+            } else {
+              player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
+              return true;
+            }
+          }
+        } else if (!args[0].equalsIgnoreCase("create") && !(args.length > 1)) {
+          List<StringMatcher.Match> matches = StringMatcher.match(args[0], Arrays.asList("stats", "join", "leave"));
+          if (!matches.isEmpty()) {
+            sender.sendMessage(ChatManager.colorMessage("Commands.Did-You-Mean").replaceAll("%command%", "bb " + matches.get(0).getMatch()));
+          }
         }
+        return true;
       }
-      return true;
+      return false;
+    } catch (Exception ex){
+      new ReportedException(plugin, ex);
+      return false;
     }
-    return false;
   }
 
   private void performSetup(CommandSender sender, String[] args) {

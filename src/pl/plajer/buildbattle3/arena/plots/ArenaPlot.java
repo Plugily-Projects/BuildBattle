@@ -28,6 +28,7 @@ import java.util.UUID;
 
 import net.citizensnpcs.api.CitizensAPI;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -41,6 +42,7 @@ import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
+import pl.plajerlair.core.services.ReportedException;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -116,68 +118,76 @@ public class ArenaPlot {
   }
 
   public void fullyResetPlot() {
-    CuboidSelection cuboidSelection = new CuboidSelection(getMaxPoint().getWorld(), getMaxPoint(), getMinPoint());
-    com.sk89q.worldedit.Vector min = cuboidSelection.getNativeMinimumPoint();
-    com.sk89q.worldedit.Vector max = cuboidSelection.getNativeMaximumPoint();
-    for (int x = min.getBlockX(); x <= max.getBlockX(); x = x + 1) {
-      for (int y = min.getBlockY(); y <= max.getBlockY(); y = y + 1) {
-        for (int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
-          Location tmpblock = new Location(getMaxPoint().getWorld(), x, y, z);
-          if (tmpblock.getBlock().getType() != Material.AIR) {
-            tmpblock.getBlock().setType(Material.AIR);
+    try {
+      CuboidSelection cuboidSelection = new CuboidSelection(getMaxPoint().getWorld(), getMaxPoint(), getMinPoint());
+      com.sk89q.worldedit.Vector min = cuboidSelection.getNativeMinimumPoint();
+      com.sk89q.worldedit.Vector max = cuboidSelection.getNativeMaximumPoint();
+      for (int x = min.getBlockX(); x <= max.getBlockX(); x = x + 1) {
+        for (int y = min.getBlockY(); y <= max.getBlockY(); y = y + 1) {
+          for (int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
+            Location tmpblock = new Location(getMaxPoint().getWorld(), x, y, z);
+            if (tmpblock.getBlock().getType() != Material.AIR) {
+              tmpblock.getBlock().setType(Material.AIR);
 
+            }
           }
         }
       }
-    }
-    changeFloor(ConfigPreferences.getDefaultFloorMaterial());
-    if (uuids != null || !uuids.isEmpty()) {
-      for (UUID u : uuids) {
-        User user = UserManager.getUser(u);
-        user.setObject(null, "plot");
-        this.setOwners(new ArrayList<>());
-        this.setPoints(0);
-      }
-    }
-    getParticles().clear();
-    for (Entity entity : getCenter().getWorld().getEntities()) {
-      if (isInPlotRange(entity.getLocation(), 3)) {
-        if (JavaPlugin.getPlugin(Main.class).getServer().getPluginManager().isPluginEnabled("Citizens")) {
-          if (CitizensAPI.getNPCRegistry().isNPC(entity)) return;
-        }
-        if (entity.getType() != EntityType.PLAYER) {
-          entity.remove();
+      changeFloor(ConfigPreferences.getDefaultFloorMaterial());
+      if (uuids != null || !uuids.isEmpty()) {
+        for (UUID u : uuids) {
+          User user = UserManager.getUser(u);
+          user.setObject(null, "plot");
+          this.setOwners(new ArrayList<>());
+          this.setPoints(0);
         }
       }
+      getParticles().clear();
+      for (Entity entity : getCenter().getWorld().getEntities()) {
+        if (isInPlotRange(entity.getLocation(), 3)) {
+          if (JavaPlugin.getPlugin(Main.class).getServer().getPluginManager().isPluginEnabled("Citizens")) {
+            if (CitizensAPI.getNPCRegistry().isNPC(entity)) return;
+          }
+          if (entity.getType() != EntityType.PLAYER) {
+            entity.remove();
+          }
+        }
+      }
+    } catch (Exception ex) {
+      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
     }
   }
 
   public void resetPlot() {
-    CuboidSelection cuboidSelection = new CuboidSelection(getMaxPoint().getWorld(), getMaxPoint(), getMinPoint());
-    com.sk89q.worldedit.Vector min = cuboidSelection.getNativeMinimumPoint();
-    com.sk89q.worldedit.Vector max = cuboidSelection.getNativeMaximumPoint();
-    for (int x = min.getBlockX(); x <= max.getBlockX(); x = x + 1) {
-      for (int y = min.getBlockY(); y <= max.getBlockY(); y = y + 1) {
-        for (int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
-          Location tmpblock = new Location(getMaxPoint().getWorld(), x, y, z);
-          if (tmpblock.getBlock().getType() != Material.AIR) {
-            tmpblock.getBlock().setType(Material.AIR);
+    try {
+      CuboidSelection cuboidSelection = new CuboidSelection(getMaxPoint().getWorld(), getMaxPoint(), getMinPoint());
+      com.sk89q.worldedit.Vector min = cuboidSelection.getNativeMinimumPoint();
+      com.sk89q.worldedit.Vector max = cuboidSelection.getNativeMaximumPoint();
+      for (int x = min.getBlockX(); x <= max.getBlockX(); x = x + 1) {
+        for (int y = min.getBlockY(); y <= max.getBlockY(); y = y + 1) {
+          for (int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
+            Location tmpblock = new Location(getMaxPoint().getWorld(), x, y, z);
+            if (tmpblock.getBlock().getType() != Material.AIR) {
+              tmpblock.getBlock().setType(Material.AIR);
 
+            }
           }
         }
       }
-    }
-    changeFloor(ConfigPreferences.getDefaultFloorMaterial());
-    getParticles().clear();
-    for (Entity entity : getCenter().getWorld().getEntities()) {
-      if (isInPlotRange(entity.getLocation(), 3)) {
-        if (JavaPlugin.getPlugin(Main.class).getServer().getPluginManager().isPluginEnabled("Citizens")) {
-          if (CitizensAPI.getNPCRegistry().isNPC(entity)) continue;
-        }
-        if (entity.getType() != EntityType.PLAYER) {
-          entity.remove();
+      changeFloor(ConfigPreferences.getDefaultFloorMaterial());
+      getParticles().clear();
+      for (Entity entity : getCenter().getWorld().getEntities()) {
+        if (isInPlotRange(entity.getLocation(), 3)) {
+          if (JavaPlugin.getPlugin(Main.class).getServer().getPluginManager().isPluginEnabled("Citizens")) {
+            if (CitizensAPI.getNPCRegistry().isNPC(entity)) continue;
+          }
+          if (entity.getType() != EntityType.PLAYER) {
+            entity.remove();
+          }
         }
       }
+    } catch (Exception ex) {
+      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
     }
   }
 
@@ -232,56 +242,69 @@ public class ArenaPlot {
   }
 
   private void changeFloor(Material material) {
-    double y;
-    if (getMinPoint().getY() > getMaxPoint().getY()) {
-      y = getMaxPoint().getY() - 1;
-    } else {
-      y = getMinPoint().getY() - 1;
-    }
-    CuboidSelection cuboidSelection = new CuboidSelection(getMaxPoint().getWorld(), getMaxPoint(), getMinPoint());
-    com.sk89q.worldedit.Vector min = cuboidSelection.getNativeMinimumPoint();
-    com.sk89q.worldedit.Vector max = cuboidSelection.getNativeMaximumPoint();
-    for (int x = min.getBlockX(); x <= max.getBlockX(); x = x + 1) {
-      for (int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
-        Location tmpblock = new Location(getMaxPoint().getWorld(), x, y, z);
-        tmpblock.getBlock().setType(material);
+    try {
+      double y;
+      if (getMinPoint().getY() > getMaxPoint().getY()) {
+        y = getMaxPoint().getY() - 1;
+      } else {
+        y = getMinPoint().getY() - 1;
       }
+      CuboidSelection cuboidSelection = new CuboidSelection(getMaxPoint().getWorld(), getMaxPoint(), getMinPoint());
+      com.sk89q.worldedit.Vector min = cuboidSelection.getNativeMinimumPoint();
+      com.sk89q.worldedit.Vector max = cuboidSelection.getNativeMaximumPoint();
+      for (int x = min.getBlockX(); x <= max.getBlockX(); x = x + 1) {
+        for (int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
+          Location tmpblock = new Location(getMaxPoint().getWorld(), x, y, z);
+          tmpblock.getBlock().setType(material);
+        }
+      }
+    } catch (Exception ex){
+      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
     }
   }
 
   public void changeFloor(Material material, byte data) {
-    if (material == Material.WATER_BUCKET) material = Material.WATER;
-    if (material == Material.LAVA_BUCKET) material = Material.LAVA;
-    double y;
-    if (getMinPoint().getY() > getMaxPoint().getY()) {
-      y = getMaxPoint().getY() - 1;
-    } else {
-      y = getMinPoint().getY() - 1;
-    }
-    CuboidSelection cuboidSelection = new CuboidSelection(getMaxPoint().getWorld(), getMaxPoint(), getMinPoint());
-    com.sk89q.worldedit.Vector min = cuboidSelection.getNativeMinimumPoint();
-    com.sk89q.worldedit.Vector max = cuboidSelection.getNativeMaximumPoint();
-    for (int x = min.getBlockX(); x <= max.getBlockX(); x = x + 1) {
-      for (int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
-        Location tmpblock = new Location(getMaxPoint().getWorld(), x, y, z);
-        tmpblock.getBlock().setType(material);
-        tmpblock.getBlock().setData(data);
+    try {
+      if (material == Material.WATER_BUCKET) material = Material.WATER;
+      if (material == Material.LAVA_BUCKET) material = Material.LAVA;
+      double y;
+      if (getMinPoint().getY() > getMaxPoint().getY()) {
+        y = getMaxPoint().getY() - 1;
+      } else {
+        y = getMinPoint().getY() - 1;
       }
+      CuboidSelection cuboidSelection = new CuboidSelection(getMaxPoint().getWorld(), getMaxPoint(), getMinPoint());
+      com.sk89q.worldedit.Vector min = cuboidSelection.getNativeMinimumPoint();
+      com.sk89q.worldedit.Vector max = cuboidSelection.getNativeMaximumPoint();
+      for (int x = min.getBlockX(); x <= max.getBlockX(); x = x + 1) {
+        for (int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
+          Location tmpblock = new Location(getMaxPoint().getWorld(), x, y, z);
+          tmpblock.getBlock().setType(material);
+          tmpblock.getBlock().setData(data);
+        }
+      }
+    } catch (Exception ex){
+      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
     }
   }
 
   public Material getFloorMaterial() {
-    Location location;
-    if (getMinPoint().getY() > getMaxPoint().getY()) {
-      location = getMaxPoint().clone();
-    } else {
-      location = getMinPoint().clone();
+    try {
+      Location location;
+      if (getMinPoint().getY() > getMaxPoint().getY()) {
+        location = getMaxPoint().clone();
+      } else {
+        location = getMinPoint().clone();
+      }
+      Material material = location.add(0, -1, 0).getBlock().getType();
+      if (material == Material.WATER || material == Material.STATIONARY_WATER) return Material.WATER_BUCKET;
+      if (material == Material.LAVA || material == Material.STATIONARY_LAVA) return Material.LAVA_BUCKET;
+      if (material == Material.AIR || material == null) return Material.REDSTONE_BLOCK;
+      return material;
+    } catch (Exception ex){
+      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
+      return Material.REDSTONE_BLOCK;
     }
-    Material material = location.add(0, -1, 0).getBlock().getType();
-    if (material == Material.WATER || material == Material.STATIONARY_WATER) return Material.WATER_BUCKET;
-    if (material == Material.LAVA || material == Material.STATIONARY_LAVA) return Material.LAVA_BUCKET;
-    if (material == Material.AIR || material == null) return Material.REDSTONE_BLOCK;
-    return material;
   }
 
   public boolean isInFlyRange(Player player) {
@@ -325,26 +348,31 @@ public class ArenaPlot {
   }
 
   public Location getTeleportLocation() {
-    Location tploc = this.getCenter();
-    while (tploc.getBlock().getType() != Material.AIR || tploc.add(0, 1, 0).getBlock().getType() != Material.AIR) tploc = tploc.add(0, 1, 0);
-    boolean enclosed = false;
-    int counter = 0;
-    Location location = tploc.clone();
-    while (counter != 10) {
-      if (!(location.getBlock().getType() == Material.BARRIER || location.getBlock().getType() == Material.AIR)) {
-        enclosed = true;
-        tploc = location;
-        counter = 9;
+    try {
+      Location tploc = this.getCenter();
+      while (tploc.getBlock().getType() != Material.AIR || tploc.add(0, 1, 0).getBlock().getType() != Material.AIR) tploc = tploc.add(0, 1, 0);
+      boolean enclosed = false;
+      int counter = 0;
+      Location location = tploc.clone();
+      while (counter != 10) {
+        if (!(location.getBlock().getType() == Material.BARRIER || location.getBlock().getType() == Material.AIR)) {
+          enclosed = true;
+          tploc = location;
+          counter = 9;
+        }
+        location.add(0, 1, 0);
+        counter++;
       }
-      location.add(0, 1, 0);
-      counter++;
-    }
-    if (enclosed) {
-      while (tploc.getBlock().getType() != Material.AIR || tploc.add(0, 1, 0).getBlock().getType() != Material.AIR) {
-        tploc = tploc.add(0, 1, 0);
+      if (enclosed) {
+        while (tploc.getBlock().getType() != Material.AIR || tploc.add(0, 1, 0).getBlock().getType() != Material.AIR) {
+          tploc = tploc.add(0, 1, 0);
+        }
       }
+      return tploc;
+    } catch (Exception ex){
+      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
+      return new Location(Bukkit.getWorld("world"), 0, 0, 0);
     }
-    return tploc;
   }
 
 }

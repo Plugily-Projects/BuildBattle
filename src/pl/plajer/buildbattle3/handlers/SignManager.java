@@ -46,6 +46,7 @@ import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.arena.ArenaState;
 import pl.plajer.buildbattle3.handlers.language.LanguageManager;
 import pl.plajer.buildbattle3.handlers.language.Locale;
+import pl.plajerlair.core.services.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.MinigameUtils;
 
@@ -80,29 +81,33 @@ public class SignManager implements Listener {
 
   @EventHandler
   public void onSignChange(SignChangeEvent e) {
-    if (!e.getPlayer().hasPermission("buildbattle.admin.sign.create")) return;
-    if (!e.getLine(0).equalsIgnoreCase("[buildbattle]")) return;
-    if (e.getLine(1).isEmpty()) {
-      e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Please-Type-Arena-Name"));
-      return;
-    }
-    for (Arena arena : ArenaRegistry.getArenas()) {
-      if (arena.getID().equalsIgnoreCase(e.getLine(1))) {
-        for (int i = 0; i < signLines.size(); i++) {
-          e.setLine(i, formatSign(signLines.get(i), arena));
-        }
-        loadedSigns.put((Sign) e.getBlock().getState(), arena);
-        e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Created"));
-        String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + "," + e.getBlock().getY() + "," + e.getBlock().getZ() + ",0.0,0.0";
-        FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-        List<String> locs = config.getStringList("instances." + arena.getID() + ".signs");
-        locs.add(location);
-        config.set("instances." + arena.getID() + ".signs", locs);
-        ConfigUtils.saveConfig(plugin, config, "arenas");
+    try {
+      if (!e.getPlayer().hasPermission("buildbattle.admin.sign.create")) return;
+      if (!e.getLine(0).equalsIgnoreCase("[buildbattle]")) return;
+      if (e.getLine(1).isEmpty()) {
+        e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Please-Type-Arena-Name"));
         return;
       }
+      for (Arena arena : ArenaRegistry.getArenas()) {
+        if (arena.getID().equalsIgnoreCase(e.getLine(1))) {
+          for (int i = 0; i < signLines.size(); i++) {
+            e.setLine(i, formatSign(signLines.get(i), arena));
+          }
+          loadedSigns.put((Sign) e.getBlock().getState(), arena);
+          e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Created"));
+          String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + "," + e.getBlock().getY() + "," + e.getBlock().getZ() + ",0.0,0.0";
+          FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+          List<String> locs = config.getStringList("instances." + arena.getID() + ".signs");
+          locs.add(location);
+          config.set("instances." + arena.getID() + ".signs", locs);
+          ConfigUtils.saveConfig(plugin, config, "arenas");
+          return;
+        }
+      }
+      e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Arena-Doesnt-Exists"));
+    } catch (Exception ex){
+      new ReportedException(plugin, ex);
     }
-    e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Arena-Doesnt-Exists"));
   }
 
   private String formatSign(String msg, Arena a) {
@@ -121,24 +126,28 @@ public class SignManager implements Listener {
 
   @EventHandler
   public void onSignDestroy(BlockBreakEvent e) {
-    if (!e.getPlayer().hasPermission("buildbattle.admin.sign.break")) return;
-    if (loadedSigns.get(e.getBlock().getState()) == null) return;
-    loadedSigns.remove(e.getBlock().getState());
-    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + ".0," + e.getBlock().getY() + ".0," + e.getBlock().getZ() + ".0," + "0.0,0.0";
-    for (String arena : config.getConfigurationSection("instances").getKeys(false)) {
-      for (String sign : config.getStringList("instances." + arena + ".signs")) {
-        if (sign.equals(location)) {
-          List<String> signs = config.getStringList("instances." + arena + ".signs");
-          signs.remove(location);
-          config.set(arena + ".signs", signs);
-          ConfigUtils.saveConfig(plugin, config, "arenas");
-          e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Removed"));
-          return;
+    try {
+      if (!e.getPlayer().hasPermission("buildbattle.admin.sign.break")) return;
+      if (loadedSigns.get(e.getBlock().getState()) == null) return;
+      loadedSigns.remove(e.getBlock().getState());
+      FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+      String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + ".0," + e.getBlock().getY() + ".0," + e.getBlock().getZ() + ".0," + "0.0,0.0";
+      for (String arena : config.getConfigurationSection("instances").getKeys(false)) {
+        for (String sign : config.getStringList("instances." + arena + ".signs")) {
+          if (sign.equals(location)) {
+            List<String> signs = config.getStringList("instances." + arena + ".signs");
+            signs.remove(location);
+            config.set(arena + ".signs", signs);
+            ConfigUtils.saveConfig(plugin, config, "arenas");
+            e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Removed"));
+            return;
+          }
         }
       }
+      e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatColor.RED + "Couldn't remove sign from configuration! Please do this manually!");
+    } catch (Exception ex){
+      new ReportedException(plugin, ex);
     }
-    e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatColor.RED + "Couldn't remove sign from configuration! Please do this manually!");
   }
 
   @EventHandler

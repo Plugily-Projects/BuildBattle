@@ -63,6 +63,8 @@ import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.MessageUtils;
 import pl.plajer.buildbattle3.utils.Metrics;
+import pl.plajerlair.core.services.ReportedException;
+import pl.plajerlair.core.services.ServiceRegistry;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.UpdateChecker;
 
@@ -142,52 +144,57 @@ public class Main extends JavaPlugin {
 
   @Override
   public void onEnable() {
-    version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+    ServiceRegistry.registerService(this);
     try {
-      Class.forName("org.spigotmc.SpigotConfig");
-    } catch (Exception e) {
-      MessageUtils.thisVersionIsNotSupported();
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server software is not supported by Build Battle!");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "We support only Spigot and Spigot forks only! Shutting off...");
-      forceDisable = true;
-      getServer().getPluginManager().disablePlugin(this);
-      return;
-    }
-    if (version.contains("v1_8") || version.contains("v1_7") || version.contains("v1_6")) {
-      MessageUtils.thisVersionIsNotSupported();
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by BuildBattle!");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider updating your server version?");
-      forceDisable = true;
-      getServer().getPluginManager().disablePlugin(this);
-      return;
-    }
-    //check if using 2.0.0 releases
-    if (ConfigUtils.getConfig(this, "language").isSet("PREFIX") && ConfigUtils.getConfig(this, "language").isSet("Unlocks-at-level")) {
-      LanguageMigrator.migrateToNewFormat();
-    }
-    debug = getConfig().getBoolean("Debug");
-    debug("Main setup start", System.currentTimeMillis());
-    saveDefaultConfig();
-    LanguageManager.init(this);
-    initializeClasses();
-    if (getConfig().getBoolean("BungeeActivated")) {
-      bungeeManager = new BungeeManager(this);
-    }
-    inventoryManagerEnabled = getConfig().getBoolean("InventoryManager");
-    for (String s : filesToGenerate) {
-      ConfigUtils.getConfig(this, s);
-    }
-    if (getConfig().getBoolean("BungeeActivated")) {
-      getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-    }
-    databaseActivated = this.getConfig().getBoolean("DatabaseActivated");
-    if (databaseActivated) this.database = new MySQLDatabase(this);
-    else {
-      fileStats = new FileStats();
-    }
-    loadStatsForPlayersOnline();
-    if (getServer().getPluginManager().isPluginEnabled("Vault")) {
-      setupEconomy();
+      version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+      try {
+        Class.forName("org.spigotmc.SpigotConfig");
+      } catch (Exception e) {
+        MessageUtils.thisVersionIsNotSupported();
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server software is not supported by Build Battle!");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "We support only Spigot and Spigot forks only! Shutting off...");
+        forceDisable = true;
+        getServer().getPluginManager().disablePlugin(this);
+        return;
+      }
+      if (version.contains("v1_8") || version.contains("v1_7") || version.contains("v1_6")) {
+        MessageUtils.thisVersionIsNotSupported();
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by BuildBattle!");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider updating your server version?");
+        forceDisable = true;
+        getServer().getPluginManager().disablePlugin(this);
+        return;
+      }
+      //check if using 2.0.0 releases
+      if (ConfigUtils.getConfig(this, "language").isSet("PREFIX") && ConfigUtils.getConfig(this, "language").isSet("Unlocks-at-level")) {
+        LanguageMigrator.migrateToNewFormat();
+      }
+      debug = getConfig().getBoolean("Debug");
+      debug("Main setup start", System.currentTimeMillis());
+      saveDefaultConfig();
+      LanguageManager.init(this);
+      initializeClasses();
+      if (getConfig().getBoolean("BungeeActivated")) {
+        bungeeManager = new BungeeManager(this);
+      }
+      inventoryManagerEnabled = getConfig().getBoolean("InventoryManager");
+      for (String s : filesToGenerate) {
+        ConfigUtils.getConfig(this, s);
+      }
+      if (getConfig().getBoolean("BungeeActivated")) {
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+      }
+      databaseActivated = this.getConfig().getBoolean("DatabaseActivated");
+      if (databaseActivated) this.database = new MySQLDatabase(this);
+      else {
+        fileStats = new FileStats();
+      }
+      loadStatsForPlayersOnline();
+      if (getServer().getPluginManager().isPluginEnabled("Vault")) {
+        setupEconomy();
+      }
+    } catch (Exception ex){
+      new ReportedException(this, ex);
     }
   }
 

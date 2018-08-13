@@ -35,6 +35,7 @@ import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.stats.MySQLDatabase;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
+import pl.plajerlair.core.services.ReportedException;
 import pl.plajerlair.core.utils.UpdateChecker;
 
 /**
@@ -62,103 +63,111 @@ public class JoinEvents implements Listener {
 
   @EventHandler
   public void onJoinCheckVersion(final PlayerJoinEvent event) {
-    //we want to be the first :)
-    Bukkit.getScheduler().runTaskLater(plugin, () -> {
-      if (event.getPlayer().isOp() && !plugin.isDataEnabled()) {
-        event.getPlayer().sendMessage(ChatColor.RED + "[BuildBattle] It seems that you've disabled bStats statistics.");
-        event.getPlayer().sendMessage(ChatColor.RED + "Please consider enabling it to help us develop our plugins better!");
-        event.getPlayer().sendMessage(ChatColor.RED + "Enable it in plugins/bStats/config.yml file");
-      }
-      if (event.getPlayer().hasPermission("buildbattle.updatenotify")) {
-        if (plugin.getConfig().getBoolean("Update-Notifier.Enabled")) {
-          String currentVersion = "v" + Bukkit.getPluginManager().getPlugin("BuildBattle").getDescription().getVersion();
-          String latestVersion;
-          try {
-            UpdateChecker.checkUpdate(plugin, currentVersion, 44703);
-            latestVersion = UpdateChecker.getLatestVersion();
-            if (latestVersion != null) {
-              latestVersion = "v" + latestVersion;
-              if (latestVersion.contains("b")) {
-                event.getPlayer().sendMessage("");
-                event.getPlayer().sendMessage(ChatColor.BOLD + "BUILD BATTLE UPDATE NOTIFY");
-                event.getPlayer().sendMessage(ChatColor.RED + "BETA version of software is ready for update! Proceed with caution.");
-                event.getPlayer().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + currentVersion + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + latestVersion);
-              } else {
-                event.getPlayer().sendMessage("");
-                event.getPlayer().sendMessage(ChatColor.BOLD + "BUILD BATTLE UPDATE NOTIFY");
-                event.getPlayer().sendMessage(ChatColor.GREEN + "Software is ready for update! Download it to keep with latest changes and fixes.");
-                event.getPlayer().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + currentVersion + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + latestVersion);
+    try {
+      //we want to be the first :)
+      Bukkit.getScheduler().runTaskLater(plugin, () -> {
+        if (event.getPlayer().isOp() && !plugin.isDataEnabled()) {
+          event.getPlayer().sendMessage(ChatColor.RED + "[BuildBattle] It seems that you've disabled bStats statistics.");
+          event.getPlayer().sendMessage(ChatColor.RED + "Please consider enabling it to help us develop our plugins better!");
+          event.getPlayer().sendMessage(ChatColor.RED + "Enable it in plugins/bStats/config.yml file");
+        }
+        if (event.getPlayer().hasPermission("buildbattle.updatenotify")) {
+          if (plugin.getConfig().getBoolean("Update-Notifier.Enabled")) {
+            String currentVersion = "v" + Bukkit.getPluginManager().getPlugin("BuildBattle").getDescription().getVersion();
+            String latestVersion;
+            try {
+              UpdateChecker.checkUpdate(plugin, currentVersion, 44703);
+              latestVersion = UpdateChecker.getLatestVersion();
+              if (latestVersion != null) {
+                latestVersion = "v" + latestVersion;
+                if (latestVersion.contains("b")) {
+                  event.getPlayer().sendMessage("");
+                  event.getPlayer().sendMessage(ChatColor.BOLD + "BUILD BATTLE UPDATE NOTIFY");
+                  event.getPlayer().sendMessage(ChatColor.RED + "BETA version of software is ready for update! Proceed with caution.");
+                  event.getPlayer().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + currentVersion + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + latestVersion);
+                } else {
+                  event.getPlayer().sendMessage("");
+                  event.getPlayer().sendMessage(ChatColor.BOLD + "BUILD BATTLE UPDATE NOTIFY");
+                  event.getPlayer().sendMessage(ChatColor.GREEN + "Software is ready for update! Download it to keep with latest changes and fixes.");
+                  event.getPlayer().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + currentVersion + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + latestVersion);
+                }
               }
+            } catch (Exception ex) {
+              event.getPlayer().sendMessage(ChatColor.RED + "[BuildBattle] An error occured while checking for update!");
+              event.getPlayer().sendMessage(ChatColor.RED + "Please check internet connection or check for update via WWW site directly!");
+              event.getPlayer().sendMessage(ChatColor.RED + "WWW site https://www.spigotmc.org/resources/minigame-village-defence-1-12-and-1-8-8.41869/");
             }
-          } catch (Exception ex) {
-            event.getPlayer().sendMessage(ChatColor.RED + "[BuildBattle] An error occured while checking for update!");
-            event.getPlayer().sendMessage(ChatColor.RED + "Please check internet connection or check for update via WWW site directly!");
-            event.getPlayer().sendMessage(ChatColor.RED + "WWW site https://www.spigotmc.org/resources/minigame-village-defence-1-12-and-1-8-8.41869/");
           }
         }
-      }
-    }, 25);
+      }, 25);
+    } catch (Exception ex){
+      new ReportedException(plugin, ex);
+    }
   }
 
   @EventHandler
   public void onJoinLoadStats(final PlayerJoinEvent event) {
-    if (plugin.isBungeeActivated()) ArenaRegistry.getArenas().get(0).teleportToLobby(event.getPlayer());
-    if (!plugin.isDatabaseActivated()) {
-      List<String> temp = new ArrayList<>();
-      temp.add("gamesplayed");
-      temp.add("wins");
-      temp.add("loses");
-      temp.add("highestwin");
-      temp.add("blocksplaced");
-      temp.add("blocksbroken");
-      temp.add("particles");
-      temp.add("supervotes");
-      for (String s : temp) {
-        plugin.getFileStats().loadStat(event.getPlayer(), s);
-      }
-      return;
-    }
-    final String playername = event.getPlayer().getUniqueId().toString();
-    final Player player = event.getPlayer();
-
-    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-      MySQLDatabase database = plugin.getMySQLDatabase();
-      ResultSet resultSet = database.executeQuery("SELECT UUID from buildbattlestats WHERE UUID='" + playername + "'");
-      try {
-        if (!resultSet.next()) {
-          database.insertPlayer(playername);
-          return;
+    try {
+      if (plugin.isBungeeActivated()) ArenaRegistry.getArenas().get(0).teleportToLobby(event.getPlayer());
+      if (!plugin.isDatabaseActivated()) {
+        List<String> temp = new ArrayList<>();
+        temp.add("gamesplayed");
+        temp.add("wins");
+        temp.add("loses");
+        temp.add("highestwin");
+        temp.add("blocksplaced");
+        temp.add("blocksbroken");
+        temp.add("particles");
+        temp.add("supervotes");
+        for (String s : temp) {
+          plugin.getFileStats().loadStat(event.getPlayer(), s);
         }
-        int gamesplayed;
-        int wins;
-        int highestwin;
-        int loses;
-        int blocksPlaced;
-        int blocksBroken;
-        int particles;
-        int supervotes;
-        gamesplayed = database.getStat(player.getUniqueId().toString(), "gamesplayed");
-        wins = database.getStat(player.getUniqueId().toString(), "wins");
-        loses = database.getStat(player.getUniqueId().toString(), "loses");
-        highestwin = database.getStat(player.getUniqueId().toString(), "highestwin");
-        blocksPlaced = database.getStat(player.getUniqueId().toString(), "blocksplaced");
-        blocksBroken = database.getStat(player.getUniqueId().toString(), "blocksbroken");
-        particles = database.getStat(player.getUniqueId().toString(), "particles");
-        supervotes = database.getStat(player.getUniqueId().toString(), "supervotes");
-        User user1 = UserManager.getUser(player.getUniqueId());
-
-        user1.setInt("gamesplayed", gamesplayed);
-        user1.setInt("wins", wins);
-        user1.setInt("highestwin", highestwin);
-        user1.setInt("loses", loses);
-        user1.setInt("blocksplaced", blocksPlaced);
-        user1.setInt("blocksbroken", blocksBroken);
-        user1.setInt("particles", particles);
-        user1.setInt("supervotes", supervotes);
-      } catch (SQLException e1) {
-        System.out.print("CONNECTION FAILED FOR PLAYER " + playername);
+        return;
       }
-    });
+      final String playername = event.getPlayer().getUniqueId().toString();
+      final Player player = event.getPlayer();
+
+      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+        MySQLDatabase database = plugin.getMySQLDatabase();
+        ResultSet resultSet = database.executeQuery("SELECT UUID from buildbattlestats WHERE UUID='" + playername + "'");
+        try {
+          if (!resultSet.next()) {
+            database.insertPlayer(playername);
+            return;
+          }
+          int gamesplayed;
+          int wins;
+          int highestwin;
+          int loses;
+          int blocksPlaced;
+          int blocksBroken;
+          int particles;
+          int supervotes;
+          gamesplayed = database.getStat(player.getUniqueId().toString(), "gamesplayed");
+          wins = database.getStat(player.getUniqueId().toString(), "wins");
+          loses = database.getStat(player.getUniqueId().toString(), "loses");
+          highestwin = database.getStat(player.getUniqueId().toString(), "highestwin");
+          blocksPlaced = database.getStat(player.getUniqueId().toString(), "blocksplaced");
+          blocksBroken = database.getStat(player.getUniqueId().toString(), "blocksbroken");
+          particles = database.getStat(player.getUniqueId().toString(), "particles");
+          supervotes = database.getStat(player.getUniqueId().toString(), "supervotes");
+          User user1 = UserManager.getUser(player.getUniqueId());
+
+          user1.setInt("gamesplayed", gamesplayed);
+          user1.setInt("wins", wins);
+          user1.setInt("highestwin", highestwin);
+          user1.setInt("loses", loses);
+          user1.setInt("blocksplaced", blocksPlaced);
+          user1.setInt("blocksbroken", blocksBroken);
+          user1.setInt("particles", particles);
+          user1.setInt("supervotes", supervotes);
+        } catch (SQLException e1) {
+          System.out.print("CONNECTION FAILED FOR PLAYER " + playername);
+        }
+      });
+    } catch (Exception ex){
+      new ReportedException(plugin, ex);
+    }
   }
 
 }

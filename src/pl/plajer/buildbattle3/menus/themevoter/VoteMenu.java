@@ -31,12 +31,15 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle3.ConfigPreferences;
+import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.ItemBuilder;
+import pl.plajerlair.core.services.ReportedException;
 import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
@@ -60,39 +63,43 @@ public class VoteMenu {
   }
 
   public void resetPoll() {
-    List<String> themesTotal = ConfigPreferences.getThemes();
-    //random themes order
-    Collections.shuffle(themesTotal);
-    List<String> randomThemes = new ArrayList<>();
-    if (themesTotal.size() <= 5) {
-      randomThemes.addAll(themesTotal);
-    } else {
-      Iterator<String> itr = themesTotal.iterator();
-      int i = 0;
-      while (itr.hasNext()) {
-        if (i == 5) break;
-        randomThemes.add(itr.next());
-        itr.remove();
-        i++;
+    try {
+      List<String> themesTotal = ConfigPreferences.getThemes();
+      //random themes order
+      Collections.shuffle(themesTotal);
+      List<String> randomThemes = new ArrayList<>();
+      if (themesTotal.size() <= 5) {
+        randomThemes.addAll(themesTotal);
+      } else {
+        Iterator<String> itr = themesTotal.iterator();
+        int i = 0;
+        while (itr.hasNext()) {
+          if (i == 5) break;
+          randomThemes.add(itr.next());
+          itr.remove();
+          i++;
+        }
       }
-    }
-    this.inventory = Bukkit.createInventory(null, 9 * (randomThemes.size() > 5 ? 5 : randomThemes.size()), ChatManager.colorMessage("Menus.Theme-Voting.Inventory-Name"));
-    for (int i = 0; i < randomThemes.size(); i++) {
-      setItem(new ItemBuilder(new ItemStack(Material.SIGN))
-              .name(ChatManager.colorMessage("Menus.Theme-Voting.Theme-Item-Name").replace("%theme%", randomThemes.get(i)))
-              .lore(ChatManager.colorMessage("Menus.Theme-Voting.Theme-Item-Lore").replace("%theme%", randomThemes.get(i))
-                      .replace("%percent%", String.valueOf("0.0")).replace("%time-left%", String.valueOf(arena.getTimer())).split(";"))
-              .build(), i * 9);
-      setItem(new ItemBuilder(new ItemStack(Material.IRON_FENCE)).build(), (i * 9) + 1);
-      for (int j = 0; j < 6; j++) {
-        setItem(new ItemBuilder(new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte) 14)).build(), (i * 9) + 1 + j + 1);
+      this.inventory = Bukkit.createInventory(null, 9 * (randomThemes.size() > 5 ? 5 : randomThemes.size()), ChatManager.colorMessage("Menus.Theme-Voting.Inventory-Name"));
+      for (int i = 0; i < randomThemes.size(); i++) {
+        setItem(new ItemBuilder(new ItemStack(Material.SIGN))
+                .name(ChatManager.colorMessage("Menus.Theme-Voting.Theme-Item-Name").replace("%theme%", randomThemes.get(i)))
+                .lore(ChatManager.colorMessage("Menus.Theme-Voting.Theme-Item-Lore").replace("%theme%", randomThemes.get(i))
+                        .replace("%percent%", String.valueOf("0.0")).replace("%time-left%", String.valueOf(arena.getTimer())).split(";"))
+                .build(), i * 9);
+        setItem(new ItemBuilder(new ItemStack(Material.IRON_FENCE)).build(), (i * 9) + 1);
+        for (int j = 0; j < 6; j++) {
+          setItem(new ItemBuilder(new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte) 14)).build(), (i * 9) + 1 + j + 1);
+        }
+        setItem(new ItemBuilder(new ItemStack(Material.PAPER))
+                .name(ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Item-Name").replace("%theme%", randomThemes.get(i)))
+                .lore(ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Item-Lore").replace("%theme%", randomThemes.get(i)).split(";"))
+                .build(), (i * 9) + 8);
       }
-      setItem(new ItemBuilder(new ItemStack(Material.PAPER))
-              .name(ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Item-Name").replace("%theme%", randomThemes.get(i)))
-              .lore(ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Item-Lore").replace("%theme%", randomThemes.get(i)).split(";"))
-              .build(), (i * 9) + 8);
+      votePoll = new VotePoll(arena, randomThemes);
+    } catch (Exception ex){
+      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
     }
-    votePoll = new VotePoll(arena, randomThemes);
   }
 
   public Inventory getInventory() {
@@ -104,48 +111,52 @@ public class VoteMenu {
   }
 
   public void updateInventory(Player player) {
-    int totalVotes = votePoll.getPlayerVote().size();
-    int i = 0;
-    for (String theme : votePoll.getVotedThemes().keySet()) {
-      double percent;
-      if (votePoll.getVotedThemes().get(theme) == Double.NaN || votePoll.getVotedThemes().get(theme) == 0) {
-        percent = 0.0;
-      } else {
-        percent = ((double) votePoll.getVotedThemes().get(theme) / (double) totalVotes) * 100;
-      }
-      ItemStack stack = new ItemBuilder(new ItemStack(Material.SIGN))
-              .name(ChatManager.colorMessage("Menus.Theme-Voting.Theme-Item-Name").replace("%theme%", theme))
-              .lore(ChatManager.colorMessage("Menus.Theme-Voting.Theme-Item-Lore").replace("%theme%", theme)
-                      .replace("%percent%", String.valueOf(MinigameUtils.round(percent, 2))).replace("%time-left%", String.valueOf(arena.getTimer())).split(";"))
-              .build();
-      if (votePoll.getPlayerVote().containsKey(player) && votePoll.getPlayerVote().get(player).equals(theme)) {
-        ItemMeta meta = stack.getItemMeta();
-        meta.addEnchant(Enchantment.DAMAGE_ALL, 1, true);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        stack.setItemMeta(meta);
-      }
-      setItem(stack, i * 9);
-      for (int j = 0; j < 6; j++) {
-        setItem(new ItemBuilder(new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte) 14)).build(), (i * 9) + 1 + j + 1);
-      }
-      setItem(new ItemBuilder(new ItemStack(Material.PAPER))
-              .name(ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Item-Name").replace("%theme%", theme))
-              .lore(ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Item-Lore").replace("%theme%", theme)
-                      .replace("%owned%", String.valueOf(UserManager.getUser(player.getUniqueId()).getInt("supervotes"))).split(";"))
-              .build(), (i * 9) + 8);
-      if (votePoll.getVotedThemes().get(theme) > 0) {
-        double vote = 0;
-        for (int j = 0; j < 6; j++) {
-          if (vote > percent) {
-            break;
-          }
-          setItem(new ItemBuilder(new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte) 5)).build(), (i * 9) + 1 + j + 1);
-          vote += 16.7;
+    try {
+      int totalVotes = votePoll.getPlayerVote().size();
+      int i = 0;
+      for (String theme : votePoll.getVotedThemes().keySet()) {
+        double percent;
+        if (votePoll.getVotedThemes().get(theme) == Double.NaN || votePoll.getVotedThemes().get(theme) == 0) {
+          percent = 0.0;
+        } else {
+          percent = ((double) votePoll.getVotedThemes().get(theme) / (double) totalVotes) * 100;
         }
+        ItemStack stack = new ItemBuilder(new ItemStack(Material.SIGN))
+                .name(ChatManager.colorMessage("Menus.Theme-Voting.Theme-Item-Name").replace("%theme%", theme))
+                .lore(ChatManager.colorMessage("Menus.Theme-Voting.Theme-Item-Lore").replace("%theme%", theme)
+                        .replace("%percent%", String.valueOf(MinigameUtils.round(percent, 2))).replace("%time-left%", String.valueOf(arena.getTimer())).split(";"))
+                .build();
+        if (votePoll.getPlayerVote().containsKey(player) && votePoll.getPlayerVote().get(player).equals(theme)) {
+          ItemMeta meta = stack.getItemMeta();
+          meta.addEnchant(Enchantment.DAMAGE_ALL, 1, true);
+          meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+          stack.setItemMeta(meta);
+        }
+        setItem(stack, i * 9);
+        for (int j = 0; j < 6; j++) {
+          setItem(new ItemBuilder(new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte) 14)).build(), (i * 9) + 1 + j + 1);
+        }
+        setItem(new ItemBuilder(new ItemStack(Material.PAPER))
+                .name(ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Item-Name").replace("%theme%", theme))
+                .lore(ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Item-Lore").replace("%theme%", theme)
+                        .replace("%owned%", String.valueOf(UserManager.getUser(player.getUniqueId()).getInt("supervotes"))).split(";"))
+                .build(), (i * 9) + 8);
+        if (votePoll.getVotedThemes().get(theme) > 0) {
+          double vote = 0;
+          for (int j = 0; j < 6; j++) {
+            if (vote > percent) {
+              break;
+            }
+            setItem(new ItemBuilder(new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte) 5)).build(), (i * 9) + 1 + j + 1);
+            vote += 16.7;
+          }
+        }
+        i++;
       }
-      i++;
+      player.openInventory(inventory);
+    } catch (Exception ex){
+      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
     }
-    player.openInventory(inventory);
   }
 
 }
