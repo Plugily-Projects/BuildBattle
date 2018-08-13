@@ -437,6 +437,7 @@ public class GameEvents implements Listener {
 
   @EventHandler
   public void onPlayerDropItem(PlayerDropItemEvent event) {
+    if(ArenaRegistry.getArena(event.getPlayer()) == null) return;
     if (event.getItemDrop().getItemStack() == null) return;
     ItemStack drop = event.getItemDrop().getItemStack();
     if (!drop.hasItemMeta()) return;
