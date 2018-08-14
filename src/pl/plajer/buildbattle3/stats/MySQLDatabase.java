@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.utils.MessageUtils;
@@ -53,12 +54,14 @@ public class MySQLDatabase {
       connection.createStatement().executeUpdate(
               "CREATE TABLE IF NOT EXISTS `buildbattlestats` (\n"
                       + "  `UUID` text NOT NULL,\n"
+                      + "  `name` text NOT NULL,\n"
                       + "  `loses` int(11) NOT NULL DEFAULT '0',\n"
                       + "  `wins` int(11) NOT NULL DEFAULT '0',\n"
                       + "  `highestwin` int(11) NOT NULL DEFAULT '0',\n"
                       + "  `gamesplayed` int(11) NOT NULL DEFAULT '0',\n"
                       + "  `blocksbroken` int(11) NOT NULL DEFAULT '0',\n"
                       + "  `blocksplaced` int(11) NOT NULL DEFAULT '0',\n"
+                      + "  `supervotes` int(11) NOT NULL DEFAULT '0',\n"
                       + "  `particles` int(11) NOT NULL DEFAULT '0');");
 
       //temporary workaround
@@ -70,7 +73,7 @@ public class MySQLDatabase {
         }
       }
       try {
-        connection.createStatement().executeUpdate("ALTER TABLE buildbattlestats ADD name text NOT NULL DEFAULT 'Unknown Player'");
+        connection.createStatement().executeUpdate("ALTER TABLE buildbattlestats ADD name text NOT NULL");
       } catch (MySQLSyntaxErrorException e) {
         if (!e.getMessage().contains("Duplicate column name")) {
           e.printStackTrace();
@@ -110,8 +113,8 @@ public class MySQLDatabase {
     }
   }
 
-  public void insertPlayer(String UUID) {
-    executeUpdate("INSERT INTO `buildbattlestats` (UUID,gamesplayed) VALUES ('" + UUID + "',0)");
+  public void insertPlayer(Player player) {
+    executeUpdate("INSERT INTO `buildbattlestats` (UUID,name,gamesplayed) VALUES ('" + player.getUniqueId().toString() + "','" + player.getName() + "',0)");
   }
 
   public void closeDatabase() {

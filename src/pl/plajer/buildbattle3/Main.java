@@ -394,45 +394,40 @@ public class Main extends JavaPlugin {
         }
         return;
       }
-      Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable() {
-        final String playerName = player.getUniqueId().toString();
-
-        @Override
-        public void run() {
-          MySQLDatabase database = getMySQLDatabase();
-          ResultSet resultSet = database.executeQuery("SELECT UUID from buildbattlestats WHERE UUID='" + playerName + "'");
-          try {
-            if (!resultSet.next()) {
-              database.insertPlayer(playerName);
-            }
-
-            int gamesplayed;
-            int wins;
-            int highestwin;
-            int loses;
-            int blocksPlaced;
-            int blocksBroken;
-            int particles;
-            gamesplayed = database.getStat(player.getUniqueId().toString(), "gamesplayed");
-            wins = database.getStat(player.getUniqueId().toString(), "wins");
-            loses = database.getStat(player.getUniqueId().toString(), "loses");
-            highestwin = database.getStat(player.getUniqueId().toString(), "highestwin");
-            blocksPlaced = database.getStat(player.getUniqueId().toString(), "blocksplaced");
-            blocksBroken = database.getStat(player.getUniqueId().toString(), "blocksbroken");
-            particles = database.getStat(player.getUniqueId().toString(), "particles");
-            User user = UserManager.getUser(player.getUniqueId());
-
-            user.setInt("gamesplayed", gamesplayed);
-            user.setInt("wins", wins);
-            user.setInt("highestwin", highestwin);
-            user.setInt("loses", loses);
-            user.setInt("blocksplaced", blocksPlaced);
-            user.setInt("blocksbroken", blocksBroken);
-            user.setInt("particles", particles);
-          } catch (SQLException e1) {
-            System.out.print("CONNECTION FAILED FOR PLAYER " + player.getName());
-            //e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
+        MySQLDatabase database = getMySQLDatabase();
+        ResultSet resultSet = database.executeQuery("SELECT UUID from buildbattlestats WHERE UUID='" + player.getUniqueId().toString() + "'");
+        try {
+          if (!resultSet.next()) {
+            database.insertPlayer(player);
           }
+
+          int gamesplayed;
+          int wins;
+          int highestwin;
+          int loses;
+          int blocksPlaced;
+          int blocksBroken;
+          int particles;
+          gamesplayed = database.getStat(player.getUniqueId().toString(), "gamesplayed");
+          wins = database.getStat(player.getUniqueId().toString(), "wins");
+          loses = database.getStat(player.getUniqueId().toString(), "loses");
+          highestwin = database.getStat(player.getUniqueId().toString(), "highestwin");
+          blocksPlaced = database.getStat(player.getUniqueId().toString(), "blocksplaced");
+          blocksBroken = database.getStat(player.getUniqueId().toString(), "blocksbroken");
+          particles = database.getStat(player.getUniqueId().toString(), "particles");
+          User user = UserManager.getUser(player.getUniqueId());
+
+          user.setInt("gamesplayed", gamesplayed);
+          user.setInt("wins", wins);
+          user.setInt("highestwin", highestwin);
+          user.setInt("loses", loses);
+          user.setInt("blocksplaced", blocksPlaced);
+          user.setInt("blocksbroken", blocksBroken);
+          user.setInt("particles", particles);
+        } catch (SQLException e1) {
+          System.out.print("CONNECTION FAILED FOR PLAYER " + player.getName());
+          //e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
       });
     }

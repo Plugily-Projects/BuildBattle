@@ -18,8 +18,6 @@
 
 package pl.plajer.buildbattle3.arena.plots;
 
-import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +31,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.WeatherType;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -42,6 +41,7 @@ import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
+import pl.plajer.buildbattle3.utils.Cuboid;
 import pl.plajerlair.core.services.ReportedException;
 
 /**
@@ -119,18 +119,10 @@ public class ArenaPlot {
 
   public void fullyResetPlot() {
     try {
-      CuboidSelection cuboidSelection = new CuboidSelection(getMaxPoint().getWorld(), getMaxPoint(), getMinPoint());
-      com.sk89q.worldedit.Vector min = cuboidSelection.getNativeMinimumPoint();
-      com.sk89q.worldedit.Vector max = cuboidSelection.getNativeMaximumPoint();
-      for (int x = min.getBlockX(); x <= max.getBlockX(); x = x + 1) {
-        for (int y = min.getBlockY(); y <= max.getBlockY(); y = y + 1) {
-          for (int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
-            Location tmpblock = new Location(getMaxPoint().getWorld(), x, y, z);
-            if (tmpblock.getBlock().getType() != Material.AIR) {
-              tmpblock.getBlock().setType(Material.AIR);
-
-            }
-          }
+      Cuboid cuboid = new Cuboid(getMinPoint(), getMaxPoint());
+      for(Block block : cuboid.blockList()){
+        if(block.getType() != Material.AIR) {
+          block.setType(Material.AIR);
         }
       }
       changeFloor(ConfigPreferences.getDefaultFloorMaterial());
@@ -160,18 +152,10 @@ public class ArenaPlot {
 
   public void resetPlot() {
     try {
-      CuboidSelection cuboidSelection = new CuboidSelection(getMaxPoint().getWorld(), getMaxPoint(), getMinPoint());
-      com.sk89q.worldedit.Vector min = cuboidSelection.getNativeMinimumPoint();
-      com.sk89q.worldedit.Vector max = cuboidSelection.getNativeMaximumPoint();
-      for (int x = min.getBlockX(); x <= max.getBlockX(); x = x + 1) {
-        for (int y = min.getBlockY(); y <= max.getBlockY(); y = y + 1) {
-          for (int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
-            Location tmpblock = new Location(getMaxPoint().getWorld(), x, y, z);
-            if (tmpblock.getBlock().getType() != Material.AIR) {
-              tmpblock.getBlock().setType(Material.AIR);
-
-            }
-          }
+      Cuboid cuboid = new Cuboid(getMinPoint(), getMaxPoint());
+      for(Block block : cuboid.blockList()){
+        if(block.getType() != Material.AIR) {
+          block.setType(Material.AIR);
         }
       }
       changeFloor(ConfigPreferences.getDefaultFloorMaterial());
@@ -249,16 +233,16 @@ public class ArenaPlot {
       } else {
         y = getMinPoint().getY() - 1;
       }
-      CuboidSelection cuboidSelection = new CuboidSelection(getMaxPoint().getWorld(), getMaxPoint(), getMinPoint());
-      com.sk89q.worldedit.Vector min = cuboidSelection.getNativeMinimumPoint();
-      com.sk89q.worldedit.Vector max = cuboidSelection.getNativeMaximumPoint();
+      Cuboid cuboid = new Cuboid(getMinPoint(), getMaxPoint());
+      Location min = cuboid.getPoint1();
+      Location max = cuboid.getPoint2();
       for (int x = min.getBlockX(); x <= max.getBlockX(); x = x + 1) {
         for (int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
           Location tmpblock = new Location(getMaxPoint().getWorld(), x, y, z);
           tmpblock.getBlock().setType(material);
         }
       }
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
     }
   }
@@ -273,9 +257,9 @@ public class ArenaPlot {
       } else {
         y = getMinPoint().getY() - 1;
       }
-      CuboidSelection cuboidSelection = new CuboidSelection(getMaxPoint().getWorld(), getMaxPoint(), getMinPoint());
-      com.sk89q.worldedit.Vector min = cuboidSelection.getNativeMinimumPoint();
-      com.sk89q.worldedit.Vector max = cuboidSelection.getNativeMaximumPoint();
+      Cuboid cuboid = new Cuboid(getMinPoint(), getMaxPoint());
+      Location min = cuboid.getPoint1();
+      Location max = cuboid.getPoint2();
       for (int x = min.getBlockX(); x <= max.getBlockX(); x = x + 1) {
         for (int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
           Location tmpblock = new Location(getMaxPoint().getWorld(), x, y, z);
@@ -283,7 +267,7 @@ public class ArenaPlot {
           tmpblock.getBlock().setData(data);
         }
       }
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
     }
   }
@@ -301,7 +285,7 @@ public class ArenaPlot {
       if (material == Material.LAVA || material == Material.STATIONARY_LAVA) return Material.LAVA_BUCKET;
       if (material == Material.AIR || material == null) return Material.REDSTONE_BLOCK;
       return material;
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
       return Material.REDSTONE_BLOCK;
     }
@@ -369,7 +353,7 @@ public class ArenaPlot {
         }
       }
       return tploc;
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
       return new Location(Bukkit.getWorld("world"), 0, 0, 0);
     }

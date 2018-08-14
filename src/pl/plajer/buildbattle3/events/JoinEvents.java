@@ -124,15 +124,14 @@ public class JoinEvents implements Listener {
         }
         return;
       }
-      final String playername = event.getPlayer().getUniqueId().toString();
       final Player player = event.getPlayer();
 
       Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
         MySQLDatabase database = plugin.getMySQLDatabase();
-        ResultSet resultSet = database.executeQuery("SELECT UUID from buildbattlestats WHERE UUID='" + playername + "'");
+        ResultSet resultSet = database.executeQuery("SELECT UUID from buildbattlestats WHERE UUID='" + player.getUniqueId().toString() + "'");
         try {
           if (!resultSet.next()) {
-            database.insertPlayer(playername);
+            database.insertPlayer(player);
             return;
           }
           int gamesplayed;
@@ -162,7 +161,7 @@ public class JoinEvents implements Listener {
           user1.setInt("particles", particles);
           user1.setInt("supervotes", supervotes);
         } catch (SQLException e1) {
-          System.out.print("CONNECTION FAILED FOR PLAYER " + playername);
+          System.out.print("CONNECTION FAILED FOR PLAYER " + player.getName());
         }
       });
     } catch (Exception ex){

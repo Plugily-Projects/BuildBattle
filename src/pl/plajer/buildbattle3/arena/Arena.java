@@ -524,8 +524,8 @@ public class Arena extends BukkitRunnable {
 
   private void updateScoreboard() {
     if (getPlayers().size() == 0 || getArenaState() == ArenaState.RESTARTING) return;
+    MinigameScoreboard scoreboard;
     for (Player p : getPlayers()) {
-      MinigameScoreboard scoreboard;
       List<String> lines;
       if (LanguageManager.getPluginLocale() == Locale.ENGLISH) {
         lines = LanguageManager.getLanguageFile().getStringList("Scoreboard.Content." + getArenaState().getFormattedName());
@@ -541,9 +541,10 @@ public class Arena extends BukkitRunnable {
       }
       scoreboard = new MinigameScoreboard("PL_BB3", "BB_CR", ChatManager.colorMessage("Scoreboard.Title"));
       scoreboard.setTitle(ChatManager.colorMessage("Scoreboard.Title"));
-      for (int i = 0; i < lines.size(); i++) {
-        scoreboard.addRow(formatScoreboardLine(lines.get(i), p));
+      for (String line : lines) {
+        scoreboard.addRow(formatScoreboardLine(line, p));
       }
+      scoreboard.finish();
       scoreboard.display(p);
     }
   }

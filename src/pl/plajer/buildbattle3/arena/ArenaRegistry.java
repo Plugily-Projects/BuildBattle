@@ -23,12 +23,16 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.plots.ArenaPlot;
+import pl.plajer.buildbattle3.utils.Cuboid;
 import pl.plajerlair.core.services.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.MinigameUtils;
@@ -149,7 +153,7 @@ public class ArenaRegistry {
         arena.start();
       }
       Main.debug("Arenas registration completed", System.currentTimeMillis());
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }
