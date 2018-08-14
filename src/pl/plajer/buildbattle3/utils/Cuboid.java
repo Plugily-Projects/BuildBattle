@@ -68,7 +68,6 @@ public class Cuboid {
       for (int y = this.yMin; y <= this.yMax; ++y) {
         for (int z = this.zMin; z <= this.zMax; ++z) {
           final Block b = this.world.getBlockAt(x, y, z);
-          if(b.getType() != Material.AIR) Bukkit.broadcastMessage("non air!!");
           bL.add(b);
         }
       }
