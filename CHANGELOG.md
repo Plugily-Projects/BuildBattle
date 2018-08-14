@@ -5,6 +5,7 @@
 * Hooked code with Error reporter service
 * Fixed MySQL error
 * Removed WorldEdit from arena usages (only for setup now)
+* Added ability to edit floor in game (requires arenas.yml edit or new setup!)
 
 ### 3.4.1 Release (30.07/03.08.2018)
 * Added public access to MySQL executeUpdate method

@@ -125,7 +125,6 @@ public class ArenaPlot {
           block.setType(Material.AIR);
         }
       }
-      changeFloor(ConfigPreferences.getDefaultFloorMaterial());
       if (uuids != null || !uuids.isEmpty()) {
         for (UUID u : uuids) {
           User user = UserManager.getUser(u);
@@ -145,6 +144,7 @@ public class ArenaPlot {
           }
         }
       }
+      changeFloor(ConfigPreferences.getDefaultFloorMaterial());
     } catch (Exception ex) {
       new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
     }
@@ -158,7 +158,6 @@ public class ArenaPlot {
           block.setType(Material.AIR);
         }
       }
-      changeFloor(ConfigPreferences.getDefaultFloorMaterial());
       getParticles().clear();
       for (Entity entity : getCenter().getWorld().getEntities()) {
         if (isInPlotRange(entity.getLocation(), 3)) {
@@ -170,6 +169,7 @@ public class ArenaPlot {
           }
         }
       }
+      changeFloor(ConfigPreferences.getDefaultFloorMaterial());
     } catch (Exception ex) {
       new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
     }
@@ -229,9 +229,9 @@ public class ArenaPlot {
     try {
       double y;
       if (getMinPoint().getY() > getMaxPoint().getY()) {
-        y = getMaxPoint().getY() - 1;
+        y = getMaxPoint().getY();
       } else {
-        y = getMinPoint().getY() - 1;
+        y = getMinPoint().getY();
       }
       Cuboid cuboid = new Cuboid(getMinPoint(), getMaxPoint());
       Location min = cuboid.getPoint1();
@@ -253,9 +253,9 @@ public class ArenaPlot {
       if (material == Material.LAVA_BUCKET) material = Material.LAVA;
       double y;
       if (getMinPoint().getY() > getMaxPoint().getY()) {
-        y = getMaxPoint().getY() - 1;
+        y = getMaxPoint().getY();
       } else {
-        y = getMinPoint().getY() - 1;
+        y = getMinPoint().getY();
       }
       Cuboid cuboid = new Cuboid(getMinPoint(), getMaxPoint());
       Location min = cuboid.getPoint1();
