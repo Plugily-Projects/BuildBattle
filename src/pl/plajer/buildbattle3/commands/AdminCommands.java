@@ -18,9 +18,6 @@
 
 package pl.plajer.buildbattle3.commands;
 
-import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
-import com.sk89q.worldedit.bukkit.selections.Selection;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -50,6 +47,7 @@ import pl.plajer.buildbattle3.arena.ArenaState;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
+import pl.plajer.buildbattle3.utils.CuboidSelector;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.MinigameUtils;
 
@@ -119,22 +117,18 @@ public class AdminCommands extends MainCommand {
       player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
       return;
     }
-    Selection selection = plugin.getWorldEditPlugin().getSelection(player);
-    if (selection instanceof CuboidSelection) {
-      FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-      if (config.contains("instances." + arena + ".plots")) {
-        MinigameUtils.saveLoc(plugin, config, "arenas", "instances." + arena + ".plots." + (config.getConfigurationSection("instances." + arena + ".plots").getKeys(false).size()) + ".minpoint", selection
-                .getMinimumPoint());
-        MinigameUtils.saveLoc(plugin, config, "arenas", "instances." + arena + ".plots." + (config.getConfigurationSection("instances." + arena + ".plots").getKeys(false).size()) + ".maxpoint", selection
-                .getMaximumPoint());
-      } else {
-        MinigameUtils.saveLoc(plugin, config, "arenas", "instances." + arena + ".plots.0.minpoint", selection.getMinimumPoint());
-        MinigameUtils.saveLoc(plugin, config, "arenas", "instances." + arena + ".plots.0.maxpoint", selection.getMaximumPoint());
-      }
-      player.sendMessage(ChatColor.GREEN + "Plot added to instance " + ChatColor.RED + arena);
-    } else {
-      player.sendMessage(ChatColor.RED + "You don't have the right selection!");
+    CuboidSelector.Selection selection = plugin.getCuboidSelector().getSelection(player);
+    if (selection.getFirstPos() == null || selection.getSecondPos() == null) {
+      player.sendMessage(ChatManager.colorRawMessage(ChatManager.PLUGIN_PREFIX + "&cPlease select both corners before adding a plot!"));
     }
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+    int id = 0;
+    if (config.contains("instances." + arena + ".plots")) {
+      id = config.getConfigurationSection("instances." + arena + ".plots").getKeys(false).size();
+    }
+    MinigameUtils.saveLoc(plugin, config, "arenas", "instances." + arena + ".plots." + id + ".minpoint", selection.getFirstPos());
+    MinigameUtils.saveLoc(plugin, config, "arenas", "instances." + arena + ".plots." + id + ".maxpoint", selection.getSecondPos());
+    player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&aPlot with ID &e" + id + "&a added to arena instance &e" + arena));
   }
 
   public void forceStart(Player player) {

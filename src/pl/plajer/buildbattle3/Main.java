@@ -18,8 +18,6 @@
 
 package pl.plajer.buildbattle3;
 
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -30,7 +28,6 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -61,6 +58,7 @@ import pl.plajer.buildbattle3.stats.FileStats;
 import pl.plajer.buildbattle3.stats.MySQLDatabase;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
+import pl.plajer.buildbattle3.utils.CuboidSelector;
 import pl.plajer.buildbattle3.utils.MessageUtils;
 import pl.plajer.buildbattle3.utils.Metrics;
 import pl.plajerlair.core.services.ReportedException;
@@ -85,6 +83,7 @@ public class Main extends JavaPlugin {
   private MainCommand mainCommand;
   private boolean inventoryManagerEnabled;
   private SignManager signManager;
+  private CuboidSelector cuboidSelector;
   private String version;
   private List<String> filesToGenerate = Arrays.asList("arenas", "EntityMenu", "particles", "SpecialItems", "stats", "voteItems", "mysql");
 
@@ -100,6 +99,10 @@ public class Main extends JavaPlugin {
     if (elapsed > 15) {
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Village Debugger] Slow server response, games may be affected.");
     }
+  }
+
+  public CuboidSelector getCuboidSelector() {
+    return cuboidSelector;
   }
 
   public BungeeManager getBungeeManager() {
@@ -193,7 +196,7 @@ public class Main extends JavaPlugin {
       if (getServer().getPluginManager().isPluginEnabled("Vault")) {
         setupEconomy();
       }
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(this, ex);
     }
   }
@@ -365,6 +368,7 @@ public class Main extends JavaPlugin {
     if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       new PlaceholderManager().register();
     }
+    cuboidSelector = new CuboidSelector(this);
     checkUpdate();
     new GameEvents(this);
     new VoteMenuListener(this);
@@ -440,12 +444,6 @@ public class Main extends JavaPlugin {
         }
       });
     }
-  }
-
-  public WorldEditPlugin getWorldEditPlugin() {
-    Plugin p = Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
-    if (p instanceof WorldEditPlugin) return (WorldEditPlugin) p;
-    return null;
   }
 
 }
