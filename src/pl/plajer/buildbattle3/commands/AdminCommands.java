@@ -70,7 +70,9 @@ public class AdminCommands extends MainCommand {
     command.add(new CommandData("/bba addplot " + gold + "<arena>", "/bba addplot <arena>",
             gray + "Add new game plot to the arena\n" + gold + "Permission: " + gray + "buildbattle.admin.addplot"));
     command.add(new CommandData("/bba removeplot " + gold + "<arena> <plot ID>", "/bba removeplot <arena> <id>",
-            gray + "Add new game plot to the arena\n" + gold + "Permission: " + gray + "buildbattle.admin.removeplot"));
+            gray + "Remove game plot from the arena\n" + gold + "Permission: " + gray + "buildbattle.admin.removeplot"));
+    command.add(new CommandData("/bba plotwand", "/bba plotwand",
+            gray + "Get plot wand to create plots\n" + gold + "Permission: " + gray + "buildbattle.admin.plotwand"));
     command.add(new CommandData("/bba addnpc", "/bba addnpc",
             gray + "Add new NPC to the game plots\n" + gold + "Permission: " + gray + "buildbattle.admin.addnpc\n" + gold + "" + ChatColor.BOLD + "Requires Citizen plugin!"));
     command.add(new CommandData("/bba settheme " + gold + "<theme>", "/bba settheme <theme>",
@@ -120,7 +122,7 @@ public class AdminCommands extends MainCommand {
       return;
     }
     CuboidSelector.Selection selection = plugin.getCuboidSelector().getSelection(player);
-    if (selection.getFirstPos() == null || selection.getSecondPos() == null) {
+    if (selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
       player.sendMessage(ChatManager.colorRawMessage(ChatManager.PLUGIN_PREFIX + "&cPlease select both corners before adding a plot!"));
     }
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");

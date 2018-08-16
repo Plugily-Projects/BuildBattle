@@ -113,6 +113,15 @@ public class MainCommand implements CommandExecutor {
             player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
           }
           return true;
+        } else if (args[0].equalsIgnoreCase("plotwand")) {
+          if(checkSenderIsConsole(sender)){
+            return true;
+          }
+          if(!hasPermission(sender, "buildbattle.admin.plotwand")){
+            return true;
+          }
+          plugin.getCuboidSelector().giveSelectorWand((Player) sender);
+          return true;
         } else if (args[0].equalsIgnoreCase("forcestart")) {
           if (args.length == 2) {
             adminCommands.forceStartWithTheme(player, args[1]);

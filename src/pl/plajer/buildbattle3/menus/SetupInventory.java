@@ -102,7 +102,7 @@ public class SetupInventory {
             .lore(ChatColor.GRAY + "in WorldEdit (select minimum and maximum")
             .lore(ChatColor.GRAY + "plot opposite selections with wand)")
             .lore(ChatColor.GRAY + "And click this.")
-            .lore(ChatColor.RED + "DO NOT SELECT THE FLOOR!")
+            .lore(ChatColor.GREEN + "PLEASE SELECT FLOOR TOO!")
             .lore(isOptionDoneList("instances." + arena.getID() + ".plots"))
             .build());
     addItem(new ItemBuilder(new ItemStack(Material.GRASS))

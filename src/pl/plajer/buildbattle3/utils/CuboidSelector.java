@@ -55,10 +55,7 @@ public class CuboidSelector implements Listener {
   }
 
   public Selection getSelection(Player p) {
-    if (selections.containsKey(p)) {
-      return selections.get(selections.get(p));
-    }
-    return null;
+    return selections.getOrDefault(p, null);
   }
 
   public void removeSelection(Player p) {
@@ -67,7 +64,9 @@ public class CuboidSelector implements Listener {
 
   @EventHandler
   public void onWandUse(PlayerInteractEvent e) {
-    if (e.getItem().hasItemMeta() && e.getItem().getItemMeta().hasDisplayName() && e.getItem().getItemMeta().getDisplayName().equals(ChatManager.colorRawMessage("&6&lPlot selector"))) {
+    if (e.getItem() != null && e.getItem().hasItemMeta() && e.getItem().getItemMeta().hasDisplayName() &&
+            e.getItem().getItemMeta().getDisplayName().equals(ChatManager.colorRawMessage("&6&lPlot selector"))) {
+      e.setCancelled(true);
       Action action = e.getAction();
       switch (action) {
         case LEFT_CLICK_BLOCK:
