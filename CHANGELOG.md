@@ -12,6 +12,7 @@ could be seen in scoreboard for a second
 * Plot reset now include weather reset
 * Added Turkish and Indonesian locales (thanks to POEditor contributors)
 * Added /bba removeplot command
+* Added new command /bba plotwand
 
 ### 3.4.1 Release (30.07/03.08.2018)
 * Added public access to MySQL executeUpdate method
