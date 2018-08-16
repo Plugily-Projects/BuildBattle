@@ -125,6 +125,16 @@ public class ArenaPlot {
           block.setType(Material.AIR);
         }
       }
+      for(UUID u : uuids){
+        Player p = Bukkit.getPlayer(u);
+        if (p.getWorld().hasStorm()) {
+          p.setPlayerWeather(WeatherType.DOWNFALL);
+          setWeatherType(WeatherType.DOWNFALL);
+        } else {
+          p.setPlayerWeather(WeatherType.CLEAR);
+          setWeatherType(WeatherType.CLEAR);
+        }
+      }
       if (uuids != null || !uuids.isEmpty()) {
         for (UUID u : uuids) {
           User user = UserManager.getUser(u);
@@ -159,6 +169,16 @@ public class ArenaPlot {
         }
       }
       getParticles().clear();
+      for(UUID u : uuids){
+        Player p = Bukkit.getPlayer(u);
+        if (p.getWorld().hasStorm()) {
+          p.setPlayerWeather(WeatherType.DOWNFALL);
+          setWeatherType(WeatherType.DOWNFALL);
+        } else {
+          p.setPlayerWeather(WeatherType.CLEAR);
+          setWeatherType(WeatherType.CLEAR);
+        }
+      }
       for (Entity entity : getCenter().getWorld().getEntities()) {
         if (isInPlotRange(entity.getLocation(), 3)) {
           if (JavaPlugin.getPlugin(Main.class).getServer().getPluginManager().isPluginEnabled("Citizens")) {

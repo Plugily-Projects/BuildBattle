@@ -20,8 +20,10 @@ package pl.plajer.buildbattle3.arena;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -238,7 +240,7 @@ public class Arena extends BukkitRunnable {
             setGameState(ArenaState.IN_GAME);
             getPlotManager().distributePlots();
             getPlotManager().teleportToPlots();
-            setTimer(BUILD_TIME);
+            setTimer(ConfigPreferences.getThemeVoteTimer());
             for (Player player : getPlayers()) {
               player.getInventory().clear();
               player.setGameMode(GameMode.CREATIVE);
@@ -249,6 +251,7 @@ public class Arena extends BukkitRunnable {
               //to prevent Multiverse chaning gamemode bug
               Bukkit.getScheduler().runTaskLater(plugin, () -> player.setGameMode(GameMode.CREATIVE), 20);
             }
+            break;
           }
           setTimer(getTimer() - 1);
           break;
@@ -364,8 +367,8 @@ public class Arena extends BukkitRunnable {
                 }
               }
               calculateResults();
-              announceResults();
               ArenaPlot winnerPlot = getPlotManager().getPlot(topList.get(1).get(0));
+              announceResults();
 
               for (Player player : getPlayers()) {
                 player.teleport(winnerPlot.getTeleportLocation());
@@ -444,7 +447,7 @@ public class Arena extends BukkitRunnable {
           setThemeVoteTime(true);
           voteMenu.resetPoll();
       }
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }
@@ -670,63 +673,46 @@ public class Arena extends BukkitRunnable {
     } else {
       messages = Arrays.asList(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Summary-Message").split(";"));
     }
-    for (Player player : getPlayers()) {
-      for (String summary : messages) {
-        String message = summary;
-        if (message.contains("%place_one%")) {
-          message = message.replace("%place_one%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-One")
-                  .replace("%player%", formatWinners(topList.get(1)))
-                  .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(1).get(0)).getPoints())));
+    List<String> formattedSummary = new ArrayList<>();
+    for (String summary : messages) {
+      String message = summary;
+      message = ChatManager.colorRawMessage(message);
+      for (int i = 1; i < 4; i++) {
+        String access = "One";
+        switch (i) {
+          case 1:
+            access = "One";
+            break;
+          case 2:
+            access = "Two";
+            break;
+          case 3:
+            access = "Three";
+            break;
         }
-        if (message.contains("%place_two%")) {
-          if (topList.containsKey(2) && topList.get(2) != null && !topList.get(2).isEmpty()) {
-            if (getPlotManager().getPlot(topList.get(1).get(0)).getPoints() == getPlotManager().getPlot(topList.get(2).get(0)).getPoints()) {
-              message = message.replace("%place_two%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Two")
-                      .replace("%player%", formatWinners(topList.get(2)))
-                      .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(2).get(0)).getPoints())));
-            } else {
-              message = message.replace("%place_two%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Two")
-                      .replace("%player%", formatWinners(topList.get(2)))
-                      .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(2).get(0)).getPoints())));
-            }
+        if (message.contains("%place_" + access.toLowerCase() + "%")) {
+          if (topList.containsKey(i) && topList.get(i) != null && !topList.get(i).isEmpty()) {
+            message = StringUtils.replace(message, "%place_" + access.toLowerCase() + "%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-" + access)
+                    .replace("%player%", formatWinners(topList.get(i)))
+                    .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(i).get(0)).getPoints())));
           } else {
-            message = message.replace("%place_two%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Two")
+            message = StringUtils.replace(message, "%place_" + access.toLowerCase() + "%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-" + access)
                     .replace("%player%", "None")
                     .replace("%number%", "none"));
           }
         }
-        if (message.contains("%place_three%")) {
-          if (topList.containsKey(3) && topList.get(3) != null && !topList.get(3).isEmpty()) {
-            if (getPlotManager().getPlot(topList.get(1).get(0)).getPoints() == getPlotManager().getPlot(topList.get(3).get(0)).getPoints()) {
-              message = message.replace("%place_three%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Three")
-                      .replace("%player%", formatWinners(topList.get(3)))
-                      .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(3).get(0)).getPoints())));
-            } else if (getPlotManager().getPlot(topList.get(2).get(0)).getPoints() == getPlotManager().getPlot(topList.get(3).get(0)).getPoints()) {
-              message = message.replace("%place_three%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Three")
-                      .replace("%player%", formatWinners(topList.get(3)))
-                      .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(3).get(0)).getPoints())));
-            } else {
-              message = message.replace("%place_three%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Three")
-                      .replace("%player%", formatWinners(topList.get(3)))
-                      .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(3).get(0)).getPoints())));
-            }
-          } else {
-            message = message.replace("%place_three%", ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Place-Three")
-                    .replace("%player%", "None")
-                    .replace("%number%", "none"));
-          }
-        }
-        MessageUtils.sendCenteredMessage(player, message);
       }
+      formattedSummary.add(message);
     }
+    getPlayers().forEach((player) -> formattedSummary.forEach((msg) -> MessageUtils.sendCenteredMessage(player, msg)));
     for (Integer rang : topList.keySet()) {
       if (topList.get(rang) != null) {
         for (UUID u : topList.get(rang)) {
           Player p = plugin.getServer().getPlayer(u);
           if (p != null) {
-            if (rang > 3) {
-              p.sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Summary-Other-Place").replaceAll("%number%", String.valueOf(rang)));
-            }
+            //if (rang > 3) {
+            p.sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Summary-Other-Place").replaceAll("%number%", String.valueOf(rang)));
+            //}
             if (rang == 1) {
               UserManager.getUser(p.getUniqueId()).addInt("wins", 1);
               if (getPlotManager().getPlot(u).getPoints() > UserManager.getUser(u).getInt("highestwin")) {
@@ -741,21 +727,22 @@ public class Arena extends BukkitRunnable {
     }
   }
 
-  private String formatWinners(List<UUID> uuids) {
+  private String formatWinners(final List<UUID> winners) {
+    List<UUID> uuids = new ArrayList<>(winners);
     StringBuilder builder = new StringBuilder(plugin.getServer().getOfflinePlayer(uuids.get(0)).getName());
-    if(uuids.size() > 1){
-      uuids.remove(0);
-      for(UUID uuid : uuids){
-        builder.append(" & ").append(plugin.getServer().getOfflinePlayer(uuid).getName());
-      }
+    if (uuids.size() == 1) {
       return builder.toString();
     } else {
+      uuids.remove(0);
+      for (UUID uuid : uuids) {
+        builder.append(" & ").append(plugin.getServer().getOfflinePlayer(uuid).getName());
+      }
       return builder.toString();
     }
   }
 
   private void calculateResults() {
-    for (int b = 1; b <= 10; b++) {
+    for (int b = 1; b <= getPlayers().size(); b++) {
       topList.put(b, new ArrayList<>());
     }
     for (ArenaPlot buildPlot : getPlotManager().getPlots()) {
@@ -766,21 +753,40 @@ public class Arena extends BukkitRunnable {
           break;
         }
         if (i > getPlotManager().getPlot(topList.get(rang).get(0)).getPoints()) {
-          insertScore(rang, buildPlot.getOwners());
+          moveScore(rang, buildPlot.getOwners());
           break;
-        } else if(i == getPlotManager().getPlot(topList.get(rang).get(0)).getPoints()) {
+        }
+        if(i == getPlotManager().getPlot(topList.get(rang).get(0)).getPoints()){
           List<UUID> winners = topList.get(rang);
           winners.addAll(buildPlot.getOwners());
           topList.put(rang, winners);
+          break;
         }
       }
     }
+    /*for (ArenaPlot plot : getPlotManager().getPlots()) {
+      int i = plot.getPoints();
+      for (int pos : topList.keySet()) {
+        if (topList.get(pos) == null || topList.get(pos).isEmpty() || topList.get(pos).get(0) == null || getPlotManager().getPlot(topList.get(pos).get(0)) == null) {
+          topList.put(pos, plot.getOwners());
+          break;
+        }
+        if (i > getPlotManager().getPlot(topList.get(pos).get(0)).getPoints()) {
+          moveScore(pos, plot.getOwners());
+        } else if (i == getPlotManager().getPlot(topList.get(pos).get(0)).getPoints()) {
+          List<UUID> members = topList.get(pos);
+          members.addAll(plot.getOwners());
+          topList.put(pos, members);
+          break;
+        }
+      }
+    }*/
   }
 
-  private void insertScore(int rang, List<UUID> uuids) {
-    List<UUID> after = topList.get(rang);
-    topList.put(rang, uuids);
-    if (!(rang > 10) && after != null) insertScore(rang + 1, after);
+  private void moveScore(int pos, List<UUID> uuids) {
+    List<UUID> after = topList.get(pos);
+    topList.put(pos, uuids);
+    if (!(pos > getPlayers().size()) && after != null) moveScore(pos + 1, after);
   }
 
   /**
@@ -961,7 +967,7 @@ public class Arena extends BukkitRunnable {
       for (Player player : getPlayers()) {
         player.teleport(location);
       }
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }
@@ -979,7 +985,7 @@ public class Arena extends BukkitRunnable {
       }
 
       player.teleport(location);
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }
