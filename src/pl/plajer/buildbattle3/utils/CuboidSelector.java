@@ -42,7 +42,7 @@ public class CuboidSelector implements Listener {
 
   private Map<Player, Selection> selections = new HashMap<>();
 
-  public CuboidSelector(Main plugin){
+  public CuboidSelector(Main plugin) {
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
@@ -54,11 +54,15 @@ public class CuboidSelector implements Listener {
     p.sendMessage(ChatManager.colorRawMessage(ChatManager.PLUGIN_PREFIX + "&eSelect bottom corner using left click!"));
   }
 
-  public Selection getSelection(Player p){
-    if(selections.containsKey(p)){
+  public Selection getSelection(Player p) {
+    if (selections.containsKey(p)) {
       return selections.get(selections.get(p));
     }
     return null;
+  }
+
+  public void removeSelection(Player p) {
+    selections.remove(p);
   }
 
   @EventHandler
@@ -71,7 +75,7 @@ public class CuboidSelector implements Listener {
           e.getPlayer().sendMessage(ChatManager.colorRawMessage(ChatManager.PLUGIN_PREFIX + "&eNow select top corner using right click!"));
           break;
         case RIGHT_CLICK_BLOCK:
-          if(!selections.containsKey(e.getPlayer())){
+          if (!selections.containsKey(e.getPlayer())) {
             e.getPlayer().sendMessage(ChatManager.colorRawMessage(ChatManager.PLUGIN_PREFIX + "&cPlease select bottom corner using left click first!"));
             break;
           }

@@ -69,6 +69,8 @@ public class AdminCommands extends MainCommand {
             gray + "Edit existing arena\n" + gold + "Permission: " + gray + "buildbattle.admin.edit"));
     command.add(new CommandData("/bba addplot " + gold + "<arena>", "/bba addplot <arena>",
             gray + "Add new game plot to the arena\n" + gold + "Permission: " + gray + "buildbattle.admin.addplot"));
+    command.add(new CommandData("/bba removeplot " + gold + "<arena> <plot ID>", "/bba removeplot <arena> <id>",
+            gray + "Add new game plot to the arena\n" + gold + "Permission: " + gray + "buildbattle.admin.removeplot"));
     command.add(new CommandData("/bba addnpc", "/bba addnpc",
             gray + "Add new NPC to the game plots\n" + gold + "Permission: " + gray + "buildbattle.admin.addnpc\n" + gold + "" + ChatColor.BOLD + "Requires Citizen plugin!"));
     command.add(new CommandData("/bba settheme " + gold + "<theme>", "/bba settheme <theme>",
@@ -129,6 +131,23 @@ public class AdminCommands extends MainCommand {
     MinigameUtils.saveLoc(plugin, config, "arenas", "instances." + arena + ".plots." + id + ".minpoint", selection.getFirstPos());
     MinigameUtils.saveLoc(plugin, config, "arenas", "instances." + arena + ".plots." + id + ".maxpoint", selection.getSecondPos());
     player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&aPlot with ID &e" + id + "&a added to arena instance &e" + arena));
+    plugin.getCuboidSelector().removeSelection(player);
+  }
+
+  public void removePlot(Player player, String arena, String plotID){
+    if (!hasPermission(player, "buildbattle.admin.removeplot")) return;
+    if (ArenaRegistry.getArena(arena) == null) {
+      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+      return;
+    }
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+    if (config.contains("instances." + arena + ".plots." + plotID)) {
+      config.set("instances." + arena + ".plots." + plotID, null);
+      ConfigUtils.saveConfig(plugin, config, "arenas");
+      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&aPlot with ID &e" + plotID + "&a removed from arena &e" + arena));
+    } else {
+      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&cPlot with that ID doesn't exist!"));
+    }
   }
 
   public void forceStart(Player player) {

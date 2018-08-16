@@ -42,7 +42,7 @@ public class TabCompletion implements TabCompleter {
   public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
     if (!(sender instanceof Player)) return null;
     if (cmd.getName().equalsIgnoreCase("buildbattleadmin") && args.length == 1) {
-      return Arrays.asList("addplot", "addnpc", "stop", "list", "forcestart", "reload", "delete", "addvotes", "setvotes");
+      return Arrays.asList("addplot", "removeplot", "addnpc", "stop", "list", "forcestart", "reload", "delete", "addvotes", "setvotes");
     }
     if (cmd.getName().equalsIgnoreCase("buildbattle") && args.length == 1) {
       if (!plugin.isBungeeActivated()) {

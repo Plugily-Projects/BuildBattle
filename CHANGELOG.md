@@ -4,13 +4,14 @@
 * Built against PLCore API
 * Hooked code with Error reporter service
 * Fixed MySQL error
-* Removed WorldEdit from arena usages (only for setup now)
+* Removed WorldEdit from arena usages
 * Added ability to edit floor in game (requires arenas.yml edit or new setup!)
 * Added joints when users have same points in voting time
 * Fixed small problem when game was started and voting for theme started, timer was set for build time instead of voting time and it
 could be seen in scoreboard for a second
 * Plot reset now include weather reset
 * Added Turkish and Indonesian locales (thanks to POEditor contributors)
+* Added /bba removeplot command
 
 ### 3.4.1 Release (30.07/03.08.2018)
 * Added public access to MySQL executeUpdate method

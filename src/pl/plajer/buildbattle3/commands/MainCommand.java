@@ -106,6 +106,13 @@ public class MainCommand implements CommandExecutor {
             player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
           }
           return true;
+        } else if (args[0].equalsIgnoreCase("removeplot")) {
+          if (args.length == 3) {
+            adminCommands.removePlot(player, args[1], args[2]);
+          } else {
+            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
+          }
+          return true;
         } else if (args[0].equalsIgnoreCase("forcestart")) {
           if (args.length == 2) {
             adminCommands.forceStartWithTheme(player, args[1]);

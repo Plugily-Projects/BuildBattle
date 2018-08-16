@@ -26,6 +26,7 @@ permissions:
       buildbattle.admin.reload: true
       buildbattle.admin.forcestart: true
       buildbattle.admin.addplot: true
+      buildbattle.admin.removeplot: true
       buildbattle.admin.list: true
       buildbattle.admin.delete: true
       buildbattle.admin.create: true
