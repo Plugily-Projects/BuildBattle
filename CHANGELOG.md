@@ -10,6 +10,7 @@
 * Fixed small problem when game was started and voting for theme started, timer was set for build time instead of voting time and it
 could be seen in scoreboard for a second
 * Plot reset now include weather reset
+* Added Turkish and Indonesian locales (thanks to POEditor contributors)
 
 ### 3.4.1 Release (30.07/03.08.2018)
 * Added public access to MySQL executeUpdate method

@@ -122,6 +122,17 @@ public class LanguageManager {
       case "vn":
         pluginLocale = Locale.VIETNAMESE;
         break;
+      case "turkish":
+      case "türk":
+      case "turk":
+      case "tr":
+        pluginLocale = Locale.TURKISH;
+        break;
+      case "indonesian":
+      case "indonesia":
+      case "id":
+        pluginLocale = Locale.INDONESIAN;
+        break;
       default:
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Plugin locale is invalid! Using default one...");
         pluginLocale = Locale.ENGLISH;
@@ -147,6 +158,7 @@ public class LanguageManager {
           case "hu-HU":
           case "ko-KR":
           case "fr-FR":
+          case "tr-TR":
             hasLocale = true;
             localeName = locale.getLocaleName();
         }
@@ -163,6 +175,8 @@ public class LanguageManager {
           case "ZH":
           case "KR":
           case "FR":
+          case "ID":
+          case "TR":
             hasLocale = true;
             localeName = locale.getDisplayName();
         }
