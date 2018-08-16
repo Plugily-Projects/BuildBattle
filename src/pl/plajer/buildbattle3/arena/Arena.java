@@ -105,6 +105,7 @@ public class Arena extends BukkitRunnable {
   private BossBar gameBar;
   private ArenaType arenaType;
   private VoteMenu voteMenu;
+  private Map<String, List<String>> scoreboardContents = new HashMap<>();
 
   public Arena(String ID) {
     gameState = ArenaState.WAITING_FOR_PLAYERS;
@@ -115,6 +116,22 @@ public class Arena extends BukkitRunnable {
     plotManager = new ArenaPlotManager(this);
     voteMenu = new VoteMenu(this);
     voteMenu.resetPoll();
+
+    List<String> lines;
+    for (ArenaState state : ArenaState.values()) {
+      if (LanguageManager.getPluginLocale() == Locale.ENGLISH) {
+        lines = LanguageManager.getLanguageFile().getStringList("Scoreboard.Content." + getArenaState().getFormattedName());
+      } else {
+        lines = Arrays.asList(ChatManager.colorMessage("Scoreboard.Content." + getArenaState().getFormattedName()).split(";"));
+      }
+      scoreboardContents.put(state.getFormattedName(), lines);
+    }
+    if (LanguageManager.getPluginLocale() == Locale.ENGLISH) {
+      lines = LanguageManager.getLanguageFile().getStringList("Scoreboard.Content.Playing-Teams");
+    } else {
+      lines = Arrays.asList(ChatManager.colorMessage("Scoreboard.Content.Playing-Teams").split(";"));
+    }
+    scoreboardContents.put(ArenaState.IN_GAME.getFormattedName() + "-Teams", lines);
   }
 
   /**
@@ -529,21 +546,11 @@ public class Arena extends BukkitRunnable {
     if (getPlayers().size() == 0 || getArenaState() == ArenaState.RESTARTING) return;
     MinigameScoreboard scoreboard;
     for (Player p : getPlayers()) {
-      List<String> lines;
-      if (LanguageManager.getPluginLocale() == Locale.ENGLISH) {
-        lines = LanguageManager.getLanguageFile().getStringList("Scoreboard.Content." + getArenaState().getFormattedName());
-      } else {
-        lines = Arrays.asList(ChatManager.colorMessage("Scoreboard.Content." + getArenaState().getFormattedName()).split(";"));
-      }
-      if (getArenaState() == ArenaState.IN_GAME && getArenaType() == ArenaType.TEAM) {
-        if (LanguageManager.getPluginLocale() == Locale.ENGLISH) {
-          lines = LanguageManager.getLanguageFile().getStringList("Scoreboard.Content." + getArenaState().getFormattedName() + "-Teams");
-        } else {
-          lines = Arrays.asList(ChatManager.colorMessage("Scoreboard.Content." + getArenaState().getFormattedName() + "-Teams").split(";"));
-        }
-      }
       scoreboard = new MinigameScoreboard("PL_BB3", "BB_CR", ChatManager.colorMessage("Scoreboard.Title"));
-      scoreboard.setTitle(ChatManager.colorMessage("Scoreboard.Title"));
+      List<String> lines = scoreboardContents.get(getArenaState().getFormattedName());
+      if(getArenaType() == ArenaType.TEAM && getArenaState() == ArenaState.IN_GAME){
+        lines = scoreboardContents.get(getArenaState().getFormattedName() + "-Teams");
+      }
       for (String line : lines) {
         scoreboard.addRow(formatScoreboardLine(line, p));
       }
@@ -764,23 +771,6 @@ public class Arena extends BukkitRunnable {
         }
       }
     }
-    /*for (ArenaPlot plot : getPlotManager().getPlots()) {
-      int i = plot.getPoints();
-      for (int pos : topList.keySet()) {
-        if (topList.get(pos) == null || topList.get(pos).isEmpty() || topList.get(pos).get(0) == null || getPlotManager().getPlot(topList.get(pos).get(0)) == null) {
-          topList.put(pos, plot.getOwners());
-          break;
-        }
-        if (i > getPlotManager().getPlot(topList.get(pos).get(0)).getPoints()) {
-          moveScore(pos, plot.getOwners());
-        } else if (i == getPlotManager().getPlot(topList.get(pos).get(0)).getPoints()) {
-          List<UUID> members = topList.get(pos);
-          members.addAll(plot.getOwners());
-          topList.put(pos, members);
-          break;
-        }
-      }
-    }*/
   }
 
   private void moveScore(int pos, List<UUID> uuids) {
