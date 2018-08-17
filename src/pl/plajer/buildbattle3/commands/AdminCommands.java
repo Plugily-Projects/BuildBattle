@@ -124,6 +124,7 @@ public class AdminCommands extends MainCommand {
     CuboidSelector.Selection selection = plugin.getCuboidSelector().getSelection(player);
     if (selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
       player.sendMessage(ChatManager.colorRawMessage(ChatManager.PLUGIN_PREFIX + "&cPlease select both corners before adding a plot!"));
+      return;
     }
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
     int id = 0;
