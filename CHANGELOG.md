@@ -1,6 +1,9 @@
 ## BuildBattle 3 changelog
 
-### 3.5.0 Release (08.08.2018)
+### 3.5.1 Release (17.08.2018)
+* Fixed NumberFormatException for language.yml migrator - this error is very rare to occur in normal environment but it was reported so I fixed it
+
+### 3.5.0 Release (08/16.08.2018)
 * Built against PLCore API
 * Hooked code with Error reporter service
 * Fixed MySQL error

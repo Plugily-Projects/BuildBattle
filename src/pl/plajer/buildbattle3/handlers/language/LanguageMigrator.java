@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -105,7 +106,10 @@ public class LanguageMigrator {
     if (LanguageManager.getDefaultLanguageMessage("File-Version-Do-Not-Edit").equals(String.valueOf(LANGUAGE_FILE_VERSION))) return;
     Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[BuildBattle] [System notify] Your language file is outdated! Updating...");
 
-    int version = Integer.valueOf(LanguageManager.getDefaultLanguageMessage("File-Version-Do-Not-Edit"));
+    int version = 0;
+    if(NumberUtils.isNumber(LanguageManager.getDefaultLanguageMessage("File-Version-Do-Not-Edit"))){
+      version = Integer.valueOf(LanguageManager.getDefaultLanguageMessage("File-Version-Do-Not-Edit"));
+    }
     LanguageMigrator.updateLanguageVersionControl(version);
 
     File file = new File(plugin.getDataFolder() + "/language.yml");
