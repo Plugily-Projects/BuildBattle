@@ -10,7 +10,6 @@ Commands:
   Teleported-To-The-Lobby: "&aYou've been teleported to the lobby!"
   No-Permission: "&cYou don't have permission to use this command!"
   No-Arena-Like-That: "&cNo arena with that ID!"
-  No-Playing: "&cYou're not playing!"
   Arena-Is-Full: "&cThis arena is full, sorry!"
   Arena-Started: "&cThis arena already started, sorry!"
   Wait-For-Start: "&cYou must wait for arena start!"

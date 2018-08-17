@@ -98,10 +98,11 @@ public class SetupInventory {
             .build());
     addItem(new ItemBuilder(new ItemStack(Material.BARRIER))
             .name(ChatColor.GOLD + "► Add game plot")
-            .lore(ChatColor.GRAY + "Select your plot with Cuboid Selction")
-            .lore(ChatColor.GRAY + "in WorldEdit (select minimum and maximum")
-            .lore(ChatColor.GRAY + "plot opposite selections with wand)")
+            .lore(ChatColor.GRAY + "Select your plot with our built-in")
+            .lore(ChatColor.GRAY + "selector (select minimum and maximum")
+            .lore(ChatColor.GRAY + "plot opposite selections with built-in wand)")
             .lore(ChatColor.GRAY + "And click this.")
+            .lore(ChatColor.GRAY + "Command for wand is: " + ChatColor.YELLOW + "/bba plotwand")
             .lore(ChatColor.GREEN + "PLEASE SELECT FLOOR TOO!")
             .lore(isOptionDoneList("instances." + arena.getID() + ".plots"))
             .build());
