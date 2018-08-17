@@ -21,7 +21,6 @@
 
 **Thanks to these companies for providing free licenses for Village Defense open source work:**
 * Code Whale Inc. - POEditor open source project license
-* JetBrains s.r.o. - IntelliJ IDEA Ultimate license for non commercial and open source developement
 
 **Also thanks to every bug reporters for reporting us those nasty bugs, and code contributors for making Village Defense better!**
 
