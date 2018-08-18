@@ -340,7 +340,7 @@ public class Arena extends BukkitRunnable {
                 User user = UserManager.getUser(player.getUniqueId());
                 ArenaPlot buildPlot = (ArenaPlot) user.getObject("plot");
                 if (buildPlot != null) {
-                  if (!buildPlot.isInFlyRange(player)) {
+                  if (!buildPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
                     player.teleport(buildPlot.getTeleportLocation());
                     player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Cant-Fly-Outside-Plot"));
                   }

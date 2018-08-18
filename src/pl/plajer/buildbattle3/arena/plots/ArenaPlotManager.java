@@ -131,12 +131,12 @@ public class ArenaPlotManager {
     try {
       for (ArenaPlot buildPlot : plots) {
         if (buildPlot.getOwners() != null || !buildPlot.getOwners().isEmpty()) {
-          Location tploc = buildPlot.getCenter();
+          Location tploc = buildPlot.getCuboid().getCenter();
           while (tploc.getBlock().getType() != Material.AIR) tploc = tploc.add(0, 1, 0);
           for (UUID u : buildPlot.getOwners()) {
             Player player = Bukkit.getServer().getPlayer(u);
             if (player != null) {
-              player.teleport(buildPlot.getCenter());
+              player.teleport(buildPlot.getCuboid().getCenter());
             }
           }
         }

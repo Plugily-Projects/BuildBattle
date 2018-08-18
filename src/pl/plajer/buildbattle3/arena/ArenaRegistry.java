@@ -131,8 +131,8 @@ public class ArenaRegistry {
             for (String plotName : config.getConfigurationSection(s + "plots").getKeys(false)) {
               if (config.isSet(s + "plots." + plotName + ".maxpoint") && config.isSet(s + "plots." + plotName + ".minpoint")) {
                 ArenaPlot buildPlot = new ArenaPlot();
-                buildPlot.setMaxPoint(MinigameUtils.getLocation(config.getString(s + "plots." + plotName + ".maxpoint")));
-                buildPlot.setMinPoint(MinigameUtils.getLocation(config.getString(s + "plots." + plotName + ".minpoint")));
+                buildPlot.setCuboid(new Cuboid(MinigameUtils.getLocation(config.getString(s + "plots." + plotName + ".minpoint")),
+                        MinigameUtils.getLocation(config.getString(s + "plots." + plotName + ".maxpoint"))));
                 buildPlot.fullyResetPlot();
                 arena.getPlotManager().addBuildPlot(buildPlot);
               } else {

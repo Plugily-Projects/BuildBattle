@@ -167,7 +167,7 @@ public class GameEvents implements Listener {
       for (Arena arena : ArenaRegistry.getArenas()) {
         for (ArenaPlot buildPlot : arena.getPlotManager().getPlots()) {
           for (Block block : event.getBlocks()) {
-            if (!buildPlot.isInPlotRange(block.getLocation(), -1) && buildPlot.isInPlot(event.getBlock().getLocation())) {
+            if (!buildPlot.getCuboid().isInWithMarge(block.getLocation(), -1) && buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
               event.setCancelled(true);
             }
           }
@@ -192,7 +192,7 @@ public class GameEvents implements Listener {
     try {
       for (Arena arena : ArenaRegistry.getArenas()) {
         for (ArenaPlot buildPlot : arena.getPlotManager().getPlots()) {
-          if (!buildPlot.isInPlot(event.getToBlock().getLocation()) && buildPlot.isInPlot(event.getBlock().getLocation())) {
+          if (!buildPlot.getCuboid().isIn(event.getToBlock().getLocation()) && buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
             event.setCancelled(true);
           }
         }
@@ -207,10 +207,10 @@ public class GameEvents implements Listener {
     try {
       for (Arena arena : ArenaRegistry.getArenas()) {
         for (ArenaPlot buildPlot : arena.getPlotManager().getPlots()) {
-          if (buildPlot.isInPlotRange(event.getEntity().getLocation(), 0)) {
+          if (buildPlot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 0)) {
             event.blockList().clear();
             event.setCancelled(true);
-          } else if (buildPlot.isInPlotRange(event.getEntity().getLocation(), 5)) {
+          } else if (buildPlot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 5)) {
             event.getEntity().getLocation().getBlock().setType(Material.TNT);
             event.blockList().clear();
             event.setCancelled(true);
@@ -263,7 +263,7 @@ public class GameEvents implements Listener {
       ArenaPlot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
       if (buildPlot == null) return;
       for (BlockState blockState : event.getBlocks()) {
-        if (!buildPlot.isInPlot(blockState.getLocation())) blockState.setType(Material.AIR);
+        if (!buildPlot.getCuboid().isIn(blockState.getLocation())) blockState.setType(Material.AIR);
       }
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
@@ -274,7 +274,7 @@ public class GameEvents implements Listener {
   public void onDispense(BlockDispenseEvent event) {
     for (Arena arena : ArenaRegistry.getArenas()) {
       for (ArenaPlot buildPlot : arena.getPlotManager().getPlots()) {
-        if (!buildPlot.isInPlotRange(event.getBlock().getLocation(), -1) && buildPlot.isInPlotRange(event.getBlock().getLocation(), 5)) {
+        if (!buildPlot.getCuboid().isInWithMarge(event.getBlock().getLocation(), -1) && buildPlot.getCuboid().isInWithMarge(event.getBlock().getLocation(), 5)) {
           event.setCancelled(true);
         }
       }
@@ -425,7 +425,7 @@ public class GameEvents implements Listener {
       if (arena == null) return;
       ArenaPlot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
       if (buildPlot == null) return;
-      if (!buildPlot.isInPlot(event.getBlockClicked().getRelative(event.getBlockFace()).getLocation())) event.setCancelled(true);
+      if (!buildPlot.getCuboid().isIn(event.getBlockClicked().getRelative(event.getBlockFace()).getLocation())) event.setCancelled(true);
     } catch (Exception ex){
       new ReportedException(plugin, ex);
     }
@@ -436,7 +436,7 @@ public class GameEvents implements Listener {
     try {
       for (Arena arena : ArenaRegistry.getArenas()) {
         if (arena.getPlotManager().getPlots().size() != 0 && arena.getPlotManager().getPlots().get(0) != null) {
-          if (arena.getPlotManager().getPlots().get(0).getCenter().getWorld().getName().equalsIgnoreCase(event.getBlock().getWorld().getName())) {
+          if (arena.getPlotManager().getPlots().get(0).getCuboid().getCenter().getWorld().getName().equalsIgnoreCase(event.getBlock().getWorld().getName())) {
             if (event.getSource().getType() == Material.FIRE) event.setCancelled(true);
           }
         }
@@ -457,11 +457,11 @@ public class GameEvents implements Listener {
             return;
           }
           for (ArenaPlot buildplot : arena.getPlotManager().getPlots()) {
-            if (buildplot.isInPlotRange(event.getEntity().getLocation(), 10)) {
+            if (buildplot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 10)) {
               event.setCancelled(true);
               return;
             }
-            if (buildplot.isInPlotRange(event.getEntity().getLocation(), 1)) {
+            if (buildplot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 1)) {
               if (buildplot.getEntities() >= ConfigPreferences.getMaxMobs()) {
                 //todo maybe only for spawner player?
                 for (UUID u : buildplot.getOwners()) {
@@ -487,7 +487,7 @@ public class GameEvents implements Listener {
   public void onLeavesDecay(LeavesDecayEvent event) {
     for (Arena arena : ArenaRegistry.getArenas()) {
       for (ArenaPlot buildPlot : arena.getPlotManager().getPlots()) {
-        if (buildPlot.isInPlotRange(event.getBlock().getLocation(), 5)) {
+        if (buildPlot.getCuboid().isInWithMarge(event.getBlock().getLocation(), 5)) {
           event.setCancelled(true);
         }
       }
@@ -534,7 +534,7 @@ public class GameEvents implements Listener {
         event.setCancelled(true);
         return;
       }
-      if (buildPlot.isInPlot(event.getBlock().getLocation())) {
+      if (buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
         UserManager.getUser(event.getPlayer().getUniqueId()).addInt("blocksbroken", 1);
         return;
       }
@@ -567,7 +567,7 @@ public class GameEvents implements Listener {
         event.setCancelled(true);
         return;
       }
-      if (buildPlot.isInPlot(event.getBlock().getLocation())) {
+      if (buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
         UserManager.getUser(event.getPlayer().getUniqueId()).addInt("blocksplaced", 1);
         return;
       }

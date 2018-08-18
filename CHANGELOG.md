@@ -3,6 +3,7 @@
 ### 3.5.1 Release (17.08.2018)
 * Fixed NumberFormatException for language.yml migrator - this error is very rare to occur in normal environment but it was reported so I fixed it
 * Fixed NullPointerException for plot adding via selector wand due to lack of code stop when message with not full selection was sent
+* Fixed Can't fly outside plot message but you were in plot
 
 ### 3.5.0 Release (08/16.08.2018)
 * Built against PLCore API
