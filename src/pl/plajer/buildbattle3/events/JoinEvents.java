@@ -108,7 +108,7 @@ public class JoinEvents implements Listener {
   @EventHandler
   public void onJoinLoadStats(final PlayerJoinEvent event) {
     try {
-      if (plugin.isBungeeActivated()) ArenaRegistry.getArenas().get(0).teleportToLobby(event.getPlayer());
+      if (plugin.isBungeeActivated() && ArenaRegistry.getArenas().size() >= 1) ArenaRegistry.getArenas().get(0).teleportToLobby(event.getPlayer());
       if (!plugin.isDatabaseActivated()) {
         List<String> temp = new ArrayList<>();
         temp.add("gamesplayed");

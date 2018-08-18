@@ -4,6 +4,10 @@
 * Fixed NumberFormatException for language.yml migrator - this error is very rare to occur in normal environment but it was reported so I fixed it
 * Fixed NullPointerException for plot adding via selector wand due to lack of code stop when message with not full selection was sent
 * Fixed Can't fly outside plot message but you were in plot
+* Fixed scoreboard contents were always in Waiting state
+* Fixed IndexOutOfBoundsException in join event while bungee is enabled
+* Fixed NullPointerException in scoreboard formatting while player was null
+* Fixed NoDefClassFoundException in 1.13 while using sign game states
 
 ### 3.5.0 Release (08/16.08.2018)
 * Built against PLCore API

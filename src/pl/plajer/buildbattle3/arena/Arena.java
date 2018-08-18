@@ -117,15 +117,16 @@ public class Arena extends BukkitRunnable {
     voteMenu = new VoteMenu(this);
     voteMenu.resetPoll();
 
-    List<String> lines;
     for (ArenaState state : ArenaState.values()) {
+      List<String> lines;
       if (LanguageManager.getPluginLocale() == Locale.ENGLISH) {
-        lines = LanguageManager.getLanguageFile().getStringList("Scoreboard.Content." + getArenaState().getFormattedName());
+        lines = LanguageManager.getLanguageFile().getStringList("Scoreboard.Content." + state.getFormattedName());
       } else {
-        lines = Arrays.asList(ChatManager.colorMessage("Scoreboard.Content." + getArenaState().getFormattedName()).split(";"));
+        lines = Arrays.asList(ChatManager.colorMessage("Scoreboard.Content." + state.getFormattedName()).split(";"));
       }
       scoreboardContents.put(state.getFormattedName(), lines);
     }
+    List<String> lines;
     if (LanguageManager.getPluginLocale() == Locale.ENGLISH) {
       lines = LanguageManager.getLanguageFile().getStringList("Scoreboard.Content.Playing-Teams");
     } else {
@@ -546,6 +547,7 @@ public class Arena extends BukkitRunnable {
     if (getPlayers().size() == 0 || getArenaState() == ArenaState.RESTARTING) return;
     MinigameScoreboard scoreboard;
     for (Player p : getPlayers()) {
+      if(p == null) continue;
       scoreboard = new MinigameScoreboard("PL_BB3", "BB_CR", ChatManager.colorMessage("Scoreboard.Title"));
       List<String> lines = scoreboardContents.get(getArenaState().getFormattedName());
       if(getArenaType() == ArenaType.TEAM && getArenaState() == ArenaState.IN_GAME){
