@@ -20,10 +20,10 @@
 * [Tristiisch74](https://www.spigotmc.org/members/tristiisch74.149406/) - code snippets
 * [TomTheDeveloper](https://www.spigotmc.org/members/tomthedeveloper.4729/) - former author of Build Battle 1 and 2
 
-**Thanks to these companies for providing free licenses for Village Defense open source work:**
+**Thanks to these companies for providing free licenses for Build Battle open source work:**
 * Code Whale Inc. - POEditor open source project license
 
-**Also thanks to every bug reporters for reporting us those nasty bugs, and code contributors for making Village Defense better!**
+**Also thanks to every bug reporters for reporting us those nasty bugs, and code contributors for making Build Battle better!**
 
 `Please note that translators are put here only if their contribution to the language is higher than 15% of total strings`
 

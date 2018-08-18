@@ -118,6 +118,7 @@ public class Arena extends BukkitRunnable {
     voteMenu.resetPoll();
 
     for (ArenaState state : ArenaState.values()) {
+      if(state == ArenaState.RESTARTING) continue;
       List<String> lines;
       if (LanguageManager.getPluginLocale() == Locale.ENGLISH) {
         lines = LanguageManager.getLanguageFile().getStringList("Scoreboard.Content." + state.getFormattedName());
