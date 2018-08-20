@@ -19,6 +19,7 @@
 package pl.plajer.buildbattle3.user;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -40,8 +41,8 @@ public class User {
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
   private ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
   private UUID uuid;
-  private HashMap<String, Integer> ints = new HashMap<>();
-  private HashMap<String, Object> objects = new HashMap<>();
+  private Map<String, Integer> ints = new HashMap<>();
+  private Map<String, Object> objects = new HashMap<>();
 
   public User(UUID uuid) {
     this.uuid = uuid;

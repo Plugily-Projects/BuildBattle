@@ -83,12 +83,12 @@ public class QuitEvents implements Listener {
             }
           }
         });
-        UserManager.removeUser(event.getPlayer().getUniqueId());
       } else {
         for (StatsStorage.StatisticType s : StatsStorage.StatisticType.values()) {
           plugin.getFileStats().saveStat(player, s.getName());
         }
       }
+      UserManager.removeUser(event.getPlayer().getUniqueId());
     } catch (Exception ex){
       new ReportedException(plugin, ex);
     }

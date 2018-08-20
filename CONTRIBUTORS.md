@@ -17,8 +17,8 @@
 * [montlikadani](https://www.spigotmc.org/members/toldi.251100/) - Hungarian translator and code contributor
 * Pheonix Harryson - Korean translator
 * [Tigerkatze](https://www.spigotmc.org/members/tigerkatze.414545/) - Main tester, German translator and staff member of Plajer's Lair discord
-* [Tristiisch74](https://www.spigotmc.org/members/tristiisch74.149406/) - code snippets
 * [TomTheDeveloper](https://www.spigotmc.org/members/tomthedeveloper.4729/) - former author of Build Battle 1 and 2
+* [Tristiisch74](https://www.spigotmc.org/members/tristiisch74.149406/) - code snippets
 
 **Thanks to these companies for providing free licenses for Build Battle open source work:**
 * Code Whale Inc. - POEditor open source project license
