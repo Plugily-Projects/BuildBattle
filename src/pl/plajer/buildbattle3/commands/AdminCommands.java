@@ -177,14 +177,6 @@ public class AdminCommands extends MainCommand {
   public void reloadPlugin(Player player) {
     if (!hasPermission(player, "buildbattle.admin.reload")) return;
     ConfigPreferences.loadOptions();
-    ConfigPreferences.loadOptions();
-    ConfigPreferences.loadThemes();
-    ConfigPreferences.loadBlackList();
-    ConfigPreferences.loadWinCommands();
-    ConfigPreferences.loadSecondPlaceCommands();
-    ConfigPreferences.loadThirdPlaceCommands();
-    ConfigPreferences.loadEndGameCommands();
-    ConfigPreferences.loadWhitelistedCommands();
     ArenaRegistry.registerArenas();
     player.sendMessage(ChatColor.GREEN + "Plugin reloaded!");
   }

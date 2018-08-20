@@ -92,19 +92,19 @@ public class ConfigPreferences {
   }
 
   public static boolean isMobSpawningDisabled() {
-    return options.get("Disable-Mob-Spawning-Completely") == 1;
+    return options.getOrDefault("Disable-Mob-Spawning-Completely", 1) == 1;
   }
 
   public static Material getDefaultFloorMaterial() {
-    return Material.getMaterial(config.getString("Default-Floor-Material-Name").toUpperCase());
+    return Material.getMaterial(config.getString("Default-Floor-Material-Name", "LOG").toUpperCase());
   }
 
   public static int getThemeVoteTimer() {
-    return options.get("Theme-Voting-Time-In-Seconds");
+    return options.getOrDefault("Theme-Voting-Time-In-Seconds", 25);
   }
 
   public static int getLobbyTimer() {
-    return options.get("Lobby-Starting-Time");
+    return options.getOrDefault("Lobby-Starting-Time", 60);
   }
 
   public static void loadBlackList() {
@@ -114,7 +114,7 @@ public class ConfigPreferences {
   }
 
   public static boolean isBarEnabled() {
-    return options.get("Boss-Bar-Enabled") == 1;
+    return options.getOrDefault("Boss-Bar-Enabled", 1) == 1;
   }
 
   public static List<String> getWhitelistedCommands() {
@@ -122,51 +122,55 @@ public class ConfigPreferences {
   }
 
   public static boolean isHidePlayersOutsideGameEnabled() {
-    return options.get("Hide-Players-Outside-Game") == 1;
+    return options.getOrDefault("Hide-Players-Outside-Game", 1) == 1;
   }
 
   public static int getAmountFromOneParticle() {
-    return options.get("Amount-One-Particle-Effect-Contains");
+    return options.getOrDefault("Amount-One-Particle-Effect-Contains", 20);
   }
 
   public static int getMaxParticles() {
-    return options.get("Max-Amount-Particles");
+    return options.getOrDefault("Max-Amount-Particles", 25);
   }
 
   public static int getVotingTime() {
-    return options.get("Voting-Time-In-Seconds");
+    return options.getOrDefault("Voting-Time-In-Seconds", 20);
   }
 
   public static int getTeamBuildTime() {
-    return options.get("Team-Build-Time-In-Seconds");
+    return options.getOrDefault("Team-Build-Time-In-Seconds", 540);
   }
 
   public static int getBuildTime() {
-    return options.get("Build-Time-In-Seconds");
+    return options.getOrDefault("Build-Time-In-Seconds", 480);
   }
 
   public static boolean getBungeeShutdown() {
-    return options.get("Bungee-Shutdown-On-End") == 1;
+    return options.getOrDefault("Bungee-Shutdown-On-End", 0) == 1;
   }
 
   public static int getMaxMobs() {
-    return options.get("Mobs-Max-Amount-Per-Plot");
+    return options.getOrDefault("Mobs-Max-Amount-Per-Plot", 20);
   }
 
   public static boolean isWinCommandsEnabled() {
-    return options.get("Win-Commands-Activated") == 1;
+    return options.getOrDefault("Win-Commands-Activated", 0) == 1;
   }
 
   public static boolean isSecondPlaceCommandsEnabled() {
-    return options.get("Second-Place-Commands-Activated") == 1;
+    return options.getOrDefault("Second-Place-Commands-Activated", 0) == 1;
   }
 
   public static boolean isThirdPlaceCommandsEnabled() {
-    return options.get("Third-Place-Commands-Activated") == 1;
+    return options.getOrDefault("Third-Place-Commands-Activated", 0) == 1;
   }
 
   public static boolean isEndGameCommandsEnabled() {
-    return options.get("End-Game-Commands-Activated") == 1;
+    return options.getOrDefault("End-Game-Commands-Activated", 1) == 1;
+  }
+
+  public static long getParticleRefreshTick() {
+    return options.getOrDefault("Particle-Refresh-Per-Tick", 10);
   }
 
   public static void loadOptions() {
@@ -205,10 +209,13 @@ public class ConfigPreferences {
         }
       }
     }
-  }
-
-  public static long getParticleRefreshTick() {
-    return options.get("Particle-Refresh-Per-Tick");
+    loadThemes();
+    loadBlackList();
+    loadWinCommands();
+    loadSecondPlaceCommands();
+    loadThirdPlaceCommands();
+    loadEndGameCommands();
+    loadWhitelistedCommands();
   }
 
 }

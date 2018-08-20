@@ -271,14 +271,6 @@ public class Main extends JavaPlugin {
     bungeeActivated = getConfig().getBoolean("BungeeActivated");
     mainCommand = new MainCommand(this);
     ConfigPreferences.loadOptions();
-    ConfigPreferences.loadOptions();
-    ConfigPreferences.loadThemes();
-    ConfigPreferences.loadBlackList();
-    ConfigPreferences.loadWinCommands();
-    ConfigPreferences.loadSecondPlaceCommands();
-    ConfigPreferences.loadThirdPlaceCommands();
-    ConfigPreferences.loadEndGameCommands();
-    ConfigPreferences.loadWhitelistedCommands();
     ParticleMenu.loadFromConfig();
     PlayerHeadsMenu.loadHeadItems();
     ArenaRegistry.registerArenas();
