@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -109,7 +111,11 @@ public class ConfigPreferences {
 
   public static void loadBlackList() {
     for (String item : config.getStringList("Blacklisted-Item-Names")) {
-      Arena.addToBlackList(Material.valueOf(item.toUpperCase()));
+      try {
+        Arena.addToBlackList(Material.valueOf(item.toUpperCase()));
+      } catch (IllegalArgumentException ex){
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Invalid black listed item! " + item + " doesn't exist, are you sure it's properly named?");
+      }
     }
   }
 
