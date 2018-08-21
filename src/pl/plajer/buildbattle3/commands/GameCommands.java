@@ -66,7 +66,7 @@ public class GameCommands extends MainCommand {
 
   public void showStatsOther(Player player, Player other) {
     User user = UserManager.getUser(other.getUniqueId());
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Header-Other"));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Header-Other").replace("%player%", other.getName()));
     player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Wins") + user.getInt("wins"));
     player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Loses") + user.getInt("loses"));
     player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Games-Played") + user.getInt("gamesplayed"));
