@@ -4,6 +4,8 @@
 * Fixed NullPointerException for users who where no longer online
 * Now using default values when they not exist in config to avoid NullPointerException from ConfigPreferences
 * Fixed IllegalArgumentException when you add invalid item name to the in-game items blacklist - now it will notify you in console
+* Fixed %player% placeholder wasn't parsed in /bb stats <player>
+* Added PlaceholderAPI placeholders in scoreboard
 
 ### 3.5.1 Release (17.08.2018)
 * Fixed NumberFormatException for language.yml migrator - this error is very rare to occur in normal environment but it was reported so I fixed it
