@@ -71,7 +71,6 @@ import pl.plajerlair.core.utils.UpdateChecker;
  */
 public class Main extends JavaPlugin {
 
-  private static Economy econ = null;
   private static boolean debug;
   private boolean databaseActivated = false;
   private boolean forceDisable = false;
@@ -86,10 +85,6 @@ public class Main extends JavaPlugin {
   private CuboidSelector cuboidSelector;
   private String version;
   private List<String> filesToGenerate = Arrays.asList("arenas", "EntityMenu", "particles", "SpecialItems", "stats", "voteItems", "mysql");
-
-  public static Economy getEcon() {
-    return econ;
-  }
 
   public static void debug(String thing, long millis) {
     long elapsed = System.currentTimeMillis() - millis;
@@ -193,9 +188,6 @@ public class Main extends JavaPlugin {
         fileStats = new FileStats();
       }
       loadStatsForPlayersOnline();
-      if (getServer().getPluginManager().isPluginEnabled("Vault")) {
-        setupEconomy();
-      }
     } catch (Exception ex) {
       new ReportedException(this, ex);
     }
@@ -372,18 +364,6 @@ public class Main extends JavaPlugin {
 
   public FileStats getFileStats() {
     return fileStats;
-  }
-
-  private boolean setupEconomy() {
-    if (getServer().getPluginManager().getPlugin("Vault") == null) {
-      return false;
-    }
-    RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-    if (rsp == null) {
-      return false;
-    }
-    econ = rsp.getProvider();
-    return econ != null;
   }
 
   public MySQLDatabase getMySQLDatabase() {

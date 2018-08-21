@@ -31,6 +31,8 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.UUID;
 
+import me.clip.placeholderapi.PlaceholderAPI;
+
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -593,8 +595,8 @@ public class Arena extends BukkitRunnable {
     } else {
       returnString = StringUtils.replace(returnString, "%TEAMMATE%", ChatManager.colorMessage("In-Game.Nobody"));
     }
-    if (plugin.getServer().getPluginManager().isPluginEnabled("Vault") && Main.getEcon() != null) {
-      returnString = StringUtils.replace(returnString, "%MONEY%", Double.toString(Main.getEcon().getBalance(player)));
+    if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")){
+      PlaceholderAPI.setPlaceholders(player, returnString);
     }
     returnString = ChatManager.colorRawMessage(returnString);
     return returnString;
