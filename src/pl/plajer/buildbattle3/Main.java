@@ -276,61 +276,7 @@ public class Main extends JavaPlugin {
     particleHandler.start();
     Metrics metrics = new Metrics(this);
     metrics.addCustomChart(new Metrics.SimplePie("bungeecord_hooked", () -> getConfig().getString("BungeeActivated", "false")));
-    metrics.addCustomChart(new Metrics.SimplePie("locale_used", () -> {
-      switch (getConfig().getString("locale", "default")) {
-        case "default":
-        case "english":
-        case "en":
-          return "English";
-        case "polski":
-        case "polish":
-        case "pl":
-          return "Polish";
-        case "german":
-        case "deutsch":
-        case "de":
-          return "German";
-        case "spanish":
-        case "espanol":
-        case "español":
-        case "es":
-          return "Spanish";
-        case "vietnamese":
-        case "việt":
-        case "viet":
-        case "vn":
-          return "Vietnamese";
-        case "hungarian":
-        case "magyar":
-        case "hu":
-          return "Hungarian";
-        case "korean":
-        case "한국의":
-        case "kr":
-          return "Korean";
-        case "简体中文":
-        case "中文":
-        case "chinese":
-        case "zh":
-          return "Chinese (Simplified)";
-        case "french":
-        case "francais":
-        case "français":
-        case "fr":
-          return "French";
-        case "turkish":
-        case "türk":
-        case "turk":
-        case "tr":
-          return "Turkish";
-        case "indonesian":
-        case "indonesia":
-        case "id":
-          return "Indonesian";
-        default:
-          return "English";
-      }
-    }));
+    metrics.addCustomChart(new Metrics.SimplePie("locale_used", () -> LanguageManager.getPluginLocale().getPrefix()));
     metrics.addCustomChart(new Metrics.SimplePie("update_notifier", () -> {
       if (getConfig().getBoolean("Update-Notifier.Enabled", true)) {
         if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {

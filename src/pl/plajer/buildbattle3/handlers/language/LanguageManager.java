@@ -44,7 +44,7 @@ import pl.plajerlair.core.utils.ConfigUtils;
 public class LanguageManager {
 
   private static Main plugin;
-  private static Locale pluginLocale;
+  private static Locale pluginLocale = null;
   private static Properties properties = new Properties();
 
   public static void init(Main pl) {
@@ -71,72 +71,18 @@ public class LanguageManager {
   }
 
   private static void setupLocale() {
-    String locale = plugin.getConfig().getString("locale", "default");
-    switch (locale.toLowerCase()) {
-      case "简体中文":
-      case "中文":
-      case "chinese":
-      case "zh":
-        pluginLocale = Locale.CHINESE_SIMPLIFIED;
-        break;
-      case "default":
-      case "english":
-      case "en":
-        pluginLocale = Locale.ENGLISH;
-        break;
-      case "german":
-      case "deutsch":
-      case "de":
-        pluginLocale = Locale.GERMAN;
-        break;
-      case "hungarian":
-      case "magyar":
-      case "hu":
-        pluginLocale = Locale.HUNGARIAN;
-        break;
-      case "french":
-      case "francais":
-      case "français":
-      case "fr":
-        pluginLocale = Locale.FRENCH;
-        break;
-      case "korean":
-      case "한국의":
-      case "kr":
-        pluginLocale = Locale.KOREAN;
-        break;
-      case "polish":
-      case "polski":
-      case "pl":
-        pluginLocale = Locale.POLISH;
-        break;
-      case "spanish":
-      case "espanol":
-      case "español":
-      case "es":
-        pluginLocale = Locale.SPANISH;
-        break;
-      case "vietnamese":
-      case "việt":
-      case "viet":
-      case "vn":
-        pluginLocale = Locale.VIETNAMESE;
-        break;
-      case "turkish":
-      case "türk":
-      case "turk":
-      case "tr":
-        pluginLocale = Locale.TURKISH;
-        break;
-      case "indonesian":
-      case "indonesia":
-      case "id":
-        pluginLocale = Locale.INDONESIAN;
-        break;
-      default:
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Plugin locale is invalid! Using default one...");
-        pluginLocale = Locale.ENGLISH;
-        break;
+    String localeName = plugin.getConfig().getString("locale", "default").toLowerCase();
+    for(Locale locale : Locale.values()){
+      for(String alias : locale.getAliases()){
+        if (alias.equals(localeName)) {
+          pluginLocale = locale;
+          break;
+        }
+      }
+    }
+    if(pluginLocale == null){
+      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Plugin locale is invalid! Using default one...");
+      pluginLocale = Locale.ENGLISH;
     }
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] Loaded locale " + pluginLocale.getFormattedName() + " (" + pluginLocale.getPrefix() + ") by " + pluginLocale.getAuthor());
     loadProperties();
@@ -159,6 +105,7 @@ public class LanguageManager {
           case "ko-KR":
           case "fr-FR":
           case "tr-TR":
+          case "ru-RU":
             hasLocale = true;
             localeName = locale.getLocaleName();
         }
@@ -177,6 +124,8 @@ public class LanguageManager {
           case "FR":
           case "ID":
           case "TR":
+          case "RU":
+          case "ET":
             hasLocale = true;
             localeName = locale.getDisplayName();
         }
