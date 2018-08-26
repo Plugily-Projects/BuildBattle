@@ -123,6 +123,7 @@ public class LanguageManager {
           case "fr-FR":
           case "tr-TR":
           case "ru-RU":
+          case "cs-CS":
             hasLocale = true;
             localeName = locale.getLocaleName();
         }
@@ -143,6 +144,8 @@ public class LanguageManager {
           case "TR":
           case "RU":
           case "ET":
+          case "CS":
+          case "RO":
             hasLocale = true;
             localeName = locale.getDisplayName();
         }

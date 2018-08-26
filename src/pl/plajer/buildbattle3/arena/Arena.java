@@ -20,10 +20,8 @@ package pl.plajer.buildbattle3.arena;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -120,7 +118,7 @@ public class Arena extends BukkitRunnable {
     voteMenu.resetPoll();
 
     for (ArenaState state : ArenaState.values()) {
-      if(state == ArenaState.RESTARTING) continue;
+      if (state == ArenaState.RESTARTING) continue;
       List<String> lines;
       if (LanguageManager.getPluginLocale() == Locale.ENGLISH) {
         lines = LanguageManager.getLanguageFile().getStringList("Scoreboard.Content." + state.getFormattedName());
@@ -550,10 +548,10 @@ public class Arena extends BukkitRunnable {
     if (getPlayers().size() == 0 || getArenaState() == ArenaState.RESTARTING) return;
     MinigameScoreboard scoreboard;
     for (Player p : getPlayers()) {
-      if(p == null) continue;
+      if (p == null) continue;
       scoreboard = new MinigameScoreboard("PL_BB3", "BB_CR", ChatManager.colorMessage("Scoreboard.Title"));
       List<String> lines = scoreboardContents.get(getArenaState().getFormattedName());
-      if(getArenaType() == ArenaType.TEAM && getArenaState() == ArenaState.IN_GAME){
+      if (getArenaType() == ArenaType.TEAM && getArenaState() == ArenaState.IN_GAME) {
         lines = scoreboardContents.get(getArenaState().getFormattedName() + "-Teams");
       }
       for (String line : lines) {
@@ -595,7 +593,7 @@ public class Arena extends BukkitRunnable {
     } else {
       returnString = StringUtils.replace(returnString, "%TEAMMATE%", ChatManager.colorMessage("In-Game.Nobody"));
     }
-    if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")){
+    if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       PlaceholderAPI.setPlaceholders(player, returnString);
     }
     returnString = ChatManager.colorRawMessage(returnString);
@@ -768,7 +766,7 @@ public class Arena extends BukkitRunnable {
           moveScore(rang, buildPlot.getOwners());
           break;
         }
-        if(i == getPlotManager().getPlot(topList.get(rang).get(0)).getPoints()){
+        if (i == getPlotManager().getPlot(topList.get(rang).get(0)).getPoints()) {
           List<UUID> winners = topList.get(rang);
           winners.addAll(buildPlot.getOwners());
           topList.put(rang, winners);
