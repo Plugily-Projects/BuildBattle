@@ -1,12 +1,13 @@
 ## BuildBattle 3 changelog
 
-### 3.5.2 Release (20/25.08.2018)
+### 4.0.0 Release (20/26.08.2018)
 * Fixed NullPointerException for users who where no longer online
 * Now using default values when they not exist in config to avoid NullPointerException from ConfigPreferences
 * Fixed IllegalArgumentException when you add invalid item name to the in-game items blacklist - now it will notify you in console
 * Fixed %player% placeholder wasn't parsed in /bb stats <player>
 * Added PlaceholderAPI placeholders in scoreboard
-* Added Russian and Estonian locales (thanks to POEditor contributors!)
+* Added Russian, Czech, Romanian and Estonian locales (thanks to POEditor contributors!)
+* Added dynamic locale manager system - you can now get latest locales on demand from our repository
 
 ### 3.5.1 Release (17.08.2018)
 * Fixed NumberFormatException for language.yml migrator - this error is very rare to occur in normal environment but it was reported so I fixed it
