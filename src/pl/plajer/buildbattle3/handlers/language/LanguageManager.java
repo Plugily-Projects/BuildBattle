@@ -23,9 +23,8 @@ import com.wasteofplastic.askyblock.ASLocale;
 import com.wasteofplastic.askyblock.ASkyBlock;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.util.Properties;
 
 import org.bukkit.Bukkit;
@@ -34,6 +33,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.utils.MessageUtils;
+import pl.plajerlair.core.services.LocaleService;
+import pl.plajerlair.core.services.ServiceRegistry;
 import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
@@ -62,9 +63,25 @@ public class LanguageManager {
   }
 
   private static void loadProperties() {
-    if (pluginLocale == Locale.ENGLISH) return;
+    LocaleService service = ServiceRegistry.getLocaleService(plugin);
+    if (service.isValidVersion()) {
+      LocaleService.DownloadStatus status = service.demandLocaleDownload(pluginLocale.getPrefix());
+      if (status == LocaleService.DownloadStatus.FAIL) {
+        pluginLocale = Locale.ENGLISH;
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Locale service couldn't download latest locale for plugin! English locale will be used instead!");
+        return;
+      } else if (status == LocaleService.DownloadStatus.SUCCESS) {
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Downloaded locale " + pluginLocale.getPrefix() + " properly!");
+      } else if (status == LocaleService.DownloadStatus.LATEST) {
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Locale " + pluginLocale.getPrefix() + " is latest! Awesome!");
+      }
+    } else {
+      pluginLocale = Locale.ENGLISH;
+      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Your plugin version is too old to use latest locale! Please update plugin to access latest updates of locale!");
+      return;
+    }
     try {
-      properties.load(new InputStreamReader(plugin.getResource("locales/" + pluginLocale.getPrefix() + ".properties"), Charset.forName("UTF-8")));
+      properties.load(new FileReader(new File(plugin.getDataFolder() + "/locales/" + pluginLocale.getPrefix() + ".properties")));
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -72,15 +89,15 @@ public class LanguageManager {
 
   private static void setupLocale() {
     String localeName = plugin.getConfig().getString("locale", "default").toLowerCase();
-    for(Locale locale : Locale.values()){
-      for(String alias : locale.getAliases()){
+    for (Locale locale : Locale.values()) {
+      for (String alias : locale.getAliases()) {
         if (alias.equals(localeName)) {
           pluginLocale = locale;
           break;
         }
       }
     }
-    if(pluginLocale == null){
+    if (pluginLocale == null) {
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Plugin locale is invalid! Using default one...");
       pluginLocale = Locale.ENGLISH;
     }
