@@ -29,6 +29,7 @@ import java.util.List;
 public enum Locale {
 
   CHINESE_SIMPLIFIED("简体中文", "zh_Hans", "POEditor contributors (Haoting)", Arrays.asList("简体中文", "中文", "chinese", "zh")),
+  CZECH("Český", "cs_CZ", "POEditor contributors", Arrays.asList("czech", "cesky", "český", "cs")),
   ENGLISH("English", "en_GB", "Plajer", Arrays.asList("default", "english", "en")),
   ESTONIAN("Eesti", "et_EE", "POEditor contributors (kaimokene)", Arrays.asList("estonian", "eesti", "et")),
   FRENCH("Français", "fr_FR", "POEditor contributors", Arrays.asList("french", "francais", "français", "fr")),
@@ -37,6 +38,7 @@ public enum Locale {
   INDONESIAN("Indonesia", "id_ID", "POEditor contributors", Arrays.asList("indonesian", "indonesia", "id")),
   KOREAN("한국의", "ko_KR", "POEditor contributors", Arrays.asList("korean", "한국의", "kr")),
   POLISH("Polski", "pl_PL", "Plajer", Arrays.asList("polish", "polski", "pl")),
+  ROMANIAN("Românesc", "ro_RO", "POEditor contributors (Andrei)", Arrays.asList("romanian", "romanesc", "românesc", "ro")),
   RUSSIAN("Pусский", "ru_RU", "POEditor contributors (Mrake)", Arrays.asList("russian", "russkiy", "pусский", "ru")),
   SPANISH("Español", "es_ES", "POEditor contributors", Arrays.asList("spanish", "espanol", "español", "es")),
   TURKISH("Türk", "tr_TR", "POEditor contributors", Arrays.asList("turkish", "turk", "türk", "tr")),
@@ -69,4 +71,5 @@ public enum Locale {
   public List<String> getAliases() {
     return aliases;
   }
+
 }

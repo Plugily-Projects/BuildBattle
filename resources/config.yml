@@ -7,9 +7,9 @@
 
 # Locale of BB 3 language. By default it's english.
 # Available localizations:
-# default - uses messages from 'language.yml' file
+#   default - uses messages from 'language.yml' file
 #   de - Deutsche sprache
-#   pl - Jezyk Polski
+#   pl - Jezyk polski
 #   es - Idioma español
 #   fr - Langue française
 #   zh - 简体中文
@@ -20,11 +20,12 @@
 #   id - Bhasa Indonesia
 #   et - Eesti keel
 #   ru - Русский язык
+#   cs - Český jazyk
+#   ro - Limba română
 #
 locale: default
 
 # Enable boss bar for the game?
-# Requires BossBarAPI for 1.8 users.
 Boss-Bar-Enabled: false
 
 # Should we hook into bungee cord? (If you wanna use arena per server option)
