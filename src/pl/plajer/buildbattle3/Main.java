@@ -23,12 +23,9 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
-import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle3.arena.Arena;
@@ -54,8 +51,8 @@ import pl.plajer.buildbattle3.menus.particles.ParticleHandler;
 import pl.plajer.buildbattle3.menus.particles.ParticleMenu;
 import pl.plajer.buildbattle3.menus.playerheads.PlayerHeadsMenu;
 import pl.plajer.buildbattle3.menus.themevoter.VoteMenuListener;
-import pl.plajer.buildbattle3.stats.FileStats;
-import pl.plajer.buildbattle3.stats.MySQLDatabase;
+import pl.plajer.buildbattle3.database.FileStats;
+import pl.plajer.buildbattle3.database.MySQLDatabase;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.CuboidSelector;
@@ -126,10 +123,6 @@ public class Main extends JavaPlugin {
 
   public boolean is1_9_R2() {
     return version.equalsIgnoreCase("v1_9_R2");
-  }
-
-  public boolean is1_13_R1() {
-    return version.equalsIgnoreCase("v1_13_R1");
   }
 
   public boolean isDataEnabled() {

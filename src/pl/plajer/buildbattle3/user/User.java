@@ -31,7 +31,7 @@ import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.buildbattleapi.BBPlayerStatisticChangeEvent;
-import pl.plajer.buildbattle3.stats.FileStats;
+import pl.plajer.buildbattle3.database.FileStats;
 
 /**
  * Created by Tom on 27/07/2014.
@@ -41,7 +41,7 @@ public class User {
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
   private ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
   private UUID uuid;
-  private Map<String, Integer> ints = new HashMap<>();
+  private Map<String, Integer> stats = new HashMap<>();
   private Map<String, Object> objects = new HashMap<>();
 
   public User(UUID uuid) {
@@ -66,14 +66,14 @@ public class User {
   }
 
   public int getInt(String s) {
-    if (!ints.containsKey(s)) {
-      ints.put(s, 0);
+    if (!stats.containsKey(s)) {
+      stats.put(s, 0);
       return 0;
-    } else if (ints.get(s) == null) {
+    } else if (stats.get(s) == null) {
       return 0;
     }
 
-    return ints.get(s);
+    return stats.get(s);
   }
 
   public void removeScoreboard() {
@@ -81,7 +81,7 @@ public class User {
   }
 
   public void setInt(String s, int i) {
-    ints.put(s, i);
+    stats.put(s, i);
 
     Bukkit.getScheduler().runTask(plugin, () -> {
       BBPlayerStatisticChangeEvent bbPlayerStatisticChangeEvent = new BBPlayerStatisticChangeEvent(getArena(), toPlayer(), FileStats.STATISTICS.get(s), i);
@@ -90,7 +90,7 @@ public class User {
   }
 
   public void addInt(String s, int i) {
-    ints.put(s, getInt(s) + i);
+    stats.put(s, getInt(s) + i);
 
     Bukkit.getScheduler().runTask(plugin, () -> {
       BBPlayerStatisticChangeEvent bbPlayerStatisticChangeEvent = new BBPlayerStatisticChangeEvent(getArena(), toPlayer(), FileStats.STATISTICS.get(s), getInt(s));

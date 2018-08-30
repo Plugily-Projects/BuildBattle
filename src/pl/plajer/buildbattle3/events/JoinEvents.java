@@ -32,7 +32,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
-import pl.plajer.buildbattle3.stats.MySQLDatabase;
+import pl.plajer.buildbattle3.database.MySQLDatabase;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajerlair.core.services.ReportedException;
