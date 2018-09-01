@@ -86,10 +86,10 @@ public class Main extends JavaPlugin {
   public static void debug(String thing, long millis) {
     long elapsed = System.currentTimeMillis() - millis;
     if (debug) {
-      Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[Village Debugger] Running task '" + thing + "'");
+      Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[BB Debugger] Running task '" + thing + "'");
     }
     if (elapsed > 15) {
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Village Debugger] Slow server response, games may be affected.");
+      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BB Debugger] Slow server response, games may be affected.");
     }
   }
 
