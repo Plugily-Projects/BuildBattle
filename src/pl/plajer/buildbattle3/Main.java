@@ -33,6 +33,8 @@ import pl.plajer.buildbattle3.arena.ArenaManager;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.buildbattleapi.StatsStorage;
 import pl.plajer.buildbattle3.commands.MainCommand;
+import pl.plajer.buildbattle3.database.FileStats;
+import pl.plajer.buildbattle3.database.MySQLDatabase;
 import pl.plajer.buildbattle3.entities.EntityItem;
 import pl.plajer.buildbattle3.entities.EntityMenuEvents;
 import pl.plajer.buildbattle3.events.GameEvents;
@@ -51,8 +53,6 @@ import pl.plajer.buildbattle3.menus.particles.ParticleHandler;
 import pl.plajer.buildbattle3.menus.particles.ParticleMenu;
 import pl.plajer.buildbattle3.menus.playerheads.PlayerHeadsMenu;
 import pl.plajer.buildbattle3.menus.themevoter.VoteMenuListener;
-import pl.plajer.buildbattle3.database.FileStats;
-import pl.plajer.buildbattle3.database.MySQLDatabase;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.CuboidSelector;
@@ -187,13 +187,12 @@ public class Main extends JavaPlugin {
   }
 
   private void checkUpdate() {
-    String currentVersion = "v" + Bukkit.getPluginManager().getPlugin("BuildBattle").getDescription().getVersion();
     if (getConfig().getBoolean("Update-Notifier.Enabled")) {
+      String currentVersion = "v" + Bukkit.getPluginManager().getPlugin("BuildBattle").getDescription().getVersion();
       try {
-        UpdateChecker.checkUpdate(this, currentVersion, 44703);
-        String latestVersion = UpdateChecker.getLatestVersion();
-        if (latestVersion != null) {
-          latestVersion = "v" + latestVersion;
+        boolean check = UpdateChecker.checkUpdate(this, currentVersion, 44703);
+        if (check) {
+          String latestVersion = "v" + UpdateChecker.getLatestVersion();
           if (latestVersion.contains("b")) {
             Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
             Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Current version %old%, latest version %new%".replace("%old%", currentVersion).replace("%new%", latestVersion));

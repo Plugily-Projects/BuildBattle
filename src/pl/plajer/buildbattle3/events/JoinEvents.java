@@ -74,11 +74,10 @@ public class JoinEvents implements Listener {
         if (event.getPlayer().hasPermission("buildbattle.updatenotify")) {
           if (plugin.getConfig().getBoolean("Update-Notifier.Enabled")) {
             String currentVersion = "v" + Bukkit.getPluginManager().getPlugin("BuildBattle").getDescription().getVersion();
-            String latestVersion;
             try {
-              UpdateChecker.checkUpdate(plugin, currentVersion, 44703);
-              latestVersion = UpdateChecker.getLatestVersion();
-              if (latestVersion != null) {
+              boolean check = UpdateChecker.checkUpdate(plugin, currentVersion, 44703);
+              if (check) {
+                String latestVersion = "v" + UpdateChecker.getLatestVersion();
                 latestVersion = "v" + latestVersion;
                 if (latestVersion.contains("b")) {
                   event.getPlayer().sendMessage("");
@@ -100,7 +99,7 @@ public class JoinEvents implements Listener {
           }
         }
       }, 25);
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }
@@ -164,7 +163,7 @@ public class JoinEvents implements Listener {
           System.out.print("CONNECTION FAILED FOR PLAYER " + player.getName());
         }
       });
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }
