@@ -176,7 +176,7 @@ public class MainCommand implements CommandExecutor {
         adminCommands.sendHelp(sender);
         List<StringMatcher.Match> matches = StringMatcher.match(args[0], Arrays.asList("addplot", "stop", "list", "forcestart", "reload", "delete", "settheme"));
         if (!matches.isEmpty()) {
-          sender.sendMessage(ChatManager.colorMessage("Commands.Did-You-Mean").replaceAll("%command%", "bba " + matches.get(0).getMatch()));
+          sender.sendMessage(ChatManager.colorMessage("Commands.Did-You-Mean").replace("%command%", "bba " + matches.get(0).getMatch()));
         }
         return true;
       }
@@ -270,7 +270,7 @@ public class MainCommand implements CommandExecutor {
         } else if (!args[0].equalsIgnoreCase("create") && !(args.length > 1)) {
           List<StringMatcher.Match> matches = StringMatcher.match(args[0], Arrays.asList("stats", "join", "leave"));
           if (!matches.isEmpty()) {
-            sender.sendMessage(ChatManager.colorMessage("Commands.Did-You-Mean").replaceAll("%command%", "bb " + matches.get(0).getMatch()));
+            sender.sendMessage(ChatManager.colorMessage("Commands.Did-You-Mean").replace("%command%", "bb " + matches.get(0).getMatch()));
           }
         }
         return true;

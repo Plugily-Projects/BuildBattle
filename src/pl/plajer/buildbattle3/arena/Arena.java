@@ -231,8 +231,7 @@ public class Arena extends BukkitRunnable {
           if (getPlayers().size() < getMinimumPlayers()) {
             if (getTimer() <= 0) {
               setTimer(LOBBY_STARTING_TIMER);
-              String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players")
-                      .replaceAll("%MINPLAYERS%", String.valueOf(getMinimumPlayers()));
+              String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", String.valueOf(getMinimumPlayers()));
               for (Player p : getPlayers()) {
                 p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
               }
@@ -324,7 +323,7 @@ public class Arena extends BukkitRunnable {
             }
           }
           if ((getTimer() == (4 * 60) || getTimer() == (3 * 60) || getTimer() == 5 * 60 || getTimer() == 30 || getTimer() == 2 * 60 || getTimer() == 60 || getTimer() == 15) && !this.isVoting()) {
-            String message = ChatManager.colorMessage("In-Game.Messages.Time-Left-To-Build").replaceAll("%FORMATTEDTIME%", MinigameUtils.formatIntoMMSS(getTimer()));
+            String message = ChatManager.colorMessage("In-Game.Messages.Time-Left-To-Build").replace("%FORMATTEDTIME%", MinigameUtils.formatIntoMMSS(getTimer()));
             String subtitle = ChatManager.colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", String.valueOf(getTimer()));
             for (Player p : getPlayers()) {
               p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
@@ -485,13 +484,13 @@ public class Arena extends BukkitRunnable {
         gameBar.setTitle(ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
         break;
       case STARTING:
-        gameBar.setTitle(ChatManager.colorMessage("Bossbar.Starting-In").replaceAll("%time%", String.valueOf(getTimer())));
+        gameBar.setTitle(ChatManager.colorMessage("Bossbar.Starting-In").replace("%time%", String.valueOf(getTimer())));
         break;
       case IN_GAME:
         if (!isVoting()) {
-          gameBar.setTitle(ChatManager.colorMessage("Bossbar.Time-Left").replaceAll("%time%", String.valueOf(getTimer())));
+          gameBar.setTitle(ChatManager.colorMessage("Bossbar.Time-Left").replace("%time%", String.valueOf(getTimer())));
         } else {
-          gameBar.setTitle(ChatManager.colorMessage("Bossbar.Vote-Time-Left").replaceAll("%time%", String.valueOf(getTimer())));
+          gameBar.setTitle(ChatManager.colorMessage("Bossbar.Vote-Time-Left").replace("%time%", String.valueOf(getTimer())));
         }
         break;
     }
@@ -502,7 +501,7 @@ public class Arena extends BukkitRunnable {
       if (topList.get(1) != null) {
         for (String string : ConfigPreferences.getWinCommands()) {
           for (UUID u : topList.get(1))
-            plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), string.replaceAll("%PLAYER%", plugin.getServer().getOfflinePlayer(u).getName()));
+            plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), string.replace("%PLAYER%", plugin.getServer().getOfflinePlayer(u).getName()));
         }
       }
     }
@@ -510,7 +509,7 @@ public class Arena extends BukkitRunnable {
       if (topList.get(2) != null) {
         for (String string : ConfigPreferences.getSecondPlaceCommands()) {
           for (UUID u : topList.get(2))
-            plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), string.replaceAll("%PLAYER%", plugin.getServer().getOfflinePlayer(u).getName()));
+            plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), string.replace("%PLAYER%", plugin.getServer().getOfflinePlayer(u).getName()));
         }
       }
     }
@@ -518,14 +517,14 @@ public class Arena extends BukkitRunnable {
       if (topList.get(3) != null) {
         for (String string : ConfigPreferences.getThirdPlaceCommands()) {
           for (UUID u : topList.get(3))
-            plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), string.replaceAll("%PLAYER%", plugin.getServer().getOfflinePlayer(u).getName()));
+            plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), string.replace("%PLAYER%", plugin.getServer().getOfflinePlayer(u).getName()));
         }
       }
     }
     if (END_GAME_COMMANDS_ENABLED) {
       for (String string : ConfigPreferences.getEndGameCommands()) {
         for (Player player : getPlayers()) {
-          plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), string.replaceAll("%PLAYER%", player.getName()).replaceAll("%RANG%", Integer.toString(getRang(player))));
+          plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), string.replace("%PLAYER%", player.getName()).replace("%RANG%", Integer.toString(getRang(player))));
         }
       }
     }
@@ -639,7 +638,7 @@ public class Arena extends BukkitRunnable {
       } else {
         // getPlotManager().teleportAllToPlot(plotManager.getPlot(player.getUniqueId()));
         setVotingPlot(plotManager.getPlot(player.getUniqueId()));
-        String message = ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Voting-For-Player-Plot").replaceAll("%PLAYER%", player.getName());
+        String message = ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Voting-For-Player-Plot").replace("%PLAYER%", player.getName());
         for (Player p : getPlayers()) {
           p.teleport(getVotingPlot().getTeleportLocation());
           p.setPlayerWeather(getVotingPlot().getWeatherType());
@@ -721,7 +720,7 @@ public class Arena extends BukkitRunnable {
           Player p = plugin.getServer().getPlayer(u);
           if (p != null) {
             //if (rang > 3) {
-            p.sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Summary-Other-Place").replaceAll("%number%", String.valueOf(rang)));
+            p.sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Summary-Other-Place").replace("%number%", String.valueOf(rang)));
             //}
             if (rang == 1) {
               UserManager.getUser(p.getUniqueId()).addInt("wins", 1);
