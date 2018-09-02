@@ -10,6 +10,7 @@
 * Added dynamic locale manager system - you can now get latest locales on demand from our repository
 * Fixed scoreboard color bugs (see https://i.imgur.com/kaZy5s2.png)
 * Fixed update checker bugs while using my other minigames
+* /bba help command is now executable via players only
 
 ### 3.5.1 Release (17.08.2018)
 * Fixed NumberFormatException for language.yml migrator - this error is very rare to occur in normal environment but it was reported so I fixed it

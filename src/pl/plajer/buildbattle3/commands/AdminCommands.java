@@ -104,14 +104,17 @@ public class AdminCommands extends MainCommand {
 
   public void sendHelp(CommandSender sender) {
     if (!sender.hasPermission("buildbattle.admin")) return;
-    sender.sendMessage(ChatColor.GREEN + "  " + ChatColor.BOLD + "BuildBattle " + ChatColor.GRAY + plugin.getDescription().getVersion());
-    sender.sendMessage(ChatColor.RED + " []" + ChatColor.GRAY + " = optional  " + ChatColor.GOLD + "<>" + ChatColor.GRAY + " = required");
-    sender.sendMessage(ChatColor.GRAY + "Hover command to see more, click command to suggest it.");
+    if (checkSenderIsConsole(sender)) return;
+    //fix for missing spigot() methods for CommandSender
+    Player player = (Player) sender;
+    player.sendMessage(ChatColor.GREEN + "  " + ChatColor.BOLD + "BuildBattle " + ChatColor.GRAY + plugin.getDescription().getVersion());
+    player.sendMessage(ChatColor.RED + " []" + ChatColor.GRAY + " = optional  " + ChatColor.GOLD + "<>" + ChatColor.GRAY + " = required");
+    player.sendMessage(ChatColor.GRAY + "Hover command to see more, click command to suggest it.");
     for (CommandData data : command) {
       TextComponent component = new TextComponent(data.getText());
       component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, data.getCommand()));
       component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(data.getDescription()).create()));
-      sender.spigot().sendMessage(component);
+      player.spigot().sendMessage(component);
     }
   }
 
