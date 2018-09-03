@@ -28,9 +28,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle3.Main;
+import pl.plajer.buildbattle3.plajerlair.core.utils.ConfigUtils;
+import pl.plajer.buildbattle3.plajerlair.core.utils.MigratorUtils;
 import pl.plajer.buildbattle3.utils.MessageUtils;
-import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.MigratorUtils;
 
 /**
  * @author Plajer

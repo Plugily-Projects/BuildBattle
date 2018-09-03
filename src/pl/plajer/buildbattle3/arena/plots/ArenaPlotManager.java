@@ -32,9 +32,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaManager;
+import pl.plajer.buildbattle3.plajerlair.core.services.ReportedException;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.MessageUtils;
-import pl.plajerlair.core.services.ReportedException;
 
 /**
  * Created by Tom on 17/08/2015.

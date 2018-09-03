@@ -32,7 +32,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import pl.plajer.buildbattle3.arena.plots.ArenaPlot;
 import pl.plajer.buildbattle3.handlers.ChatManager;
-import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajer.buildbattle3.plajerlair.core.utils.MinigameUtils;
 
 /**
  * Created by Tom on 24/08/2015.

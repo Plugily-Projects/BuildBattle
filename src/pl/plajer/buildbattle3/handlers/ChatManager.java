@@ -28,8 +28,8 @@ import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.handlers.language.LanguageManager;
 import pl.plajer.buildbattle3.handlers.language.Locale;
-import pl.plajerlair.core.services.ReportedException;
-import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajer.buildbattle3.plajerlair.core.services.ReportedException;
+import pl.plajer.buildbattle3.plajerlair.core.utils.MinigameUtils;
 
 /**
  * Created by Tom on 27/07/2014.

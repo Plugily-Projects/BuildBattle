@@ -28,9 +28,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
+import pl.plajer.buildbattle3.plajerlair.core.utils.ConfigUtils;
+import pl.plajer.buildbattle3.plajerlair.core.utils.MinigameUtils;
 import pl.plajer.buildbattle3.utils.ItemBuilder;
-import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
  * Created by Tom on 15/06/2015.

@@ -1,6 +1,6 @@
 ## BuildBattle 3 changelog
 
-### 4.0.0 Release (20/26.08.2018)
+### 4.0.0 Release (20.08.2018 - 02.09.2018)
 * Fixed NullPointerException for users who where no longer online
 * Now using default values when they not exist in config to avoid NullPointerException from ConfigPreferences
 * Fixed IllegalArgumentException when you add invalid item name to the in-game items blacklist - now it will notify you in console

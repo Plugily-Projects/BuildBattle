@@ -38,8 +38,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.handlers.ChatManager;
-import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajer.buildbattle3.plajerlair.core.utils.ConfigUtils;
+import pl.plajer.buildbattle3.plajerlair.core.utils.MinigameUtils;
 
 /**
  * Created by Tom on 26/08/2015.

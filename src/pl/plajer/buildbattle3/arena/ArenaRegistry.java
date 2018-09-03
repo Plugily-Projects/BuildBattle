@@ -23,19 +23,16 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.plots.ArenaPlot;
+import pl.plajer.buildbattle3.plajerlair.core.services.ReportedException;
+import pl.plajer.buildbattle3.plajerlair.core.utils.ConfigUtils;
+import pl.plajer.buildbattle3.plajerlair.core.utils.MinigameUtils;
 import pl.plajer.buildbattle3.utils.Cuboid;
-import pl.plajerlair.core.services.ReportedException;
-import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
  * Created by Tom on 27/07/2014.

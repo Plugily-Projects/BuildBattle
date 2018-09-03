@@ -29,8 +29,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle3.Main;
+import pl.plajer.buildbattle3.plajerlair.core.utils.ConfigUtils;
 import pl.plajer.buildbattle3.user.UserManager;
-import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
  * @author Plajer, TomTheDeveloper

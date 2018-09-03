@@ -53,15 +53,15 @@ import pl.plajer.buildbattle3.menus.particles.ParticleHandler;
 import pl.plajer.buildbattle3.menus.particles.ParticleMenu;
 import pl.plajer.buildbattle3.menus.playerheads.PlayerHeadsMenu;
 import pl.plajer.buildbattle3.menus.themevoter.VoteMenuListener;
+import pl.plajer.buildbattle3.plajerlair.core.services.ReportedException;
+import pl.plajer.buildbattle3.plajerlair.core.services.ServiceRegistry;
+import pl.plajer.buildbattle3.plajerlair.core.utils.ConfigUtils;
+import pl.plajer.buildbattle3.plajerlair.core.utils.UpdateChecker;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.CuboidSelector;
 import pl.plajer.buildbattle3.utils.MessageUtils;
 import pl.plajer.buildbattle3.utils.Metrics;
-import pl.plajerlair.core.services.ReportedException;
-import pl.plajerlair.core.services.ServiceRegistry;
-import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.UpdateChecker;
 
 /**
  * Created by Tom on 17/08/2015.

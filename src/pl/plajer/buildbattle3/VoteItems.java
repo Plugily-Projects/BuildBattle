@@ -30,7 +30,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle3.handlers.ChatManager;
-import pl.plajerlair.core.utils.ConfigUtils;
+import pl.plajer.buildbattle3.plajerlair.core.utils.ConfigUtils;
 
 /**
  * Created by Tom on 17/08/2015.

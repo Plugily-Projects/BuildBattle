@@ -34,9 +34,9 @@ import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.plots.ArenaPlot;
 import pl.plajer.buildbattle3.handlers.ChatManager;
+import pl.plajer.buildbattle3.plajerlair.core.utils.ConfigUtils;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.Utils;
-import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
  * Created by Tom on 23/08/2015.

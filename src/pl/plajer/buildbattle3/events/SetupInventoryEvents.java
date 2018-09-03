@@ -43,10 +43,10 @@ import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.arena.plots.ArenaPlot;
 import pl.plajer.buildbattle3.handlers.PermissionManager;
 import pl.plajer.buildbattle3.menus.SetupInventory;
+import pl.plajer.buildbattle3.plajerlair.core.services.ReportedException;
+import pl.plajer.buildbattle3.plajerlair.core.utils.ConfigUtils;
+import pl.plajer.buildbattle3.plajerlair.core.utils.MinigameUtils;
 import pl.plajer.buildbattle3.utils.Cuboid;
-import pl.plajerlair.core.services.ReportedException;
-import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
  * Created by Tom on 15/06/2015.

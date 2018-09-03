@@ -32,10 +32,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import pl.plajer.buildbattle3.Main;
+import pl.plajer.buildbattle3.plajerlair.core.services.LocaleService;
+import pl.plajer.buildbattle3.plajerlair.core.services.ServiceRegistry;
+import pl.plajer.buildbattle3.plajerlair.core.utils.ConfigUtils;
 import pl.plajer.buildbattle3.utils.MessageUtils;
-import pl.plajerlair.core.services.LocaleService;
-import pl.plajerlair.core.services.ServiceRegistry;
-import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
  * @author Plajer

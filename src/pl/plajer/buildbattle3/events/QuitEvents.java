@@ -29,9 +29,9 @@ import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaManager;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.buildbattleapi.StatsStorage;
+import pl.plajer.buildbattle3.plajerlair.core.services.ReportedException;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
-import pl.plajerlair.core.services.ReportedException;
 
 /**
  * @author Plajer

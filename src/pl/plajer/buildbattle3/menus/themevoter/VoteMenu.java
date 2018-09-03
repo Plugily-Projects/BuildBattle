@@ -37,10 +37,10 @@ import pl.plajer.buildbattle3.ConfigPreferences;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.handlers.ChatManager;
+import pl.plajer.buildbattle3.plajerlair.core.services.ReportedException;
+import pl.plajer.buildbattle3.plajerlair.core.utils.MinigameUtils;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.ItemBuilder;
-import pl.plajerlair.core.services.ReportedException;
-import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
  * @author Plajer

@@ -43,7 +43,7 @@ import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.arena.ArenaState;
 import pl.plajer.buildbattle3.handlers.ChatManager;
-import pl.plajerlair.core.services.ReportedException;
+import pl.plajer.buildbattle3.plajerlair.core.services.ReportedException;
 
 /**
  * Created by Tom on 1/02/2016.
