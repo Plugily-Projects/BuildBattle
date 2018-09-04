@@ -6,7 +6,7 @@ EXPLOSION_NORMAL:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 332
   enabled: true
   permission: particles.VIP
   slot: 0
@@ -16,7 +16,7 @@ EXPLOSION_LARGE:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 332
   enabled: true
   permission: particles.VIP
   slot: 1
@@ -26,17 +26,17 @@ EXPLOSION_HUGE:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 332
   enabled: true
   permission: particles.VIP
   slot: 2
 FIREWORKS_SPARK:
-  data: 0
+  data: 15
   displayname: '&6FIREWORKS_SPARK'
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 351
   enabled: true
   permission: particles.VIP
   slot: 3
@@ -46,7 +46,7 @@ WATER_BUBBLE:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 326
   enabled: true
   permission: particles.VIP
   slot: 4
@@ -56,7 +56,7 @@ WATER_SPLASH:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 326
   enabled: true
   permission: particles.VIP
   slot: 5
@@ -66,7 +66,7 @@ WATER_WAKE:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 326
   enabled: true
   permission: particles.VIP
   slot: 6
@@ -76,7 +76,7 @@ SUSPENDED:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 351
   enabled: true
   permission: particles.VIP
   slot: 7
@@ -86,27 +86,27 @@ SUSPENDED_DEPTH:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 351
   enabled: true
   permission: particles.VIP
   slot: 8
 CRIT:
-  data: 0
+  data: 7
   displayname: '&6CRIT'
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 351
   enabled: true
   permission: particles.VIP
   slot: 9
 CRIT_MAGIC:
-  data: 0
+  data: 6
   displayname: '&6CRIT_MAGIC'
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 351
   enabled: true
   permission: particles.VIP
   slot: 10
@@ -116,7 +116,7 @@ SMOKE_NORMAL:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 318
   enabled: true
   permission: particles.VIP
   slot: 11
@@ -126,7 +126,7 @@ SMOKE_LARGE:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 173
   enabled: true
   permission: particles.VIP
   slot: 12
@@ -136,7 +136,7 @@ SPELL:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 372
   enabled: true
   permission: particles.VIP
   slot: 13
@@ -146,7 +146,7 @@ SPELL_INSTANT:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 372
   enabled: true
   permission: particles.VIP
   slot: 14
@@ -156,7 +156,7 @@ SPELL_MOB:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 372
   enabled: true
   permission: particles.VIP
   slot: 15
@@ -166,7 +166,7 @@ SPELL_MOB_AMBIENT:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 372
   enabled: true
   permission: particles.VIP
   slot: 16
@@ -176,7 +176,7 @@ SPELL_WITCH:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 372
   enabled: true
   permission: particles.VIP
   slot: 17
@@ -186,7 +186,7 @@ DRIP_WATER:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 373
   enabled: true
   permission: particles.VIP
   slot: 18
@@ -196,7 +196,7 @@ DRIP_LAVA:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 327
   enabled: true
   permission: particles.VIP
   slot: 19
@@ -206,7 +206,7 @@ VILLAGER_ANGRY:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 388
   enabled: true
   permission: particles.VIP
   slot: 20
@@ -216,7 +216,7 @@ VILLAGER_HAPPY:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 388
   enabled: true
   permission: particles.VIP
   slot: 21
@@ -226,7 +226,7 @@ TOWN_AURA:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 263
   enabled: true
   permission: particles.VIP
   slot: 22
@@ -236,7 +236,7 @@ NOTE:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 377
   enabled: true
   permission: particles.VIP
   slot: 23
@@ -246,7 +246,7 @@ PORTAL:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 381
   enabled: true
   permission: particles.VIP
   slot: 24
@@ -256,7 +256,7 @@ ENCHANTMENT_TABLE:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 116
   enabled: true
   permission: particles.VIP
   slot: 25
@@ -266,7 +266,7 @@ FLAME:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 377
   enabled: true
   permission: particles.VIP
   slot: 26
@@ -276,7 +276,7 @@ LAVA:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 327
   enabled: true
   permission: particles.VIP
   slot: 27
@@ -296,7 +296,7 @@ CLOUD:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 80
   enabled: true
   permission: particles.VIP
   slot: 29
@@ -306,7 +306,7 @@ REDSTONE:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 331
   enabled: true
   permission: particles.VIP
   slot: 30
@@ -316,7 +316,7 @@ SNOWBALL:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 332
   enabled: true
   permission: particles.VIP
   slot: 31
@@ -326,7 +326,7 @@ SNOW_SHOVEL:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 332
   enabled: true
   permission: particles.VIP
   slot: 32
@@ -336,7 +336,7 @@ SLIME:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 165
   enabled: true
   permission: particles.VIP
   slot: 33
@@ -346,7 +346,7 @@ HEART:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 331
   enabled: true
   permission: particles.VIP
   slot: 34
@@ -356,7 +356,7 @@ BARRIER:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 166
   enabled: true
   permission: particles.VIP
   slot: 35
@@ -366,7 +366,7 @@ WATER_DROP:
   lore:
   - Click to activate
   - on your location
-  material: 339
+  material: 326
   enabled: true
   permission: particles.VIP
   slot: 36
