@@ -57,8 +57,8 @@ public class ConfigPreferences {
   }
 
   public static boolean isThemeBlacklisted(String theme) {
-    for(String s : config.getStringList("Blacklisted-Themes")) {
-      if(s.equalsIgnoreCase(theme)) {
+    for (String s : config.getStringList("Blacklisted-Themes")) {
+      if (s.equalsIgnoreCase(theme)) {
         return true;
       }
     }

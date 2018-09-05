@@ -19,7 +19,6 @@
 package pl.plajer.buildbattle3.utils;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -27,28 +26,27 @@ import org.bukkit.SkullType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import pl.plajer.buildbattle3.ConfigPreferences;
 
 /**
  * Created by Tom on 29/07/2014.
  */
 public class Utils {
 
-    public static ItemStack getPlayerHead(OfflinePlayer player) {
-        ItemStack itemStack = new ItemStack(Material.SKULL_ITEM);
-        SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();
-        skullMeta.setOwner(player.getName());
-        itemStack.setItemMeta(skullMeta);
-        itemStack.setDurability((short) SkullType.PLAYER.ordinal());
-        return itemStack;
-    }
+  public static ItemStack getPlayerHead(OfflinePlayer player) {
+    ItemStack itemStack = new ItemStack(Material.SKULL_ITEM);
+    SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();
+    skullMeta.setOwner(player.getName());
+    itemStack.setItemMeta(skullMeta);
+    itemStack.setDurability((short) SkullType.PLAYER.ordinal());
+    return itemStack;
+  }
 
-    public static ItemStack setItemNameAndLore(ItemStack item, String name, String[] lore) {
-        ItemMeta im = item.getItemMeta();
-        im.setDisplayName(name);
-        im.setLore(Arrays.asList(lore));
-        item.setItemMeta(im);
-        return item;
-    }
+  public static ItemStack setItemNameAndLore(ItemStack item, String name, String[] lore) {
+    ItemMeta im = item.getItemMeta();
+    im.setDisplayName(name);
+    im.setLore(Arrays.asList(lore));
+    item.setItemMeta(im);
+    return item;
+  }
 
 }
