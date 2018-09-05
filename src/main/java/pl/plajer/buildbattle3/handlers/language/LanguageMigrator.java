@@ -39,7 +39,7 @@ import pl.plajerlair.core.utils.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int LANGUAGE_FILE_VERSION = 6;
+  public static final int LANGUAGE_FILE_VERSION = 7;
   public static final int CONFIG_FILE_VERSION = 4;
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
@@ -164,6 +164,8 @@ public class LanguageMigrator {
                   "    Header: \"&8&m-------------------[&6 Top 10 &8&m]-------------------\"\r\n" +
                   "    Format: \"&e#%position% %name% - %value% &7%statistic%\"");
           break;
+        case 6:
+          MigratorUtils.insertAfterLine(file, "Admin-Commands:", "    Theme-Blacklisted: \"&cThis theme cannot be used in game!\"");
       }
       version++;
     }
