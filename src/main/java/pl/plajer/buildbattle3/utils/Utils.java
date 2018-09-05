@@ -18,27 +18,43 @@
 
 package pl.plajer.buildbattle3.utils;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+
+import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.UUID;
 
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.SkullType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 /**
  * Created by Tom on 29/07/2014.
  */
 public class Utils {
 
-  public static ItemStack getPlayerHead(OfflinePlayer player) {
-    ItemStack itemStack = new ItemStack(Material.SKULL_ITEM);
-    SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();
-    skullMeta.setOwner(player.getName());
-    itemStack.setItemMeta(skullMeta);
-    itemStack.setDurability((short) SkullType.PLAYER.ordinal());
-    return itemStack;
+  public static ItemStack getSkull(String url) {
+    ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+    if (url.isEmpty()) return head;
+
+    SkullMeta headMeta = (SkullMeta) head.getItemMeta();
+    GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+    profile.getProperties().put("textures", new Property("textures", Base64Coder.decodeString(url)));
+    Field profileField;
+    try {
+      profileField = headMeta.getClass().getDeclaredField("profile");
+      profileField.setAccessible(true);
+      profileField.set(headMeta, profile);
+
+    } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException ignored) {
+    }
+
+    head.setItemMeta(headMeta);
+    return head;
+
   }
 
   public static ItemStack setItemNameAndLore(ItemStack item, String name, String[] lore) {

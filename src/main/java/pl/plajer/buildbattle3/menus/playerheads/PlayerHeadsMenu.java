@@ -28,8 +28,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.SkullType;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -54,16 +52,12 @@ public class PlayerHeadsMenu {
   public static void loadHeadItems() {
     FileConfiguration config = ConfigUtils.getConfig(Main.getPlugin(Main.class), "playerheadmenu/mainmenu");
     if (!config.contains("animals")) {
-      config.set("animals.data", SkullType.PLAYER.ordinal());
       config.set("animals.displayname", "&6" + "Animals");
       config.set("animals.lore", Arrays.asList("Click to open", "animals head menu"));
-      config.set("animals.material", Material.SKULL_ITEM.getId());
       config.set("animals.enabled", true);
       config.set("animals.config", "animalheads");
       config.set("animals.permission", "particles.VIP");
-      config.set("animals.slot", 7);
-      config.set("animals.owner", "MHF_Pig");
-      config.set("animals.inventorysize", 3 * 9);
+      config.set("animals.texture", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjIxNjY4ZWY3Y2I3OWRkOWMyMmNlM2QxZjNmNGNiNmUyNTU5ODkzYjZkZjRhNDY5NTE0ZTY2N2MxNmFhNCJ9fX0=");
       config.set("animals.menuname", "Animal Heads Menu");
     }
     try {
@@ -73,17 +67,13 @@ public class PlayerHeadsMenu {
     }
     for (String str : config.getKeys(false)) {
       HeadsItem headsItem = new HeadsItem();
-      headsItem.setData(config.getInt(str + ".data"));
       headsItem.setEnabled(config.getBoolean(str + ".enabled"));
-      headsItem.setMaterial(org.bukkit.Material.getMaterial(config.getInt(str + ".material")));
       headsItem.setLore(config.getStringList(str + ".lore"));
       headsItem.setDisplayName(config.getString(str + ".displayname"));
       headsItem.setPermission(config.getString(str + ".permission"));
-      headsItem.setOwner(config.getString(str + ".owner"));
-      headsItem.setSlot(config.getInt(str + ".slot"));
       headsItem.setConfig(config.getString(str + ".config"));
-      headsItem.setSize(config.getInt(str + ".inventorysize"));
       headsItem.setMenuName(config.getString(str + ".menuname"));
+      headsItem.setTexture(config.getString(str + ".texture"));
       if (headsItem.isEnabled()) headsItems.add(headsItem);
     }
     for (HeadsItem headsItem : headsItems) {
@@ -91,13 +81,10 @@ public class PlayerHeadsMenu {
       Inventory inv;
       List<HeadsItem> list = new ArrayList<>();
       if (!config.contains("example")) {
-        config.set("example.data", SkullType.PLAYER.ordinal());
         config.set("example.displayname", "&6" + "Animals");
-        config.set("example.owner", "MHF_Pig");
+        config.set("example.texture", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjIxNjY4ZWY3Y2I3OWRkOWMyMmNlM2QxZjNmNGNiNmUyNTU5ODkzYjZkZjRhNDY5NTE0ZTY2N2MxNmFhNCJ9fX0=");
         config.set("example.lore", Collections.singletonList(ChatManager.colorRawMessage("&7Click to select")));
-        config.set("example.material", Material.SKULL_ITEM.getId());
         config.set("example.enabled", true);
-        config.set("example.slot", 7);
         try {
           config.save(ConfigUtils.getFile(JavaPlugin.getPlugin(Main.class), "playerheadmenu/menus/" + headsItem.getConfigName()));
         } catch (IOException e) {
@@ -106,29 +93,34 @@ public class PlayerHeadsMenu {
       }
       for (String path : headsItem.getConfig().getKeys(false)) {
         HeadsItem heads = new HeadsItem();
-        heads.setData(config.getInt(path + ".data"));
         heads.setEnabled(config.getBoolean(path + ".enabled"));
-        heads.setMaterial(org.bukkit.Material.getMaterial(config.getInt(path + ".material")));
         heads.setLore(config.getStringList(path + ".lore"));
         heads.setDisplayName(config.getString(path + ".displayname"));
         heads.setPermission(config.getString(path + ".permission"));
-        heads.setOwner(config.getString(path + ".owner"));
-        heads.setSlot(config.getInt(path + ".slot"));
+        heads.setTexture(config.getString(path + ".texture"));
         if (heads.isEnabled()) list.add(heads);
       }
       playerheadmenus.put(headsItem.getMenuName(), list);
       inv = Bukkit.createInventory(null, MinigameUtils.serializeInt(list.size()), headsItem.getMenuName());
+      int i = 0;
       for (HeadsItem item : list) {
-        if (item.isEnabled()) inv.setItem(item.getSlot(), item.getItemStack());
+        if (item.isEnabled()) {
+          inv.setItem(i, item.getItemStack());
+          i++;
+        }
       }
       inventories.put(headsItem.getMenuName(), inv);
     }
   }
 
   public static void openMenu(Player player) {
-    Inventory inventory = player.getServer().createInventory(player, 3 * 9, ChatManager.colorMessage("Menus.Option-Menu.Players-Heads-Inventory-Name"));
+    Inventory inventory = player.getServer().createInventory(player, MinigameUtils.serializeInt(headsItems.size()), ChatManager.colorMessage("Menus.Option-Menu.Players-Heads-Inventory-Name"));
+    int i = 0;
     for (HeadsItem headsItem : headsItems) {
-      if (headsItem.isEnabled()) inventory.setItem(headsItem.getSlot(), headsItem.getItemStack());
+      if (headsItem.isEnabled()) {
+        inventory.setItem(i, headsItem.getItemStack());
+        i++;
+      }
     }
     player.openInventory(inventory);
   }

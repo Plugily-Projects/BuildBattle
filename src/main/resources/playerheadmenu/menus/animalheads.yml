@@ -1,66 +1,46 @@
 Pig:
-  data: 3
   displayname: '&6Pig'
-  owner: MHF_Pig
   lore:
-  - '&7Click to select'
-  material: 397
+    - '&7Click to select'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjIxNjY4ZWY3Y2I3OWRkOWMyMmNlM2QxZjNmNGNiNmUyNTU5ODkzYjZkZjRhNDY5NTE0ZTY2N2MxNmFhNCJ9fX0="
   enabled: true
-  slot: 0
 cow:
-  data: 3
   displayname: '&6Cow'
-  owner: MHF_Cow
   lore:
   - '&7Click to select'
-  material: 397
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWQ2YzZlZGE5NDJmN2Y1ZjcxYzMxNjFjNzMwNmY0YWVkMzA3ZDgyODk1ZjlkMmIwN2FiNDUyNTcxOGVkYzUifX19"
   enabled: true
-  slot: 2
 chicken:
-  data: 3
   displayname: '&6Chicken'
-  owner: MHF_Chicken
   lore:
   - '&7Click to select'
-  material: 397
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTYzODQ2OWE1OTljZWVmNzIwNzUzNzYwMzI0OGE5YWIxMWZmNTkxZmQzNzhiZWE0NzM1YjM0NmE3ZmFlODkzIn19fQ=="
   enabled: true
-  slot: 3
 wolf:
-  data: 3
-  displayname: '&6WOlf'
-  owner: MHF_Wolf
+  displayname: '&6Wolf'
   lore:
   - '&7Click to select'
-  material: 397
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjlkMWQzMTEzZWM0M2FjMjk2MWRkNTlmMjgxNzVmYjQ3MTg4NzNjNmM0NDhkZmNhODcyMjMxN2Q2NyJ9fX0="
   enabled: true
-  slot: 4
 Ocelot:
-  data: 3
   displayname: '&6Ocelot'
-  owner: MHF_Ocelot
   lore:
   - '&7Click to select'
-  material: 397
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTY1N2NkNWMyOTg5ZmY5NzU3MGZlYzRkZGNkYzY5MjZhNjhhMzM5MzI1MGMxYmUxZjBiMTE0YTFkYjEifX19"
   enabled: true
-  slot: 5
 Sheep:
-  data: 3
   displayname: '&6Sheep'
-  owner: MHF_Sheep
   lore:
   - '&7Click to select'
-  material: 397
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjMxZjljY2M2YjNlMzJlY2YxM2I4YTExYWMyOWNkMzNkMThjOTVmYzczZGI4YTY2YzVkNjU3Y2NiOGJlNzAifX19"
   enabled: true
-  slot: 6
 Squid:
-  data: 3
   displayname: '&6Squid'
-  owner: MHF_Squid
   lore:
   - '&7Click to select'
-  material: 397
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMDE0MzNiZTI0MjM2NmFmMTI2ZGE0MzRiODczNWRmMWViNWIzY2IyY2VkZTM5MTQ1OTc0ZTljNDgzNjA3YmFjIn19fQ=="
   enabled: true
-  slot: 7
+  #todo
 Villager:
   data: 3
   displayname: '&6Villager'

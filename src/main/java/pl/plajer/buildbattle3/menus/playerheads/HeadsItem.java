@@ -20,11 +20,7 @@ package pl.plajer.buildbattle3.menus.playerheads;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.SkullType;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -37,20 +33,16 @@ import pl.plajerlair.core.utils.ConfigUtils;
 /**
  * Created by Tom on 26/08/2015.
  */
-class HeadsItem {
+public class HeadsItem {
 
-  private Material material;
-  private Byte data = null;
-  private String[] lore;
   private String displayName;
+  private String[] lore;
   private String permission;
-  private boolean enabled = true;
-  private int slot;
-  private String owner;
-  private String config;
-  private int size = 18;
   private String menuName;
+  private String texture;
+  private boolean enabled;
   private ItemStack itemStack = null;
+  private String config;
 
   public String getMenuName() {
     return menuName;
@@ -58,14 +50,6 @@ class HeadsItem {
 
   public void setMenuName(String menuName) {
     this.menuName = menuName;
-  }
-
-  private String getOwner() {
-    return owner;
-  }
-
-  public void setOwner(String owner) {
-    this.owner = owner;
   }
 
   public FileConfiguration getConfig() {
@@ -78,10 +62,6 @@ class HeadsItem {
 
   public String getConfigName() {
     return config;
-  }
-
-  public void setSize(int size) {
-    this.size = size;
   }
 
   public String getPermission() {
@@ -100,20 +80,8 @@ class HeadsItem {
     this.enabled = enabled;
   }
 
-  private Material getMaterial() {
-    return material;
-  }
-
-  public void setMaterial(Material material) {
-    this.material = material;
-  }
-
-  private byte getData() {
-    return data;
-  }
-
-  public void setData(Integer data) {
-    this.data = data.byteValue();
+  public void setTexture(String texture) {
+    this.texture = texture;
   }
 
   private List<String> getLore() {
@@ -137,31 +105,10 @@ class HeadsItem {
     this.displayName = displayName;
   }
 
-  public int getSlot() {
-    return slot;
-  }
-
-  public void setSlot(int slot) {
-    this.slot = slot;
-  }
-
   public ItemStack getItemStack() {
     if (itemStack == null) {
-      if (data != null) {
-        itemStack = new ItemStack(getMaterial(), 1, getData());
-      } else {
-        itemStack = new ItemStack(getMaterial());
-
-      }
-      if (itemStack.getType() == Material.SKULL_ITEM && itemStack.getData().getData() == SkullType.PLAYER.ordinal()) {
-        if (getOwner().matches("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[34][0-9a-fA-F]{3}-[89ab][0-9a-fA-F]{3}-[0-9a-fA-F]{12}")) {
-          itemStack = Utils.getPlayerHead(Bukkit.getOfflinePlayer(UUID.fromString(getOwner())));
-        } else {
-          itemStack = Utils.getPlayerHead(Bukkit.getOfflinePlayer(getOwner()));
-        }
-      }
+      itemStack = Utils.getSkull(texture);
       Utils.setItemNameAndLore(itemStack, ChatManager.colorRawMessage(this.getDisplayName()), getLore().toArray(new String[0]));
-
       return itemStack;
     } else {
       return itemStack;
