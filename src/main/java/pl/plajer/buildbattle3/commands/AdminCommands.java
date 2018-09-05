@@ -60,254 +60,258 @@ import pl.plajerlair.core.utils.MinigameUtils;
  */
 public class AdminCommands extends MainCommand {
 
-  private static List<CommandData> command = new LinkedList<>();
+    private static List<CommandData> command = new LinkedList<>();
 
-  static {
-    ChatColor gray = ChatColor.GRAY;
-    ChatColor gold = ChatColor.GOLD;
-    command.add(new CommandData("/bb create " + gold + "<arena>", "/bb create <arena>",
-            gray + "Create new arena\n" + gold + "Permission: " + gray + "buildbattle.admin.create"));
-    command.add(new CommandData("/bb " + gold + "<arena>" + ChatColor.WHITE + " edit", "/bb <arena> edit",
-            gray + "Edit existing arena\n" + gold + "Permission: " + gray + "buildbattle.admin.edit"));
-    command.add(new CommandData("/bba addplot " + gold + "<arena>", "/bba addplot <arena>",
-            gray + "Add new game plot to the arena\n" + gold + "Permission: " + gray + "buildbattle.admin.addplot"));
-    command.add(new CommandData("/bba removeplot " + gold + "<arena> <plot ID>", "/bba removeplot <arena> <id>",
-            gray + "Remove game plot from the arena\n" + gold + "Permission: " + gray + "buildbattle.admin.removeplot"));
-    command.add(new CommandData("/bba plotwand", "/bba plotwand",
-            gray + "Get plot wand to create plots\n" + gold + "Permission: " + gray + "buildbattle.admin.plotwand"));
-    command.add(new CommandData("/bba addnpc", "/bba addnpc",
-            gray + "Add new NPC to the game plots\n" + gold + "Permission: " + gray + "buildbattle.admin.addnpc\n" + gold + "" + ChatColor.BOLD + "Requires Citizen plugin!"));
-    command.add(new CommandData("/bba settheme " + gold + "<theme>", "/bba settheme <theme>",
-            gray + "Set new arena theme\n" + gold + "Permission: " + gray + "buildbattle.admin.settheme\n" + gold + "You can set arena theme only when it started\n" + gold + "and only for 20 seconds after start!"));
-    command.add(new CommandData("/bba addvotes " + gold + "<player> <amount>", "/bba addvotes <player> <amount>",
-            gray + "Add super votes to target player\n" + gold + "Permission: " + gray + "buildbattle.admin.supervotes.add"));
-    command.add(new CommandData("/bba setvotes " + gold + "<player> <amount>", "/bba setvotes <player> <amount>",
-            gray + "Set super votes of target player\n" + gold + "Permission: " + gray + "buildbattle.admin.supervotes.set"));
-    command.add(new CommandData("/bba list", "/bba list",
-            gray + "Shows list with all loaded arenas\n" + gold + "Permission: " + gray + "buildbattle.admin.list"));
-    command.add(new CommandData("/bba stop", "/bba stop",
-            gray + "Stops the arena you're in\n" + gray + "" + ChatColor.BOLD + "You must be in target arena!\n" + gold + "Permission: " + gray + "buildbattle.admin.stop"));
-    command.add(new CommandData("/bba forcestart", "/bba forcestart",
-            gray + "Force starts arena you're in\n" + gold + "Permission: " + gray + "buildbattle.admin.forcestart"));
-    command.add(new CommandData("/bba reload", "/bba reload", gray + "Reload all game arenas\n" + gray + "" + ChatColor.BOLD +
-            "They will be stopped!\n" + gold + "Permission: " + gray + "buildbattle.admin.reload"));
-    command.add(new CommandData(ChatColor.STRIKETHROUGH + "/bba addsign " + ChatColor.GOLD + "<arena>", "/bba addsign <arena>",
-            gray + "Set sign you look at as a target arena sign\n" + gold + "Permission: " + gray + "buildbattle.admin.sign.create (for creating signs manually)\n" +
-                    gold + "Permission: " + gray + "buildbattle.admin.sign.break (for breaking arena signs)\n" + ChatColor.BOLD + "" + ChatColor.RED + "Currently unused, use Setup menu instead"));
-    command.add(new CommandData("/bba delete " + ChatColor.GOLD + "<arena>", "/bba delete <arena>",
-            gray + "Deletes specified arena\n" + gold + "Permission: " + gray + "buildbattle.admin.delete"));
-  }
-
-  private Main plugin;
-
-  public AdminCommands(Main plugin) {
-    this.plugin = plugin;
-  }
-
-  public void sendHelp(CommandSender sender) {
-    if (!sender.hasPermission("buildbattle.admin")) return;
-    if (checkSenderIsConsole(sender)) return;
-    //fix for missing spigot() methods for CommandSender
-    Player player = (Player) sender;
-    player.sendMessage(ChatColor.GREEN + "  " + ChatColor.BOLD + "BuildBattle " + ChatColor.GRAY + plugin.getDescription().getVersion());
-    player.sendMessage(ChatColor.RED + " []" + ChatColor.GRAY + " = optional  " + ChatColor.GOLD + "<>" + ChatColor.GRAY + " = required");
-    player.sendMessage(ChatColor.GRAY + "Hover command to see more, click command to suggest it.");
-    for (CommandData data : command) {
-      TextComponent component = new TextComponent(data.getText());
-      component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, data.getCommand()));
-      component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(data.getDescription()).create()));
-      player.spigot().sendMessage(component);
+    static {
+        ChatColor gray = ChatColor.GRAY;
+        ChatColor gold = ChatColor.GOLD;
+        command.add(new CommandData("/bb create " + gold + "<arena>", "/bb create <arena>",
+                gray + "Create new arena\n" + gold + "Permission: " + gray + "buildbattle.admin.create"));
+        command.add(new CommandData("/bb " + gold + "<arena>" + ChatColor.WHITE + " edit", "/bb <arena> edit",
+                gray + "Edit existing arena\n" + gold + "Permission: " + gray + "buildbattle.admin.edit"));
+        command.add(new CommandData("/bba addplot " + gold + "<arena>", "/bba addplot <arena>",
+                gray + "Add new game plot to the arena\n" + gold + "Permission: " + gray + "buildbattle.admin.addplot"));
+        command.add(new CommandData("/bba removeplot " + gold + "<arena> <plot ID>", "/bba removeplot <arena> <id>",
+                gray + "Remove game plot from the arena\n" + gold + "Permission: " + gray + "buildbattle.admin.removeplot"));
+        command.add(new CommandData("/bba plotwand", "/bba plotwand",
+                gray + "Get plot wand to create plots\n" + gold + "Permission: " + gray + "buildbattle.admin.plotwand"));
+        command.add(new CommandData("/bba addnpc", "/bba addnpc",
+                gray + "Add new NPC to the game plots\n" + gold + "Permission: " + gray + "buildbattle.admin.addnpc\n" + gold + "" + ChatColor.BOLD + "Requires Citizen plugin!"));
+        command.add(new CommandData("/bba settheme " + gold + "<theme>", "/bba settheme <theme>",
+                gray + "Set new arena theme\n" + gold + "Permission: " + gray + "buildbattle.admin.settheme\n" + gold + "You can set arena theme only when it started\n" + gold + "and only for 20 seconds after start!"));
+        command.add(new CommandData("/bba addvotes " + gold + "<player> <amount>", "/bba addvotes <player> <amount>",
+                gray + "Add super votes to target player\n" + gold + "Permission: " + gray + "buildbattle.admin.supervotes.add"));
+        command.add(new CommandData("/bba setvotes " + gold + "<player> <amount>", "/bba setvotes <player> <amount>",
+                gray + "Set super votes of target player\n" + gold + "Permission: " + gray + "buildbattle.admin.supervotes.set"));
+        command.add(new CommandData("/bba list", "/bba list",
+                gray + "Shows list with all loaded arenas\n" + gold + "Permission: " + gray + "buildbattle.admin.list"));
+        command.add(new CommandData("/bba stop", "/bba stop",
+                gray + "Stops the arena you're in\n" + gray + "" + ChatColor.BOLD + "You must be in target arena!\n" + gold + "Permission: " + gray + "buildbattle.admin.stop"));
+        command.add(new CommandData("/bba forcestart", "/bba forcestart",
+                gray + "Force starts arena you're in\n" + gold + "Permission: " + gray + "buildbattle.admin.forcestart"));
+        command.add(new CommandData("/bba reload", "/bba reload", gray + "Reload all game arenas\n" + gray + "" + ChatColor.BOLD +
+                "They will be stopped!\n" + gold + "Permission: " + gray + "buildbattle.admin.reload"));
+        command.add(new CommandData(ChatColor.STRIKETHROUGH + "/bba addsign " + ChatColor.GOLD + "<arena>", "/bba addsign <arena>",
+                gray + "Set sign you look at as a target arena sign\n" + gold + "Permission: " + gray + "buildbattle.admin.sign.create (for creating signs manually)\n" +
+                        gold + "Permission: " + gray + "buildbattle.admin.sign.break (for breaking arena signs)\n" + ChatColor.BOLD + "" + ChatColor.RED + "Currently unused, use Setup menu instead"));
+        command.add(new CommandData("/bba delete " + ChatColor.GOLD + "<arena>", "/bba delete <arena>",
+                gray + "Deletes specified arena\n" + gold + "Permission: " + gray + "buildbattle.admin.delete"));
     }
-  }
 
-  public void addPlot(Player player, String arena) {
-    if (!hasPermission(player, "buildbattle.admin.addplot")) return;
-    if (ArenaRegistry.getArena(arena) == null) {
-      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
-      return;
-    }
-    CuboidSelector.Selection selection = plugin.getCuboidSelector().getSelection(player);
-    if (selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
-      player.sendMessage(ChatManager.colorRawMessage(ChatManager.PLUGIN_PREFIX + "&cPlease select both corners before adding a plot!"));
-      return;
-    }
-    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    int id = 0;
-    if (config.contains("instances." + arena + ".plots")) {
-      id = config.getConfigurationSection("instances." + arena + ".plots").getKeys(false).size();
-    }
-    MinigameUtils.saveLoc(plugin, config, "arenas", "instances." + arena + ".plots." + id + ".minpoint", selection.getFirstPos());
-    MinigameUtils.saveLoc(plugin, config, "arenas", "instances." + arena + ".plots." + id + ".maxpoint", selection.getSecondPos());
-    player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&aPlot with ID &e" + id + "&a added to arena instance &e" + arena));
-    plugin.getCuboidSelector().removeSelection(player);
-  }
+    private Main plugin;
 
-  public void removePlot(Player player, String arena, String plotID) {
-    if (!hasPermission(player, "buildbattle.admin.removeplot")) return;
-    if (ArenaRegistry.getArena(arena) == null) {
-      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
-      return;
+    public AdminCommands(Main plugin) {
+        this.plugin = plugin;
     }
-    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    if (config.contains("instances." + arena + ".plots." + plotID)) {
-      config.set("instances." + arena + ".plots." + plotID, null);
-      ConfigUtils.saveConfig(plugin, config, "arenas");
-      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&aPlot with ID &e" + plotID + "&a removed from arena &e" + arena));
-    } else {
-      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&cPlot with that ID doesn't exist!"));
+
+    public void sendHelp(CommandSender sender) {
+        if(!sender.hasPermission("buildbattle.admin")) return;
+        if(checkSenderIsConsole(sender)) return;
+        //fix for missing spigot() methods for CommandSender
+        Player player = (Player) sender;
+        player.sendMessage(ChatColor.GREEN + "  " + ChatColor.BOLD + "BuildBattle " + ChatColor.GRAY + plugin.getDescription().getVersion());
+        player.sendMessage(ChatColor.RED + " []" + ChatColor.GRAY + " = optional  " + ChatColor.GOLD + "<>" + ChatColor.GRAY + " = required");
+        player.sendMessage(ChatColor.GRAY + "Hover command to see more, click command to suggest it.");
+        for(CommandData data : command) {
+            TextComponent component = new TextComponent(data.getText());
+            component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, data.getCommand()));
+            component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(data.getDescription()).create()));
+            player.spigot().sendMessage(component);
+        }
     }
-  }
 
-  public void forceStart(Player player) {
-    if (!hasPermission(player, "buildbattle.admin.forcestart")) return;
-    Arena arena = ArenaRegistry.getArena(player);
-    if (arena == null) return;
-    if (arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) {
-      arena.setGameState(ArenaState.STARTING);
-      arena.setTimer(0);
-      for (Player p : arena.getPlayers()) {
-        p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Admin-Messages.Set-Starting-In-To-0"));
-      }
-    }
-  }
-
-  public void forceStartWithTheme(Player player, String theme) {
-    Arena arena = ArenaRegistry.getArena(player);
-    if (arena == null) return;
-    forceStart(player);
-    arena.setThemeVoteTime(false);
-    arena.setTheme(theme);
-  }
-
-  public void reloadPlugin(Player player) {
-    if (!hasPermission(player, "buildbattle.admin.reload")) return;
-    ConfigPreferences.loadOptions();
-    ArenaRegistry.registerArenas();
-    player.sendMessage(ChatColor.GREEN + "Plugin reloaded!");
-  }
-
-  public void addSign(Player player, String arenaName) {
-    if (!hasPermission(player, "buildbattle.admin.addsign")) return;
-    Arena arena = ArenaRegistry.getArena(arenaName);
-    if (arena == null) {
-      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
-    } else {
-      Location loc = player.getTargetBlock((Set<Material>) null, 10).getLocation();
-      if (loc.getBlock().getState() instanceof Sign) {
+    public void addPlot(Player player, String arena) {
+        if(!hasPermission(player, "buildbattle.admin.addplot")) return;
+        if(ArenaRegistry.getArena(arena) == null) {
+            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+            return;
+        }
+        CuboidSelector.Selection selection = plugin.getCuboidSelector().getSelection(player);
+        if(selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
+            player.sendMessage(ChatManager.colorRawMessage(ChatManager.PLUGIN_PREFIX + "&cPlease select both corners before adding a plot!"));
+            return;
+        }
         FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-        List<String> signs = config.getStringList("instances." + arena.getID() + ".signs");
-        signs.add(loc.getWorld().getName() + "," + loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getYaw() + "," + loc.getPitch());
-        config.set("instances." + arena.getID() + ".signs", signs);
+        int id = 0;
+        if(config.contains("instances." + arena + ".plots")) {
+            id = config.getConfigurationSection("instances." + arena + ".plots").getKeys(false).size();
+        }
+        MinigameUtils.saveLoc(plugin, config, "arenas", "instances." + arena + ".plots." + id + ".minpoint", selection.getFirstPos());
+        MinigameUtils.saveLoc(plugin, config, "arenas", "instances." + arena + ".plots." + id + ".maxpoint", selection.getSecondPos());
+        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&aPlot with ID &e" + id + "&a added to arena instance &e" + arena));
+        plugin.getCuboidSelector().removeSelection(player);
+    }
+
+    public void removePlot(Player player, String arena, String plotID) {
+        if(!hasPermission(player, "buildbattle.admin.removeplot")) return;
+        if(ArenaRegistry.getArena(arena) == null) {
+            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+            return;
+        }
+        FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+        if(config.contains("instances." + arena + ".plots." + plotID)) {
+            config.set("instances." + arena + ".plots." + plotID, null);
+            ConfigUtils.saveConfig(plugin, config, "arenas");
+            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&aPlot with ID &e" + plotID + "&a removed from arena &e" + arena));
+        } else {
+            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&cPlot with that ID doesn't exist!"));
+        }
+    }
+
+    public void forceStart(Player player) {
+        if(!hasPermission(player, "buildbattle.admin.forcestart")) return;
+        Arena arena = ArenaRegistry.getArena(player);
+        if(arena == null) return;
+        if(arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) {
+            arena.setGameState(ArenaState.STARTING);
+            arena.setTimer(0);
+            for(Player p : arena.getPlayers()) {
+                p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Admin-Messages.Set-Starting-In-To-0"));
+            }
+        }
+    }
+
+    public void forceStartWithTheme(Player player, String theme) {
+        Arena arena = ArenaRegistry.getArena(player);
+        if(arena == null) return;
+        forceStart(player);
+        arena.setThemeVoteTime(false);
+        arena.setTheme(theme);
+    }
+
+    public void reloadPlugin(Player player) {
+        if(!hasPermission(player, "buildbattle.admin.reload")) return;
+        ConfigPreferences.loadOptions();
+        ArenaRegistry.registerArenas();
+        player.sendMessage(ChatColor.GREEN + "Plugin reloaded!");
+    }
+
+    public void addSign(Player player, String arenaName) {
+        if(!hasPermission(player, "buildbattle.admin.addsign")) return;
+        Arena arena = ArenaRegistry.getArena(arenaName);
+        if(arena == null) {
+            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+        } else {
+            Location loc = player.getTargetBlock((Set<Material>) null, 10).getLocation();
+            if(loc.getBlock().getState() instanceof Sign) {
+                FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+                List<String> signs = config.getStringList("instances." + arena.getID() + ".signs");
+                signs.add(loc.getWorld().getName() + "," + loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getYaw() + "," + loc.getPitch());
+                config.set("instances." + arena.getID() + ".signs", signs);
+                ConfigUtils.saveConfig(plugin, config, "arenas");
+                plugin.getSignManager().getLoadedSigns().put((Sign) loc.getBlock().getState(), arena);
+                player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Created"));
+            } else {
+                player.sendMessage(ChatColor.RED + "You have to look at a sign to perform this command!");
+            }
+
+        }
+    }
+
+    public void stopGame(CommandSender sender) {
+        if(checkSenderIsConsole(sender)) return;
+        if(!hasPermission(sender, "buildbattle.admin.stopgame")) return;
+        Arena a = ArenaRegistry.getArena((Player) sender);
+        if(a == null) return;
+        ArenaManager.stopGame(false, a);
+    }
+
+    public void addNPC(Player player) {
+        if(!hasPermission(player, "buildbattle.admin.addnpc")) return;
+        if(plugin.getServer().getPluginManager().isPluginEnabled("Citizens")) {
+            NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.VILLAGER, ChatManager.colorMessage("In-Game.NPC.Floor-Change-NPC-Name"));
+            npc.spawn(player.getLocation());
+            npc.setProtected(true);
+            npc.setName(ChatManager.colorMessage("In-Game.NPC.Floor-Change-NPC-Name"));
+            player.sendMessage(ChatManager.colorMessage("In-Game.NPC.NPC-Created"));
+        } else {
+            player.sendMessage(ChatManager.colorMessage("In-Game.NPC.Install-Citizens"));
+        }
+    }
+
+    public void printList(CommandSender sender) {
+        if(!hasPermission(sender, "buildbattle.admin.list")) return;
+        sender.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.List-Command.Header"));
+        int i = 0;
+        for(Arena arena : ArenaRegistry.getArenas()) {
+            sender.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.List-Command.Format").replace("%arena%", arena.getID())
+                    .replace("%status%", arena.getArenaState().getFormattedName()).replace("%players%", String.valueOf(arena.getPlayers().size()))
+                    .replace("%maxplayers%", String.valueOf(arena.getMaximumPlayers())));
+            i++;
+        }
+        if(i == 0) sender.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.List-Command.No-Arenas"));
+    }
+
+    public void deleteArena(CommandSender sender, String arenaString) {
+        if(checkSenderIsConsole(sender)) return;
+        if(!hasPermission(sender, "buildbattle.admin.delete")) return;
+        Arena arena = ArenaRegistry.getArena(arenaString);
+        if(arena == null) {
+            sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+            return;
+        }
+        ArenaManager.stopGame(false, arena);
+        FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+        config.set("instances." + arenaString, null);
         ConfigUtils.saveConfig(plugin, config, "arenas");
-        plugin.getSignManager().getLoadedSigns().put((Sign) loc.getBlock().getState(), arena);
-        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Created"));
-      } else {
-        player.sendMessage(ChatColor.RED + "You have to look at a sign to perform this command!");
-      }
+        ArenaRegistry.unregisterArena(arena);
+        sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatColor.RED + "Successfully removed game instance!");
+    }
 
+    public void setArenaTheme(CommandSender sender, String theme) {
+        if(checkSenderIsConsole(sender)) return;
+        if(!hasPermission(sender, "buildbattle.admin.settheme")) return;
+        Arena arena = ArenaRegistry.getArena((Player) sender);
+        if(arena == null) {
+            sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Playing"));
+            return;
+        }
+        if(arena.getArenaState() == ArenaState.IN_GAME && (arena.getBuildTime() - arena.getTimer()) <= 20){
+            if(ConfigPreferences.isThemeBlacklisted(theme)) {
+                sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Admin-Messages.Blacklisted-Theme"));
+                return;
+            }
+            arena.setTheme(theme);
+            for(Player p : arena.getPlayers()) {
+                p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Admin-Messages.Changed-Theme").replace("%THEME%", theme));
+            }
+        } else {
+            if(arena.getArenaState() == ArenaState.STARTING) {
+                sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Wait-For-Start"));
+            } else {
+                sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Started"));
+            }
+        }
     }
-  }
 
-  public void stopGame(CommandSender sender) {
-    if (checkSenderIsConsole(sender)) return;
-    if (!hasPermission(sender, "buildbattle.admin.stopgame")) return;
-    Arena a = ArenaRegistry.getArena((Player) sender);
-    if (a == null) return;
-    ArenaManager.stopGame(false, a);
-  }
+    public void setSuperVotes(CommandSender sender, String who, String superVotes) {
+        if(!hasPermission(sender, "buildbattle.admin.supervotes.set")) return;
+        if(!NumberUtils.isNumber(superVotes)) {
+            sender.sendMessage(ChatManager.colorRawMessage("&cArgument isn't a number!"));
+            return;
+        }
+        if(Bukkit.getPlayer(who) == null || !Bukkit.getPlayer(who).isOnline()) {
+            sender.sendMessage(ChatManager.colorMessage("Commands.Player-Not-Found"));
+            return;
+        }
+        User user = UserManager.getUser(Bukkit.getPlayer(who).getUniqueId());
+        user.setInt("supervotes", Integer.parseInt(superVotes));
+        sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&aSuper votes set."));
+    }
 
-  public void addNPC(Player player) {
-    if (!hasPermission(player, "buildbattle.admin.addnpc")) return;
-    if (plugin.getServer().getPluginManager().isPluginEnabled("Citizens")) {
-      NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.VILLAGER, ChatManager.colorMessage("In-Game.NPC.Floor-Change-NPC-Name"));
-      npc.spawn(player.getLocation());
-      npc.setProtected(true);
-      npc.setName(ChatManager.colorMessage("In-Game.NPC.Floor-Change-NPC-Name"));
-      player.sendMessage(ChatManager.colorMessage("In-Game.NPC.NPC-Created"));
-    } else {
-      player.sendMessage(ChatManager.colorMessage("In-Game.NPC.Install-Citizens"));
+    public void addSuperVotes(CommandSender sender, String who, String superVotes) {
+        if(!hasPermission(sender, "buildbattle.admin.supervotes.add")) return;
+        if(!NumberUtils.isNumber(superVotes)) {
+            sender.sendMessage(ChatManager.colorRawMessage("&cArgument isn't a number!"));
+            return;
+        }
+        if(Bukkit.getPlayer(who) == null || !Bukkit.getPlayer(who).isOnline()) {
+            sender.sendMessage(ChatManager.colorMessage("Commands.Player-Not-Found"));
+            return;
+        }
+        User user = UserManager.getUser(Bukkit.getPlayer(who).getUniqueId());
+        user.addInt("supervotes", Integer.parseInt(superVotes));
+        sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&aSuper votes added."));
     }
-  }
-
-  public void printList(CommandSender sender) {
-    if (!hasPermission(sender, "buildbattle.admin.list")) return;
-    sender.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.List-Command.Header"));
-    int i = 0;
-    for (Arena arena : ArenaRegistry.getArenas()) {
-      sender.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.List-Command.Format").replace("%arena%", arena.getID())
-              .replace("%status%", arena.getArenaState().getFormattedName()).replace("%players%", String.valueOf(arena.getPlayers().size()))
-              .replace("%maxplayers%", String.valueOf(arena.getMaximumPlayers())));
-      i++;
-    }
-    if (i == 0) sender.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.List-Command.No-Arenas"));
-  }
-
-  public void deleteArena(CommandSender sender, String arenaString) {
-    if (checkSenderIsConsole(sender)) return;
-    if (!hasPermission(sender, "buildbattle.admin.delete")) return;
-    Arena arena = ArenaRegistry.getArena(arenaString);
-    if (arena == null) {
-      sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
-      return;
-    }
-    ArenaManager.stopGame(false, arena);
-    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    config.set("instances." + arenaString, null);
-    ConfigUtils.saveConfig(plugin, config, "arenas");
-    ArenaRegistry.unregisterArena(arena);
-    sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatColor.RED + "Successfully removed game instance!");
-  }
-
-  public void setArenaTheme(CommandSender sender, String theme) {
-    if (checkSenderIsConsole(sender)) return;
-    if (!hasPermission(sender, "buildbattle.admin.settheme")) return;
-    Arena arena = ArenaRegistry.getArena((Player) sender);
-    if (arena == null) {
-      sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Playing"));
-      return;
-    }
-    if (arena.getArenaState() == ArenaState.IN_GAME && (arena.getBuildTime() - arena.getTimer()) <= 20) {
-      arena.setTheme(theme);
-      for (Player p : arena.getPlayers()) {
-        p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Admin-Messages.Changed-Theme").replace("%THEME%", theme));
-      }
-    } else {
-      if (arena.getArenaState() == ArenaState.STARTING) {
-        sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Wait-For-Start"));
-      } else {
-        sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Started"));
-      }
-    }
-  }
-
-  public void setSuperVotes(CommandSender sender, String who, String superVotes) {
-    if (!hasPermission(sender, "buildbattle.admin.supervotes.set")) return;
-    if (!NumberUtils.isNumber(superVotes)) {
-      sender.sendMessage(ChatManager.colorRawMessage("&cArgument isn't a number!"));
-      return;
-    }
-    if (Bukkit.getPlayer(who) == null || !Bukkit.getPlayer(who).isOnline()) {
-      sender.sendMessage(ChatManager.colorMessage("Commands.Player-Not-Found"));
-      return;
-    }
-    User user = UserManager.getUser(Bukkit.getPlayer(who).getUniqueId());
-    user.setInt("supervotes", Integer.parseInt(superVotes));
-    sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&aSuper votes set."));
-  }
-
-  public void addSuperVotes(CommandSender sender, String who, String superVotes) {
-    if (!hasPermission(sender, "buildbattle.admin.supervotes.add")) return;
-    if (!NumberUtils.isNumber(superVotes)) {
-      sender.sendMessage(ChatManager.colorRawMessage("&cArgument isn't a number!"));
-      return;
-    }
-    if (Bukkit.getPlayer(who) == null || !Bukkit.getPlayer(who).isOnline()) {
-      sender.sendMessage(ChatManager.colorMessage("Commands.Player-Not-Found"));
-      return;
-    }
-    User user = UserManager.getUser(Bukkit.getPlayer(who).getUniqueId());
-    user.addInt("supervotes", Integer.parseInt(superVotes));
-    sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&aSuper votes added."));
-  }
 
 }
