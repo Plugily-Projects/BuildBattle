@@ -59,10 +59,10 @@ public class ConfigPreferences {
   public static boolean isThemeBlacklisted(String theme) {
     for(String s : config.getStringList("Blacklisted-Themes")) {
       if(s.equalsIgnoreCase(theme)) {
-        return false;
+        return true;
       }
     }
-    return true;
+    return false;
   }
 
   public static void loadWinCommands() {

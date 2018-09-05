@@ -266,7 +266,11 @@ public class AdminCommands extends MainCommand {
             sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Playing"));
             return;
         }
-        if(arena.getArenaState() == ArenaState.IN_GAME && (arena.getBuildTime() - arena.getTimer()) <= 20 && ConfigPreferences.isThemeBlacklisted(theme)) {
+        if(arena.getArenaState() == ArenaState.IN_GAME && (arena.getBuildTime() - arena.getTimer()) <= 20){
+            if(ConfigPreferences.isThemeBlacklisted(theme)) {
+                sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Admin-Messages.Blacklisted-Theme"));
+                return;
+            }
             arena.setTheme(theme);
             for(Player p : arena.getPlayers()) {
                 p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Admin-Messages.Changed-Theme").replace("%THEME%", theme));
@@ -274,9 +278,6 @@ public class AdminCommands extends MainCommand {
         } else {
             if(arena.getArenaState() == ArenaState.STARTING) {
                 sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Wait-For-Start"));
-            }
-            if(!ConfigPreferences.isThemeBlacklisted(theme)) {
-                sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Admin-Messages.Blacklisted-Theme"));
             } else {
                 sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Started"));
             }
