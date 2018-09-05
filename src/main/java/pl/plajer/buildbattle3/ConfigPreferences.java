@@ -56,6 +56,15 @@ public class ConfigPreferences {
     return themes;
   }
 
+  public static boolean isThemeBlacklisted(String theme) {
+    for(String s : config.getStringList("Blacklisted-Themes")) {
+      if(s.equalsIgnoreCase(theme)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public static void loadWinCommands() {
     winCommands.addAll(config.getStringList("Win-Commands"));
   }
