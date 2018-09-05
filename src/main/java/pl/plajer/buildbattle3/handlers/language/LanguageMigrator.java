@@ -40,7 +40,7 @@ import pl.plajerlair.core.utils.MigratorUtils;
 public class LanguageMigrator {
 
   public static final int LANGUAGE_FILE_VERSION = 6;
-  public static final int CONFIG_FILE_VERSION = 3;
+  public static final int CONFIG_FILE_VERSION = 4;
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
   private static List<String> migratable = Arrays.asList("bungee", "config", "language", "MySQL");
@@ -63,40 +63,36 @@ public class LanguageMigrator {
     Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[BuildBattle] System notify >> Your config file is outdated! Updating...");
     File file = new File(plugin.getDataFolder() + "/config.yml");
 
-    MigratorUtils.removeLineFromFile(file, "# Don't modify.");
-    MigratorUtils.removeLineFromFile(file, "Version: " + plugin.getConfig().getInt("Version"));
-    MigratorUtils.removeLineFromFile(file, "# No way! You've reached the end! But... where's the dragon!?");
-    switch (plugin.getConfig().getInt("Version")) {
-      case 0:
-        MigratorUtils.addNewLines(file, "# Should blocks behind game signs change their color based on game state?\r\n# They will change color to:\r\n" +
-                "# - white (waiting for players) stained glass\r\n# - yellow (starting) stained glass\r\n# - orange (in game) stained glass\r\n# - gray (ending) stained glass\r\n" +
-                "# - black (restarting) stained glass\r\nSigns-Block-States-Enabled: true\r\n\r\n");
-        MigratorUtils.addNewLines(file, "# Total time of building in game in TEAM game mode\n" +
-                "Team-Build-Time-In-Seconds: 540\r\n\r\n# Total time of voting for themes before starting\n" +
-                "Theme-Voting-Time-In-Seconds: 25\r\n\r\n");
-        MigratorUtils.addNewLines(file, "# Default floor material name\r\n" +
-                "Default-Floor-Material-Name: log\r\n\r\n");
-        MigratorUtils.addNewLines(file, "# Blacklisted item names, you can't use them while building.\r\n" +
-                "Blacklisted-Item-Names:\r\n- tnt\r\n- diamond_block\r\n\r\n" +
-                "# Don't modify\r\nVersion: 3\r\n\r\n# No way! You've reached the end! But... where's the dragon!?");
-        break;
-      case 1:
-        MigratorUtils.addNewLines(file, "# Total time of building in game in TEAM game mode\n" +
-                "Team-Build-Time-In-Seconds: 540\r\n\r\n# Total time of voting for themes before starting\n" +
-                "Theme-Voting-Time-In-Seconds: 25\r\n\r\n");
-        MigratorUtils.addNewLines(file, "# Default floor material name\r\n" +
-                "Default-Floor-Material-Name: log\r\n\r\n");
-        MigratorUtils.addNewLines(file, "# Blacklisted item names, you can't use them while building.\r\n" +
-                "Blacklisted-Item-Names:\r\n- tnt\r\n- diamond_block\r\n\r\n" +
-                "# Don't modify\r\nVersion: 3\r\n\r\n# No way! You've reached the end! But... where's the dragon!?");
-        break;
-      case 2:
-        MigratorUtils.addNewLines(file, "# Default floor material name\r\n" +
-                "Default-Floor-Material-Name: log\r\n\r\n");
-        MigratorUtils.addNewLines(file, "# Blacklisted item names, you can't use them while building.\r\n" +
-                "Blacklisted-Item-Names:\r\n- tnt\r\n- diamond_block\r\n\r\n" +
-                "# Don't modify\r\nVersion: 3\r\n\r\n# No way! You've reached the end! But... where's the dragon!?");
-        break;
+    int version = 0;
+    if (NumberUtils.isNumber(plugin.getConfig().getString("Version"))) {
+      version = Integer.valueOf(plugin.getConfig().getString("Version"));
+    }
+    updateConfigVersionControl(version);
+
+    for (int i = 0; i < CONFIG_FILE_VERSION; i++) {
+      switch (version) {
+        case 0:
+          MigratorUtils.addNewLines(file, "# Should blocks behind game signs change their color based on game state?\r\n# They will change color to:\r\n" +
+                  "# - white (waiting for players) stained glass\r\n# - yellow (starting) stained glass\r\n# - orange (in game) stained glass\r\n# - gray (ending) stained glass\r\n" +
+                  "# - black (restarting) stained glass\r\nSigns-Block-States-Enabled: true\r\n\r\n");
+          break;
+        case 1:
+          MigratorUtils.addNewLines(file, "# Total time of building in game in TEAM game mode\n" +
+                  "Team-Build-Time-In-Seconds: 540\r\n\r\n# Total time of voting for themes before starting\n" +
+                  "Theme-Voting-Time-In-Seconds: 25\r\n\r\n");
+          break;
+        case 2:
+          MigratorUtils.addNewLines(file, "# Default floor material name\r\n" +
+                  "Default-Floor-Material-Name: log\r\n\r\n");
+          MigratorUtils.addNewLines(file, "# Blacklisted item names, you can't use them while building.\r\n" +
+                  "Blacklisted-Item-Names:\r\n- tnt\r\n- diamond_block\r\n\r\n" +
+                  "# Don't modify\r\nVersion: 3\r\n\r\n# No way! You've reached the end! But... where's the dragon!?");
+          break;
+        case 3:
+          MigratorUtils.addNewLines(file, "# Theme names that are blacklisted.\r\nBlacklisted-Themes:\n\n- Fuck");
+          break;
+      }
+      version++;
     }
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] [System notify] Config updated, no comments were removed :)");
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] [System notify] You're using latest config file version! Nice!");
@@ -110,7 +106,7 @@ public class LanguageMigrator {
     if (NumberUtils.isNumber(LanguageManager.getDefaultLanguageMessage("File-Version-Do-Not-Edit"))) {
       version = Integer.valueOf(LanguageManager.getDefaultLanguageMessage("File-Version-Do-Not-Edit"));
     }
-    LanguageMigrator.updateLanguageVersionControl(version);
+    updateLanguageVersionControl(version);
 
     File file = new File(plugin.getDataFolder() + "/language.yml");
 
@@ -150,11 +146,11 @@ public class LanguageMigrator {
           MigratorUtils.insertAfterLine(file, "Commands:", "  No-Free-Arenas: \"&cThere are no free arenas!\"");
           break;
         case 4:
-          MigratorUtils.insertAfterLine(file, "Option-Menu:", "    Weather-Inventory-Name: \"&aSet weather\"\n" +
-                  "    Weather-Option: \"&aChange plot weather\"\n" +
-                  "    Weather-Option-Lore: \"&7Right click to open menu\"\n" +
-                  "    Weather-Set: \"&eWeather has been changed\"\n" +
-                  "    Weather-Downfall: \"&eDownfall\"\n" +
+          MigratorUtils.insertAfterLine(file, "Option-Menu:", "    Weather-Inventory-Name: \"&aSet weather\"\r\n" +
+                  "    Weather-Option: \"&aChange plot weather\"\r\n" +
+                  "    Weather-Option-Lore: \"&7Right click to open menu\"\r\n" +
+                  "    Weather-Set: \"&eWeather has been changed\"\r\n" +
+                  "    Weather-Downfall: \"&eDownfall\"\r\n" +
                   "    Weather-Clear: \"&eClear\"");
           break;
         case 5:
@@ -162,10 +158,10 @@ public class LanguageMigrator {
                   "    Super-Vote-Item-Lore: \"&7You have &b%owned% super votes;;&eClick to super vote &b%theme%&e!\"\r\n" +
                   "    Super-Vote-Used: \"&7Player &e%player% &7has used &bSuper vote &7for theme &b%theme%&7! Starting now...\"");
           MigratorUtils.insertAfterLine(file, "Stats-Command:", "    Super-Votes: \"&aSuper votes: &e\"");
-          MigratorUtils.insertAfterLine(file, "No-Free-Arenas:", "  Statistics:\n" +
-                  "    Type-Name: \"&cPlease type statistic name to view!\"\n" +
-                  "    Invalid-Name: \"&cName of statistic is invalid! Type: loses, wins, games_played, blocks_broken, blocks_placed, super_votes\"\n" +
-                  "    Header: \"&8&m-------------------[&6 Top 10 &8&m]-------------------\"\n" +
+          MigratorUtils.insertAfterLine(file, "No-Free-Arenas:", "  Statistics:\r\n" +
+                  "    Type-Name: \"&cPlease type statistic name to view!\"\r\n" +
+                  "    Invalid-Name: \"&cName of statistic is invalid! Type: loses, wins, games_played, blocks_broken, blocks_placed, super_votes\"\r\n" +
+                  "    Header: \"&8&m-------------------[&6 Top 10 &8&m]-------------------\"\r\n" +
                   "    Format: \"&e#%position% %name% - %value% &7%statistic%\"");
           break;
       }
@@ -179,7 +175,15 @@ public class LanguageMigrator {
     File file = new File(plugin.getDataFolder() + "/language.yml");
     MigratorUtils.removeLineFromFile(file, "# Do not modify!");
     MigratorUtils.removeLineFromFile(file, "File-Version-Do-Not-Edit: " + oldVersion);
-    MigratorUtils.addNewLines(file, "# Do not modify!\nFile-Version-Do-Not-Edit: " + LANGUAGE_FILE_VERSION);
+    MigratorUtils.addNewLines(file, "# Do not modify!\r\nFile-Version-Do-Not-Edit: " + LANGUAGE_FILE_VERSION);
+  }
+
+  private static void updateConfigVersionControl(int oldVersion) {
+    File file = new File(plugin.getDataFolder() + "/config.yml");
+    MigratorUtils.removeLineFromFile(file, "# Don't modify.");
+    MigratorUtils.removeLineFromFile(file, "Version: " + oldVersion);
+    MigratorUtils.removeLineFromFile(file, "# No way! You've reached the end! But... where's the dragon!?");
+    MigratorUtils.addNewLines(file, "# Do not modify!\r\nVersion: " + CONFIG_FILE_VERSION);
   }
 
 }
