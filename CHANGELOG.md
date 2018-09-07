@@ -13,6 +13,7 @@
 * /bba help command is now executable via players only
 * Temporarily merged PLCore to prevent issues with other plugins
 * Added blacklisted themes
+* Dropped 1.9-1.10 support
 
 ### 3.5.1 Release (17.08.2018)
 * Fixed NumberFormatException for language.yml migrator - this error is very rare to occur in normal environment but it was reported so I fixed it
