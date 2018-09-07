@@ -20,8 +20,8 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>pl.plajer</groupId>
-  <artifactId>buildbattle3</artifactId>
+    <groupId>pl.plajer.buildbattle3</groupId>
+    <artifactId>BuildBattle</artifactId>
   <version>3.6.0</version>
   <build>
     <plugins>
@@ -85,6 +85,10 @@
       <id>local-repo</id>
       <url>file:///${project.basedir}/../PLCore/repo</url>
     </repository>
+      <repository>
+          <id>mojang-repo</id>
+          <url>https://libraries.minecraft.net/</url>
+      </repository>
   </repositories>
   <dependencies>
     <dependency>
@@ -100,10 +104,6 @@
         <exclusion>
           <artifactId>json-simple</artifactId>
           <groupId>com.googlecode.json-simple</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>gson</artifactId>
-          <groupId>com.google.code.gson</groupId>
         </exclusion>
         <exclusion>
           <artifactId>snakeyaml</artifactId>
@@ -128,10 +128,6 @@
         <exclusion>
           <artifactId>json-simple</artifactId>
           <groupId>com.googlecode.json-simple</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>gson</artifactId>
-          <groupId>com.google.code.gson</groupId>
         </exclusion>
         <exclusion>
           <artifactId>snakeyaml</artifactId>

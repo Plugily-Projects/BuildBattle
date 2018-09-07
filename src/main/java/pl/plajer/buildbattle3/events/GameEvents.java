@@ -321,7 +321,6 @@ public class GameEvents implements Listener {
               e.getCurrentItem().getType() == Material.NETHER_STAR && e.getCurrentItem().getItemMeta().hasDisplayName() &&
               e.getCurrentItem().getItemMeta().getDisplayName().equals(ChatManager.colorMessage("Menus.Option-Menu.Option-Item"))) {
         e.setResult(Event.Result.DENY);
-        e.setCursor(null);
         e.setCancelled(true);
       }
       if (e.getInventory() == null) return;

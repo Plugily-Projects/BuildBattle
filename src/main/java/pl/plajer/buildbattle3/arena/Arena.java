@@ -52,7 +52,6 @@ import pl.plajer.buildbattle3.buildbattleapi.BBGameChangeStateEvent;
 import pl.plajer.buildbattle3.buildbattleapi.BBGameEndEvent;
 import pl.plajer.buildbattle3.buildbattleapi.BBGameStartEvent;
 import pl.plajer.buildbattle3.handlers.ChatManager;
-import pl.plajer.buildbattle3.handlers.MessageHandler;
 import pl.plajer.buildbattle3.handlers.language.LanguageManager;
 import pl.plajer.buildbattle3.handlers.language.Locale;
 import pl.plajer.buildbattle3.menus.OptionsMenu;
@@ -327,11 +326,7 @@ public class Arena extends BukkitRunnable {
             String subtitle = ChatManager.colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", String.valueOf(getTimer()));
             for (Player p : getPlayers()) {
               p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
-              if (plugin.is1_9_R1() || plugin.is1_9_R2()) {
-                p.sendTitle(null, subtitle);
-              } else {
-                p.sendTitle(null, subtitle, 5, 30, 5);
-              }
+              p.sendTitle(null, subtitle, 5, 30, 5);
             }
           }
           if (getTimer() != 0 && !receivedVoteItems) {
@@ -397,11 +392,10 @@ public class Arena extends BukkitRunnable {
                   } else {
                     winner = winner.replace("%player%", Bukkit.getOfflinePlayer(topList.get(1).get(0)).getName() + " & " + Bukkit.getOfflinePlayer(topList.get(1).get(1)).getName());
                   }
-                  MessageHandler.sendTitleMessage(player, winner, 5, 35, 5);
                 } else {
                   winner = winner.replace("%player%", Bukkit.getOfflinePlayer(topList.get(1).get(0)).getName());
-                  MessageHandler.sendTitleMessage(player, winner, 5, 35, 5);
                 }
+                player.sendTitle(winner, null, 5, 35, 5);
               }
               this.setGameState(ArenaState.ENDING);
               Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
@@ -649,11 +643,10 @@ public class Arena extends BukkitRunnable {
             } else {
               owner = owner.replace("%player%", Bukkit.getOfflinePlayer(getVotingPlot().getOwners().get(0)).getName() + " & " + Bukkit.getOfflinePlayer(getVotingPlot().getOwners().get(1)).getName());
             }
-            MessageHandler.sendTitleMessage(p, owner, 5, 40, 5);
           } else {
             owner = owner.replace("%player%", player.getName());
-            MessageHandler.sendTitleMessage(p, owner, 5, 40, 5);
           }
+          p.sendTitle(owner, null, 5, 40, 5);
           p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
         }
       }

@@ -117,14 +117,6 @@ public class Main extends JavaPlugin {
     return inventoryManagerEnabled;
   }
 
-  public boolean is1_9_R1() {
-    return version.equalsIgnoreCase("v1_9_R1");
-  }
-
-  public boolean is1_9_R2() {
-    return version.equalsIgnoreCase("v1_9_R2");
-  }
-
   public boolean isDataEnabled() {
     return dataEnabled;
   }
@@ -148,7 +140,7 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().disablePlugin(this);
         return;
       }
-      if (version.contains("v1_8") || version.contains("v1_7") || version.contains("v1_6")) {
+      if (version.contains("v1_10") || version.contains("v1_9") || version.contains("v1_8") || version.contains("v1_7") || version.contains("v1_6")) {
         MessageUtils.thisVersionIsNotSupported();
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by BuildBattle!");
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider updating your server version?");
