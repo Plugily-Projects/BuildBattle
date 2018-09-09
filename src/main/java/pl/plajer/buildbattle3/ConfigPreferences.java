@@ -36,8 +36,7 @@ import pl.plajer.buildbattle3.arena.Arena;
 public class ConfigPreferences {
 
     private static FileConfiguration config;
-    private static List<String> themesSolo = new ArrayList<>();
-    private static List<String> themesTeam = new ArrayList<>();
+    private static Map<Arena.ArenaType, List<String>> gameThemes = new HashMap<>();
     private static Map<String, Integer> options = new HashMap<>();
     private static List<String> winCommands = new ArrayList<>();
     private static List<String> endGameCommands = new ArrayList<>();
@@ -50,17 +49,14 @@ public class ConfigPreferences {
     }
 
     private static void loadThemes() {
-        themesSolo.addAll(config.getStringList("Game-Themes"));
-        themesTeam.addAll(config.getStringList("Game-Themes-Team"));
+        gameThemes.put(Arena.ArenaType.SOLO, config.getStringList("Game-Themes"));
+        gameThemes.put(Arena.ArenaType.TEAM, config.getStringList("Game-Themes-Team"));
     }
 
     public static List<String> getThemes(Arena arena) {
-        if(arena.getArenaType() == Arena.ArenaType.TEAM) {
-            return themesTeam;
-        }
-        return themesSolo;
+        return gameThemes.get(arena.getArenaType());
     }
-
+    
     public static boolean isThemeBlacklisted(String theme) {
         for(String s : config.getStringList("Blacklisted-Themes")) {
             if(s.equalsIgnoreCase(theme)) {
