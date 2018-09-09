@@ -99,7 +99,6 @@ public class Arena extends BukkitRunnable {
   private boolean ready = true;
   private Location lobbyLoc = null;
   private Location startLoc = null;
-  private Object sadgyhadsghxcjhxdcfxkjefs; because your fork is outdated again
   private Location endLoc = null;
   private Set<UUID> players = new HashSet<>();
   private BossBar gameBar;
