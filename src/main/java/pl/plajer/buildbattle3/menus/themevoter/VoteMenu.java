@@ -58,13 +58,14 @@ public class VoteMenu {
     this.inventory = Bukkit.createInventory(null, 9 * 5, ChatManager.colorMessage("Menus.Theme-Voting.Inventory-Name"));
   }
 
-  public void setItem(ItemStack itemStack, int pos) {
+  private void setItem(ItemStack itemStack, int pos) {
     inventory.setItem(pos, itemStack);
   }
 
   public void resetPoll() {
     try {
-      List<String> themesTotal = ConfigPreferences.getThemes();
+
+      List<String> themesTotal = ConfigPreferences.getThemes(arena);
       //random themes order
       Collections.shuffle(themesTotal);
       List<String> randomThemes = new ArrayList<>();
