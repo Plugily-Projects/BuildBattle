@@ -92,14 +92,18 @@ Hide-Players-Outside-Game: true
 Lobby-Starting-Time: 60
 
 # All game themes, type here everything you want your players to build.
+# Solo game mode themes.
 Game-Themes:
 - Bees
-- Pirates
 - Medieval
-- Castle
 - Love
 - Hate
 - Ugly
+
+# Team game mode themes.
+Game-Themes-Team:
+- Pirates
+- Castle
 
 # Theme names that are blacklisted.
 Blacklisted-Themes:

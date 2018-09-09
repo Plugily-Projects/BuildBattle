@@ -34,3 +34,4 @@ permissions:
       buildbattle.admin.settheme: true
       buildbattle.admin.supervotes.set: true
       buildbattle.admin.supervotes.add: true
+      buildbattle.command.bypass: true
