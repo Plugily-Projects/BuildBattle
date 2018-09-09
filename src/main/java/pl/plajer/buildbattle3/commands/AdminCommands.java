@@ -267,7 +267,7 @@ public class AdminCommands extends MainCommand {
       return;
     }
     if (arena.getArenaState() == ArenaState.IN_GAME && (arena.getBuildTime() - arena.getTimer()) <= 20) {
-      if (ConfigPreferences.isThemeBlacklisted(theme)) {
+      if (ConfigPreferences.isThemeBlacklisted(theme.toLowerCase())) {
         sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Admin-Commands.Theme-Blacklisted"));
         return;
       }
