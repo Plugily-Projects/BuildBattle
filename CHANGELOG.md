@@ -18,6 +18,7 @@
 * Fixed message You became 1th/2th/3th was displayed - it shouldn't and it wasn't grammatically okay
 * Added extra permission "buildbattle.command.bypass"
 * Added solo and team themes
+* Added cancel lobbystart when there are not enough players
 
 ### 3.5.1 Release (17.08.2018)
 * Fixed NumberFormatException for language.yml migrator - this error is very rare to occur in normal environment but it was reported so I fixed it
