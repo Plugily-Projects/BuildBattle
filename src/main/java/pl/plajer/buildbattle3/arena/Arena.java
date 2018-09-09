@@ -249,20 +249,20 @@ public class Arena extends BukkitRunnable {
                     setTimer(getTimer() - 1);
                     break;
                 case STARTING:
+                    if(getPlayers().size() < getMinimumPlayers()) {
+                        String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", String.valueOf(getMinimumPlayers()));
+                        for(Player p : getPlayers()) {
+                            p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
+                        }
+                        setGameState(ArenaState.WAITING_FOR_PLAYERS);
+                        Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
+                        setTimer(LOBBY_STARTING_TIMER);
+                        break;
+                    }
                     if(getTimer() == 0) {
                         extraCounter = 0;
                         if(!getPlotManager().isPlotsCleared()) {
                             getPlotManager().resetQeuedPlots();
-                        }
-                        if(getPlayers().size() < getMinimumPlayers()) {
-                            String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", String.valueOf(getMinimumPlayers()));
-                            for(Player p : getPlayers()) {
-                                p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
-                            }
-                            setGameState(ArenaState.WAITING_FOR_PLAYERS);
-                            Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
-                            setTimer(LOBBY_STARTING_TIMER);
-                            break;
                         }
                         setGameState(ArenaState.IN_GAME);
                         getPlotManager().distributePlots();
