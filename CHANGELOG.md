@@ -14,6 +14,8 @@
 * Temporarily merged PLCore to prevent issues with other plugins
 * Added blacklisted themes
 * Dropped 1.9-1.10 support
+* Fixed bug where plot floor wasn't reset while using Citizens
+* Fixed message You became 1th/2th/3th was displayed - it shouldn't and it wasn't grammatically okay
 * Added extra permission "buildbattle.command.bypass"
 * Added solo and team themes
 

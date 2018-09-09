@@ -523,7 +523,7 @@ public class GameEvents implements Listener {
         event.setCancelled(true);
         return;
       }
-      if (arena.getBlacklist().contains(event.getBlock().getType())) {
+      if (arena.getBlacklistedBlocks().contains(event.getBlock().getType())) {
         event.setCancelled(true);
         return;
       }
@@ -552,7 +552,7 @@ public class GameEvents implements Listener {
         event.setCancelled(true);
         return;
       }
-      if (arena.getBlacklist().contains(event.getBlock().getType())) {
+      if (arena.getBlacklistedBlocks().contains(event.getBlock().getType())) {
         event.setCancelled(true);
         return;
       }
@@ -615,7 +615,7 @@ public class GameEvents implements Listener {
         Arena arena = ArenaRegistry.getArena(e.getPlayer());
         if (arena == null) return;
         if (!e.getPlayer().getInventory().getItemInMainHand().getType().isBlock()) return;
-        if (arena.getBlacklist().contains(e.getPlayer().getInventory().getItemInMainHand().getType())) return;
+        if (arena.getBlacklistedBlocks().contains(e.getPlayer().getInventory().getItemInMainHand().getType())) return;
         if (arena.getArenaState() != ArenaState.IN_GAME) return;
         if (arena.isVoting()) return;
         arena.getPlotManager().getPlot(e.getPlayer()).changeFloor(e.getPlayer().getInventory().getItemInMainHand().getType(), e.getPlayer().getInventory().getItemInMainHand().getData().getData());

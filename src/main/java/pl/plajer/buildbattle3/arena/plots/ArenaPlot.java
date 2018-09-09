@@ -137,7 +137,7 @@ public class ArenaPlot {
       for (Entity entity : cuboid.getCenter().getWorld().getEntities()) {
         if (cuboid.isInWithMarge(entity.getLocation(), 3)) {
           if (JavaPlugin.getPlugin(Main.class).getServer().getPluginManager().isPluginEnabled("Citizens")) {
-            if (CitizensAPI.getNPCRegistry().isNPC(entity)) return;
+            if (CitizensAPI.getNPCRegistry().isNPC(entity)) continue;
           }
           if (entity.getType() != EntityType.PLAYER) {
             entity.remove();

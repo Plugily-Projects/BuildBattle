@@ -593,7 +593,12 @@ public class Arena extends BukkitRunnable {
     return returnString;
   }
 
-  public List<Material> getBlacklist() {
+  /**
+   * List of blacklisted materials that cannot be used in game
+   *
+   * @return blacklisted materials
+   */
+  public List<Material> getBlacklistedBlocks() {
     return blacklist;
   }
 
@@ -712,9 +717,9 @@ public class Arena extends BukkitRunnable {
         for (UUID u : topList.get(rang)) {
           Player p = plugin.getServer().getPlayer(u);
           if (p != null) {
-            //if (rang > 3) {
-            p.sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Summary-Other-Place").replace("%number%", String.valueOf(rang)));
-            //}
+            if (rang > 3) {
+              p.sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Summary-Other-Place").replace("%number%", String.valueOf(rang)));
+            }
             if (rang == 1) {
               UserManager.getUser(p.getUniqueId()).addInt("wins", 1);
               if (getPlotManager().getPlot(u).getPoints() > UserManager.getUser(u).getInt("highestwin")) {
