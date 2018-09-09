@@ -593,7 +593,7 @@ public class Arena extends BukkitRunnable {
     return returnString;
   }
 
-  public List<Material> getBlacklist() {
+  public List<Material> getBlacklistedBlocks() {
     return blacklist;
   }
 
