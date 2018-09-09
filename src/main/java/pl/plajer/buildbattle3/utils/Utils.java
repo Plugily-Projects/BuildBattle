@@ -18,18 +18,11 @@
 
 package pl.plajer.buildbattle3.utils;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
-
-import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.UUID;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 /**
  * Created by Tom on 29/07/2014.
@@ -37,7 +30,8 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 public class Utils {
 
   public static ItemStack getSkull(String url) {
-    ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+    return new ItemStack(Material.DIRT);
+    /*ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
     if (url.isEmpty()) return head;
 
     SkullMeta headMeta = (SkullMeta) head.getItemMeta();
@@ -53,7 +47,7 @@ public class Utils {
     }
 
     head.setItemMeta(headMeta);
-    return head;
+    return head;*/
 
   }
 

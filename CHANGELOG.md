@@ -14,6 +14,7 @@
 * Temporarily merged PLCore to prevent issues with other plugins
 * Added blacklisted themes
 * Dropped 1.9-1.10 support
+* Fixed bug where plot floor wasn't reset while using Citizens
 * Added extra permission "buildbattle.command.bypass"
 * Added solo and team themes
 
