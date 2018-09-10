@@ -33,6 +33,7 @@ import me.clip.placeholderapi.PlaceholderAPI;
 
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -115,8 +116,6 @@ public class Arena extends BukkitRunnable {
             gameBar = Bukkit.createBossBar(ChatManager.colorMessage("Bossbar.Waiting-For-Players"), BarColor.BLUE, BarStyle.SOLID);
         }
         plotManager = new ArenaPlotManager(this);
-        voteMenu = new VoteMenu(this);
-        voteMenu.resetPoll();
 
         for(ArenaState state : ArenaState.values()) {
             if(state == ArenaState.RESTARTING) continue;
@@ -136,6 +135,14 @@ public class Arena extends BukkitRunnable {
         }
         scoreboardContents.put(ArenaState.IN_GAME.getFormattedName() + "-Teams", lines);
     }
+
+  /**
+   * Initiates voting poll
+   */
+  public void initPoll() {
+    voteMenu = new VoteMenu(this);
+    voteMenu.resetPoll();
+  }
 
     /**
      * Adds item which can not be used in game

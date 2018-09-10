@@ -146,6 +146,7 @@ public class ArenaRegistry {
           arena.setReady(false);
         }
         arena.setReady(config.getBoolean("instances." + ID + ".isdone"));
+        arena.initPoll();
         ArenaRegistry.registerArena(arena);
         arena.start();
       }

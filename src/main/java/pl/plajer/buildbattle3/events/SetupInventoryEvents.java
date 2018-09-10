@@ -275,6 +275,7 @@ public class SetupInventoryEvents implements Listener {
           buildPlot.fullyResetPlot();
           arena.getPlotManager().addBuildPlot(buildPlot);
         }
+        arena.initPoll();
         ArenaRegistry.registerArena(arena);
         arena.start();
         for (Sign s : signsToUpdate) {

@@ -398,6 +398,7 @@ public class MainCommand implements CommandExecutor {
     arena.setEndLocation(MinigameUtils.getLocation(ConfigUtils.getConfig(plugin, "arenas").getString(path + "Endlocation")));
     arena.setArenaType(Arena.ArenaType.valueOf(ConfigUtils.getConfig(plugin, "arenas").getString(path + "gametype").toUpperCase()));
     arena.setReady(false);
+    arena.initPoll();
     ArenaRegistry.registerArena(arena);
 
     ArenaRegistry.registerArenas();
