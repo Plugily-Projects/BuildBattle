@@ -31,6 +31,8 @@ import java.util.UUID;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -335,6 +337,7 @@ public class Arena extends BukkitRunnable {
                         String message = ChatManager.colorMessage("In-Game.Messages.Time-Left-To-Build").replace("%FORMATTEDTIME%", MinigameUtils.formatIntoMMSS(getTimer()));
                         String subtitle = ChatManager.colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", String.valueOf(getTimer()));
                         for(Player p : getPlayers()) {
+                            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
                             p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
                             p.sendTitle(null, subtitle, 5, 30, 5);
                         }
