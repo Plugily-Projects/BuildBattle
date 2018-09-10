@@ -85,11 +85,11 @@ public class LanguageMigrator {
           MigratorUtils.addNewLines(file, "# Default floor material name\r\n" +
                   "Default-Floor-Material-Name: log\r\n\r\n");
           MigratorUtils.addNewLines(file, "# Blacklisted item names, you can't use them while building.\r\n" +
-                  "Blacklisted-Item-Names:\r\n- tnt\r\n- diamond_block\r\n\r\n" +
-                  "# Don't modify\r\nVersion: 3\r\n\r\n# No way! You've reached the end! But... where's the dragon!?");
+                  "Blacklisted-Item-Names:\r\n- tnt\r\n- diamond_block\r\n\r\n");
           break;
         case 3:
-          MigratorUtils.addNewLines(file, "# Theme names that are blacklisted.\r\nBlacklisted-Themes:\n\n- Fuck");
+          MigratorUtils.addNewLines(file, "# Theme names that are blacklisted.\r\nBlacklisted-Themes:\r\n- Fuck\r\n\r\n");
+          MigratorUtils.addNewLines(file, "# Team game mode themes.\r\nGame-Themes-Team:\r\n- Pirates\r\n- Castle");
           break;
       }
       version++;
