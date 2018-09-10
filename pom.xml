@@ -55,8 +55,8 @@
             <url>http://dl.bintray.com/tastybento/maven-repo</url>
         </repository>
         <repository>
-            <id>local-repo</id>
-            <url>file:///${project.basedir}/../PLCore/repo</url>
+            <id>plajerlair-repo</id>
+            <url>https://plajer.xyz/mvn/repo</url>
         </repository>
         <repository>
             <id>mojang-repo</id>
@@ -79,8 +79,8 @@
         </dependency>
         <dependency>
             <groupId>pl.plajerlair</groupId>
-            <artifactId>PLCore</artifactId>
-            <version>1.0.0</version>
+            <artifactId>plcore</artifactId>
+            <version>1.1.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
