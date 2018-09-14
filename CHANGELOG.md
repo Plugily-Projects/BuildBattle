@@ -19,6 +19,8 @@
 * Added extra permission "buildbattle.command.bypass"
 * Added solo and team themes
 * Added cancel lobbystart when there are not enough players
+* Fixed bedrock was displayed in plot floor change option menu
+* Head blocks textures are now loading instantly and do not cause server to freeze at the start now
 
 ### 3.5.1 Release (17.08.2018)
 * Fixed NumberFormatException for language.yml migrator - this error is very rare to occur in normal environment but it was reported so I fixed it

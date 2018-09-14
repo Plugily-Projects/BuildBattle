@@ -18,10 +18,7 @@
 
 package pl.plajer.buildbattle3.menus.playerheads;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +29,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.handlers.ChatManager;
@@ -42,7 +38,6 @@ import pl.plajerlair.core.utils.MinigameUtils;
 /**
  * Created by Tom on 26/08/2015.
  */
-//todo texture loading
 public class PlayerHeadsMenu {
 
   private static List<HeadsItem> headsItems = new ArrayList<>();
@@ -51,20 +46,6 @@ public class PlayerHeadsMenu {
 
   public static void loadHeadItems() {
     FileConfiguration config = ConfigUtils.getConfig(Main.getPlugin(Main.class), "playerheadmenu/mainmenu");
-    if (!config.contains("animals")) {
-      config.set("animals.displayname", "&6" + "Animals");
-      config.set("animals.lore", Arrays.asList("Click to open", "animals head menu"));
-      config.set("animals.enabled", true);
-      config.set("animals.config", "animalheads");
-      config.set("animals.permission", "particles.VIP");
-      config.set("animals.texture", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjIxNjY4ZWY3Y2I3OWRkOWMyMmNlM2QxZjNmNGNiNmUyNTU5ODkzYjZkZjRhNDY5NTE0ZTY2N2MxNmFhNCJ9fX0=");
-      config.set("animals.menuname", "Animal Heads Menu");
-    }
-    try {
-      config.save(ConfigUtils.getFile(JavaPlugin.getPlugin(Main.class), "playerheadmenu/mainmenu"));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
     for (String str : config.getKeys(false)) {
       HeadsItem headsItem = new HeadsItem();
       headsItem.setEnabled(config.getBoolean(str + ".enabled"));
@@ -80,17 +61,6 @@ public class PlayerHeadsMenu {
       config = headsItem.getConfig();
       Inventory inv;
       List<HeadsItem> list = new ArrayList<>();
-      if (!config.contains("example")) {
-        config.set("example.displayname", "&6" + "Animals");
-        config.set("example.texture", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjIxNjY4ZWY3Y2I3OWRkOWMyMmNlM2QxZjNmNGNiNmUyNTU5ODkzYjZkZjRhNDY5NTE0ZTY2N2MxNmFhNCJ9fX0=");
-        config.set("example.lore", Collections.singletonList(ChatManager.colorRawMessage("&7Click to select")));
-        config.set("example.enabled", true);
-        try {
-          config.save(ConfigUtils.getFile(JavaPlugin.getPlugin(Main.class), "playerheadmenu/menus/" + headsItem.getConfigName()));
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
       for (String path : headsItem.getConfig().getKeys(false)) {
         HeadsItem heads = new HeadsItem();
         heads.setEnabled(config.getBoolean(path + ".enabled"));
@@ -137,12 +107,6 @@ public class PlayerHeadsMenu {
           return;
         } else {
           player.openInventory(inventories.get(headsItem.getMenuName()));
-                    /*Inventory inventory = player.getServer().createInventory(player, headsItem.getSize(), headsItem.getMenuName());
-                    List<HeadsItem> list = playerheadmenus.get(headsItem.getMenuName());
-                    for(HeadsItem headsItem1 : list) {
-                        if(headsItem.isEnabled()) inventory.setItem(headsItem1.getSlot(), headsItem1.getItemStack());
-                    }
-                    player.openInventory(inventory);*/
           return;
         }
       }

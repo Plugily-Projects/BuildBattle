@@ -245,7 +245,7 @@ public class ArenaPlot {
       } else {
         location = cuboid.getPoint1().clone();
       }
-      Material material = location.add(0, -1, 0).getBlock().getType();
+      Material material = location.getBlock().getType();
       if (material == Material.WATER || material == Material.STATIONARY_WATER) return Material.WATER_BUCKET;
       if (material == Material.LAVA || material == Material.STATIONARY_LAVA) return Material.LAVA_BUCKET;
       if (material == Material.AIR || material == null) return Material.REDSTONE_BLOCK;

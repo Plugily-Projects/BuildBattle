@@ -18,11 +18,17 @@
 
 package pl.plajer.buildbattle3.utils;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+
+import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.UUID;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
 /**
  * Created by Tom on 29/07/2014.
@@ -30,13 +36,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class Utils {
 
   public static ItemStack getSkull(String url) {
-    return new ItemStack(Material.DIRT);
-    /*ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+    ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
     if (url.isEmpty()) return head;
 
     SkullMeta headMeta = (SkullMeta) head.getItemMeta();
     GameProfile profile = new GameProfile(UUID.randomUUID(), null);
-    profile.getProperties().put("textures", new Property("textures", Base64Coder.decodeString(url)));
+    profile.getProperties().put("textures", new Property("textures", url));
     Field profileField;
     try {
       profileField = headMeta.getClass().getDeclaredField("profile");
@@ -47,8 +52,7 @@ public class Utils {
     }
 
     head.setItemMeta(headMeta);
-    return head;*/
-
+    return head;
   }
 
   public static ItemStack setItemNameAndLore(ItemStack item, String name, String[] lore) {
