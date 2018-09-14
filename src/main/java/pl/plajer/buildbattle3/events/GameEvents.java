@@ -74,7 +74,7 @@ import pl.plajer.buildbattle3.menus.particles.ParticleRemoveMenu;
 import pl.plajer.buildbattle3.menus.playerheads.PlayerHeadsMenu;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
-import pl.plajerlair.core.services.ReportedException;
+import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -408,7 +408,7 @@ public class GameEvents implements Listener {
       for (String string : ConfigPreferences.getWhitelistedCommands()) {
         if (event.getMessage().contains(string)) return;
       }
-      if (event.getPlayer().isOp() || event.getPlayer().hasPermission("buildbattle.admin") || event.getPlayer().hasPermission("buildbattle.command.bypass"))return;
+      if (event.getPlayer().isOp() || event.getPlayer().hasPermission("buildbattle.admin") || event.getPlayer().hasPermission("buildbattle.command.bypass")) return;
       if (event.getMessage().contains("leave") || event.getMessage().contains("stats")) return;
       event.setCancelled(true);
       event.getPlayer().sendMessage(ChatManager.colorMessage("In-Game.Only-Command-Ingame-Is-Leave"));

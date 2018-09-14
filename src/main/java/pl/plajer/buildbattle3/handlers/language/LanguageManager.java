@@ -33,8 +33,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.utils.MessageUtils;
-import pl.plajerlair.core.services.LocaleService;
 import pl.plajerlair.core.services.ServiceRegistry;
+import pl.plajerlair.core.services.locale.LocaleService;
 import pl.plajerlair.core.utils.ConfigUtils;
 
 /**

@@ -60,7 +60,49 @@ Bossbar:
 
 Scoreboard:
   Title: "&b&lBuildBattle"
+  Theme-Unknown: "&c???"
   Content:
+    #todo accessors change + migrator
+    Playing:
+      Classic:
+        - "&fTime Left: &e%FORMATTED_TIME_LEFT%"
+        - ""
+        - "&fPlayers: &e%PLAYERS%/%MAX_PLAYERS%"
+        - ""
+        - "&fTheme: &e%THEME%"
+        - ""
+        - "&fArena: &e%ARENA_ID%"
+        - ""
+        - "&ewww.spigotmc.org"
+      Teams:
+        - "&7Teams Mode"
+        - "&fTime Left: &e%FORMATTED_TIME_LEFT%"
+        - ""
+        - "&fTheme: &e%THEME%"
+        - ""
+        - "&fArena: &e%ARENA_ID%"
+        - ""
+        - "&fTeammate:"
+        - "&e%TEAMMATE%"
+        - ""
+        - "&ewww.spigotmc.org"
+      Guess-The-Build:
+        - "&7Guess The Build Mode"
+        - "&fBuilder:"
+        - "&7%GTB_BUILDER%"
+        - ""
+        - "&e&lLeaders:"
+        - "&6%GTB_LEAD_ONE%&e: %GTB_LEAD_ONE_PTS%"
+        - "&7%GTB_LEAD_TWO%&e: %GTB_LEAD_TWO_PTS%"
+        - "&7%GTB_LEAD_THREE%&e: %GTB_LEAD_THREE_PTS%"
+        - ""
+        - "&fTime: &e%FORMATTED_TIME_LEFT%"
+        - ""
+        - "&fTheme:"
+        - "&c%GTB_THEME%"
+        - ""
+        - "&ewww.spigotmc.org"
+
     Playing:
       - "&fTime Left: &e%FORMATTED_TIME_LEFT%"
       - ""

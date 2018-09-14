@@ -91,6 +91,7 @@ Hide-Players-Outside-Game: true
 # Time in lobby to wait before start
 Lobby-Starting-Time: 60
 
+#todo rework
 # All game themes, type here everything you want your players to build.
 # Solo game mode themes.
 Game-Themes:
@@ -104,6 +105,15 @@ Game-Themes:
 Game-Themes-Team:
 - Pirates
 - Castle
+
+# todo migrator and rework
+Themes:
+  # You can use aliases here followed by ; mark.
+  # ex. - School bus;Schoolbus;Bus from school etc.
+  # The first alias will be always used as default but you can still guess rest of those aliases
+  # Aliases are nOt cAsE SENsiTivE
+  Guess-The-Build:
+    - School bus;Schoolbus
 
 # Theme names that are blacklisted.
 Blacklisted-Themes:

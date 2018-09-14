@@ -58,8 +58,8 @@ import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.CuboidSelector;
 import pl.plajer.buildbattle3.utils.MessageUtils;
 import pl.plajer.buildbattle3.utils.Metrics;
-import pl.plajerlair.core.services.ReportedException;
 import pl.plajerlair.core.services.ServiceRegistry;
+import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.UpdateChecker;
 

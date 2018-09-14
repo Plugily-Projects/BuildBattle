@@ -40,9 +40,9 @@ import pl.plajer.buildbattle3.arena.ArenaState;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.menus.SetupInventory;
 import pl.plajer.buildbattle3.utils.StringMatcher;
-import pl.plajerlair.core.services.ReportedException;
+import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajerlair.core.utils.LocationUtils;
 
 /**
  * @author Plajer
@@ -311,12 +311,12 @@ public class MainCommand implements CommandExecutor {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
     if (args.length == 3) {
       if (args[2].equalsIgnoreCase("lobbylocation") || args[2].equalsIgnoreCase("lobbyloc")) {
-        MinigameUtils.saveLoc(plugin, config, "arenas", "instances." + args[0] + ".lobbylocation", player.getLocation());
-        player.sendMessage("BuildBattle: Lobby location for arena/instance " + args[0] + " set to " + MinigameUtils.locationToString(player.getLocation()));
+        LocationUtils.saveLoc(plugin, config, "arenas", "instances." + args[0] + ".lobbylocation", player.getLocation());
+        player.sendMessage("BuildBattle: Lobby location for arena/instance " + args[0] + " set to " + LocationUtils.locationToString(player.getLocation()));
         return;
       } else if (args[2].equalsIgnoreCase("Endlocation") || args[2].equalsIgnoreCase("Endloc")) {
-        MinigameUtils.saveLoc(plugin, config, "arenas", "instances." + args[0] + ".Endlocation", player.getLocation());
-        player.sendMessage("BuildBattle: End location for arena/instance " + args[0] + " set to " + MinigameUtils.locationToString(player.getLocation()));
+        LocationUtils.saveLoc(plugin, config, "arenas", "instances." + args[0] + ".Endlocation", player.getLocation());
+        player.sendMessage("BuildBattle: End location for arena/instance " + args[0] + " set to " + LocationUtils.locationToString(player.getLocation()));
         return;
       } else {
         player.sendMessage(ChatColor.RED + "Invalid Command!");
@@ -377,8 +377,8 @@ public class MainCommand implements CommandExecutor {
   private void createInstanceInConfig(String ID) {
     String path = "instances." + ID + ".";
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    MinigameUtils.saveLoc(plugin, config, "arenas", path + "lobbylocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
-    MinigameUtils.saveLoc(plugin, config, "arenas", path + "Endlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+    LocationUtils.saveLoc(plugin, config, "arenas", path + "lobbylocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+    LocationUtils.saveLoc(plugin, config, "arenas", path + "Endlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
     config.set(path + "minimumplayers", config.getInt("instances.default.minimumplayers"));
     config.set(path + "maximumplayers", config.getInt("instances.default.maximumplayers"));
     config.set(path + "mapname", ID);
@@ -394,8 +394,8 @@ public class MainCommand implements CommandExecutor {
     arena.setMinimumPlayers(ConfigUtils.getConfig(plugin, "arenas").getInt(path + "minimumplayers"));
     arena.setMaximumPlayers(ConfigUtils.getConfig(plugin, "arenas").getInt(path + "maximumplayers"));
     arena.setMapName(ConfigUtils.getConfig(plugin, "arenas").getString(path + "mapname"));
-    arena.setLobbyLocation(MinigameUtils.getLocation(ConfigUtils.getConfig(plugin, "arenas").getString(path + "lobbylocation")));
-    arena.setEndLocation(MinigameUtils.getLocation(ConfigUtils.getConfig(plugin, "arenas").getString(path + "Endlocation")));
+    arena.setLobbyLocation(LocationUtils.getLocation(ConfigUtils.getConfig(plugin, "arenas").getString(path + "lobbylocation")));
+    arena.setEndLocation(LocationUtils.getLocation(ConfigUtils.getConfig(plugin, "arenas").getString(path + "Endlocation")));
     arena.setArenaType(Arena.ArenaType.valueOf(ConfigUtils.getConfig(plugin, "arenas").getString(path + "gametype").toUpperCase()));
     arena.setReady(false);
     arena.initPoll();

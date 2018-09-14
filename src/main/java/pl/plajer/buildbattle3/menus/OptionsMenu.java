@@ -32,7 +32,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import pl.plajer.buildbattle3.arena.plots.ArenaPlot;
 import pl.plajer.buildbattle3.handlers.ChatManager;
-import pl.plajer.buildbattle3.utils.ItemBuilder;
+import pl.plajerlair.core.utils.ItemBuilder;
 
 /**
  * Created by Tom on 18/08/2015.
@@ -40,7 +40,7 @@ import pl.plajer.buildbattle3.utils.ItemBuilder;
 public class OptionsMenu {
 
   public static ItemStack getMenuItem() {
-    return new ItemBuilder(Material.NETHER_STAR).name(ChatManager.colorMessage("Menus.Option-Menu.Option-Item")).lore(ChatManager.colorMessage("Menus.Option-Menu.Option-Item-Lore")).build();
+    return new ItemBuilder(new ItemStack(Material.NETHER_STAR)).name(ChatManager.colorMessage("Menus.Option-Menu.Option-Item")).lore(ChatManager.colorMessage("Menus.Option-Menu.Option-Item-Lore")).build();
   }
 
   private static Inventory createMenu(ArenaPlot plot) {

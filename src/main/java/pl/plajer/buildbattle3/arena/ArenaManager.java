@@ -40,7 +40,7 @@ import pl.plajer.buildbattle3.handlers.items.SpecialItem;
 import pl.plajer.buildbattle3.handlers.items.SpecialItemManager;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
-import pl.plajerlair.core.services.ReportedException;
+import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.InventoryUtils;
 import pl.plajerlair.core.utils.MinigameUtils;
 

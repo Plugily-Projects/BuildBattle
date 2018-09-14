@@ -49,8 +49,10 @@ public class ConfigPreferences {
     }
 
     private static void loadThemes() {
+        //todo different accessors
         gameThemes.put(Arena.ArenaType.SOLO, config.getStringList("Game-Themes"));
         gameThemes.put(Arena.ArenaType.TEAM, config.getStringList("Game-Themes-Team"));
+        gameThemes.put(Arena.ArenaType.GUESS_THE_BUILD, config.getStringList("Themes.Guess-The-Build"));
     }
 
     public static List<String> getThemes(Arena arena) {

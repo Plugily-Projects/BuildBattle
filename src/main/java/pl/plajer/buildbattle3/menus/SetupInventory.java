@@ -28,9 +28,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
-import pl.plajer.buildbattle3.utils.ItemBuilder;
 import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajerlair.core.utils.ItemBuilder;
+import pl.plajerlair.core.utils.LocationUtils;
 
 /**
  * Created by Tom on 15/06/2015.
@@ -135,7 +135,7 @@ public class SetupInventory {
 
   private String isOptionDoneBool(String path) {
     if (ConfigUtils.getConfig(plugin, "arenas").isSet(path)) {
-      if (Bukkit.getServer().getWorlds().get(0).getSpawnLocation().equals(MinigameUtils.getLocation(ConfigUtils.getConfig(plugin, "arenas").getString(path)))) {
+      if (Bukkit.getServer().getWorlds().get(0).getSpawnLocation().equals(LocationUtils.getLocation(ConfigUtils.getConfig(plugin, "arenas").getString(path)))) {
         return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.RED + "No";
       }
       return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.GREEN + "Yes";

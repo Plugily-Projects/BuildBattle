@@ -51,7 +51,7 @@ import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.CuboidSelector;
 import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajerlair.core.utils.LocationUtils;
 
 /**
  * @author Plajer
@@ -136,8 +136,8 @@ public class AdminCommands extends MainCommand {
     if (config.contains("instances." + arena + ".plots")) {
       id = config.getConfigurationSection("instances." + arena + ".plots").getKeys(false).size();
     }
-    MinigameUtils.saveLoc(plugin, config, "arenas", "instances." + arena + ".plots." + id + ".minpoint", selection.getFirstPos());
-    MinigameUtils.saveLoc(plugin, config, "arenas", "instances." + arena + ".plots." + id + ".maxpoint", selection.getSecondPos());
+    LocationUtils.saveLoc(plugin, config, "arenas", "instances." + arena + ".plots." + id + ".minpoint", selection.getFirstPos());
+    LocationUtils.saveLoc(plugin, config, "arenas", "instances." + arena + ".plots." + id + ".maxpoint", selection.getSecondPos());
     player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&aPlot with ID &e" + id + "&a added to arena instance &e" + arena));
     plugin.getCuboidSelector().removeSelection(player);
   }

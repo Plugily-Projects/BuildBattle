@@ -30,9 +30,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.plots.ArenaPlot;
 import pl.plajer.buildbattle3.utils.Cuboid;
-import pl.plajerlair.core.services.ReportedException;
+import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajerlair.core.utils.LocationUtils;
 
 /**
  * Created by Tom on 27/07/2014.
@@ -110,8 +110,8 @@ public class ArenaRegistry {
         else arena.setMaximumPlayers(config.getInt("instances.default.maximumplayers"));
         if (config.contains(s + "mapname")) arena.setMapName(config.getString(s + "mapname"));
         else arena.setMapName(config.getString("instances.default.mapname"));
-        if (config.contains(s + "lobbylocation")) arena.setLobbyLocation(MinigameUtils.getLocation(config.getString(s + "lobbylocation")));
-        if (config.contains(s + "Endlocation")) arena.setEndLocation(MinigameUtils.getLocation(config.getString(s + "Endlocation")));
+        if (config.contains(s + "lobbylocation")) arena.setLobbyLocation(LocationUtils.getLocation(config.getString(s + "lobbylocation")));
+        if (config.contains(s + "Endlocation")) arena.setEndLocation(LocationUtils.getLocation(config.getString(s + "Endlocation")));
         else {
           if (!plugin.isBungeeActivated()) {
             System.out.print(ID + " doesn't contains an end location!");
@@ -128,8 +128,8 @@ public class ArenaRegistry {
             for (String plotName : config.getConfigurationSection(s + "plots").getKeys(false)) {
               if (config.isSet(s + "plots." + plotName + ".maxpoint") && config.isSet(s + "plots." + plotName + ".minpoint")) {
                 ArenaPlot buildPlot = new ArenaPlot();
-                buildPlot.setCuboid(new Cuboid(MinigameUtils.getLocation(config.getString(s + "plots." + plotName + ".minpoint")),
-                        MinigameUtils.getLocation(config.getString(s + "plots." + plotName + ".maxpoint"))));
+                buildPlot.setCuboid(new Cuboid(LocationUtils.getLocation(config.getString(s + "plots." + plotName + ".minpoint")),
+                        LocationUtils.getLocation(config.getString(s + "plots." + plotName + ".maxpoint"))));
                 buildPlot.fullyResetPlot();
                 arena.getPlotManager().addBuildPlot(buildPlot);
               } else {

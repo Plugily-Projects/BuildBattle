@@ -42,7 +42,7 @@ import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.Cuboid;
-import pl.plajerlair.core.services.ReportedException;
+import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
  * Created by Tom on 17/08/2015.

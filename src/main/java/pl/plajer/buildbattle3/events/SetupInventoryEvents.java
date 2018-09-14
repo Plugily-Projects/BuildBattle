@@ -44,9 +44,9 @@ import pl.plajer.buildbattle3.arena.plots.ArenaPlot;
 import pl.plajer.buildbattle3.handlers.PermissionManager;
 import pl.plajer.buildbattle3.menus.SetupInventory;
 import pl.plajer.buildbattle3.utils.Cuboid;
-import pl.plajerlair.core.services.ReportedException;
+import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajerlair.core.utils.LocationUtils;
 
 /**
  * Created by Tom on 15/06/2015.
@@ -225,7 +225,7 @@ public class SetupInventoryEvents implements Listener {
         String[] locations = new String[]{"lobbylocation", "Endlocation"};
         FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
         for (String s : locations) {
-          if (!config.isSet("instances." + arena.getID() + "." + s) || config.getString("instances." + arena.getID() + "." + s).equals(MinigameUtils.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
+          if (!config.isSet("instances." + arena.getID() + "." + s) || config.getString("instances." + arena.getID() + "." + s).equals(LocationUtils.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
             event.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure following spawn properly: " + s + " (cannot be world spawn location)");
             return;
           }
@@ -237,8 +237,8 @@ public class SetupInventoryEvents implements Listener {
           for (String plotName : config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false)) {
             if (config.isSet("instances." + arena.getID() + ".plots." + plotName + ".maxpoint") && config.isSet("instances." + arena.getID() + ".plots." + plotName + ".minpoint")) {
               ArenaPlot buildPlot = new ArenaPlot();
-              buildPlot.setCuboid(new Cuboid(MinigameUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint")),
-                      MinigameUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint"))));
+              buildPlot.setCuboid(new Cuboid(LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint")),
+                      LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint"))));
               buildPlot.fullyResetPlot();
               arena.getPlotManager().addBuildPlot(buildPlot);
             } else {
@@ -264,14 +264,14 @@ public class SetupInventoryEvents implements Listener {
         arena.setMinimumPlayers(config.getInt("instances." + arena.getID() + ".minimumplayers"));
         arena.setMaximumPlayers(config.getInt("instances." + arena.getID() + ".maximumplayers"));
         arena.setMapName(config.getString("instances." + arena.getID() + ".mapname"));
-        arena.setLobbyLocation(MinigameUtils.getLocation(config.getString("instances." + arena.getID() + ".lobbylocation")));
-        arena.setEndLocation(MinigameUtils.getLocation(config.getString("instances." + arena.getID() + ".Endlocation")));
+        arena.setLobbyLocation(LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".lobbylocation")));
+        arena.setEndLocation(LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".Endlocation")));
         arena.setArenaType(Arena.ArenaType.valueOf(config.getString("instances." + arena.getID() + ".gametype").toUpperCase()));
 
         for (String plotName : config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false)) {
           ArenaPlot buildPlot = new ArenaPlot();
-          buildPlot.setCuboid(new Cuboid(MinigameUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint")),
-                  MinigameUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint"))));
+          buildPlot.setCuboid(new Cuboid(LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint")),
+                  LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint"))));
           buildPlot.fullyResetPlot();
           arena.getPlotManager().addBuildPlot(buildPlot);
         }
