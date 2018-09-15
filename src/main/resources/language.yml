@@ -110,6 +110,7 @@ Scoreboard:
       - "&fStarting In: &e%TIMER%"
       - ""
       - "&ewww.plajer.xyz"
+      #todo locale
     Ending-States:
       Classic:
         - "&e&lGAME ENDED"
@@ -156,6 +157,11 @@ In-Game:
   Join-Cancelled-Via-API: "&cYou can't join this game!"
   Nobody: "&eNobody"
   No-Theme-Yet: "&cVoting"
+  #todo locale
+  Guess-The-Build:
+    Current-Builder: "&eBuilder: &7%BUILDER%"
+    Current-Round: "&eRound: &7%ROUND%/%MAXPLAYERS%"
+    Theme-Is-Long: "&eThe theme is &7%NUM% &echaracters long"
   NPC:
     Floor-Change-NPC-Name: "&aChange floor NPC"
     NPC-Created: "&aFloor NPC created successfully!"

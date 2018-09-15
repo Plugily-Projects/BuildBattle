@@ -177,6 +177,8 @@ public class LanguageMigrator {
                   "        - \"&7Guess The Build Mode\"\r\n        - \"\"\r\n        - \"&e1. &f%1%: &e%1_PTS%\"\r\n        - \"&e2. &f%2%: &e%2_PTS%\"\r\n        - \"&e3. &f%3%: &e%3_PTS%\"\r\n" +
                   "        - \"&e4. &f%4%: &e%4_PTS%\"\r\n        - \"&e5. &f%5%: &e%5_PTS%\"\r\n        - \"&e6. &f%6%: &e%6_PTS%\"\r\n        - \"&e7. &f%7%: &e%7_PTS%\"\r\n        - \"&e8. &f%8%: &e%8_PTS%\"\r\n" +
                   "        - \"&e9. &f%9%: &e%9_PTS%\"\r\n        - \"&e10. &f%10%: &e%10_PTS%\"\r\n        - \"\"\r\n        - \"&ewww.plajer.xyz\"");
+          MigratorUtils.insertAfterLine(file, "No-Theme-Yet", "  Guess-The-Build:\r\n    Current-Builder: \"&eBuilder: &7%BUILDER%\"\r\n" +
+                  "    Current-Round: \"&eRound: &7%ROUND%/%MAXPLAYERS%\"\r\n    Theme-Is-Long: \"&eThe theme is &7%NUM% &echaracters long\"");
       }
       version++;
     }
