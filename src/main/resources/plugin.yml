@@ -1,5 +1,5 @@
 main: pl.plajer.buildbattle3.Main
-version: 3.6.0
+version: 4.0.0b
 name: BuildBattle
 softdepend: [Vault, PlaceholderAPI, Citizens]
 authors: [Plajer, TomTheDeveloper]

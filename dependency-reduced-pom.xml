@@ -17,12 +17,11 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-    <groupId>pl.plajer.buildbattle3</groupId>
-    <artifactId>BuildBattle</artifactId>
-  <version>3.6.0</version>
+  <groupId>pl.plajer.buildbattle3</groupId>
+  <artifactId>BuildBattle</artifactId>
+  <version>4.0.0</version>
   <build>
     <plugins>
       <plugin>
@@ -82,13 +81,13 @@
       <url>http://dl.bintray.com/tastybento/maven-repo</url>
     </repository>
     <repository>
-        <id>plajerlair-repo</id>
-        <url>https://plajer.xyz/mvn/repo</url>
+      <id>plajerlair-repo</id>
+      <url>https://plajer.xyz/mvn/repo</url>
     </repository>
-      <repository>
-          <id>mojang-repo</id>
-          <url>https://libraries.minecraft.net/</url>
-      </repository>
+    <repository>
+      <id>mojang-repo</id>
+      <url>https://libraries.minecraft.net/</url>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
