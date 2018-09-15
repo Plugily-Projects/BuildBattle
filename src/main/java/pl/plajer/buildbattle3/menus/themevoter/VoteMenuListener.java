@@ -18,6 +18,9 @@
 
 package pl.plajer.buildbattle3.menus.themevoter;
 
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -71,17 +74,11 @@ public class VoteMenuListener implements Listener {
           User u = UserManager.getUser(e.getWhoClicked().getUniqueId());
           if (u.getInt("supervotes") > 0) {
             u.setInt("supervotes", u.getInt("supervotes") - 1);
-            for (Player p : arena.getPlayers()) {
-              p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Used")
-                      .replace("%player%", e.getWhoClicked().getName()).replace("%theme%", arena.getVotePoll().getThemeByPosition(e.getSlot() + 1)));
-            }
+            ChatManager.broadcast(arena, ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Used")
+                    .replace("%player%", e.getWhoClicked().getName()).replace("%theme%", arena.getVotePoll().getThemeByPosition(e.getSlot() + 1)));
             arena.setThemeVoteTime(false);
             arena.setTheme(arena.getVotePoll().getThemeByPosition(e.getSlot() + 1));
-            if (arena.getArenaType() == Arena.ArenaType.SOLO) {
-              arena.setTimer(ConfigPreferences.getBuildTime());
-            } else {
-              arena.setTimer(ConfigPreferences.getTeamBuildTime());
-            }
+            arena.setTimer(ConfigPreferences.getBuildTime(arena));
             String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started");
             for (Player p : arena.getPlayers()) {
               p.closeInventory();
@@ -89,6 +86,46 @@ public class VoteMenuListener implements Listener {
               p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
             }
           }
+        }
+      }
+    } catch (Exception ex) {
+      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
+    }
+  }
+
+  @EventHandler
+  public void onInventoryClickOnGuessTheBuild(InventoryClickEvent e) {
+    try {
+      if (e.getInventory() == null || e.getInventory().getName() == null) return;
+      if (e.getCurrentItem() == null) return;
+      if (e.getInventory().getName().equals(ChatManager.colorMessage("Menus.Guess-The-Build-Theme-Selector"))) {
+        e.setCancelled(true);
+        Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+        if (arena == null) {
+          return;
+        }
+        if (e.getCurrentItem().getType() == Material.PAPER) {
+          GTBTheme theme;
+          String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
+          displayName = ChatColor.stripColor(displayName);
+          switch (e.getSlot()) {
+            case 11:
+              theme = new GTBTheme(displayName, GTBTheme.Difficulty.EASY);
+              break;
+            case 13:
+              theme = new GTBTheme(displayName, GTBTheme.Difficulty.MEDIUM);
+              break;
+            case 15:
+              theme = new GTBTheme(displayName, GTBTheme.Difficulty.HARD);
+              break;
+            default:
+              return;
+          }
+          arena.setCurrentGTBTheme(theme);
+          arena.setGTBThemeSet(true);
+          ((Player) e.getWhoClicked()).spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatManager.colorMessage("In-Game.Guess-The-Build.Theme-Is-Name")
+                  .replace("%THEME%", theme.getTheme())));
+
         }
       }
     } catch (Exception ex) {

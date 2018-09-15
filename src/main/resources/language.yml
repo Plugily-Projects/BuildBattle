@@ -61,6 +61,9 @@ Bossbar:
 Scoreboard:
   Title: "&b&lBuildBattle"
   Theme-Unknown: "&c???"
+  GTB-Current-Timer:
+    Build-Time: "&fTime: &e%FORMATTED_TIME_LEFT%"
+    Starts-In: "&fStarts In: &e%FORMATTED_TIME_LEFT%"
   Content:
     #todo accessors change + migrator
     Playing-States:
@@ -86,17 +89,19 @@ Scoreboard:
         - "&e%TEAMMATE%"
         - ""
         - "&ewww.plajer.xyz"
+        #todo migrator
       Guess-The-Build:
         - "&7Guess The Build Mode"
         - "&fBuilder:"
         - "&7%BUILDER%"
         - ""
         - "&e&lLeaders:"
-        - "&6%GTB_LEAD_ONE%&e: %LEAD_ONE_PTS%"
-        - "&7%GTB_LEAD_TWO%&e: %LEAD_TWO_PTS%"
-        - "&7%GTB_LEAD_THREE%&e: %LEAD_THREE_PTS%"
+        - "&6%1%&e: %1_PTS%"
+        - "&7%2%&e: %2_PTS%"
+        - "&7%3%&e: %3_PTS%"
         - ""
-        - "&fTime: &e%FORMATTED_TIME_LEFT%"
+        #todo format
+        - "%CURRENT_TIMER%"
         - ""
         - "&fTheme:"
         - "&c%THEME%"
@@ -162,6 +167,7 @@ In-Game:
     Current-Builder: "&eBuilder: &7%BUILDER%"
     Current-Round: "&eRound: &7%ROUND%/%MAXPLAYERS%"
     Theme-Is-Long: "&eThe theme is &7%NUM% &echaracters long"
+    Theme-Is-Name: "&eThe theme is a &e%THEME%"
   NPC:
     Floor-Change-NPC-Name: "&aChange floor NPC"
     NPC-Created: "&aFloor NPC created successfully!"

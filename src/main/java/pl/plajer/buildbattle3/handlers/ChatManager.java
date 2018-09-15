@@ -42,6 +42,12 @@ public class ChatManager {
     PLUGIN_PREFIX = colorMessage("In-Game.Plugin-Prefix");
   }
 
+  public static void broadcast(Arena arena, String message) {
+    for (Player p : arena.getPlayers()) {
+      p.sendMessage(PLUGIN_PREFIX + message);
+    }
+  }
+
   public static String colorMessage(String message) {
     try {
       return ChatColor.translateAlternateColorCodes('&', LanguageManager.getLanguageMessage(message));
@@ -82,16 +88,10 @@ public class ChatManager {
   public static void broadcastAction(Arena arena, Player p, ActionType action) {
     switch (action) {
       case JOIN:
-        String joinMsg = PLUGIN_PREFIX + formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Join"), p);
-        for (Player player : arena.getPlayers()) {
-          player.sendMessage(joinMsg);
-        }
+        broadcast(arena, formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Join"), p));
         break;
       case LEAVE:
-        String leaveMsg = PLUGIN_PREFIX + formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Leave"), p);
-        for (Player player : arena.getPlayers()) {
-          player.sendMessage(leaveMsg);
-        }
+        broadcast(arena, formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Leave"), p));
         break;
     }
   }

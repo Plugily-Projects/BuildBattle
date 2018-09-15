@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
@@ -60,11 +61,13 @@ import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.handlers.language.LanguageManager;
 import pl.plajer.buildbattle3.handlers.language.Locale;
 import pl.plajer.buildbattle3.menus.OptionsMenu;
+import pl.plajer.buildbattle3.menus.themevoter.GTBTheme;
 import pl.plajer.buildbattle3.menus.themevoter.VoteMenu;
 import pl.plajer.buildbattle3.menus.themevoter.VotePoll;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.MessageUtils;
+import pl.plajer.buildbattle3.utils.Utils;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.GameScoreboard;
 import pl.plajerlair.core.utils.InventoryUtils;
@@ -115,6 +118,10 @@ public class Arena extends BukkitRunnable {
   //guess the build mode
   private int round = 0;
   private UUID currentBuilder;
+  private GTBTheme currentTheme;
+  private boolean themeSet;
+  private Map<String, List<String>> themesCache = new HashMap<>();
+  private Map<UUID, Integer> playersPoints = new HashMap<>();
 
   public Arena(String ID) {
     gameState = ArenaState.WAITING_FOR_PLAYERS;
@@ -149,6 +156,9 @@ public class Arena extends BukkitRunnable {
       scoreboardContents.put(ArenaState.IN_GAME.getFormattedName() + "_" + type.getPrefix(), playing);
       scoreboardContents.put(ArenaState.ENDING.getFormattedName() + "_" + type.getPrefix(), ending);
     }
+    themesCache.put("EASY", ConfigPreferences.getThemes(getArenaType().getPrefix() + "_EASY"));
+    themesCache.put("MEDIUM", ConfigPreferences.getThemes(getArenaType().getPrefix() + "_MEDIUM"));
+    themesCache.put("HARD", ConfigPreferences.getThemes(getArenaType().getPrefix() + "_HARD"));
   }
 
   /**
@@ -228,14 +238,42 @@ public class Arena extends BukkitRunnable {
 
   public void setArenaType(ArenaType arenaType) {
     this.arenaType = arenaType;
-    switch (arenaType) {
-      case SOLO:
-        BUILD_TIME = ConfigPreferences.getBuildTime();
-        break;
-      case TEAM:
-        BUILD_TIME = ConfigPreferences.getTeamBuildTime();
-        break;
-    }
+    BUILD_TIME = ConfigPreferences.getBuildTime(this);
+  }
+
+  /**
+   * @return current Guess The Build gamemode theme
+   * Returns theme named "null" if arena game mode isn't Guess The Build game mode
+   */
+  public GTBTheme getCurrentGTBTheme() {
+    return currentTheme == null ? new GTBTheme("null", GTBTheme.Difficulty.EASY) : currentTheme;
+  }
+
+  /**
+   * Sets current Guess The Build gamemode theme
+   *
+   * @param currentTheme new Guess The Build theme
+   */
+  public void setCurrentGTBTheme(GTBTheme currentTheme) {
+    this.currentTheme = currentTheme;
+  }
+
+  /**
+   * Is Guess The Build theme voting set
+   *
+   * @return true if is, false otherwise
+   */
+  public boolean isGTBThemeSet() {
+    return themeSet;
+  }
+
+  /**
+   * Sets whether guess the build theme timer is set or not
+   *
+   * @param themeSet true or false
+   */
+  public void setGTBThemeSet(boolean themeSet) {
+    this.themeSet = themeSet;
   }
 
   public void run() {
@@ -269,17 +307,11 @@ public class Arena extends BukkitRunnable {
         if (getPlayers().size() < getMinimumPlayers()) {
           if (getTimer() <= 0) {
             setTimer(LOBBY_STARTING_TIMER);
-            String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", String.valueOf(getMinimumPlayers()));
-            for (Player p : getPlayers()) {
-              p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
-            }
+            ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", String.valueOf(getMinimumPlayers())));
             return;
           }
         } else {
-          String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start");
-          for (Player p : getPlayers()) {
-            p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
-          }
+          ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
           setGameState(ArenaState.STARTING);
           Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
           setTimer(LOBBY_STARTING_TIMER);
@@ -289,10 +321,7 @@ public class Arena extends BukkitRunnable {
         break;
       case STARTING:
         if (getPlayers().size() < getMinimumPlayers()) {
-          String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", String.valueOf(getMinimumPlayers()));
-          for (Player p : getPlayers()) {
-            p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
-          }
+          ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", String.valueOf(getMinimumPlayers())));
           setGameState(ArenaState.WAITING_FOR_PLAYERS);
           Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
           setTimer(LOBBY_STARTING_TIMER);
@@ -341,11 +370,7 @@ public class Arena extends BukkitRunnable {
             setThemeVoteTime(false);
             String votedTheme = voteMenu.getVotePoll().getVotedTheme();
             setTheme(votedTheme);
-            if (arenaType == ArenaType.SOLO) {
-              setTimer(ConfigPreferences.getBuildTime());
-            } else {
-              setTimer(ConfigPreferences.getTeamBuildTime());
-            }
+            setTimer(ConfigPreferences.getBuildTime(this));
             String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started");
             for (Player p : getPlayers()) {
               p.closeInventory();
@@ -362,9 +387,7 @@ public class Arena extends BukkitRunnable {
           if ((getPlayers().size() == 1 && arenaType == ArenaType.SOLO) || (getPlayers().size() == 2 && arenaType == ArenaType.TEAM
                   && getPlotManager().getPlot(((Player) getPlayers().toArray()[0]).getUniqueId()).getOwners().contains(((Player) getPlayers().toArray()[1]).getUniqueId()))) {
             String message = ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Only-You-Playing");
-            for (Player p : getPlayers()) {
-              p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
-            }
+            ChatManager.broadcast(this, message);
             setGameState(ArenaState.ENDING);
             Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
             setTimer(10);
@@ -520,17 +543,11 @@ public class Arena extends BukkitRunnable {
         if (getPlayers().size() < getMinimumPlayers()) {
           if (getTimer() <= 0) {
             setTimer(LOBBY_STARTING_TIMER);
-            String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", String.valueOf(getMinimumPlayers()));
-            for (Player p : getPlayers()) {
-              p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
-            }
+            ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", String.valueOf(getMinimumPlayers())));
             return;
           }
         } else {
-          String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start");
-          for (Player p : getPlayers()) {
-            p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
-          }
+          ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
           setGameState(ArenaState.STARTING);
           Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
           setTimer(LOBBY_STARTING_TIMER);
@@ -540,10 +557,7 @@ public class Arena extends BukkitRunnable {
         break;
       case STARTING:
         if (getPlayers().size() < getMinimumPlayers()) {
-          String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", String.valueOf(getMinimumPlayers()));
-          for (Player p : getPlayers()) {
-            p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
-          }
+          ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", String.valueOf(getMinimumPlayers())));
           setGameState(ArenaState.WAITING_FOR_PLAYERS);
           Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
           setTimer(LOBBY_STARTING_TIMER);
@@ -573,6 +587,13 @@ public class Arena extends BukkitRunnable {
         setTimer(getTimer() - 1);
         break;
       case IN_GAME:
+        for (Player p : getPlayers()) {
+          if (!playersPoints.containsKey(p.getUniqueId())) {
+            playersPoints.put(p.getUniqueId(), 0);
+          }
+          //todo ineffective?
+          playersPoints = Utils.sortByValue(playersPoints);
+        }
         if (plugin.isBungeeActivated()) {
           if (getMaximumPlayers() <= getPlayers().size()) {
             plugin.getServer().setWhitelist(true);
@@ -582,9 +603,51 @@ public class Arena extends BukkitRunnable {
         }
         if (currentBuilder == null) {
           currentBuilder = ((Player) getPlayers().toArray()[0]).getUniqueId();
+          Random r = new Random();
 
           Inventory inv = Bukkit.createInventory(null, 27, ChatManager.colorMessage("Menus.Guess-The-Build-Theme-Selector.Inventory-Name"));
-          inv.addItem(new ItemBuilder(new ItemStack(Material.PAPER)).name(ChatManager.colorMessage("Menus.Guess-The-Build-Theme-Selector.")).build());
+          inv.setItem(11, new ItemBuilder(new ItemStack(Material.PAPER)).name(ChatManager.colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Name")
+                  .replace("%theme%", themesCache.get("EASY").get(r.nextInt(themesCache.get("EASY").size()))))
+                  .lore(ChatManager.colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Lore")
+                          .replace("%difficulty%", ChatManager.colorMessage("Menus.Guess-The-Build-Theme-Selector.Difficulties.Easy"))
+                          .replace("%points%", String.valueOf(1)).split(";")).build());
+          inv.setItem(13, new ItemBuilder(new ItemStack(Material.PAPER)).name(ChatManager.colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Name")
+                  .replace("%theme%", themesCache.get("MEDIUM").get(r.nextInt(themesCache.get("MEDIUM").size()))))
+                  .lore(ChatManager.colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Lore")
+                          .replace("%difficulty%", ChatManager.colorMessage("Menus.Guess-The-Build-Theme-Selector.Difficulties.Medium"))
+                          .replace("%points%", String.valueOf(2)).split(";")).build());
+          inv.setItem(15, new ItemBuilder(new ItemStack(Material.PAPER)).name(ChatManager.colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Name")
+                  .replace("%theme%", themesCache.get("HARD").get(r.nextInt(themesCache.get("HARD").size()))))
+                  .lore(ChatManager.colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Lore")
+                          .replace("%difficulty%", ChatManager.colorMessage("Menus.Guess-The-Build-Theme-Selector.Difficulties.Hard"))
+                          .replace("%points%", String.valueOf(3)).split(";")).build());
+
+          Bukkit.getPlayer(currentBuilder).openInventory(inv);
+          break;
+        } else {
+          if (!isGTBThemeSet()) {
+            if (getTimer() <= 0) {
+              Random r = new Random();
+              String type = "EASY";
+              switch (r.nextInt(2)) {
+                case 0:
+                  break;
+                case 1:
+                  type = "MEDIUM";
+                  break;
+                case 2:
+                  type = "HARD";
+                  break;
+              }
+              GTBTheme theme = new GTBTheme(themesCache.get(type).get(r.nextInt(themesCache.get(type).size())), GTBTheme.Difficulty.valueOf(type));
+              setCurrentGTBTheme(theme);
+              setGTBThemeSet(true);
+              Bukkit.getPlayer(currentBuilder).spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatManager.colorMessage("In-Game.Guess-The-Build.Theme-Is-Name")
+                      .replace("%THEME%", theme.getTheme())));
+            }
+            setTimer(getTimer() - 1);
+            break;
+          }
         }
         if (isThemeVoteTime()) {
           if (!themeTimerSet) {
@@ -598,11 +661,7 @@ public class Arena extends BukkitRunnable {
             setThemeVoteTime(false);
             String votedTheme = voteMenu.getVotePoll().getVotedTheme();
             setTheme(votedTheme);
-            if (arenaType == ArenaType.SOLO) {
-              setTimer(ConfigPreferences.getBuildTime());
-            } else {
-              setTimer(ConfigPreferences.getTeamBuildTime());
-            }
+            setTimer(ConfigPreferences.getBuildTime(this));
             String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started");
             for (Player p : getPlayers()) {
               p.closeInventory();
@@ -616,10 +675,7 @@ public class Arena extends BukkitRunnable {
           }
         }
         if (getPlayers().size() < 2) {
-          String message = ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Only-You-Playing");
-          for (Player p : getPlayers()) {
-            p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
-          }
+          ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Only-You-Playing"));
           setGameState(ArenaState.ENDING);
           Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
           setTimer(10);
@@ -738,7 +794,7 @@ public class Arena extends BukkitRunnable {
   private void giveRewards() {
     if (WIN_COMMANDS_ENABLED) {
       if (topList.get(1) != null) {
-        for (String string : ConfigPreferences.getWinCommands()) {
+        for (String string : ConfigPreferences.getWinCommands(ConfigPreferences.Position.FIRST)) {
           for (UUID u : topList.get(1))
             plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), string.replace("%PLAYER%", plugin.getServer().getOfflinePlayer(u).getName()));
         }
@@ -746,7 +802,7 @@ public class Arena extends BukkitRunnable {
     }
     if (SECOND_PLACE_COMMANDS_ENABLED) {
       if (topList.get(2) != null) {
-        for (String string : ConfigPreferences.getSecondPlaceCommands()) {
+        for (String string : ConfigPreferences.getWinCommands(ConfigPreferences.Position.SECOND)) {
           for (UUID u : topList.get(2))
             plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), string.replace("%PLAYER%", plugin.getServer().getOfflinePlayer(u).getName()));
         }
@@ -754,7 +810,7 @@ public class Arena extends BukkitRunnable {
     }
     if (THIRD_PLACE_COMMANDS_ENABLED) {
       if (topList.get(3) != null) {
-        for (String string : ConfigPreferences.getThirdPlaceCommands()) {
+        for (String string : ConfigPreferences.getWinCommands(ConfigPreferences.Position.THIRD)) {
           for (UUID u : topList.get(3))
             plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), string.replace("%PLAYER%", plugin.getServer().getOfflinePlayer(u).getName()));
         }
@@ -804,10 +860,35 @@ public class Arena extends BukkitRunnable {
     String returnString = string;
     returnString = StringUtils.replace(returnString, "%PLAYERS%", Integer.toString(getPlayers().size()));
     returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());
-    if (isThemeVoteTime()) {
-      returnString = StringUtils.replace(returnString, "%THEME%", ChatManager.colorMessage("In-Game.No-Theme-Yet"));
+    if (getArenaType() != ArenaType.GUESS_THE_BUILD) {
+      if (isThemeVoteTime()) {
+        returnString = StringUtils.replace(returnString, "%THEME%", ChatManager.colorMessage("In-Game.No-Theme-Yet"));
+      } else {
+        returnString = StringUtils.replace(returnString, "%THEME%", getTheme());
+      }
     } else {
-      returnString = StringUtils.replace(returnString, "%THEME%", getTheme());
+      if (isGTBThemeSet()) {
+        returnString = StringUtils.replace(returnString, "%CURRENT_TIMER%", ChatManager.colorMessage("Scoreboard.GTB-Current-Timer.Build-Time"));
+      } else {
+        returnString = StringUtils.replace(returnString, "%CURRENT_TIMER%", ChatManager.colorMessage("Scoreboard.GTB-Current-Timer.Starts-In"));
+      }
+      if (currentBuilder != null) {
+        if (player.getUniqueId() == currentBuilder) {
+          returnString = StringUtils.replace(returnString, "%THEME%", getCurrentGTBTheme().getTheme());
+        } else {
+          returnString = StringUtils.replace(returnString, "%THEME%", ChatManager.colorMessage("Scoreboard.Theme-Unknown"));
+        }
+        returnString = StringUtils.replace(returnString, "%BUILDER%", Bukkit.getPlayer(currentBuilder).getName());
+      }
+    }
+    //todo ineffective
+    for (int i = 1; i < 11; i++) {
+      if (getArenaState() != ArenaState.ENDING && i > 3) {
+        break;
+      }
+      //todo may be errors?
+      returnString = StringUtils.replace(returnString, "%" + i + "%", Bukkit.getOfflinePlayer((UUID) playersPoints.keySet().toArray()[i]).getName());
+      returnString = StringUtils.replace(returnString, "%" + i + "_PTS%", String.valueOf(playersPoints.get(playersPoints.keySet().toArray()[i])));
     }
     returnString = StringUtils.replace(returnString, "%MIN_PLAYERS%", Integer.toString(getMinimumPlayers()));
     returnString = StringUtils.replace(returnString, "%MAX_PLAYERS%", Integer.toString(getMaximumPlayers()));

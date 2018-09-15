@@ -18,9 +18,6 @@
 
 package pl.plajer.buildbattle3.buildbattleapi;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
@@ -30,6 +27,7 @@ import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.user.UserManager;
+import pl.plajer.buildbattle3.utils.Utils;
 import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
@@ -41,17 +39,6 @@ import pl.plajerlair.core.utils.ConfigUtils;
 public class StatsStorage {
 
   public static Main plugin;
-
-  private static Map sortByValue(Map unsortMap) {
-    List list = new LinkedList(unsortMap.entrySet());
-    list.sort((o1, o2) -> ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue()));
-    Map sortedMap = new LinkedHashMap();
-    for (Object aList : list) {
-      Map.Entry entry = (Map.Entry) aList;
-      sortedMap.put(entry.getKey(), entry.getValue());
-    }
-    return sortedMap;
-  }
 
   /**
    * Get all UUID's sorted ascending by Statistic Type
@@ -69,7 +56,7 @@ public class StatsStorage {
       for (String string : config.getKeys(false)) {
         stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));
       }
-      return sortByValue(stats);
+      return Utils.sortByValue(stats);
     }
   }
 

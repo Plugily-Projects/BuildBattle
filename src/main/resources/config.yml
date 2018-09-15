@@ -40,14 +40,15 @@ Basic-Permissions:
 # Should /bb leave command be disabled?
 Disable-Leave-Command: false
 
-# Total time of building in game
-Build-Time-In-Seconds: 480
+#todo migrator
+# Total build times of game modes
+Build-Time:
+  Classic: 480
+  Teams: 540
+  Guess-The-Build: 120
 
 # Total time of voting per player plot
 Voting-Time-In-Seconds: 20
-
-# Total time of building in game in TEAM game mode
-Team-Build-Time-In-Seconds: 540
 
 # Total time of voting for themes before starting
 Theme-Voting-Time-In-Seconds: 25
@@ -91,6 +92,7 @@ Hide-Players-Outside-Game: true
 # Time in lobby to wait before start
 Lobby-Starting-Time: 60
 
+#todo migrator
 # All game themes players will build.
 Themes:
   # Solo themes.
@@ -135,21 +137,16 @@ Blacklisted-Item-Names:
 - tnt
 - diamond_block
 
+#todo migrator
 # Commands executed when player wins
 # Use %PLAYER% placeholder to replace it with winner's name
 Win-Commands:
-- say %PLAYER% won the game!
-- give %PLAYER% 1000
-
-# Commands executed for second winner
-Second-Place-Commands:
-- say %PLAYER% become second
-- give %PLAYER% 1000
-
-# Commands executed for third winner
-Third-Place-Commands:
-- say %PLAYER% became third
-- give %PLAYER% 1000
+  First:
+    - say %PLAYER% won the game!
+  Second:
+    - say %PLAYER% become second
+  Third:
+    - say %PLAYER% became third
 
 # Commands executed for every player after the game ends
 End-Game-Commands:

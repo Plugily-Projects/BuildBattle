@@ -165,9 +165,7 @@ public class AdminCommands extends MainCommand {
     if (arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) {
       arena.setGameState(ArenaState.STARTING);
       arena.setTimer(0);
-      for (Player p : arena.getPlayers()) {
-        p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Admin-Messages.Set-Starting-In-To-0"));
-      }
+      ChatManager.broadcast(arena, ChatManager.colorMessage("In-Game.Messages.Admin-Messages.Set-Starting-In-To-0"));
     }
   }
 
@@ -272,9 +270,7 @@ public class AdminCommands extends MainCommand {
         return;
       }
       arena.setTheme(theme);
-      for (Player p : arena.getPlayers()) {
-        p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Admin-Messages.Changed-Theme").replace("%THEME%", theme));
-      }
+      ChatManager.broadcast(arena, ChatManager.colorMessage("In-Game.Messages.Admin-Messages.Changed-Theme").replace("%THEME%", theme));
     } else {
       if (arena.getArenaState() == ArenaState.STARTING) {
         sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Wait-For-Start"));
