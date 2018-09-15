@@ -166,6 +166,17 @@ public class LanguageMigrator {
           break;
         case 6:
           MigratorUtils.insertAfterLine(file, "Admin-Commands:", "    Theme-Blacklisted: \"&cThis theme cannot be used in game!\"");
+          MigratorUtils.insertAfterLine(file, "Content:", "    Playing-States:\r\n      Classic:\r\n" +
+                  "        - \"&fTime Left: &e%FORMATTED_TIME_LEFT%\"\r\n        - \"\"\r\n        - \"&fPlayers: &e%PLAYERS%/%MAX_PLAYERS%\"\r\n        - \"\"\r\n        - \"&fTheme: &e%THEME%\"\r\n        - \"\"\r\n" +
+                  "        - \"&fArena: &e%ARENA_ID%\"\r\n        - \"\"\r\n        - \"&ewww.plajer.xyz\"\r\n      Teams:\r\n        - \"&7Teams Mode\"\r\n        - \"&fTime Left: &e%FORMATTED_TIME_LEFT%\"\r\n" +
+                  "        - \"\"\r\n        - \"&fTheme: &e%THEME%\"\r\n        - \"\"\r\n        - \"&fArena: &e%ARENA_ID%\"\r\n        - \"\"\r\n        - \"&fTeammate:\"\r\n        - \"&e%TEAMMATE%\"\r\n" +
+                  "        - \"\"\r\n        - \"&ewww.plajer.xyz\"\r\n      Guess-The-Build:\r\n        - \"&7Guess The Build Mode\"\r\n        - \"&fBuilder:\"\r\n        - \"&7%BUILDER%\"\r\n        - \"\"\r\n        - \"&e&lLeaders:\"\r\n" +
+                  "        - \"&6%GTB_LEAD_ONE%&e: %LEAD_ONE_PTS%\"\r\n        - \"&7%GTB_LEAD_TWO%&e: %LEAD_TWO_PTS%\"\r\n        - \"&7%GTB_LEAD_THREE%&e: %LEAD_THREE_PTS%\"\r\n        - \"\"\r\n        - \"&fTime: &e%FORMATTED_TIME_LEFT%\"\r\n        - \"\"\r\n" +
+                  "        - \"&fTheme:\"\r\n        - \"&c%THEME%\"\r\n        - \"\"\r\n        - \"&ewww.plajer.xyz\"\r\n    Ending-States:\r\n      Classic:\r\n        - \"&e&lGAME ENDED\"\r\n        - \"\"\r\n" +
+                  "        - \"&ewww.plajer.xyz\"\r\n      Teams:\r\n        - \"&7Teams Mode\"\r\n        - \"&e&lGAME ENDED\"\r\n        - \"\"\r\n        - \"&ewww.plajer.xyz\"\r\n      Guess-The-Build:\r\n" +
+                  "        - \"&7Guess The Build Mode\"\r\n        - \"\"\r\n        - \"&e1. &f%1%: &e%1_PTS%\"\r\n        - \"&e2. &f%2%: &e%2_PTS%\"\r\n        - \"&e3. &f%3%: &e%3_PTS%\"\r\n" +
+                  "        - \"&e4. &f%4%: &e%4_PTS%\"\r\n        - \"&e5. &f%5%: &e%5_PTS%\"\r\n        - \"&e6. &f%6%: &e%6_PTS%\"\r\n        - \"&e7. &f%7%: &e%7_PTS%\"\r\n        - \"&e8. &f%8%: &e%8_PTS%\"\r\n" +
+                  "        - \"&e9. &f%9%: &e%9_PTS%\"\r\n        - \"&e10. &f%10%: &e%10_PTS%\"\r\n        - \"\"\r\n        - \"&ewww.plajer.xyz\"");
       }
       version++;
     }

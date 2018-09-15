@@ -118,7 +118,8 @@ public class Arena extends BukkitRunnable {
     plotManager = new ArenaPlotManager(this);
 
     for (ArenaState state : ArenaState.values()) {
-      if (state == ArenaState.RESTARTING || state == ArenaState.IN_GAME) continue;
+      //not registering RESTARTING state and registering IN_GAME and ENDING later
+      if (state == ArenaState.RESTARTING || state == ArenaState.IN_GAME || state == ArenaState.ENDING) continue;
       List<String> lines;
       if (LanguageManager.getPluginLocale() == Locale.ENGLISH) {
         lines = LanguageManager.getLanguageFile().getStringList("Scoreboard.Content." + state.getFormattedName());
@@ -128,14 +129,18 @@ public class Arena extends BukkitRunnable {
       scoreboardContents.put(state.getFormattedName(), lines);
     }
     for (ArenaType type : ArenaType.values()) {
-      List<String> lines;
+      List<String> playing;
+      List<String> ending;
       //todo locale
       if (LanguageManager.getPluginLocale() == Locale.ENGLISH) {
-        lines = LanguageManager.getLanguageFile().getStringList("Scoreboard.Content.Playing." + type.getPrefix());
+        playing = LanguageManager.getLanguageFile().getStringList("Scoreboard.Content.Playing-States." + type.getPrefix());
+        ending = LanguageManager.getLanguageFile().getStringList("Scoreboard.Content.Ending-States." + type.getPrefix());
       } else {
-        lines = Arrays.asList(ChatManager.colorMessage("Scoreboard.Content.Playing." + type.getPrefix()).split(";"));
+        playing = Arrays.asList(ChatManager.colorMessage("Scoreboard.Content.Playing-States." + type.getPrefix()).split(";"));
+        ending = Arrays.asList(ChatManager.colorMessage("Scoreboard.Content.Ending-States." + type.getPrefix()).split(";"));
       }
-      scoreboardContents.put(ArenaState.IN_GAME.getFormattedName(), lines);
+      scoreboardContents.put(ArenaState.IN_GAME.getFormattedName() + "_" + type.getPrefix(), playing);
+      scoreboardContents.put(ArenaState.ENDING.getFormattedName() + "_" + type.getPrefix(), ending);
     }
   }
 
@@ -649,8 +654,8 @@ public class Arena extends BukkitRunnable {
       if (p == null) continue;
       scoreboard = new GameScoreboard("PL_BB3", "BB_CR", ChatManager.colorMessage("Scoreboard.Title"));
       List<String> lines = scoreboardContents.get(getArenaState().getFormattedName());
-      if (getArenaType() == ArenaType.TEAM && getArenaState() == ArenaState.IN_GAME) {
-        lines = scoreboardContents.get(getArenaState().getFormattedName() + "-Teams");
+      if (getArenaState() == ArenaState.IN_GAME || getArenaState() == ArenaState.ENDING) {
+        lines = scoreboardContents.get(getArenaState().getFormattedName() + "_" + getArenaType().getPrefix());
       }
       for (String line : lines) {
         scoreboard.addRow(formatScoreboardLine(line, p));

@@ -63,7 +63,7 @@ Scoreboard:
   Theme-Unknown: "&c???"
   Content:
     #todo accessors change + migrator
-    Playing:
+    Playing-States:
       Classic:
         - "&fTime Left: &e%FORMATTED_TIME_LEFT%"
         - ""
@@ -73,7 +73,7 @@ Scoreboard:
         - ""
         - "&fArena: &e%ARENA_ID%"
         - ""
-        - "&ewww.spigotmc.org"
+        - "&ewww.plajer.xyz"
       Teams:
         - "&7Teams Mode"
         - "&fTime Left: &e%FORMATTED_TIME_LEFT%"
@@ -85,46 +85,23 @@ Scoreboard:
         - "&fTeammate:"
         - "&e%TEAMMATE%"
         - ""
-        - "&ewww.spigotmc.org"
+        - "&ewww.plajer.xyz"
       Guess-The-Build:
         - "&7Guess The Build Mode"
         - "&fBuilder:"
-        - "&7%GTB_BUILDER%"
+        - "&7%BUILDER%"
         - ""
         - "&e&lLeaders:"
-        - "&6%GTB_LEAD_ONE%&e: %GTB_LEAD_ONE_PTS%"
-        - "&7%GTB_LEAD_TWO%&e: %GTB_LEAD_TWO_PTS%"
-        - "&7%GTB_LEAD_THREE%&e: %GTB_LEAD_THREE_PTS%"
+        - "&6%GTB_LEAD_ONE%&e: %LEAD_ONE_PTS%"
+        - "&7%GTB_LEAD_TWO%&e: %LEAD_TWO_PTS%"
+        - "&7%GTB_LEAD_THREE%&e: %LEAD_THREE_PTS%"
         - ""
         - "&fTime: &e%FORMATTED_TIME_LEFT%"
         - ""
         - "&fTheme:"
-        - "&c%GTB_THEME%"
+        - "&c%THEME%"
         - ""
-        - "&ewww.spigotmc.org"
-
-    Playing:
-      - "&fTime Left: &e%FORMATTED_TIME_LEFT%"
-      - ""
-      - "&fPlayers: &e%PLAYERS%/%MAX_PLAYERS%"
-      - ""
-      - "&fTheme: &e%THEME%"
-      - ""
-      - "&fArena: &e%ARENA_ID%"
-      - ""
-      - "&ewww.spigotmc.org"
-    Playing-Teams:
-      - "&7Teams Mode"
-      - "&fTime Left: &e%FORMATTED_TIME_LEFT%"
-      - ""
-      - "&fTheme: &e%THEME%"
-      - ""
-      - "&fArena: &e%ARENA_ID%"
-      - ""
-      - "&fTeammate:"
-      - "&e%TEAMMATE%"
-      - ""
-      - "&ewww.spigotmc.org"
+        - "&ewww.plajer.xyz"
     Starting:
       - "&fPlayers: &e%PLAYERS%"
       - ""
@@ -132,17 +109,38 @@ Scoreboard:
       - ""
       - "&fStarting In: &e%TIMER%"
       - ""
-      - "&ewww.spigotmc.org"
-    Ending:
-      - "&e&lGAME ENDED"
-      - ""
-      - "&ewww.spigotmc.org"
+      - "&ewww.plajer.xyz"
+    Ending-States:
+      Classic:
+        - "&e&lGAME ENDED"
+        - ""
+        - "&ewww.plajer.xyz"
+      Teams:
+        - "&7Teams Mode"
+        - "&e&lGAME ENDED"
+        - ""
+        - "&ewww.plajer.xyz"
+      Guess-The-Build:
+        - "&7Guess The Build Mode"
+        - ""
+        - "&e1. &f%1%: &e%1_PTS%"
+        - "&e2. &f%2%: &e%2_PTS%"
+        - "&e3. &f%3%: &e%3_PTS%"
+        - "&e4. &f%4%: &e%4_PTS%"
+        - "&e5. &f%5%: &e%5_PTS%"
+        - "&e6. &f%6%: &e%6_PTS%"
+        - "&e7. &f%7%: &e%7_PTS%"
+        - "&e8. &f%8%: &e%8_PTS%"
+        - "&e9. &f%9%: &e%9_PTS%"
+        - "&e10. &f%10%: &e%10_PTS%"
+        - ""
+        - "&ewww.plajer.xyz"
     Waiting:
       - "&fPlayers: &e%PLAYERS%"
       - ""
       - "&fPlayers Needed: &e%MIN_PLAYERS%"
       - ""
-      - "&ewww.spigotmc.org"
+      - "&ewww.plajer.xyz"
 
 In-Game:
   Plugin-Prefix: "&6[&bBuildBattle&6] "
