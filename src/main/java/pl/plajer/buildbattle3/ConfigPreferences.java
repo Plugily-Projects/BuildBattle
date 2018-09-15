@@ -36,7 +36,7 @@ import pl.plajer.buildbattle3.arena.Arena;
 public class ConfigPreferences {
 
     private static FileConfiguration config;
-    private static Map<Arena.ArenaType, List<String>> gameThemes = new HashMap<>();
+  private static Map<String, List<String>> gameThemes = new HashMap<>();
     private static Map<String, Integer> options = new HashMap<>();
     private static List<String> winCommands = new ArrayList<>();
     private static List<String> endGameCommands = new ArrayList<>();
@@ -49,14 +49,15 @@ public class ConfigPreferences {
     }
 
     private static void loadThemes() {
-        //todo different accessors
-        gameThemes.put(Arena.ArenaType.SOLO, config.getStringList("Game-Themes"));
-        gameThemes.put(Arena.ArenaType.TEAM, config.getStringList("Game-Themes-Team"));
-        gameThemes.put(Arena.ArenaType.GUESS_THE_BUILD, config.getStringList("Themes.Guess-The-Build"));
+      gameThemes.put(Arena.ArenaType.SOLO.getPrefix(), config.getStringList("Themes.Classic"));
+      gameThemes.put(Arena.ArenaType.TEAM.getPrefix(), config.getStringList("Themes.Teams"));
+      gameThemes.put(Arena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_EASY", config.getStringList("Themes.Guess-The-Build.Easy"));
+      gameThemes.put(Arena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_MEDIUM", config.getStringList("Themes.Guess-The-Build.Medium"));
+      gameThemes.put(Arena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_HARD", config.getStringList("Themes.Guess-The-Build.Hard"));
     }
 
-    public static List<String> getThemes(Arena arena) {
-        return gameThemes.get(arena.getArenaType());
+  public static List<String> getThemes(String accessor) {
+    return gameThemes.get(accessor);
     }
     
     public static boolean isThemeBlacklisted(String theme) {

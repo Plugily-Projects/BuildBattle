@@ -240,6 +240,14 @@ Menus:
     Super-Vote-Item-Name: "&bSuper vote"
     Super-Vote-Item-Lore: "&7You have &b%owned% super votes;;&eClick to super vote &b%theme%&e!"
     Super-Vote-Used: "&7Player &e%player% &7has used &bSuper vote &7for theme &b%theme%&7! Starting now..."
+  Guess-The-Build-Theme-Selector:
+    Inventory-Name: "Select a theme to build!"
+    Theme-Item-Name: "&b%theme%"
+    Theme-Item-Lore: "%difficulty%;;&b+%points% &7points if player's guess it correctly;;&eClick to select!"
+    Difficulties:
+      Easy: "&aEASY"
+      Medium: "&eMEDIUM"
+      Hard: "&cHARD"
 
 Signs:
   Please-Type-Arena-Name: "&cPlease type arena name in second line!"

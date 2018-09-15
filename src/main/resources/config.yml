@@ -91,29 +91,40 @@ Hide-Players-Outside-Game: true
 # Time in lobby to wait before start
 Lobby-Starting-Time: 60
 
-#todo rework
-# All game themes, type here everything you want your players to build.
-# Solo game mode themes.
-Game-Themes:
-- Bees
-- Medieval
-- Love
-- Hate
-- Ugly
-
-# Team game mode themes.
-Game-Themes-Team:
-- Pirates
-- Castle
-
-# todo migrator and rework
+# All game themes players will build.
 Themes:
-  # You can use aliases here followed by ; mark.
-  # ex. - School bus;Schoolbus;Bus from school etc.
-  # The first alias will be always used as default but you can still guess rest of those aliases
-  # Aliases are nOt cAsE SENsiTivE
+  # Solo themes.
+  Classic:
+    - Heart
+    - Castle
+    - Emoji
+    - House
+    - Flower
+  # Team mode themes.
+  Teams:
+    - Well
+    - Car
+    - Rainbow
+    - Arcade Machine
+  # Guess the build themes.
   Guess-The-Build:
-    - School bus;Schoolbus
+    Easy:
+      - Apple
+      - Sun
+      - Bread
+      - Book
+      - Dollar
+    Medium:
+      - School Bus
+      - Horse
+      - Fountain
+      - Sumo
+      - Bicycle
+    Hard:
+      - Soccer
+      - Birthday Cake
+      - Typewriter
+      - Solar System
 
 # Theme names that are blacklisted.
 Blacklisted-Themes:

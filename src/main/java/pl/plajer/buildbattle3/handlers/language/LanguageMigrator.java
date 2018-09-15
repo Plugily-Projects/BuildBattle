@@ -90,6 +90,10 @@ public class LanguageMigrator {
         case 3:
           MigratorUtils.addNewLines(file, "# Theme names that are blacklisted.\r\nBlacklisted-Themes:\r\n- Fuck\r\n\r\n");
           MigratorUtils.addNewLines(file, "# Team game mode themes.\r\nGame-Themes-Team:\r\n- Pirates\r\n- Castle");
+          MigratorUtils.addNewLines(file, "# All game themes players will build.\r\nThemes:\r\n  # Solo themes.\r\n  Classic:\r\n    - Heart\r\n    - Castle\r\n    - Emoji\r\n" +
+                  "    - House\r\n    - Flower\r\n  # Team mode themes.\r\n  Teams:\r\n    - Well\r\n    - Car\r\n    - Rainbow\r\n    - Arcade Machine\r\n  # Guess the build themes.\r\n" +
+                  "  Guess-The-Build:\r\n    Easy:\r\n      - Apple\r\n      - Sun\r\n      - Bread\r\n      - Book\r\n      - Dollar\r\n    Medium:\r\n      - School Bus\r\n      - Horse\r\n" +
+                  "      - Fountain\r\n      - Sumo\r\n      - Bicycle\r\n    Hard:\r\n      - Soccer\r\n      - Birthday Cake\r\n      - Typewriter\r\n      - Solar System\r\n\r\n");
           break;
       }
       version++;
@@ -179,6 +183,9 @@ public class LanguageMigrator {
                   "        - \"&e9. &f%9%: &e%9_PTS%\"\r\n        - \"&e10. &f%10%: &e%10_PTS%\"\r\n        - \"\"\r\n        - \"&ewww.plajer.xyz\"");
           MigratorUtils.insertAfterLine(file, "No-Theme-Yet", "  Guess-The-Build:\r\n    Current-Builder: \"&eBuilder: &7%BUILDER%\"\r\n" +
                   "    Current-Round: \"&eRound: &7%ROUND%/%MAXPLAYERS%\"\r\n    Theme-Is-Long: \"&eThe theme is &7%NUM% &echaracters long\"");
+          MigratorUtils.insertAfterLine(file, "Theme-Voting:", "  Guess-The-Build-Theme-Selector:\r\n    Inventory-Name: \"Select a theme to build!\"\r\n" +
+                  "    Theme-Item-Name: \"&b%theme%\"\r\n    Theme-Item-Lore: \"%difficulty%;;&b+%points% &7points if player's guess it correctly;;&eClick to select!\"\r\n" +
+                  "    Difficulties:\r\n      Easy: \"&aEASY\"\r\n      Medium: \"&eMEDIUM\"\r\n      Hard: \"&cHARD\"\r\n");
       }
       version++;
     }
