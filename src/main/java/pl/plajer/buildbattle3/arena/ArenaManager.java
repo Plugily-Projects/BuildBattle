@@ -94,15 +94,19 @@ public class ArenaManager {
         return;
       }
       Main.debug("Final join attempt, " + p.getName(), System.currentTimeMillis());
-      if (plugin.isInventoryManagerEnabled()) InventoryUtils.saveInventoryToFile(plugin, p);
+      if (plugin.isInventoryManagerEnabled()) {
+        InventoryUtils.saveInventoryToFile(plugin, p);
+      }
       if (ConfigPreferences.isBarEnabled()) {
         a.getGameBar().addPlayer(p);
       }
       a.teleportToLobby(p);
       a.addPlayer(p);
+      p.setExp(1);
+      p.setLevel(0);
       p.setHealth(20.0);
       p.setFoodLevel(20);
-      p.getInventory().setArmorContents(new ItemStack[]{new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
+      p.getInventory().setArmorContents(new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
       p.getInventory().clear();
       a.showPlayers();
       ChatManager.broadcastAction(a, p, ChatManager.ActionType.JOIN);
@@ -140,8 +144,9 @@ public class ArenaManager {
       Bukkit.getPluginManager().callEvent(bbGameLeaveEvent);
       a.getQueue().remove(p.getUniqueId());
       User user = UserManager.getUser(p.getUniqueId());
-      if (a.getArenaState() == ArenaState.IN_GAME || a.getArenaState() == ArenaState.ENDING)
+      if (a.getArenaState() == ArenaState.IN_GAME || a.getArenaState() == ArenaState.ENDING) {
         UserManager.getUser(p.getUniqueId()).addInt("gamesplayed", 1);
+      }
       a.teleportToEndLocation(p);
       a.removePlayer(p);
       ChatManager.broadcastAction(a, p, ChatManager.ActionType.LEAVE);
@@ -151,6 +156,8 @@ public class ArenaManager {
       }
 
       p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
+      p.setExp(0);
+      p.setLevel(0);
       p.setFoodLevel(20);
       p.setFlying(false);
       p.setAllowFlight(false);
@@ -208,8 +215,12 @@ public class ArenaManager {
               int i = 0;
 
               public void run() {
-                if (i == 4) this.cancel();
-                if (!arena.getPlayers().contains(p)) this.cancel();
+                if (i == 4) {
+                  this.cancel();
+                }
+                if (!arena.getPlayers().contains(p)) {
+                  this.cancel();
+                }
                 MinigameUtils.spawnRandomFirework(p.getLocation());
                 i++;
               }
