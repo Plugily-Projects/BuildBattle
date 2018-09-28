@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -34,7 +35,7 @@ import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.buildbattleapi.StatsStorage;
 import pl.plajer.buildbattle3.commands.MainCommand;
 import pl.plajer.buildbattle3.database.FileStats;
-import pl.plajer.buildbattle3.database.MySQLDatabase;
+import pl.plajer.buildbattle3.database.MySQLManager;
 import pl.plajer.buildbattle3.entities.EntityItem;
 import pl.plajer.buildbattle3.entities.EntityMenuEvents;
 import pl.plajer.buildbattle3.events.GameEvents;
@@ -58,6 +59,7 @@ import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.CuboidSelector;
 import pl.plajer.buildbattle3.utils.MessageUtils;
 import pl.plajer.buildbattle3.utils.Metrics;
+import pl.plajerlair.core.database.MySQLDatabase;
 import pl.plajerlair.core.services.ServiceRegistry;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
@@ -73,6 +75,7 @@ public class Main extends JavaPlugin {
   private boolean forceDisable = false;
   private boolean dataEnabled = true;
   private MySQLDatabase database;
+  private MySQLManager mySQLManager;
   private FileStats fileStats;
   private BungeeManager bungeeManager;
   private boolean bungeeActivated;
@@ -168,8 +171,12 @@ public class Main extends JavaPlugin {
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
       }
       databaseActivated = this.getConfig().getBoolean("DatabaseActivated");
-      if (databaseActivated) this.database = new MySQLDatabase(this);
-      else {
+      if (databaseActivated) {
+        FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
+        database = new MySQLDatabase(this, config.getString("address"), config.getString("user"), config.getString("password"),
+            config.getInt("min-connections"), config.getInt("max-connections"));
+        mySQLManager = new MySQLManager(this);
+      } else {
         fileStats = new FileStats();
       }
       loadStatsForPlayersOnline();
@@ -219,15 +226,15 @@ public class Main extends JavaPlugin {
         if (this.isDatabaseActivated()) {
           int i;
           try {
-            i = getMySQLDatabase().getStat(player.getUniqueId().toString(), s.getName());
+            i = getMySQLManager().getStat(player.getUniqueId().toString(), s.getName());
           } catch (NullPointerException npe) {
             i = 0;
             System.out.print("COULDN'T GET STATS FROM PLAYER: " + player.getName());
           }
           if (i > user.getInt(s.getName())) {
-            getMySQLDatabase().setStat(player.getUniqueId().toString(), s.getName(), user.getInt(s.getName()) + i);
+            getMySQLManager().setStat(player.getUniqueId().toString(), s.getName(), user.getInt(s.getName()) + i);
           } else {
-            getMySQLDatabase().setStat(player.getUniqueId().toString(), s.getName(), user.getInt(s.getName()));
+            getMySQLManager().setStat(player.getUniqueId().toString(), s.getName(), user.getInt(s.getName()));
           }
         } else {
           getFileStats().saveStat(player, s.getName());
@@ -235,7 +242,9 @@ public class Main extends JavaPlugin {
       }
       UserManager.removeUser(player.getUniqueId());
     }
-    if (databaseActivated) getMySQLDatabase().closeDatabase();
+    if (databaseActivated) {
+      getMySQLDatabase().getManager().shutdownConnPool();
+    }
   }
 
   private void initializeClasses() {
@@ -300,6 +309,10 @@ public class Main extends JavaPlugin {
     return database;
   }
 
+  public MySQLManager getMySQLManager() {
+    return mySQLManager;
+  }
+
   private void loadStatsForPlayersOnline() {
     for (final Player player : getServer().getOnlinePlayers()) {
       if (bungeeActivated) ArenaRegistry.getArenas().get(0).teleportToLobby(player);
@@ -310,8 +323,8 @@ public class Main extends JavaPlugin {
         return;
       }
       Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
-        MySQLDatabase database = getMySQLDatabase();
-        ResultSet resultSet = database.executeQuery("SELECT UUID from buildbattlestats WHERE UUID='" + player.getUniqueId().toString() + "'");
+        MySQLManager database = getMySQLManager();
+        ResultSet resultSet = this.database.executeQuery("SELECT UUID from buildbattlestats WHERE UUID='" + player.getUniqueId().toString() + "'");
         try {
           if (!resultSet.next()) {
             database.insertPlayer(player);

@@ -32,7 +32,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
-import pl.plajer.buildbattle3.database.MySQLDatabase;
+import pl.plajer.buildbattle3.database.MySQLManager;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajerlair.core.services.exception.ReportedException;
@@ -53,9 +53,13 @@ public class JoinEvents implements Listener {
 
   @EventHandler
   public void onJoin(PlayerJoinEvent event) {
-    if (plugin.isBungeeActivated()) return;
+    if (plugin.isBungeeActivated()) {
+      return;
+    }
     for (Player player : plugin.getServer().getOnlinePlayers()) {
-      if (ArenaRegistry.getArena(player) == null) continue;
+      if (ArenaRegistry.getArena(player) == null) {
+        continue;
+      }
       player.hidePlayer(event.getPlayer());
       event.getPlayer().hidePlayer(player);
     }
@@ -107,7 +111,9 @@ public class JoinEvents implements Listener {
   @EventHandler
   public void onJoinLoadStats(final PlayerJoinEvent event) {
     try {
-      if (plugin.isBungeeActivated() && ArenaRegistry.getArenas().size() >= 1) ArenaRegistry.getArenas().get(0).teleportToLobby(event.getPlayer());
+      if (plugin.isBungeeActivated() && ArenaRegistry.getArenas().size() >= 1) {
+        ArenaRegistry.getArenas().get(0).teleportToLobby(event.getPlayer());
+      }
       if (!plugin.isDatabaseActivated()) {
         List<String> temp = new ArrayList<>();
         temp.add("gamesplayed");
@@ -126,8 +132,8 @@ public class JoinEvents implements Listener {
       final Player player = event.getPlayer();
 
       Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-        MySQLDatabase database = plugin.getMySQLDatabase();
-        ResultSet resultSet = database.executeQuery("SELECT UUID from buildbattlestats WHERE UUID='" + player.getUniqueId().toString() + "'");
+        MySQLManager database = plugin.getMySQLManager();
+        ResultSet resultSet = plugin.getMySQLDatabase().executeQuery("SELECT UUID from buildbattlestats WHERE UUID='" + player.getUniqueId().toString() + "'");
         try {
           if (!resultSet.next()) {
             database.insertPlayer(player);

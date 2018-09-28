@@ -70,16 +70,16 @@ public class QuitEvents implements Listener {
           for (StatsStorage.StatisticType s : StatsStorage.StatisticType.values()) {
             int i;
             try {
-              i = plugin.getMySQLDatabase().getStat(player.getUniqueId().toString(), s.getName());
+              i = plugin.getMySQLManager().getStat(player.getUniqueId().toString(), s.getName());
             } catch (NullPointerException npe) {
               i = 0;
               System.out.print("COULDN'T GET STATS FROM PLAYER: " + player.getName());
             }
 
             if (i > user.getInt(s.getName())) {
-              plugin.getMySQLDatabase().setStat(player.getUniqueId().toString(), s.getName(), user.getInt(s.getName()) + i);
+              plugin.getMySQLManager().setStat(player.getUniqueId().toString(), s.getName(), user.getInt(s.getName()) + i);
             } else {
-              plugin.getMySQLDatabase().setStat(player.getUniqueId().toString(), s.getName(), user.getInt(s.getName()));
+              plugin.getMySQLManager().setStat(player.getUniqueId().toString(), s.getName(), user.getInt(s.getName()));
             }
           }
         });
