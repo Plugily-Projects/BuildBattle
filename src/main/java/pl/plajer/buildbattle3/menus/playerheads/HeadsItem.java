@@ -53,7 +53,7 @@ public class HeadsItem {
   }
 
   public FileConfiguration getConfig() {
-    return ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "playerheadmenu/menus/" + config);
+    return ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "heads/menus/" + config);
   }
 
   public void setConfig(String config) {

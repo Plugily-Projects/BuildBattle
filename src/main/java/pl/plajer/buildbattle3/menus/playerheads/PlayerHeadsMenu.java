@@ -45,7 +45,7 @@ public class PlayerHeadsMenu {
   private static Map<String, Inventory> inventories = new HashMap<>();
 
   public static void loadHeadItems() {
-    FileConfiguration config = ConfigUtils.getConfig(Main.getPlugin(Main.class), "playerheadmenu/mainmenu");
+    FileConfiguration config = ConfigUtils.getConfig(Main.getPlugin(Main.class), "heads/mainmenu");
     for (String str : config.getKeys(false)) {
       HeadsItem headsItem = new HeadsItem();
       headsItem.setEnabled(config.getBoolean(str + ".enabled"));

@@ -39,8 +39,8 @@ import pl.plajerlair.core.utils.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int LANGUAGE_FILE_VERSION = 7;
-  public static final int CONFIG_FILE_VERSION = 4;
+  public static final int LANGUAGE_FILE_VERSION = 8;
+  public static final int CONFIG_FILE_VERSION = 5;
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
   private static List<String> migratable = Arrays.asList("bungee", "config", "language", "MySQL");
@@ -92,10 +92,6 @@ public class LanguageMigrator {
         case 3:
           MigratorUtils.addNewLines(file, "# Theme names that are blacklisted.\r\nBlacklisted-Themes:\r\n- Fuck\r\n\r\n");
           MigratorUtils.addNewLines(file, "# Team game mode themes.\r\nGame-Themes-Team:\r\n- Pirates\r\n- Castle");
-          MigratorUtils.addNewLines(file, "# All game themes players will build.\r\nThemes:\r\n  # Solo themes.\r\n  Classic:\r\n    - Heart\r\n    - Castle\r\n    - Emoji\r\n" +
-              "    - House\r\n    - Flower\r\n  # Team mode themes.\r\n  Teams:\r\n    - Well\r\n    - Car\r\n    - Rainbow\r\n    - Arcade Machine\r\n  # Guess the build themes.\r\n" +
-              "  Guess-The-Build:\r\n    Easy:\r\n      - Apple\r\n      - Sun\r\n      - Bread\r\n      - Book\r\n      - Dollar\r\n    Medium:\r\n      - School Bus\r\n      - Horse\r\n" +
-              "      - Fountain\r\n      - Sumo\r\n      - Bicycle\r\n    Hard:\r\n      - Soccer\r\n      - Birthday Cake\r\n      - Typewriter\r\n      - Solar System\r\n\r\n");
           break;
         case 4:
           MigratorUtils.addNewLines(file, "# Total build times of game modes\r\nBuild-Time:\r\n  Classic: 480\r\n  Teams: 540\r\n  Guess-The-Build: 120");
@@ -104,7 +100,7 @@ public class LanguageMigrator {
               "  # Guess the build themes.\r\n  Guess-The-Build:\r\n    Easy:\r\n      - Apple\r\n      - Sun\r\n      - Bread\r\n      - Book\r\n      - Dollar\r\n    Medium:\r\n      - School Bus\r\n" +
               "      - Horse\r\n      - Fountain\r\n      - Sumo\r\n      - Bicycle\r\n    Hard:\r\n      - Soccer\r\n      - Birthday Cake\r\n      - Typewriter\r\n      - Solar System");
           MigratorUtils.addNewLines(file, "# Commands executed when player wins\r\n# Use %PLAYER% placeholder to replace it with winner's name\r\nWin-Commands:\r\n" +
-              "  First:\r\n    - say %PLAYER% won the game!\r\n  Second:\r\n    - say %PLAYER% become second\r\n  Third:\r\n    - say %PLAYER% became third");
+              "  First:\r\n    - say %PLAYER% won the game!\r\n  Second:\r\n    - say %PLAYER% become second\r\n  Third:\r\n    - say %PLAYER% became third\r\n\r\n");
       }
       version++;
     }
@@ -193,7 +189,7 @@ public class LanguageMigrator {
               "        - \"\"\r\n        - \"&ewww.plajer.xyz\"\r\n      Guess-The-Build:\r\n        - \"&7Guess The Build Mode\"\r\n        - \"&fBuilder:\"\r\n        - \"&7%BUILDER%\"\r\n" +
               "        - \"\"\r\n        - \"&e&lLeaders:\"\r\n        - \"&6%1%&e: %1_PTS%\"\r\n        - \"&7%2%&e: %2_PTS%\"\r\n        - \"&7%3%&e: %3_PTS%\"\r\n        - \"\"\r\n" +
               "        - \"%CURRENT_TIMER%\"\r\n        - \"\"\r\n        - \"&fTheme:\"\r\n        - \"&c%THEME%\"\r\n        - \"\"\r\n        - \"&ewww.plajer.xyz\"");
-          MigratorUtils.insertAfterLine(file, "Content:", "Ending-States:\r\n      Classic:\r\n        - \"&e&lGAME ENDED\"\r\n        - \"\"\r\n        - \"&ewww.plajer.xyz\"\r\n" +
+          MigratorUtils.insertAfterLine(file, "Content:", "    Ending-States:\r\n      Classic:\r\n        - \"&e&lGAME ENDED\"\r\n        - \"\"\r\n        - \"&ewww.plajer.xyz\"\r\n" +
               "      Teams:\r\n        - \"&7Teams Mode\"\r\n        - \"&e&lGAME ENDED\"\r\n        - \"\"\r\n        - \"&ewww.plajer.xyz\"\r\n      Guess-The-Build:\r\n" +
               "        - \"&7Guess The Build Mode\"\r\n        - \"\"\r\n        - \"&e1. &f%1%: &e%1_PTS%\"\r\n        - \"&e2. &f%2%: &e%2_PTS%\"\r\n        - \"&e3. &f%3%: &e%3_PTS%\"\r\n" +
               "        - \"&e4. &f%4%: &e%4_PTS%\"\r\n        - \"&e5. &f%5%: &e%5_PTS%\"\r\n        - \"&e6. &f%6%: &e%6_PTS%\"\r\n        - \"&e7. &f%7%: &e%7_PTS%\"\r\n" +
@@ -217,7 +213,7 @@ public class LanguageMigrator {
     File file = new File(plugin.getDataFolder() + "/language.yml");
     MigratorUtils.removeLineFromFile(file, "# Do not modify!");
     MigratorUtils.removeLineFromFile(file, "File-Version-Do-Not-Edit: " + oldVersion);
-    MigratorUtils.addNewLines(file, "# Do not modify!\r\nFile-Version-Do-Not-Edit: " + LANGUAGE_FILE_VERSION);
+    MigratorUtils.addNewLines(file, "# Do not modify!\r\nFile-Version-Do-Not-Edit: " + LANGUAGE_FILE_VERSION + "\r\n");
   }
 
   private static void updateConfigVersionControl(int oldVersion) {
@@ -225,7 +221,7 @@ public class LanguageMigrator {
     MigratorUtils.removeLineFromFile(file, "# Don't modify.");
     MigratorUtils.removeLineFromFile(file, "Version: " + oldVersion);
     MigratorUtils.removeLineFromFile(file, "# No way! You've reached the end! But... where's the dragon!?");
-    MigratorUtils.addNewLines(file, "# Do not modify!\r\nVersion: " + CONFIG_FILE_VERSION);
+    MigratorUtils.addNewLines(file, "# Do not modify!\r\nVersion: " + CONFIG_FILE_VERSION + "\r\n");
   }
 
 }
