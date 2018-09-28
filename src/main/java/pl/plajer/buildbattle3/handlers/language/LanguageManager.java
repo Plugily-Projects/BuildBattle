@@ -25,15 +25,19 @@ import com.wasteofplastic.askyblock.ASkyBlock;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import pl.plajer.buildbattle3.Main;
+import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.utils.MessageUtils;
 import pl.plajerlair.core.services.ServiceRegistry;
+import pl.plajerlair.core.services.locale.Locale;
+import pl.plajerlair.core.services.locale.LocaleRegistry;
 import pl.plajerlair.core.services.locale.LocaleService;
 import pl.plajerlair.core.utils.ConfigUtils;
 
@@ -45,7 +49,7 @@ import pl.plajerlair.core.utils.ConfigUtils;
 public class LanguageManager {
 
   private static Main plugin;
-  private static Locale pluginLocale = null;
+  private static Locale pluginLocale;
   private static Properties properties = new Properties();
 
   public static void init(Main pl) {
@@ -53,13 +57,34 @@ public class LanguageManager {
     if (!new File(plugin.getDataFolder() + File.separator + "language.yml").exists()) {
       plugin.saveResource("language.yml", false);
     }
+    registerLocales();
     setupLocale();
     LanguageMigrator.configUpdate();
     LanguageMigrator.languageFileUpdate();
     //we will wait until server is loaded, we won't soft depend those plugins
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
-      if (pluginLocale == Locale.ENGLISH) suggestLocale();
+      if (isDefaultLanguageUsed()) {
+        suggestLocale();
+      }
     }, 100);
+  }
+
+  private static void registerLocales() {
+    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("Chinese (Simplified)", "简体中文", "zh_Hans", "POEditor contributors (Haoting)", Arrays.asList("简体中文", "中文", "chinese", "zh")));
+    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("Czech", "Český", "cs_CZ", "POEditor contributors", Arrays.asList("czech", "cesky", "český", "cs")));
+    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("English", "English", "en_GB", "Plajer", Arrays.asList("default", "english", "en")));
+    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("Estonian", "Eesti", "et_EE", "POEditor contributors (kaimokene)", Arrays.asList("estonian", "eesti", "et")));
+    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("French", "Français", "fr_FR", "POEditor contributors", Arrays.asList("french", "francais", "français", "fr")));
+    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("German", "Deutsch", "de_DE", "Tigerkatze and POEditor contributors", Arrays.asList("deutsch", "german", "de")));
+    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("Hungarian", "Magyar", "hu_HU", "POEditor contributors (montlikadani)", Arrays.asList("hungarian", "magyar", "hu")));
+    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("Indonesian", "Indonesia", "id_ID", "POEditor contributors", Arrays.asList("indonesian", "indonesia", "id")));
+    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("Korean", "한국의", "ko_KR", "POEditor contributors", Arrays.asList("korean", "한국의", "kr")));
+    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("Polish", "Polski", "pl_PL", "Plajer", Arrays.asList("polish", "polski", "pl")));
+    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("Romanian", "Românesc", "ro_RO", "POEditor contributors (Andrei)", Arrays.asList("romanian", "romanesc", "românesc", "ro")));
+    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("Russian", "Pусский", "ru_RU", "POEditor contributors (Mrake)", Arrays.asList("russian", "russkiy", "pусский", "ru")));
+    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("Spanish", "Español", "es_ES", "POEditor contributors", Arrays.asList("spanish", "espanol", "español", "es")));
+    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("Turkish", "Türk", "tr_TR", "POEditor contributors", Arrays.asList("turkish", "turk", "türk", "tr")));
+    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("Vietnamese", "Việt", "vn_VN", "POEditor contributors (HStreamGamer)", Arrays.asList("vietnamese", "viet", "việt", "vn")));
   }
 
   private static void loadProperties() {
@@ -67,7 +92,7 @@ public class LanguageManager {
     if (service.isValidVersion()) {
       LocaleService.DownloadStatus status = service.demandLocaleDownload(pluginLocale.getPrefix());
       if (status == LocaleService.DownloadStatus.FAIL) {
-        pluginLocale = Locale.ENGLISH;
+        pluginLocale = LocaleRegistry.getByName("English");
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Locale service couldn't download latest locale for plugin! English locale will be used instead!");
         return;
       } else if (status == LocaleService.DownloadStatus.SUCCESS) {
@@ -76,7 +101,7 @@ public class LanguageManager {
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Locale " + pluginLocale.getPrefix() + " is latest! Awesome!");
       }
     } else {
-      pluginLocale = Locale.ENGLISH;
+      pluginLocale = LocaleRegistry.getByName("English");
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Your plugin version is too old to use latest locale! Please update plugin to access latest updates of locale!");
       return;
     }
@@ -89,7 +114,7 @@ public class LanguageManager {
 
   private static void setupLocale() {
     String localeName = plugin.getConfig().getString("locale", "default").toLowerCase();
-    for (Locale locale : Locale.values()) {
+    for (Locale locale : LocaleRegistry.getRegisteredLocales()) {
       for (String alias : locale.getAliases()) {
         if (alias.equals(localeName)) {
           pluginLocale = locale;
@@ -99,9 +124,10 @@ public class LanguageManager {
     }
     if (pluginLocale == null) {
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Plugin locale is invalid! Using default one...");
-      pluginLocale = Locale.ENGLISH;
+      pluginLocale = LocaleRegistry.getByName("English");
     }
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] Loaded locale " + pluginLocale.getFormattedName() + " (" + pluginLocale.getPrefix() + ") by " + pluginLocale.getAuthor());
+    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] Loaded locale " + pluginLocale.getName() + " (" + pluginLocale.getOriginalName() + " ID: " +
+        pluginLocale.getPrefix() + ") by " + pluginLocale.getAuthor());
     loadProperties();
   }
 
@@ -161,35 +187,31 @@ public class LanguageManager {
     }
   }
 
-  //todo do something with me
-  public static FileConfiguration getLanguageFile() {
-    return ConfigUtils.getConfig(plugin, "language");
+  public static boolean isDefaultLanguageUsed() {
+    return pluginLocale.getName().equals("English");
   }
 
-  public static String getDefaultLanguageMessage(String message) {
-    if (ConfigUtils.getConfig(plugin, "language").isSet(message)) {
-      return ConfigUtils.getConfig(plugin, "language").getString(message);
+  public static List<String> getLanguageList(String path) {
+    if (isDefaultLanguageUsed()) {
+      return ConfigUtils.getConfig(plugin, "language").getStringList(path);
+    } else {
+      return Arrays.asList(ChatManager.colorMessage(path).split(";"));
     }
-    MessageUtils.errorOccured();
-    Bukkit.getConsoleSender().sendMessage("Game message not found!");
-    Bukkit.getConsoleSender().sendMessage("Please regenerate your language.yml file! If error still occurs report it to the developer!");
-    Bukkit.getConsoleSender().sendMessage("Access string: " + message);
-    return "ERR_MESSAGE_NOT_FOUND";
   }
 
   public static String getLanguageMessage(String message) {
-    if (pluginLocale != Locale.ENGLISH) {
-      try {
-        return properties.getProperty(ChatColor.translateAlternateColorCodes('&', message));
-      } catch (NullPointerException ex) {
-        MessageUtils.errorOccured();
-        Bukkit.getConsoleSender().sendMessage("Game message not found!");
-        Bukkit.getConsoleSender().sendMessage("Please regenerate your language.yml file! If error still occurs report it to the developer!");
-        Bukkit.getConsoleSender().sendMessage("Access string: " + message);
-        return "ERR_MESSAGE_NOT_FOUND";
-      }
+    if (isDefaultLanguageUsed()) {
+      return ConfigUtils.getConfig(plugin, "language").getString(message, "ERR_MESSAGE_NOT_FOUND");
     }
-    return ConfigUtils.getConfig(plugin, "language").getString(message);
+    try {
+      return properties.getProperty(ChatColor.translateAlternateColorCodes('&', message));
+    } catch (NullPointerException ex) {
+      MessageUtils.errorOccured();
+      Bukkit.getConsoleSender().sendMessage("Game message not found!");
+      Bukkit.getConsoleSender().sendMessage("Please regenerate your language.yml file! If error still occurs report it to the developer!");
+      Bukkit.getConsoleSender().sendMessage("Access string: " + message);
+      return "ERR_MESSAGE_NOT_FOUND";
+    }
   }
 
   public static Locale getPluginLocale() {

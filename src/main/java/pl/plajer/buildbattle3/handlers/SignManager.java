@@ -18,7 +18,6 @@
 
 package pl.plajer.buildbattle3.handlers;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +44,6 @@ import pl.plajer.buildbattle3.arena.ArenaManager;
 import pl.plajer.buildbattle3.arena.ArenaRegistry;
 import pl.plajer.buildbattle3.arena.ArenaState;
 import pl.plajer.buildbattle3.handlers.language.LanguageManager;
-import pl.plajer.buildbattle3.handlers.language.Locale;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.LocationUtils;
@@ -69,11 +67,7 @@ public class SignManager implements Listener {
     gameStateToString.put(ArenaState.IN_GAME, ChatManager.colorMessage("Signs.Game-States.In-Game"));
     gameStateToString.put(ArenaState.ENDING, ChatManager.colorMessage("Signs.Game-States.Ending"));
     gameStateToString.put(ArenaState.RESTARTING, ChatManager.colorMessage("Signs.Game-States.Restarting"));
-    if (LanguageManager.getPluginLocale() == Locale.ENGLISH) {
-      signLines = LanguageManager.getLanguageFile().getStringList("Signs.Lines");
-    } else {
-      signLines = Arrays.asList(ChatManager.colorMessage("Signs.Lines").split(";"));
-    }
+    signLines = LanguageManager.getLanguageList("Signs.Lines");
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
     loadSigns();
     updateSignScheduler();

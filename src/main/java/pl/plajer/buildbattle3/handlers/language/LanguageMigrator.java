@@ -103,12 +103,14 @@ public class LanguageMigrator {
   }
 
   public static void languageFileUpdate() {
-    if (LanguageManager.getDefaultLanguageMessage("File-Version-Do-Not-Edit").equals(String.valueOf(LANGUAGE_FILE_VERSION))) return;
+    if (ConfigUtils.getConfig(plugin, "language").getString("File-Version-Do-Not-Edit").equals(String.valueOf(LANGUAGE_FILE_VERSION))) {
+      return;
+    }
     Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[BuildBattle] [System notify] Your language file is outdated! Updating...");
 
     int version = 0;
-    if (NumberUtils.isNumber(LanguageManager.getDefaultLanguageMessage("File-Version-Do-Not-Edit"))) {
-      version = Integer.valueOf(LanguageManager.getDefaultLanguageMessage("File-Version-Do-Not-Edit"));
+    if (NumberUtils.isNumber(ConfigUtils.getConfig(plugin, "language").getString("File-Version-Do-Not-Edit"))) {
+      version = Integer.valueOf(ConfigUtils.getConfig(plugin, "language").getString("File-Version-Do-Not-Edit"));
     }
     updateLanguageVersionControl(version);
 

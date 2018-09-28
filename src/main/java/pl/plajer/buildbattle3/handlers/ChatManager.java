@@ -27,7 +27,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.arena.Arena;
 import pl.plajer.buildbattle3.handlers.language.LanguageManager;
-import pl.plajer.buildbattle3.handlers.language.Locale;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.MinigameUtils;
 
@@ -54,7 +53,7 @@ public class ChatManager {
     } catch (NullPointerException e1) {
       new ReportedException(JavaPlugin.getPlugin(Main.class), e1);
       Bukkit.getConsoleSender().sendMessage("Game message not found!");
-      if (LanguageManager.getPluginLocale() == Locale.ENGLISH) {
+      if (LanguageManager.isDefaultLanguageUsed()) {
         Bukkit.getConsoleSender().sendMessage("Please regenerate your language.yml file! If error still occurs report it to the developer!");
       } else {
         Bukkit.getConsoleSender().sendMessage("Locale message string not found! Please contact developer!");

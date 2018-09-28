@@ -19,7 +19,6 @@
 package pl.plajer.buildbattle3.arena;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -59,7 +58,6 @@ import pl.plajer.buildbattle3.buildbattleapi.BBGameEndEvent;
 import pl.plajer.buildbattle3.buildbattleapi.BBGameStartEvent;
 import pl.plajer.buildbattle3.handlers.ChatManager;
 import pl.plajer.buildbattle3.handlers.language.LanguageManager;
-import pl.plajer.buildbattle3.handlers.language.Locale;
 import pl.plajer.buildbattle3.menus.OptionsMenu;
 import pl.plajer.buildbattle3.menus.themevoter.GTBTheme;
 import pl.plajer.buildbattle3.menus.themevoter.VoteMenu;
@@ -136,25 +134,14 @@ public class Arena extends BukkitRunnable {
       if (state == ArenaState.RESTARTING || state == ArenaState.IN_GAME || state == ArenaState.ENDING) {
         continue;
       }
-      List<String> lines;
-      if (LanguageManager.getPluginLocale() == Locale.ENGLISH) {
-        lines = LanguageManager.getLanguageFile().getStringList("Scoreboard.Content." + state.getFormattedName());
-      } else {
-        lines = Arrays.asList(ChatManager.colorMessage("Scoreboard.Content." + state.getFormattedName()).split(";"));
-      }
+      //todo migrator
+      List<String> lines = LanguageManager.getLanguageList("Scoreboard.Content." + state.getFormattedName());
       scoreboardContents.put(state.getFormattedName(), lines);
     }
     for (ArenaType type : ArenaType.values()) {
-      List<String> playing;
-      List<String> ending;
+      List<String> playing = LanguageManager.getLanguageList("Scoreboard.Content.Playing-States." + type.getPrefix());
+      List<String> ending = LanguageManager.getLanguageList("Scoreboard.Content.Ending-States." + type.getPrefix());
       //todo locale
-      if (LanguageManager.getPluginLocale() == Locale.ENGLISH) {
-        playing = LanguageManager.getLanguageFile().getStringList("Scoreboard.Content.Playing-States." + type.getPrefix());
-        ending = LanguageManager.getLanguageFile().getStringList("Scoreboard.Content.Ending-States." + type.getPrefix());
-      } else {
-        playing = Arrays.asList(ChatManager.colorMessage("Scoreboard.Content.Playing-States." + type.getPrefix()).split(";"));
-        ending = Arrays.asList(ChatManager.colorMessage("Scoreboard.Content.Ending-States." + type.getPrefix()).split(";"));
-      }
       scoreboardContents.put(ArenaState.IN_GAME.getFormattedName() + "_" + type.getPrefix(), playing);
       scoreboardContents.put(ArenaState.ENDING.getFormattedName() + "_" + type.getPrefix(), ending);
     }
@@ -1035,14 +1022,8 @@ public class Arena extends BukkitRunnable {
     votingPlot = buildPlot;
   }
 
-  //fixme wtf
   private void announceResults() {
-    List<String> messages;
-    if (LanguageManager.getPluginLocale() == Locale.ENGLISH) {
-      messages = LanguageManager.getLanguageFile().getStringList("In-Game.Messages.Voting-Messages.Summary-Message");
-    } else {
-      messages = Arrays.asList(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Summary-Message").split(";"));
-    }
+    List<String> messages = LanguageManager.getLanguageList("In-Game.Messages.Voting-Messages.Summary-Message");
     List<String> formattedSummary = new ArrayList<>();
     for (String summary : messages) {
       String message = summary;
