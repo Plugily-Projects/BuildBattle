@@ -190,16 +190,17 @@ In-Game:
       Cant-Vote-Own-Plot: "&cYou can't vote for your plot!"
       Vote-Successful: "&aVoted successfully!"
       Winner-Title: "&eWINNER: &a%player%"
-      Summary-Message:
+      Summary:
         - "&a&l&m-------------------------------------------"
         - "&f&lBuildBattle"
+        - ""
         - "%place_one%"
         - "%place_two%"
         - "%place_three%"
         - "&a&l&m-------------------------------------------"
-      Place-One: "&e1st Winner &7- %player% (%number% points)"
-      Place-Two: "&62nd Winner &7- %player% (%number% points)"
-      Place-Three: "&c3rd Winner &7- %player% (%number% points)"
+      Place-One: "&e&l1st Winner &7- %player% (%number% points)"
+      Place-Two: "&6&l2nd Winner &7- %player% (%number% points)"
+      Place-Three: "&c&l3rd Winner &7- %player% (%number% points)"
       Summary-Other-Place: "&aYou became &7%number%th"
     Game-End-Messages:
       Only-You-Playing: "&7You're the only player left. You'll be teleported to the lobby."
@@ -274,4 +275,4 @@ Signs:
     - "&5[%playersize%/%maxplayers%]"
 
 # Do not modify!
-File-Version-Do-Not-Edit: 7
+File-Version-Do-Not-Edit: 8

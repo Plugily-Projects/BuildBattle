@@ -59,7 +59,9 @@ public class LanguageMigrator {
   }
 
   public static void configUpdate() {
-    if (plugin.getConfig().getInt("Version") == CONFIG_FILE_VERSION) return;
+    if (plugin.getConfig().getInt("Version") == CONFIG_FILE_VERSION) {
+      return;
+    }
     Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[BuildBattle] System notify >> Your config file is outdated! Updating...");
     File file = new File(plugin.getDataFolder() + "/config.yml");
 
@@ -73,28 +75,36 @@ public class LanguageMigrator {
       switch (version) {
         case 0:
           MigratorUtils.addNewLines(file, "# Should blocks behind game signs change their color based on game state?\r\n# They will change color to:\r\n" +
-                  "# - white (waiting for players) stained glass\r\n# - yellow (starting) stained glass\r\n# - orange (in game) stained glass\r\n# - gray (ending) stained glass\r\n" +
-                  "# - black (restarting) stained glass\r\nSigns-Block-States-Enabled: true\r\n\r\n");
+              "# - white (waiting for players) stained glass\r\n# - yellow (starting) stained glass\r\n# - orange (in game) stained glass\r\n# - gray (ending) stained glass\r\n" +
+              "# - black (restarting) stained glass\r\nSigns-Block-States-Enabled: true\r\n\r\n");
           break;
         case 1:
           MigratorUtils.addNewLines(file, "# Total time of building in game in TEAM game mode\n" +
-                  "Team-Build-Time-In-Seconds: 540\r\n\r\n# Total time of voting for themes before starting\n" +
-                  "Theme-Voting-Time-In-Seconds: 25\r\n\r\n");
+              "Team-Build-Time-In-Seconds: 540\r\n\r\n# Total time of voting for themes before starting\n" +
+              "Theme-Voting-Time-In-Seconds: 25\r\n\r\n");
           break;
         case 2:
           MigratorUtils.addNewLines(file, "# Default floor material name\r\n" +
-                  "Default-Floor-Material-Name: log\r\n\r\n");
+              "Default-Floor-Material-Name: log\r\n\r\n");
           MigratorUtils.addNewLines(file, "# Blacklisted item names, you can't use them while building.\r\n" +
-                  "Blacklisted-Item-Names:\r\n- tnt\r\n- diamond_block\r\n\r\n");
+              "Blacklisted-Item-Names:\r\n- tnt\r\n- diamond_block\r\n\r\n");
           break;
         case 3:
           MigratorUtils.addNewLines(file, "# Theme names that are blacklisted.\r\nBlacklisted-Themes:\r\n- Fuck\r\n\r\n");
           MigratorUtils.addNewLines(file, "# Team game mode themes.\r\nGame-Themes-Team:\r\n- Pirates\r\n- Castle");
           MigratorUtils.addNewLines(file, "# All game themes players will build.\r\nThemes:\r\n  # Solo themes.\r\n  Classic:\r\n    - Heart\r\n    - Castle\r\n    - Emoji\r\n" +
-                  "    - House\r\n    - Flower\r\n  # Team mode themes.\r\n  Teams:\r\n    - Well\r\n    - Car\r\n    - Rainbow\r\n    - Arcade Machine\r\n  # Guess the build themes.\r\n" +
-                  "  Guess-The-Build:\r\n    Easy:\r\n      - Apple\r\n      - Sun\r\n      - Bread\r\n      - Book\r\n      - Dollar\r\n    Medium:\r\n      - School Bus\r\n      - Horse\r\n" +
-                  "      - Fountain\r\n      - Sumo\r\n      - Bicycle\r\n    Hard:\r\n      - Soccer\r\n      - Birthday Cake\r\n      - Typewriter\r\n      - Solar System\r\n\r\n");
+              "    - House\r\n    - Flower\r\n  # Team mode themes.\r\n  Teams:\r\n    - Well\r\n    - Car\r\n    - Rainbow\r\n    - Arcade Machine\r\n  # Guess the build themes.\r\n" +
+              "  Guess-The-Build:\r\n    Easy:\r\n      - Apple\r\n      - Sun\r\n      - Bread\r\n      - Book\r\n      - Dollar\r\n    Medium:\r\n      - School Bus\r\n      - Horse\r\n" +
+              "      - Fountain\r\n      - Sumo\r\n      - Bicycle\r\n    Hard:\r\n      - Soccer\r\n      - Birthday Cake\r\n      - Typewriter\r\n      - Solar System\r\n\r\n");
           break;
+        case 4:
+          MigratorUtils.addNewLines(file, "# Total build times of game modes\r\nBuild-Time:\r\n  Classic: 480\r\n  Teams: 540\r\n  Guess-The-Build: 120");
+          MigratorUtils.addNewLines(file, "# All game themes players will build.\r\nThemes:\r\n  # Solo themes.\r\n  Classic:\r\n    - Heart\r\n    - Castle\r\n" +
+              "    - Emoji\r\n    - House\r\n    - Flower\r\n  # Team mode themes.\r\n  Teams:\r\n    - Well\r\n    - Car\r\n    - Rainbow\r\n    - Arcade Machine\r\n" +
+              "  # Guess the build themes.\r\n  Guess-The-Build:\r\n    Easy:\r\n      - Apple\r\n      - Sun\r\n      - Bread\r\n      - Book\r\n      - Dollar\r\n    Medium:\r\n      - School Bus\r\n" +
+              "      - Horse\r\n      - Fountain\r\n      - Sumo\r\n      - Bicycle\r\n    Hard:\r\n      - Soccer\r\n      - Birthday Cake\r\n      - Typewriter\r\n      - Solar System");
+          MigratorUtils.addNewLines(file, "# Commands executed when player wins\r\n# Use %PLAYER% placeholder to replace it with winner's name\r\nWin-Commands:\r\n" +
+              "  First:\r\n    - say %PLAYER% won the game!\r\n  Second:\r\n    - say %PLAYER% become second\r\n  Third:\r\n    - say %PLAYER% became third");
       }
       version++;
     }
@@ -125,71 +135,77 @@ public class LanguageMigrator {
           break;
         case 1:
           MigratorUtils.insertAfterLine(file, "Particles-Placed:", "  Main-Command:\r\n    Header: \"&6----------------{BuildBattle commands}----------\"\r\n" +
-                  "    Description: \"&aGame commands:\\n\r\n    &b/bb stats: &7Shows your stats!\\n\r\n    &b/bb leave: &7Quits current arena!\\n\r\n" +
-                  "    &b/bb join <arena>: &7Joins specified arena!\"\r\n    Admin-Bonus-Description: \"\\n&b/bba help: &7Shows all the admin commands\"\r\n" +
-                  "    Footer: \"&6-------------------------------------------------\"");
+              "    Description: \"&aGame commands:\\n\r\n    &b/bb stats: &7Shows your stats!\\n\r\n    &b/bb leave: &7Quits current arena!\\n\r\n" +
+              "    &b/bb join <arena>: &7Joins specified arena!\"\r\n    Admin-Bonus-Description: \"\\n&b/bba help: &7Shows all the admin commands\"\r\n" +
+              "    Footer: \"&6-------------------------------------------------\"");
           MigratorUtils.insertAfterLine(file, "Winner-Title:", "      Summary-Message:\r\n        - \"&a&l&m-------------------------------------------\"\r\n" +
-                  "        - \"&f&lBuildBattle\"\r\n        - \"%place_one%\"\r\n        - \"%place_two%\"\r\n        - \"%place_three%\"\r\n        - \"&a&l&m-------------------------------------------\"\r\n" +
-                  "      Place-One: \"&e1st Winner &7- %player% (Plot %number%)\"\r\n      Place-Two: \"&62nd Winner &7- %player% (Plot %number%)\"\r\n" +
-                  "      Place-Three: \"&c3rd Winner &7- %player% (Plot %number%)\"\r\n      Summary-Other-Place: \"&aYou became &7%number%th\"");
+              "        - \"&f&lBuildBattle\"\r\n        - \"%place_one%\"\r\n        - \"%place_two%\"\r\n        - \"%place_three%\"\r\n        - \"&a&l&m-------------------------------------------\"\r\n" +
+              "      Place-One: \"&e1st Winner &7- %player% (Plot %number%)\"\r\n      Place-Two: \"&62nd Winner &7- %player% (Plot %number%)\"\r\n" +
+              "      Place-Three: \"&c3rd Winner &7- %player% (Plot %number%)\"\r\n      Summary-Other-Place: \"&aYou became &7%number%th\"");
           break;
         case 2:
           MigratorUtils.insertAfterLine(file, "Time-Left-To-Build:", "    Time-Left-Subtitle: \"&c%FORMATTEDTIME% seconds left\"");
           break;
         case 3:
           MigratorUtils.insertAfterLine(file, "Menus:", "  Theme-Voting:\r\n" +
-                  "    Inventory-Name: \"What theme?\"\r\n" +
-                  "    Theme-Item-Name: \"&6%theme%\"\r\n" +
-                  "    #use ; to move to next line\r\n" +
-                  "    Theme-Item-Lore: \"&7Vote for theme &b%theme%;;&7Time remaining: &c%time-left%;&7Current votes: &c%percent%%!;;&8&oLive vote percentages;&8&oare shown on the right in;&8&obar form.;;&eClick to vote &b%theme%&e!\"\r\n" +
-                  "    Voted-Successfully: \"&aVoted successfully!\"\r\n" +
-                  "    Already-Voted: \"&cYou've already voted for this theme!\"");
+              "    Inventory-Name: \"What theme?\"\r\n" +
+              "    Theme-Item-Name: \"&6%theme%\"\r\n" +
+              "    #use ; to move to next line\r\n" +
+              "    Theme-Item-Lore: \"&7Vote for theme &b%theme%;;&7Time remaining: &c%time-left%;&7Current votes: &c%percent%%!;;&8&oLive vote percentages;&8&oare shown on the right in;&8&obar form.;;&eClick to vote &b%theme%&e!\"\r\n" +
+              "    Voted-Successfully: \"&aVoted successfully!\"\r\n" +
+              "    Already-Voted: \"&cYou've already voted for this theme!\"");
           MigratorUtils.insertAfterLine(file, "Content:", "    Playing-Teams:\r\n" +
-                  "      - \"&7Teams Mode\"\r\n" + "      - \"&fTime Left: &e%FORMATTED_TIME_LEFT%\"\r\n" + "      - \"\"\r\n" +
-                  "      - \"&fTheme: &e%THEME%\"\r\n" + "      - \"\"\r\n" + "      - \"&fArena: &e%ARENA_ID%\"\r\n" + "      - \"\"\r\n" +
-                  "      - \"&fTeammate:\"\r\n" + "      - \"&e%TEAMMATE%\"\r\n" + "      - \"\"\r\n" + "      - \"&ewww.spigotmc.org\"");
+              "      - \"&7Teams Mode\"\r\n" + "      - \"&fTime Left: &e%FORMATTED_TIME_LEFT%\"\r\n" + "      - \"\"\r\n" +
+              "      - \"&fTheme: &e%THEME%\"\r\n" + "      - \"\"\r\n" + "      - \"&fArena: &e%ARENA_ID%\"\r\n" + "      - \"\"\r\n" +
+              "      - \"&fTeammate:\"\r\n" + "      - \"&e%TEAMMATE%\"\r\n" + "      - \"\"\r\n" + "      - \"&ewww.spigotmc.org\"");
           MigratorUtils.insertAfterLine(file, "Join-Cancelled-Via-API:", "  Nobody: \"&eNobody\"\r\n  No-Theme-Yet: \"&cVoting\"");
           MigratorUtils.insertAfterLine(file, "Commands:", "  No-Free-Arenas: \"&cThere are no free arenas!\"");
           break;
         case 4:
           MigratorUtils.insertAfterLine(file, "Option-Menu:", "    Weather-Inventory-Name: \"&aSet weather\"\r\n" +
-                  "    Weather-Option: \"&aChange plot weather\"\r\n" +
-                  "    Weather-Option-Lore: \"&7Right click to open menu\"\r\n" +
-                  "    Weather-Set: \"&eWeather has been changed\"\r\n" +
-                  "    Weather-Downfall: \"&eDownfall\"\r\n" +
-                  "    Weather-Clear: \"&eClear\"");
+              "    Weather-Option: \"&aChange plot weather\"\r\n" +
+              "    Weather-Option-Lore: \"&7Right click to open menu\"\r\n" +
+              "    Weather-Set: \"&eWeather has been changed\"\r\n" +
+              "    Weather-Downfall: \"&eDownfall\"\r\n" +
+              "    Weather-Clear: \"&eClear\"");
           break;
         case 5:
           MigratorUtils.insertAfterLine(file, "Theme-Voting:", "    Super-Vote-Item-Name: \"&bSuper vote\"\r\n" +
-                  "    Super-Vote-Item-Lore: \"&7You have &b%owned% super votes;;&eClick to super vote &b%theme%&e!\"\r\n" +
-                  "    Super-Vote-Used: \"&7Player &e%player% &7has used &bSuper vote &7for theme &b%theme%&7! Starting now...\"");
+              "    Super-Vote-Item-Lore: \"&7You have &b%owned% super votes;;&eClick to super vote &b%theme%&e!\"\r\n" +
+              "    Super-Vote-Used: \"&7Player &e%player% &7has used &bSuper vote &7for theme &b%theme%&7! Starting now...\"");
           MigratorUtils.insertAfterLine(file, "Stats-Command:", "    Super-Votes: \"&aSuper votes: &e\"");
           MigratorUtils.insertAfterLine(file, "No-Free-Arenas:", "  Statistics:\r\n" +
-                  "    Type-Name: \"&cPlease type statistic name to view!\"\r\n" +
-                  "    Invalid-Name: \"&cName of statistic is invalid! Type: loses, wins, games_played, blocks_broken, blocks_placed, super_votes\"\r\n" +
-                  "    Header: \"&8&m-------------------[&6 Top 10 &8&m]-------------------\"\r\n" +
-                  "    Format: \"&e#%position% %name% - %value% &7%statistic%\"");
+              "    Type-Name: \"&cPlease type statistic name to view!\"\r\n" +
+              "    Invalid-Name: \"&cName of statistic is invalid! Type: loses, wins, games_played, blocks_broken, blocks_placed, super_votes\"\r\n" +
+              "    Header: \"&8&m-------------------[&6 Top 10 &8&m]-------------------\"\r\n" +
+              "    Format: \"&e#%position% %name% - %value% &7%statistic%\"");
           break;
         case 6:
-          //todo whole migrator re add
           MigratorUtils.insertAfterLine(file, "Admin-Commands:", "    Theme-Blacklisted: \"&cThis theme cannot be used in game!\"");
-          MigratorUtils.insertAfterLine(file, "Content:", "    Playing-States:\r\n      Classic:\r\n" +
-                  "        - \"&fTime Left: &e%FORMATTED_TIME_LEFT%\"\r\n        - \"\"\r\n        - \"&fPlayers: &e%PLAYERS%/%MAX_PLAYERS%\"\r\n        - \"\"\r\n        - \"&fTheme: &e%THEME%\"\r\n        - \"\"\r\n" +
-                  "        - \"&fArena: &e%ARENA_ID%\"\r\n        - \"\"\r\n        - \"&ewww.plajer.xyz\"\r\n      Teams:\r\n        - \"&7Teams Mode\"\r\n        - \"&fTime Left: &e%FORMATTED_TIME_LEFT%\"\r\n" +
-                  "        - \"\"\r\n        - \"&fTheme: &e%THEME%\"\r\n        - \"\"\r\n        - \"&fArena: &e%ARENA_ID%\"\r\n        - \"\"\r\n        - \"&fTeammate:\"\r\n        - \"&e%TEAMMATE%\"\r\n" +
-                  "        - \"\"\r\n        - \"&ewww.plajer.xyz\"\r\n      Guess-The-Build:\r\n        - \"&7Guess The Build Mode\"\r\n        - \"&fBuilder:\"\r\n        - \"&7%BUILDER%\"\r\n        - \"\"\r\n        - \"&e&lLeaders:\"\r\n" +
-                  "        - \"&6%GTB_LEAD_ONE%&e: %LEAD_ONE_PTS%\"\r\n        - \"&7%GTB_LEAD_TWO%&e: %LEAD_TWO_PTS%\"\r\n        - \"&7%GTB_LEAD_THREE%&e: %LEAD_THREE_PTS%\"\r\n        - \"\"\r\n        - \"%CURRENT_TIMER%\"\r\n        - \"\"\r\n" +
-                  "        - \"&fTheme:\"\r\n        - \"&c%THEME%\"\r\n        - \"\"\r\n        - \"&ewww.plajer.xyz\"\r\n    Ending-States:\r\n      Classic:\r\n        - \"&e&lGAME ENDED\"\r\n        - \"\"\r\n" +
-                  "        - \"&ewww.plajer.xyz\"\r\n      Teams:\r\n        - \"&7Teams Mode\"\r\n        - \"&e&lGAME ENDED\"\r\n        - \"\"\r\n        - \"&ewww.plajer.xyz\"\r\n      Guess-The-Build:\r\n" +
-                  "        - \"&7Guess The Build Mode\"\r\n        - \"\"\r\n        - \"&e1. &f%1%: &e%1_PTS%\"\r\n        - \"&e2. &f%2%: &e%2_PTS%\"\r\n        - \"&e3. &f%3%: &e%3_PTS%\"\r\n" +
-                  "        - \"&e4. &f%4%: &e%4_PTS%\"\r\n        - \"&e5. &f%5%: &e%5_PTS%\"\r\n        - \"&e6. &f%6%: &e%6_PTS%\"\r\n        - \"&e7. &f%7%: &e%7_PTS%\"\r\n        - \"&e8. &f%8%: &e%8_PTS%\"\r\n" +
-                  "        - \"&e9. &f%9%: &e%9_PTS%\"\r\n        - \"&e10. &f%10%: &e%10_PTS%\"\r\n        - \"\"\r\n        - \"&ewww.plajer.xyz\"");
+          break;
+        case 7:
+          MigratorUtils.insertAfterLine(file, "Scoreboard: ", "  Theme-Unknown: \"&c???\"\r\n  GTB-Current-Timer:\r\n" +
+              "    Build-Time: \"&fTime: &e%FORMATTED_TIME_LEFT%\"\r\n    Starts-In: \"&fStarts In: &e%FORMATTED_TIME_LEFT%\"");
+          MigratorUtils.insertAfterLine(file, "Content:", "    Playing-States:\r\n      Classic:\r\n        - \"&fTime Left: &e%FORMATTED_TIME_LEFT%\"\r\n        - \"\"\r\n" +
+              "        - \"&fPlayers: &e%PLAYERS%/%MAX_PLAYERS%\"\r\n        - \"\"\r\n        - \"&fTheme: &e%THEME%\"\r\n        - \"\"\r\n        - \"&fArena: &e%ARENA_ID%\"\r\n" +
+              "        - \"\"\r\n        - \"&ewww.plajer.xyz\"\r\n      Teams:\r\n        - \"&7Teams Mode\"\r\n        - \"&fTime Left: &e%FORMATTED_TIME_LEFT%\"\r\n        - \"\"\r\n" +
+              "        - \"&fTheme: &e%THEME%\"\r\n        - \"\"\r\n        - \"&fArena: &e%ARENA_ID%\"\r\n        - \"\"\r\n        - \"&fTeammate:\"\r\n        - \"&e%TEAMMATE%\"\r\n" +
+              "        - \"\"\r\n        - \"&ewww.plajer.xyz\"\r\n      Guess-The-Build:\r\n        - \"&7Guess The Build Mode\"\r\n        - \"&fBuilder:\"\r\n        - \"&7%BUILDER%\"\r\n" +
+              "        - \"\"\r\n        - \"&e&lLeaders:\"\r\n        - \"&6%1%&e: %1_PTS%\"\r\n        - \"&7%2%&e: %2_PTS%\"\r\n        - \"&7%3%&e: %3_PTS%\"\r\n        - \"\"\r\n" +
+              "        - \"%CURRENT_TIMER%\"\r\n        - \"\"\r\n        - \"&fTheme:\"\r\n        - \"&c%THEME%\"\r\n        - \"\"\r\n        - \"&ewww.plajer.xyz\"");
+          MigratorUtils.insertAfterLine(file, "Content:", "Ending-States:\r\n      Classic:\r\n        - \"&e&lGAME ENDED\"\r\n        - \"\"\r\n        - \"&ewww.plajer.xyz\"\r\n" +
+              "      Teams:\r\n        - \"&7Teams Mode\"\r\n        - \"&e&lGAME ENDED\"\r\n        - \"\"\r\n        - \"&ewww.plajer.xyz\"\r\n      Guess-The-Build:\r\n" +
+              "        - \"&7Guess The Build Mode\"\r\n        - \"\"\r\n        - \"&e1. &f%1%: &e%1_PTS%\"\r\n        - \"&e2. &f%2%: &e%2_PTS%\"\r\n        - \"&e3. &f%3%: &e%3_PTS%\"\r\n" +
+              "        - \"&e4. &f%4%: &e%4_PTS%\"\r\n        - \"&e5. &f%5%: &e%5_PTS%\"\r\n        - \"&e6. &f%6%: &e%6_PTS%\"\r\n        - \"&e7. &f%7%: &e%7_PTS%\"\r\n" +
+              "        - \"&e8. &f%8%: &e%8_PTS%\"\r\n        - \"&e9. &f%9%: &e%9_PTS%\"\r\n        - \"&e10. &f%10%: &e%10_PTS%\"\r\n        - \"\"\r\n        - \"&ewww.plajer.xyz\"");
           MigratorUtils.insertAfterLine(file, "No-Theme-Yet", "  Guess-The-Build:\r\n    Current-Builder: \"&eBuilder: &7%BUILDER%\"\r\n" +
-                  "    Current-Round: \"&eRound: &7%ROUND%/%MAXPLAYERS%\"\r\n    Theme-Is-Long: \"&eThe theme is &7%NUM% &echaracters long\"\r\n    Theme-Is-Name: \"&eThe theme is a &e%THEME%\"");
-          MigratorUtils.insertAfterLine(file, "Theme-Voting:", "  Guess-The-Build-Theme-Selector:\r\n    Inventory-Name: \"Select a theme to build!\"\r\n" +
-                  "    Theme-Item-Name: \"&b%theme%\"\r\n    Theme-Item-Lore: \"%difficulty%;;&b+%points% &7points if player's guess it correctly;;&eClick to select!\"\r\n" +
-                  "    Difficulties:\r\n      Easy: \"&aEASY\"\r\n      Medium: \"&eMEDIUM\"\r\n      Hard: \"&cHARD\"\r\n");
-          MigratorUtils.insertAfterLine(file, "Scoreboard:", "  Theme-Unknown: \"&c???\"\r\n  GTB-Current-Timer:\r\n    Build-Time: \"&fTime: &e%FORMATTED_TIME_LEFT%\"\r\n    Starts-In: \"&fStarts In: &e%FORMATTED_TIME_LEFT%\"");
+              "    Current-Round: \"&eRound: &7%ROUND%/%MAXPLAYERS%\"\r\n    Theme-Is-Long: \"&eThe theme is &7%NUM% &echaracters long\"\r\n    Theme-Is-Name: \"&eThe theme is a &e%THEME%\"");
+          MigratorUtils.insertAfterLine(file, "Winner-Title:", "      Summary:\r\n" +
+              "        - \"&a&l&m-------------------------------------------\"\r\n        - \"&f&lBuildBattle\"\r\n        - \"\"\r\n        - \"%place_one%\"\r\n" +
+              "        - \"%place_two%\"\r\n        - \"%place_three%\"\r\n        - \"&a&l&m-------------------------------------------\"");
+          MigratorUtils.insertAfterLine(file, "Super-Vote-Used:", "  Guess-The-Build-Theme-Selector:\r\n    Inventory-Name: \"Select a theme to build!\"\r\n" +
+              "    Theme-Item-Name: \"&b%theme%\"\r\n    Theme-Item-Lore: \"%difficulty%;;&b+%points% &7points if player's guess it correctly;;&eClick to select!\"\r\n" +
+              "    Difficulties:\r\n      Easy: \"&aEASY\"\r\n      Medium: \"&eMEDIUM\"\r\n      Hard: \"&cHARD\"");
       }
       version++;
     }

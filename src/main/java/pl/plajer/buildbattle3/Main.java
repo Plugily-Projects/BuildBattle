@@ -355,7 +355,6 @@ public class Main extends JavaPlugin {
           user.setInt("particles", particles);
         } catch (SQLException e1) {
           System.out.print("CONNECTION FAILED FOR PLAYER " + player.getName());
-          //e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
       });
     }

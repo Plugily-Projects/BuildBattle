@@ -40,7 +40,6 @@ Basic-Permissions:
 # Should /bb leave command be disabled?
 Disable-Leave-Command: false
 
-#todo migrator
 # Total build times of game modes
 Build-Time:
   Classic: 480
@@ -92,7 +91,6 @@ Hide-Players-Outside-Game: true
 # Time in lobby to wait before start
 Lobby-Starting-Time: 60
 
-#todo migrator
 # All game themes players will build.
 Themes:
   # Solo themes.
@@ -137,7 +135,6 @@ Blacklisted-Item-Names:
 - tnt
 - diamond_block
 
-#todo migrator
 # Commands executed when player wins
 # Use %PLAYER% placeholder to replace it with winner's name
 Win-Commands:

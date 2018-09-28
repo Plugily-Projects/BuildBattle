@@ -17,8 +17,6 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<!-- todo maven plugin.yml filtering -->
-<!-- todo deploy repository for plcore -->
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -26,7 +24,7 @@
 
     <groupId>pl.plajer.buildbattle3</groupId>
     <artifactId>BuildBattle</artifactId>
-    <version>4.0.0</version>
+    <version>4.0.0b build 1</version>
 
     <properties>
         <java.version>1.8</java.version>
@@ -138,6 +136,12 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

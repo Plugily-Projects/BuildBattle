@@ -25,7 +25,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
@@ -44,8 +43,6 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import pl.plajer.buildbattle3.ConfigPreferences;
@@ -65,11 +62,9 @@ import pl.plajer.buildbattle3.menus.themevoter.VotePoll;
 import pl.plajer.buildbattle3.user.User;
 import pl.plajer.buildbattle3.user.UserManager;
 import pl.plajer.buildbattle3.utils.MessageUtils;
-import pl.plajer.buildbattle3.utils.Utils;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.GameScoreboard;
 import pl.plajerlair.core.utils.InventoryUtils;
-import pl.plajerlair.core.utils.ItemBuilder;
 import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
@@ -280,9 +275,9 @@ public class Arena extends BukkitRunnable {
         case TEAM:
           runClassicTeamsMode();
           break;
-        case GUESS_THE_BUILD:
+        /*case GUESS_THE_BUILD:
           runGuessTheBuild();
-          break;
+          break;*/
       }
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
@@ -537,7 +532,7 @@ public class Arena extends BukkitRunnable {
     }
   }
 
-  private void runGuessTheBuild() {
+  /*private void runGuessTheBuild() {
     switch (getArenaState()) {
       case WAITING_FOR_PLAYERS:
         if (plugin.isBungeeActivated()) {
@@ -777,7 +772,7 @@ public class Arena extends BukkitRunnable {
       case RESTARTING:
         break;
     }
-  }
+  }*/
 
   private void hidePlayersOutsideTheGame(Player player) {
     for (Player players : plugin.getServer().getOnlinePlayers()) {
@@ -1023,7 +1018,7 @@ public class Arena extends BukkitRunnable {
   }
 
   private void announceResults() {
-    List<String> messages = LanguageManager.getLanguageList("In-Game.Messages.Voting-Messages.Summary-Message");
+    List<String> messages = LanguageManager.getLanguageList("In-Game.Messages.Voting-Messages.Summary");
     List<String> formattedSummary = new ArrayList<>();
     for (String summary : messages) {
       String message = summary;
