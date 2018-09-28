@@ -140,9 +140,6 @@ public class Arena extends BukkitRunnable {
       scoreboardContents.put(ArenaState.IN_GAME.getFormattedName() + "_" + type.getPrefix(), playing);
       scoreboardContents.put(ArenaState.ENDING.getFormattedName() + "_" + type.getPrefix(), ending);
     }
-    themesCache.put("EASY", ConfigPreferences.getThemes(getArenaType().getPrefix() + "_EASY"));
-    themesCache.put("MEDIUM", ConfigPreferences.getThemes(getArenaType().getPrefix() + "_MEDIUM"));
-    themesCache.put("HARD", ConfigPreferences.getThemes(getArenaType().getPrefix() + "_HARD"));
   }
 
   /**
@@ -223,6 +220,11 @@ public class Arena extends BukkitRunnable {
   public void setArenaType(ArenaType arenaType) {
     this.arenaType = arenaType;
     BUILD_TIME = ConfigPreferences.getBuildTime(this);
+    if (arenaType == ArenaType.GUESS_THE_BUILD) {
+      themesCache.put("EASY", ConfigPreferences.getThemes(getArenaType().getPrefix() + "_EASY"));
+      themesCache.put("MEDIUM", ConfigPreferences.getThemes(getArenaType().getPrefix() + "_MEDIUM"));
+      themesCache.put("HARD", ConfigPreferences.getThemes(getArenaType().getPrefix() + "_HARD"));
+    }
   }
 
   /**
@@ -900,14 +902,16 @@ public class Arena extends BukkitRunnable {
         returnString = StringUtils.replace(returnString, "%BUILDER%", Bukkit.getPlayer(currentBuilder).getName());
       }
     }
-    //todo ineffective
-    for (int i = 1; i < 11; i++) {
-      if (getArenaState() != ArenaState.ENDING && i > 3) {
-        break;
+    if (arenaType == ArenaType.GUESS_THE_BUILD) {
+      //todo ineffective
+      for (int i = 1; i < 11; i++) {
+        if (getArenaState() != ArenaState.ENDING && i > 3) {
+          break;
+        }
+        //todo may be errors?
+        returnString = StringUtils.replace(returnString, "%" + i + "%", Bukkit.getOfflinePlayer((UUID) playersPoints.keySet().toArray()[i]).getName());
+        returnString = StringUtils.replace(returnString, "%" + i + "_PTS%", String.valueOf(playersPoints.get(playersPoints.keySet().toArray()[i])));
       }
-      //todo may be errors?
-      returnString = StringUtils.replace(returnString, "%" + i + "%", Bukkit.getOfflinePlayer((UUID) playersPoints.keySet().toArray()[i]).getName());
-      returnString = StringUtils.replace(returnString, "%" + i + "_PTS%", String.valueOf(playersPoints.get(playersPoints.keySet().toArray()[i])));
     }
     returnString = StringUtils.replace(returnString, "%MIN_PLAYERS%", Integer.toString(getMinimumPlayers()));
     returnString = StringUtils.replace(returnString, "%MAX_PLAYERS%", Integer.toString(getMaximumPlayers()));

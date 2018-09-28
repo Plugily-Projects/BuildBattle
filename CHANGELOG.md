@@ -1,6 +1,5 @@
 ## BuildBattle 3 changelog
 
-#todo migrator for headss
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)
 * Fixed NullPointerException for users who where no longer online
 * Now using default values when they not exist in config to avoid NullPointerException from ConfigPreferences
