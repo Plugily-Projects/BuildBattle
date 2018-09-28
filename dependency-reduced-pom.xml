@@ -55,7 +55,7 @@
               <relocations>
                 <relocation>
                   <pattern>pl.plajerlair.core</pattern>
-                  <shadedPattern>pl.plajer.buildbattle3.plajerlair.core</shadedPattern>
+                  <shadedPattern>pl.plajer.buildbattle4.plajerlair.core</shadedPattern>
                 </relocation>
               </relocations>
             </configuration>

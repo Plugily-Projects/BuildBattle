@@ -22,7 +22,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>pl.plajer.buildbattle3</groupId>
+    <groupId>pl.plajer.buildbattle4</groupId>
     <artifactId>BuildBattle</artifactId>
     <version>4.0.0b build 1</version>
 
@@ -171,7 +171,7 @@
                             <relocations>
                                 <relocation>
                                     <pattern>pl.plajerlair.core</pattern>
-                                    <shadedPattern>pl.plajer.buildbattle3.plajerlair.core</shadedPattern>
+                                    <shadedPattern>pl.plajer.buildbattle4.plajerlair.core</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
