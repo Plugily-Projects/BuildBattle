@@ -1,7 +1,7 @@
 ## BuildBattle 3 changelog
 
 #todo migrator for headss
-### 4.0.0 Release (20.08.2018 - 02.09.2018)
+### 4.0.0 Release (20.08.2018 - 28.09.2018)
 * Fixed NullPointerException for users who where no longer online
 * Now using default values when they not exist in config to avoid NullPointerException from ConfigPreferences
 * Fixed IllegalArgumentException when you add invalid item name to the in-game items blacklist - now it will notify you in console
@@ -22,6 +22,8 @@
 * Added cancel lobbystart when there are not enough players
 * Fixed bedrock was displayed in plot floor change option menu
 * Head blocks textures are now loading instantly and do not cause server to freeze at the start now
+* Fixed /bb top was reversed while MySQL was enabled
+* Disabled game end rewards by default because they were confusing for users
 
 ### 3.5.1 Release (17.08.2018)
 * Fixed NumberFormatException for language.yml migrator - this error is very rare to occur in normal environment but it was reported so I fixed it

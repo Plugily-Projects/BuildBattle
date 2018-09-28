@@ -18,15 +18,20 @@
 
 package pl.plajer.buildbattle3.buildbattleapi;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle3.Main;
 import pl.plajer.buildbattle3.user.UserManager;
+import pl.plajer.buildbattle3.utils.MessageUtils;
 import pl.plajer.buildbattle3.utils.Utils;
 import pl.plajerlair.core.utils.ConfigUtils;
 
@@ -48,8 +53,21 @@ public class StatsStorage {
    */
   public static Map<UUID, Integer> getStats(StatisticType stat) {
     Main.debug("BuildBattle API getStats(" + stat.getName() + ") run", System.currentTimeMillis());
-    if (plugin.isDatabaseActivated())
-      return plugin.getMySQLDatabase().getColumn(stat.getName());
+    if (plugin.isDatabaseActivated()) {
+      ResultSet set = plugin.getMySQLDatabase().executeQuery("SELECT UUID, " + stat.getName() + " FROM buildbattlestats ORDER BY " + stat.getName() + " ASC;");
+      Map<java.util.UUID, java.lang.Integer> column = new LinkedHashMap<>();
+      try {
+        while (set.next()) {
+          column.put(java.util.UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));
+        }
+      } catch (SQLException e) {
+        e.printStackTrace();
+        MessageUtils.errorOccured();
+        Bukkit.getConsoleSender().sendMessage("Cannot get contents from MySQL database!");
+        Bukkit.getConsoleSender().sendMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
+      }
+      return column;
+    }
     else {
       FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
       Map<UUID, Integer> stats = new TreeMap<>();

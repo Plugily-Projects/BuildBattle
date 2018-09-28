@@ -157,7 +157,7 @@ public class ConfigPreferences {
   }
 
   public static boolean isEndGameCommandsEnabled() {
-    return options.getOrDefault("End-Game-Commands-Activated", 1) == 1;
+    return options.getOrDefault("End-Game-Commands-Activated", 0) == 1;
   }
 
   public static long getParticleRefreshTick() {

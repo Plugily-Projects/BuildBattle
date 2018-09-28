@@ -75,7 +75,7 @@ Bungee-Shutdown-On-End: false
 Win-Commands-Activated: false
 
 # Should end game commands be activated?
-End-Game-Commands-Activated: true
+End-Game-Commands-Activated: false
 
 # Should second place commands be activated?
 Second-Place-Commands-Activated: false
@@ -151,7 +151,6 @@ Win-Commands:
 # Commands executed for every player after the game ends
 End-Game-Commands:
 - say %PLAYER% has played a game!
-- give %PLAYER% 100
 
 # Commands which can be executed while being in game
 Whitelisted-Commands:
