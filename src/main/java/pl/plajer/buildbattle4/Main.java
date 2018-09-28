@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -216,6 +217,7 @@ public class Main extends JavaPlugin {
     for (final Player player : getServer().getOnlinePlayers()) {
       Arena arena = ArenaRegistry.getArena(player);
       if (arena != null) {
+        player.setGameMode(GameMode.SURVIVAL);
         if (ConfigPreferences.isBarEnabled()) {
           arena.getGameBar().removePlayer(player);
         }
