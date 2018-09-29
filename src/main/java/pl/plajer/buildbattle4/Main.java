@@ -37,8 +37,6 @@ import pl.plajer.buildbattle4.buildbattleapi.StatsStorage;
 import pl.plajer.buildbattle4.commands.MainCommand;
 import pl.plajer.buildbattle4.database.FileStats;
 import pl.plajer.buildbattle4.database.MySQLManager;
-import pl.plajer.buildbattle4.entities.EntityItem;
-import pl.plajer.buildbattle4.entities.EntityMenuEvents;
 import pl.plajer.buildbattle4.events.GameEvents;
 import pl.plajer.buildbattle4.events.JoinEvents;
 import pl.plajer.buildbattle4.events.QuitEvents;
@@ -265,8 +263,6 @@ public class Main extends JavaPlugin {
     signManager = new SignManager(this);
     SpecialItem.loadAll();
     VoteItems.loadVoteItemsFromConfig();
-    EntityItem.loadAll();
-    new EntityMenuEvents(this);
     ParticleHandler particleHandler = new ParticleHandler(this);
     particleHandler.start();
     Metrics metrics = new Metrics(this);

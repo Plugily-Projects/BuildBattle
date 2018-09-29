@@ -209,8 +209,6 @@ In-Game:
       Changed-Theme: "&bAdmin has changed theme to %THEME%"
 
 Menus:
-  Entity-Menu-Name: "&aEntity menu"
-  Villager-Profession-Menu-Name: "&7Choose villager profession"
   Location-Message: "&aLocation: "
   Option-Menu:
     Inventory-Name: "&aOptions menu"

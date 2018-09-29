@@ -25,6 +25,7 @@
 * Disabled game end rewards by default because they were confusing for users
 * Fixed server was stopped using Shutdown-When-Game-Ends option but player just left not started arena
 * Player will be given now survival gamemode on server stop
+* Removed unused code for entities
 
 ### 3.5.1 Release (17.08.2018)
 * Fixed NumberFormatException for language.yml migrator - this error is very rare to occur in normal environment but it was reported so I fixed it
