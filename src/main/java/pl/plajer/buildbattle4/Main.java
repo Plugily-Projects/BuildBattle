@@ -82,8 +82,7 @@ public class Main extends JavaPlugin {
   private boolean inventoryManagerEnabled;
   private SignManager signManager;
   private CuboidSelector cuboidSelector;
-  private String version;
-  private List<String> filesToGenerate = Arrays.asList("arenas", "EntityMenu", "particles", "SpecialItems", "stats", "voteItems", "mysql");
+  private List<String> filesToGenerate = Arrays.asList("arenas", "particles", "SpecialItems", "stats", "voteItems", "mysql");
 
   public static void debug(String thing, long millis) {
     long elapsed = System.currentTimeMillis() - millis;
@@ -131,7 +130,7 @@ public class Main extends JavaPlugin {
   public void onEnable() {
     ServiceRegistry.registerService(this);
     try {
-      version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+      String version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
       try {
         Class.forName("org.spigotmc.SpigotConfig");
       } catch (Exception e) {

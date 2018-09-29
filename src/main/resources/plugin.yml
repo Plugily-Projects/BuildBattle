@@ -1,4 +1,4 @@
-main: pl.plajer.buildbattle3.Main
+main: pl.plajer.buildbattle4.Main
 version: ${project.version}
 name: BuildBattle
 softdepend: [Vault, PlaceholderAPI, Citizens]
