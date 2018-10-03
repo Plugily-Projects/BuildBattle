@@ -70,11 +70,6 @@ public class JoinEvents implements Listener {
     try {
       //we want to be the first :)
       Bukkit.getScheduler().runTaskLater(plugin, () -> {
-        if (event.getPlayer().isOp() && !plugin.isDataEnabled()) {
-          event.getPlayer().sendMessage(ChatColor.RED + "[BuildBattle] It seems that you've disabled bStats statistics.");
-          event.getPlayer().sendMessage(ChatColor.RED + "Please consider enabling it to help us develop our plugins better!");
-          event.getPlayer().sendMessage(ChatColor.RED + "Enable it in plugins/bStats/config.yml file");
-        }
         if (event.getPlayer().hasPermission("buildbattle.updatenotify")) {
           if (plugin.getConfig().getBoolean("Update-Notifier.Enabled")) {
             String currentVersion = "v" + Bukkit.getPluginManager().getPlugin("BuildBattle").getDescription().getVersion();

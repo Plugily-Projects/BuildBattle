@@ -23,6 +23,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -57,7 +58,6 @@ import pl.plajer.buildbattle4.user.User;
 import pl.plajer.buildbattle4.user.UserManager;
 import pl.plajer.buildbattle4.utils.CuboidSelector;
 import pl.plajer.buildbattle4.utils.MessageUtils;
-import pl.plajer.buildbattle4.utils.Metrics;
 import pl.plajerlair.core.database.MySQLDatabase;
 import pl.plajerlair.core.services.ServiceRegistry;
 import pl.plajerlair.core.services.exception.ReportedException;
@@ -72,7 +72,6 @@ public class Main extends JavaPlugin {
   private static boolean debug;
   private boolean databaseActivated = false;
   private boolean forceDisable = false;
-  private boolean dataEnabled = true;
   private MySQLDatabase database;
   private MySQLManager mySQLManager;
   private FileStats fileStats;
@@ -116,14 +115,6 @@ public class Main extends JavaPlugin {
 
   public boolean isInventoryManagerEnabled() {
     return inventoryManagerEnabled;
-  }
-
-  public boolean isDataEnabled() {
-    return dataEnabled;
-  }
-
-  public void setDataEnabled(boolean dataEnabled) {
-    this.dataEnabled = dataEnabled;
   }
 
   @Override
