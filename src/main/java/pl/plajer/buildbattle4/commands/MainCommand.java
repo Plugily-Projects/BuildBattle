@@ -21,6 +21,7 @@ package pl.plajer.buildbattle4.commands;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -295,6 +296,7 @@ public class MainCommand implements CommandExecutor {
         sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
         return;
       }
+      sendProTip((Player) sender);
       new SetupInventory(arena).openInventory((Player) sender);
       return;
     }
@@ -371,6 +373,7 @@ public class MainCommand implements CommandExecutor {
       player.sendMessage(ChatColor.GOLD + "Don't know where to start? Check out tutorial video:");
       player.sendMessage(ChatColor.GOLD + "https://bit.ly/2w8eKmI");
       player.sendMessage(ChatColor.BOLD + "------------------------------------------- ");
+      sendProTip(player);
     }
   }
 
@@ -402,6 +405,24 @@ public class MainCommand implements CommandExecutor {
     ArenaRegistry.registerArena(arena);
 
     ArenaRegistry.registerArenas();
+  }
+
+  private void sendProTip(Player p) {
+    int rand = new Random().nextInt(3 + 1);
+    switch (rand) {
+      case 0:
+        p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Plajer-Lair/BuildBattle"));
+        break;
+      case 1:
+        p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7Help us translating plugin to your language here: https://plajer.xyz/translate/buildbattle"));
+        break;
+      case 2:
+        p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7Download some free maps! Get them here: https://wiki.plajer.xyz/minecraft/buildbattle/free_maps.php"));
+        break;
+      case 3:
+        p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7You can use PlaceholderAPI placeholders from our plugin! Check: https://wiki.plajer.xyz/minecraft/buildbattle/papi_placeholders.php"));
+        break;
+    }
   }
 
 }

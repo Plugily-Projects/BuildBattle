@@ -3,6 +3,7 @@
 ### 4.0.0 Beta build 3 (03.10.2018)
 * Removed annoying "Please enable bStats" message
 * Code improvements
+* Added PR0 TIPS when editing arena
 
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)
 * Fixed NullPointerException for users who where no longer online
