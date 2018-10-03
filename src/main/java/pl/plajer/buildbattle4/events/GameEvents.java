@@ -46,7 +46,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -706,20 +705,6 @@ public class GameEvents implements Listener {
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
-  }
-
-  @EventHandler
-  public void onChat(AsyncPlayerChatEvent event) {
-    if (ArenaRegistry.getArena(event.getPlayer()) == null) {
-      for (Player player : event.getRecipients()) {
-        if (ArenaRegistry.getArena(event.getPlayer()) == null) {
-          return;
-        }
-        event.getRecipients().remove(player);
-      }
-    }
-    event.getRecipients().clear();
-    event.getRecipients().addAll(ArenaRegistry.getArena(event.getPlayer()).getPlayers());
   }
 
   @EventHandler

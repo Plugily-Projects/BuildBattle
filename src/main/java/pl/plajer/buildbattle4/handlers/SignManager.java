@@ -170,30 +170,30 @@ public class SignManager implements Listener {
   private void updateSignScheduler() {
     Bukkit.getScheduler().runTaskTimer(plugin, () -> {
       for (Sign s : loadedSigns.keySet()) {
-        Block block = s.getBlock();
         for (int i = 0; i < signLines.size(); i++) {
           s.setLine(i, formatSign(signLines.get(i), loadedSigns.get(s)));
-          if (plugin.getConfig().getBoolean("Signs-Block-States-Enabled", true)) {
-            if (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN) {
-              Block behind = block.getRelative(((org.bukkit.material.Sign) s.getData()).getAttachedFace());
-              behind.setType(Material.STAINED_GLASS);
-              switch (loadedSigns.get(s).getArenaState()) {
-                case WAITING_FOR_PLAYERS:
-                  behind.setData((byte) 0);
-                  break;
-                case STARTING:
-                  behind.setData((byte) 4);
-                  break;
-                case IN_GAME:
-                  behind.setData((byte) 1);
-                  break;
-                case ENDING:
-                  behind.setData((byte) 7);
-                  break;
-                case RESTARTING:
-                  behind.setData((byte) 15);
-                  break;
-              }
+        }
+        Block block = s.getBlock();
+        if (plugin.getConfig().getBoolean("Signs-Block-States-Enabled", true)) {
+          if (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN) {
+            Block behind = block.getRelative(((org.bukkit.material.Sign) s.getData()).getAttachedFace());
+            behind.setType(Material.STAINED_GLASS);
+            switch (loadedSigns.get(s).getArenaState()) {
+              case WAITING_FOR_PLAYERS:
+                behind.setData((byte) 0);
+                break;
+              case STARTING:
+                behind.setData((byte) 4);
+                break;
+              case IN_GAME:
+                behind.setData((byte) 1);
+                break;
+              case ENDING:
+                behind.setData((byte) 7);
+                break;
+              case RESTARTING:
+                behind.setData((byte) 15);
+                break;
             }
           }
         }
