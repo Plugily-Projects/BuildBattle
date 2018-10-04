@@ -28,6 +28,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle4.ConfigPreferences;
@@ -36,6 +37,7 @@ import pl.plajer.buildbattle4.arena.plots.ArenaPlot;
 import pl.plajer.buildbattle4.handlers.ChatManager;
 import pl.plajer.buildbattle4.user.UserManager;
 import pl.plajer.buildbattle4.utils.Utils;
+import pl.plajer.buildbattle4.utils.XMaterial;
 import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
@@ -63,24 +65,36 @@ public class ParticleMenu {
     for (Particle particle : Particle.values()) {
       if (particle.toString().equalsIgnoreCase("BLOCK_CRACK") || particle.toString().equalsIgnoreCase("ITEM_CRACK")
               || particle.toString().equalsIgnoreCase("ITEM_TAKE") || particle.toString().equalsIgnoreCase("BLOCK_DUST")
-              || particle.toString().equalsIgnoreCase("MOB_APPEARANCE"))
+          || particle.toString().equalsIgnoreCase("MOB_APPEARANCE") || particle.toString().equalsIgnoreCase("FOOTSTEP"))
         continue;
       if (!config.contains(particle.toString())) {
-        config.set(particle.toString() + ".data", 0);
         config.set(particle.toString() + ".displayname", "&6" + particle.toString());
         config.set(particle.toString() + ".lore", Arrays.asList("Click to activate", "on your location"));
-        config.set(particle.toString() + ".material", org.bukkit.Material.PAPER.getId());
+        config.set(particle.toString() + ".material-name", Material.PAPER.name());
         config.set(particle.toString() + ".enabled", true);
         config.set(particle.toString() + ".permission", "particles.VIP");
         config.set(particle.toString() + ".slot", slotCounter);
         slotCounter++;
+      } else {
+        if (!config.isSet(particle.toString() + ".material-name")) {
+          config.set(particle.toString() + ".material-name", Material.PAPER.name());
+          Main.debug("Found outdated item in particles.yml! We've converted it to the newest version!", System.currentTimeMillis());
+        }
       }
+      ConfigUtils.saveConfig(JavaPlugin.getPlugin(Main.class), config, "particles");
       ParticleItem particleItem = new ParticleItem();
-      particleItem.setData(config.getInt(particle.toString() + ".data"));
+      ItemStack stack = XMaterial.fromString(config.getString(particle.toString() + ".material-name").toUpperCase()).parseItem();
+      ItemMeta meta = stack.getItemMeta();
+      meta.setDisplayName(ChatManager.colorRawMessage(config.getString(particle.toString() + ".displayname")));
+      List<String> colorizedLore = new ArrayList<>();
+      for (String str : config.getStringList(particle.toString() + ".lore")) {
+        colorizedLore.add(ChatManager.colorRawMessage(str));
+      }
+      meta.setLore(colorizedLore);
+      stack.setItemMeta(meta);
+
+      particleItem.setItemStack(stack);
       particleItem.setEnabled(config.getBoolean(particle.toString() + ".enabled"));
-      particleItem.setMaterial(org.bukkit.Material.getMaterial(config.getInt(particle.toString() + ".material")));
-      particleItem.setLore(config.getStringList(particle.toString() + ".lore"));
-      particleItem.setDisplayName(config.getString(particle.toString() + ".displayname"));
       particleItem.setPermission(config.getString(particle.toString() + ".permission"));
       particleItem.setEffect(particle);
       particleItem.setSlot(config.getInt(particle.toString() + ".slot"));
@@ -92,7 +106,7 @@ public class ParticleMenu {
 
   public static void onClick(Player player, ItemStack itemStack, ArenaPlot buildPlot) {
     for (ParticleItem particleItem : particleItems) {
-      if (particleItem.getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName()) && particleItem.getMaterial() == itemStack.getType()) {
+      if (particleItem.getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName()) && particleItem.getItemStack().getType() == itemStack.getType()) {
         if (!player.hasPermission(particleItem.getPermission())) {
           player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.No-Permission-For-Particle"));
         } else {

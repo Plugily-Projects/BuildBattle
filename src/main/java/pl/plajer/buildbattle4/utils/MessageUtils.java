@@ -20,7 +20,6 @@ package pl.plajer.buildbattle4.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
 /**
  * @author Plajer
@@ -28,42 +27,6 @@ import org.bukkit.entity.Player;
  * Created at 14.05.2018
  */
 public class MessageUtils {
-
-  public static void sendCenteredMessage(Player player, String message) {
-    if (message == null || message.equals("")) {
-      player.sendMessage("");
-      return;
-    }
-    message = ChatColor.translateAlternateColorCodes('&', message);
-
-    int messagePxSize = 0;
-    boolean previousCode = false;
-    boolean isBold = false;
-
-    for (char c : message.toCharArray()) {
-      if (c == '§') {
-        previousCode = true;
-      } else if (previousCode) {
-        previousCode = false;
-        isBold = c == 'l' || c == 'L';
-      } else {
-        DefaultFontInfo dFI = DefaultFontInfo.getDefaultFontInfo(c);
-        messagePxSize += isBold ? dFI.getBoldLength() : dFI.getLength();
-        messagePxSize++;
-      }
-    }
-    int CENTER_PX = 154;
-    int halvedMessageSize = messagePxSize / 2;
-    int toCompensate = CENTER_PX - halvedMessageSize;
-    int spaceLength = DefaultFontInfo.SPACE.getLength() + 1;
-    int compensated = 0;
-    StringBuilder sb = new StringBuilder();
-    while (compensated < toCompensate) {
-      sb.append(" ");
-      compensated += spaceLength;
-    }
-    player.sendMessage(sb.toString() + message);
-  }
 
   public static void thisVersionIsNotSupported() {
     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "  _   _           _                                                    _                _ ");
@@ -74,16 +37,7 @@ public class MessageUtils {
     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "                                       |_|     |_|                                        ");
   }
 
-  public static void weAreSadSadSad() {
-    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " __        __                                                     _          __         __");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " \\ \\      / /   ___      __ _   _ __    ___     ___    __ _    __| |    _   / /    _   / /");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "  \\ \\ /\\ / /   / _ \\    / _` | | '__|  / _ \\   / __|  / _` |  / _` |   (_) | |    (_) | | ");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "   \\ V  V /   |  __/   | (_| | | |    |  __/   \\__ \\ | (_| | | (_| |    _  | |     _  | | ");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "    \\_/\\_/     \\___|    \\__,_| |_|     \\___|   |___/  \\__,_|  \\__,_|   (_) | |    (_) | | ");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "                                                                            \\_\\        \\_\\");
-  }
-
-  public static void errorOccured() {
+  public static void errorOccurred() {
     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "  _____                                                                                  _   _ ");
     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " | ____|  _ __   _ __    ___    _ __      ___     ___    ___   _   _   _ __    ___    __| | | |");
     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " |  _|   | '__| | '__|  / _ \\  | '__|    / _ \\   / __|  / __| | | | | | '__|  / _ \\  / _` | | |");

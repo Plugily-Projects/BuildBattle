@@ -61,7 +61,6 @@ import pl.plajer.buildbattle4.menus.themevoter.VoteMenu;
 import pl.plajer.buildbattle4.menus.themevoter.VotePoll;
 import pl.plajer.buildbattle4.user.User;
 import pl.plajer.buildbattle4.user.UserManager;
-import pl.plajer.buildbattle4.utils.MessageUtils;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.GameScoreboard;
 import pl.plajerlair.core.utils.InventoryUtils;
@@ -1054,7 +1053,7 @@ public class Arena extends BukkitRunnable {
       }
       formattedSummary.add(message);
     }
-    getPlayers().forEach((player) -> formattedSummary.forEach((msg) -> MessageUtils.sendCenteredMessage(player, msg)));
+    getPlayers().forEach((player) -> formattedSummary.forEach((msg) -> MinigameUtils.sendCenteredMessage(player, msg)));
     for (Integer rang : topList.keySet()) {
       if (topList.get(rang) != null) {
         for (UUID u : topList.get(rang)) {

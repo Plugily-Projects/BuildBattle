@@ -42,17 +42,20 @@ public class User {
   private ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
   private UUID uuid;
   private Map<String, Integer> stats = new HashMap<>();
+  @Deprecated
   private Map<String, Object> objects = new HashMap<>();
 
   public User(UUID uuid) {
     this.uuid = uuid;
   }
 
+  @Deprecated
   public Object getObject(String s) {
     if (objects.containsKey(s)) return objects.get(s);
     return null;
   }
 
+  @Deprecated
   public void setObject(Object object, String s) {
     objects.put(s, object);
   }
@@ -65,6 +68,7 @@ public class User {
     return ArenaRegistry.getArena(Bukkit.getPlayer(uuid));
   }
 
+  @Deprecated
   public int getInt(String s) {
     if (!stats.containsKey(s)) {
       stats.put(s, 0);
@@ -80,6 +84,7 @@ public class User {
     this.toPlayer().setScoreboard(scoreboardManager.getNewScoreboard());
   }
 
+  @Deprecated
   public void setInt(String s, int i) {
     stats.put(s, i);
 
@@ -89,6 +94,7 @@ public class User {
     });
   }
 
+  @Deprecated
   public void addInt(String s, int i) {
     stats.put(s, getInt(s) + i);
 

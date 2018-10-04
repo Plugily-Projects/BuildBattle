@@ -33,14 +33,25 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import pl.plajer.buildbattle4.Main;
 
 /**
  * Created by Tom on 29/07/2014.
  */
 public class Utils {
 
+  private static Main plugin = JavaPlugin.getPlugin(Main.class);
+
   public static ItemStack getSkull(String url) {
-    ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+    ItemStack head;
+    if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+      head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+    } else {
+      //todo check
+      head = XMaterial.PLAYER_HEAD.parseItem();
+    }
     if (url.isEmpty()) return head;
 
     SkullMeta headMeta = (SkullMeta) head.getItemMeta();

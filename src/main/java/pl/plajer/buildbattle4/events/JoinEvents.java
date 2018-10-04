@@ -91,6 +91,7 @@ public class JoinEvents implements Listener {
                 }
               }
             } catch (Exception ex) {
+              //todo remove
               event.getPlayer().sendMessage(ChatColor.RED + "[BuildBattle] An error occured while checking for update!");
               event.getPlayer().sendMessage(ChatColor.RED + "Please check internet connection or check for update via WWW site directly!");
               event.getPlayer().sendMessage(ChatColor.RED + "WWW site https://www.spigotmc.org/resources/minigame-village-defence-1-12-and-1-8-8.41869/");
@@ -134,6 +135,7 @@ public class JoinEvents implements Listener {
             database.insertPlayer(player);
             return;
           }
+          //todo fixme
           int gamesplayed;
           int wins;
           int highestwin;

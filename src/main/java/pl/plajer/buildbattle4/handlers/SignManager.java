@@ -44,6 +44,7 @@ import pl.plajer.buildbattle4.arena.ArenaManager;
 import pl.plajer.buildbattle4.arena.ArenaRegistry;
 import pl.plajer.buildbattle4.arena.ArenaState;
 import pl.plajer.buildbattle4.handlers.language.LanguageManager;
+import pl.plajer.buildbattle4.utils.XMaterial;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.LocationUtils;
@@ -175,24 +176,39 @@ public class SignManager implements Listener {
         }
         Block block = s.getBlock();
         if (plugin.getConfig().getBoolean("Signs-Block-States-Enabled", true)) {
-          if (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN) {
+          if (block.getType() == XMaterial.WALL_SIGN.parseMaterial() || ((plugin.is1_11_R1() || plugin.is1_12_R1() && block.getType() == Material.SIGN_POST))) {
             Block behind = block.getRelative(((org.bukkit.material.Sign) s.getData()).getAttachedFace());
-            behind.setType(Material.STAINED_GLASS);
+            behind.setType(XMaterial.WHITE_STAINED_GLASS.parseMaterial());
             switch (loadedSigns.get(s).getArenaState()) {
               case WAITING_FOR_PLAYERS:
-                behind.setData((byte) 0);
+                behind.setType(XMaterial.WHITE_STAINED_GLASS.parseMaterial());
+                if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+                  behind.setData((byte) 0);
+                }
                 break;
               case STARTING:
-                behind.setData((byte) 4);
+                behind.setType(XMaterial.YELLOW_STAINED_GLASS.parseMaterial());
+                if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+                  behind.setData((byte) 4);
+                }
                 break;
               case IN_GAME:
-                behind.setData((byte) 1);
+                behind.setType(XMaterial.ORANGE_STAINED_GLASS.parseMaterial());
+                if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+                  behind.setData((byte) 1);
+                }
                 break;
               case ENDING:
-                behind.setData((byte) 7);
+                behind.setType(XMaterial.GRAY_STAINED_GLASS.parseMaterial());
+                if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+                  behind.setData((byte) 7);
+                }
                 break;
               case RESTARTING:
-                behind.setData((byte) 15);
+                behind.setType(XMaterial.BLACK_STAINED_GLASS.parseMaterial());
+                if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+                  behind.setData((byte) 15);
+                }
                 break;
             }
           }

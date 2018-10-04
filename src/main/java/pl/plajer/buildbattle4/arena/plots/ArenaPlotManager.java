@@ -80,7 +80,7 @@ public class ArenaPlotManager {
         }
       }
       if (!players.isEmpty()) {
-        MessageUtils.errorOccured();
+        MessageUtils.errorOccurred();
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] [PLOT WARNING] Not enough plots in arena " + buildInstance.getID() + "!");
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[PLOT WARNING] Required " + (buildInstance.getArenaType() == Arena.ArenaType.TEAM ? Math.ceil((double) buildInstance.getPlayers().size() / 2) : buildInstance.getPlayers().size()) + " but have " + plots.size());
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[PLOT WARNING] Instance was stopped!");

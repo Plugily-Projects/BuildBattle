@@ -28,6 +28,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle4.Main;
 import pl.plajer.buildbattle4.arena.Arena;
+import pl.plajer.buildbattle4.utils.XMaterial;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.ItemBuilder;
 import pl.plajerlair.core.utils.LocationUtils;
@@ -81,7 +82,7 @@ public class SetupInventory {
               .lore(ChatColor.DARK_GRAY + "(this will set target sign as game sign)")
               .build());
     }
-    addItem(new ItemBuilder(new ItemStack(Material.WATCH))
+    addItem(new ItemBuilder(XMaterial.CLOCK.parseItem())
             .name(ChatColor.GOLD + "► Set game type")
             .lore(ChatColor.GRAY + "Set game mode of build battle arena.")
             .lore(ChatColor.GRAY + "Valid types: SOLO, TEAM")
@@ -111,7 +112,7 @@ public class SetupInventory {
             .lore(ChatColor.GRAY + "Add floor changer NPC to your plot.")
             .lore(ChatColor.RED + "Requires Citizens plugin!")
             .build());
-    addItem(new ItemBuilder(new ItemStack(Material.FIREWORK))
+    addItem(new ItemBuilder(XMaterial.FIREWORK_ROCKET.parseItem())
             .name(ChatColor.GOLD + "► " + ChatColor.GREEN + "Register arena")
             .lore(ChatColor.GRAY + "Click this when you're done with configuration.")
             .lore(ChatColor.GRAY + "It will validate and register arena.")

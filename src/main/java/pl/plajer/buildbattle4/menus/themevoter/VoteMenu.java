@@ -38,6 +38,7 @@ import pl.plajer.buildbattle4.Main;
 import pl.plajer.buildbattle4.arena.Arena;
 import pl.plajer.buildbattle4.handlers.ChatManager;
 import pl.plajer.buildbattle4.user.UserManager;
+import pl.plajer.buildbattle4.utils.XMaterial;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ItemBuilder;
 import pl.plajerlair.core.utils.MinigameUtils;
@@ -87,9 +88,9 @@ public class VoteMenu {
                 .lore(ChatManager.colorMessage("Menus.Theme-Voting.Theme-Item-Lore").replace("%theme%", randomThemes.get(i))
                         .replace("%percent%", String.valueOf("0.0")).replace("%time-left%", String.valueOf(arena.getTimer())).split(";"))
                 .build(), i * 9);
-        setItem(new ItemBuilder(new ItemStack(Material.IRON_FENCE)).build(), (i * 9) + 1);
+        setItem(new ItemBuilder(XMaterial.IRON_BARS.parseItem()).build(), (i * 9) + 1);
         for (int j = 0; j < 6; j++) {
-          setItem(new ItemBuilder(new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte) 14)).build(), (i * 9) + 1 + j + 1);
+          setItem(new ItemBuilder(XMaterial.RED_STAINED_GLASS_PANE.parseItem()).build(), (i * 9) + 1 + j + 1);
         }
         setItem(new ItemBuilder(new ItemStack(Material.PAPER))
                 .name(ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Item-Name").replace("%theme%", randomThemes.get(i)))
@@ -116,7 +117,7 @@ public class VoteMenu {
       int i = 0;
       for (String theme : votePoll.getVotedThemes().keySet()) {
         double percent;
-        if (votePoll.getVotedThemes().get(theme) == Double.NaN || votePoll.getVotedThemes().get(theme) == 0) {
+        if (Double.isNaN(votePoll.getVotedThemes().get(theme)) || votePoll.getVotedThemes().get(theme) == 0) {
           percent = 0.0;
         } else {
           percent = ((double) votePoll.getVotedThemes().get(theme) / (double) totalVotes) * 100;
@@ -134,7 +135,7 @@ public class VoteMenu {
         }
         setItem(stack, i * 9);
         for (int j = 0; j < 6; j++) {
-          setItem(new ItemBuilder(new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte) 14)).build(), (i * 9) + 1 + j + 1);
+          setItem(new ItemBuilder(XMaterial.RED_STAINED_GLASS_PANE.parseItem()).build(), (i * 9) + 1 + j + 1);
         }
         setItem(new ItemBuilder(new ItemStack(Material.PAPER))
                 .name(ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Item-Name").replace("%theme%", theme))
@@ -147,7 +148,7 @@ public class VoteMenu {
             if (vote > percent) {
               break;
             }
-            setItem(new ItemBuilder(new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte) 5)).build(), (i * 9) + 1 + j + 1);
+            setItem(new ItemBuilder(XMaterial.LIME_STAINED_GLASS_PANE.parseItem()).build(), (i * 9) + 1 + j + 1);
             vote += 16.7;
           }
         }

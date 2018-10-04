@@ -458,10 +458,18 @@ public class GameEvents implements Listener {
       if (!((e.getCursor().getType().isBlock() && e.getCursor().getType().isSolid()) || e.getCursor().getType() == Material.WATER_BUCKET || e.getCursor().getType() == Material.LAVA_BUCKET)) {
         return;
       }
-      if (e.getCursor().getType() == null || e.getCursor().getType() == Material.SAPLING || e.getCursor().getType() == Material.TRAP_DOOR || e.getCursor().getType() == Material.WOOD_DOOR || e.getCursor().getType() == Material.IRON_TRAPDOOR || e.getCursor().getType() == Material.WOODEN_DOOR || e.getCursor().getType() == Material.ACACIA_DOOR || e.getCursor().getType() == Material.BIRCH_DOOR || e.getCursor().getType() == Material.WOOD_DOOR || e.getCursor().getType() == Material.JUNGLE_DOOR || e.getCursor().getType() == Material.SPRUCE_DOOR || e.getCursor().getType() == Material.IRON_DOOR || e.getCursor().getType() == Material.CHEST || e.getCursor().getType() == Material.TRAPPED_CHEST || e.getCursor().getType() == Material.FENCE_GATE || e.getCursor().getType() == Material.BED || e.getCursor().getType() == Material.LADDER || e.getCursor().getType() == Material.JUNGLE_FENCE_GATE || e.getCursor().getType() == Material.JUNGLE_DOOR_ITEM || e.getCursor().getType() == Material.SIGN || e.getCursor().getType() == Material.SIGN_POST || e.getCursor().getType() == Material.WALL_SIGN || e.getCursor().getType() == Material.CACTUS || e.getCursor().getType() == Material.ENDER_CHEST || e.getCursor().getType() == Material.PISTON_BASE
+      if (e.getCursor().getType() == null || e.getCursor().getType() == Material.IRON_TRAPDOOR || e.getCursor().getType() == Material.ACACIA_DOOR || e.getCursor().getType() == Material.BIRCH_DOOR || e.getCursor().getType() == Material.JUNGLE_DOOR || e.getCursor().getType() == Material.SPRUCE_DOOR || e.getCursor().getType() == Material.IRON_DOOR || e.getCursor().getType() == Material.CHEST || e.getCursor().getType() == Material.TRAPPED_CHEST || e.getCursor().getType() == Material.LADDER || e.getCursor().getType() == Material.JUNGLE_FENCE_GATE || e.getCursor().getType() == Material.SIGN || e.getCursor().getType() == Material.WALL_SIGN || e.getCursor().getType() == Material.CACTUS || e.getCursor().getType() == Material.ENDER_CHEST
           || e.getCursor().getType() == Material.TNT || e.getCursor().getType() == Material.AIR) {
         e.setCancelled(true);
         return;
+      }
+      if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+        if (e.getCursor().getType() == Material.valueOf("SAPLING") || e.getCursor().getType() == Material.valueOf("TRAP_DOOR") || e.getCursor().getType() == Material.valueOf("WOOD_DOOR") ||
+            e.getCursor().getType() == Material.valueOf("WOODEN_DOOR") || e.getCursor().getType() == Material.valueOf("WOOD_DOOR") || e.getCursor().getType() == Material.valueOf("FENCE_GATE") ||
+            e.getCursor().getType() == Material.valueOf("BED") || e.getCursor().getType() == Material.valueOf("JUNGLE_DOOR_ITEM") || e.getCursor().getType() == Material.valueOf("SIGN_POST") || e.getCursor().getType() == Material.valueOf("PISTON_BASE")) {
+          e.setCancelled(true);
+          return;
+        }
       }
       if (displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Floor-Option"))) {
         arena.getPlotManager().getPlot(player).changeFloor(e.getCursor().getType(), e.getCursor().getData().getData());

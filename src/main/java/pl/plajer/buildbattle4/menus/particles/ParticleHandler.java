@@ -34,15 +34,13 @@ public class ParticleHandler extends BukkitRunnable {
 
   private static int amount = ConfigPreferences.getAmountFromOneParticle();
   private Main plugin;
-  private long tick;
 
   public ParticleHandler(Main main) {
     plugin = main;
   }
 
   public void start() {
-    tick = ConfigPreferences.getParticleRefreshTick();
-    this.runTaskTimer(plugin, tick, tick);
+    this.runTaskTimer(plugin, ConfigPreferences.getParticleRefreshTick(), ConfigPreferences.getParticleRefreshTick());
   }
 
   @Override

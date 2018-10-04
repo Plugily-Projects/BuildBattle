@@ -24,20 +24,24 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.SkullType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.java.JavaPlugin;
 
+import pl.plajer.buildbattle4.Main;
 import pl.plajer.buildbattle4.arena.plots.ArenaPlot;
 import pl.plajer.buildbattle4.handlers.ChatManager;
+import pl.plajer.buildbattle4.utils.XMaterial;
 import pl.plajerlair.core.utils.ItemBuilder;
 
 /**
  * Created by Tom on 18/08/2015.
  */
 public class OptionsMenu {
+
+  private static Main plugin = JavaPlugin.getPlugin(Main.class);
 
   public static ItemStack getMenuItem() {
     return new ItemBuilder(new ItemStack(Material.NETHER_STAR)).name(ChatManager.colorMessage("Menus.Option-Menu.Option-Item")).lore(ChatManager.colorMessage("Menus.Option-Menu.Option-Item-Lore")).build();
@@ -46,15 +50,20 @@ public class OptionsMenu {
   private static Inventory createMenu(ArenaPlot plot) {
     Inventory inv = Bukkit.createInventory(null, 5 * 9, ChatManager.colorMessage("Menus.Option-Menu.Inventory-Name"));
 
-    ItemStack headOption = new ItemStack(Material.SKULL_ITEM, 1);
-    headOption.setTypeId((byte) SkullType.PLAYER.ordinal());
+    ItemStack headOption;
+    if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+      headOption = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+    } else {
+      //todo check
+      headOption = XMaterial.PLAYER_HEAD.parseItem();
+    }
     ItemMeta headMeta = headOption.getItemMeta();
     headMeta.setDisplayName(ChatManager.colorMessage("Menus.Option-Menu.Players-Heads-Option"));
     headMeta.setLore(Collections.singletonList(ChatManager.colorMessage("Menus.Option-Menu.Players-Heads-Option-Lore")));
     headOption.setItemMeta(headMeta);
     inv.setItem(11, headOption);
 
-    ItemStack particleOption = new ItemStack(Material.YELLOW_FLOWER, 1);
+    ItemStack particleOption = XMaterial.DANDELION.parseItem();
     ItemMeta particleMeta = particleOption.getItemMeta();
     particleMeta.setDisplayName(ChatManager.colorMessage("Menus.Option-Menu.Particle-Option"));
     particleMeta.setLore(Collections.singletonList(ChatManager.colorMessage("Menus.Option-Menu.Particle-Option-Lore")));

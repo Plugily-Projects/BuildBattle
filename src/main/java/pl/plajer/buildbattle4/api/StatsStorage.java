@@ -62,7 +62,7 @@ public class StatsStorage {
         }
       } catch (SQLException e) {
         e.printStackTrace();
-        MessageUtils.errorOccured();
+        MessageUtils.errorOccurred();
         Bukkit.getConsoleSender().sendMessage("Cannot get contents from MySQL database!");
         Bukkit.getConsoleSender().sendMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
       }

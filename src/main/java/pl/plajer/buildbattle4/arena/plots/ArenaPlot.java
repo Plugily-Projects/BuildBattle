@@ -49,6 +49,7 @@ import pl.plajerlair.core.services.exception.ReportedException;
  */
 public class ArenaPlot {
 
+  private Main plugin = JavaPlugin.getPlugin(Main.class);
   private Cuboid cuboid;
   private int points;
   private List<UUID> uuids = new ArrayList<>();
@@ -229,7 +230,9 @@ public class ArenaPlot {
         for (int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
           Location tmpblock = new Location(cuboid.getPoint2().getWorld(), x, y, z);
           tmpblock.getBlock().setType(material);
-          tmpblock.getBlock().setData(data);
+          if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+            tmpblock.getBlock().setData(data);
+          }
         }
       }
     } catch (Exception ex) {
@@ -246,8 +249,12 @@ public class ArenaPlot {
         location = cuboid.getPoint1().clone();
       }
       Material material = location.getBlock().getType();
-      if (material == Material.WATER || material == Material.STATIONARY_WATER) return Material.WATER_BUCKET;
-      if (material == Material.LAVA || material == Material.STATIONARY_LAVA) return Material.LAVA_BUCKET;
+      if (material == Material.WATER || ((plugin.is1_11_R1() || plugin.is1_12_R1()) && material == Material.valueOf("STATIONARY_WATER"))) {
+        return Material.WATER_BUCKET;
+      }
+      if (material == Material.LAVA || ((plugin.is1_11_R1() || plugin.is1_12_R1()) && material == Material.valueOf("STATIONARY_LAVA"))) {
+        return Material.LAVA_BUCKET;
+      }
       if (material == Material.AIR || material == null) return Material.REDSTONE_BLOCK;
       return material;
     } catch (Exception ex) {

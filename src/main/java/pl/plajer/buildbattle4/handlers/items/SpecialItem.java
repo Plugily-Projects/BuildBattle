@@ -18,16 +18,20 @@
 
 package pl.plajer.buildbattle4.handlers.items;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle4.Main;
 import pl.plajer.buildbattle4.handlers.ChatManager;
-import pl.plajer.buildbattle4.utils.Utils;
+import pl.plajer.buildbattle4.utils.XMaterial;
 import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
@@ -35,10 +39,7 @@ import pl.plajerlair.core.utils.ConfigUtils;
  */
 public class SpecialItem {
 
-  private Material material;
-  private Byte data = null;
-  private String[] lore;
-  private String displayName;
+  private ItemStack itemStack;
   private int slot;
   private String name;
 
@@ -47,46 +48,43 @@ public class SpecialItem {
   }
 
   public static void loadAll() {
-    new SpecialItem("Leave").load();
+    new SpecialItem("Leave").load(ChatColor.RED + "Leave", new String[] {
+        ChatColor.GRAY + "Click to teleport to hub"
+    }, XMaterial.WHITE_BED.parseMaterial(), 8);
   }
 
-  private void load() {
-    FileConfiguration config = ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "SpecialItems");
+  public void load(String displayName, String[] lore, Material material, int slot) {
+    FileConfiguration config = ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "lobbyitems");
+
+    if (!config.contains(name)) {
+      config.set(name + ".data", 0);
+      config.set(name + ".displayname", displayName);
+      config.set(name + ".lore", Arrays.asList(lore));
+      config.set(name + ".material-name", material.toString());
+      config.set(name + ".slot", slot);
+    } else {
+      if (!config.isSet(name + ".material-name")) {
+        config.set(name + ".material-name", material.toString());
+        Main.debug("Found outdated item in lobbyitems.yml! We've converted it to the newest version!", System.currentTimeMillis());
+      }
+    }
+    ConfigUtils.saveConfig(JavaPlugin.getPlugin(Main.class), config, "lobbyitems");
     SpecialItem particleItem = new SpecialItem(name);
-    particleItem.setData(config.getInt(name + ".data"));
-    particleItem.setMaterial(org.bukkit.Material.getMaterial(config.getInt(name + ".material")));
-    particleItem.setLore(config.getStringList(name + ".lore"));
-    particleItem.setDisplayName(config.getString(name + ".displayname"));
+    ItemStack stack = XMaterial.fromString(config.getString(name + ".material-name").toUpperCase()).parseItem();
+    ItemMeta meta = stack.getItemMeta();
+    meta.setDisplayName(ChatManager.colorRawMessage(config.getString(name + ".displayname")));
+
+    List<String> colorizedLore = new ArrayList<>();
+    for (String str : config.getStringList(name + ".lore")) {
+      colorizedLore.add(ChatManager.colorRawMessage(str));
+    }
+    meta.setLore(colorizedLore);
+    stack.setItemMeta(meta);
+
+    particleItem.itemStack = stack;
     particleItem.setSlot(config.getInt(name + ".slot"));
-    SpecialItemManager.addEntityItem(name, particleItem);
-  }
+    SpecialItemManager.addItem(name, particleItem);
 
-  public Material getMaterial() {
-    return material;
-  }
-
-  private void setMaterial(Material material) {
-    this.material = material;
-  }
-
-  private byte getData() {
-    return data;
-  }
-
-  private void setData(Integer data) {
-    this.data = data.byteValue();
-  }
-
-  private void setLore(List<String> lore) {
-    this.lore = lore.toArray(new String[0]);
-  }
-
-  private String getDisplayName() {
-    return ChatManager.colorRawMessage(displayName);
-  }
-
-  private void setDisplayName(String displayName) {
-    this.displayName = displayName;
   }
 
   public int getSlot() {
@@ -98,14 +96,6 @@ public class SpecialItem {
   }
 
   public ItemStack getItemStack() {
-    ItemStack itemStack;
-    if (data != null) {
-      itemStack = new ItemStack(getMaterial(), 1, getData());
-    } else {
-      itemStack = new ItemStack(getMaterial());
-
-    }
-    Utils.setItemNameAndLore(itemStack, ChatManager.colorRawMessage(this.getDisplayName()), lore);
     return itemStack;
   }
 

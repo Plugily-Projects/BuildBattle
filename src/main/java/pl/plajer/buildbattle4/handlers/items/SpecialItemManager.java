@@ -27,12 +27,10 @@ import org.bukkit.inventory.ItemStack;
  */
 public class SpecialItemManager {
 
-
   private static HashMap<String, SpecialItem> specialItems = new HashMap<>();
 
-
-  public static void addEntityItem(String name, SpecialItem entityItem) {
-    specialItems.put(name, entityItem);
+  public static void addItem(String name, SpecialItem item) {
+    specialItems.put(name, item);
   }
 
   public static SpecialItem getSpecialItem(String name) {

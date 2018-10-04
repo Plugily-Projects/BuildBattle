@@ -18,24 +18,17 @@
 
 package pl.plajer.buildbattle4.menus.particles;
 
-import java.util.List;
-
-import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.buildbattle4.handlers.ChatManager;
-import pl.plajer.buildbattle4.utils.Utils;
 
 /**
  * Created by Tom on 23/08/2015.
  */
 public class ParticleItem {
 
-  private Material material;
-  private Byte data = null;
-  private String[] lore;
-  private String displayName;
+  private ItemStack itemStack;
   private Particle effect;
   private String permission;
   private boolean enabled = true;
@@ -57,32 +50,8 @@ public class ParticleItem {
     this.enabled = enabled;
   }
 
-  public Material getMaterial() {
-    return material;
-  }
-
-  public void setMaterial(Material material) {
-    this.material = material;
-  }
-
-  private byte getData() {
-    return data;
-  }
-
-  public void setData(Integer data) {
-    this.data = data.byteValue();
-  }
-
-  public void setLore(List<String> lore) {
-    this.lore = lore.toArray(new String[0]);
-  }
-
   public String getDisplayName() {
-    return ChatManager.colorRawMessage(displayName);
-  }
-
-  public void setDisplayName(String displayName) {
-    this.displayName = displayName;
+    return ChatManager.colorRawMessage(itemStack.getItemMeta().getDisplayName());
   }
 
   public Particle getEffect() {
@@ -102,13 +71,11 @@ public class ParticleItem {
   }
 
   public ItemStack getItemStack() {
-    ItemStack itemStack;
-    if (data != null) {
-      itemStack = new ItemStack(getMaterial(), 1, getData());
-    } else {
-      itemStack = new ItemStack(getMaterial());
-    }
-    Utils.setItemNameAndLore(itemStack, ChatManager.colorRawMessage(this.getDisplayName()), lore);
     return itemStack;
   }
+
+  public void setItemStack(ItemStack itemStack) {
+    this.itemStack = itemStack;
+  }
+
 }

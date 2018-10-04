@@ -3,6 +3,7 @@ version: ${project.version}
 name: BuildBattle
 softdepend: [Vault, PlaceholderAPI, Citizens]
 authors: [Plajer, Tigerpanzer, TomTheDeveloper]
+api-version: 1.13
 
 commands:
   buildbattle:

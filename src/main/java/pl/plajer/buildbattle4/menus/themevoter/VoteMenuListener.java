@@ -45,7 +45,10 @@ import pl.plajerlair.core.services.exception.ReportedException;
  */
 public class VoteMenuListener implements Listener {
 
+  private Main plugin;
+
   public VoteMenuListener(Main plugin) {
+    this.plugin = plugin;
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
@@ -60,7 +63,8 @@ public class VoteMenuListener implements Listener {
         if (arena == null) {
           return;
         }
-        if (e.getCurrentItem().getType() == Material.SIGN || /*1.13*/ e.getCurrentItem().getType() == Material.SIGN_POST) {
+        if (e.getCurrentItem().getType() == Material.SIGN || /*1.13*/ ((plugin.is1_11_R1() || plugin.is1_12_R1()) &&
+            e.getCurrentItem().getType() == Material.valueOf("SIGN_POST"))) {
           String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
           displayName = ChatColor.stripColor(displayName);
           boolean success = arena.getVotePoll().addVote((Player) e.getWhoClicked(), displayName);

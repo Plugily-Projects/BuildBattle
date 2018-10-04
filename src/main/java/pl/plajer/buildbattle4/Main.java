@@ -81,7 +81,8 @@ public class Main extends JavaPlugin {
   private boolean inventoryManagerEnabled;
   private SignManager signManager;
   private CuboidSelector cuboidSelector;
-  private List<String> filesToGenerate = Arrays.asList("arenas", "particles", "SpecialItems", "stats", "voteItems", "mysql");
+  private String version;
+  private List<String> filesToGenerate = Arrays.asList("arenas", "particles", "lobbyitems", "stats", "voteItems", "mysql");
 
   public static void debug(String thing, long millis) {
     long elapsed = System.currentTimeMillis() - millis;
@@ -117,11 +118,27 @@ public class Main extends JavaPlugin {
     return inventoryManagerEnabled;
   }
 
+  public boolean is1_11_R1() {
+    return version.equalsIgnoreCase("v1_11_R1");
+  }
+
+  public boolean is1_12_R1() {
+    return version.equalsIgnoreCase("v1_12_R1");
+  }
+
+  public boolean is1_13_R1() {
+    return version.equalsIgnoreCase("v1_13_R1");
+  }
+
+  public boolean is1_13_R2() {
+    return version.equalsIgnoreCase("v1_13_R2");
+  }
+
   @Override
   public void onEnable() {
     ServiceRegistry.registerService(this);
     try {
-      String version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+      version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
       try {
         Class.forName("org.spigotmc.SpigotConfig");
       } catch (Exception e) {

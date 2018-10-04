@@ -39,6 +39,7 @@ import pl.plajerlair.core.utils.ConfigUtils;
  */
 public class FileStats {
 
+  @Deprecated
   public final static Map<String, StatsStorage.StatisticType> STATISTICS = new HashMap<>();
 
   static {
@@ -65,7 +66,7 @@ public class FileStats {
       config.save(ConfigUtils.getFile(JavaPlugin.getPlugin(Main.class), "stats"));
     } catch (IOException e) {
       e.printStackTrace();
-      MessageUtils.errorOccured();
+      MessageUtils.errorOccurred();
       Bukkit.getConsoleSender().sendMessage("Cannot save stats.yml file!");
       Bukkit.getConsoleSender().sendMessage("Restart the server, file COULD BE OVERRIDDEN!");
     }

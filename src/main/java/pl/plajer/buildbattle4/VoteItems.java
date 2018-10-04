@@ -21,8 +21,6 @@ package pl.plajer.buildbattle4;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -30,6 +28,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle4.handlers.ChatManager;
+import pl.plajer.buildbattle4.utils.XMaterial;
 import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
@@ -50,8 +49,13 @@ public class VoteItems {
 
   public static void loadVoteItemsFromConfig() {
     for (String s : config.getKeys(false)) {
-      if (StringUtils.isNumeric(s) && config.contains(s + ".material") && config.contains(s + ".data") && config.contains(s + ".displayname")) {
-        ItemStack item = new ItemStack(Material.getMaterial(config.getInt(s + ".material")), 1, (byte) config.getInt(s + ".data"));
+      if (config.contains(s + ".displayname")) {
+        if (!config.isSet(s + ".material-name")) {
+          config.set(s + ".material-name", XMaterial.GREEN_TERRACOTTA.name());
+          Main.debug("Found outdated item in votingItems.yml! We've converted it to the newest version!", System.currentTimeMillis());
+        }
+        ConfigUtils.saveConfig(JavaPlugin.getPlugin(Main.class), config, "voteItems");
+        ItemStack item = XMaterial.fromString(config.getString(s + ".material-name").toUpperCase()).parseItem();
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.setDisplayName(ChatManager.colorRawMessage(config.getString(s + ".displayname")));
         item.setItemMeta(itemMeta);
