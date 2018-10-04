@@ -29,6 +29,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import pl.plajer.buildbattle4.arena.Arena;
+import pl.plajer.buildbattle4.utils.XMaterial;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -87,7 +88,7 @@ public class ConfigPreferences {
   }
 
   public static Material getDefaultFloorMaterial() {
-    return Material.getMaterial(config.getString("Default-Floor-Material-Name", "LOG").toUpperCase());
+    return XMaterial.fromString(config.getString("Default-Floor-Material-Name", "LOG").toUpperCase()).parseMaterial();
   }
 
   public static int getThemeVoteTimer() {

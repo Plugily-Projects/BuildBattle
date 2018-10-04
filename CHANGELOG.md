@@ -7,6 +7,7 @@
    * Added PR0 TIPS when editing arena
 #### Pre 4:
    * API change - now you can access BuildBattle API via pl.plajer.buildbattle4.api
+   * Maybe a fix for https://plajer.xyz/errorservice/viewer.php?id=244
 
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)
 * Fixed NullPointerException for users who where no longer online
