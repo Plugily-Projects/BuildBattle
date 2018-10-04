@@ -48,6 +48,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import pl.plajer.buildbattle4.ConfigPreferences;
 import pl.plajer.buildbattle4.Main;
 import pl.plajer.buildbattle4.VoteItems;
+import pl.plajer.buildbattle4.api.StatsStorage;
 import pl.plajer.buildbattle4.api.event.game.BBGameChangeStateEvent;
 import pl.plajer.buildbattle4.api.event.game.BBGameEndEvent;
 import pl.plajer.buildbattle4.api.event.game.BBGameStartEvent;
@@ -405,7 +406,7 @@ public class Arena extends BukkitRunnable {
             extraCounter = 0;
             for (Player player : getPlayers()) {
               User user = UserManager.getUser(player.getUniqueId());
-              ArenaPlot buildPlot = (ArenaPlot) user.getObject("plot");
+              ArenaPlot buildPlot = user.getCurrentPlot();
               if (buildPlot != null) {
                 if (!buildPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
                   player.teleport(buildPlot.getTeleportLocation());
@@ -430,8 +431,8 @@ public class Arena extends BukkitRunnable {
           if (!queue.isEmpty()) {
             if (getVotingPlot() != null) {
               for (Player player : getPlayers()) {
-                getVotingPlot().setPoints(getVotingPlot().getPoints() + UserManager.getUser(player.getUniqueId()).getInt("points"));
-                UserManager.getUser(player.getUniqueId()).setInt("points", 0);
+                getVotingPlot().setPoints(getVotingPlot().getPoints() + UserManager.getUser(player.getUniqueId()).getStat(StatsStorage.StatisticType.POINTS));
+                UserManager.getUser(player.getUniqueId()).setStat(StatsStorage.StatisticType.POINTS, 0);
               }
             }
             if (arenaType == ArenaType.TEAM) {
@@ -446,8 +447,8 @@ public class Arena extends BukkitRunnable {
           } else {
             if (getVotingPlot() != null) {
               for (Player player : getPlayers()) {
-                getVotingPlot().setPoints(getVotingPlot().getPoints() + UserManager.getUser(player.getUniqueId()).getInt("points"));
-                UserManager.getUser(player.getUniqueId()).setInt("points", 0);
+                getVotingPlot().setPoints(getVotingPlot().getPoints() + UserManager.getUser(player.getUniqueId()).getStat(StatsStorage.StatisticType.POINTS));
+                UserManager.getUser(player.getUniqueId()).setStat(StatsStorage.StatisticType.POINTS, 0);
               }
             }
             calculateResults();
@@ -498,7 +499,7 @@ public class Arena extends BukkitRunnable {
             player.setAllowFlight(false);
             player.getInventory().setArmorContents(null);
             player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
-            UserManager.getUser(player.getUniqueId()).addInt("gamesplayed", 1);
+            UserManager.getUser(player.getUniqueId()).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
             if (plugin.isInventoryManagerEnabled()) {
               InventoryUtils.loadInventory(plugin, player);
             }
@@ -1063,12 +1064,12 @@ public class Arena extends BukkitRunnable {
               p.sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Summary-Other-Place").replace("%number%", String.valueOf(rang)));
             }
             if (rang == 1) {
-              UserManager.getUser(p.getUniqueId()).addInt("wins", 1);
-              if (getPlotManager().getPlot(u).getPoints() > UserManager.getUser(u).getInt("highestwin")) {
-                UserManager.getUser(p.getUniqueId()).setInt("highestwin", getPlotManager().getPlot(u).getPoints());
+              UserManager.getUser(p.getUniqueId()).addStat(StatsStorage.StatisticType.WINS, 1);
+              if (getPlotManager().getPlot(u).getPoints() > UserManager.getUser(u).getStat(StatsStorage.StatisticType.HIGHEST_WIN)) {
+                UserManager.getUser(p.getUniqueId()).setStat(StatsStorage.StatisticType.HIGHEST_WIN, getPlotManager().getPlot(u).getPoints());
               }
             } else {
-              UserManager.getUser(p.getUniqueId()).addInt("loses", 1);
+              UserManager.getUser(p.getUniqueId()).addStat(StatsStorage.StatisticType.LOSES, 1);
             }
           }
         }

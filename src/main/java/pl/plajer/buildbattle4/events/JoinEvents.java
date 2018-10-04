@@ -20,8 +20,6 @@ package pl.plajer.buildbattle4.events;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -31,6 +29,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import pl.plajer.buildbattle4.Main;
+import pl.plajer.buildbattle4.api.StatsStorage;
 import pl.plajer.buildbattle4.arena.ArenaRegistry;
 import pl.plajer.buildbattle4.database.MySQLManager;
 import pl.plajer.buildbattle4.user.User;
@@ -111,17 +110,8 @@ public class JoinEvents implements Listener {
         ArenaRegistry.getArenas().get(0).teleportToLobby(event.getPlayer());
       }
       if (!plugin.isDatabaseActivated()) {
-        List<String> temp = new ArrayList<>();
-        temp.add("gamesplayed");
-        temp.add("wins");
-        temp.add("loses");
-        temp.add("highestwin");
-        temp.add("blocksplaced");
-        temp.add("blocksbroken");
-        temp.add("particles");
-        temp.add("supervotes");
-        for (String s : temp) {
-          plugin.getFileStats().loadStat(event.getPlayer(), s);
+        for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+          plugin.getFileStats().loadStat(event.getPlayer(), stat);
         }
         return;
       }
@@ -135,33 +125,10 @@ public class JoinEvents implements Listener {
             database.insertPlayer(player);
             return;
           }
-          //todo fixme
-          int gamesplayed;
-          int wins;
-          int highestwin;
-          int loses;
-          int blocksPlaced;
-          int blocksBroken;
-          int particles;
-          int supervotes;
-          gamesplayed = database.getStat(player.getUniqueId().toString(), "gamesplayed");
-          wins = database.getStat(player.getUniqueId().toString(), "wins");
-          loses = database.getStat(player.getUniqueId().toString(), "loses");
-          highestwin = database.getStat(player.getUniqueId().toString(), "highestwin");
-          blocksPlaced = database.getStat(player.getUniqueId().toString(), "blocksplaced");
-          blocksBroken = database.getStat(player.getUniqueId().toString(), "blocksbroken");
-          particles = database.getStat(player.getUniqueId().toString(), "particles");
-          supervotes = database.getStat(player.getUniqueId().toString(), "supervotes");
-          User user1 = UserManager.getUser(player.getUniqueId());
-
-          user1.setInt("gamesplayed", gamesplayed);
-          user1.setInt("wins", wins);
-          user1.setInt("highestwin", highestwin);
-          user1.setInt("loses", loses);
-          user1.setInt("blocksplaced", blocksPlaced);
-          user1.setInt("blocksbroken", blocksBroken);
-          user1.setInt("particles", particles);
-          user1.setInt("supervotes", supervotes);
+          User user = UserManager.getUser(player.getUniqueId());
+          for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+            user.setStat(stat, plugin.getMySQLManager().getStat(player, stat));
+          }
         } catch (SQLException e1) {
           System.out.print("CONNECTION FAILED FOR PLAYER " + player.getName());
         }

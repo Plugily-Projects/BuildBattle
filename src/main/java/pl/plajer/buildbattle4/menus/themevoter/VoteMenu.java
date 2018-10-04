@@ -35,6 +35,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle4.ConfigPreferences;
 import pl.plajer.buildbattle4.Main;
+import pl.plajer.buildbattle4.api.StatsStorage;
 import pl.plajer.buildbattle4.arena.Arena;
 import pl.plajer.buildbattle4.handlers.ChatManager;
 import pl.plajer.buildbattle4.user.UserManager;
@@ -140,7 +141,7 @@ public class VoteMenu {
         setItem(new ItemBuilder(new ItemStack(Material.PAPER))
                 .name(ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Item-Name").replace("%theme%", theme))
                 .lore(ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Item-Lore").replace("%theme%", theme)
-                        .replace("%owned%", String.valueOf(UserManager.getUser(player.getUniqueId()).getInt("supervotes"))).split(";"))
+                    .replace("%owned%", String.valueOf(UserManager.getUser(player.getUniqueId()).getStat(StatsStorage.StatisticType.SUPER_VOTES))).split(";"))
                 .build(), (i * 9) + 8);
         if (votePoll.getVotedThemes().get(theme) > 0) {
           double vote = 0;

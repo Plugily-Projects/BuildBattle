@@ -23,14 +23,12 @@ import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle4.Main;
+import pl.plajer.buildbattle4.api.StatsStorage;
 import pl.plajer.buildbattle4.utils.MessageUtils;
 import pl.plajerlair.core.database.MySQLDatabase;
 
@@ -85,12 +83,12 @@ public class MySQLManager {
     database.executeUpdate("INSERT INTO `buildbattlestats` (UUID,name,gamesplayed) VALUES ('" + player.getUniqueId().toString() + "','" + player.getName() + "',0)");
   }
 
-  public void setStat(String UUID, String stat, int number) {
-    database.executeUpdate("UPDATE `buildbattlestats` SET " + stat + "=" + number + " WHERE UUID='" + UUID + "';");
+  public void setStat(Player player, StatsStorage.StatisticType stat, int number) {
+    database.executeUpdate("UPDATE `buildbattlestats` SET " + stat.getName() + "=" + number + " WHERE UUID='" + player.getUniqueId().toString() + "';");
   }
 
-  public int getStat(String UUID, String stat) {
-    ResultSet set = database.executeQuery("SELECT " + stat + " FROM `buildbattlestats` WHERE UUID='" + UUID + "'");
+  public int getStat(Player player, StatsStorage.StatisticType stat) {
+    ResultSet set = database.executeQuery("SELECT " + stat.getName() + " FROM `buildbattlestats` WHERE UUID='" + player.getUniqueId().toString() + "'");
     try {
       if (!set.next()) {
         return 0;
@@ -103,22 +101,6 @@ public class MySQLManager {
       Bukkit.getConsoleSender().sendMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
       return 0;
     }
-  }
-
-  public Map<UUID, Integer> getColumn(String stat) {
-    ResultSet set = database.executeQuery("SELECT UUID, " + stat + " FROM buildbattlestats ORDER BY " + stat + " DESC;");
-    Map<java.util.UUID, java.lang.Integer> column = new LinkedHashMap<>();
-    try {
-      while (set.next()) {
-        column.put(java.util.UUID.fromString(set.getString("UUID")), set.getInt(stat));
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-      MessageUtils.errorOccurred();
-      Bukkit.getConsoleSender().sendMessage("Cannot get contents from MySQL database!");
-      Bukkit.getConsoleSender().sendMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
-    }
-    return column;
   }
 
 }

@@ -68,24 +68,27 @@ public class QuitEvents implements Listener {
       if (plugin.isDatabaseActivated()) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
           for (StatsStorage.StatisticType s : StatsStorage.StatisticType.values()) {
+            if (!s.isPersistent()) {
+              continue;
+            }
             int i;
             try {
-              i = plugin.getMySQLManager().getStat(player.getUniqueId().toString(), s.getName());
+              i = plugin.getMySQLManager().getStat(player, s);
             } catch (NullPointerException npe) {
               i = 0;
               System.out.print("COULDN'T GET STATS FROM PLAYER: " + player.getName());
             }
 
-            if (i > user.getInt(s.getName())) {
-              plugin.getMySQLManager().setStat(player.getUniqueId().toString(), s.getName(), user.getInt(s.getName()) + i);
+            if (i > user.getStat(s)) {
+              plugin.getMySQLManager().setStat(player, s, user.getStat(s) + i);
             } else {
-              plugin.getMySQLManager().setStat(player.getUniqueId().toString(), s.getName(), user.getInt(s.getName()));
+              plugin.getMySQLManager().setStat(player, s, user.getStat(s));
             }
           }
         });
       } else {
         for (StatsStorage.StatisticType s : StatsStorage.StatisticType.values()) {
-          plugin.getFileStats().saveStat(player, s.getName());
+          plugin.getFileStats().saveStat(player, s);
         }
       }
       UserManager.removeUser(event.getPlayer().getUniqueId());

@@ -58,6 +58,7 @@ import org.bukkit.inventory.ItemStack;
 import pl.plajer.buildbattle4.ConfigPreferences;
 import pl.plajer.buildbattle4.Main;
 import pl.plajer.buildbattle4.VoteItems;
+import pl.plajer.buildbattle4.api.StatsStorage;
 import pl.plajer.buildbattle4.arena.Arena;
 import pl.plajer.buildbattle4.arena.ArenaManager;
 import pl.plajer.buildbattle4.arena.ArenaRegistry;
@@ -120,7 +121,7 @@ public class GameEvents implements Listener {
         event.setCancelled(true);
         return;
       }
-      UserManager.getUser(event.getPlayer().getUniqueId()).setInt("points", VoteItems.getPoints(event.getItem()));
+      UserManager.getUser(event.getPlayer().getUniqueId()).setStat(StatsStorage.StatisticType.POINTS, VoteItems.getPoints(event.getItem()));
       event.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Vote-Successful"));
       event.setCancelled(true);
     } catch (Exception ex) {
@@ -645,13 +646,13 @@ public class GameEvents implements Listener {
         return;
       }
       User user = UserManager.getUser(event.getPlayer().getUniqueId());
-      ArenaPlot buildPlot = (ArenaPlot) user.getObject("plot");
+      ArenaPlot buildPlot = user.getCurrentPlot();
       if (buildPlot == null) {
         event.setCancelled(true);
         return;
       }
       if (buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
-        UserManager.getUser(event.getPlayer().getUniqueId()).addInt("blocksbroken", 1);
+        UserManager.getUser(event.getPlayer().getUniqueId()).addStat(StatsStorage.StatisticType.BLOCKS_BROKEN, 1);
         return;
       }
       event.setCancelled(true);
@@ -680,13 +681,13 @@ public class GameEvents implements Listener {
         return;
       }
       User user = UserManager.getUser(event.getPlayer().getUniqueId());
-      ArenaPlot buildPlot = (ArenaPlot) user.getObject("plot");
+      ArenaPlot buildPlot = user.getCurrentPlot();
       if (buildPlot == null) {
         event.setCancelled(true);
         return;
       }
       if (buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
-        UserManager.getUser(event.getPlayer().getUniqueId()).addInt("blocksplaced", 1);
+        UserManager.getUser(event.getPlayer().getUniqueId()).addStat(StatsStorage.StatisticType.BLOCKS_PLACED, 1);
         return;
       }
       event.setCancelled(true);

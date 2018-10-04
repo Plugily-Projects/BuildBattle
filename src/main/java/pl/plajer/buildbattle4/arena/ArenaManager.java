@@ -31,6 +31,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import pl.plajer.buildbattle4.ConfigPreferences;
 import pl.plajer.buildbattle4.Main;
+import pl.plajer.buildbattle4.api.StatsStorage;
 import pl.plajer.buildbattle4.api.event.game.BBGameEndEvent;
 import pl.plajer.buildbattle4.api.event.game.BBGameJoinEvent;
 import pl.plajer.buildbattle4.api.event.game.BBGameLeaveEvent;
@@ -145,7 +146,7 @@ public class ArenaManager {
       a.getQueue().remove(p.getUniqueId());
       User user = UserManager.getUser(p.getUniqueId());
       if (a.getArenaState() == ArenaState.IN_GAME || a.getArenaState() == ArenaState.ENDING) {
-        UserManager.getUser(p.getUniqueId()).addInt("gamesplayed", 1);
+        UserManager.getUser(p.getUniqueId()).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
       }
       a.teleportToEndLocation(p);
       a.removePlayer(p);

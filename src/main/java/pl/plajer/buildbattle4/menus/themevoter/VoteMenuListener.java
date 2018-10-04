@@ -31,6 +31,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle4.ConfigPreferences;
 import pl.plajer.buildbattle4.Main;
+import pl.plajer.buildbattle4.api.StatsStorage;
 import pl.plajer.buildbattle4.arena.Arena;
 import pl.plajer.buildbattle4.arena.ArenaRegistry;
 import pl.plajer.buildbattle4.handlers.ChatManager;
@@ -76,8 +77,8 @@ public class VoteMenuListener implements Listener {
         }
         if (e.getCurrentItem().getType() == Material.PAPER) {
           User u = UserManager.getUser(e.getWhoClicked().getUniqueId());
-          if (u.getInt("supervotes") > 0) {
-            u.setInt("supervotes", u.getInt("supervotes") - 1);
+          if (u.getStat(StatsStorage.StatisticType.SUPER_VOTES) > 0) {
+            u.setStat(StatsStorage.StatisticType.SUPER_VOTES, u.getStat(StatsStorage.StatisticType.SUPER_VOTES) - 1);
             ChatManager.broadcast(arena, ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Used")
                     .replace("%player%", e.getWhoClicked().getName()).replace("%theme%", arena.getVotePoll().getThemeByPosition(e.getSlot() + 1)));
             arena.setThemeVoteTime(false);

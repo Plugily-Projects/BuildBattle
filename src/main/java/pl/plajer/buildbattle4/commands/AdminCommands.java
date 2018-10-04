@@ -42,6 +42,7 @@ import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle4.ConfigPreferences;
 import pl.plajer.buildbattle4.Main;
+import pl.plajer.buildbattle4.api.StatsStorage;
 import pl.plajer.buildbattle4.arena.Arena;
 import pl.plajer.buildbattle4.arena.ArenaManager;
 import pl.plajer.buildbattle4.arena.ArenaRegistry;
@@ -291,7 +292,7 @@ public class AdminCommands extends MainCommand {
       return;
     }
     User user = UserManager.getUser(Bukkit.getPlayer(who).getUniqueId());
-    user.setInt("supervotes", Integer.parseInt(superVotes));
+    user.setStat(StatsStorage.StatisticType.SUPER_VOTES, Integer.parseInt(superVotes));
     sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&aSuper votes set."));
   }
 
@@ -306,7 +307,7 @@ public class AdminCommands extends MainCommand {
       return;
     }
     User user = UserManager.getUser(Bukkit.getPlayer(who).getUniqueId());
-    user.addInt("supervotes", Integer.parseInt(superVotes));
+    user.addStat(StatsStorage.StatisticType.SUPER_VOTES, Integer.parseInt(superVotes));
     sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&aSuper votes added."));
   }
 

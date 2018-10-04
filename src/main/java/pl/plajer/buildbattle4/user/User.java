@@ -28,10 +28,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.ScoreboardManager;
 
 import pl.plajer.buildbattle4.Main;
+import pl.plajer.buildbattle4.api.StatsStorage;
 import pl.plajer.buildbattle4.api.event.player.BBPlayerStatisticChangeEvent;
 import pl.plajer.buildbattle4.arena.Arena;
 import pl.plajer.buildbattle4.arena.ArenaRegistry;
-import pl.plajer.buildbattle4.database.FileStats;
+import pl.plajer.buildbattle4.arena.plots.ArenaPlot;
 
 /**
  * Created by Tom on 27/07/2014.
@@ -41,23 +42,19 @@ public class User {
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
   private ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
   private UUID uuid;
-  private Map<String, Integer> stats = new HashMap<>();
-  @Deprecated
-  private Map<String, Object> objects = new HashMap<>();
+  private Map<StatsStorage.StatisticType, Integer> stats = new HashMap<>();
+  private ArenaPlot currentPlot;
 
   public User(UUID uuid) {
     this.uuid = uuid;
   }
 
-  @Deprecated
-  public Object getObject(String s) {
-    if (objects.containsKey(s)) return objects.get(s);
-    return null;
+  public ArenaPlot getCurrentPlot() {
+    return currentPlot;
   }
 
-  @Deprecated
-  public void setObject(Object object, String s) {
-    objects.put(s, object);
+  public void setCurrentPlot(ArenaPlot currentPlot) {
+    this.currentPlot = currentPlot;
   }
 
   public Player toPlayer() {
@@ -68,38 +65,35 @@ public class User {
     return ArenaRegistry.getArena(Bukkit.getPlayer(uuid));
   }
 
-  @Deprecated
-  public int getInt(String s) {
-    if (!stats.containsKey(s)) {
-      stats.put(s, 0);
+  public int getStat(StatsStorage.StatisticType stat) {
+    if (!stats.containsKey(stat)) {
+      stats.put(stat, 0);
       return 0;
-    } else if (stats.get(s) == null) {
+    } else if (stats.get(stat) == null) {
       return 0;
     }
 
-    return stats.get(s);
+    return stats.get(stat);
   }
 
   public void removeScoreboard() {
     this.toPlayer().setScoreboard(scoreboardManager.getNewScoreboard());
   }
 
-  @Deprecated
-  public void setInt(String s, int i) {
-    stats.put(s, i);
+  public void setStat(StatsStorage.StatisticType stat, int i) {
+    stats.put(stat, i);
 
     Bukkit.getScheduler().runTask(plugin, () -> {
-      BBPlayerStatisticChangeEvent bbPlayerStatisticChangeEvent = new BBPlayerStatisticChangeEvent(getArena(), toPlayer(), FileStats.STATISTICS.get(s), i);
+      BBPlayerStatisticChangeEvent bbPlayerStatisticChangeEvent = new BBPlayerStatisticChangeEvent(getArena(), toPlayer(), stat, i);
       Bukkit.getPluginManager().callEvent(bbPlayerStatisticChangeEvent);
     });
   }
 
-  @Deprecated
-  public void addInt(String s, int i) {
-    stats.put(s, getInt(s) + i);
+  public void addStat(StatsStorage.StatisticType stat, int i) {
+    stats.put(stat, getStat(stat) + i);
 
     Bukkit.getScheduler().runTask(plugin, () -> {
-      BBPlayerStatisticChangeEvent bbPlayerStatisticChangeEvent = new BBPlayerStatisticChangeEvent(getArena(), toPlayer(), FileStats.STATISTICS.get(s), getInt(s));
+      BBPlayerStatisticChangeEvent bbPlayerStatisticChangeEvent = new BBPlayerStatisticChangeEvent(getArena(), toPlayer(), stat, getStat(stat));
       Bukkit.getPluginManager().callEvent(bbPlayerStatisticChangeEvent);
     });
   }

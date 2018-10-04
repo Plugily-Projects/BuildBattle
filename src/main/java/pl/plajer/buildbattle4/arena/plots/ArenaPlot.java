@@ -129,7 +129,7 @@ public class ArenaPlot {
       if (uuids != null || !uuids.isEmpty()) {
         for (UUID u : uuids) {
           User user = UserManager.getUser(u);
-          user.setObject(null, "plot");
+          user.setCurrentPlot(null);
           this.setOwners(new ArrayList<>());
           this.setPoints(0);
         }

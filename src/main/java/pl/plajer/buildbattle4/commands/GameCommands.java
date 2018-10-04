@@ -53,28 +53,28 @@ public class GameCommands extends MainCommand {
   public void showStats(Player player) {
     User user = UserManager.getUser(player.getUniqueId());
     player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Header"));
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Wins") + user.getInt("wins"));
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Loses") + user.getInt("loses"));
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Games-Played") + user.getInt("gamesplayed"));
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Highest-Win") + user.getInt("highestwin"));
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Blocks-Placed") + user.getInt("blocksplaced"));
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Blocks-Broken") + user.getInt("blocksbroken"));
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Particles-Placed") + user.getInt("particles"));
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Super-Votes") + user.getInt("supervotes"));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Wins") + user.getStat(StatsStorage.StatisticType.WINS));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Loses") + user.getStat(StatsStorage.StatisticType.LOSES));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Games-Played") + user.getStat(StatsStorage.StatisticType.GAMES_PLAYED));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Highest-Win") + user.getStat(StatsStorage.StatisticType.HIGHEST_WIN));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Blocks-Placed") + user.getStat(StatsStorage.StatisticType.BLOCKS_PLACED));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Blocks-Broken") + user.getStat(StatsStorage.StatisticType.BLOCKS_BROKEN));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Particles-Placed") + user.getStat(StatsStorage.StatisticType.PARTICLES_USED));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Super-Votes") + user.getStat(StatsStorage.StatisticType.SUPER_VOTES));
     player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Footer"));
   }
 
   public void showStatsOther(Player player, Player other) {
     User user = UserManager.getUser(other.getUniqueId());
     player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Header-Other").replace("%player%", other.getName()));
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Wins") + user.getInt("wins"));
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Loses") + user.getInt("loses"));
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Games-Played") + user.getInt("gamesplayed"));
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Highest-Win") + user.getInt("highestwin"));
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Blocks-Placed") + user.getInt("blocksplaced"));
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Blocks-Broken") + user.getInt("blocksbroken"));
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Particles-Placed") + user.getInt("particles"));
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Super-Votes") + user.getInt("supervotes"));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Wins") + user.getStat(StatsStorage.StatisticType.WINS));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Loses") + user.getStat(StatsStorage.StatisticType.LOSES));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Games-Played") + user.getStat(StatsStorage.StatisticType.GAMES_PLAYED));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Highest-Win") + user.getStat(StatsStorage.StatisticType.HIGHEST_WIN));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Blocks-Placed") + user.getStat(StatsStorage.StatisticType.BLOCKS_PLACED));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Blocks-Broken") + user.getStat(StatsStorage.StatisticType.BLOCKS_BROKEN));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Particles-Placed") + user.getStat(StatsStorage.StatisticType.PARTICLES_USED));
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Super-Votes") + user.getStat(StatsStorage.StatisticType.SUPER_VOTES));
     player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Footer"));
   }
 

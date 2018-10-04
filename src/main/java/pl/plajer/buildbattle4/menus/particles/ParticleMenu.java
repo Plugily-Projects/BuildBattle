@@ -33,6 +33,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle4.ConfigPreferences;
 import pl.plajer.buildbattle4.Main;
+import pl.plajer.buildbattle4.api.StatsStorage;
 import pl.plajer.buildbattle4.arena.plots.ArenaPlot;
 import pl.plajer.buildbattle4.handlers.ChatManager;
 import pl.plajer.buildbattle4.user.UserManager;
@@ -114,7 +115,7 @@ public class ParticleMenu {
             player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Max-Particles-Limit-Reached"));
           } else {
             buildPlot.addParticle(player.getLocation(), particleItem.getEffect());
-            UserManager.getUser(player.getUniqueId()).addInt("particles", 1);
+            UserManager.getUser(player.getUniqueId()).addStat(StatsStorage.StatisticType.PARTICLES_USED, 1);
             player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Particle-Added"));
           }
         }

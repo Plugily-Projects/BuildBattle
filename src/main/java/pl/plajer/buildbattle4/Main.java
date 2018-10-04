@@ -230,21 +230,24 @@ public class Main extends JavaPlugin {
       }
       final User user = UserManager.getUser(player.getUniqueId());
       for (StatsStorage.StatisticType s : StatsStorage.StatisticType.values()) {
+        if (!s.isPersistent()) {
+          continue;
+        }
         if (this.isDatabaseActivated()) {
           int i;
           try {
-            i = getMySQLManager().getStat(player.getUniqueId().toString(), s.getName());
+            i = getMySQLManager().getStat(player, s);
           } catch (NullPointerException npe) {
             i = 0;
             System.out.print("COULDN'T GET STATS FROM PLAYER: " + player.getName());
           }
-          if (i > user.getInt(s.getName())) {
-            getMySQLManager().setStat(player.getUniqueId().toString(), s.getName(), user.getInt(s.getName()) + i);
+          if (i > user.getStat(s)) {
+            getMySQLManager().setStat(player, s, user.getStat(s) + i);
           } else {
-            getMySQLManager().setStat(player.getUniqueId().toString(), s.getName(), user.getInt(s.getName()));
+            getMySQLManager().setStat(player, s, user.getStat(s));
           }
         } else {
-          getFileStats().saveStat(player, s.getName());
+          getFileStats().saveStat(player, s);
         }
       }
       UserManager.removeUser(player.getUniqueId());
@@ -323,7 +326,7 @@ public class Main extends JavaPlugin {
       if (bungeeActivated) ArenaRegistry.getArenas().get(0).teleportToLobby(player);
       if (!this.isDatabaseActivated()) {
         for (StatsStorage.StatisticType s : StatsStorage.StatisticType.values()) {
-          this.getFileStats().loadStat(player, s.getName());
+          this.getFileStats().loadStat(player, s);
         }
         return;
       }
@@ -335,29 +338,10 @@ public class Main extends JavaPlugin {
             database.insertPlayer(player);
           }
 
-          int gamesplayed;
-          int wins;
-          int highestwin;
-          int loses;
-          int blocksPlaced;
-          int blocksBroken;
-          int particles;
-          gamesplayed = database.getStat(player.getUniqueId().toString(), "gamesplayed");
-          wins = database.getStat(player.getUniqueId().toString(), "wins");
-          loses = database.getStat(player.getUniqueId().toString(), "loses");
-          highestwin = database.getStat(player.getUniqueId().toString(), "highestwin");
-          blocksPlaced = database.getStat(player.getUniqueId().toString(), "blocksplaced");
-          blocksBroken = database.getStat(player.getUniqueId().toString(), "blocksbroken");
-          particles = database.getStat(player.getUniqueId().toString(), "particles");
           User user = UserManager.getUser(player.getUniqueId());
-
-          user.setInt("gamesplayed", gamesplayed);
-          user.setInt("wins", wins);
-          user.setInt("highestwin", highestwin);
-          user.setInt("loses", loses);
-          user.setInt("blocksplaced", blocksPlaced);
-          user.setInt("blocksbroken", blocksBroken);
-          user.setInt("particles", particles);
+          for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+            user.setStat(stat, database.getStat(player, stat));
+          }
         } catch (SQLException e1) {
           System.out.print("CONNECTION FAILED FOR PLAYER " + player.getName());
         }

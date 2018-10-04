@@ -19,8 +19,6 @@
 package pl.plajer.buildbattle4.database;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -39,29 +37,18 @@ import pl.plajerlair.core.utils.ConfigUtils;
  */
 public class FileStats {
 
-  @Deprecated
-  public final static Map<String, StatsStorage.StatisticType> STATISTICS = new HashMap<>();
-
-  static {
-    STATISTICS.put("gamesplayed", StatsStorage.StatisticType.GAMES_PLAYED);
-    STATISTICS.put("wins", StatsStorage.StatisticType.WINS);
-    STATISTICS.put("highestwin", StatsStorage.StatisticType.HIGHEST_WIN);
-    STATISTICS.put("loses", StatsStorage.StatisticType.LOSES);
-    STATISTICS.put("particles", StatsStorage.StatisticType.PARTICLES_USED);
-    STATISTICS.put("blocksbroken", StatsStorage.StatisticType.BLOCKS_BROKEN);
-    STATISTICS.put("blocksplaced", StatsStorage.StatisticType.BLOCKS_PLACED);
-    STATISTICS.put("supervotes", StatsStorage.StatisticType.SUPER_VOTES);
-  }
-
   private FileConfiguration config;
 
   public FileStats() {
     config = ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "stats");
   }
 
-  public void saveStat(Player player, String stat) {
+  public void saveStat(Player player, StatsStorage.StatisticType stat) {
+    if (!stat.isPersistent()) {
+      return;
+    }
     User user = UserManager.getUser(player.getUniqueId());
-    config.set(player.getUniqueId().toString() + "." + stat, user.getInt(stat));
+    config.set(player.getUniqueId().toString() + "." + stat, user.getStat(stat));
     try {
       config.save(ConfigUtils.getFile(JavaPlugin.getPlugin(Main.class), "stats"));
     } catch (IOException e) {
@@ -72,11 +59,13 @@ public class FileStats {
     }
   }
 
-  public void loadStat(Player player, String stat) {
+  public void loadStat(Player player, StatsStorage.StatisticType stat) {
     User user = UserManager.getUser(player.getUniqueId());
-    if (config.contains(player.getUniqueId().toString() + "." + stat))
-      user.setInt(stat, config.getInt(player.getUniqueId().toString() + "." + stat));
-    else user.setInt(stat, 0);
+    if (config.contains(player.getUniqueId().toString() + "." + stat)) {
+      user.setStat(stat, config.getInt(player.getUniqueId().toString() + "." + stat));
+    } else {
+      user.setStat(stat, 0);
+    }
   }
 
 

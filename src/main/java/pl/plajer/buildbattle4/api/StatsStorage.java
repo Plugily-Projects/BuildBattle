@@ -88,24 +88,30 @@ public class StatsStorage {
    */
   public static int getUserStats(Player player, StatisticType statisticType) {
     Main.debug("BuildBattle API getUserStats(" + player.getName() + ", " + statisticType.getName() + ") run", System.currentTimeMillis());
-    return UserManager.getUser(player.getUniqueId()).getInt(statisticType.name);
+    return UserManager.getUser(player.getUniqueId()).getStat(statisticType);
   }
 
   /**
    * Available statistics to get.
    */
   public enum StatisticType {
-    BLOCKS_PLACED("blocksplaced"), BLOCKS_BROKEN("blocksbroken"), GAMES_PLAYED("gamesplayed"), WINS("wins"), LOSES("loses"), HIGHEST_WIN("highestwin"), PARTICLES_USED("particles"),
-    SUPER_VOTES("supervotes");
+    BLOCKS_PLACED("blocksplaced", true), BLOCKS_BROKEN("blocksbroken", true), GAMES_PLAYED("gamesplayed", true), WINS("wins", true), LOSES("loses", true),
+    HIGHEST_WIN("highestwin", true), PARTICLES_USED("particles", true), SUPER_VOTES("supervotes", true), POINTS("points", false);
 
-    String name;
+    private String name;
+    private boolean persistent;
 
-    StatisticType(String name) {
+    StatisticType(String name, boolean persistent) {
       this.name = name;
+      this.persistent = persistent;
     }
 
     public String getName() {
       return name;
+    }
+
+    public boolean isPersistent() {
+      return persistent;
     }
   }
 
