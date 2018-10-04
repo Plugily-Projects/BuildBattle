@@ -5,6 +5,6 @@ Leave:
   data: 0
   displayname: "&c&lReturn to Lobby &7(Right Click)"
   lore:
-  - &7Right-click to leave to the lobby
+  - "&7Right-click to leave to the lobby"
   material: 355
   slot: 8

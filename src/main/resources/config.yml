@@ -1,11 +1,11 @@
 #
-#        Build Battle 3 configuration file
+#         Build Battle configuration file
 #               Edit it by yourself
 #          Read descriptions CAREFULLY
 #   You don't want to break anything, do you?
 #
 
-# Locale of BB 3 language. By default it's english.
+# Locale of BuildBattle language. By default it's english.
 # Available localizations:
 #   default - uses messages from 'language.yml' file.
 #   de - Deutsche sprache          pl - Jezyk polski
