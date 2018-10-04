@@ -25,10 +25,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import pl.plajer.buildbattle4.Main;
+import pl.plajer.buildbattle4.api.StatsStorage;
 import pl.plajer.buildbattle4.arena.Arena;
 import pl.plajer.buildbattle4.arena.ArenaManager;
 import pl.plajer.buildbattle4.arena.ArenaRegistry;
-import pl.plajer.buildbattle4.buildbattleapi.StatsStorage;
 import pl.plajer.buildbattle4.user.User;
 import pl.plajer.buildbattle4.user.UserManager;
 import pl.plajerlair.core.services.exception.ReportedException;

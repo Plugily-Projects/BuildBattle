@@ -16,54 +16,55 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle4.buildbattleapi;
+package pl.plajer.buildbattle4.api.event.player;
+
+import javax.annotation.Nullable;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
+import pl.plajer.buildbattle4.api.StatsStorage;
+import pl.plajer.buildbattle4.api.event.BBEvent;
 import pl.plajer.buildbattle4.arena.Arena;
 
 /**
- * Called when player joins arena
+ * @author Plajer
+ * @see StatsStorage.StatisticType
+ * @since 3.4.1
+ * <p>
+ * Called when player receive new statistic.
  */
-public class BBGameJoinEvent extends BBEvent implements Cancellable {
+public class BBPlayerStatisticChangeEvent extends BBEvent {
 
-  private static final HandlerList handlers = new HandlerList();
-  private boolean cancelled;
+  private static final HandlerList HANDLERS = new HandlerList();
   private Player player;
+  private StatsStorage.StatisticType statisticType;
+  private int number;
 
-  public BBGameJoinEvent(Player player, Arena arena) {
-    super(arena);
+  public BBPlayerStatisticChangeEvent(@Nullable Arena eventArena, Player player, StatsStorage.StatisticType statisticType, int number) {
+    super(eventArena);
     this.player = player;
+    this.statisticType = statisticType;
+    this.number = number;
   }
 
   public static HandlerList getHandlerList() {
-    return handlers;
+    return HANDLERS;
   }
 
-  @Override
-  public boolean isCancelled() {
-    return cancelled;
+  public HandlerList getHandlers() {
+    return HANDLERS;
   }
 
-  @Override
-  public void setCancelled(boolean cancelled) {
-    this.cancelled = cancelled;
-  }
-
-  /**
-   * Get player associated with this event
-   *
-   * @return player
-   */
   public Player getPlayer() {
     return player;
   }
 
-  @Override
-  public HandlerList getHandlers() {
-    return handlers;
+  public StatsStorage.StatisticType getStatisticType() {
+    return statisticType;
   }
 
+  public int getNumber() {
+    return number;
+  }
 }

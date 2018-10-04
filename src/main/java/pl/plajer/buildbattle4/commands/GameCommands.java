@@ -29,10 +29,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle4.Main;
+import pl.plajer.buildbattle4.api.StatsStorage;
 import pl.plajer.buildbattle4.arena.Arena;
 import pl.plajer.buildbattle4.arena.ArenaManager;
 import pl.plajer.buildbattle4.arena.ArenaRegistry;
-import pl.plajer.buildbattle4.buildbattleapi.StatsStorage;
 import pl.plajer.buildbattle4.handlers.ChatManager;
 import pl.plajer.buildbattle4.user.User;
 import pl.plajer.buildbattle4.user.UserManager;

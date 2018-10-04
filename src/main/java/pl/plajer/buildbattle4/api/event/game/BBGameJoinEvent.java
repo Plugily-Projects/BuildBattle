@@ -16,42 +16,55 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle4.buildbattleapi;
+package pl.plajer.buildbattle4.api.event.game;
 
+import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
+import pl.plajer.buildbattle4.api.event.BBEvent;
 import pl.plajer.buildbattle4.arena.Arena;
-import pl.plajer.buildbattle4.arena.ArenaState;
 
 /**
- * Called when arena states changes
+ * Called when player joins arena
  */
-public class BBGameChangeStateEvent extends BBEvent {
+public class BBGameJoinEvent extends BBEvent implements Cancellable {
 
   private static final HandlerList handlers = new HandlerList();
-  private ArenaState gameState;
-  private ArenaState previous;
+  private boolean cancelled;
+  private Player player;
 
-  public BBGameChangeStateEvent(ArenaState gameState, Arena arena, ArenaState previous) {
+  public BBGameJoinEvent(Player player, Arena arena) {
     super(arena);
-    this.gameState = gameState;
-    this.previous = previous;
+    this.player = player;
   }
 
   public static HandlerList getHandlerList() {
     return handlers;
   }
 
-  public ArenaState getState() {
-    return gameState;
+  @Override
+  public boolean isCancelled() {
+    return cancelled;
   }
 
-  public ArenaState getPreviousState() {
-    return previous;
+  @Override
+  public void setCancelled(boolean cancelled) {
+    this.cancelled = cancelled;
+  }
+
+  /**
+   * Get player associated with this event
+   *
+   * @return player
+   */
+  public Player getPlayer() {
+    return player;
   }
 
   @Override
   public HandlerList getHandlers() {
     return handlers;
   }
+
 }

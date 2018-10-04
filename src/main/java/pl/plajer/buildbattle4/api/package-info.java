@@ -16,30 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle4.buildbattleapi;
-
-import org.bukkit.event.Event;
-
-import pl.plajer.buildbattle4.arena.Arena;
-
 /**
- * Represents BuildBattle game related events.
+ * Package with all API events and methods to hook with Village Defense.
  */
-public abstract class BBEvent extends Event {
 
-  protected Arena arena;
-
-  public BBEvent(Arena eventArena) {
-    arena = eventArena;
-  }
-
-  /**
-   * Returns event arena
-   * Returns null when called from BBPlayerStatisticChangeEvent when super votes are added via command
-   *
-   * @return event arena
-   */
-  public Arena getArena() {
-    return arena;
-  }
-}
+package pl.plajer.buildbattle4.api;

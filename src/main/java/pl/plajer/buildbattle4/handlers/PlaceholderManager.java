@@ -22,7 +22,7 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
 import org.bukkit.entity.Player;
 
-import pl.plajer.buildbattle4.buildbattleapi.StatsStorage;
+import pl.plajer.buildbattle4.api.StatsStorage;
 
 /**
  * @author Plajer

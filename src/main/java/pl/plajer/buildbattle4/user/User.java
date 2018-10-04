@@ -28,9 +28,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.ScoreboardManager;
 
 import pl.plajer.buildbattle4.Main;
+import pl.plajer.buildbattle4.api.event.player.BBPlayerStatisticChangeEvent;
 import pl.plajer.buildbattle4.arena.Arena;
 import pl.plajer.buildbattle4.arena.ArenaRegistry;
-import pl.plajer.buildbattle4.buildbattleapi.BBPlayerStatisticChangeEvent;
 import pl.plajer.buildbattle4.database.FileStats;
 
 /**

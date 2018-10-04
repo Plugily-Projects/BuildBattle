@@ -31,9 +31,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import pl.plajer.buildbattle4.ConfigPreferences;
 import pl.plajer.buildbattle4.Main;
-import pl.plajer.buildbattle4.buildbattleapi.BBGameEndEvent;
-import pl.plajer.buildbattle4.buildbattleapi.BBGameJoinEvent;
-import pl.plajer.buildbattle4.buildbattleapi.BBGameLeaveEvent;
+import pl.plajer.buildbattle4.api.event.game.BBGameEndEvent;
+import pl.plajer.buildbattle4.api.event.game.BBGameJoinEvent;
+import pl.plajer.buildbattle4.api.event.game.BBGameLeaveEvent;
 import pl.plajer.buildbattle4.handlers.ChatManager;
 import pl.plajer.buildbattle4.handlers.PermissionManager;
 import pl.plajer.buildbattle4.handlers.items.SpecialItem;

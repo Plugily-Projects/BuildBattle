@@ -16,29 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle4.buildbattleapi;
-
-import org.bukkit.event.HandlerList;
-
-import pl.plajer.buildbattle4.arena.Arena;
-
 /**
- * Called when game is started
+ * All in-game player related events.
  */
-public class BBGameStartEvent extends BBEvent {
 
-  private static final HandlerList handlers = new HandlerList();
-
-  public BBGameStartEvent(Arena arena) {
-    super(arena);
-  }
-
-  public static HandlerList getHandlerList() {
-    return handlers;
-  }
-
-  @Override
-  public HandlerList getHandlers() {
-    return handlers;
-  }
-}
+package pl.plajer.buildbattle4.api.event.player;

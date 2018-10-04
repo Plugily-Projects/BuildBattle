@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle4.buildbattleapi;
+package pl.plajer.buildbattle4.api;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

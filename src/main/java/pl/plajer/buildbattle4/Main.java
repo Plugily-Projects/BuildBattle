@@ -31,10 +31,10 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import pl.plajer.buildbattle4.api.StatsStorage;
 import pl.plajer.buildbattle4.arena.Arena;
 import pl.plajer.buildbattle4.arena.ArenaManager;
 import pl.plajer.buildbattle4.arena.ArenaRegistry;
-import pl.plajer.buildbattle4.buildbattleapi.StatsStorage;
 import pl.plajer.buildbattle4.commands.MainCommand;
 import pl.plajer.buildbattle4.database.FileStats;
 import pl.plajer.buildbattle4.database.MySQLManager;

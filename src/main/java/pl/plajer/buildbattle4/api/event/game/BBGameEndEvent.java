@@ -16,24 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle4.buildbattleapi;
+package pl.plajer.buildbattle4.api.event.game;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
+import pl.plajer.buildbattle4.api.event.BBEvent;
 import pl.plajer.buildbattle4.arena.Arena;
 
 /**
- * Called when player leaves arena
+ * Called when game is ended
  */
-public class BBGameLeaveEvent extends BBEvent {
+public class BBGameEndEvent extends BBEvent {
 
   private static final HandlerList handlers = new HandlerList();
-  private Player player;
 
-  public BBGameLeaveEvent(Player player, Arena arena) {
+  public BBGameEndEvent(Arena arena) {
     super(arena);
-    this.player = player;
   }
 
   public static HandlerList getHandlerList() {
@@ -43,14 +41,5 @@ public class BBGameLeaveEvent extends BBEvent {
   @Override
   public HandlerList getHandlers() {
     return handlers;
-  }
-
-  /**
-   * Get player associated with this event
-   *
-   * @return player
-   */
-  public Player getPlayer() {
-    return player;
   }
 }

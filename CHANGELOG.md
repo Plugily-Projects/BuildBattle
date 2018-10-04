@@ -1,9 +1,12 @@
 ## BuildBattle 3 changelog
 
-### 4.0.0 Beta build 3 (03.10.2018)
-* Removed annoying "Please enable bStats" message
-* Code improvements
-* Added PR0 TIPS when editing arena
+### 4.0.0 Beta pre (03.10.2018)
+#### Pre 3:
+   * Removed annoying "Please enable bStats" message
+   * Code improvements
+   * Added PR0 TIPS when editing arena
+#### Pre 4:
+   * API change - now you can access BuildBattle API via pl.plajer.buildbattle4.api
 
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)
 * Fixed NullPointerException for users who where no longer online

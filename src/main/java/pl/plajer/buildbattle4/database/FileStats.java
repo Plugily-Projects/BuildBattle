@@ -28,7 +28,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle4.Main;
-import pl.plajer.buildbattle4.buildbattleapi.StatsStorage;
+import pl.plajer.buildbattle4.api.StatsStorage;
 import pl.plajer.buildbattle4.user.User;
 import pl.plajer.buildbattle4.user.UserManager;
 import pl.plajer.buildbattle4.utils.MessageUtils;
