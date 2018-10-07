@@ -247,6 +247,10 @@ public class MainCommand implements CommandExecutor {
           player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
           return true;
         } else if (args[0].equalsIgnoreCase("randomjoin")) {
+          if (ArenaRegistry.getArena(player) != null) {
+            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Already-Playing"));
+            return true;
+          }
           if (!plugin.isBungeeActivated()) {
             if (args.length == 2) {
               switch (args[1].toLowerCase()) {
