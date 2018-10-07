@@ -10,6 +10,7 @@
    * Maybe a fix for https://plajer.xyz/errorservice/viewer.php?id=244
 #### Pre 5:
    * You cannot join game now infinitely through command (lol????)
+   * Now players that will leave game will be visible by other players outside game
 
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)
 * Fixed NullPointerException for users who where no longer online

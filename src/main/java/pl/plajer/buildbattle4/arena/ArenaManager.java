@@ -185,11 +185,11 @@ public class ArenaManager {
       if (plugin.isInventoryManagerEnabled()) {
         InventoryUtils.loadInventory(plugin, p);
       }
-      for (Player player : plugin.getServer().getOnlinePlayers()) {
-        if (!a.getPlayers().contains(player)) {
-          p.showPlayer(player);
-          player.showPlayer(p);
+      for (Player players : plugin.getServer().getOnlinePlayers()) {
+        if (ArenaRegistry.getArena(players) == null) {
+          players.showPlayer(p);
         }
+        p.showPlayer(players);
       }
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
