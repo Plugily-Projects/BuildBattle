@@ -226,6 +226,10 @@ public class MainCommand implements CommandExecutor {
           return true;
         } else if (args[0].equalsIgnoreCase("join")) {
           if (args.length == 2) {
+            if (ArenaRegistry.getArena(player) != null) {
+              player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Already-Playing"));
+              return true;
+            }
             Arena arena = ArenaRegistry.getArena(args[1]);
             if (arena == null) {
               player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));

@@ -19,16 +19,16 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-    <groupId>pl.plajer.buildbattle4</groupId>
+  <groupId>pl.plajer.buildbattle4</groupId>
   <artifactId>BuildBattle</artifactId>
-    <version>4.0.0-pre-4</version>
+  <version>4.0.0-pre-4</version>
   <build>
-      <resources>
-          <resource>
-              <filtering>true</filtering>
-              <directory>src/main/resources</directory>
-          </resource>
-      </resources>
+    <resources>
+      <resource>
+        <filtering>true</filtering>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -57,10 +57,10 @@
                   <pattern>pl.plajerlair.core</pattern>
                   <shadedPattern>pl.plajer.buildbattle4.plajerlair.core</shadedPattern>
                 </relocation>
-                  <relocation>
-                      <pattern>org.bstats</pattern>
-                      <shadedPattern>pl.plajer.buildbattle4.utils</shadedPattern>
-                  </relocation>
+                <relocation>
+                  <pattern>org.bstats</pattern>
+                  <shadedPattern>pl.plajer.buildbattle4.utils</shadedPattern>
+                </relocation>
               </relocations>
             </configuration>
           </execution>
@@ -92,22 +92,22 @@
     </repository>
     <repository>
       <id>plajerlair-repo</id>
-        <url>https://maven.plajer.xyz/</url>
+      <url>https://maven.plajer.xyz/</url>
     </repository>
     <repository>
       <id>mojang-repo</id>
       <url>https://libraries.minecraft.net/</url>
     </repository>
-      <repository>
-          <id>bstats-repo</id>
-          <url>http://repo.bstats.org/content/repositories/releases/</url>
-      </repository>
+    <repository>
+      <id>bstats-repo</id>
+      <url>http://repo.bstats.org/content/repositories/releases/</url>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-        <version>1.12.2-R0.1-SNAPSHOT</version>
+      <version>1.12.2-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
       <exclusions>
         <exclusion>
@@ -131,7 +131,7 @@
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-        <version>1.12.2-R0.1-SNAPSHOT</version>
+      <version>1.12.2-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
       <exclusions>
         <exclusion>
