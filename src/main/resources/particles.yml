@@ -8,7 +8,6 @@ EXPLOSION_NORMAL:
   material-name: SNOWBALL
   enabled: true
   permission: particles.VIP
-  slot: 0
 EXPLOSION_LARGE:
   displayname: '&6EXPLOSION_LARGE'
   lore:
@@ -17,7 +16,6 @@ EXPLOSION_LARGE:
   material-name: SNOWBALL
   enabled: true
   permission: particles.VIP
-  slot: 1
 EXPLOSION_HUGE:
   displayname: '&6EXPLOSION_HUGE'
   lore:
@@ -26,7 +24,6 @@ EXPLOSION_HUGE:
   material-name: SNOWBALL
   enabled: true
   permission: particles.VIP
-  slot: 2
 FIREWORKS_SPARK:
   displayname: '&6FIREWORKS_SPARK'
   lore:
@@ -35,7 +32,6 @@ FIREWORKS_SPARK:
   material-name: BONE_MEAL
   enabled: true
   permission: particles.VIP
-  slot: 3
 WATER_BUBBLE:
   displayname: '&6WATER_BUBBLE'
   lore:
@@ -44,7 +40,6 @@ WATER_BUBBLE:
   material-name: WATER_BUCKET
   enabled: true
   permission: particles.VIP
-  slot: 4
 WATER_SPLASH:
   displayname: '&6WATER_SPLASH'
   lore:
@@ -53,7 +48,6 @@ WATER_SPLASH:
   material-name: WATER_BUCKET
   enabled: true
   permission: particles.VIP
-  slot: 5
 WATER_WAKE:
   displayname: '&6WATER_WAKE'
   lore:
@@ -62,7 +56,6 @@ WATER_WAKE:
   material-name: WATER_BUCKET
   enabled: true
   permission: particles.VIP
-  slot: 6
 SUSPENDED:
   displayname: '&6SUSPENDED'
   lore:
@@ -71,7 +64,6 @@ SUSPENDED:
   material-name: INK_SAC
   enabled: true
   permission: particles.VIP
-  slot: 7
 SUSPENDED_DEPTH:
   displayname: '&6SUSPENDED_DEPTH'
   lore:
@@ -80,7 +72,6 @@ SUSPENDED_DEPTH:
   material-name: INK_SAC
   enabled: true
   permission: particles.VIP
-  slot: 8
 CRIT:
   displayname: '&6CRIT'
   lore:
@@ -89,7 +80,6 @@ CRIT:
   material-name: LIGHT_GRAY_DYE
   enabled: true
   permission: particles.VIP
-  slot: 9
 CRIT_MAGIC:
   displayname: '&6CRIT_MAGIC'
   lore:
@@ -98,7 +88,6 @@ CRIT_MAGIC:
   material-name: CYAN_DYE
   enabled: true
   permission: particles.VIP
-  slot: 10
 SMOKE_NORMAL:
   data: 0
   displayname: '&6SMOKE_NORMAL'
@@ -108,7 +97,6 @@ SMOKE_NORMAL:
   material-name: FLINT
   enabled: true
   permission: particles.VIP
-  slot: 11
 SMOKE_LARGE:
   displayname: '&6SMOKE_LARGE'
   lore:
@@ -117,7 +105,6 @@ SMOKE_LARGE:
   material-name: COAL_BLOCK
   enabled: true
   permission: particles.VIP
-  slot: 12
 SPELL:
   displayname: '&6SPELL'
   lore:
@@ -126,7 +113,6 @@ SPELL:
   material-name: NETHER_WART
   enabled: true
   permission: particles.VIP
-  slot: 13
 SPELL_INSTANT:
   displayname: '&6SPELL_INSTANT'
   lore:
@@ -135,7 +121,6 @@ SPELL_INSTANT:
   material-name: NETHER_WART
   enabled: true
   permission: particles.VIP
-  slot: 14
 SPELL_MOB:
   displayname: '&6SPELL_MOB'
   lore:
@@ -144,7 +129,6 @@ SPELL_MOB:
   material-name: NETHER_WART
   enabled: true
   permission: particles.VIP
-  slot: 15
 SPELL_MOB_AMBIENT:
   displayname: '&6SPELL_MOB_AMBIENT'
   lore:
@@ -153,7 +137,6 @@ SPELL_MOB_AMBIENT:
   material-name: NETHER_WART
   enabled: true
   permission: particles.VIP
-  slot: 16
 SPELL_WITCH:
   displayname: '&6SPELL_WITCH'
   lore:
@@ -162,7 +145,6 @@ SPELL_WITCH:
   material-name: NETHER_WART
   enabled: true
   permission: particles.VIP
-  slot: 17
 DRIP_WATER:
   displayname: '&6DRIP_WATER'
   lore:
@@ -171,7 +153,6 @@ DRIP_WATER:
   material-name: POTION
   enabled: true
   permission: particles.VIP
-  slot: 18
 DRIP_LAVA:
   displayname: '&6DRIP_LAVA'
   lore:
@@ -180,7 +161,6 @@ DRIP_LAVA:
   material-name: LAVA_BUCKET
   enabled: true
   permission: particles.VIP
-  slot: 19
 VILLAGER_ANGRY:
   displayname: '&6VILLAGER_ANGRY'
   lore:
@@ -189,7 +169,6 @@ VILLAGER_ANGRY:
   material-name: EMERALD
   enabled: true
   permission: particles.VIP
-  slot: 20
 VILLAGER_HAPPY:
   displayname: '&6VILLAGER_HAPPY'
   lore:
@@ -198,7 +177,6 @@ VILLAGER_HAPPY:
   material-name: EMERALD
   enabled: true
   permission: particles.VIP
-  slot: 21
 TOWN_AURA:
   displayname: '&6TOWN_AURA'
   lore:
@@ -207,7 +185,6 @@ TOWN_AURA:
   material-name: COAL
   enabled: true
   permission: particles.VIP
-  slot: 22
 NOTE:
   displayname: '&6NOTE'
   lore:
@@ -216,7 +193,6 @@ NOTE:
   material-name: BLAZE_POWDER
   enabled: true
   permission: particles.VIP
-  slot: 23
 PORTAL:
   displayname: '&6PORTAL'
   lore:
@@ -225,7 +201,6 @@ PORTAL:
   material-name: ENDER_EYE
   enabled: true
   permission: particles.VIP
-  slot: 24
 ENCHANTMENT_TABLE:
   displayname: '&6ENCHANTMENT_TABLE'
   lore:
@@ -234,7 +209,6 @@ ENCHANTMENT_TABLE:
   material-name: ENCHANTING_TABLE
   enabled: true
   permission: particles.VIP
-  slot: 25
 FLAME:
   displayname: '&6FLAME'
   lore:
@@ -243,7 +217,6 @@ FLAME:
   material-name: BLAZE_POWDER
   enabled: true
   permission: particles.VIP
-  slot: 26
 LAVA:
   displayname: '&6LAVA'
   lore:
@@ -252,7 +225,6 @@ LAVA:
   material-name: LAVA_BUCKET
   enabled: true
   permission: particles.VIP
-  slot: 27
 CLOUD:
   displayname: '&6CLOUD'
   lore:
@@ -261,16 +233,6 @@ CLOUD:
   material-name: SNOW_BLOCK
   enabled: true
   permission: particles.VIP
-  slot: 29
-REDSTONE:
-  displayname: '&6REDSTONE'
-  lore:
-  - Click to activate
-  - on your location
-  material-name: REDSTONE
-  enabled: true
-  permission: particles.VIP
-  slot: 30
 SNOWBALL:
   displayname: '&6SNOWBALL'
   lore:
@@ -279,7 +241,6 @@ SNOWBALL:
   material-name: SNOWBALL
   enabled: true
   permission: particles.VIP
-  slot: 31
 SNOW_SHOVEL:
   displayname: '&6SNOW_SHOVEL'
   lore:
@@ -288,7 +249,6 @@ SNOW_SHOVEL:
   material-name: SNOWBALL
   enabled: true
   permission: particles.VIP
-  slot: 32
 SLIME:
   displayname: '&6SLIME'
   lore:
@@ -297,7 +257,6 @@ SLIME:
   material-name: SLIME_BLOCK
   enabled: true
   permission: particles.VIP
-  slot: 33
 HEART:
   displayname: '&6HEART'
   lore:
@@ -306,7 +265,6 @@ HEART:
   material-name: REDSTONE
   enabled: true
   permission: particles.VIP
-  slot: 34
 BARRIER:
   displayname: '&6BARRIER'
   lore:
@@ -315,7 +273,6 @@ BARRIER:
   material-name: BARRIER
   enabled: true
   permission: particles.VIP
-  slot: 35
 WATER_DROP:
   displayname: '&6WATER_DROP'
   lore:
@@ -324,4 +281,3 @@ WATER_DROP:
   material-name: WATER_BUCKET
   enabled: true
   permission: particles.VIP
-  slot: 36

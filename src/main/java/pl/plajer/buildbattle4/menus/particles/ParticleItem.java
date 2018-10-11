@@ -32,7 +32,6 @@ public class ParticleItem {
   private Particle effect;
   private String permission;
   private boolean enabled = true;
-  private int slot;
 
   public String getPermission() {
     return permission;
@@ -60,14 +59,6 @@ public class ParticleItem {
 
   public void setEffect(Particle effect) {
     this.effect = effect;
-  }
-
-  public int getSlot() {
-    return slot;
-  }
-
-  public void setSlot(int slot) {
-    this.slot = slot;
   }
 
   public ItemStack getItemStack() {

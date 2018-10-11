@@ -51,7 +51,9 @@ public class ParticleMenu {
   public static void openMenu(Player player) {
     Inventory inventory = player.getServer().createInventory(player, 6 * 9, ChatManager.colorMessage("Menus.Option-Menu.Particle-Inventory-Name"));
     for (ParticleItem particleItem : particleItems) {
-      if (particleItem.isEnabled()) inventory.setItem(particleItem.getSlot(), particleItem.getItemStack());
+      if (particleItem.isEnabled()) {
+        inventory.addItem(particleItem.getItemStack());
+      }
     }
     ItemStack itemStack = new ItemStack(Material.REDSTONE_BLOCK);
     Utils.setItemNameAndLore(itemStack, ChatManager.colorMessage("Menus.Option-Menu.Particle-Remove"), new String[]{ChatManager.colorMessage("Menus.Option-Menu.Particle-Remove-Lore")});
@@ -62,11 +64,10 @@ public class ParticleMenu {
 
   public static void loadFromConfig() {
     FileConfiguration config = ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "particles");
-    int slotCounter = 0;
     for (Particle particle : Particle.values()) {
-      if (particle.toString().equalsIgnoreCase("BLOCK_CRACK") || particle.toString().equalsIgnoreCase("ITEM_CRACK")
-              || particle.toString().equalsIgnoreCase("ITEM_TAKE") || particle.toString().equalsIgnoreCase("BLOCK_DUST")
-          || particle.toString().equalsIgnoreCase("MOB_APPEARANCE") || particle.toString().equalsIgnoreCase("FOOTSTEP"))
+      if (particle.toString().equals("BLOCK_CRACK") || particle.toString().equals("ITEM_CRACK")
+          || particle.toString().equals("ITEM_TAKE") || particle.toString().equals("BLOCK_DUST")
+          || particle.toString().equals("MOB_APPEARANCE") || particle.toString().equals("FOOTSTEP") || particle.toString().equals("REDSTONE"))
         continue;
       if (!config.contains(particle.toString())) {
         config.set(particle.toString() + ".displayname", "&6" + particle.toString());
@@ -74,8 +75,6 @@ public class ParticleMenu {
         config.set(particle.toString() + ".material-name", Material.PAPER.name());
         config.set(particle.toString() + ".enabled", true);
         config.set(particle.toString() + ".permission", "particles.VIP");
-        config.set(particle.toString() + ".slot", slotCounter);
-        slotCounter++;
       } else {
         if (!config.isSet(particle.toString() + ".material-name")) {
           config.set(particle.toString() + ".material-name", Material.PAPER.name());
@@ -98,7 +97,6 @@ public class ParticleMenu {
       particleItem.setEnabled(config.getBoolean(particle.toString() + ".enabled"));
       particleItem.setPermission(config.getString(particle.toString() + ".permission"));
       particleItem.setEffect(particle);
-      particleItem.setSlot(config.getInt(particle.toString() + ".slot"));
       particleItems.add(particleItem);
     }
     ConfigUtils.saveConfig(JavaPlugin.getPlugin(Main.class), config, "particles");

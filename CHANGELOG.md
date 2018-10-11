@@ -11,6 +11,9 @@
 #### Pre 5:
    * You cannot join game now infinitely through command (lol????)
    * Now players that will leave game will be visible by other players outside game
+#### Pre 6:
+   * Particles in menu are now incrementing automatically
+   * Particle redstone requires DustOptions and causes errors so it was removed from menu 
 
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)
 * Fixed NullPointerException for users who where no longer online
