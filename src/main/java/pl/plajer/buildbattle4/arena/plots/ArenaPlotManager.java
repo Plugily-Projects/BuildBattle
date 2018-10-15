@@ -93,7 +93,7 @@ public class ArenaPlotManager {
 
   public ArenaPlot getPlot(Player player) {
     for (ArenaPlot buildPlot : plots) {
-      if (buildPlot.getOwners() != null || !buildPlot.getOwners().isEmpty()) {
+      if (buildPlot.getOwners() != null && !buildPlot.getOwners().isEmpty()) {
         if (buildPlot.getOwners().contains(player.getUniqueId())) return buildPlot;
       }
     }
@@ -102,7 +102,7 @@ public class ArenaPlotManager {
 
   public ArenaPlot getPlot(UUID uuid) {
     for (ArenaPlot buildPlot : plots) {
-      if (buildPlot.getOwners() != null || !buildPlot.getOwners().isEmpty()) {
+      if (buildPlot.getOwners() != null && !buildPlot.getOwners().isEmpty()) {
         if (buildPlot.getOwners().contains(uuid)) return buildPlot;
       }
     }
@@ -130,9 +130,15 @@ public class ArenaPlotManager {
   public void teleportToPlots() {
     try {
       for (ArenaPlot buildPlot : plots) {
-        if (buildPlot.getOwners() != null || !buildPlot.getOwners().isEmpty()) {
+        if (buildPlot.getOwners() != null && !buildPlot.getOwners().isEmpty()) {
           Location tploc = buildPlot.getCuboid().getCenter();
-          while (tploc.getBlock().getType() != Material.AIR) tploc = tploc.add(0, 1, 0);
+          while (tploc.getBlock().getType() != Material.AIR) {
+            tploc = tploc.add(0, 1, 0);
+            //teleporting 1 x and z block away from center cause Y is above plot limit
+            if (tploc.getY() >= buildPlot.getCuboid().getPoint2().getY()) {
+              tploc = buildPlot.getCuboid().getCenter().clone().add(1, 0, 1);
+            }
+          }
           for (UUID u : buildPlot.getOwners()) {
             Player player = Bukkit.getServer().getPlayer(u);
             if (player != null) {
