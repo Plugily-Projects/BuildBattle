@@ -196,16 +196,16 @@ public class ArenaPlot {
   private void changeFloor(Material material) {
     try {
       double y;
-      if (cuboid.getPoint1().getY() > cuboid.getPoint2().getY()) {
-        y = cuboid.getPoint2().getY();
+      if (cuboid.getMinPoint().getY() > cuboid.getMaxPoint().getY()) {
+        y = cuboid.getMaxPoint().getY();
       } else {
-        y = cuboid.getPoint1().getY();
+        y = cuboid.getMinPoint().getY();
       }
-      Location min = cuboid.getPoint1();
-      Location max = cuboid.getPoint2();
+      Location min = cuboid.getMinPoint();
+      Location max = cuboid.getMaxPoint();
       for (int x = min.getBlockX(); x <= max.getBlockX(); x = x + 1) {
         for (int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
-          Location tmpblock = new Location(cuboid.getPoint2().getWorld(), x, y, z);
+          Location tmpblock = new Location(cuboid.getMaxPoint().getWorld(), x, y, z);
           tmpblock.getBlock().setType(material);
         }
       }
@@ -219,16 +219,16 @@ public class ArenaPlot {
       if (material == Material.WATER_BUCKET) material = Material.WATER;
       if (material == Material.LAVA_BUCKET) material = Material.LAVA;
       double y;
-      if (cuboid.getPoint1().getY() > cuboid.getPoint2().getY()) {
-        y = cuboid.getPoint2().getY();
+      if (cuboid.getMinPoint().getY() > cuboid.getMaxPoint().getY()) {
+        y = cuboid.getMaxPoint().getY();
       } else {
-        y = cuboid.getPoint1().getY();
+        y = cuboid.getMinPoint().getY();
       }
-      Location min = cuboid.getPoint1();
-      Location max = cuboid.getPoint2();
+      Location min = cuboid.getMinPoint();
+      Location max = cuboid.getMaxPoint();
       for (int x = min.getBlockX(); x <= max.getBlockX(); x = x + 1) {
         for (int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
-          Location tmpblock = new Location(cuboid.getPoint2().getWorld(), x, y, z);
+          Location tmpblock = new Location(cuboid.getMaxPoint().getWorld(), x, y, z);
           tmpblock.getBlock().setType(material);
           if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
             tmpblock.getBlock().setData(data);
@@ -243,10 +243,10 @@ public class ArenaPlot {
   public Material getFloorMaterial() {
     try {
       Location location;
-      if (cuboid.getPoint1().getY() > cuboid.getPoint2().getY()) {
-        location = cuboid.getPoint2().clone();
+      if (cuboid.getMinPoint().getY() > cuboid.getMaxPoint().getY()) {
+        location = cuboid.getMaxPoint().clone();
       } else {
-        location = cuboid.getPoint1().clone();
+        location = cuboid.getMinPoint().clone();
       }
       Material material = location.getBlock().getType();
       if (material == Material.WATER || ((plugin.is1_11_R1() || plugin.is1_12_R1()) && material == Material.valueOf("STATIONARY_WATER"))) {

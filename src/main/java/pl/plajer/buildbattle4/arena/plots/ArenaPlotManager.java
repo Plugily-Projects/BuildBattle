@@ -135,7 +135,7 @@ public class ArenaPlotManager {
           while (tploc.getBlock().getType() != Material.AIR) {
             tploc = tploc.add(0, 1, 0);
             //teleporting 1 x and z block away from center cause Y is above plot limit
-            if (tploc.getY() >= buildPlot.getCuboid().getPoint2().getY()) {
+            if (tploc.getY() >= buildPlot.getCuboid().getMaxPoint().getY()) {
               tploc = buildPlot.getCuboid().getCenter().clone().add(1, 0, 1);
             }
           }

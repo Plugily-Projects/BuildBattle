@@ -77,22 +77,22 @@ public class Cuboid {
   }
 
   public double getDistance() {
-    return this.getPoint1().distance(this.getPoint2());
+    return this.getMinPoint().distance(this.getMaxPoint());
   }
 
   public double getDistanceSquared() {
-    return this.getPoint1().distanceSquared(this.getPoint2());
+    return this.getMinPoint().distanceSquared(this.getMaxPoint());
   }
 
   public int getHeight() {
     return this.yMax - this.yMin + 1;
   }
 
-  public Location getPoint1() {
+  public Location getMinPoint() {
     return new Location(this.world, this.xMin, this.yMin, this.zMin);
   }
 
-  public Location getPoint2() {
+  public Location getMaxPoint() {
     return new Location(this.world, this.xMax, this.yMax, this.zMax);
   }
 
