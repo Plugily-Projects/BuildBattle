@@ -537,8 +537,11 @@ public class GameEvents implements Listener {
   public void onBlockSpread(BlockSpreadEvent event) {
     try {
       for (Arena arena : ArenaRegistry.getArenas()) {
-        if (arena.getPlotManager().getPlots().size() != 0 && arena.getPlotManager().getPlots().get(0) != null) {
-          if (arena.getPlotManager().getPlots().get(0).getCuboid().getCenter().getWorld().getName().equalsIgnoreCase(event.getBlock().getWorld().getName())) {
+        if (!arena.getPlotManager().getPlots().isEmpty() && arena.getPlotManager().getPlots().get(0) != null) {
+          if (arena.getPlotManager().getPlots().get(0).getCuboid() == null) {
+            continue;
+          }
+          if (arena.getPlotManager().getPlots().get(0).getCuboid().getCenter().getWorld().equals(event.getBlock().getWorld())) {
             if (event.getSource().getType() == Material.FIRE) {
               event.setCancelled(true);
             }

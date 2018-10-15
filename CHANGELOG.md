@@ -13,7 +13,8 @@
    * Now players that will leave game will be visible by other players outside game
 #### Pre 6:
    * Particles in menu are now incrementing automatically
-   * Particle redstone requires DustOptions and causes errors so it was removed from menu 
+   * Particle redstone requires DustOptions and causes errors so it was removed from menu
+   * Fixed possible NPEs in block spread event (https://plajer.xyz/errorservice/viewer.php?id=282)
 
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)
 * Fixed NullPointerException for users who where no longer online
