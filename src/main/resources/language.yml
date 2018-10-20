@@ -188,7 +188,10 @@ In-Game:
       Plot-Owner-Title: "&aPlot owner: &7%player%"
       Voting-For-Player-Plot: "&7Now voting for &e&l%PLAYER%'s &7plot!"
       Cant-Vote-Own-Plot: "&cYou can't vote for your plot!"
+      Cant-Report-Own-Plot: "&cYou can't report your own plot!"
       Vote-Successful: "&aVoted successfully!"
+      Report-Successful: "&aReported successfully!"
+      Report-Failed: "&aReport failed! Contact Adminitrator"
       Winner-Title: "&eWINNER: &a%player%"
       Summary:
         - "&a&l&m-------------------------------------------"

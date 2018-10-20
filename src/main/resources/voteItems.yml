@@ -19,3 +19,7 @@
 '5':
   material-name: YELLOW_TERRACOTTA
   displayname: "&6&lLEGENDARY"
+'8':
+  material-name: BOOK
+  displayname: "&c&lReport Building"
+  report-item-function: true
