@@ -22,6 +22,7 @@ Boss-Bar-Enabled: false
 
 # Should we hook into bungee cord? (If you wanna use arena per server option)
 # You STILL need to use external addon for HUB server game signs
+# Check here for more info: https://wiki.plajer.xyz/minecraft/buildbattle/addons.php#bungee-signs-not-official
 BungeeActivated: false
 
 # Enable Inventory Manager for your games? (VERY USEFUL feature for MULTI ARENA)
@@ -29,7 +30,7 @@ BungeeActivated: false
 # Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions
 InventoryManager: false
 
-# Basic game permissions
+# Basic permissions for game, permissions explained here: https://wiki.plajer.xyz/minecraft/buildbattle/cmds_and_perms.php#basic-permissions
 Basic-Permissions:
   # Permissions to edit/create arenas
   Arena-Edit-Permission: "buildbattle.editgames"
