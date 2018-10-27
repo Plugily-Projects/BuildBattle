@@ -21,7 +21,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>pl.plajer.buildbattle4</groupId>
   <artifactId>BuildBattle</artifactId>
-  <version>4.0.0-pre-6</version>
+  <version>4.0.0b-pre-7</version>
   <build>
     <extensions>
       <extension>
@@ -77,11 +77,11 @@
               <relocations>
                 <relocation>
                   <pattern>pl.plajerlair.core</pattern>
-                    <shadedPattern>pl.plajer.buildbattle.plajerlair.core</shadedPattern>
+                  <shadedPattern>pl.plajer.buildbattle.plajerlair.core</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.bstats</pattern>
-                    <shadedPattern>pl.plajer.buildbattle.utils</shadedPattern>
+                  <shadedPattern>pl.plajer.buildbattle.utils</shadedPattern>
                 </relocation>
               </relocations>
             </configuration>
@@ -122,7 +122,7 @@
     </repository>
     <repository>
       <id>bstats-repo</id>
-        <url>https://jitpack.io</url>
+      <url>https://jitpack.io</url>
     </repository>
   </repositories>
   <dependencies>
@@ -139,6 +139,10 @@
         <exclusion>
           <artifactId>json-simple</artifactId>
           <groupId>com.googlecode.json-simple</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>gson</artifactId>
+          <groupId>com.google.code.gson</groupId>
         </exclusion>
         <exclusion>
           <artifactId>snakeyaml</artifactId>
@@ -163,6 +167,10 @@
         <exclusion>
           <artifactId>json-simple</artifactId>
           <groupId>com.googlecode.json-simple</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>gson</artifactId>
+          <groupId>com.google.code.gson</groupId>
         </exclusion>
         <exclusion>
           <artifactId>snakeyaml</artifactId>
@@ -211,6 +219,34 @@
       <artifactId>commons-io</artifactId>
       <version>2.5</version>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.mojang</groupId>
+      <artifactId>authlib</artifactId>
+      <version>1.5.21</version>
+      <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>commons-lang3</artifactId>
+          <groupId>org.apache.commons</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>log4j-core</artifactId>
+          <groupId>org.apache.logging.log4j</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-codec</artifactId>
+          <groupId>commons-codec</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>log4j-api</artifactId>
+          <groupId>org.apache.logging.log4j</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>gson</artifactId>
+          <groupId>com.google.code.gson</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
   <distributionManagement>
