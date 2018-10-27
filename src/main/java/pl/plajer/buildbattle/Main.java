@@ -38,6 +38,7 @@ import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.commands.MainCommand;
 import pl.plajer.buildbattle.database.FileStats;
 import pl.plajer.buildbattle.database.MySQLManager;
+import pl.plajer.buildbattle.events.GameEvents;
 import pl.plajer.buildbattle.events.JoinEvents;
 import pl.plajer.buildbattle.events.QuitEvents;
 import pl.plajer.buildbattle.events.SetupInventoryEvents;
