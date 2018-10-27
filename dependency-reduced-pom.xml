@@ -77,11 +77,11 @@
               <relocations>
                 <relocation>
                   <pattern>pl.plajerlair.core</pattern>
-                  <shadedPattern>pl.plajer.buildbattle4.plajerlair.core</shadedPattern>
+                    <shadedPattern>pl.plajer.buildbattle.plajerlair.core</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.bstats</pattern>
-                  <shadedPattern>pl.plajer.buildbattle4.utils</shadedPattern>
+                    <shadedPattern>pl.plajer.buildbattle.utils</shadedPattern>
                 </relocation>
               </relocations>
             </configuration>
