@@ -122,7 +122,7 @@
     </repository>
     <repository>
       <id>bstats-repo</id>
-      <url>http://repo.bstats.org/content/repositories/releases/</url>
+        <url>https://jitpack.io</url>
     </repository>
   </repositories>
   <dependencies>

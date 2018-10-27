@@ -61,8 +61,8 @@ import pl.plajer.buildbattle4.utils.MessageUtils;
 import pl.plajerlair.core.database.MySQLDatabase;
 import pl.plajerlair.core.services.ServiceRegistry;
 import pl.plajerlair.core.services.exception.ReportedException;
+import pl.plajerlair.core.services.update.UpdateChecker;
 import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.UpdateChecker;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -192,33 +192,31 @@ public class Main extends JavaPlugin {
   }
 
   private void checkUpdate() {
-    if (getConfig().getBoolean("Update-Notifier.Enabled")) {
-      String currentVersion = "v" + Bukkit.getPluginManager().getPlugin("BuildBattle").getDescription().getVersion();
-      try {
-        boolean check = UpdateChecker.checkUpdate(this, currentVersion, 44703);
-        if (check) {
-          String latestVersion = "v" + UpdateChecker.getLatestVersion();
-          if (latestVersion.contains("b")) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Current version %old%, latest version %new%".replace("%old%", currentVersion).replace("%new%", latestVersion));
-          } else {
-            MessageUtils.updateIsHere();
-            Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Your Build Battle plugin is outdated! Download it to keep with latest changes and fixes.");
-            Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Disable this option in config.yml if you wish.");
-            Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + currentVersion + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + latestVersion);
+    if (getConfig().getBoolean("Update-Notifier.Enabled", true)) {
+      UpdateChecker.init(this, 44703).requestUpdateCheck().whenComplete((result, exception) -> {
+        if (result.requiresUpdate()) {
+          if (result.getNewestVersion().contains("b")) {
+            if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
+              Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
+              Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
+                  result.getNewestVersion()));
+            }
+            return;
           }
+          MessageUtils.updateIsHere();
+          Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Your Build Battle plugin is outdated! Download it to keep with latest changes and fixes.");
+          Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Disable this option in config.yml if you wish.");
+          Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + getDescription().getVersion() + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + result.getNewestVersion());
         }
-      } catch (Exception ex) {
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] An error occured while checking for update!");
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Please check internet connection or check for update via WWW site directly!");
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "WWW site https://www.spigotmc.org/resources/buildbattle-1-8.44703/");
-      }
+      });
     }
   }
 
   @Override
   public void onDisable() {
-    if (forceDisable) return;
+    if (forceDisable) {
+      return;
+    }
     for (final Player player : getServer().getOnlinePlayers()) {
       Arena arena = ArenaRegistry.getArena(player);
       if (arena != null) {
@@ -300,6 +298,7 @@ public class Main extends JavaPlugin {
       new PlaceholderManager().register();
     }
     cuboidSelector = new CuboidSelector(this);
+    UpdateChecker.init(this, 44703);
     checkUpdate();
     new GameEvents(this);
     new VoteMenuListener(this);
@@ -323,7 +322,9 @@ public class Main extends JavaPlugin {
 
   private void loadStatsForPlayersOnline() {
     for (final Player player : getServer().getOnlinePlayers()) {
-      if (bungeeActivated) ArenaRegistry.getArenas().get(0).teleportToLobby(player);
+      if (bungeeActivated) {
+        ArenaRegistry.getArenas().get(0).teleportToLobby(player);
+      }
       if (!this.isDatabaseActivated()) {
         for (StatsStorage.StatisticType s : StatsStorage.StatisticType.values()) {
           this.getFileStats().loadStat(player, s);

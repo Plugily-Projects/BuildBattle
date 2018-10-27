@@ -17,6 +17,8 @@
    * Fixed possible NPEs in block spread event (https://plajer.xyz/errorservice/viewer.php?id=282)
    * Fixed NPE when teleporting to plot, now players will be teleported 1 x and z block away from center if
    height reach Y plot limit (https://plajer.xyz/errorservice/viewer.php?id=283)
+#### Pre 7:
+   * Updates are now checked async without freezing the main thread which caused TPS to drop a bit
 
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)
 * Fixed NullPointerException for users who where no longer online

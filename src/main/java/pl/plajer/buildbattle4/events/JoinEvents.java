@@ -35,7 +35,7 @@ import pl.plajer.buildbattle4.database.MySQLManager;
 import pl.plajer.buildbattle4.user.User;
 import pl.plajer.buildbattle4.user.UserManager;
 import pl.plajerlair.core.services.exception.ReportedException;
-import pl.plajerlair.core.utils.UpdateChecker;
+import pl.plajerlair.core.services.update.UpdateChecker;
 
 /**
  * Created by Tom on 10/07/2015.
@@ -70,31 +70,24 @@ public class JoinEvents implements Listener {
       //we want to be the first :)
       Bukkit.getScheduler().runTaskLater(plugin, () -> {
         if (event.getPlayer().hasPermission("buildbattle.updatenotify")) {
-          if (plugin.getConfig().getBoolean("Update-Notifier.Enabled")) {
-            String currentVersion = "v" + Bukkit.getPluginManager().getPlugin("BuildBattle").getDescription().getVersion();
-            try {
-              boolean check = UpdateChecker.checkUpdate(plugin, currentVersion, 44703);
-              if (check) {
-                String latestVersion = "v" + UpdateChecker.getLatestVersion();
-                latestVersion = "v" + latestVersion;
-                if (latestVersion.contains("b")) {
-                  event.getPlayer().sendMessage("");
-                  event.getPlayer().sendMessage(ChatColor.BOLD + "BUILD BATTLE UPDATE NOTIFY");
-                  event.getPlayer().sendMessage(ChatColor.RED + "BETA version of software is ready for update! Proceed with caution.");
-                  event.getPlayer().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + currentVersion + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + latestVersion);
-                } else {
-                  event.getPlayer().sendMessage("");
-                  event.getPlayer().sendMessage(ChatColor.BOLD + "BUILD BATTLE UPDATE NOTIFY");
-                  event.getPlayer().sendMessage(ChatColor.GREEN + "Software is ready for update! Download it to keep with latest changes and fixes.");
-                  event.getPlayer().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + currentVersion + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + latestVersion);
+          if (plugin.getConfig().getBoolean("Update-Notifier.Enabled", true)) {
+            UpdateChecker.init(plugin, 44703).requestUpdateCheck().whenComplete((result, exception) -> {
+              if (result.requiresUpdate()) {
+                if (result.getNewestVersion().contains("b")) {
+                  if (plugin.getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
+                    event.getPlayer().sendMessage("");
+                    event.getPlayer().sendMessage(ChatColor.BOLD + "BUILD BATTLE UPDATE NOTIFY");
+                    event.getPlayer().sendMessage(ChatColor.RED + "BETA version of software is ready for update! Proceed with caution.");
+                    event.getPlayer().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + plugin.getDescription().getVersion() + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + result.getNewestVersion());
+                  }
+                  return;
                 }
+                event.getPlayer().sendMessage("");
+                event.getPlayer().sendMessage(ChatColor.BOLD + "BUILD BATTLE UPDATE NOTIFY");
+                event.getPlayer().sendMessage(ChatColor.GREEN + "Software is ready for update! Download it to keep with latest changes and fixes.");
+                event.getPlayer().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + plugin.getDescription().getVersion() + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + result.getNewestVersion());
               }
-            } catch (Exception ex) {
-              //todo remove
-              event.getPlayer().sendMessage(ChatColor.RED + "[BuildBattle] An error occured while checking for update!");
-              event.getPlayer().sendMessage(ChatColor.RED + "Please check internet connection or check for update via WWW site directly!");
-              event.getPlayer().sendMessage(ChatColor.RED + "WWW site https://www.spigotmc.org/resources/minigame-village-defence-1-12-and-1-8-8.41869/");
-            }
+            });
           }
         }
       }, 25);
