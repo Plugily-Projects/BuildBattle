@@ -2,3 +2,6 @@
 /out/
 *.iml
 /target/
+/lib/
+/minecraft/
+/docs/
