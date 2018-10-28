@@ -19,9 +19,9 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>pl.plajer.buildbattle4</groupId>
+    <groupId>pl.plajer.buildbattle</groupId>
   <artifactId>BuildBattle</artifactId>
-  <version>4.0.0b-pre-7</version>
+    <version>4.0.0b-pre-8</version>
   <build>
     <extensions>
       <extension>
