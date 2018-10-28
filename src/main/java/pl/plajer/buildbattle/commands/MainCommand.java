@@ -98,9 +98,11 @@ public class MainCommand implements CommandExecutor {
           adminCommands.sendHelp(sender);
           return true;
         }
-        if (checkSenderIsConsole(sender)) return true;
-        Player player = (Player) sender;
         if (args[0].equalsIgnoreCase("addplot")) {
+          if (checkSenderIsConsole(sender)) {
+            return true;
+          }
+          Player player = (Player) sender;
           if (args.length == 2) {
             adminCommands.addPlot(player, args[1]);
           } else {
@@ -108,6 +110,10 @@ public class MainCommand implements CommandExecutor {
           }
           return true;
         } else if (args[0].equalsIgnoreCase("removeplot")) {
+          if (checkSenderIsConsole(sender)) {
+            return true;
+          }
+          Player player = (Player) sender;
           if (args.length == 3) {
             adminCommands.removePlot(player, args[1], args[2]);
           } else {
@@ -124,6 +130,10 @@ public class MainCommand implements CommandExecutor {
           plugin.getCuboidSelector().giveSelectorWand((Player) sender);
           return true;
         } else if (args[0].equalsIgnoreCase("forcestart")) {
+          if (checkSenderIsConsole(sender)) {
+            return true;
+          }
+          Player player = (Player) sender;
           if (args.length == 2) {
             adminCommands.forceStartWithTheme(player, args[1]);
           } else {
@@ -131,43 +141,56 @@ public class MainCommand implements CommandExecutor {
           }
           return true;
         } else if (args[0].equalsIgnoreCase("reload")) {
-          adminCommands.reloadPlugin(player);
+          adminCommands.reloadPlugin(sender);
           return true;
         } else if (args[0].equalsIgnoreCase("addnpc")) {
+          if (checkSenderIsConsole(sender)) {
+            return true;
+          }
+          Player player = (Player) sender;
           adminCommands.addNPC(player);
           return true;
         } else if (args[0].equalsIgnoreCase("stop")) {
+          if (checkSenderIsConsole(sender)) {
+            return true;
+          }
           adminCommands.stopGame(sender);
           return true;
         } else if (args[0].equalsIgnoreCase("list")) {
           adminCommands.printList(sender);
           return true;
         } else if (args[0].equalsIgnoreCase("delete")) {
+          if (checkSenderIsConsole(sender)) {
+            return true;
+          }
           if (args.length == 2) {
             adminCommands.deleteArena(sender, args[1]);
           } else {
-            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
+            sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
           }
           return true;
         } else if (args[0].equalsIgnoreCase("settheme")) {
+          if (checkSenderIsConsole(sender)) {
+            return true;
+          }
           if (args.length == 2) {
             adminCommands.setArenaTheme(sender, args[1]);
           } else {
-            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
+            sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
           }
           return true;
         } else if (args[0].equalsIgnoreCase("addvotes")) {
           if (args.length == 3) {
             adminCommands.addSuperVotes(sender, args[1], args[2]);
           } else {
-            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
+            sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
           }
           return true;
         } else if (args[0].equalsIgnoreCase("setvotes")) {
           if (args.length == 3) {
             adminCommands.setSuperVotes(sender, args[1], args[2]);
           } else {
-            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
+            sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
           }
           return true;
         } else if (args[0].equalsIgnoreCase("help")) {

@@ -111,7 +111,7 @@ public class VoteMenuListener implements Listener {
       if (e.getCurrentItem() == null) {
         return;
       }
-      if (e.getInventory().getName().equals(ChatManager.colorMessage("Menus.Guess-The-Build-Theme-Selector"))) {
+      if (e.getInventory().getName().equals(ChatManager.colorMessage("Menus.Guess-The-Build-Theme-Selector.Inventory-Name"))) {
         e.setCancelled(true);
         Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
         if (arena == null) {

@@ -19,6 +19,11 @@
    height reach Y plot limit (https://plajer.xyz/errorservice/viewer.php?id=283)
 #### Pre 7:
    * Updates are now checked async without freezing the main thread which caused TPS to drop a bit
+#### Pre 8:
+   * Fixed NPE because of wrong string access in code
+   * Locales will be now automatically disabled in this version - ppl don't read warnings about locales so I force them
+   to disable
+   * Now /bba reload /bba addvotes/setvotes and /bba list can be now properly executed from console
 
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)
 * Fixed NullPointerException for users who where no longer online

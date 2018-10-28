@@ -178,11 +178,13 @@ public class AdminCommands extends MainCommand {
     arena.setTheme(theme);
   }
 
-  public void reloadPlugin(Player player) {
-    if (!hasPermission(player, "buildbattle.admin.reload")) return;
+  public void reloadPlugin(CommandSender sender) {
+    if (!hasPermission(sender, "buildbattle.admin.reload")) {
+      return;
+    }
     ConfigPreferences.loadOptions();
     ArenaRegistry.registerArenas();
-    player.sendMessage(ChatColor.GREEN + "Plugin reloaded!");
+    sender.sendMessage(ChatColor.GREEN + "Plugin reloaded!");
   }
 
   public void addSign(Player player, String arenaName) {

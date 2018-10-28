@@ -125,6 +125,13 @@ public class LanguageManager {
     if (pluginLocale == null) {
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Plugin locale is invalid! Using default one...");
       pluginLocale = LocaleRegistry.getByName("English");
+      return;
+    }
+    /* is beta release */
+    if (plugin.getDescription().getVersion().contains("b")) {
+      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Locales aren't supported in beta versions because they're lacking latest translations! Enabling English one...");
+      pluginLocale = LocaleRegistry.getByName("English");
+      return;
     }
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] Loaded locale " + pluginLocale.getName() + " (" + pluginLocale.getOriginalName() + " ID: " +
         pluginLocale.getPrefix() + ") by " + pluginLocale.getAuthor());
