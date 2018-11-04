@@ -118,6 +118,9 @@ public class ArenaPlot {
       }
       for (UUID u : uuids) {
         Player p = Bukkit.getPlayer(u);
+        if (p == null) {
+          continue;
+        }
         if (p.getWorld().hasStorm()) {
           p.setPlayerWeather(WeatherType.DOWNFALL);
           setWeatherType(WeatherType.DOWNFALL);

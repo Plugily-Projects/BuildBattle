@@ -74,10 +74,12 @@ public class Arena extends BukkitRunnable {
 
   public static Main plugin;
   private static List<Material> blacklist = new ArrayList<>();
+  //todo hold players here
   private Map<Integer, List<UUID>> topList = new HashMap<>();
   private String theme = "Theme";
   private ArenaPlotManager plotManager;
   private boolean receivedVoteItems;
+  //todo hold players here
   private Queue<UUID> queue = new LinkedList<>();
   private int extraCounter;
   private ArenaPlot votingPlot = null;
@@ -102,6 +104,7 @@ public class Arena extends BukkitRunnable {
   private Location lobbyLoc = null;
   private Location startLoc = null;
   private Location endLoc = null;
+  //todo hold players here
   private Set<UUID> players = new HashSet<>();
   private BossBar gameBar;
   private ArenaType arenaType;
