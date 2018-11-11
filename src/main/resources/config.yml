@@ -28,7 +28,7 @@ BungeeActivated: false
 # Enable Inventory Manager for your games? (VERY USEFUL feature for MULTI ARENA)
 # This saves inventory of players and restores it after player leaves arena.
 # Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions
-InventoryManager: false
+InventoryManager: true
 
 # Basic permissions for game, permissions explained here: https://wiki.plajer.xyz/minecraft/buildbattle/cmds_and_perms.php#basic-permissions
 Basic-Permissions:
