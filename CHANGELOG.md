@@ -1,6 +1,6 @@
 ## BuildBattle 3 changelog
 
-### 4.0.0 Beta pre (03.10.2018/27.10.2018)
+### 4.0.0 Beta pre (03.10.2018/27.10.2018 - 21.11.2018)
 #### Pre 3:
    * Removed annoying "Please enable bStats" message
    * Code improvements
@@ -27,6 +27,10 @@
 #### Pre 9:
    * Fixed NPE when player was null (https://plajer.xyz/errorservice/viewer.php?id=347)
    * Code must be changed to avoid those NPE's in the future
+#### Pre 10:
+   * Added setup tutorial link to setup menu
+   * Added tip about downloadable maps when no arenas are set up while typing /bba list
+   * Added tab completer for /bb
    
 
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)

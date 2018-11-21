@@ -18,6 +18,7 @@
 
 package pl.plajer.buildbattle.commands;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,6 +29,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
+import pl.plajer.buildbattle.arena.Arena;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
 
 /**
  * @author Plajer
@@ -44,11 +47,20 @@ public class TabCompletion implements TabCompleter {
     if (cmd.getName().equalsIgnoreCase("buildbattleadmin") && args.length == 1) {
       return Arrays.asList("addplot", "removeplot", "addnpc", "stop", "list", "forcestart", "reload", "delete", "addvotes", "setvotes");
     }
-    if (cmd.getName().equalsIgnoreCase("buildbattle") && args.length == 1) {
-      if (!plugin.isBungeeActivated()) {
-        return Arrays.asList("join", "leave", "stats", "top", "create", "randomjoin");
-      } else {
-        return Arrays.asList("join", "leave", "stats", "top", "create");
+    if (cmd.getName().equalsIgnoreCase("buildbattle")) {
+      if (args.length == 0) {
+        List<String> arenaIds = new ArrayList<>();
+        for (Arena arena : ArenaRegistry.getArenas()) {
+          arenaIds.add(arena.getID());
+        }
+        return arenaIds;
+      }
+      if (args.length == 1) {
+        if (!plugin.isBungeeActivated()) {
+          return Arrays.asList("join", "leave", "stats", "top", "create", "randomjoin");
+        } else {
+          return Arrays.asList("join", "leave", "stats", "top", "create");
+        }
       }
     }
     return null;

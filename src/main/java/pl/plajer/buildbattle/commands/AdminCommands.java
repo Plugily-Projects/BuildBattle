@@ -240,7 +240,10 @@ public class AdminCommands extends MainCommand {
               .replace("%maxplayers%", String.valueOf(arena.getMaximumPlayers())));
       i++;
     }
-    if (i == 0) sender.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.List-Command.No-Arenas"));
+    if (i == 0) {
+      sender.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.List-Command.No-Arenas"));
+      sender.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7You can get free maps with configs at our wiki! Just head to https://wiki.plajer.xyz/minecraft/buildbattle/free_maps.php"));
+    }
   }
 
   public void deleteArena(CommandSender sender, String arenaString) {
