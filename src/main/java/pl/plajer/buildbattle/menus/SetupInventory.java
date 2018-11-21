@@ -40,6 +40,7 @@ public class SetupInventory {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
   private Inventory inventory;
+  public static final String VIDEO_LINK = "https://bit.ly/2w8eKmI";
 
   public SetupInventory(Arena arena) {
     this.inventory = Bukkit.createInventory(null, 9 * 2, "BB Arena: " + arena.getID());
@@ -117,6 +118,12 @@ public class SetupInventory {
             .lore(ChatColor.GRAY + "Click this when you're done with configuration.")
             .lore(ChatColor.GRAY + "It will validate and register arena.")
             .build());
+
+    inventory.setItem(17, new ItemBuilder(XMaterial.FILLED_MAP.parseItem())
+        .name(ChatColor.GOLD + "► View setup video")
+        .lore(ChatColor.GRAY + "Having problems with setup or wanna")
+        .lore(ChatColor.GRAY + "know some useful tips? Click to get video link!")
+        .build());
   }
 
   private static String isOptionDone(String path) {

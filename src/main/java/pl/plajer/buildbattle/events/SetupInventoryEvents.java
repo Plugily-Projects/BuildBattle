@@ -41,6 +41,7 @@ import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.plots.ArenaPlot;
+import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.PermissionManager;
 import pl.plajer.buildbattle.menus.SetupInventory;
 import pl.plajer.buildbattle.utils.Cuboid;
@@ -185,6 +186,12 @@ public class SetupInventoryEvents implements Listener {
       if (name.contains("Add game sign")) {
         event.setCancelled(true);
         plugin.getMainCommand().getAdminCommands().addSign(player, arena.getID());
+        return;
+      }
+      if (name.contains("View setup video")) {
+        event.setCancelled(true);
+        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&6Check out this video: " + SetupInventory.VIDEO_LINK));
+        player.closeInventory();
         return;
       }
       if (event.getCurrentItem().getType() != Material.NAME_TAG) {
