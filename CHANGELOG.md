@@ -30,7 +30,8 @@
 #### Pre 10:
    * Added setup tutorial link to setup menu
    * Added tip about downloadable maps when no arenas are set up while typing /bba list
-   * Added tab completer for /bb
+   * Added tab completer for /bb <arena> edit -- todo remove
+   * Fixed exp not saving properly with InventoryManager
    
 
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)
