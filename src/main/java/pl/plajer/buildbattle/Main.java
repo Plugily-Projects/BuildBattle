@@ -320,6 +320,10 @@ public class Main extends JavaPlugin {
     return mySQLManager;
   }
 
+  public String getVersion() {
+    return version;
+  }
+
   private void loadStatsForPlayersOnline() {
     for (final Player player : getServer().getOnlinePlayers()) {
       if (bungeeActivated) {

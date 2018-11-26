@@ -37,6 +37,7 @@ import pl.plajerlair.core.utils.ConfigUtils;
 public class VoteItems {
 
   private static Map<ItemStack, Integer> voteItems = new HashMap<>();
+  private static ItemStack reportItem;
   private static FileConfiguration config = ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "voteItems");
 
   public static void giveVoteItems(Player player) {
@@ -49,7 +50,7 @@ public class VoteItems {
 
   public static void loadVoteItemsFromConfig() {
     for (String s : config.getKeys(false)) {
-      if (config.contains(s + ".displayname") && !config.contains(s + ".report-item-function")) {
+      if (config.contains(s + ".displayname")) {
         if (!config.isSet(s + ".material-name")) {
           config.set(s + ".material-name", XMaterial.GREEN_TERRACOTTA.name());
           Main.debug("Found outdated item in votingItems.yml! We've converted it to the newest version!", System.currentTimeMillis());
@@ -59,6 +60,10 @@ public class VoteItems {
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.setDisplayName(ChatManager.colorRawMessage(config.getString(s + ".displayname")));
         item.setItemMeta(itemMeta);
+        if (config.isSet(s + ".report-item-function") && config.getBoolean(s + ".report-item-function", true)) {
+          reportItem = item;
+          continue;
+        }
         voteItems.put(item, Integer.parseInt(s));
       }
     }
@@ -72,4 +77,10 @@ public class VoteItems {
     return 1;
   }
 
+  /**
+   * @return itemStack that represents report building function
+   */
+  public static ItemStack getReportItem() {
+    return reportItem;
+  }
 }

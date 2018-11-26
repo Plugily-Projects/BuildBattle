@@ -21,7 +21,7 @@
   <modelVersion>4.0.0</modelVersion>
     <groupId>pl.plajer.buildbattle</groupId>
   <artifactId>BuildBattle</artifactId>
-    <version>4.0.0b-pre-9</version>
+    <version>4.0.0b-pre-10</version>
   <build>
     <extensions>
       <extension>
@@ -122,7 +122,7 @@
     </repository>
     <repository>
       <id>bstats-repo</id>
-      <url>https://jitpack.io</url>
+        <url>https://repo.codemc.org/repository/maven-public</url>
     </repository>
   </repositories>
   <dependencies>

@@ -25,7 +25,6 @@ import org.bukkit.Material;
 import org.bukkit.WeatherType;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -75,7 +74,6 @@ import pl.plajer.buildbattle.menus.playerheads.PlayerHeadsMenu;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.user.UserManager;
 import pl.plajerlair.core.services.exception.ReportedException;
-import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -118,27 +116,16 @@ public class GameEvents implements Listener {
       if (!arena.isVoting()) {
         return;
       }
+      if (VoteItems.getReportItem().equals(event.getItem())) {
+        //todo attempt report
+        event.setCancelled(true);
+        return;
+      }
       if (arena.getVotingPlot().getOwners().contains(event.getPlayer().getUniqueId())) {
-        FileConfiguration config = ConfigUtils.getConfig(plugin, "voteItems");
-        /*for (String s : config.getKeys(false)) {
-          if (config.contains(s + ".report-item-function") && event.getItem().getItemMeta().getDisplayName().equalsIgnoreCase(config.getString(s + ".displayname"))) {
-            ReportManager.attemptReport(arena, event.getPlayer());
-            event.setCancelled(true);
-            return;
-          }
-        }*/
         event.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Cant-Vote-Own-Plot"));
         event.setCancelled(true);
         return;
       }
-      FileConfiguration config = ConfigUtils.getConfig(plugin, "voteItems");
-      /*for (String s : config.getKeys(false)) {
-        if (config.contains(s + ".report-item-function") && event.getItem().getItemMeta().getDisplayName().equalsIgnoreCase(config.getString(s + ".displayname"))) {
-          ReportManager.attemptReport(arena, event.getPlayer());
-          event.setCancelled(true);
-          return;
-        }
-      }*/
       UserManager.getUser(event.getPlayer().getUniqueId()).setStat(StatsStorage.StatisticType.POINTS, VoteItems.getPoints(event.getItem()));
       event.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Vote-Successful"));
       event.setCancelled(true);
