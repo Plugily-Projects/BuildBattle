@@ -45,6 +45,7 @@ import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.PermissionManager;
 import pl.plajer.buildbattle.menus.SetupInventory;
 import pl.plajer.buildbattle.utils.Cuboid;
+import pl.plajer.buildbattle.utils.Utils;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.LocationUtils;
@@ -74,12 +75,9 @@ public class SetupInventoryEvents implements Listener {
         return;
       if (e.getInventory().getHolder() != null)
         return;
-      if (e.getCurrentItem() == null)
+      if (!Utils.isNamed(e.getCurrentItem())) {
         return;
-      if (!e.getCurrentItem().hasItemMeta())
-        return;
-      if (!e.getCurrentItem().getItemMeta().hasDisplayName())
-        return;
+      }
       String name = e.getCurrentItem().getItemMeta().getDisplayName();
       name = ChatColor.stripColor(name);
       Arena arena = ArenaRegistry.getArena(e.getInventory().getName().replace("Game type: ", ""));
@@ -105,98 +103,90 @@ public class SetupInventoryEvents implements Listener {
   }
 
   @EventHandler
-  public void onClick(InventoryClickEvent event) {
+  public void onClick(InventoryClickEvent e) {
     try {
-      if (event.getWhoClicked().getType() != EntityType.PLAYER)
+      if (e.getWhoClicked().getType() != EntityType.PLAYER)
         return;
-      Player player = (Player) event.getWhoClicked();
+      Player player = (Player) e.getWhoClicked();
       if (!player.hasPermission(PermissionManager.getEditGames()))
         return;
-      if (!event.getInventory().getName().contains("BB Arena:"))
+      if (!e.getInventory().getName().contains("BB Arena:"))
         return;
-      if (event.getInventory().getHolder() != null)
+      if (e.getInventory().getHolder() != null)
         return;
-      if (event.getCurrentItem() == null)
-        return;
-      if (!event.getCurrentItem().hasItemMeta())
-        return;
-      if (!event.getCurrentItem().getItemMeta().hasDisplayName())
-        return;
-
-      String name = event.getCurrentItem().getItemMeta().getDisplayName();
-      name = ChatColor.stripColor(name);
-
-      Arena arena = ArenaRegistry.getArena(event.getInventory().getName().replace("BB Arena: ", ""));
-      if (arena == null) return;
-      if (event.getCurrentItem().getType() == Material.NAME_TAG && event.getCursor().getType() == Material.NAME_TAG) {
-        event.setCancelled(true);
-        if (!event.getCursor().hasItemMeta()) {
-          player.sendMessage(ChatColor.RED + "This item doesn't has a name!");
-          return;
-        }
-        if (!event.getCursor().getItemMeta().hasDisplayName()) {
-          player.sendMessage(ChatColor.RED + "This item doesn't has a name!");
-          return;
-        }
-
-        player.performCommand("bb " + arena.getID() + " set MAPNAME " + event.getCursor().getItemMeta().getDisplayName());
-        arena.setMapName(event.getCursor().getItemMeta().getDisplayName());
-        event.getCurrentItem().getItemMeta().setDisplayName(ChatColor.GOLD + "Set a mapname (currently: " + event.getCursor().getItemMeta().getDisplayName());
+      if (!Utils.isNamed(e.getCurrentItem())) {
         return;
       }
-      ClickType clickType = event.getClick();
+
+      String name = e.getCurrentItem().getItemMeta().getDisplayName();
+      name = ChatColor.stripColor(name);
+
+      Arena arena = ArenaRegistry.getArena(e.getInventory().getName().replace("BB Arena: ", ""));
+      if (arena == null) return;
+      if (e.getCurrentItem().getType() == Material.NAME_TAG && e.getCursor().getType() == Material.NAME_TAG) {
+        e.setCancelled(true);
+        if (!Utils.isNamed(e.getCursor())) {
+          player.sendMessage(ChatColor.RED + "This item doesn't has a name!");
+          return;
+        }
+        player.performCommand("bb " + arena.getID() + " set MAPNAME " + e.getCursor().getItemMeta().getDisplayName());
+        arena.setMapName(e.getCursor().getItemMeta().getDisplayName());
+        e.getCurrentItem().getItemMeta().setDisplayName(ChatColor.GOLD + "Set a mapname (currently: " + e.getCursor().getItemMeta().getDisplayName());
+        return;
+      }
+      ClickType clickType = e.getClick();
       if (name.contains("ending location")) {
-        event.setCancelled(true);
+        e.setCancelled(true);
         player.closeInventory();
         player.performCommand("bb " + arena.getID() + " set ENDLOC");
         return;
       }
       if (name.contains("lobby location")) {
-        event.setCancelled(true);
+        e.setCancelled(true);
         player.closeInventory();
         player.performCommand("bb " + arena.getID() + " set LOBBYLOC");
         return;
       }
       if (name.contains("maximum players")) {
-        event.setCancelled(true);
+        e.setCancelled(true);
         if (clickType.isRightClick()) {
-          event.getCurrentItem().setAmount(event.getCurrentItem().getAmount() + 1);
-          player.performCommand("bb " + arena.getID() + " set MAXPLAYERS " + event.getCurrentItem().getAmount());
+          e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
+          player.performCommand("bb " + arena.getID() + " set MAXPLAYERS " + e.getCurrentItem().getAmount());
         }
         if (clickType.isLeftClick()) {
-          event.getCurrentItem().setAmount(event.getCurrentItem().getAmount() - 1);
-          player.performCommand("bb " + arena.getID() + " set MAXPLAYERS " + event.getCurrentItem().getAmount());
+          e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
+          player.performCommand("bb " + arena.getID() + " set MAXPLAYERS " + e.getCurrentItem().getAmount());
         }
         player.closeInventory();
         player.openInventory(new SetupInventory(arena).getInventory());
       }
 
       if (name.contains("minimum players")) {
-        event.setCancelled(true);
+        e.setCancelled(true);
         if (clickType.isRightClick()) {
-          event.getCurrentItem().setAmount(event.getCurrentItem().getAmount() + 1);
-          player.performCommand("bb " + arena.getID() + " set MINPLAYERS " + event.getCurrentItem().getAmount());
+          e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
+          player.performCommand("bb " + arena.getID() + " set MINPLAYERS " + e.getCurrentItem().getAmount());
         }
         if (clickType.isLeftClick()) {
-          event.getCurrentItem().setAmount(event.getCurrentItem().getAmount() - 1);
-          player.performCommand("bb " + arena.getID() + " set MINPLAYERS " + event.getCurrentItem().getAmount());
+          e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
+          player.performCommand("bb " + arena.getID() + " set MINPLAYERS " + e.getCurrentItem().getAmount());
         }
         player.closeInventory();
         player.openInventory(new SetupInventory(arena).getInventory());
       }
       if (name.contains("Add game sign")) {
-        event.setCancelled(true);
+        e.setCancelled(true);
         plugin.getMainCommand().getAdminCommands().addSign(player, arena.getID());
         return;
       }
       if (name.contains("View setup video")) {
-        event.setCancelled(true);
+        e.setCancelled(true);
         player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&6Check out this video: " + SetupInventory.VIDEO_LINK));
         player.closeInventory();
         return;
       }
-      if (event.getCurrentItem().getType() != Material.NAME_TAG) {
-        event.setCancelled(true);
+      if (e.getCurrentItem().getType() != Material.NAME_TAG) {
+        e.setCancelled(true);
       }
       if (name.contains("Add game plot")) {
         player.performCommand("bba addplot " + arena.getID());
@@ -224,22 +214,22 @@ public class SetupInventoryEvents implements Listener {
         player.openInventory(inv);
       }
       if (name.contains("Register arena")) {
-        event.setCancelled(true);
-        event.getWhoClicked().closeInventory();
+        e.setCancelled(true);
+        e.getWhoClicked().closeInventory();
         if (arena.isReady()) {
-          event.getWhoClicked().sendMessage(ChatColor.GREEN + "This arena was already validated and is ready to use!");
+          e.getWhoClicked().sendMessage(ChatColor.GREEN + "This arena was already validated and is ready to use!");
           return;
         }
         String[] locations = new String[]{"lobbylocation", "Endlocation"};
         FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
         for (String s : locations) {
           if (!config.isSet("instances." + arena.getID() + "." + s) || config.getString("instances." + arena.getID() + "." + s).equals(LocationUtils.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
-            event.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure following spawn properly: " + s + " (cannot be world spawn location)");
+            e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure following spawn properly: " + s + " (cannot be world spawn location)");
             return;
           }
         }
         if (config.getConfigurationSection("instances." + arena.getID() + ".plots") == null) {
-          event.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure plots properly");
+          e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure plots properly");
           return;
         } else {
           for (String plotName : config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false)) {
@@ -250,12 +240,12 @@ public class SetupInventoryEvents implements Listener {
               buildPlot.fullyResetPlot();
               arena.getPlotManager().addBuildPlot(buildPlot);
             } else {
-              event.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Plots are not configured properly! (missing selection values)");
+              e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Plots are not configured properly! (missing selection values)");
               return;
             }
           }
         }
-        event.getWhoClicked().sendMessage(ChatColor.GREEN + "Validation succeeded! Registering new arena instance: " + arena.getID());
+        e.getWhoClicked().sendMessage(ChatColor.GREEN + "Validation succeeded! Registering new arena instance: " + arena.getID());
         config.set("instances." + arena.getID() + ".isdone", true);
         ConfigUtils.saveConfig(plugin, config, "arenas");
         List<Sign> signsToUpdate = new ArrayList<>();

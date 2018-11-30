@@ -57,7 +57,6 @@ import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.VoteItems;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaManager;
@@ -73,6 +72,7 @@ import pl.plajer.buildbattle.menus.particles.ParticleRemoveMenu;
 import pl.plajer.buildbattle.menus.playerheads.PlayerHeadsMenu;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.user.UserManager;
+import pl.plajer.buildbattle.utils.Utils;
 import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
@@ -90,33 +90,17 @@ public class GameEvents implements Listener {
   @EventHandler
   public void onVote(PlayerInteractEvent event) {
     try {
-      if (event.getHand() == EquipmentSlot.OFF_HAND) {
+      if (event.getHand() == EquipmentSlot.OFF_HAND || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
         return;
       }
-      if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-        return;
-      }
-      if (event.getItem() == null) {
+      if (!Utils.isNamed(event.getItem())) {
         return;
       }
       Arena arena = ArenaRegistry.getArena(event.getPlayer());
-      if (arena == null) {
+      if (arena == null || arena.getArenaState() != ArenaState.IN_GAME || !arena.isVoting()) {
         return;
       }
-      if (arena.getArenaState() != ArenaState.IN_GAME) {
-        return;
-      }
-
-      if (!event.getItem().hasItemMeta()) {
-        return;
-      }
-      if (!event.getItem().getItemMeta().hasDisplayName()) {
-        return;
-      }
-      if (!arena.isVoting()) {
-        return;
-      }
-      if (VoteItems.getReportItem().equals(event.getItem())) {
+      if (plugin.getVoteItems().getReportItem().equals(event.getItem())) {
         //todo attempt report
         event.setCancelled(true);
         return;
@@ -126,7 +110,7 @@ public class GameEvents implements Listener {
         event.setCancelled(true);
         return;
       }
-      UserManager.getUser(event.getPlayer().getUniqueId()).setStat(StatsStorage.StatisticType.POINTS, VoteItems.getPoints(event.getItem()));
+      UserManager.getUser(event.getPlayer().getUniqueId()).setStat(StatsStorage.StatisticType.POINTS, plugin.getVoteItems().getPoints(event.getItem()));
       event.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Vote-Successful"));
       event.setCancelled(true);
     } catch (Exception ex) {
@@ -137,10 +121,7 @@ public class GameEvents implements Listener {
   @EventHandler(priority = EventPriority.LOWEST)
   public void onLeave(PlayerInteractEvent event) {
     try {
-      if (event.getHand() == EquipmentSlot.OFF_HAND) {
-        return;
-      }
-      if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+      if (event.getHand() == EquipmentSlot.OFF_HAND || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
         return;
       }
       Arena arena = ArenaRegistry.getArena(event.getPlayer());
@@ -148,20 +129,14 @@ public class GameEvents implements Listener {
         return;
       }
       ItemStack itemStack = event.getPlayer().getInventory().getItemInMainHand();
-      if (itemStack == null) {
-        return;
-      }
-      if (itemStack.getItemMeta() == null) {
-        return;
-      }
-      if (itemStack.getItemMeta().getDisplayName() == null) {
+      if (!Utils.isNamed(itemStack)) {
         return;
       }
       String key = SpecialItemManager.getRelatedSpecialItem(itemStack);
       if (key == null) {
         return;
       }
-      if (SpecialItemManager.getRelatedSpecialItem(itemStack).equalsIgnoreCase("Leave")) {
+      if (key.equalsIgnoreCase("Leave")) {
         event.setCancelled(true);
         if (plugin.isBungeeActivated()) {
           plugin.getBungeeManager().connectToHub(event.getPlayer());
@@ -178,30 +153,15 @@ public class GameEvents implements Listener {
   @EventHandler
   public void onOpenOptionMenu(PlayerInteractEvent event) {
     try {
-      if (event.getHand() == EquipmentSlot.OFF_HAND) {
-        return;
-      }
-      if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-        return;
-      }
-      if (event.getItem() == null) {
-        return;
-      }
-      Arena arena = ArenaRegistry.getArena(event.getPlayer());
-      if (arena == null) {
-        return;
-      }
-      if (arena.getArenaState() != ArenaState.IN_GAME) {
+      if (event.getHand() == EquipmentSlot.OFF_HAND || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
         return;
       }
       ItemStack itemStack = event.getItem();
-      if (!itemStack.hasItemMeta()) {
+      if (!Utils.isNamed(itemStack)) {
         return;
       }
-      if (!itemStack.getItemMeta().hasDisplayName()) {
-        return;
-      }
-      if (arena.isVoting()) {
+      Arena arena = ArenaRegistry.getArena(event.getPlayer());
+      if (arena == null || arena.getArenaState() != ArenaState.IN_GAME || arena.isVoting()) {
         return;
       }
       if (!OptionsMenu.getMenuItem().getItemMeta().getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())) {
@@ -368,7 +328,7 @@ public class GameEvents implements Listener {
       }
       if (e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Inventory-Name"))) {
         e.setCancelled(true);
-        if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta() || !e.getCurrentItem().getItemMeta().hasDisplayName()) {
+        if (!Utils.isNamed(e.getCurrentItem())) {
           return;
         }
         if (arena.getPlotManager().getPlot(player) == null) {
@@ -395,16 +355,13 @@ public class GameEvents implements Listener {
   @EventHandler
   public void onOptionMenuClick(InventoryClickEvent e) {
     try {
-      if (e.getWhoClicked() instanceof Player && ArenaRegistry.getArena((Player) e.getWhoClicked()) != null && e.getCurrentItem() != null &&
-          e.getCurrentItem().getType() == Material.NETHER_STAR && e.getCurrentItem().getItemMeta().hasDisplayName() &&
+      if (e.getWhoClicked() instanceof Player && ArenaRegistry.getArena((Player) e.getWhoClicked()) != null && Utils.isNamed(e.getCurrentItem()) &&
+          e.getCurrentItem().getType() == Material.NETHER_STAR &&
           e.getCurrentItem().getItemMeta().getDisplayName().equals(ChatManager.colorMessage("Menus.Option-Menu.Option-Item"))) {
         e.setResult(Event.Result.DENY);
         e.setCancelled(true);
       }
-      if (e.getInventory() == null || e.getCurrentItem() == null) {
-        return;
-      }
-      if (!(e.getCurrentItem().hasItemMeta() && e.getCurrentItem().getItemMeta().hasDisplayName())) {
+      if (e.getInventory() == null || !Utils.isNamed(e.getCurrentItem())) {
         return;
       }
       String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
@@ -610,17 +567,11 @@ public class GameEvents implements Listener {
       if (ArenaRegistry.getArena(event.getPlayer()) == null) {
         return;
       }
-      if (event.getItemDrop().getItemStack() == null) {
-        return;
-      }
       ItemStack drop = event.getItemDrop().getItemStack();
-      if (!drop.hasItemMeta()) {
+      if (!Utils.isNamed(drop)) {
         return;
       }
-      if (!drop.getItemMeta().hasDisplayName()) {
-        return;
-      }
-      if (drop.getItemMeta().getDisplayName().equals(ChatManager.colorMessage("Menus.Option-Menu.Inventory-Name")) || VoteItems.getPoints(drop) != 0) {
+      if (drop.getItemMeta().getDisplayName().equals(ChatManager.colorMessage("Menus.Option-Menu.Inventory-Name")) || plugin.getVoteItems().getPoints(drop) != 0) {
         event.setCancelled(true);
       }
     } catch (Exception ex) {

@@ -44,6 +44,22 @@ public class Utils {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
 
+  /**
+   * Checks whether itemstack is named (not null, has meta and display name)
+   *
+   * @param stack item stack to check
+   * @return true if named, false otherwise
+   */
+  public static boolean isNamed(ItemStack stack) {
+    if (stack == null) {
+      return false;
+    }
+    if (!stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {
+      return false;
+    }
+    return true;
+  }
+
   public static ItemStack getSkull(String url) {
     ItemStack head;
     if (plugin.is1_11_R1() || plugin.is1_12_R1()) {

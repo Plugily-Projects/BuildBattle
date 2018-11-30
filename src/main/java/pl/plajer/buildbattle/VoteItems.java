@@ -40,15 +40,11 @@ public class VoteItems {
   private static ItemStack reportItem;
   private static FileConfiguration config = ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "voteItems");
 
-  public static void giveVoteItems(Player player) {
-    for (ItemStack itemStack : voteItems.keySet()) {
-      player.getInventory().setItem(voteItems.get(itemStack), itemStack);
-    }
-    player.updateInventory();
+  public VoteItems() {
+    loadVoteItemsFromConfig();
   }
 
-
-  public static void loadVoteItemsFromConfig() {
+  private static void loadVoteItemsFromConfig() {
     for (String s : config.getKeys(false)) {
       if (config.contains(s + ".displayname")) {
         if (!config.isSet(s + ".material-name")) {
@@ -69,10 +65,18 @@ public class VoteItems {
     }
   }
 
-  public static int getPoints(ItemStack itemStack) {
+  public void giveVoteItems(Player player) {
+    for (ItemStack itemStack : voteItems.keySet()) {
+      player.getInventory().setItem(voteItems.get(itemStack), itemStack);
+    }
+    player.updateInventory();
+  }
+
+  public int getPoints(ItemStack itemStack) {
     for (ItemStack voteItem : voteItems.keySet()) {
-      if (itemStack.getType() == voteItem.getType() && itemStack.getItemMeta().getDisplayName().equalsIgnoreCase(voteItem.getItemMeta().getDisplayName()))
+      if (itemStack.getType() == voteItem.getType() && itemStack.getItemMeta().getDisplayName().equalsIgnoreCase(voteItem.getItemMeta().getDisplayName())) {
         return voteItems.get(voteItem) + 1;
+      }
     }
     return 1;
   }
@@ -80,7 +84,7 @@ public class VoteItems {
   /**
    * @return itemStack that represents report building function
    */
-  public static ItemStack getReportItem() {
+  public ItemStack getReportItem() {
     return reportItem;
   }
 }

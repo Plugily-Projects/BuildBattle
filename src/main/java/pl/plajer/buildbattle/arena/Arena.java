@@ -47,7 +47,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.VoteItems;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.api.event.game.BBGameChangeStateEvent;
 import pl.plajer.buildbattle.api.event.game.BBGameEndEvent;
@@ -425,7 +424,7 @@ public class Arena extends BukkitRunnable {
           }
           for (Player player : getPlayers()) {
             player.getInventory().clear();
-            VoteItems.giveVoteItems(player);
+            plugin.getVoteItems().giveVoteItems(player);
           }
           receivedVoteItems = true;
         }

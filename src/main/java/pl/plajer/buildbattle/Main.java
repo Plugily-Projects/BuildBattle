@@ -84,6 +84,7 @@ public class Main extends JavaPlugin {
   private SignManager signManager;
   private CuboidSelector cuboidSelector;
   private GameInventories gameInventories;
+  private VoteItems voteItems;
   private String version;
   private List<String> filesToGenerate = Arrays.asList("arenas", "particles", "lobbyitems", "stats", "voteItems", "mysql");
 
@@ -103,6 +104,10 @@ public class Main extends JavaPlugin {
 
   public GameInventories getGameInventories() {
     return gameInventories;
+  }
+
+  public VoteItems getVoteItems() {
+    return voteItems;
   }
 
   public BungeeManager getBungeeManager() {
@@ -199,24 +204,26 @@ public class Main extends JavaPlugin {
   }
 
   private void checkUpdate() {
-    if (getConfig().getBoolean("Update-Notifier.Enabled", true)) {
-      UpdateChecker.init(this, 44703).requestUpdateCheck().whenComplete((result, exception) -> {
-        if (result.requiresUpdate()) {
-          if (result.getNewestVersion().contains("b")) {
-            if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
-              Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
-              Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
-                  result.getNewestVersion()));
-            }
-            return;
-          }
-          MessageUtils.updateIsHere();
-          Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Your Build Battle plugin is outdated! Download it to keep with latest changes and fixes.");
-          Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Disable this option in config.yml if you wish.");
-          Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + getDescription().getVersion() + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + result.getNewestVersion());
-        }
-      });
+    if (!getConfig().getBoolean("Update-Notifier.Enabled", true)) {
+      return;
     }
+    UpdateChecker.init(this, 44703).requestUpdateCheck().whenComplete((result, exception) -> {
+      if (!result.requiresUpdate()) {
+        return;
+      }
+      if (result.getNewestVersion().contains("b")) {
+        if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
+          Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
+          Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
+              result.getNewestVersion()));
+        }
+        return;
+      }
+      MessageUtils.updateIsHere();
+      Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Your Build Battle plugin is outdated! Download it to keep with latest changes and fixes.");
+      Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Disable this option in config.yml if you wish.");
+      Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + getDescription().getVersion() + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + result.getNewestVersion());
+    });
   }
 
   @Override
@@ -277,7 +284,7 @@ public class Main extends JavaPlugin {
     //load signs after arenas
     signManager = new SignManager(this);
     SpecialItem.loadAll();
-    VoteItems.loadVoteItemsFromConfig();
+    voteItems = new VoteItems();
     ParticleHandler particleHandler = new ParticleHandler(this);
     particleHandler.start();
     Metrics metrics = new Metrics(this);
