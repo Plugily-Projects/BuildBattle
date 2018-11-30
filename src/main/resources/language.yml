@@ -156,7 +156,7 @@ In-Game:
   No-Permission-For-Particle: "&cYou don't have permission for this particle!"
   Particle-Added: "&aParticle successfully added!"
   Join-No-Permission: "&cYou don't have permission to join this arena!"
-  Particle-Removed: "&cParticle successfully removed!"
+  # todo moved for Menus.Option-Menu.Items.Particle.Particle-Removed Particle-Removed: "&cParticle successfully removed!"
   Arena-Not-Configured: "&cArena is not configured yet! Contact staff!"
   # Join cancelled via external plugin that uses BuildBattle API.
   Join-Cancelled-Via-API: "&cYou can't join this game!"
@@ -213,10 +213,55 @@ In-Game:
 
 Menus:
   Location-Message: "&aLocation: "
+  #todo recoded addddddd to locales
+  #todo migrator
   Option-Menu:
     Inventory-Name: "&aOptions menu"
     Option-Item: "&aOptions"
     Option-Item-Lore: "&7Right click to open menu"
+    <!-- New -->
+    Items:
+      Particle:
+        Inventory-Name: "&aParticles menu"
+        Item-Name: "&aChoose particles"
+        Item-Lore: "&7Click to get particles"
+        In-Inventory-Item-Name: "&cRemove particles"
+        In-Inventory-Item-Lore: "&7Right click to open menu"
+        <!-- Moved from In-Game.Particle-Removed -->
+        Particle-Removed: "&cParticle successfully removed!"
+      Players-Heads:
+        Inventory-Name: "&aPlayers heads menu"
+        Item-Name: "&aGet player heads"
+        Item-Lore: "&7Click to get heads"
+        No-Permission: "&cYou don't have permission!"
+      Floor:
+        Item-Name: "&aChange floor material"
+        Item-Lore: "&7Drag block here to change floor"
+        Floor-Changed: "&aFloor material changed!"
+      Time:
+        Inventory-Name: "&aSet time"
+        Item-Name: "&aChange plot time"
+        Item-Lore: "&7Right click to open menu"
+        Time-Type:
+          World-Time: "&eWorld time"
+          Day: "&eDay (1000 ticks)"
+          Sunset: "&eSunset (12000 ticks)"
+          Night: "&eNight (13000 ticks)"
+          Sunrise: "&eSunrise (23000 ticks)"
+      Weather:
+        Inventory-Name: "&aSet weather"
+        Item-Name: "&aChange plot weather"
+        Item-Lore: "&7Right click to open menu"
+        Weather-Type:
+          Downfall: "&eDownfall"
+          Clear: "&eClear"
+        Weather-Set: "&eWeather has been changed"
+      Reset:
+        Item-Name: "&cReset plot"
+        Item-Lore: "&7Fully reset plot, &c&lcan't be undone!"
+        Plot-Reset: "&cPlot fully reset!"
+    <!-- New end -->
+    <!-- Old -->
     Particle-Inventory-Name: "&aParticles menu"
     Particle-Option: "&aChoose particles"
     Particle-Option-Lore: "&7Click to get particles"
@@ -238,6 +283,7 @@ Menus:
     Weather-Set: "&eWeather has been changed"
     Weather-Downfall: "&eDownfall"
     Weather-Clear: "&eClear"
+    <!-- Old end -->
   Theme-Voting:
     Inventory-Name: "What theme?"
     Theme-Item-Name: "&6%theme%"

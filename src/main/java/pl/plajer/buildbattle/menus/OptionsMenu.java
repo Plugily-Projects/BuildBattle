@@ -18,16 +18,11 @@
 
 package pl.plajer.buildbattle.menus;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
@@ -57,41 +52,30 @@ public class OptionsMenu {
       //todo check
       headOption = XMaterial.PLAYER_HEAD.parseItem();
     }
-    ItemMeta headMeta = headOption.getItemMeta();
-    headMeta.setDisplayName(ChatManager.colorMessage("Menus.Option-Menu.Players-Heads-Option"));
-    headMeta.setLore(Collections.singletonList(ChatManager.colorMessage("Menus.Option-Menu.Players-Heads-Option-Lore")));
-    headOption.setItemMeta(headMeta);
-    inv.setItem(11, headOption);
-
-    ItemStack particleOption = XMaterial.DANDELION.parseItem();
-    ItemMeta particleMeta = particleOption.getItemMeta();
-    particleMeta.setDisplayName(ChatManager.colorMessage("Menus.Option-Menu.Particle-Option"));
-    particleMeta.setLore(Collections.singletonList(ChatManager.colorMessage("Menus.Option-Menu.Particle-Option-Lore")));
-    particleOption.setItemMeta(particleMeta);
-    inv.setItem(13, particleOption);
-
-    ItemStack floorOption = new ItemStack(plot.getFloorMaterial(), 1);
-    ItemMeta floorMeta = floorOption.getItemMeta();
-    floorMeta.setDisplayName(ChatManager.colorMessage("Menus.Option-Menu.Floor-Option"));
-    List<String> lore = new ArrayList<>();
-    lore.add(ChatManager.colorMessage("Menus.Option-Menu.Floor-Option-Lore"));
-    floorMeta.setLore(lore);
-    floorOption.setItemMeta(floorMeta);
-    inv.setItem(15, floorOption);
-
-    ItemStack weatherOption = new ItemStack(Material.BUCKET, 1);
-    ItemMeta weatherMeta = weatherOption.getItemMeta();
-    weatherMeta.setDisplayName(ChatManager.colorMessage("Menus.Option-Menu.Weather-Option"));
-    weatherMeta.setLore(Collections.singletonList(ChatManager.colorMessage("Menus.Option-Menu.Weather-Option-Lore")));
-    weatherOption.setItemMeta(weatherMeta);
-    inv.setItem(30, weatherOption);
-
-    ItemStack resetOption = new ItemStack(Material.BARRIER, 1);
-    ItemMeta resetMeta = resetOption.getItemMeta();
-    resetMeta.setDisplayName(ChatManager.colorMessage("Menus.Option-Menu.Reset-Option"));
-    resetMeta.setLore(Collections.singletonList(ChatManager.colorMessage("Menus.Option-Menu.Reset-Option-Lore")));
-    resetOption.setItemMeta(resetMeta);
-    inv.setItem(32, resetOption);
+    inv.setItem(11, new ItemBuilder(headOption)
+        .name(ChatManager.colorMessage("Menus.Option-Menu.Items.Players-Heads.Item-Name"))
+        .lore(ChatManager.colorMessage("Menus.Option-Menu.Items.Players-Heads.Item-Lore"))
+        .build());
+    inv.setItem(13, new ItemBuilder(XMaterial.DANDELION.parseItem())
+        .name(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.Item-Name"))
+        .lore(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.Item-Lore"))
+        .build());
+    inv.setItem(15, new ItemBuilder(new ItemStack(plot.getFloorMaterial(), 1))
+        .name(ChatManager.colorMessage("Menus.Option-Menu.Items.Floor.Item-Name"))
+        .lore(ChatManager.colorMessage("Menus.Option-Menu.Items.Floor.Item-Lore"))
+        .build());
+    inv.setItem(29, new ItemBuilder(new ItemStack(Material.BUCKET))
+        .name(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Item-Name"))
+        .lore(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Item-Lore"))
+        .build());
+    inv.setItem(31, new ItemBuilder(XMaterial.CLOCK.parseItem())
+        .name(ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Item-Name"))
+        .lore(ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Item-Lore"))
+        .build());
+    inv.setItem(33, new ItemBuilder(new ItemStack(Material.BARRIER))
+        .name(ChatManager.colorMessage("Menus.Option-Menu.Items.Reset.Item-Name"))
+        .lore(ChatManager.colorMessage("Menus.Option-Menu.Items.Reset.Item-Lore"))
+        .build());
     return inv;
   }
 

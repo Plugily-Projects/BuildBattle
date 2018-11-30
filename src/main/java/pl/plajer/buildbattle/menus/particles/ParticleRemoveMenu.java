@@ -40,7 +40,7 @@ import pl.plajerlair.core.utils.MinigameUtils;
 public class ParticleRemoveMenu {
 
   public static void openMenu(Player player, ArenaPlot buildPlot) {
-    Inventory inventory = player.getServer().createInventory(player, 6 * 9, ChatManager.colorMessage("Menus.Option-Menu.Particle-Remove"));
+    Inventory inventory = player.getServer().createInventory(player, 6 * 9, ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"));
 
     for (Location location : buildPlot.getParticles().keySet()) {
       ParticleItem particleItem = ParticleMenu.getParticleItem(buildPlot.getParticles().get(location));
@@ -75,7 +75,7 @@ public class ParticleRemoveMenu {
     for (Location location : buildPlot.getParticles().keySet()) {
       if (Math.round(location.getX()) == x && Math.round(location.getY()) == y && Math.round(location.getZ()) == z) {
         buildPlot.getParticles().remove(location);
-        p.sendMessage(ChatManager.colorMessage("In-Game.Particle-Removed"));
+        p.sendMessage(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.Particle-Removed"));
         inventory.remove(itemStack);
         p.updateInventory();
         break;

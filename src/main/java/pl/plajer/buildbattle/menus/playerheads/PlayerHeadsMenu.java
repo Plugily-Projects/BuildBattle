@@ -84,7 +84,7 @@ public class PlayerHeadsMenu {
   }
 
   public static void openMenu(Player player) {
-    Inventory inventory = player.getServer().createInventory(player, MinigameUtils.serializeInt(headsItems.size()), ChatManager.colorMessage("Menus.Option-Menu.Players-Heads-Inventory-Name"));
+    Inventory inventory = player.getServer().createInventory(player, MinigameUtils.serializeInt(headsItems.size()), ChatManager.colorMessage("Menus.Option-Menu.Items.Players-Heads.Inventory-Name"));
     int i = 0;
     for (HeadsItem headsItem : headsItems) {
       if (headsItem.isEnabled()) {
@@ -103,7 +103,7 @@ public class PlayerHeadsMenu {
     for (HeadsItem headsItem : headsItems) {
       if (headsItem.getItemStack().getItemMeta().getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())) {
         if (!player.hasPermission(headsItem.getPermission())) {
-          player.sendMessage(ChatManager.colorMessage("Menus.Option-Menu.Players-Heads-No-Permission"));
+          player.sendMessage(ChatManager.colorMessage("Menus.Option-Menu.Items.Players-Heads.No-Permission"));
           return;
         } else {
           player.openInventory(inventories.get(headsItem.getMenuName()));

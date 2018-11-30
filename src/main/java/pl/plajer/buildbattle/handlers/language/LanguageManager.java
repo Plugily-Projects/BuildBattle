@@ -128,7 +128,7 @@ public class LanguageManager {
       return;
     }
     /* is beta release */
-    if (plugin.getDescription().getVersion().contains("b")) {
+    if (plugin.getDescription().getVersion().contains("b") || plugin.getDescription().getVersion().contains("pre")) {
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Locales aren't supported in beta versions because they're lacking latest translations! Enabling English one...");
       pluginLocale = LocaleRegistry.getByName("English");
       return;

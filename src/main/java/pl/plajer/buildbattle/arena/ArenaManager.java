@@ -21,7 +21,6 @@ package pl.plajer.buildbattle.arena;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.WeatherType;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -162,12 +161,8 @@ public class ArenaManager {
       p.setFoodLevel(20);
       p.setFlying(false);
       p.setAllowFlight(false);
-      //set weather to world's weather because it was changed in game for each plot
-      if (p.getWorld().hasStorm()) {
-        p.setPlayerWeather(WeatherType.DOWNFALL);
-      } else {
-        p.setPlayerWeather(WeatherType.CLEAR);
-      }
+      p.resetPlayerWeather();
+      p.resetPlayerTime();
       if (ConfigPreferences.isBarEnabled()) {
         a.getGameBar().removePlayer(p);
       }

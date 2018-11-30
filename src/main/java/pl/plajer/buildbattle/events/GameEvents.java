@@ -66,8 +66,8 @@ import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.plots.ArenaPlot;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.items.SpecialItemManager;
+import pl.plajer.buildbattle.menus.GameInventories;
 import pl.plajer.buildbattle.menus.OptionsMenu;
-import pl.plajer.buildbattle.menus.WeatherInventory;
 import pl.plajer.buildbattle.menus.particles.ParticleMenu;
 import pl.plajer.buildbattle.menus.particles.ParticleRemoveMenu;
 import pl.plajer.buildbattle.menus.playerheads.PlayerHeadsMenu;
@@ -358,28 +358,32 @@ public class GameEvents implements Listener {
   @EventHandler
   public void onWeatherMenuClick(InventoryClickEvent e) {
     try {
-      if (e.getInventory() == null || e.getInventory().getName() == null || !(e.getWhoClicked() instanceof Player) || ArenaRegistry.getArena((Player) e.getWhoClicked()) == null) {
+      if (!(e.getWhoClicked() instanceof Player)) {
         return;
       }
-      if (e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Weather-Inventory-Name"))) {
+      Player player = (Player) e.getWhoClicked();
+      Arena arena = ArenaRegistry.getArena(player);
+      if (e.getInventory() == null || e.getInventory().getName() == null || !(e.getWhoClicked() instanceof Player) || arena == null) {
+        return;
+      }
+      if (e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Inventory-Name"))) {
         e.setCancelled(true);
         if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta() || !e.getCurrentItem().getItemMeta().hasDisplayName()) {
           return;
         }
-        Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
-        if (arena.getPlotManager().getPlot((Player) e.getWhoClicked()) == null) {
+        if (arena.getPlotManager().getPlot(player) == null) {
           return;
         }
-        if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Weather-Downfall"))) {
-          arena.getPlotManager().getPlot((Player) e.getWhoClicked()).setWeatherType(WeatherType.DOWNFALL);
-          e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Weather-Set"));
-        } else if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Weather-Clear"))) {
-          arena.getPlotManager().getPlot((Player) e.getWhoClicked()).setWeatherType(WeatherType.CLEAR);
-          e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Weather-Set"));
+        if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Downfall"))) {
+          arena.getPlotManager().getPlot(player).setWeatherType(WeatherType.DOWNFALL);
+          e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Set"));
+        } else if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Clear"))) {
+          arena.getPlotManager().getPlot(player).setWeatherType(WeatherType.CLEAR);
+          e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Set"));
         }
-        for (UUID owner : arena.getPlotManager().getPlot((Player) e.getWhoClicked()).getOwners()) {
+        for (UUID owner : arena.getPlotManager().getPlot(player).getOwners()) {
           if (Bukkit.getPlayer(owner).isOnline()) {
-            Bukkit.getPlayer(owner).setPlayerWeather(arena.getPlotManager().getPlot((Player) e.getWhoClicked()).getWeatherType());
+            Bukkit.getPlayer(owner).setPlayerWeather(arena.getPlotManager().getPlot(player).getWeatherType());
           }
         }
       }
@@ -397,16 +401,10 @@ public class GameEvents implements Listener {
         e.setResult(Event.Result.DENY);
         e.setCancelled(true);
       }
-      if (e.getInventory() == null) {
+      if (e.getInventory() == null || e.getCurrentItem() == null) {
         return;
       }
-      if (e.getCurrentItem() == null) {
-        return;
-      }
-      if (!e.getCurrentItem().hasItemMeta()) {
-        return;
-      }
-      if (!e.getCurrentItem().getItemMeta().hasDisplayName()) {
+      if (!(e.getCurrentItem().hasItemMeta() && e.getCurrentItem().getItemMeta().hasDisplayName())) {
         return;
       }
       String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
@@ -414,48 +412,44 @@ public class GameEvents implements Listener {
       if (e.getInventory().getName().equals(ChatManager.colorMessage("Menus.Option-Menu.Inventory-Name"))) {
         e.setCancelled(true);
       }
-      Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
-      if (arena == null) {
+      Arena arena = ArenaRegistry.getArena(player);
+      if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
         return;
       }
-
-      if (arena.getArenaState() != ArenaState.IN_GAME) {
-        return;
-      }
-      if (displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Particle-Option"))) {
-        e.getWhoClicked().closeInventory();
+      if (displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.Item-Name"))) {
+        player.closeInventory();
         ParticleMenu.openMenu(player);
         return;
-      } else if (displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Reset-Option"))) {
-        e.getWhoClicked().closeInventory();
-        arena.getPlotManager().getPlot((Player) e.getWhoClicked()).resetPlot();
-        e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Reset-Option-Done"));
+      } else if (displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Reset.Item-Name"))) {
+        player.closeInventory();
+        arena.getPlotManager().getPlot(player).resetPlot();
+        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Items.Reset.Plot-Reset"));
         return;
-      } else if (displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Weather-Option"))) {
-        e.getWhoClicked().closeInventory();
-        WeatherInventory.openWeatherInventory((Player) e.getWhoClicked());
+      } else if (displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Item-Name"))) {
+        player.closeInventory();
+        plugin.getGameInventories().openInventory(GameInventories.InventoryType.WEATHER, player);
         return;
       }
-      if (e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Particle-Remove"))) {
-        ParticleRemoveMenu.onClick((Player) e.getWhoClicked(), e.getInventory(), e.getCurrentItem(), arena.getPlotManager().getPlot(player));
+      if (e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))) {
+        ParticleRemoveMenu.onClick(player, e.getInventory(), e.getCurrentItem(), arena.getPlotManager().getPlot(player));
         return;
-      } else if (e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Players-Heads-Inventory-Name"))) {
+      } else if (e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Player-Heads.Players-Heads.Inventory-Name"))) {
         PlayerHeadsMenu.onClickInMainMenu(player, e.getCurrentItem());
         return;
       } else if (PlayerHeadsMenu.getMenuNames().contains(e.getInventory().getName())) {
         PlayerHeadsMenu.onClickInDeeperMenu(player, e.getCurrentItem());
         return;
-      } else if (displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Players-Heads-Option"))) {
+      } else if (displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Players-Heads.Item-Name"))) {
         PlayerHeadsMenu.openMenu(player);
         return;
-      } else if (e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Particle-Inventory-Name"))) {
-        if (displayName.contains(ChatManager.colorMessage("Menus.Option-Menu.Particle-Remove"))) {
-          e.getWhoClicked().closeInventory();
-          ParticleRemoveMenu.openMenu(player, arena.getPlotManager().getPlot((Player) e.getWhoClicked()));
+      } else if (e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.Inventory-Name"))) {
+        if (displayName.contains(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))) {
+          player.closeInventory();
+          ParticleRemoveMenu.openMenu(player, arena.getPlotManager().getPlot(player));
           return;
         }
         e.setCancelled(true);
-        ParticleMenu.onClick(player, e.getCurrentItem(), arena.getPlotManager().getPlot((Player) e.getWhoClicked()));
+        ParticleMenu.onClick(player, e.getCurrentItem(), arena.getPlotManager().getPlot(player));
         return;
       }
       if (e.getCursor() == null) {
@@ -477,9 +471,9 @@ public class GameEvents implements Listener {
           return;
         }
       }
-      if (displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Floor-Option"))) {
+      if (displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Floor.Item-Name"))) {
         arena.getPlotManager().getPlot(player).changeFloor(e.getCursor().getType(), e.getCursor().getData().getData());
-        player.sendMessage(ChatManager.colorMessage("Menus.Option-Menu.Floor-Changed"));
+        player.sendMessage(ChatManager.colorMessage("Menus.Option-Menu.Items.Floor.Floor-Changed"));
         e.getCursor().setAmount(0);
         e.getCursor().setType(Material.AIR);
         e.getCurrentItem().setType(Material.AIR);
@@ -562,32 +556,33 @@ public class GameEvents implements Listener {
   public void onCreatureSpawn(CreatureSpawnEvent event) {
     try {
       for (Arena arena : ArenaRegistry.getArenas()) {
-        if (arena.getStartLocation() != null && event.getEntity().getWorld().equals(arena.getStartLocation().getWorld())) {
-          if (event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) {
-            return;
-          }
-          if (event.getEntity().getType() == EntityType.WITHER || ConfigPreferences.isMobSpawningDisabled()) {
+        if (arena.getStartLocation() == null || event.getEntity().getWorld().equals(arena.getStartLocation().getWorld())) {
+          continue;
+        }
+        if (event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) {
+          return;
+        }
+        if (event.getEntity().getType() == EntityType.WITHER || ConfigPreferences.isMobSpawningDisabled()) {
+          event.setCancelled(true);
+          return;
+        }
+        for (ArenaPlot buildplot : arena.getPlotManager().getPlots()) {
+          if (buildplot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 10)) {
             event.setCancelled(true);
             return;
           }
-          for (ArenaPlot buildplot : arena.getPlotManager().getPlots()) {
-            if (buildplot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 10)) {
+          if (buildplot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 1)) {
+            if (buildplot.getEntities() >= ConfigPreferences.getMaxMobs()) {
+              //todo maybe only for spawner player?
+              for (UUID u : buildplot.getOwners()) {
+                plugin.getServer().getPlayer(u).sendMessage(ChatManager.colorMessage("In-Game.Max-Entities-Limit-Reached"));
+              }
               event.setCancelled(true);
               return;
-            }
-            if (buildplot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 1)) {
-              if (buildplot.getEntities() >= ConfigPreferences.getMaxMobs()) {
-                //todo maybe only for spawner player?
-                for (UUID u : buildplot.getOwners()) {
-                  plugin.getServer().getPlayer(u).sendMessage(ChatManager.colorMessage("In-Game.Max-Entities-Limit-Reached"));
-                }
-                event.setCancelled(true);
-                return;
-              } else {
-                buildplot.addEntity();
-                event.setCancelled(false);
-                event.getEntity().setAI(false);
-              }
+            } else {
+              buildplot.addEntity();
+              event.setCancelled(false);
+              event.getEntity().setAI(false);
             }
           }
         }
@@ -735,7 +730,7 @@ public class GameEvents implements Listener {
       }
       if (e.getRightClicked() instanceof Villager && e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.NPC.Floor-Change-NPC-Name"))) {
         Arena arena = ArenaRegistry.getArena(e.getPlayer());
-        if (arena == null) {
+        if (arena == null || arena.getArenaState() != ArenaState.IN_GAME || arena.isVoting()) {
           return;
         }
         if (!e.getPlayer().getInventory().getItemInMainHand().getType().isBlock()) {
@@ -744,14 +739,8 @@ public class GameEvents implements Listener {
         if (arena.getBlacklistedBlocks().contains(e.getPlayer().getInventory().getItemInMainHand().getType())) {
           return;
         }
-        if (arena.getArenaState() != ArenaState.IN_GAME) {
-          return;
-        }
-        if (arena.isVoting()) {
-          return;
-        }
         arena.getPlotManager().getPlot(e.getPlayer()).changeFloor(e.getPlayer().getInventory().getItemInMainHand().getType(), e.getPlayer().getInventory().getItemInMainHand().getData().getData());
-        e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Floor-Changed"));
+        e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Items.Floor.Floor-Changed"));
       }
     } catch (Exception ex) {
       new ReportedException(plugin, ex);

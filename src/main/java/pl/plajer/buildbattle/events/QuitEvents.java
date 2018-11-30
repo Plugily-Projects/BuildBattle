@@ -49,18 +49,21 @@ public class QuitEvents implements Listener {
 
   @EventHandler
   public void onQuit(PlayerQuitEvent event) {
-    Arena a = ArenaRegistry.getArena(event.getPlayer());
-    if (a == null) return;
-    if (!plugin.isBungeeActivated())
-      ArenaManager.leaveAttempt(event.getPlayer(), a);
+    Arena arena = ArenaRegistry.getArena(event.getPlayer());
+    if (arena == null) {
+      return;
+    }
+    if (!plugin.isBungeeActivated()) {
+      ArenaManager.leaveAttempt(event.getPlayer(), arena);
+    }
   }
 
   @EventHandler
   public void onQuitSaveStats(PlayerQuitEvent event) {
     try {
-      Arena a = ArenaRegistry.getArena(event.getPlayer());
-      if (a != null) {
-        ArenaManager.leaveAttempt(event.getPlayer(), a);
+      Arena arena = ArenaRegistry.getArena(event.getPlayer());
+      if (arena != null) {
+        ArenaManager.leaveAttempt(event.getPlayer(), arena);
       }
       final User user = UserManager.getUser(event.getPlayer().getUniqueId());
       final Player player = event.getPlayer();

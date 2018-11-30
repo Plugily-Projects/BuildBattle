@@ -52,6 +52,7 @@ import pl.plajerlair.core.utils.LocationUtils;
 /**
  * Created by Tom on 15/06/2015.
  */
+//todo recodeee
 public class SetupInventoryEvents implements Listener {
 
   private Main plugin;

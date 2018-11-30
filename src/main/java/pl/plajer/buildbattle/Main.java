@@ -50,6 +50,7 @@ import pl.plajer.buildbattle.handlers.SignManager;
 import pl.plajer.buildbattle.handlers.items.SpecialItem;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
 import pl.plajer.buildbattle.handlers.language.LanguageMigrator;
+import pl.plajer.buildbattle.menus.GameInventories;
 import pl.plajer.buildbattle.menus.particles.ParticleHandler;
 import pl.plajer.buildbattle.menus.particles.ParticleMenu;
 import pl.plajer.buildbattle.menus.playerheads.PlayerHeadsMenu;
@@ -67,6 +68,7 @@ import pl.plajerlair.core.utils.ConfigUtils;
 /**
  * Created by Tom on 17/08/2015.
  */
+//todo add time type inv
 public class Main extends JavaPlugin {
 
   private static boolean debug;
@@ -81,6 +83,7 @@ public class Main extends JavaPlugin {
   private boolean inventoryManagerEnabled;
   private SignManager signManager;
   private CuboidSelector cuboidSelector;
+  private GameInventories gameInventories;
   private String version;
   private List<String> filesToGenerate = Arrays.asList("arenas", "particles", "lobbyitems", "stats", "voteItems", "mysql");
 
@@ -96,6 +99,10 @@ public class Main extends JavaPlugin {
 
   public CuboidSelector getCuboidSelector() {
     return cuboidSelector;
+  }
+
+  public GameInventories getGameInventories() {
+    return gameInventories;
   }
 
   public BungeeManager getBungeeManager() {
@@ -302,6 +309,7 @@ public class Main extends JavaPlugin {
     checkUpdate();
     new GameEvents(this);
     new VoteMenuListener(this);
+    gameInventories = new GameInventories();
   }
 
   public boolean isDatabaseActivated() {

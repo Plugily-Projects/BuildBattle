@@ -993,6 +993,7 @@ public class Arena extends BukkitRunnable {
         for (Player p : getPlayers()) {
           p.teleport(getVotingPlot().getTeleportLocation());
           p.setPlayerWeather(getVotingPlot().getWeatherType());
+          p.setPlayerTime(ArenaPlot.Time.format(getVotingPlot().getTime(), p.getWorld().getTime()), false);
           String owner = ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
           if (getArenaType() == ArenaType.TEAM) {
             if (getVotingPlot().getOwners().size() == 1) {

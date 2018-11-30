@@ -49,14 +49,15 @@ public class ParticleMenu {
   private static List<ParticleItem> particleItems = new ArrayList<>();
 
   public static void openMenu(Player player) {
-    Inventory inventory = player.getServer().createInventory(player, 6 * 9, ChatManager.colorMessage("Menus.Option-Menu.Particle-Inventory-Name"));
+    Inventory inventory = player.getServer().createInventory(player, 6 * 9, ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.Inventory-Name"));
     for (ParticleItem particleItem : particleItems) {
       if (particleItem.isEnabled()) {
         inventory.addItem(particleItem.getItemStack());
       }
     }
     ItemStack itemStack = new ItemStack(Material.REDSTONE_BLOCK);
-    Utils.setItemNameAndLore(itemStack, ChatManager.colorMessage("Menus.Option-Menu.Particle-Remove"), new String[]{ChatManager.colorMessage("Menus.Option-Menu.Particle-Remove-Lore")});
+    Utils.setItemNameAndLore(itemStack, ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"),
+        new String[] {ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Lore")});
     inventory.setItem(53, itemStack);
     player.openInventory(inventory);
   }

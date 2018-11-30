@@ -54,11 +54,9 @@ public class ArenaPlot {
   private int points;
   private List<UUID> uuids = new ArrayList<>();
   private Map<Location, Particle> particles = new HashMap<>();
+  private Time time = Time.WORLD_TIME;
   private WeatherType weatherType = WeatherType.CLEAR;
   private int entities = 0;
-
-  public ArenaPlot() {
-  }
 
   public int getEntities() {
     return entities;
@@ -87,6 +85,14 @@ public class ArenaPlot {
 
   public void setWeatherType(WeatherType weatherType) {
     this.weatherType = weatherType;
+  }
+
+  public Time getTime() {
+    return time;
+  }
+
+  public void setTime(Time time) {
+    this.time = time;
   }
 
   public Cuboid getCuboid() {
@@ -121,13 +127,9 @@ public class ArenaPlot {
         if (p == null) {
           continue;
         }
-        if (p.getWorld().hasStorm()) {
-          p.setPlayerWeather(WeatherType.DOWNFALL);
-          setWeatherType(WeatherType.DOWNFALL);
-        } else {
-          p.setPlayerWeather(WeatherType.CLEAR);
-          setWeatherType(WeatherType.CLEAR);
-        }
+        p.resetPlayerWeather();
+        setWeatherType(p.getPlayerWeather());
+        p.resetPlayerTime();
       }
       if (uuids != null || !uuids.isEmpty()) {
         for (UUID u : uuids) {
@@ -164,13 +166,9 @@ public class ArenaPlot {
       getParticles().clear();
       for (UUID u : uuids) {
         Player p = Bukkit.getPlayer(u);
-        if (p.getWorld().hasStorm()) {
-          p.setPlayerWeather(WeatherType.DOWNFALL);
-          setWeatherType(WeatherType.DOWNFALL);
-        } else {
-          p.setPlayerWeather(WeatherType.CLEAR);
-          setWeatherType(WeatherType.CLEAR);
-        }
+        p.resetPlayerWeather();
+        setWeatherType(p.getPlayerWeather());
+        p.resetPlayerTime();
       }
       for (Entity entity : cuboid.getCenter().getWorld().getEntities()) {
         if (cuboid.isInWithMarge(entity.getLocation(), 3)) {
@@ -291,6 +289,30 @@ public class ArenaPlot {
     } catch (Exception ex) {
       new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
       return new Location(Bukkit.getWorld("world"), 0, 0, 0);
+    }
+  }
+
+  /**
+   * Enum that represents current plot time
+   */
+  public enum Time {
+    WORLD_TIME(-1), DAY(1000), SUNSET(12000), SUNRISE(23000), NIGHT(13000);
+
+    private long ticks;
+
+    Time(long ticks) {
+      this.ticks = ticks;
+    }
+
+    public static long format(Time time, long currTime) {
+      if (time == Time.WORLD_TIME) {
+        return currTime;
+      }
+      return time.getTicks();
+    }
+
+    public long getTicks() {
+      return ticks;
     }
   }
 
