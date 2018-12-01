@@ -54,10 +54,7 @@ public class Utils {
     if (stack == null) {
       return false;
     }
-    if (!stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {
-      return false;
-    }
-    return true;
+    return stack.hasItemMeta() && stack.getItemMeta().hasDisplayName();
   }
 
   public static ItemStack getSkull(String url) {

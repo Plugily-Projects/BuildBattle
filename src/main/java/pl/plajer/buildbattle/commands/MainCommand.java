@@ -25,7 +25,6 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -39,7 +38,7 @@ import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.handlers.ChatManager;
-import pl.plajer.buildbattle.menus.SetupInventory;
+import pl.plajer.buildbattle.handlers.setup.SetupInventory;
 import pl.plajer.buildbattle.utils.StringMatcher;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
@@ -321,7 +320,7 @@ public class MainCommand implements CommandExecutor {
       this.createArenaCommand((Player) sender, args);
       return;
     }
-    if (args[1].equalsIgnoreCase("setup") || args[1].equals("edit")) {
+    if (args[1].equals("edit")) {
       Arena arena = ArenaRegistry.getArena(args[0]);
       if (arena == null) {
         sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
@@ -329,59 +328,7 @@ public class MainCommand implements CommandExecutor {
       }
       sendProTip((Player) sender);
       new SetupInventory(arena).openInventory((Player) sender);
-      return;
     }
-    if (!(args.length > 2)) return;
-
-    Player player = (Player) sender;
-    if (!ConfigUtils.getConfig(plugin, "arenas").contains("instances." + args[0])) {
-      sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
-      sender.sendMessage(ChatColor.RED + "Usage: /bb < ARENA ID > set <MINPLAYRS | MAXPLAYERS | MAPNAME | SCHEMATIC | LOBBYLOCATION | EndLOCATION | STARTLOCATION  >  < VALUE>");
-      return;
-    }
-    if (!(args[1].equalsIgnoreCase("set"))) return;
-
-    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    if (args.length == 3) {
-      if (args[2].equalsIgnoreCase("lobbylocation") || args[2].equalsIgnoreCase("lobbyloc")) {
-        LocationUtils.saveLoc(plugin, config, "arenas", "instances." + args[0] + ".lobbylocation", player.getLocation());
-        player.sendMessage("BuildBattle: Lobby location for arena/instance " + args[0] + " set to " + LocationUtils.locationToString(player.getLocation()));
-        return;
-      } else if (args[2].equalsIgnoreCase("Endlocation") || args[2].equalsIgnoreCase("Endloc")) {
-        LocationUtils.saveLoc(plugin, config, "arenas", "instances." + args[0] + ".Endlocation", player.getLocation());
-        player.sendMessage("BuildBattle: End location for arena/instance " + args[0] + " set to " + LocationUtils.locationToString(player.getLocation()));
-        return;
-      } else {
-        player.sendMessage(ChatColor.RED + "Invalid Command!");
-        player.sendMessage(ChatColor.RED + "Usage: /bb <ARENA > set <LOBBYLOCATION | EndLOCATION>");
-      }
-    } else if (args.length == 4) {
-      if (args[2].equalsIgnoreCase("MAXPLAYERS") || args[2].equalsIgnoreCase("maximumplayers")) {
-        config.set("instances." + args[0] + ".maximumplayers", Integer.parseInt(args[3]));
-        player.sendMessage("BuildBattle: Maximum players for arena/instance " + args[0] + " set to " + Integer.parseInt(args[3]));
-      } else if (args[2].equalsIgnoreCase("MINPLAYERS") || args[2].equalsIgnoreCase("minimumplayers")) {
-        config.set("instances." + args[0] + ".minimumplayers", Integer.parseInt(args[3]));
-        player.sendMessage("BuildBattle: Minimum players for arena/instance " + args[0] + " set to " + Integer.parseInt(args[3]));
-      } else if (args[2].equalsIgnoreCase("MAPNAME") || args[2].equalsIgnoreCase("NAME")) {
-        config.set("instances." + args[0] + ".mapname", args[3]);
-        player.sendMessage("BuildBattle: Map name for arena/instance " + args[0] + " set to " + args[3]);
-      } else if (args[2].equalsIgnoreCase("WORLD") || args[2].equalsIgnoreCase("MAP")) {
-        boolean exists = false;
-        for (World world : Bukkit.getWorlds()) {
-          if (world.getName().equalsIgnoreCase(args[3])) exists = true;
-        }
-        if (!exists) {
-          player.sendMessage(ChatColor.RED + "That world doesn't exists!");
-          return;
-        }
-        config.set("instances." + args[0] + ".world", args[3]);
-        player.sendMessage("BuildBattle: World for arena/instance " + args[0] + " set to " + args[3]);
-      } else {
-        player.sendMessage(ChatColor.RED + "Invalid Command!");
-        player.sendMessage(ChatColor.RED + "Usage: /bb set <MINPLAYERS | MAXPLAYERS> <value>");
-      }
-    }
-    ConfigUtils.saveConfig(plugin, config, "arenas");
   }
 
   private void createArenaCommand(Player player, String[] args) {
