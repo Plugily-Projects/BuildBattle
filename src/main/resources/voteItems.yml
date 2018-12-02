@@ -2,26 +2,24 @@
 # Number mean slot position, material, data and displayname are obvious
 
 '0':
-  material: 159
+  material-name: YELLOW_TERRACOTTA
   displayname: "&4&lSUPER POOP"
-  data: 14
 '1':
-  material: 172
+  material-name: TERRACOTTA
   displayname: "&c&lPOOP"
-  data: 0
 '2':
-  material: 159
+  material-name: LIME_TERRACOTTA
   displayname: "&a&lOK"
-  data: 5
 '3':
-  material: 159
+  material-name: GREEN_TERRACOTTA
   displayname: "&2&lGOOD"
-  data: 13
 '4':
-  material: 159
+  material-name: BLUE_TERRACOTTA
   displayname: "&5&lEPIC"
-  data: 11
 '5':
-  material: 159
+  material-name: YELLOW_TERRACOTTA
   displayname: "&6&lLEGENDARY"
-  data: 4
+'8':
+  material-name: BOOK
+  displayname: "&c&lReport Building"
+  report-item-function: true

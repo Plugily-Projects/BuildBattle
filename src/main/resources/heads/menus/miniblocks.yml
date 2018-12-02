@@ -1,0 +1,96 @@
+dirt:
+  displayname: '&6Dirt'
+  lore:
+  - '&7Click to select'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWFiNDNiOGMzZDM0ZjEyNWU1YTNmOGI5MmNkNDNkZmQxNGM2MjQwMmMzMzI5ODQ2MWQ0ZDRkN2NlMmQzYWVhIn19fQ=="
+  enabled: true
+Mycelium:
+  displayname: '&6Mycelium'
+  lore:
+  - '&7Click to select'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2ViNGM0MWY0ODFlODE2Y2Y0YjUwN2IwYTE3NTk1ZjJiYTFmMjQ2NjRkYzQzMmJlMzQ3ZDRlN2E0ZWIzIn19fQ=="
+  enabled: true
+Woodlog:
+  displayname: '&6Wood Log'
+  lore:
+  - '&7Click to select'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDNjNzQxNDlkYmM0MTM0ZDhiNWUzYmJlMjk5N2JhMzZhOGE4MDJlMWFmOTI5NThhNDkzYjczNmYxZjQ2OGM4In19fQ=="
+  enabled: true
+leaves:
+  displayname: '&6Leaves'
+  lore:
+  - '&7Click to select'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDM3ZGJjNzE5MWJmYzM5YTQ1MDRlMmZhODkwYjAyNTlmNTFjMDY0ODIyMWVlZTliNDdmNGRhMmIzZDA1ZjIxIn19fQ=="
+  enabled: true
+Cactus:
+  displayname: '&6Cactus'
+  lore:
+  - '&7Click to select'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzhjOWE3MzAyNjljZTFkZTNlOWZhMDY0YWZiMzcwY2JjZDA3NjZkNzI5ZjNlMjllNGYzMjBhNDMzYjA5OGI1In19fQ=="
+  enabled: true
+Melon:
+  displayname: '&6Melon'
+  lore:
+  - '&7Click to select'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzNmZWQ1MTRjM2UyMzhjYTdhYzFjOTRiODk3ZmY2NzExYjFkYmU1MDE3NGFmYzIzNWM4ZjgwZDAyOSJ9fX0="
+  enabled: true
+Stone:
+  displayname: '&6Stone'
+  lore:
+  - '&7Click to select'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGU5YjhhYWU3ZjljYzc2ZDYyNWNjYjhhYmM2ODZmMzBkMzhmOWU2YzQyNTMzMDk4YjlhZDU3N2Y5MWMzMzNjIn19fQ=="
+  enabled: true
+Cobble:
+  displayname: '&6Cobble'
+  lore:
+  - '&7Click to select'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTk1NTM0ZTAyYzU5YjMzZWNlNTYxOTI4MDMzMTk3OTc3N2UwMjVmYTVmYTgxYWU3NWU5OWZkOGVmZGViYjgifX19"
+  enabled: true
+Stonebrick:
+  displayname: '&6Stone brick'
+  lore:
+  - '&7Click to select'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzdhMmMxOGZmYTRkM2Y0MjE2YjI0MTQxNzllY2Q4OGFlNzllNmIxZTBlODljN2JmMjVkZDM1OTk0ZjdiOTYifX19"
+  enabled: true
+DiamondBlock:
+  displayname: '&6Diamond block'
+  lore:
+  - '&7Click to select'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzAxNDYxOTczNjM0NTI1MTk2ZWNjNzU3NjkzYjE3MWFkYTRlZjI0YWE5MjgzNmY0MmVhMTFiZDc5YzNhNTAyZCJ9fX0="
+  enabled: true
+StackedGold:
+  displayname: '&6Gold'
+  lore:
+  - '&7Click to select'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjZkMWNlNjk3ZTlkYmFhNGNjZjY0MjUxNmFhYTU5ODEzMzJkYWMxZDMzMWFmZWUyZWUzZGNjODllZmRlZGIifX19"
+  enabled: true
+Iron:
+  displayname: '&6Iron'
+  lore:
+  - '&7Click to select'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmJhODQ1OTE0NWQ4M2ZmYzQ0YWQ1OGMzMjYwZTc0Y2E1YTBmNjM0YzdlZWI1OWExYWQzMjM0ODQ5YzkzM2MifX19"
+  enabled: true
+tnt:
+  displayname: '&6TNT'
+  lore:
+  - '&7Click to select'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzI4YTE4MTU2ODlkNzE5NGNmN2RiMDYxYjU5ZjYzMTA2MjY0YjUxMzg3OTc2YTdmYjc0YWI3OWI1NjQxIn19fQ=="
+  enabled: true
+Hay:
+  displayname: '&6Hay Bale'
+  lore:
+  - '&7Click to select'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGUzY2E1YjM5MGQxZTVmMjk3MjgzMjU3Y2U5MGFjNmY4NzgzZDc4NmVjYWVlMDk1YjQ5Y2M2Yjk0NGQ3MmQifX19"
+  enabled: true
+redstonelamp:
+  displayname: '&6Redstone lamp'
+  lore:
+  - '&7Click to select'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWFmZjkzZWJlY2MxZjhmYmQxM2JhNzgzOWVjN2JkY2RlY2FiN2MwN2ZkOGJhNzhlZTc4YWQwYmQzYWNjYmUifX19"
+  enabled: true
+Obsidian:
+  displayname: '&6Obsidian'
+  lore:
+  - '&7Click to select'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDkzNmE0YjZhYjM1OGVmM2YxYjljYmNkOTljYTYyZGM3ODc3ZDIxZWQ1NjQ3ZDhjNzBkOTY0OTA5ZjU3Y2EifX19"
+  enabled: true

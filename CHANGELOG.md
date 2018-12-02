@@ -1,6 +1,40 @@
 ## BuildBattle 3 changelog
 
-### 4.0.0 Release (20.08.2018 - 02.09.2018)
+### 4.0.0 Beta pre (03.10.2018/27.10.2018 - 21.11.2018)
+#### Pre 3:
+   * Removed annoying "Please enable bStats" message
+   * Code improvements
+   * Added PR0 TIPS when editing arena
+#### Pre 4:
+   * API change - now you can access BuildBattle API via pl.plajer.buildbattle.api
+   * Maybe a fix for https://plajer.xyz/errorservice/viewer.php?id=244
+#### Pre 5:
+   * You cannot join game now infinitely through command (lol????)
+   * Now players that will leave game will be visible by other players outside game
+#### Pre 6:
+   * Particles in menu are now incrementing automatically
+   * Particle redstone requires DustOptions and causes errors so it was removed from menu
+   * Fixed possible NPEs in block spread event (https://plajer.xyz/errorservice/viewer.php?id=282)
+   * Fixed NPE when teleporting to plot, now players will be teleported 1 x and z block away from center if
+   height reach Y plot limit (https://plajer.xyz/errorservice/viewer.php?id=283)
+#### Pre 7:
+   * Updates are now checked async without freezing the main thread which caused TPS to drop a bit
+#### Pre 8:
+   * Fixed NPE because of wrong string access in code
+   * Locales will be now automatically disabled in this version - ppl don't read warnings about locales so I force them
+   to disable
+   * Now /bba reload /bba addvotes/setvotes and /bba list can be now properly executed from console
+#### Pre 9:
+   * Fixed NPE when player was null (https://plajer.xyz/errorservice/viewer.php?id=347)
+   * Code must be changed to avoid those NPE's in the future
+#### Pre 10:
+   * Added setup tutorial link to setup menu
+   * Added tip about downloadable maps when no arenas are set up while typing /bba list
+   * Added tab completer for /bb <arena> edit -- todo remove
+   * Fixed exp not saving properly with InventoryManager
+   
+
+### 4.0.0 Release (20.08.2018 - 28.09.2018)
 * Fixed NullPointerException for users who where no longer online
 * Now using default values when they not exist in config to avoid NullPointerException from ConfigPreferences
 * Fixed IllegalArgumentException when you add invalid item name to the in-game items blacklist - now it will notify you in console
@@ -19,6 +53,13 @@
 * Added extra permission "buildbattle.command.bypass"
 * Added solo and team themes
 * Added cancel lobbystart when there are not enough players
+* Fixed bedrock was displayed in plot floor change option menu
+* Head blocks textures are now loading instantly and do not cause server to freeze at the start now
+* Fixed /bb top was reversed while MySQL was enabled
+* Disabled game end rewards by default because they were confusing for users
+* Fixed server was stopped using Shutdown-When-Game-Ends option but player just left not started arena
+* Player will be given now survival gamemode on server stop
+* Removed unused code for entities
 
 ### 3.5.1 Release (17.08.2018)
 * Fixed NumberFormatException for language.yml migrator - this error is very rare to occur in normal environment but it was reported so I fixed it

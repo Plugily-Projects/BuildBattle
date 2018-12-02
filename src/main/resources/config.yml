@@ -1,11 +1,11 @@
 #
-#        Build Battle 3 configuration file
+#         Build Battle configuration file
 #               Edit it by yourself
 #          Read descriptions CAREFULLY
 #   You don't want to break anything, do you?
 #
 
-# Locale of BB 3 language. By default it's english.
+# Locale of BuildBattle language. By default it's english.
 # Available localizations:
 #   default - uses messages from 'language.yml' file.
 #   de - Deutsche sprache          pl - Jezyk polski
@@ -22,14 +22,15 @@ Boss-Bar-Enabled: false
 
 # Should we hook into bungee cord? (If you wanna use arena per server option)
 # You STILL need to use external addon for HUB server game signs
+# Check here for more info: https://wiki.plajer.xyz/minecraft/buildbattle/addons.php#bungee-signs-not-official
 BungeeActivated: false
 
 # Enable Inventory Manager for your games? (VERY USEFUL feature for MULTI ARENA)
 # This saves inventory of players and restores it after player leaves arena.
 # Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions
-InventoryManager: false
+InventoryManager: true
 
-# Basic game permissions
+# Basic permissions for game, permissions explained here: https://wiki.plajer.xyz/minecraft/buildbattle/cmds_and_perms.php#basic-permissions
 Basic-Permissions:
   # Permissions to edit/create arenas
   Arena-Edit-Permission: "buildbattle.editgames"
@@ -40,14 +41,14 @@ Basic-Permissions:
 # Should /bb leave command be disabled?
 Disable-Leave-Command: false
 
-# Total time of building in game
-Build-Time-In-Seconds: 480
+# Total build times of game modes
+Build-Time:
+  Classic: 480
+  Teams: 540
+  Guess-The-Build: 120
 
 # Total time of voting per player plot
 Voting-Time-In-Seconds: 20
-
-# Total time of building in game in TEAM game mode
-Team-Build-Time-In-Seconds: 540
 
 # Total time of voting for themes before starting
 Theme-Voting-Time-In-Seconds: 25
@@ -74,7 +75,7 @@ Bungee-Shutdown-On-End: false
 Win-Commands-Activated: false
 
 # Should end game commands be activated?
-End-Game-Commands-Activated: true
+End-Game-Commands-Activated: false
 
 # Should second place commands be activated?
 Second-Place-Commands-Activated: false
@@ -91,19 +92,40 @@ Hide-Players-Outside-Game: true
 # Time in lobby to wait before start
 Lobby-Starting-Time: 60
 
-# All game themes, type here everything you want your players to build.
-# Solo game mode themes.
-Game-Themes:
-- Bees
-- Medieval
-- Love
-- Hate
-- Ugly
-
-# Team game mode themes.
-Game-Themes-Team:
-- Pirates
-- Castle
+# All game themes players will build.
+Themes:
+  # Solo themes.
+  Classic:
+    - Heart
+    - Castle
+    - Emoji
+    - House
+    - Flower
+  # Team mode themes.
+  Teams:
+    - Well
+    - Car
+    - Rainbow
+    - Arcade Machine
+  # Guess the build themes.
+  Guess-The-Build:
+    Easy:
+      - Apple
+      - Sun
+      - Bread
+      - Book
+      - Dollar
+    Medium:
+      - School Bus
+      - Horse
+      - Fountain
+      - Sumo
+      - Bicycle
+    Hard:
+      - Soccer
+      - Birthday Cake
+      - Typewriter
+      - Solar System
 
 # Theme names that are blacklisted.
 Blacklisted-Themes:
@@ -117,23 +139,16 @@ Blacklisted-Item-Names:
 # Commands executed when player wins
 # Use %PLAYER% placeholder to replace it with winner's name
 Win-Commands:
-- say %PLAYER% won the game!
-- give %PLAYER% 1000
-
-# Commands executed for second winner
-Second-Place-Commands:
-- say %PLAYER% become second
-- give %PLAYER% 1000
-
-# Commands executed for third winner
-Third-Place-Commands:
-- say %PLAYER% became third
-- give %PLAYER% 1000
+  First:
+    - say %PLAYER% won the game!
+  Second:
+    - say %PLAYER% become second
+  Third:
+    - say %PLAYER% became third
 
 # Commands executed for every player after the game ends
 End-Game-Commands:
 - say %PLAYER% has played a game!
-- give %PLAYER% 100
 
 # Commands which can be executed while being in game
 Whitelisted-Commands:
@@ -164,6 +179,6 @@ DatabaseActivated: false
 Debug: false
 
 # Don't modify.
-Version: 4
+Version: 5
 
 # No way! You've reached the end! But... where's the dragon!?

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ BuildBattle 3 - Ultimate building competition minigame
-  ~ Copyright (C) 2018  Plajer's Lair - maintained by Plajer
+  ~ BuildBattle 4 - Ultimate building competition minigame
+  ~ Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -17,16 +17,14 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<!-- todo maven plugin.yml filtering -->
-<!-- todo deploy repository for plcore -->
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>pl.plajer.buildbattle3</groupId>
+    <groupId>pl.plajer.buildbattle</groupId>
     <artifactId>BuildBattle</artifactId>
-    <version>3.6.0</version>
+    <version>4.0.0b-pre-10</version>
 
     <properties>
         <java.version>1.8</java.version>
@@ -55,12 +53,16 @@
             <url>http://dl.bintray.com/tastybento/maven-repo</url>
         </repository>
         <repository>
-            <id>local-repo</id>
-            <url>file:///${project.basedir}/../PLCore/repo</url>
+            <id>plajerlair-repo</id>
+            <url>https://maven.plajer.xyz/</url>
         </repository>
         <repository>
             <id>mojang-repo</id>
             <url>https://libraries.minecraft.net/</url>
+        </repository>
+        <repository>
+            <id>bstats-repo</id>
+            <url>https://repo.codemc.org/repository/maven-public</url>
         </repository>
     </repositories>
     <dependencies>
@@ -68,19 +70,19 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.12-R0.1-SNAPSHOT</version>
+            <version>1.12.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.12-R0.1-SNAPSHOT</version>
+            <version>1.12.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>pl.plajerlair</groupId>
-            <artifactId>PLCore</artifactId>
-            <version>1.0.0</version>
+            <artifactId>plcore</artifactId>
+            <version>1.4.3</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -94,6 +96,12 @@
             <artifactId>citizensapi</artifactId>
             <version>2.0.18-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>1.4</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>
@@ -134,10 +142,17 @@
             <groupId>com.mojang</groupId>
             <artifactId>authlib</artifactId>
             <version>1.5.21</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -155,6 +170,24 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.7.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.0.1</version>
+                <configuration>
+                    <windowtitle>Build Battle API docs for v${project.version}</windowtitle>
+                    <description>Minecraft building minigame.
+                        Build the best you can to win the game, play solo or in teams! API documentation for hooking Build Battle with your plugin.
+                    </description>
+                    <destDir>minecraft/buildbattle</destDir>
+                    <isOffline>false</isOffline>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.1.1</version>
                 <executions>
@@ -167,7 +200,11 @@
                             <relocations>
                                 <relocation>
                                     <pattern>pl.plajerlair.core</pattern>
-                                    <shadedPattern>pl.plajer.buildbattle3.plajerlair.core</shadedPattern>
+                                    <shadedPattern>pl.plajer.buildbattle.plajerlair.core</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.bstats</pattern>
+                                    <shadedPattern>pl.plajer.buildbattle.utils</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
@@ -175,7 +212,24 @@
                 </executions>
             </plugin>
         </plugins>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ftp</artifactId>
+                <version>3.0.0</version>
+            </extension>
+        </extensions>
     </build>
 
+    <distributionManagement>
+        <repository>
+            <id>plajer-lair-repo</id>
+            <url>ftp://54.38.159.68</url>
+        </repository>
+        <site>
+            <id>plajer-lair-java-docs</id>
+            <url>ftp://54.38.159.68</url>
+        </site>
+    </distributionManagement>
 
 </project>

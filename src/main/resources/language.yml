@@ -1,4 +1,4 @@
-#    You can translate Build Battle 3 messages here.
+#     You can translate Build Battle messages here.
 #             Color codes (&) supported.
 #
 #     Some messages support their own placeholders
@@ -60,29 +60,53 @@ Bossbar:
 
 Scoreboard:
   Title: "&b&lBuildBattle"
+  Theme-Unknown: "&c???"
+  GTB-Current-Timer:
+    Build-Time: "&fTime: &e%FORMATTED_TIME_LEFT%"
+    Starts-In: "&fStarts In: &e%FORMATTED_TIME_LEFT%"
   Content:
-    Playing:
-      - "&fTime Left: &e%FORMATTED_TIME_LEFT%"
-      - ""
-      - "&fPlayers: &e%PLAYERS%/%MAX_PLAYERS%"
-      - ""
-      - "&fTheme: &e%THEME%"
-      - ""
-      - "&fArena: &e%ARENA_ID%"
-      - ""
-      - "&ewww.spigotmc.org"
-    Playing-Teams:
-      - "&7Teams Mode"
-      - "&fTime Left: &e%FORMATTED_TIME_LEFT%"
-      - ""
-      - "&fTheme: &e%THEME%"
-      - ""
-      - "&fArena: &e%ARENA_ID%"
-      - ""
-      - "&fTeammate:"
-      - "&e%TEAMMATE%"
-      - ""
-      - "&ewww.spigotmc.org"
+    #todo accessors change + migrator
+    Playing-States:
+      Classic:
+        - "&fTime Left: &e%FORMATTED_TIME_LEFT%"
+        - ""
+        - "&fPlayers: &e%PLAYERS%/%MAX_PLAYERS%"
+        - ""
+        - "&fTheme: &e%THEME%"
+        - ""
+        - "&fArena: &e%ARENA_ID%"
+        - ""
+        - "&ewww.plajer.xyz"
+      Teams:
+        - "&7Teams Mode"
+        - "&fTime Left: &e%FORMATTED_TIME_LEFT%"
+        - ""
+        - "&fTheme: &e%THEME%"
+        - ""
+        - "&fArena: &e%ARENA_ID%"
+        - ""
+        - "&fTeammate:"
+        - "&e%TEAMMATE%"
+        - ""
+        - "&ewww.plajer.xyz"
+        #todo migrator
+      Guess-The-Build:
+        - "&7Guess The Build Mode"
+        - "&fBuilder:"
+        - "&7%BUILDER%"
+        - ""
+        - "&e&lLeaders:"
+        - "&6%1%&e: %1_PTS%"
+        - "&7%2%&e: %2_PTS%"
+        - "&7%3%&e: %3_PTS%"
+        - ""
+        #todo format
+        - "%CURRENT_TIMER%"
+        - ""
+        - "&fTheme:"
+        - "&c%THEME%"
+        - ""
+        - "&ewww.plajer.xyz"
     Starting:
       - "&fPlayers: &e%PLAYERS%"
       - ""
@@ -90,17 +114,39 @@ Scoreboard:
       - ""
       - "&fStarting In: &e%TIMER%"
       - ""
-      - "&ewww.spigotmc.org"
-    Ending:
-      - "&e&lGAME ENDED"
-      - ""
-      - "&ewww.spigotmc.org"
+      - "&ewww.plajer.xyz"
+      #todo locale
+    Ending-States:
+      Classic:
+        - "&e&lGAME ENDED"
+        - ""
+        - "&ewww.plajer.xyz"
+      Teams:
+        - "&7Teams Mode"
+        - "&e&lGAME ENDED"
+        - ""
+        - "&ewww.plajer.xyz"
+      Guess-The-Build:
+        - "&7Guess The Build Mode"
+        - ""
+        - "&e1. &f%1%: &e%1_PTS%"
+        - "&e2. &f%2%: &e%2_PTS%"
+        - "&e3. &f%3%: &e%3_PTS%"
+        - "&e4. &f%4%: &e%4_PTS%"
+        - "&e5. &f%5%: &e%5_PTS%"
+        - "&e6. &f%6%: &e%6_PTS%"
+        - "&e7. &f%7%: &e%7_PTS%"
+        - "&e8. &f%8%: &e%8_PTS%"
+        - "&e9. &f%9%: &e%9_PTS%"
+        - "&e10. &f%10%: &e%10_PTS%"
+        - ""
+        - "&ewww.plajer.xyz"
     Waiting:
       - "&fPlayers: &e%PLAYERS%"
       - ""
       - "&fPlayers Needed: &e%MIN_PLAYERS%"
       - ""
-      - "&ewww.spigotmc.org"
+      - "&ewww.plajer.xyz"
 
 In-Game:
   Plugin-Prefix: "&6[&bBuildBattle&6] "
@@ -110,12 +156,18 @@ In-Game:
   No-Permission-For-Particle: "&cYou don't have permission for this particle!"
   Particle-Added: "&aParticle successfully added!"
   Join-No-Permission: "&cYou don't have permission to join this arena!"
-  Particle-Removed: "&cParticle successfully removed!"
+  # todo moved for Menus.Option-Menu.Items.Particle.Particle-Removed Particle-Removed: "&cParticle successfully removed!"
   Arena-Not-Configured: "&cArena is not configured yet! Contact staff!"
-  # Join cancelled via external plugin that uses BB3 api.
+  # Join cancelled via external plugin that uses BuildBattle API.
   Join-Cancelled-Via-API: "&cYou can't join this game!"
   Nobody: "&eNobody"
   No-Theme-Yet: "&cVoting"
+  #todo locale
+  Guess-The-Build:
+    Current-Builder: "&eBuilder: &7%BUILDER%"
+    Current-Round: "&eRound: &7%ROUND%/%MAXPLAYERS%"
+    Theme-Is-Long: "&eThe theme is &7%NUM% &echaracters long"
+    Theme-Is-Name: "&eThe theme is a &e%THEME%"
   NPC:
     Floor-Change-NPC-Name: "&aChange floor NPC"
     NPC-Created: "&aFloor NPC created successfully!"
@@ -136,18 +188,22 @@ In-Game:
       Plot-Owner-Title: "&aPlot owner: &7%player%"
       Voting-For-Player-Plot: "&7Now voting for &e&l%PLAYER%'s &7plot!"
       Cant-Vote-Own-Plot: "&cYou can't vote for your plot!"
+      Cant-Report-Own-Plot: "&cYou can't report your own plot!"
       Vote-Successful: "&aVoted successfully!"
+      Report-Successful: "&aReported successfully!"
+      Report-Failed: "&aReport failed! Contact Adminitrator"
       Winner-Title: "&eWINNER: &a%player%"
-      Summary-Message:
+      Summary:
         - "&a&l&m-------------------------------------------"
         - "&f&lBuildBattle"
+        - ""
         - "%place_one%"
         - "%place_two%"
         - "%place_three%"
         - "&a&l&m-------------------------------------------"
-      Place-One: "&e1st Winner &7- %player% (%number% points)"
-      Place-Two: "&62nd Winner &7- %player% (%number% points)"
-      Place-Three: "&c3rd Winner &7- %player% (%number% points)"
+      Place-One: "&e&l1st Winner &7- %player% (%number% points)"
+      Place-Two: "&6&l2nd Winner &7- %player% (%number% points)"
+      Place-Three: "&c&l3rd Winner &7- %player% (%number% points)"
       Summary-Other-Place: "&aYou became &7%number%th"
     Game-End-Messages:
       Only-You-Playing: "&7You're the only player left. You'll be teleported to the lobby."
@@ -156,13 +212,56 @@ In-Game:
       Changed-Theme: "&bAdmin has changed theme to %THEME%"
 
 Menus:
-  Entity-Menu-Name: "&aEntity menu"
-  Villager-Profession-Menu-Name: "&7Choose villager profession"
   Location-Message: "&aLocation: "
+  #todo recoded addddddd to locales
+  #todo migrator
   Option-Menu:
     Inventory-Name: "&aOptions menu"
     Option-Item: "&aOptions"
     Option-Item-Lore: "&7Right click to open menu"
+    <!-- New -->
+    Items:
+      Particle:
+        Inventory-Name: "&aParticles menu"
+        Item-Name: "&aChoose particles"
+        Item-Lore: "&7Click to get particles"
+        In-Inventory-Item-Name: "&cRemove particles"
+        In-Inventory-Item-Lore: "&7Right click to open menu"
+        <!-- Moved from In-Game.Particle-Removed -->
+        Particle-Removed: "&cParticle successfully removed!"
+      Players-Heads:
+        Inventory-Name: "&aPlayers heads menu"
+        Item-Name: "&aGet player heads"
+        Item-Lore: "&7Click to get heads"
+        No-Permission: "&cYou don't have permission!"
+      Floor:
+        Item-Name: "&aChange floor material"
+        Item-Lore: "&7Drag block here to change floor"
+        Floor-Changed: "&aFloor material changed!"
+      Time:
+        Inventory-Name: "&aSet time"
+        Item-Name: "&aChange plot time"
+        Item-Lore: "&7Right click to open menu"
+        Time-Type:
+          World-Time: "&eWorld time"
+          Day: "&eDay (1000 ticks)"
+          Sunset: "&eSunset (12000 ticks)"
+          Night: "&eNight (13000 ticks)"
+          Sunrise: "&eSunrise (23000 ticks)"
+      Weather:
+        Inventory-Name: "&aSet weather"
+        Item-Name: "&aChange plot weather"
+        Item-Lore: "&7Right click to open menu"
+        Weather-Type:
+          Downfall: "&eDownfall"
+          Clear: "&eClear"
+        Weather-Set: "&eWeather has been changed"
+      Reset:
+        Item-Name: "&cReset plot"
+        Item-Lore: "&7Fully reset plot, &c&lcan't be undone!"
+        Plot-Reset: "&cPlot fully reset!"
+    <!-- New end -->
+    <!-- Old -->
     Particle-Inventory-Name: "&aParticles menu"
     Particle-Option: "&aChoose particles"
     Particle-Option-Lore: "&7Click to get particles"
@@ -184,6 +283,7 @@ Menus:
     Weather-Set: "&eWeather has been changed"
     Weather-Downfall: "&eDownfall"
     Weather-Clear: "&eClear"
+    <!-- Old end -->
   Theme-Voting:
     Inventory-Name: "What theme?"
     Theme-Item-Name: "&6%theme%"
@@ -194,6 +294,14 @@ Menus:
     Super-Vote-Item-Name: "&bSuper vote"
     Super-Vote-Item-Lore: "&7You have &b%owned% super votes;;&eClick to super vote &b%theme%&e!"
     Super-Vote-Used: "&7Player &e%player% &7has used &bSuper vote &7for theme &b%theme%&7! Starting now..."
+  Guess-The-Build-Theme-Selector:
+    Inventory-Name: "Select a theme to build!"
+    Theme-Item-Name: "&b%theme%"
+    Theme-Item-Lore: "%difficulty%;;&b+%points% &7points if player's guess it correctly;;&eClick to select!"
+    Difficulties:
+      Easy: "&aEASY"
+      Medium: "&eMEDIUM"
+      Hard: "&cHARD"
 
 Signs:
   Please-Type-Arena-Name: "&cPlease type arena name in second line!"
@@ -214,4 +322,4 @@ Signs:
     - "&5[%playersize%/%maxplayers%]"
 
 # Do not modify!
-File-Version-Do-Not-Edit: 7
+File-Version-Do-Not-Edit: 8
