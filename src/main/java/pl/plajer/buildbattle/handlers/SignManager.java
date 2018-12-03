@@ -88,20 +88,21 @@ public class SignManager implements Listener {
         return;
       }
       for (Arena arena : ArenaRegistry.getArenas()) {
-        if (arena.getID().equalsIgnoreCase(e.getLine(1))) {
-          for (int i = 0; i < signLines.size(); i++) {
-            e.setLine(i, formatSign(signLines.get(i), arena));
-          }
-          loadedSigns.put((Sign) e.getBlock().getState(), arena);
-          e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Created"));
-          String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + "," + e.getBlock().getY() + "," + e.getBlock().getZ() + ",0.0,0.0";
-          FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-          List<String> locs = config.getStringList("instances." + arena.getID() + ".signs");
-          locs.add(location);
-          config.set("instances." + arena.getID() + ".signs", locs);
-          ConfigUtils.saveConfig(plugin, config, "arenas");
-          return;
+        if (!arena.getID().equalsIgnoreCase(e.getLine(1))) {
+          continue;
         }
+        for (int i = 0; i < signLines.size(); i++) {
+          e.setLine(i, formatSign(signLines.get(i), arena));
+        }
+        loadedSigns.put((Sign) e.getBlock().getState(), arena);
+        e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Created"));
+        String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + "," + e.getBlock().getY() + "," + e.getBlock().getZ() + ",0.0,0.0";
+        FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+        List<String> locs = config.getStringList("instances." + arena.getID() + ".signs");
+        locs.add(location);
+        config.set("instances." + arena.getID() + ".signs", locs);
+        ConfigUtils.saveConfig(plugin, config, "arenas");
+        return;
       }
       e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Arena-Doesnt-Exists"));
     } catch (Exception ex) {
@@ -137,14 +138,15 @@ public class SignManager implements Listener {
       String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + ".0," + e.getBlock().getY() + ".0," + e.getBlock().getZ() + ".0," + "0.0,0.0";
       for (String arena : config.getConfigurationSection("instances").getKeys(false)) {
         for (String sign : config.getStringList("instances." + arena + ".signs")) {
-          if (sign.equals(location)) {
-            List<String> signs = config.getStringList("instances." + arena + ".signs");
-            signs.remove(location);
-            config.set(arena + ".signs", signs);
-            ConfigUtils.saveConfig(plugin, config, "arenas");
-            e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Removed"));
-            return;
+          if (!sign.equals(location)) {
+            continue;
           }
+          List<String> signs = config.getStringList("instances." + arena + ".signs");
+          signs.remove(location);
+          config.set(arena + ".signs", signs);
+          ConfigUtils.saveConfig(plugin, config, "arenas");
+          e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Removed"));
+          return;
         }
       }
       e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatColor.RED + "Couldn't remove sign from configuration! Please do this manually!");
@@ -179,48 +181,49 @@ public class SignManager implements Listener {
   }
 
   private void updateSignScheduler() {
+    if (!plugin.getConfig().getBoolean("Signs-Block-States-Enabled", true)) {
+      return;
+    }
     Bukkit.getScheduler().runTaskTimer(plugin, () -> {
       for (Sign s : loadedSigns.keySet()) {
         for (int i = 0; i < signLines.size(); i++) {
           s.setLine(i, formatSign(signLines.get(i), loadedSigns.get(s)));
         }
         Block block = s.getBlock();
-        if (plugin.getConfig().getBoolean("Signs-Block-States-Enabled", true)) {
-          if (block.getType() == XMaterial.WALL_SIGN.parseMaterial() || ((plugin.is1_11_R1() || plugin.is1_12_R1() && block.getType() == Material.SIGN_POST))) {
-            Block behind = block.getRelative(((org.bukkit.material.Sign) s.getData()).getAttachedFace());
-            behind.setType(XMaterial.WHITE_STAINED_GLASS.parseMaterial());
-            switch (loadedSigns.get(s).getArenaState()) {
-              case WAITING_FOR_PLAYERS:
-                behind.setType(XMaterial.WHITE_STAINED_GLASS.parseMaterial());
-                if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
-                  behind.setData((byte) 0);
-                }
-                break;
-              case STARTING:
-                behind.setType(XMaterial.YELLOW_STAINED_GLASS.parseMaterial());
-                if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
-                  behind.setData((byte) 4);
-                }
-                break;
-              case IN_GAME:
-                behind.setType(XMaterial.ORANGE_STAINED_GLASS.parseMaterial());
-                if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
-                  behind.setData((byte) 1);
-                }
-                break;
-              case ENDING:
-                behind.setType(XMaterial.GRAY_STAINED_GLASS.parseMaterial());
-                if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
-                  behind.setData((byte) 7);
-                }
-                break;
-              case RESTARTING:
-                behind.setType(XMaterial.BLACK_STAINED_GLASS.parseMaterial());
-                if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
-                  behind.setData((byte) 15);
-                }
-                break;
-            }
+        if (block.getType() == XMaterial.WALL_SIGN.parseMaterial() || ((plugin.is1_11_R1() || plugin.is1_12_R1() && block.getType() == Material.SIGN_POST))) {
+          Block behind = block.getRelative(((org.bukkit.material.Sign) s.getData()).getAttachedFace());
+          behind.setType(XMaterial.WHITE_STAINED_GLASS.parseMaterial());
+          switch (loadedSigns.get(s).getArenaState()) {
+            case WAITING_FOR_PLAYERS:
+              behind.setType(XMaterial.WHITE_STAINED_GLASS.parseMaterial());
+              if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+                behind.setData((byte) 0);
+              }
+              break;
+            case STARTING:
+              behind.setType(XMaterial.YELLOW_STAINED_GLASS.parseMaterial());
+              if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+                behind.setData((byte) 4);
+              }
+              break;
+            case IN_GAME:
+              behind.setType(XMaterial.ORANGE_STAINED_GLASS.parseMaterial());
+              if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+                behind.setData((byte) 1);
+              }
+              break;
+            case ENDING:
+              behind.setType(XMaterial.GRAY_STAINED_GLASS.parseMaterial());
+              if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+                behind.setData((byte) 7);
+              }
+              break;
+            case RESTARTING:
+              behind.setType(XMaterial.BLACK_STAINED_GLASS.parseMaterial());
+              if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+                behind.setData((byte) 15);
+              }
+              break;
           }
         }
         s.update();
