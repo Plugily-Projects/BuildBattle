@@ -185,9 +185,6 @@ public class Main extends JavaPlugin {
       for (String s : filesToGenerate) {
         ConfigUtils.getConfig(this, s);
       }
-      if (getConfig().getBoolean("BungeeActivated")) {
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-      }
       databaseActivated = this.getConfig().getBoolean("DatabaseActivated");
       if (databaseActivated) {
         FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
