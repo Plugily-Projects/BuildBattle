@@ -78,6 +78,7 @@ import pl.plajerlair.core.services.exception.ReportedException;
 /**
  * Created by Tom on 17/08/2015.
  */
+//todo centralized inventoryclickitem event listener
 public class GameEvents implements Listener {
 
   private Main plugin;
@@ -326,26 +327,56 @@ public class GameEvents implements Listener {
       if (e.getInventory() == null || e.getInventory().getName() == null || !(e.getWhoClicked() instanceof Player) || arena == null) {
         return;
       }
-      if (e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Inventory-Name"))) {
-        e.setCancelled(true);
-        if (!Utils.isNamed(e.getCurrentItem())) {
-          return;
+      if (!e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Inventory-Name"))) {
+        return;
+      }
+      e.setCancelled(true);
+      if (!Utils.isNamed(e.getCurrentItem()) || arena.getPlotManager().getPlot(player) == null) {
+        return;
+      }
+      if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Downfall"))) {
+        arena.getPlotManager().getPlot(player).setWeatherType(WeatherType.DOWNFALL);
+        e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Set"));
+      } else if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Clear"))) {
+        arena.getPlotManager().getPlot(player).setWeatherType(WeatherType.CLEAR);
+        e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Set"));
+      }
+      for (UUID owner : arena.getPlotManager().getPlot(player).getOwners()) {
+        if (Bukkit.getPlayer(owner).isOnline()) {
+          Bukkit.getPlayer(owner).setPlayerWeather(arena.getPlotManager().getPlot(player).getWeatherType());
         }
-        if (arena.getPlotManager().getPlot(player) == null) {
-          return;
+      }
+    } catch (Exception ex) {
+      new ReportedException(plugin, ex);
+    }
+  }
+
+  @EventHandler
+  public void onTimeMenuClick(InventoryClickEvent e) {
+    try {
+      if (!(e.getWhoClicked() instanceof Player)) {
+        return;
+      }
+      Player player = (Player) e.getWhoClicked();
+      Arena arena = ArenaRegistry.getArena(player);
+      if (e.getInventory() == null || e.getInventory().getName() == null || !(e.getWhoClicked() instanceof Player) || arena == null) {
+        return;
+      }
+      if (!e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Inventory-Name"))) {
+        return;
+      }
+      e.setCancelled(true);
+      if (!Utils.isNamed(e.getCurrentItem()) || arena.getPlotManager().getPlot(player) == null) {
+        return;
+      }
+      ArenaPlot plot = arena.getPlotManager().getPlot(player);
+      plot.setTime(ArenaPlot.Time.valueOf(GameInventories.TimeClickPosition.getByPosition(e.getRawSlot()).toString()));
+      for (UUID owner : plot.getOwners()) {
+        Player p = Bukkit.getPlayer(owner);
+        if (p == null) {
+          continue;
         }
-        if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Downfall"))) {
-          arena.getPlotManager().getPlot(player).setWeatherType(WeatherType.DOWNFALL);
-          e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Set"));
-        } else if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Clear"))) {
-          arena.getPlotManager().getPlot(player).setWeatherType(WeatherType.CLEAR);
-          e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Set"));
-        }
-        for (UUID owner : arena.getPlotManager().getPlot(player).getOwners()) {
-          if (Bukkit.getPlayer(owner).isOnline()) {
-            Bukkit.getPlayer(owner).setPlayerWeather(arena.getPlotManager().getPlot(player).getWeatherType());
-          }
-        }
+        p.setPlayerTime(ArenaPlot.Time.format(plot.getTime(), p.getWorld().getTime()), false);
       }
     } catch (Exception ex) {
       new ReportedException(plugin, ex);

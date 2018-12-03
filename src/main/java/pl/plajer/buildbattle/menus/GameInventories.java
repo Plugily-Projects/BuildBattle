@@ -47,11 +47,11 @@ public class GameInventories {
     inventories.put(InventoryType.WEATHER, weatherInv);
 
     Inventory timeInv = Bukkit.createInventory(null, 9, ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Inventory-Name"));
-    timeInv.addItem(new ItemBuilder(XMaterial.CLOCK.parseItem()).name(ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Time-Type.World-Time")).build());
-    timeInv.addItem(new ItemBuilder(XMaterial.CLOCK.parseItem()).name(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Day")).build());
-    timeInv.addItem(new ItemBuilder(XMaterial.CLOCK.parseItem()).name(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Sunset")).build());
-    timeInv.addItem(new ItemBuilder(XMaterial.CLOCK.parseItem()).name(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Night")).build());
-    timeInv.addItem(new ItemBuilder(XMaterial.CLOCK.parseItem()).name(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Sunrise")).build());
+    timeInv.setItem(0, new ItemBuilder(XMaterial.CLOCK.parseItem()).name(ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Time-Type.World-Time")).build());
+    timeInv.setItem(1, new ItemBuilder(XMaterial.CLOCK.parseItem()).name(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Day")).build());
+    timeInv.setItem(2, new ItemBuilder(XMaterial.CLOCK.parseItem()).name(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Sunset")).build());
+    timeInv.setItem(3, new ItemBuilder(XMaterial.CLOCK.parseItem()).name(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Night")).build());
+    timeInv.setItem(4, new ItemBuilder(XMaterial.CLOCK.parseItem()).name(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Sunrise")).build());
     inventories.put(InventoryType.TIME, timeInv);
   }
 
@@ -67,6 +67,36 @@ public class GameInventories {
 
   public enum InventoryType {
     WEATHER, TIME
+  }
+
+  //todo maybe replace with ArenaPlot.Time
+  public enum TimeClickPosition {
+    WORLD_TIME(0), DAY(1), SUNSET(2), NIGHT(3), SUNRISE(4);
+
+    private int position;
+
+    TimeClickPosition(int position) {
+      this.position = position;
+    }
+
+    /**
+     * Get time by clicked inventory position
+     *
+     * @param pos clicked position
+     * @return clicked time, returns WORLD_TIME if clicked not matching results
+     */
+    public static TimeClickPosition getByPosition(int pos) {
+      for (TimeClickPosition position : values()) {
+        if (position.getPosition() == pos) {
+          return position;
+        }
+      }
+      return TimeClickPosition.WORLD_TIME;
+    }
+
+    public int getPosition() {
+      return position;
+    }
   }
 
 }
