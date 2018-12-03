@@ -31,6 +31,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.WeatherType;
+import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -55,8 +56,13 @@ public class ArenaPlot {
   private List<UUID> uuids = new ArrayList<>();
   private Map<Location, Particle> particles = new HashMap<>();
   private Time time = Time.WORLD_TIME;
+  private Biome plotDefaultBiome;
   private WeatherType weatherType = WeatherType.CLEAR;
   private int entities = 0;
+
+  public ArenaPlot(Biome biome) {
+    plotDefaultBiome = biome;
+  }
 
   public int getEntities() {
     return entities;
@@ -77,6 +83,10 @@ public class ArenaPlot {
 
   public void addParticle(Location location, Particle effect) {
     particles.put(location, effect);
+  }
+
+  public Biome getPlotDefaultBiome() {
+    return plotDefaultBiome;
   }
 
   public WeatherType getWeatherType() {
@@ -117,21 +127,8 @@ public class ArenaPlot {
 
   public void fullyResetPlot() {
     try {
-      for (Block block : cuboid.blockList()) {
-        if (block.getType() != Material.AIR) {
-          block.setType(Material.AIR);
-        }
-      }
-      for (UUID u : uuids) {
-        Player p = Bukkit.getPlayer(u);
-        if (p == null) {
-          continue;
-        }
-        p.resetPlayerWeather();
-        setWeatherType(p.getPlayerWeather());
-        p.resetPlayerTime();
-      }
-      if (uuids != null || !uuids.isEmpty()) {
+      resetPlot();
+      if (uuids != null && !uuids.isEmpty()) {
         for (UUID u : uuids) {
           User user = UserManager.getUser(u);
           user.setCurrentPlot(null);
@@ -140,17 +137,6 @@ public class ArenaPlot {
         }
       }
       getParticles().clear();
-      for (Entity entity : cuboid.getCenter().getWorld().getEntities()) {
-        if (cuboid.isInWithMarge(entity.getLocation(), 3)) {
-          if (JavaPlugin.getPlugin(Main.class).getServer().getPluginManager().isPluginEnabled("Citizens")) {
-            if (CitizensAPI.getNPCRegistry().isNPC(entity)) continue;
-          }
-          if (entity.getType() != EntityType.PLAYER) {
-            entity.remove();
-          }
-        }
-      }
-      changeFloor(ConfigPreferences.getDefaultFloorMaterial());
     } catch (Exception ex) {
       new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
     }
@@ -166,6 +152,9 @@ public class ArenaPlot {
       getParticles().clear();
       for (UUID u : uuids) {
         Player p = Bukkit.getPlayer(u);
+        if (p == null) {
+          continue;
+        }
         p.resetPlayerWeather();
         setWeatherType(p.getPlayerWeather());
         p.resetPlayerTime();
@@ -181,6 +170,7 @@ public class ArenaPlot {
         }
       }
       changeFloor(ConfigPreferences.getDefaultFloorMaterial());
+      cuboid.getCenter().getWorld().setBiome(cuboid.getMinPoint().getBlockX(), cuboid.getMaxPoint().getBlockZ(), plotDefaultBiome);
     } catch (Exception ex) {
       new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
     }

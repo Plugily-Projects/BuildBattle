@@ -23,6 +23,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -127,9 +128,9 @@ public class ArenaRegistry {
           if (config.isConfigurationSection(s + "plots")) {
             for (String plotName : config.getConfigurationSection(s + "plots").getKeys(false)) {
               if (config.isSet(s + "plots." + plotName + ".maxpoint") && config.isSet(s + "plots." + plotName + ".minpoint")) {
-                ArenaPlot buildPlot = new ArenaPlot();
-                buildPlot.setCuboid(new Cuboid(LocationUtils.getLocation(config.getString(s + "plots." + plotName + ".minpoint")),
-                        LocationUtils.getLocation(config.getString(s + "plots." + plotName + ".maxpoint"))));
+                Location minPoint = LocationUtils.getLocation(config.getString(s + "plots." + plotName + ".minpoint"));
+                ArenaPlot buildPlot = new ArenaPlot(minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ()));
+                buildPlot.setCuboid(new Cuboid(minPoint, LocationUtils.getLocation(config.getString(s + "plots." + plotName + ".maxpoint"))));
                 buildPlot.fullyResetPlot();
                 arena.getPlotManager().addBuildPlot(buildPlot);
               } else {

@@ -101,7 +101,7 @@ public class SetupInventoryEvents implements Listener {
         return;
       }
       Player player = (Player) e.getWhoClicked();
-      if (!(player.hasPermission("villagedefense.admin.create") || e.getInventory().getName().contains("BB Arena:") || Utils.isNamed(e.getCurrentItem()))) {
+      if (!(player.hasPermission("villagedefense.admin.create") && e.getInventory().getName().contains("BB Arena:") && Utils.isNamed(e.getCurrentItem()))) {
         return;
       }
 
@@ -213,9 +213,9 @@ public class SetupInventoryEvents implements Listener {
               e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Plots are not configured properly! (missing selection values)");
               return;
             }
-            ArenaPlot buildPlot = new ArenaPlot();
-            buildPlot.setCuboid(new Cuboid(LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint")),
-                LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint"))));
+            Location minPoint = LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint"));
+            ArenaPlot buildPlot = new ArenaPlot(minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ()));
+            buildPlot.setCuboid(new Cuboid(minPoint, LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint"))));
             buildPlot.fullyResetPlot();
             arena.getPlotManager().addBuildPlot(buildPlot);
           }
@@ -241,9 +241,9 @@ public class SetupInventoryEvents implements Listener {
           arena.setArenaType(Arena.ArenaType.valueOf(config.getString("instances." + arena.getID() + ".gametype").toUpperCase()));
 
           for (String plotName : config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false)) {
-            ArenaPlot buildPlot = new ArenaPlot();
-            buildPlot.setCuboid(new Cuboid(LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint")),
-                LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint"))));
+            Location minPoint = LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint"));
+            ArenaPlot buildPlot = new ArenaPlot(minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ()));
+            buildPlot.setCuboid(new Cuboid(minPoint, LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint"))));
             buildPlot.fullyResetPlot();
             arena.getPlotManager().addBuildPlot(buildPlot);
           }
