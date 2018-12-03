@@ -39,6 +39,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
+import pl.plajerlair.core.utils.XMaterial;
 
 /**
  * Created by Tom on 29/07/2014.

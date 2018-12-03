@@ -31,8 +31,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.handlers.ChatManager;
-import pl.plajer.buildbattle.utils.XMaterial;
 import pl.plajerlair.core.utils.ConfigUtils;
+import pl.plajerlair.core.utils.XMaterial;
 
 /**
  * Created by Tom on 5/02/2016.

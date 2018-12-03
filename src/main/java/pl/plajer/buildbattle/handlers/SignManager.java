@@ -44,10 +44,10 @@ import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
-import pl.plajer.buildbattle.utils.XMaterial;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.LocationUtils;
+import pl.plajerlair.core.utils.XMaterial;
 
 /**
  * @author Plajer
@@ -77,8 +77,12 @@ public class SignManager implements Listener {
   @EventHandler
   public void onSignChange(SignChangeEvent e) {
     try {
-      if (!e.getPlayer().hasPermission("buildbattle.admin.sign.create")) return;
-      if (!e.getLine(0).equalsIgnoreCase("[buildbattle]")) return;
+      if (!e.getPlayer().hasPermission("buildbattle.admin.sign.create")) {
+        return;
+      }
+      if (!e.getLine(0).equalsIgnoreCase("[buildbattle]")) {
+        return;
+      }
       if (e.getLine(1).isEmpty()) {
         e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Please-Type-Arena-Name"));
         return;
@@ -122,8 +126,12 @@ public class SignManager implements Listener {
   @EventHandler
   public void onSignDestroy(BlockBreakEvent e) {
     try {
-      if (!e.getPlayer().hasPermission("buildbattle.admin.sign.break")) return;
-      if (loadedSigns.get(e.getBlock().getState()) == null) return;
+      if (!e.getPlayer().hasPermission("buildbattle.admin.sign.break")) {
+        return;
+      }
+      if (loadedSigns.get(e.getBlock().getState()) == null) {
+        return;
+      }
       loadedSigns.remove(e.getBlock().getState());
       FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
       String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + ".0," + e.getBlock().getY() + ".0," + e.getBlock().getZ() + ".0," + "0.0,0.0";
@@ -147,9 +155,11 @@ public class SignManager implements Listener {
 
   @EventHandler
   public void onJoinAttempt(PlayerInteractEvent e) {
-    if (e.getHand() == EquipmentSlot.OFF_HAND) return;
+    if (e.getHand() == EquipmentSlot.OFF_HAND) {
+      return;
+    }
     if (e.getAction() == Action.RIGHT_CLICK_BLOCK &&
-            e.getClickedBlock().getState() instanceof Sign && loadedSigns.containsKey(e.getClickedBlock().getState())) {
+        e.getClickedBlock().getState() instanceof Sign && loadedSigns.containsKey(e.getClickedBlock().getState())) {
       ArenaManager.joinAttempt(e.getPlayer(), loadedSigns.get(e.getClickedBlock().getState()));
     }
   }

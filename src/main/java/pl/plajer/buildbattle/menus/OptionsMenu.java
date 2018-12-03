@@ -28,8 +28,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.plots.ArenaPlot;
 import pl.plajer.buildbattle.handlers.ChatManager;
-import pl.plajer.buildbattle.utils.XMaterial;
 import pl.plajerlair.core.utils.ItemBuilder;
+import pl.plajerlair.core.utils.XMaterial;
 
 /**
  * Created by Tom on 18/08/2015.
