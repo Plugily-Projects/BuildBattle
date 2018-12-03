@@ -70,7 +70,7 @@ import pl.plajerlair.core.utils.MinigameUtils;
  */
 public class Arena extends BukkitRunnable {
 
-  private static Main plugin;
+  private Main plugin;
   private static List<Material> blacklist = new ArrayList<>();
   //todo hold players here
   private Map<Integer, List<UUID>> topList = new HashMap<>();
@@ -84,14 +84,7 @@ public class Arena extends BukkitRunnable {
   private boolean voteTime;
   private boolean themeVoteTime = true;
   private boolean themeTimerSet = false;
-  private boolean bossBarEnabled = ConfigPreferences.isBarEnabled();
   private int BUILD_TIME;
-  private boolean PLAYERS_OUTSIDE_GAME_ENABLED = ConfigPreferences.isHidePlayersOutsideGameEnabled();
-  private int LOBBY_STARTING_TIMER = ConfigPreferences.getLobbyTimer();
-  private boolean WIN_COMMANDS_ENABLED = ConfigPreferences.isWinCommandsEnabled();
-  private boolean SECOND_PLACE_COMMANDS_ENABLED = ConfigPreferences.isSecondPlaceCommandsEnabled();
-  private boolean THIRD_PLACE_COMMANDS_ENABLED = ConfigPreferences.isThirdPlaceCommandsEnabled();
-  private boolean END_GAME_COMMANDS_ENABLED = ConfigPreferences.isEndGameCommandsEnabled();
   private ArenaState gameState;
   private int minimumPlayers = 2;
   private int maximumPlayers = 10;
@@ -119,8 +112,9 @@ public class Arena extends BukkitRunnable {
 
   public Arena(String ID, Main plugin) {
     gameState = ArenaState.WAITING_FOR_PLAYERS;
+    this.plugin = plugin;
     this.ID = ID;
-    if (bossBarEnabled) {
+    if (ConfigPreferences.isBossBarEnabled()) {
       gameBar = Bukkit.createBossBar(ChatManager.colorMessage("Bossbar.Waiting-For-Players"), BarColor.BLUE, BarStyle.SOLID);
     }
     plotManager = new ArenaPlotManager(this);
@@ -270,7 +264,7 @@ public class Arena extends BukkitRunnable {
         return;
       }
       updateScoreboard();
-      if (bossBarEnabled) {
+      if (ConfigPreferences.isBossBarEnabled()) {
         updateBossBar();
       }
       switch (arenaType) {
@@ -296,7 +290,7 @@ public class Arena extends BukkitRunnable {
         getPlotManager().resetPlotsGradually();
         if (getPlayers().size() < getMinimumPlayers()) {
           if (getTimer() <= 0) {
-            setTimer(LOBBY_STARTING_TIMER);
+            setTimer(ConfigPreferences.getLobbyTimer());
             ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", String.valueOf(getMinimumPlayers())));
             return;
           }
@@ -304,7 +298,7 @@ public class Arena extends BukkitRunnable {
           ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
           setGameState(ArenaState.STARTING);
           Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
-          setTimer(LOBBY_STARTING_TIMER);
+          setTimer(ConfigPreferences.getLobbyTimer());
           this.showPlayers();
         }
         setTimer(getTimer() - 1);
@@ -318,7 +312,7 @@ public class Arena extends BukkitRunnable {
           ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", String.valueOf(getMinimumPlayers())));
           setGameState(ArenaState.WAITING_FOR_PLAYERS);
           Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
-          setTimer(LOBBY_STARTING_TIMER);
+          setTimer(ConfigPreferences.getLobbyTimer());
           for (Player player : getPlayers()) {
             player.setExp(1);
             player.setLevel(0);
@@ -339,7 +333,7 @@ public class Arena extends BukkitRunnable {
             player.setGameMode(GameMode.CREATIVE);
             player.setAllowFlight(true);
             player.setFlying(true);
-            if (PLAYERS_OUTSIDE_GAME_ENABLED) {
+            if (ConfigPreferences.isHidePlayersOutsideGameEnabled()) {
               hidePlayersOutsideTheGame(player);
             }
             player.getInventory().setItem(8, plugin.getOptionsMenu().getMenuItem());
@@ -490,7 +484,7 @@ public class Arena extends BukkitRunnable {
         if (getTimer() <= 0) {
           teleportAllToEndLocation();
           for (Player player : getPlayers()) {
-            if (bossBarEnabled) {
+            if (ConfigPreferences.isBossBarEnabled()) {
               gameBar.removePlayer(player);
             }
             player.getInventory().clear();
@@ -807,7 +801,7 @@ public class Arena extends BukkitRunnable {
 
 
   private void giveRewards() {
-    if (WIN_COMMANDS_ENABLED) {
+    if (ConfigPreferences.isWinCommandsEnabled()) {
       if (topList.get(1) != null) {
         for (String string : ConfigPreferences.getWinCommands(ConfigPreferences.Position.FIRST)) {
           for (UUID u : topList.get(1)) {
@@ -816,7 +810,7 @@ public class Arena extends BukkitRunnable {
         }
       }
     }
-    if (SECOND_PLACE_COMMANDS_ENABLED) {
+    if (ConfigPreferences.isSecondPlaceCommandsEnabled()) {
       if (topList.get(2) != null) {
         for (String string : ConfigPreferences.getWinCommands(ConfigPreferences.Position.SECOND)) {
           for (UUID u : topList.get(2)) {
@@ -825,7 +819,7 @@ public class Arena extends BukkitRunnable {
         }
       }
     }
-    if (THIRD_PLACE_COMMANDS_ENABLED) {
+    if (ConfigPreferences.isThirdPlaceCommandsEnabled()) {
       if (topList.get(3) != null) {
         for (String string : ConfigPreferences.getWinCommands(ConfigPreferences.Position.THIRD)) {
           for (UUID u : topList.get(3)) {
@@ -834,7 +828,7 @@ public class Arena extends BukkitRunnable {
         }
       }
     }
-    if (END_GAME_COMMANDS_ENABLED) {
+    if (ConfigPreferences.isEndGameCommandsEnabled()) {
       for (String string : ConfigPreferences.getEndGameCommands()) {
         for (Player player : getPlayers()) {
           plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), string.replace("%PLAYER%", player.getName()).replace("%RANG%", Integer.toString(getRang(player))));
