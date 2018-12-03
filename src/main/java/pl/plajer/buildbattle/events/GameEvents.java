@@ -69,7 +69,6 @@ import pl.plajer.buildbattle.arena.plots.ArenaPlot;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.items.SpecialItemManager;
 import pl.plajer.buildbattle.menus.GameInventories;
-import pl.plajer.buildbattle.menus.OptionsMenu;
 import pl.plajer.buildbattle.menus.particles.ParticleMenu;
 import pl.plajer.buildbattle.menus.particles.ParticleRemoveMenu;
 import pl.plajer.buildbattle.menus.playerheads.PlayerHeadsMenu;
@@ -167,10 +166,10 @@ public class GameEvents implements Listener {
       if (arena == null || arena.getArenaState() != ArenaState.IN_GAME || arena.isVoting()) {
         return;
       }
-      if (!OptionsMenu.getMenuItem().getItemMeta().getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())) {
+      if (!plugin.getOptionsMenu().getMenuItem().getItemMeta().getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())) {
         return;
       }
-      OptionsMenu.openMenu(event.getPlayer(), arena.getPlotManager().getPlot(event.getPlayer()));
+      plugin.getOptionsMenu().openMenu(event.getPlayer(), arena.getPlotManager().getPlot(event.getPlayer()));
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }

@@ -36,13 +36,15 @@ import pl.plajerlair.core.utils.XMaterial;
  */
 public class OptionsMenu {
 
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
+  private Main plugin = JavaPlugin.getPlugin(Main.class);
 
-  public static ItemStack getMenuItem() {
-    return new ItemBuilder(new ItemStack(Material.NETHER_STAR)).name(ChatManager.colorMessage("Menus.Option-Menu.Option-Item")).lore(ChatManager.colorMessage("Menus.Option-Menu.Option-Item-Lore")).build();
+  public ItemStack getMenuItem() {
+    return new ItemBuilder(new ItemStack(Material.NETHER_STAR))
+        .name(ChatManager.colorMessage("Menus.Option-Menu.Option-Item"))
+        .lore(ChatManager.colorMessage("Menus.Option-Menu.Option-Item-Lore")).build();
   }
 
-  private static Inventory createMenu(ArenaPlot plot) {
+  private Inventory createMenu(ArenaPlot plot) {
     Inventory inv = Bukkit.createInventory(null, 5 * 9, ChatManager.colorMessage("Menus.Option-Menu.Inventory-Name"));
 
     ItemStack headOption;
@@ -83,7 +85,7 @@ public class OptionsMenu {
     return inv;
   }
 
-  public static void openMenu(Player player, ArenaPlot buildPlot) {
+  public void openMenu(Player player, ArenaPlot buildPlot) {
     player.openInventory(createMenu(buildPlot));
   }
 
