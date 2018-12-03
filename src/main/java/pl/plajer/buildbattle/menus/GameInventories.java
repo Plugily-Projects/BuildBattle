@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -30,6 +31,7 @@ import org.bukkit.inventory.ItemStack;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.utils.XMaterial;
 import pl.plajerlair.core.utils.ItemBuilder;
+import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
  * @author Plajer
@@ -53,6 +55,12 @@ public class GameInventories {
     timeInv.setItem(3, new ItemBuilder(XMaterial.CLOCK.parseItem()).name(ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Time-Type.Night")).build());
     timeInv.setItem(4, new ItemBuilder(XMaterial.CLOCK.parseItem()).name(ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Time-Type.Sunrise")).build());
     inventories.put(InventoryType.TIME, timeInv);
+
+    Inventory biomeInv = Bukkit.createInventory(null, MinigameUtils.serializeInt(Biome.values().length), ChatManager.colorMessage("Menus.Option-Menu.Items.Biome.Inventory-Name"));
+    for (Biome biome : Biome.values()) {
+      biomeInv.addItem(new ItemBuilder(new ItemStack(Material.GRASS)).name(ChatManager.colorRawMessage("&6" + biome.name())).build());
+    }
+    inventories.put(InventoryType.BIOME, biomeInv);
   }
 
   /**
@@ -66,7 +74,7 @@ public class GameInventories {
   }
 
   public enum InventoryType {
-    WEATHER, TIME
+    WEATHER, TIME, BIOME
   }
 
   //todo maybe replace with ArenaPlot.Time

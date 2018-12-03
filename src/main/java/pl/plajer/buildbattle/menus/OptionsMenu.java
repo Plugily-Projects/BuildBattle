@@ -64,15 +64,19 @@ public class OptionsMenu {
         .name(ChatManager.colorMessage("Menus.Option-Menu.Items.Floor.Item-Name"))
         .lore(ChatManager.colorMessage("Menus.Option-Menu.Items.Floor.Item-Lore"))
         .build());
-    inv.setItem(29, new ItemBuilder(new ItemStack(Material.BUCKET))
+    inv.setItem(28, new ItemBuilder(new ItemStack(Material.BUCKET))
         .name(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Item-Name"))
         .lore(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Item-Lore"))
         .build());
-    inv.setItem(31, new ItemBuilder(XMaterial.CLOCK.parseItem())
+    inv.setItem(30, new ItemBuilder(XMaterial.CLOCK.parseItem())
         .name(ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Item-Name"))
         .lore(ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Item-Lore"))
         .build());
-    inv.setItem(33, new ItemBuilder(new ItemStack(Material.BARRIER))
+    inv.setItem(32, new ItemBuilder(XMaterial.MYCELIUM.parseItem())
+        .name(ChatManager.colorMessage("Menus.Option-Menu.Items.Biome.Item-Name"))
+        .lore(ChatManager.colorMessage("Menus.Option-Menu.Items.Biome.Item-Lore"))
+        .build());
+    inv.setItem(34, new ItemBuilder(new ItemStack(Material.BARRIER))
         .name(ChatManager.colorMessage("Menus.Option-Menu.Items.Reset.Item-Name"))
         .lore(ChatManager.colorMessage("Menus.Option-Menu.Items.Reset.Item-Lore"))
         .build());

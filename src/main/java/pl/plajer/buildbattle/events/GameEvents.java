@@ -21,8 +21,11 @@ package pl.plajer.buildbattle.events;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.WeatherType;
+import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
@@ -384,6 +387,48 @@ public class GameEvents implements Listener {
   }
 
   @EventHandler
+  public void onBiomeItemClick(InventoryClickEvent e) {
+    try {
+      if (!(e.getWhoClicked() instanceof Player)) {
+        return;
+      }
+      Player player = (Player) e.getWhoClicked();
+      Arena arena = ArenaRegistry.getArena(player);
+      if (e.getInventory() == null || e.getInventory().getName() == null || !(e.getWhoClicked() instanceof Player) || arena == null) {
+        return;
+      }
+      if (!e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Biome.Inventory-Name"))) {
+        return;
+      }
+      e.setCancelled(true);
+      if (!Utils.isNamed(e.getCurrentItem()) || arena.getPlotManager().getPlot(player) == null) {
+        return;
+      }
+      ArenaPlot plot = arena.getPlotManager().getPlot(player);
+      for (Block block : plot.getCuboid().blockList()) {
+        block.setBiome(Biome.valueOf(ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName())));
+      }
+      for (Chunk chunk : plot.getCuboid().chunkList()) {
+        for (Player p : Bukkit.getOnlinePlayers()) {
+          Utils.sendPacket(p, Utils.getNMSClass("PacketPlayOutMapChunk").getConstructor(Utils.getNMSClass("Chunk"), int.class)
+              .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535));
+        }
+      }
+      for (UUID owner : plot.getOwners()) {
+        Player p = Bukkit.getPlayer(owner);
+        if (p == null) {
+          continue;
+        }
+        p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Items.Biome.Biome-Set"));
+      }
+    } catch (Exception ex) {
+      new ReportedException(plugin, ex);
+    }
+  }
+
+  //todo code must be changed
+  @Deprecated
+  @EventHandler
   public void onOptionMenuClick(InventoryClickEvent e) {
     try {
       if (e.getWhoClicked() instanceof Player && ArenaRegistry.getArena((Player) e.getWhoClicked()) != null && Utils.isNamed(e.getCurrentItem()) &&
@@ -420,6 +465,10 @@ public class GameEvents implements Listener {
       } else if (displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Item-Name"))) {
         player.closeInventory();
         plugin.getGameInventories().openInventory(GameInventories.InventoryType.TIME, player);
+        return;
+      } else if (displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Biome.Item-Name"))) {
+        player.closeInventory();
+        plugin.getGameInventories().openInventory(GameInventories.InventoryType.BIOME, player);
         return;
       }
       if (e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))) {

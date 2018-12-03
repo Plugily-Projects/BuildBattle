@@ -249,6 +249,11 @@ Menus:
           Night: "&eNight (13000 ticks)"
           Sunrise: "&eSunrise (23000 ticks)"
         Time-Set: "&eTime has been changed"
+      Biome:
+        Inventory-Name: "&aSet biome"
+        Item-Name: "&aChange plot biome"
+        Item-Lore: "&7Right click to open menu"
+        Biome-Set: "&eBiome has been changed"
       Weather:
         Inventory-Name: "&aSet weather"
         Item-Name: "&aChange plot weather"

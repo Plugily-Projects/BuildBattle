@@ -22,6 +22,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -29,7 +30,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -65,7 +68,9 @@ public class Utils {
       //todo check
       head = XMaterial.PLAYER_HEAD.parseItem();
     }
-    if (url.isEmpty()) return head;
+    if (url.isEmpty()) {
+      return head;
+    }
 
     SkullMeta headMeta = (SkullMeta) head.getItemMeta();
     GameProfile profile = new GameProfile(UUID.randomUUID(), null);
@@ -100,6 +105,26 @@ public class Utils {
       sortedMap.put(entry.getKey(), entry.getValue());
     }
     return sortedMap;
+  }
+
+  public static void sendPacket(Player player, Object packet) {
+    try {
+      Object handle = player.getClass().getMethod("getHandle").invoke(player);
+      Object playerConnection = handle.getClass().getField("playerConnection").get(handle);
+      playerConnection.getClass().getMethod("sendPacket", getNMSClass("Packet")).invoke(playerConnection, packet);
+    } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException | NoSuchFieldException ex) {
+      ex.printStackTrace();
+    }
+  }
+
+  public static Class<?> getNMSClass(String nmsClassName) {
+    try {
+      return Class.forName("net.minecraft.server." + Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + "." + nmsClassName);
+    } catch (ClassNotFoundException ex) {
+      ex.printStackTrace();
+      Bukkit.getConsoleSender().sendMessage("Reflection failed for " + nmsClassName);
+      return null;
+    }
   }
 
 }

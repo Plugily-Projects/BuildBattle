@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -70,6 +71,17 @@ public class Cuboid {
       }
     }
     return bL;
+  }
+
+  public List<Chunk> chunkList() {
+    final List<Chunk> chunks = new ArrayList<>();
+    for (Block block : blockList()) {
+      if (chunks.contains(block.getChunk())) {
+        continue;
+      }
+      chunks.add(block.getChunk());
+    }
+    return chunks;
   }
 
   public Location getCenter() {
