@@ -328,7 +328,7 @@ public class Arena extends BukkitRunnable {
         if (getTimer() == 0) {
           extraCounter = 0;
           if (!getPlotManager().isPlotsCleared()) {
-            getPlotManager().resetQeuedPlots();
+            getPlotManager().resetQueuedPlots();
           }
           setGameState(ArenaState.IN_GAME);
           getPlotManager().distributePlots();
