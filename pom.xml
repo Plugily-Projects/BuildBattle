@@ -24,7 +24,8 @@
 
     <groupId>pl.plajer.buildbattle</groupId>
     <artifactId>BuildBattle</artifactId>
-    <version>4.0.0b-pre-10</version>
+    <version>4.0.0b-pre-11</version>
+    <name>BuildBattle</name>
 
     <properties>
         <java.version>1.8</java.version>
