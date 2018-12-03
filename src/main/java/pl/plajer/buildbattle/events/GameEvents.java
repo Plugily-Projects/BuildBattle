@@ -81,7 +81,6 @@ import pl.plajerlair.core.services.exception.ReportedException;
 /**
  * Created by Tom on 17/08/2015.
  */
-//todo centralized inventoryclickitem event listener
 public class GameEvents implements Listener {
 
   private Main plugin;
@@ -308,6 +307,7 @@ public class GameEvents implements Listener {
     }
   }
 
+  //todo weird code?
   @EventHandler
   public void onDispense(BlockDispenseEvent event) {
     for (Arena arena : ArenaRegistry.getArenas()) {
@@ -319,92 +319,69 @@ public class GameEvents implements Listener {
     }
   }
 
+  //todo move to better place
   @EventHandler
-  public void onWeatherMenuClick(InventoryClickEvent e) {
+  public void onMenuClick(InventoryClickEvent e) {
     try {
       if (!(e.getWhoClicked() instanceof Player)) {
         return;
       }
       Player player = (Player) e.getWhoClicked();
       Arena arena = ArenaRegistry.getArena(player);
-      if (e.getInventory() == null || e.getInventory().getName() == null || !(e.getWhoClicked() instanceof Player) || arena == null) {
+      String invName = e.getInventory().getName();
+      if (e.getInventory() == null || invName == null || !(e.getWhoClicked() instanceof Player) || arena == null) {
         return;
       }
-      if (!e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Inventory-Name"))) {
+      ArenaPlot plot = arena.getPlotManager().getPlot(player);
+      if (!Utils.isNamed(e.getCurrentItem()) || plot == null) {
         return;
       }
-      e.setCancelled(true);
-      if (!Utils.isNamed(e.getCurrentItem()) || arena.getPlotManager().getPlot(player) == null) {
-        return;
-      }
-      if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Downfall"))) {
-        arena.getPlotManager().getPlot(player).setWeatherType(WeatherType.DOWNFALL);
-      } else if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Clear"))) {
-        arena.getPlotManager().getPlot(player).setWeatherType(WeatherType.CLEAR);
-      }
-      for (UUID owner : arena.getPlotManager().getPlot(player).getOwners()) {
-        if (Bukkit.getPlayer(owner).isOnline()) {
-          Bukkit.getPlayer(owner).setPlayerWeather(arena.getPlotManager().getPlot(player).getWeatherType());
-          Bukkit.getPlayer(owner).sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Set"));
-        }
+      if (invName.equals(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Inventory-Name"))) {
+        e.setCancelled(true);
+        weatherInventoryClick(e, plot);
+      } else if (invName.equals(ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Inventory-Name"))) {
+        e.setCancelled(true);
+        timeInventoryClick(e, plot);
+      } else if (invName.equals(ChatManager.colorMessage("Menus.Option-Menu.Items.Biome.Inventory-Name"))) {
+        e.setCancelled(true);
+        biomeInventoryClick(e, plot);
       }
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }
 
-  @EventHandler
-  public void onTimeMenuClick(InventoryClickEvent e) {
-    try {
-      if (!(e.getWhoClicked() instanceof Player)) {
-        return;
+  //todo move to better place
+  private void weatherInventoryClick(InventoryClickEvent e, ArenaPlot plot) {
+    if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Downfall"))) {
+      plot.setWeatherType(WeatherType.DOWNFALL);
+    } else if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Clear"))) {
+      plot.setWeatherType(WeatherType.CLEAR);
+    }
+    for (UUID owner : plot.getOwners()) {
+      if (Bukkit.getPlayer(owner).isOnline()) {
+        Bukkit.getPlayer(owner).setPlayerWeather(plot.getWeatherType());
+        Bukkit.getPlayer(owner).sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Set"));
       }
-      Player player = (Player) e.getWhoClicked();
-      Arena arena = ArenaRegistry.getArena(player);
-      if (e.getInventory() == null || e.getInventory().getName() == null || !(e.getWhoClicked() instanceof Player) || arena == null) {
-        return;
-      }
-      if (!e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Inventory-Name"))) {
-        return;
-      }
-      e.setCancelled(true);
-      if (!Utils.isNamed(e.getCurrentItem()) || arena.getPlotManager().getPlot(player) == null) {
-        return;
-      }
-      ArenaPlot plot = arena.getPlotManager().getPlot(player);
-      plot.setTime(ArenaPlot.Time.valueOf(GameInventories.TimeClickPosition.getByPosition(e.getRawSlot()).toString()));
-      for (UUID owner : plot.getOwners()) {
-        Player p = Bukkit.getPlayer(owner);
-        if (p == null) {
-          continue;
-        }
-        p.setPlayerTime(ArenaPlot.Time.format(plot.getTime(), p.getWorld().getTime()), false);
-        p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Time-Set"));
-      }
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
     }
   }
 
-  @EventHandler
-  public void onBiomeItemClick(InventoryClickEvent e) {
+  //todo move to better place
+  private void timeInventoryClick(InventoryClickEvent e, ArenaPlot plot) {
+    plot.setTime(ArenaPlot.Time.valueOf(GameInventories.TimeClickPosition.getByPosition(e.getRawSlot()).toString()));
+    for (UUID owner : plot.getOwners()) {
+      Player p = Bukkit.getPlayer(owner);
+      if (p == null) {
+        continue;
+      }
+      p.setPlayerTime(ArenaPlot.Time.format(plot.getTime(), p.getWorld().getTime()), false);
+      p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Time-Set"));
+    }
+  }
+
+  //todo move to better place
+  private void biomeInventoryClick(InventoryClickEvent e, ArenaPlot plot) {
     try {
-      if (!(e.getWhoClicked() instanceof Player)) {
-        return;
-      }
-      Player player = (Player) e.getWhoClicked();
-      Arena arena = ArenaRegistry.getArena(player);
-      if (e.getInventory() == null || e.getInventory().getName() == null || !(e.getWhoClicked() instanceof Player) || arena == null) {
-        return;
-      }
-      if (!e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Biome.Inventory-Name"))) {
-        return;
-      }
-      e.setCancelled(true);
-      if (!Utils.isNamed(e.getCurrentItem()) || arena.getPlotManager().getPlot(player) == null) {
-        return;
-      }
-      ArenaPlot plot = arena.getPlotManager().getPlot(player);
       for (Block block : plot.getCuboid().blockList()) {
         block.setBiome(Biome.valueOf(ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName())));
       }
