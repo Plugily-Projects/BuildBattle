@@ -226,7 +226,7 @@ public class Main extends JavaPlugin {
       Arena arena = ArenaRegistry.getArena(player);
       if (arena != null) {
         player.setGameMode(GameMode.SURVIVAL);
-        if (ConfigPreferences.isBarEnabled()) {
+        if (ConfigPreferences.isBossBarEnabled()) {
           arena.getGameBar().removePlayer(player);
         }
         ArenaManager.leaveAttempt(player, arena);

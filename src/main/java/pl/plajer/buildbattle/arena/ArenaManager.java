@@ -97,7 +97,7 @@ public class ArenaManager {
       if (plugin.isInventoryManagerEnabled()) {
         InventoryUtils.saveInventoryToFile(plugin, p);
       }
-      if (ConfigPreferences.isBarEnabled()) {
+      if (ConfigPreferences.isBossBarEnabled()) {
         a.getGameBar().addPlayer(p);
       }
       a.teleportToLobby(p);
@@ -163,7 +163,7 @@ public class ArenaManager {
       p.setAllowFlight(false);
       p.resetPlayerWeather();
       p.resetPlayerTime();
-      if (ConfigPreferences.isBarEnabled()) {
+      if (ConfigPreferences.isBossBarEnabled()) {
         a.getGameBar().removePlayer(p);
       }
       p.getInventory().setArmorContents(null);

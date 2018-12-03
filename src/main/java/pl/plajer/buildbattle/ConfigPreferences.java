@@ -109,7 +109,7 @@ public class ConfigPreferences {
     }
   }
 
-  public static boolean isBarEnabled() {
+  public static boolean isBossBarEnabled() {
     return options.getOrDefault("Boss-Bar-Enabled", 1) == 1;
   }
 
@@ -117,6 +117,8 @@ public class ConfigPreferences {
     return whitelistedCommands;
   }
 
+  @Deprecated
+  //should be removed
   public static boolean isHidePlayersOutsideGameEnabled() {
     return options.getOrDefault("Hide-Players-Outside-Game", 1) == 1;
   }
