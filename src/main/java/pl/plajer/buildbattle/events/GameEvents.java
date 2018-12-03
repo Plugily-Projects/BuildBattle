@@ -336,14 +336,13 @@ public class GameEvents implements Listener {
       }
       if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Downfall"))) {
         arena.getPlotManager().getPlot(player).setWeatherType(WeatherType.DOWNFALL);
-        e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Set"));
       } else if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Clear"))) {
         arena.getPlotManager().getPlot(player).setWeatherType(WeatherType.CLEAR);
-        e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Set"));
       }
       for (UUID owner : arena.getPlotManager().getPlot(player).getOwners()) {
         if (Bukkit.getPlayer(owner).isOnline()) {
           Bukkit.getPlayer(owner).setPlayerWeather(arena.getPlotManager().getPlot(player).getWeatherType());
+          Bukkit.getPlayer(owner).sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Set"));
         }
       }
     } catch (Exception ex) {
@@ -377,6 +376,7 @@ public class GameEvents implements Listener {
           continue;
         }
         p.setPlayerTime(ArenaPlot.Time.format(plot.getTime(), p.getWorld().getTime()), false);
+        p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Time-Set"));
       }
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
@@ -416,6 +416,10 @@ public class GameEvents implements Listener {
       } else if (displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Item-Name"))) {
         player.closeInventory();
         plugin.getGameInventories().openInventory(GameInventories.InventoryType.WEATHER, player);
+        return;
+      } else if (displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Item-Name"))) {
+        player.closeInventory();
+        plugin.getGameInventories().openInventory(GameInventories.InventoryType.TIME, player);
         return;
       }
       if (e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))) {
