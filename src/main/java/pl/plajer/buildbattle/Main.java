@@ -68,7 +68,6 @@ import pl.plajerlair.core.utils.ConfigUtils;
 /**
  * Created by Tom on 17/08/2015.
  */
-//todo add time type inv
 public class Main extends JavaPlugin {
 
   private static boolean debug;
@@ -79,7 +78,6 @@ public class Main extends JavaPlugin {
   private FileStats fileStats;
   private BungeeManager bungeeManager;
   private boolean bungeeActivated;
-  private MainCommand mainCommand;
   private boolean inventoryManagerEnabled;
   private SignManager signManager;
   private CuboidSelector cuboidSelector;
@@ -88,6 +86,8 @@ public class Main extends JavaPlugin {
   private String version;
   private List<String> filesToGenerate = Arrays.asList("arenas", "particles", "lobbyitems", "stats", "voteItems", "mysql");
 
+  @Deprecated
+  //use new debugger version
   public static void debug(String thing, long millis) {
     long elapsed = System.currentTimeMillis() - millis;
     if (debug) {
@@ -120,10 +120,6 @@ public class Main extends JavaPlugin {
 
   public SignManager getSignManager() {
     return signManager;
-  }
-
-  public MainCommand getMainCommand() {
-    return mainCommand;
   }
 
   public boolean isInventoryManagerEnabled() {
@@ -273,7 +269,7 @@ public class Main extends JavaPlugin {
     PermissionManager.init();
     new SetupInventoryEvents(this);
     bungeeActivated = getConfig().getBoolean("BungeeActivated");
-    mainCommand = new MainCommand(this);
+    new MainCommand(this);
     ConfigPreferences.loadOptions();
     ParticleMenu.loadFromConfig();
     PlayerHeadsMenu.loadHeadItems();
@@ -330,10 +326,6 @@ public class Main extends JavaPlugin {
 
   public MySQLManager getMySQLManager() {
     return mySQLManager;
-  }
-
-  public String getVersion() {
-    return version;
   }
 
   private void loadStatsForPlayersOnline() {
