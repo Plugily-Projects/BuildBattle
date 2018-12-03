@@ -384,7 +384,7 @@ public class MainCommand implements CommandExecutor {
     config.set(path + "world", config.getString("instances.default.world"));
     ConfigUtils.saveConfig(plugin, config, "arenas");
 
-    Arena arena = new Arena(ID);
+    Arena arena = new Arena(ID, plugin);
 
     arena.setMinimumPlayers(ConfigUtils.getConfig(plugin, "arenas").getInt(path + "minimumplayers"));
     arena.setMaximumPlayers(ConfigUtils.getConfig(plugin, "arenas").getInt(path + "maximumplayers"));

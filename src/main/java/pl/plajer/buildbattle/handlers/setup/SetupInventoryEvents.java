@@ -231,7 +231,7 @@ public class SetupInventoryEvents implements Listener {
               }
             }
           }
-          arena = new Arena(arena.getID());
+          arena = new Arena(arena.getID(), plugin);
           arena.setReady(true);
           arena.setMinimumPlayers(config.getInt("instances." + arena.getID() + ".minimumplayers"));
           arena.setMaximumPlayers(config.getInt("instances." + arena.getID() + ".maximumplayers"));

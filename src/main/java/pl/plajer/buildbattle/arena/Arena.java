@@ -70,7 +70,7 @@ import pl.plajerlair.core.utils.MinigameUtils;
  */
 public class Arena extends BukkitRunnable {
 
-  public static Main plugin;
+  private static Main plugin;
   private static List<Material> blacklist = new ArrayList<>();
   //todo hold players here
   private Map<Integer, List<UUID>> topList = new HashMap<>();
@@ -117,7 +117,7 @@ public class Arena extends BukkitRunnable {
   private Map<String, List<String>> themesCache = new HashMap<>();
   private Map<UUID, Integer> playersPoints = new HashMap<>();
 
-  public Arena(String ID) {
+  public Arena(String ID, Main plugin) {
     gameState = ArenaState.WAITING_FOR_PLAYERS;
     this.ID = ID;
     if (bossBarEnabled) {
