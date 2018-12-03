@@ -103,7 +103,7 @@ public class ArenaRegistry {
         String s = "instances." + ID + ".";
         if (s.contains("default")) continue;
 
-        arena = new Arena(ID);
+        arena = new Arena(ID, plugin);
 
         if (config.contains(s + "minimumplayers")) arena.setMinimumPlayers(config.getInt(s + "minimumplayers"));
         else arena.setMinimumPlayers(config.getInt("instances.default.minimumplayers"));
