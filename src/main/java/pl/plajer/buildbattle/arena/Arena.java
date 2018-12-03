@@ -70,8 +70,8 @@ import pl.plajerlair.core.utils.MinigameUtils;
  */
 public class Arena extends BukkitRunnable {
 
-  private Main plugin;
   private static List<Material> blacklist = new ArrayList<>();
+  private Main plugin;
   //todo hold players here
   private Map<Integer, List<UUID>> topList = new HashMap<>();
   private String theme = "Theme";
@@ -84,7 +84,7 @@ public class Arena extends BukkitRunnable {
   private boolean voteTime;
   private boolean themeVoteTime = true;
   private boolean themeTimerSet = false;
-  private int BUILD_TIME;
+  private int buildTime;
   private ArenaState gameState;
   private int minimumPlayers = 2;
   private int maximumPlayers = 10;
@@ -92,9 +92,8 @@ public class Arena extends BukkitRunnable {
   private int timer;
   private String ID;
   private boolean ready = true;
-  private Location lobbyLoc = null;
-  private Location startLoc = null;
-  private Location endLoc = null;
+  //instead of 2 (lobby, end) location fields we use map with GameLocation enum
+  private Map<GameLocation, Location> gameLocations = new HashMap<>();
   //todo hold players here
   private Set<UUID> players = new HashSet<>();
   private BossBar gameBar;
@@ -201,7 +200,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public int getBuildTime() {
-    return BUILD_TIME;
+    return buildTime;
   }
 
   Queue<UUID> getQueue() {
@@ -214,7 +213,7 @@ public class Arena extends BukkitRunnable {
 
   public void setArenaType(ArenaType arenaType) {
     this.arenaType = arenaType;
-    BUILD_TIME = ConfigPreferences.getBuildTime(this);
+    buildTime = ConfigPreferences.getBuildTime(this);
     if (arenaType == ArenaType.GUESS_THE_BUILD) {
       themesCache.put("EASY", ConfigPreferences.getThemes(getArenaType().getPrefix() + "_EASY"));
       themesCache.put("MEDIUM", ConfigPreferences.getThemes(getArenaType().getPrefix() + "_MEDIUM"));
@@ -1269,20 +1268,11 @@ public class Arena extends BukkitRunnable {
    * @return lobby loc of arena
    */
   public Location getLobbyLocation() {
-    return lobbyLoc;
+    return gameLocations.get(GameLocation.LOBBY);
   }
 
   public void setLobbyLocation(Location loc) {
-    this.lobbyLoc = loc;
-  }
-
-  /**
-   * Start location of arena
-   *
-   * @return start loc of arena
-   */
-  public Location getStartLocation() {
-    return startLoc;
+    gameLocations.put(GameLocation.LOBBY, loc);
   }
 
   private void teleportAllToEndLocation() {
@@ -1331,11 +1321,11 @@ public class Arena extends BukkitRunnable {
    * @return end loc of arena
    */
   public Location getEndLocation() {
-    return endLoc;
+    return gameLocations.get(GameLocation.END);
   }
 
   public void setEndLocation(Location endLoc) {
-    this.endLoc = endLoc;
+    gameLocations.put(GameLocation.END, endLoc);
   }
 
   public enum ArenaType {
@@ -1350,6 +1340,10 @@ public class Arena extends BukkitRunnable {
     public String getPrefix() {
       return prefix;
     }
+  }
+
+  public enum GameLocation {
+    LOBBY, END
   }
 
 }

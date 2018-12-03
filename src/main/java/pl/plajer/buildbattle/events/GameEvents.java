@@ -573,7 +573,7 @@ public class GameEvents implements Listener {
   public void onCreatureSpawn(CreatureSpawnEvent event) {
     try {
       for (Arena arena : ArenaRegistry.getArenas()) {
-        if (arena.getStartLocation() == null || event.getEntity().getWorld().equals(arena.getStartLocation().getWorld())) {
+        if (arena.getPlotManager().getPlots().get(0) == null || event.getEntity().getWorld().equals(arena.getPlotManager().getPlots().get(0).getCuboid().getCenter().getWorld())) {
           continue;
         }
         if (event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) {
@@ -583,21 +583,21 @@ public class GameEvents implements Listener {
           event.setCancelled(true);
           return;
         }
-        for (ArenaPlot buildplot : arena.getPlotManager().getPlots()) {
-          if (buildplot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 10)) {
+        for (ArenaPlot plot : arena.getPlotManager().getPlots()) {
+          if (plot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 10)) {
             event.setCancelled(true);
             return;
           }
-          if (buildplot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 1)) {
-            if (buildplot.getEntities() >= ConfigPreferences.getMaxMobs()) {
+          if (plot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 1)) {
+            if (plot.getEntities() >= ConfigPreferences.getMaxMobs()) {
               //todo maybe only for spawner player?
-              for (UUID u : buildplot.getOwners()) {
+              for (UUID u : plot.getOwners()) {
                 plugin.getServer().getPlayer(u).sendMessage(ChatManager.colorMessage("In-Game.Max-Entities-Limit-Reached"));
               }
               event.setCancelled(true);
               return;
             } else {
-              buildplot.addEntity();
+              plot.addEntity();
               event.setCancelled(false);
               event.getEntity().setAI(false);
             }
