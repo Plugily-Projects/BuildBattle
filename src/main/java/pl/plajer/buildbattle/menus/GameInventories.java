@@ -48,10 +48,10 @@ public class GameInventories {
 
     Inventory timeInv = Bukkit.createInventory(null, 9, ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Inventory-Name"));
     timeInv.setItem(0, new ItemBuilder(XMaterial.CLOCK.parseItem()).name(ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Time-Type.World-Time")).build());
-    timeInv.setItem(1, new ItemBuilder(XMaterial.CLOCK.parseItem()).name(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Day")).build());
-    timeInv.setItem(2, new ItemBuilder(XMaterial.CLOCK.parseItem()).name(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Sunset")).build());
-    timeInv.setItem(3, new ItemBuilder(XMaterial.CLOCK.parseItem()).name(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Night")).build());
-    timeInv.setItem(4, new ItemBuilder(XMaterial.CLOCK.parseItem()).name(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Sunrise")).build());
+    timeInv.setItem(1, new ItemBuilder(XMaterial.CLOCK.parseItem()).name(ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Time-Type.Day")).build());
+    timeInv.setItem(2, new ItemBuilder(XMaterial.CLOCK.parseItem()).name(ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Time-Type.Sunset")).build());
+    timeInv.setItem(3, new ItemBuilder(XMaterial.CLOCK.parseItem()).name(ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Time-Type.Night")).build());
+    timeInv.setItem(4, new ItemBuilder(XMaterial.CLOCK.parseItem()).name(ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Time-Type.Sunrise")).build());
     inventories.put(InventoryType.TIME, timeInv);
   }
 

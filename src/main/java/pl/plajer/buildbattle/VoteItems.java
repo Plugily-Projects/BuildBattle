@@ -21,6 +21,7 @@ package pl.plajer.buildbattle;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -56,6 +57,9 @@ public class VoteItems {
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.setDisplayName(ChatManager.colorRawMessage(config.getString(s + ".displayname")));
         item.setItemMeta(itemMeta);
+
+        //set to something random for now
+        reportItem = new ItemStack(Material.BEDROCK, 32);
         if (config.isSet(s + ".report-item-function") && config.getBoolean(s + ".report-item-function", true)) {
           reportItem = item;
           continue;

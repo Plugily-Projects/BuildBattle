@@ -248,6 +248,7 @@ Menus:
           Sunset: "&eSunset (12000 ticks)"
           Night: "&eNight (13000 ticks)"
           Sunrise: "&eSunrise (23000 ticks)"
+        Time-Set: "&eTime has been changed"
       Weather:
         Inventory-Name: "&aSet weather"
         Item-Name: "&aChange plot weather"
