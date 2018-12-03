@@ -38,8 +38,8 @@ import pl.plajer.buildbattle.arena.plots.ArenaPlot;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.user.UserManager;
 import pl.plajer.buildbattle.utils.Utils;
-import pl.plajer.buildbattle.utils.XMaterial;
 import pl.plajerlair.core.utils.ConfigUtils;
+import pl.plajerlair.core.utils.XMaterial;
 
 /**
  * Created by Tom on 23/08/2015.
@@ -68,8 +68,9 @@ public class ParticleMenu {
     for (Particle particle : Particle.values()) {
       if (particle.toString().equals("BLOCK_CRACK") || particle.toString().equals("ITEM_CRACK")
           || particle.toString().equals("ITEM_TAKE") || particle.toString().equals("BLOCK_DUST")
-          || particle.toString().equals("MOB_APPEARANCE") || particle.toString().equals("FOOTSTEP") || particle.toString().equals("REDSTONE"))
+          || particle.toString().equals("MOB_APPEARANCE") || particle.toString().equals("FOOTSTEP") || particle.toString().equals("REDSTONE")) {
         continue;
+      }
       if (!config.contains(particle.toString())) {
         config.set(particle.toString() + ".displayname", "&6" + particle.toString());
         config.set(particle.toString() + ".lore", Arrays.asList("Click to activate", "on your location"));
@@ -125,7 +126,9 @@ public class ParticleMenu {
 
   public static ParticleItem getParticleItem(Particle effect) {
     for (ParticleItem particleItem : particleItems) {
-      if (effect == particleItem.getEffect()) return particleItem;
+      if (effect == particleItem.getEffect()) {
+        return particleItem;
+      }
     }
     return null;
   }

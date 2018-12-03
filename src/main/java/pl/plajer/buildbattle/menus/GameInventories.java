@@ -29,9 +29,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.buildbattle.handlers.ChatManager;
-import pl.plajer.buildbattle.utils.XMaterial;
 import pl.plajerlair.core.utils.ItemBuilder;
 import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajerlair.core.utils.XMaterial;
 
 /**
  * @author Plajer

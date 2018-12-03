@@ -29,7 +29,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import pl.plajer.buildbattle.arena.Arena;
-import pl.plajer.buildbattle.utils.XMaterial;
+import pl.plajerlair.core.utils.XMaterial;
 
 /**
  * Created by Tom on 17/08/2015.

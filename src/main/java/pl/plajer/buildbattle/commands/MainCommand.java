@@ -39,10 +39,10 @@ import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.setup.SetupInventory;
-import pl.plajer.buildbattle.utils.StringMatcher;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.LocationUtils;
+import pl.plajerlair.core.utils.StringMatcher;
 
 /**
  * @author Plajer
@@ -204,7 +204,9 @@ public class MainCommand implements CommandExecutor {
         return true;
       }
       if (cmd.getName().equalsIgnoreCase("buildbattle")) {
-        if (checkSenderIsConsole(sender)) return true;
+        if (checkSenderIsConsole(sender)) {
+          return true;
+        }
         Player player = (Player) sender;
         if (args.length == 0) {
           sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Header"));
@@ -217,14 +219,20 @@ public class MainCommand implements CommandExecutor {
         }
         if (args.length > 1) {
           if (args[1].equalsIgnoreCase("set") || args[1].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("create")) {
-            if (checkSenderIsConsole(sender)) return true;
-            if (!hasPermission(sender, "buildbattle.admin.create")) return true;
+            if (checkSenderIsConsole(sender)) {
+              return true;
+            }
+            if (!hasPermission(sender, "buildbattle.admin.create")) {
+              return true;
+            }
             performSetup(sender, args);
             return true;
           }
         }
         if (args[0].equalsIgnoreCase("stats")) {
-          if (checkSenderIsConsole(sender)) return true;
+          if (checkSenderIsConsole(sender)) {
+            return true;
+          }
           if (args.length == 1) {
             gameCommands.showStats((Player) sender);
           } else {
@@ -243,7 +251,9 @@ public class MainCommand implements CommandExecutor {
           }
           return true;
         } else if (args[0].equalsIgnoreCase("leave")) {
-          if (checkSenderIsConsole(sender)) return true;
+          if (checkSenderIsConsole(sender)) {
+            return true;
+          }
           gameCommands.leaveGame(sender);
           return true;
         } else if (args[0].equalsIgnoreCase("join")) {
@@ -314,9 +324,13 @@ public class MainCommand implements CommandExecutor {
   }
 
   private void performSetup(CommandSender sender, String[] args) {
-    if (!(args.length > 1)) return;
+    if (!(args.length > 1)) {
+      return;
+    }
     if (args[0].equalsIgnoreCase("create")) {
-      if (!hasPermission(sender, "buildbattle.admin.create")) return;
+      if (!hasPermission(sender, "buildbattle.admin.create")) {
+        return;
+      }
       this.createArenaCommand((Player) sender, args);
       return;
     }

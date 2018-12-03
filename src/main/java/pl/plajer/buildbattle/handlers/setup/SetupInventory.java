@@ -29,10 +29,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.Arena;
-import pl.plajer.buildbattle.utils.XMaterial;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.ItemBuilder;
 import pl.plajerlair.core.utils.LocationUtils;
+import pl.plajerlair.core.utils.XMaterial;
 
 /**
  * Created by Tom on 15/06/2015.
