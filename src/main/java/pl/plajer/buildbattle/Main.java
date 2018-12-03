@@ -51,6 +51,7 @@ import pl.plajer.buildbattle.handlers.language.LanguageManager;
 import pl.plajer.buildbattle.handlers.language.LanguageMigrator;
 import pl.plajer.buildbattle.handlers.setup.SetupInventoryEvents;
 import pl.plajer.buildbattle.menus.GameInventories;
+import pl.plajer.buildbattle.menus.OptionsMenu;
 import pl.plajer.buildbattle.menus.particles.ParticleHandler;
 import pl.plajer.buildbattle.menus.particles.ParticleMenu;
 import pl.plajer.buildbattle.menus.playerheads.PlayerHeadsMenu;
@@ -83,6 +84,7 @@ public class Main extends JavaPlugin {
   private CuboidSelector cuboidSelector;
   private GameInventories gameInventories;
   private VoteItems voteItems;
+  private OptionsMenu optionsMenu;
   private String version;
   private List<String> filesToGenerate = Arrays.asList("arenas", "particles", "lobbyitems", "stats", "voteItems", "mysql");
 
@@ -110,6 +112,10 @@ public class Main extends JavaPlugin {
     return voteItems;
   }
 
+  public OptionsMenu getOptionsMenu() {
+    return optionsMenu;
+  }
+
   public BungeeManager getBungeeManager() {
     return bungeeManager;
   }
@@ -132,14 +138,6 @@ public class Main extends JavaPlugin {
 
   public boolean is1_12_R1() {
     return version.equalsIgnoreCase("v1_12_R1");
-  }
-
-  public boolean is1_13_R1() {
-    return version.equalsIgnoreCase("v1_13_R1");
-  }
-
-  public boolean is1_13_R2() {
-    return version.equalsIgnoreCase("v1_13_R2");
   }
 
   @Override
@@ -278,6 +276,7 @@ public class Main extends JavaPlugin {
     signManager = new SignManager(this);
     SpecialItem.loadAll();
     voteItems = new VoteItems();
+    optionsMenu = new OptionsMenu();
     ParticleHandler particleHandler = new ParticleHandler(this);
     particleHandler.start();
     Metrics metrics = new Metrics(this);
