@@ -233,9 +233,6 @@ public class Main extends JavaPlugin {
       }
       final User user = UserManager.getUser(player.getUniqueId());
       for (StatsStorage.StatisticType s : StatsStorage.StatisticType.values()) {
-        if (!s.isPersistent()) {
-          continue;
-        }
         if (this.isDatabaseActivated()) {
           int i;
           try {

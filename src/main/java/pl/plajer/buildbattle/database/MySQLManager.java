@@ -84,10 +84,16 @@ public class MySQLManager {
   }
 
   public void setStat(Player player, StatsStorage.StatisticType stat, int number) {
+    if (!stat.isPersistent()) {
+      return;
+    }
     database.executeUpdate("UPDATE `buildbattlestats` SET " + stat.getName() + "=" + number + " WHERE UUID='" + player.getUniqueId().toString() + "';");
   }
 
   public int getStat(Player player, StatsStorage.StatisticType stat) {
+    if (!stat.isPersistent()) {
+      return 0;
+    }
     ResultSet set = database.executeQuery("SELECT " + stat.getName() + " FROM `buildbattlestats` WHERE UUID='" + player.getUniqueId().toString() + "'");
     try {
       if (!set.next()) {
