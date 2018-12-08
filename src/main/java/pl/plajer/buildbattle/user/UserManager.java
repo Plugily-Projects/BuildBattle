@@ -21,6 +21,8 @@ package pl.plajer.buildbattle.user;
 import java.util.HashMap;
 import java.util.UUID;
 
+import pl.plajer.buildbattle.Main;
+
 /**
  * Created by Tom on 27/07/2014.
  */
@@ -32,6 +34,7 @@ public class UserManager {
     if (users.containsKey(uuid)) {
       return users.get(uuid);
     } else {
+      Main.debug("Registering new user with UUID: " + uuid, System.currentTimeMillis());
       users.put(uuid, new User(uuid));
       return users.get(uuid);
     }
