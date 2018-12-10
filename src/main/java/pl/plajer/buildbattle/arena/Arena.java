@@ -425,8 +425,8 @@ public class Arena extends BukkitRunnable {
           if (!queue.isEmpty()) {
             if (getVotingPlot() != null) {
               for (Player player : getPlayers()) {
-                getVotingPlot().setPoints(getVotingPlot().getPoints() + UserManager.getUser(player.getUniqueId()).getStat(StatsStorage.StatisticType.POINTS));
-                UserManager.getUser(player.getUniqueId()).setStat(StatsStorage.StatisticType.POINTS, 0);
+                getVotingPlot().setPoints(getVotingPlot().getPoints() + UserManager.getUser(player.getUniqueId()).getStat(StatsStorage.StatisticType.LOCAL_POINTS));
+                UserManager.getUser(player.getUniqueId()).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
               }
             }
             if (arenaType == ArenaType.TEAM) {
@@ -441,8 +441,8 @@ public class Arena extends BukkitRunnable {
           } else {
             if (getVotingPlot() != null) {
               for (Player player : getPlayers()) {
-                getVotingPlot().setPoints(getVotingPlot().getPoints() + UserManager.getUser(player.getUniqueId()).getStat(StatsStorage.StatisticType.POINTS));
-                UserManager.getUser(player.getUniqueId()).setStat(StatsStorage.StatisticType.POINTS, 0);
+                getVotingPlot().setPoints(getVotingPlot().getPoints() + UserManager.getUser(player.getUniqueId()).getStat(StatsStorage.StatisticType.LOCAL_POINTS));
+                UserManager.getUser(player.getUniqueId()).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
               }
             }
             calculateResults();

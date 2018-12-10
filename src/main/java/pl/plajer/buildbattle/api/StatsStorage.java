@@ -96,7 +96,7 @@ public class StatsStorage {
    */
   public enum StatisticType {
     BLOCKS_PLACED("blocksplaced", true), BLOCKS_BROKEN("blocksbroken", true), GAMES_PLAYED("gamesplayed", true), WINS("wins", true), LOSES("loses", true),
-    HIGHEST_WIN("highestwin", true), PARTICLES_USED("particles", true), SUPER_VOTES("supervotes", true), POINTS("points", false);
+    HIGHEST_WIN("highestwin", true), PARTICLES_USED("particles", true), SUPER_VOTES("supervotes", true), LOCAL_POINTS("points", false);
 
     private String name;
     private boolean persistent;

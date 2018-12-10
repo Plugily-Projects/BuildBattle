@@ -50,9 +50,8 @@ public class GameCommands extends MainCommand {
     this.plugin = plugin;
   }
 
-  public void showStats(Player player) {
-    User user = UserManager.getUser(player.getUniqueId());
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Header"));
+  private void showStats(User user) {
+    Player player = user.toPlayer();
     player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Wins") + user.getStat(StatsStorage.StatisticType.WINS));
     player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Loses") + user.getStat(StatsStorage.StatisticType.LOSES));
     player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Games-Played") + user.getStat(StatsStorage.StatisticType.GAMES_PLAYED));
@@ -64,18 +63,16 @@ public class GameCommands extends MainCommand {
     player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Footer"));
   }
 
+  public void showStats(Player player) {
+    User user = UserManager.getUser(player.getUniqueId());
+    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Header"));
+    showStats(user);
+  }
+
   public void showStatsOther(Player player, Player other) {
     User user = UserManager.getUser(other.getUniqueId());
     player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Header-Other").replace("%player%", other.getName()));
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Wins") + user.getStat(StatsStorage.StatisticType.WINS));
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Loses") + user.getStat(StatsStorage.StatisticType.LOSES));
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Games-Played") + user.getStat(StatsStorage.StatisticType.GAMES_PLAYED));
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Highest-Win") + user.getStat(StatsStorage.StatisticType.HIGHEST_WIN));
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Blocks-Placed") + user.getStat(StatsStorage.StatisticType.BLOCKS_PLACED));
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Blocks-Broken") + user.getStat(StatsStorage.StatisticType.BLOCKS_BROKEN));
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Particles-Placed") + user.getStat(StatsStorage.StatisticType.PARTICLES_USED));
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Super-Votes") + user.getStat(StatsStorage.StatisticType.SUPER_VOTES));
-    player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Footer"));
+    showStats(user);
   }
 
   public void leaveGame(CommandSender sender) {
@@ -101,6 +98,7 @@ public class GameCommands extends MainCommand {
       StatsStorage.StatisticType statisticType = StatsStorage.StatisticType.valueOf(stat.toUpperCase());
       LinkedHashMap<UUID, Integer> stats = (LinkedHashMap<UUID, Integer>) StatsStorage.getStats(statisticType);
       sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Header"));
+      String statistic = StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "));
       for (int i = 0; i < 10; i++) {
         try {
           UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
@@ -108,14 +106,14 @@ public class GameCommands extends MainCommand {
                   .replace("%position%", String.valueOf(i + 1))
                   .replace("%name%", Bukkit.getOfflinePlayer(current).getName())
                   .replace("%value%", String.valueOf(stats.get(current)))
-                  .replace("%statistic%", StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " ")))); //Games_played > Games played etc
+              .replace("%statistic%", statistic)); //Games_played > Games played etc
           stats.remove(current);
         } catch (IndexOutOfBoundsException ex) {
           sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Format")
                   .replace("%position%", String.valueOf(i + 1))
                   .replace("%name%", "Empty")
                   .replace("%value%", "0")
-                  .replace("%statistic%", StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "))));
+              .replace("%statistic%", statistic));
         } catch (NullPointerException ex) {
           UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
           if (plugin.isDatabaseActivated()) {
@@ -126,7 +124,7 @@ public class GameCommands extends MainCommand {
                         .replace("%position%", String.valueOf(i + 1))
                         .replace("%name%", set.getString(1))
                         .replace("%value%", String.valueOf(stats.get(current)))
-                        .replace("%statistic%", StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "))));
+                    .replace("%statistic%", statistic));
                 return;
               }
             } catch (SQLException ignored) {
@@ -136,7 +134,7 @@ public class GameCommands extends MainCommand {
                   .replace("%position%", String.valueOf(i + 1))
                   .replace("%name%", "Unknown Player")
                   .replace("%value%", String.valueOf(stats.get(current)))
-                  .replace("%statistic%", StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "))));
+              .replace("%statistic%", statistic));
         }
       }
     } catch (IllegalArgumentException e) {

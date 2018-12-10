@@ -112,7 +112,7 @@ public class GameEvents implements Listener {
         event.setCancelled(true);
         return;
       }
-      UserManager.getUser(event.getPlayer().getUniqueId()).setStat(StatsStorage.StatisticType.POINTS, plugin.getVoteItems().getPoints(event.getItem()));
+      UserManager.getUser(event.getPlayer().getUniqueId()).setStat(StatsStorage.StatisticType.LOCAL_POINTS, plugin.getVoteItems().getPoints(event.getItem()));
       event.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Vote-Successful"));
       event.setCancelled(true);
     } catch (Exception ex) {
