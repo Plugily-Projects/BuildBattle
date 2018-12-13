@@ -145,7 +145,7 @@ public class ArenaManager {
       a.getQueue().remove(p.getUniqueId());
       User user = UserManager.getUser(p.getUniqueId());
       if (a.getArenaState() == ArenaState.IN_GAME || a.getArenaState() == ArenaState.ENDING) {
-        UserManager.getUser(p.getUniqueId()).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
+        user.addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
       }
       a.teleportToEndLocation(p);
       a.removePlayer(p);
