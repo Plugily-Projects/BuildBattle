@@ -125,7 +125,7 @@ public class GameCommands extends MainCommand {
                         .replace("%name%", set.getString(1))
                         .replace("%value%", String.valueOf(stats.get(current)))
                     .replace("%statistic%", statistic));
-                return;
+                continue;
               }
             } catch (SQLException ignored) {
             }
