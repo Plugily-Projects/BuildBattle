@@ -59,6 +59,7 @@ import pl.plajer.buildbattle.menus.themevoter.VoteMenuListener;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.user.UserManager;
 import pl.plajer.buildbattle.utils.CuboidSelector;
+import pl.plajer.buildbattle.utils.LegacyDataFixer;
 import pl.plajer.buildbattle.utils.MessageUtils;
 import pl.plajerlair.core.database.MySQLDatabase;
 import pl.plajerlair.core.services.ServiceRegistry;
@@ -171,6 +172,7 @@ public class Main extends JavaPlugin {
       debug("Main setup start", System.currentTimeMillis());
       saveDefaultConfig();
       LanguageManager.init(this);
+      new LegacyDataFixer(this);
       initializeClasses();
       if (getConfig().getBoolean("BungeeActivated")) {
         bungeeManager = new BungeeManager(this);

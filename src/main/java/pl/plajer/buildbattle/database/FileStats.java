@@ -48,7 +48,7 @@ public class FileStats {
       return;
     }
     User user = UserManager.getUser(player.getUniqueId());
-    config.set(player.getUniqueId().toString() + "." + stat, user.getStat(stat));
+    config.set(player.getUniqueId().toString() + "." + stat.getName(), user.getStat(stat));
     try {
       config.save(ConfigUtils.getFile(JavaPlugin.getPlugin(Main.class), "stats"));
     } catch (IOException e) {
@@ -64,7 +64,7 @@ public class FileStats {
       return;
     }
     User user = UserManager.getUser(player.getUniqueId());
-    if (config.contains(player.getUniqueId().toString() + "." + stat)) {
+    if (config.contains(player.getUniqueId().toString() + "." + stat.getName())) {
       user.setStat(stat, config.getInt(player.getUniqueId().toString() + "." + stat));
     } else {
       user.setStat(stat, 0);
