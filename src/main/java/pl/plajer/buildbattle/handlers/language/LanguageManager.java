@@ -54,21 +54,20 @@ public class LanguageManager {
   private static Locale pluginLocale;
   private static Properties properties = new Properties();
 
-  public static void init(Main pl) {
-    plugin = pl;
+  public static void init(Main plugin) {
+    LanguageManager.plugin = plugin;
     if (!new File(plugin.getDataFolder() + File.separator + "language.yml").exists()) {
       plugin.saveResource("language.yml", false);
     }
     registerLocales();
     setupLocale();
-    LanguageMigrator.configUpdate();
-    LanguageMigrator.languageFileUpdate();
     //we will wait until server is loaded, we won't soft depend those plugins
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
       if (isDefaultLanguageUsed()) {
         suggestLocale();
       }
     }, 100);
+    new LanguageMigrator(plugin);
   }
 
   private static void registerLocales() {

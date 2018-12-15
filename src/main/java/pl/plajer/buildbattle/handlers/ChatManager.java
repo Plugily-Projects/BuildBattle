@@ -35,15 +35,22 @@ import pl.plajerlair.core.utils.MinigameUtils;
  */
 public class ChatManager {
 
-  public static String PLUGIN_PREFIX;
+  private static String prefix;
 
-  public ChatManager() {
-    PLUGIN_PREFIX = colorMessage("In-Game.Plugin-Prefix");
+  public ChatManager(String prefix) {
+    ChatManager.prefix = prefix;
+  }
+
+  /**
+   * @return game prefix
+   */
+  public static String getPrefix() {
+    return prefix;
   }
 
   public static void broadcast(Arena arena, String message) {
     for (Player p : arena.getPlayers()) {
-      p.sendMessage(PLUGIN_PREFIX + message);
+      p.sendMessage(prefix + message);
     }
   }
 

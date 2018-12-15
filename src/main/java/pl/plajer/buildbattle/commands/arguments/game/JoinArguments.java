@@ -46,15 +46,15 @@ public class JoinArguments {
           return;
         }
         if (ArenaRegistry.getArena(((Player) sender)) != null) {
-          sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Already-Playing"));
+          sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Already-Playing"));
           return;
         }
         for (Arena arena : ArenaRegistry.getArenas()) {
           if (args[1].equalsIgnoreCase(arena.getID())) {
             if (arena.getPlayers().size() >= arena.getMaximumPlayers()) {
-              sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Is-Full"));
+              sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Arena-Is-Full"));
             } else if (arena.getArenaState() == ArenaState.IN_GAME) {
-              sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Started"));
+              sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Arena-Started"));
             } else {
               ArenaManager.joinAttempt((Player) sender, arena);
             }
@@ -71,7 +71,7 @@ public class JoinArguments {
         @Override
         public void execute(CommandSender sender, String[] args) {
           if (ArenaRegistry.getArena(((Player) sender)) != null) {
-            sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Already-Playing"));
+            sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Already-Playing"));
             return;
           }
           switch (args[1].toLowerCase()) {
@@ -86,10 +86,10 @@ public class JoinArguments {
                   }
                 }
               }
-              sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Free-Arenas"));
+              sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.No-Free-Arenas"));
               return;
             default:
-              sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
+              sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Invalid-Args"));
           }
         }
       });

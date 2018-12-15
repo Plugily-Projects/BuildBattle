@@ -80,7 +80,7 @@ public class GameCommands extends MainCommand {
       Player p = (Player) sender;
       Arena arena = ArenaRegistry.getArena(p);
       if (arena == null) return;
-      p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
+      p.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
       if (plugin.isBungeeActivated()) {
         plugin.getBungeeManager().connectToHub(p);
         System.out.print(p.getName() + " is teleported to the Hub Server");

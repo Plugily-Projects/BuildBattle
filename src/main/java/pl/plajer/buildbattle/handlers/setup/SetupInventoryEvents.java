@@ -155,7 +155,7 @@ public class SetupInventoryEvents implements Listener {
             break;
           }
           plugin.getSignManager().getLoadedSigns().put((Sign) location.getBlock().getState(), arena);
-          player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Created"));
+          player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Signs.Sign-Created"));
           String loc = location.getBlock().getWorld().getName() + "," + location.getBlock().getX() + "," + location.getBlock().getY() + "," + location.getBlock().getZ() + ",0.0,0.0";
           List<String> locs = config.getStringList("instances." + arena + ".signs");
           locs.add(loc);
@@ -255,7 +255,7 @@ public class SetupInventoryEvents implements Listener {
           }
           break;
         case VIEW_SETUP_VIDEO:
-          player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&6Check out this video: " + SetupInventory.VIDEO_LINK));
+          player.sendMessage(ChatManager.getPrefix() + ChatManager.colorRawMessage("&6Check out this video: " + SetupInventory.VIDEO_LINK));
           break;
       }
       ConfigUtils.saveConfig(plugin, config, "arenas");
