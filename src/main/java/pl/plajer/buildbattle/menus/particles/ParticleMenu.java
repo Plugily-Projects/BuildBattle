@@ -80,7 +80,7 @@ public class ParticleMenu {
       } else {
         if (!config.isSet(particle.toString() + ".material-name")) {
           config.set(particle.toString() + ".material-name", Material.PAPER.name());
-          Main.debug("Found outdated item in particles.yml! We've converted it to the newest version!", System.currentTimeMillis());
+          Main.debug(Main.LogLevel.WARN, "Found outdated item in particles.yml! We've converted it to the newest version!");
         }
       }
       ConfigUtils.saveConfig(JavaPlugin.getPlugin(Main.class), config, "particles");

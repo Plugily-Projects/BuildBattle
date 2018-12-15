@@ -69,12 +69,12 @@ public class ArenaRegistry {
   }
 
   public static void registerArena(Arena arena) {
-    Main.debug("Registering new game instance, " + arena.getID(), System.currentTimeMillis());
+    Main.debug(Main.LogLevel.INFO, "Registering new game instance, " + arena.getID());
     arenas.add(arena);
   }
 
   public static void unregisterArena(Arena arena) {
-    Main.debug("Unegistering game instance, " + arena.getID(), System.currentTimeMillis());
+    Main.debug(Main.LogLevel.INFO, "Unegistering game instance, " + arena.getID());
     arenas.remove(arena);
   }
 
@@ -95,7 +95,7 @@ public class ArenaRegistry {
 
   public static void registerArenas() {
     try {
-      Main.debug("Initial arenas registration", System.currentTimeMillis());
+      Main.debug(Main.LogLevel.INFO, "Initial arenas registration");
       ArenaRegistry.getArenas().clear();
       FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
       for (String ID : config.getConfigurationSection("instances").getKeys(false)) {
@@ -151,7 +151,7 @@ public class ArenaRegistry {
         ArenaRegistry.registerArena(arena);
         arena.start();
       }
-      Main.debug("Arenas registration completed", System.currentTimeMillis());
+      Main.debug(Main.LogLevel.INFO, "Arenas registration completed");
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }

@@ -174,7 +174,7 @@ public class SignManager implements Listener {
         if (loc.getBlock().getState() instanceof Sign) {
           loadedSigns.put((Sign) loc.getBlock().getState(), ArenaRegistry.getArena(path));
         } else {
-          Main.debug("Block at loc " + loc + " for arena " + path + " not a sign", System.currentTimeMillis());
+          Main.debug(Main.LogLevel.WARN, "Block at loc " + loc + " for arena " + path + " not a sign");
         }
       }
     }

@@ -65,7 +65,7 @@ public class SpecialItem {
     } else {
       if (!config.isSet(name + ".material-name")) {
         config.set(name + ".material-name", material.toString());
-        Main.debug("Found outdated item in lobbyitems.yml! We've converted it to the newest version!", System.currentTimeMillis());
+        Main.debug(Main.LogLevel.WARN, "Found outdated item in lobbyitems.yml! We've converted it to the newest version!");
       }
     }
     ConfigUtils.saveConfig(JavaPlugin.getPlugin(Main.class), config, "lobbyitems");

@@ -50,7 +50,7 @@ public class VoteItems {
       if (config.contains(s + ".displayname")) {
         if (!config.isSet(s + ".material-name")) {
           config.set(s + ".material-name", XMaterial.GREEN_TERRACOTTA.name());
-          Main.debug("Found outdated item in votingItems.yml! We've converted it to the newest version!", System.currentTimeMillis());
+          Main.debug(Main.LogLevel.WARN, "Found outdated item in votingItems.yml! We've converted it to the newest version!");
         }
         ConfigUtils.saveConfig(JavaPlugin.getPlugin(Main.class), config, "voteItems");
         ItemStack item = XMaterial.fromString(config.getString(s + ".material-name").toUpperCase()).parseItem();
