@@ -170,11 +170,11 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().disablePlugin(this);
         return;
       }
+      setupConfigValues();
       //check if using 2.0.0 releases
       if (ConfigUtils.getConfig(this, "language").isSet("PREFIX") && ConfigUtils.getConfig(this, "language").isSet("Unlocks-at-level")) {
         LanguageMigrator.migrateToNewFormat();
       }
-      debug = getConfig().getBoolean("Debug");
       debug(LogLevel.INFO, "Main setup started");
       saveDefaultConfig();
       LanguageManager.init(this);
@@ -183,11 +183,9 @@ public class Main extends JavaPlugin {
       if (getConfig().getBoolean("BungeeActivated")) {
         bungeeManager = new BungeeManager(this);
       }
-      inventoryManagerEnabled = getConfig().getBoolean("InventoryManager");
       for (String s : filesToGenerate) {
         ConfigUtils.getConfig(this, s);
       }
-      databaseActivated = this.getConfig().getBoolean("DatabaseActivated");
       if (databaseActivated) {
         FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
         database = new MySQLDatabase(this, config.getString("address"), config.getString("user"), config.getString("password"),
@@ -248,12 +246,18 @@ public class Main extends JavaPlugin {
     }
   }
 
+  private void setupConfigValues() {
+    debug = getConfig().getBoolean("Debug", false);
+    bungeeActivated = getConfig().getBoolean("BungeeActivated", false);
+    inventoryManagerEnabled = getConfig().getBoolean("InventoryManager", true);
+    databaseActivated = getConfig().getBoolean("DatabaseActivated", false);
+  }
+
   private void initializeClasses() {
     new ConfigPreferences(this);
     new ChatManager();
     PermissionManager.init();
     new SetupInventoryEvents(this);
-    bungeeActivated = getConfig().getBoolean("BungeeActivated");
     new MainCommand(this);
     ConfigPreferences.loadOptions();
     ParticleMenu.loadFromConfig();
@@ -267,7 +271,7 @@ public class Main extends JavaPlugin {
     ParticleHandler particleHandler = new ParticleHandler(this);
     particleHandler.start();
     Metrics metrics = new Metrics(this);
-    metrics.addCustomChart(new Metrics.SimplePie("bungeecord_hooked", () -> getConfig().getString("BungeeActivated", "false")));
+    metrics.addCustomChart(new Metrics.SimplePie("bungeecord_hooked", () -> String.valueOf(bungeeActivated)));
     metrics.addCustomChart(new Metrics.SimplePie("locale_used", () -> LanguageManager.getPluginLocale().getPrefix()));
     metrics.addCustomChart(new Metrics.SimplePie("update_notifier", () -> {
       if (getConfig().getBoolean("Update-Notifier.Enabled", true)) {
