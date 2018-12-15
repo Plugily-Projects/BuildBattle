@@ -86,7 +86,7 @@ public class SignManager implements Listener {
         return;
       }
       if (e.getLine(1).isEmpty()) {
-        e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Please-Type-Arena-Name"));
+        e.getPlayer().sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Signs.Please-Type-Arena-Name"));
         return;
       }
       for (Arena arena : ArenaRegistry.getArenas()) {
@@ -97,7 +97,7 @@ public class SignManager implements Listener {
           e.setLine(i, formatSign(signLines.get(i), arena));
         }
         loadedSigns.put((Sign) e.getBlock().getState(), arena);
-        e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Created"));
+        e.getPlayer().sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Signs.Sign-Created"));
         String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + "," + e.getBlock().getY() + "," + e.getBlock().getZ() + ",0.0,0.0";
         FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
         List<String> locs = config.getStringList("instances." + arena.getID() + ".signs");
@@ -106,7 +106,7 @@ public class SignManager implements Listener {
         ConfigUtils.saveConfig(plugin, config, "arenas");
         return;
       }
-      e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Arena-Doesnt-Exists"));
+      e.getPlayer().sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Signs.Arena-Doesnt-Exists"));
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
@@ -147,11 +147,11 @@ public class SignManager implements Listener {
           signs.remove(location);
           config.set(arena + ".signs", signs);
           ConfigUtils.saveConfig(plugin, config, "arenas");
-          e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Removed"));
+          e.getPlayer().sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Signs.Sign-Removed"));
           return;
         }
       }
-      e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatColor.RED + "Couldn't remove sign from configuration! Please do this manually!");
+      e.getPlayer().sendMessage(ChatManager.getPrefix() + ChatColor.RED + "Couldn't remove sign from configuration! Please do this manually!");
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }

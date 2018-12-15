@@ -107,12 +107,12 @@ public class GameEvents implements Listener {
         return;
       }
       if (arena.getVotingPlot().getOwners().contains(event.getPlayer().getUniqueId())) {
-        event.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Cant-Vote-Own-Plot"));
+        event.getPlayer().sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Cant-Vote-Own-Plot"));
         event.setCancelled(true);
         return;
       }
       plugin.getUserManager().getUser(event.getPlayer().getUniqueId()).setStat(StatsStorage.StatisticType.LOCAL_POINTS, plugin.getVoteItems().getPoints(event.getItem()));
-      event.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Vote-Successful"));
+      event.getPlayer().sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Vote-Successful"));
       event.setCancelled(true);
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
@@ -359,7 +359,7 @@ public class GameEvents implements Listener {
     for (UUID owner : plot.getOwners()) {
       if (Bukkit.getPlayer(owner).isOnline()) {
         Bukkit.getPlayer(owner).setPlayerWeather(plot.getWeatherType());
-        Bukkit.getPlayer(owner).sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Set"));
+        Bukkit.getPlayer(owner).sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Set"));
       }
     }
   }
@@ -373,7 +373,7 @@ public class GameEvents implements Listener {
         continue;
       }
       p.setPlayerTime(Plot.Time.format(plot.getTime(), p.getWorld().getTime()), false);
-      p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Time-Set"));
+      p.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Time-Set"));
     }
   }
 
@@ -394,7 +394,7 @@ public class GameEvents implements Listener {
         if (p == null) {
           continue;
         }
-        p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Items.Biome.Biome-Set"));
+        p.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Menus.Option-Menu.Items.Biome.Biome-Set"));
       }
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
@@ -431,7 +431,7 @@ public class GameEvents implements Listener {
       } else if (displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Reset.Item-Name"))) {
         player.closeInventory();
         arena.getPlotManager().getPlot(player).resetPlot();
-        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Items.Reset.Plot-Reset"));
+        player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Menus.Option-Menu.Items.Reset.Plot-Reset"));
         return;
       } else if (displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Item-Name"))) {
         player.closeInventory();
@@ -750,7 +750,7 @@ public class GameEvents implements Listener {
           return;
         }
         arena.getPlotManager().getPlot(e.getPlayer()).changeFloor(e.getPlayer().getInventory().getItemInMainHand().getType(), e.getPlayer().getInventory().getItemInMainHand().getData().getData());
-        e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Items.Floor.Floor-Changed"));
+        e.getPlayer().sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Menus.Option-Menu.Items.Floor.Floor-Changed"));
       }
     } catch (Exception ex) {
       new ReportedException(plugin, ex);

@@ -123,12 +123,12 @@ public class AdminCommands extends MainCommand {
   public void addPlot(Player player, String arena) {
     if (!hasPermission(player, "buildbattle.admin.addplot")) return;
     if (ArenaRegistry.getArena(arena) == null) {
-      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+      player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
       return;
     }
     CuboidSelector.Selection selection = plugin.getCuboidSelector().getSelection(player);
     if (selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
-      player.sendMessage(ChatManager.colorRawMessage(ChatManager.PLUGIN_PREFIX + "&cPlease select both corners before adding a plot!"));
+      player.sendMessage(ChatManager.colorRawMessage(ChatManager.getPrefix() + "&cPlease select both corners before adding a plot!"));
       return;
     }
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
@@ -138,23 +138,23 @@ public class AdminCommands extends MainCommand {
     }
     LocationUtils.saveLoc(plugin, config, "arenas", "instances." + arena + ".plots." + id + ".minpoint", selection.getFirstPos());
     LocationUtils.saveLoc(plugin, config, "arenas", "instances." + arena + ".plots." + id + ".maxpoint", selection.getSecondPos());
-    player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&aPlot with ID &e" + id + "&a added to arena instance &e" + arena));
+    player.sendMessage(ChatManager.getPrefix() + ChatManager.colorRawMessage("&aPlot with ID &e" + id + "&a added to arena instance &e" + arena));
     plugin.getCuboidSelector().removeSelection(player);
   }
 
   public void removePlot(Player player, String arena, String plotID) {
     if (!hasPermission(player, "buildbattle.admin.removeplot")) return;
     if (ArenaRegistry.getArena(arena) == null) {
-      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+      player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
       return;
     }
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
     if (config.contains("instances." + arena + ".plots." + plotID)) {
       config.set("instances." + arena + ".plots." + plotID, null);
       ConfigUtils.saveConfig(plugin, config, "arenas");
-      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&aPlot with ID &e" + plotID + "&a removed from arena &e" + arena));
+      player.sendMessage(ChatManager.getPrefix() + ChatManager.colorRawMessage("&aPlot with ID &e" + plotID + "&a removed from arena &e" + arena));
     } else {
-      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&cPlot with that ID doesn't exist!"));
+      player.sendMessage(ChatManager.getPrefix() + ChatManager.colorRawMessage("&cPlot with that ID doesn't exist!"));
     }
   }
 
@@ -190,7 +190,7 @@ public class AdminCommands extends MainCommand {
     if (!hasPermission(player, "buildbattle.admin.addsign")) return;
     Arena arena = ArenaRegistry.getArena(arenaName);
     if (arena == null) {
-      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+      player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
     } else {
       Location loc = player.getTargetBlock((Set<Material>) null, 10).getLocation();
       if (loc.getBlock().getState() instanceof Sign) {
@@ -200,7 +200,7 @@ public class AdminCommands extends MainCommand {
         config.set("instances." + arena.getID() + ".signs", signs);
         ConfigUtils.saveConfig(plugin, config, "arenas");
         plugin.getSignManager().getLoadedSigns().put((Sign) loc.getBlock().getState(), arena);
-        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Created"));
+        player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Signs.Sign-Created"));
       } else {
         player.sendMessage(ChatColor.RED + "You have to look at a sign to perform this command!");
       }
@@ -250,7 +250,7 @@ public class AdminCommands extends MainCommand {
     if (!hasPermission(sender, "buildbattle.admin.delete")) return;
     Arena arena = ArenaRegistry.getArena(arenaString);
     if (arena == null) {
-      sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+      sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
       return;
     }
     ArenaManager.stopGame(false, arena);
@@ -258,7 +258,7 @@ public class AdminCommands extends MainCommand {
     config.set("instances." + arenaString, null);
     ConfigUtils.saveConfig(plugin, config, "arenas");
     ArenaRegistry.unregisterArena(arena);
-    sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatColor.RED + "Successfully removed game instance!");
+    sender.sendMessage(ChatManager.getPrefix() + ChatColor.RED + "Successfully removed game instance!");
   }
 
   public void setArenaTheme(CommandSender sender, String theme) {
@@ -266,21 +266,21 @@ public class AdminCommands extends MainCommand {
     if (!hasPermission(sender, "buildbattle.admin.settheme")) return;
     Arena arena = ArenaRegistry.getArena((Player) sender);
     if (arena == null) {
-      sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Playing"));
+      sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.No-Playing"));
       return;
     }
     if (arena.getArenaState() == ArenaState.IN_GAME && (arena.getBuildTime() - arena.getTimer()) <= 20) {
       if (ConfigPreferences.isThemeBlacklisted(theme.toLowerCase())) {
-        sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Admin-Commands.Theme-Blacklisted"));
+        sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Admin-Commands.Theme-Blacklisted"));
         return;
       }
       arena.setTheme(theme);
       ChatManager.broadcast(arena, ChatManager.colorMessage("In-Game.Messages.Admin-Messages.Changed-Theme").replace("%THEME%", theme));
     } else {
       if (arena.getArenaState() == ArenaState.STARTING) {
-        sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Wait-For-Start"));
+        sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Wait-For-Start"));
       } else {
-        sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Started"));
+        sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Arena-Started"));
       }
     }
   }
@@ -297,7 +297,7 @@ public class AdminCommands extends MainCommand {
     }
     User user = plugin.getUserManager().getUser(Bukkit.getPlayer(who).getUniqueId());
     user.setStat(StatsStorage.StatisticType.SUPER_VOTES, Integer.parseInt(superVotes));
-    sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&aSuper votes set."));
+    sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorRawMessage("&aSuper votes set."));
   }
 
   public void addSuperVotes(CommandSender sender, String who, String superVotes) {
@@ -312,7 +312,7 @@ public class AdminCommands extends MainCommand {
     }
     User user = plugin.getUserManager().getUser(Bukkit.getPlayer(who).getUniqueId());
     user.addStat(StatsStorage.StatisticType.SUPER_VOTES, Integer.parseInt(superVotes));
-    sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&aSuper votes added."));
+    sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorRawMessage("&aSuper votes added."));
   }
 
 }

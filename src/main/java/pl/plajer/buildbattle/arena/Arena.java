@@ -365,7 +365,7 @@ public class Arena extends BukkitRunnable {
             for (Player p : getPlayers()) {
               p.closeInventory();
               p.teleport(getPlotManager().getPlot(p).getTeleportLocation());
-              p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
+              p.sendMessage(ChatManager.getPrefix() + message);
             }
             break;
           } else {
@@ -388,7 +388,7 @@ public class Arena extends BukkitRunnable {
           String subtitle = ChatManager.colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", String.valueOf(getTimer()));
           for (Player p : getPlayers()) {
             p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
-            p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
+            p.sendMessage(ChatManager.getPrefix() + message);
             p.sendTitle(null, subtitle, 5, 30, 5);
           }
         }
@@ -401,7 +401,7 @@ public class Arena extends BukkitRunnable {
               if (buildPlot != null) {
                 if (!buildPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
                   player.teleport(buildPlot.getTeleportLocation());
-                  player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Cant-Fly-Outside-Plot"));
+                  player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Messages.Cant-Fly-Outside-Plot"));
                 }
               }
             }
@@ -489,7 +489,7 @@ public class Arena extends BukkitRunnable {
             player.setFlying(false);
             player.setAllowFlight(false);
             player.getInventory().setArmorContents(null);
-            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
+            player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
             plugin.getUserManager().getUser(player.getUniqueId()).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
             if (plugin.isInventoryManagerEnabled()) {
               InventoryUtils.loadInventory(plugin, player);
@@ -668,7 +668,7 @@ public class Arena extends BukkitRunnable {
             for (Player p : getPlayers()) {
               p.closeInventory();
               p.teleport(getPlotManager().getPlot(p).getTeleportLocation());
-              p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
+              p.sendMessage(ChatManager.getPrefix() + message);
             }
             break;
           } else {
@@ -687,7 +687,7 @@ public class Arena extends BukkitRunnable {
           String subtitle = ChatManager.colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", String.valueOf(getTimer()));
           for (Player p : getPlayers()) {
             p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
-            p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
+            p.sendMessage(ChatManager.getPrefix() + message);
             p.sendTitle(null, subtitle, 5, 30, 5);
           }
         }
@@ -700,7 +700,7 @@ public class Arena extends BukkitRunnable {
               if (buildPlot != null) {
                 if (!buildPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
                   player.teleport(buildPlot.getTeleportLocation());
-                  player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Cant-Fly-Outside-Plot"));
+                  player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Messages.Cant-Fly-Outside-Plot"));
                 }
               }
             }
@@ -993,7 +993,7 @@ public class Arena extends BukkitRunnable {
             owner = owner.replace("%player%", player.getName());
           }
           p.sendTitle(owner, null, 5, 40, 5);
-          p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
+          p.sendMessage(ChatManager.getPrefix() + message);
         }
       }
     }

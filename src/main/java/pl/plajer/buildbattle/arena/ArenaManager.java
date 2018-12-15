@@ -69,29 +69,29 @@ public class ArenaManager {
       BBGameJoinEvent bbGameJoinEvent = new BBGameJoinEvent(p, a);
       Bukkit.getPluginManager().callEvent(bbGameJoinEvent);
       if (!a.isReady()) {
-        p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Arena-Not-Configured"));
+        p.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Arena-Not-Configured"));
         return;
       }
       if (bbGameJoinEvent.isCancelled()) {
-        p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Join-Cancelled-Via-API"));
+        p.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Join-Cancelled-Via-API"));
         return;
       }
       if (!plugin.isBungeeActivated()) {
         if (!(p.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", "*")) || p.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", a.getID())))) {
-          p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Join-No-Permission"));
+          p.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Join-No-Permission"));
           return;
         }
       }
       if (ArenaRegistry.getArena(p) != null) {
-        p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Already-Playing"));
+        p.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Messages.Already-Playing"));
         return;
       }
       if ((a.getArenaState() == ArenaState.IN_GAME || a.getArenaState() == ArenaState.ENDING || a.getArenaState() == ArenaState.RESTARTING)) {
-        p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Started"));
+        p.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Arena-Started"));
         return;
       }
       if (a.getPlayers().size() == a.getMaximumPlayers()) {
-        p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Is-Full"));
+        p.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Arena-Is-Full"));
         return;
       }
       Debugger.debug(LogLevel.INFO, "Final join attempt, " + p.getName());

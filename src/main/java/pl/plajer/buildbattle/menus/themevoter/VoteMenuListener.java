@@ -73,16 +73,16 @@ public class VoteMenuListener implements Listener {
           displayName = ChatColor.stripColor(displayName);
           boolean success = arena.getVotePoll().addVote((Player) e.getWhoClicked(), displayName);
           if (!success) {
-            e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Theme-Voting.Already-Voted"));
+            e.getWhoClicked().sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Menus.Theme-Voting.Already-Voted"));
           } else {
-            e.getWhoClicked().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Theme-Voting.Voted-Successfully"));
+            e.getWhoClicked().sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Menus.Theme-Voting.Voted-Successfully"));
           }
         }
         if (e.getCurrentItem().getType() == Material.PAPER) {
           User u = plugin.getUserManager().getUser(e.getWhoClicked().getUniqueId());
           if (u.getStat(StatsStorage.StatisticType.SUPER_VOTES) > 0) {
             u.setStat(StatsStorage.StatisticType.SUPER_VOTES, u.getStat(StatsStorage.StatisticType.SUPER_VOTES) - 1);
-            ChatManager.broadcast(arena, ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Used")
+            ChatManager.broadcast(arena, ChatManager.getPrefix() + ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Used")
                 .replace("%player%", e.getWhoClicked().getName()).replace("%theme%", arena.getVotePoll().getThemeByPosition(e.getSlot() + 1)));
             arena.setThemeVoteTime(false);
             arena.setTheme(arena.getVotePoll().getThemeByPosition(e.getSlot() + 1));
@@ -91,7 +91,7 @@ public class VoteMenuListener implements Listener {
             for (Player p : arena.getPlayers()) {
               p.closeInventory();
               p.teleport(arena.getPlotManager().getPlot(p).getTeleportLocation());
-              p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
+              p.sendMessage(ChatManager.getPrefix() + message);
             }
           }
         }

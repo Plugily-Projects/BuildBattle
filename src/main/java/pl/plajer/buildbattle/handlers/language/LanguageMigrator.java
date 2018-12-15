@@ -25,7 +25,7 @@ import java.util.List;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.utils.MessageUtils;
@@ -41,11 +41,25 @@ public class LanguageMigrator {
 
   public static final int LANGUAGE_FILE_VERSION = 8;
   public static final int CONFIG_FILE_VERSION = 5;
+  private List<String> migratable = Arrays.asList("bungee", "config", "language", "MySQL");
+  private Main plugin;
 
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
-  private static List<String> migratable = Arrays.asList("bungee", "config", "language", "MySQL");
+  public LanguageMigrator(Main plugin) {
+    this.plugin = plugin;
 
-  public static void migrateToNewFormat() {
+    FileConfiguration lang = ConfigUtils.getConfig(plugin, "language");
+    //checks if file architecture don't need to be updated to 3.x format
+    //check if using 2.0.0 releases
+    if (lang.isSet("PREFIX") && lang.isSet("Unlocks-at-level")) {
+      migrateToNewFormat();
+    }
+
+    //initializes migrator to update files with latest values
+    configUpdate();
+    languageFileUpdate();
+  }
+
+  private void migrateToNewFormat() {
     MessageUtils.gonnaMigrate();
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Build Battle is migrating all files to the new file format...");
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Don't worry! Old files will be renamed not overridden!");
@@ -58,7 +72,7 @@ public class LanguageMigrator {
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Done! Enabling BB2...");
   }
 
-  public static void configUpdate() {
+  private void configUpdate() {
     if (plugin.getConfig().getInt("Version") == CONFIG_FILE_VERSION) {
       return;
     }
@@ -108,7 +122,7 @@ public class LanguageMigrator {
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] [System notify] You're using latest config file version! Nice!");
   }
 
-  public static void languageFileUpdate() {
+  private void languageFileUpdate() {
     if (ConfigUtils.getConfig(plugin, "language").getString("File-Version-Do-Not-Edit").equals(String.valueOf(LANGUAGE_FILE_VERSION))) {
       return;
     }
@@ -210,14 +224,14 @@ public class LanguageMigrator {
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] [System notify] You're using latest language file version! Nice!");
   }
 
-  private static void updateLanguageVersionControl(int oldVersion) {
+  private void updateLanguageVersionControl(int oldVersion) {
     File file = new File(plugin.getDataFolder() + "/language.yml");
     MigratorUtils.removeLineFromFile(file, "# Do not modify!");
     MigratorUtils.removeLineFromFile(file, "File-Version-Do-Not-Edit: " + oldVersion);
     MigratorUtils.addNewLines(file, "# Do not modify!\r\nFile-Version-Do-Not-Edit: " + LANGUAGE_FILE_VERSION + "\r\n");
   }
 
-  private static void updateConfigVersionControl(int oldVersion) {
+  private void updateConfigVersionControl(int oldVersion) {
     File file = new File(plugin.getDataFolder() + "/config.yml");
     MigratorUtils.removeLineFromFile(file, "# Don't modify.");
     MigratorUtils.removeLineFromFile(file, "Version: " + oldVersion);

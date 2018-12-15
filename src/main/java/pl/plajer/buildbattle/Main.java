@@ -44,7 +44,6 @@ import pl.plajer.buildbattle.handlers.PlaceholderManager;
 import pl.plajer.buildbattle.handlers.SignManager;
 import pl.plajer.buildbattle.handlers.items.SpecialItem;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
-import pl.plajer.buildbattle.handlers.language.LanguageMigrator;
 import pl.plajer.buildbattle.handlers.setup.SetupInventoryEvents;
 import pl.plajer.buildbattle.menus.GameInventories;
 import pl.plajer.buildbattle.menus.OptionsMenu;
@@ -149,10 +148,6 @@ public class Main extends JavaPlugin {
         return;
       }
       setupConfigValues();
-      //check if using 2.0.0 releases
-      if (ConfigUtils.getConfig(this, "language").isSet("PREFIX") && ConfigUtils.getConfig(this, "language").isSet("Unlocks-at-level")) {
-        LanguageMigrator.migrateToNewFormat();
-      }
       Debugger.setEnabled(getConfig().getBoolean("Debug", false));
       Debugger.setPrefix("[Build Battle Debugger]");
       Debugger.debug(LogLevel.INFO, "Main setup started");
@@ -235,7 +230,7 @@ public class Main extends JavaPlugin {
 
   private void initializeClasses() {
     new ConfigPreferences(this);
-    new ChatManager();
+    new ChatManager(ChatManager.colorMessage("In-Game.Plugin-Prefix"));
     PermissionManager.init();
     new SetupInventoryEvents(this);
     new MainCommand(this);

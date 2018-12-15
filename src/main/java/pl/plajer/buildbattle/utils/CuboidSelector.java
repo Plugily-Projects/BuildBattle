@@ -50,8 +50,8 @@ public class CuboidSelector implements Listener {
     ItemStack stack = new ItemBuilder(new ItemStack(Material.BLAZE_ROD)).name(ChatManager.colorRawMessage("&6&lPlot selector")).build();
     p.getInventory().addItem(stack);
 
-    p.sendMessage(ChatManager.colorRawMessage(ChatManager.PLUGIN_PREFIX + "&eYou received plot selector wand!"));
-    p.sendMessage(ChatManager.colorRawMessage(ChatManager.PLUGIN_PREFIX + "&eSelect bottom corner using left click!"));
+    p.sendMessage(ChatManager.colorRawMessage(ChatManager.getPrefix() + "&eYou received plot selector wand!"));
+    p.sendMessage(ChatManager.colorRawMessage(ChatManager.getPrefix() + "&eSelect bottom corner using left click!"));
   }
 
   public Selection getSelection(Player p) {
@@ -71,21 +71,21 @@ public class CuboidSelector implements Listener {
     switch (e.getAction()) {
       case LEFT_CLICK_BLOCK:
         selections.put(e.getPlayer(), new Selection(e.getClickedBlock().getLocation(), null));
-        e.getPlayer().sendMessage(ChatManager.colorRawMessage(ChatManager.PLUGIN_PREFIX + "&eNow select top corner using right click!"));
+        e.getPlayer().sendMessage(ChatManager.colorRawMessage(ChatManager.getPrefix() + "&eNow select top corner using right click!"));
         break;
       case RIGHT_CLICK_BLOCK:
         if (!selections.containsKey(e.getPlayer())) {
-          e.getPlayer().sendMessage(ChatManager.colorRawMessage(ChatManager.PLUGIN_PREFIX + "&cPlease select bottom corner using left click first!"));
+          e.getPlayer().sendMessage(ChatManager.colorRawMessage(ChatManager.getPrefix() + "&cPlease select bottom corner using left click first!"));
           break;
         }
         selections.put(e.getPlayer(), new Selection(selections.get(e.getPlayer()).getFirstPos(), e.getClickedBlock().getLocation()));
-        e.getPlayer().sendMessage(ChatManager.colorRawMessage(ChatManager.PLUGIN_PREFIX + "&eNow you can add plot via setup menu!"));
+        e.getPlayer().sendMessage(ChatManager.colorRawMessage(ChatManager.getPrefix() + "&eNow you can add plot via setup menu!"));
         break;
       case LEFT_CLICK_AIR:
-        e.getPlayer().sendMessage(ChatManager.colorRawMessage(ChatManager.PLUGIN_PREFIX + "&cPlease select solid block (not air)!"));
+        e.getPlayer().sendMessage(ChatManager.colorRawMessage(ChatManager.getPrefix() + "&cPlease select solid block (not air)!"));
         break;
       case RIGHT_CLICK_AIR:
-        e.getPlayer().sendMessage(ChatManager.colorRawMessage(ChatManager.PLUGIN_PREFIX + "&cPlease select solid block (not air)!"));
+        e.getPlayer().sendMessage(ChatManager.colorRawMessage(ChatManager.getPrefix() + "&cPlease select solid block (not air)!"));
         break;
       default:
         break;

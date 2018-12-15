@@ -85,7 +85,7 @@ public class MainCommand implements CommandExecutor {
     if (sender.hasPermission(perm)) {
       return true;
     }
-    sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Permission"));
+    sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.No-Permission"));
     return false;
   }
 
@@ -105,7 +105,7 @@ public class MainCommand implements CommandExecutor {
           if (args.length == 2) {
             adminCommands.addPlot(player, args[1]);
           } else {
-            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
+            player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Invalid-Args"));
           }
           return true;
         } else if (args[0].equalsIgnoreCase("removeplot")) {
@@ -116,7 +116,7 @@ public class MainCommand implements CommandExecutor {
           if (args.length == 3) {
             adminCommands.removePlot(player, args[1], args[2]);
           } else {
-            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
+            player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Invalid-Args"));
           }
           return true;
         } else if (args[0].equalsIgnoreCase("plotwand")) {
@@ -165,7 +165,7 @@ public class MainCommand implements CommandExecutor {
           if (args.length == 2) {
             adminCommands.deleteArena(sender, args[1]);
           } else {
-            sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
+            sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Invalid-Args"));
           }
           return true;
         } else if (args[0].equalsIgnoreCase("settheme")) {
@@ -175,21 +175,21 @@ public class MainCommand implements CommandExecutor {
           if (args.length == 2) {
             adminCommands.setArenaTheme(sender, args[1]);
           } else {
-            sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
+            sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Invalid-Args"));
           }
           return true;
         } else if (args[0].equalsIgnoreCase("addvotes")) {
           if (args.length == 3) {
             adminCommands.addSuperVotes(sender, args[1], args[2]);
           } else {
-            sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
+            sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Invalid-Args"));
           }
           return true;
         } else if (args[0].equalsIgnoreCase("setvotes")) {
           if (args.length == 3) {
             adminCommands.setSuperVotes(sender, args[1], args[2]);
           } else {
-            sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
+            sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Invalid-Args"));
           }
           return true;
         } else if (args[0].equalsIgnoreCase("help")) {
@@ -237,7 +237,7 @@ public class MainCommand implements CommandExecutor {
             gameCommands.showStats((Player) sender);
           } else {
             if (Bukkit.getPlayer(args[1]) == null) {
-              player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Player-Not-Found"));
+              player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Player-Not-Found"));
               return true;
             }
             gameCommands.showStatsOther((Player) sender, Bukkit.getPlayer(args[1]));
@@ -259,28 +259,28 @@ public class MainCommand implements CommandExecutor {
         } else if (args[0].equalsIgnoreCase("join")) {
           if (args.length == 2) {
             if (ArenaRegistry.getArena(player) != null) {
-              player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Already-Playing"));
+              player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Already-Playing"));
               return true;
             }
             Arena arena = ArenaRegistry.getArena(args[1]);
             if (arena == null) {
-              player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+              player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
             } else {
               if (arena.getPlayers().size() >= arena.getMaximumPlayers()) {
-                player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Is-Full"));
+                player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Arena-Is-Full"));
               } else if (arena.getArenaState() == ArenaState.IN_GAME) {
-                player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Started"));
+                player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Arena-Started"));
               } else {
                 ArenaManager.joinAttempt(player, arena);
               }
             }
             return true;
           }
-          player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
+          player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Invalid-Args"));
           return true;
         } else if (args[0].equalsIgnoreCase("randomjoin")) {
           if (ArenaRegistry.getArena(player) != null) {
-            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Already-Playing"));
+            player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Already-Playing"));
             return true;
           }
           if (!plugin.isBungeeActivated()) {
@@ -297,14 +297,14 @@ public class MainCommand implements CommandExecutor {
                       }
                     }
                   }
-                  player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Free-Arenas"));
+                  player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.No-Free-Arenas"));
                   return true;
                 default:
-                  player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
+                  player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Invalid-Args"));
                   return true;
               }
             } else {
-              player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Invalid-Args"));
+              player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Invalid-Args"));
               return true;
             }
           }
@@ -337,7 +337,7 @@ public class MainCommand implements CommandExecutor {
     if (args[1].equals("edit")) {
       Arena arena = ArenaRegistry.getArena(args[0]);
       if (arena == null) {
-        sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+        sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
         return;
       }
       sendProTip((Player) sender);
@@ -355,7 +355,7 @@ public class MainCommand implements CommandExecutor {
     }
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
     if (config.contains("instances." + args[1])) {
-      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatColor.DARK_RED + "Instance/Arena already exists! Use another ID or delete it first!");
+      player.sendMessage(ChatManager.getPrefix() + ChatColor.DARK_RED + "Instance/Arena already exists! Use another ID or delete it first!");
     } else {
       createInstanceInConfig(args[1]);
       player.sendMessage(ChatColor.BOLD + "------------------------------------------");
