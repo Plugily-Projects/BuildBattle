@@ -39,6 +39,8 @@ import pl.plajer.buildbattle.handlers.PermissionManager;
 import pl.plajer.buildbattle.handlers.items.SpecialItem;
 import pl.plajer.buildbattle.handlers.items.SpecialItemManager;
 import pl.plajer.buildbattle.user.User;
+import pl.plajerlair.core.debug.Debugger;
+import pl.plajerlair.core.debug.LogLevel;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.InventoryUtils;
 import pl.plajerlair.core.utils.MinigameUtils;
@@ -63,7 +65,7 @@ public class ArenaManager {
    */
   public static void joinAttempt(Player p, Arena a) {
     try {
-      Main.debug(Main.LogLevel.INFO, "Initial join attempt, " + p.getName());
+      Debugger.debug(LogLevel.INFO, "Initial join attempt, " + p.getName());
       BBGameJoinEvent bbGameJoinEvent = new BBGameJoinEvent(p, a);
       Bukkit.getPluginManager().callEvent(bbGameJoinEvent);
       if (!a.isReady()) {
@@ -92,7 +94,7 @@ public class ArenaManager {
         p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Arena-Is-Full"));
         return;
       }
-      Main.debug(Main.LogLevel.INFO, "Final join attempt, " + p.getName());
+      Debugger.debug(LogLevel.INFO, "Final join attempt, " + p.getName());
       if (plugin.isInventoryManagerEnabled()) {
         InventoryUtils.saveInventoryToFile(plugin, p);
       }
@@ -136,7 +138,7 @@ public class ArenaManager {
    */
   public static void leaveAttempt(Player p, Arena a) {
     try {
-      Main.debug(Main.LogLevel.INFO, "Initial leave attempt, " + p.getName());
+      Debugger.debug(LogLevel.INFO, "Initial leave attempt, " + p.getName());
       BBGameLeaveEvent bbGameLeaveEvent = new BBGameLeaveEvent(p, a);
       Bukkit.getPluginManager().callEvent(bbGameLeaveEvent);
       a.getQueue().remove(p.getUniqueId());
@@ -197,7 +199,7 @@ public class ArenaManager {
    */
   public static void stopGame(boolean quickStop, Arena arena) {
     try {
-      Main.debug(Main.LogLevel.INFO, "Game stop event initiate, arena " + arena.getID());
+      Debugger.debug(LogLevel.INFO, "Game stop event initiate, arena " + arena.getID());
       BBGameEndEvent gameEndEvent = new BBGameEndEvent(arena);
       Bukkit.getPluginManager().callEvent(gameEndEvent);
       for (final Player p : arena.getPlayers()) {
@@ -224,7 +226,7 @@ public class ArenaManager {
       arena.setGameState(ArenaState.ENDING);
       arena.setTimer(10);
       arena.setVoting(false);
-      Main.debug(Main.LogLevel.INFO, "Game stop event finish, arena " + arena.getID());
+      Debugger.debug(LogLevel.INFO, "Game stop event finish, arena " + arena.getID());
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }

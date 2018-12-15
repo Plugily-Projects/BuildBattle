@@ -29,6 +29,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.handlers.ChatManager;
+import pl.plajerlair.core.debug.Debugger;
+import pl.plajerlair.core.debug.LogLevel;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.XMaterial;
 
@@ -50,7 +52,7 @@ public class VoteItems {
       if (config.contains(s + ".displayname")) {
         if (!config.isSet(s + ".material-name")) {
           config.set(s + ".material-name", XMaterial.GREEN_TERRACOTTA.name());
-          Main.debug(Main.LogLevel.WARN, "Found outdated item in votingItems.yml! We've converted it to the newest version!");
+          Debugger.debug(LogLevel.WARN, "Found outdated item in votingItems.yml! We've converted it to the newest version!");
         }
         ConfigUtils.saveConfig(JavaPlugin.getPlugin(Main.class), config, "voteItems");
         ItemStack item = XMaterial.fromString(config.getString(s + ".material-name").toUpperCase()).parseItem();

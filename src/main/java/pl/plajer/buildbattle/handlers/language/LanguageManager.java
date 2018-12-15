@@ -35,6 +35,8 @@ import org.bukkit.ChatColor;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.utils.MessageUtils;
+import pl.plajerlair.core.debug.Debugger;
+import pl.plajerlair.core.debug.LogLevel;
 import pl.plajerlair.core.services.ServiceRegistry;
 import pl.plajerlair.core.services.locale.Locale;
 import pl.plajerlair.core.services.locale.LocaleRegistry;
@@ -184,7 +186,7 @@ public class LanguageManager {
         }
       }
     } catch (Exception e) {
-      Main.debug(Main.LogLevel.WARN, "Plugin has occured a problem suggesting locale, probably API change.");
+      Debugger.debug(LogLevel.WARN, "Plugin has occured a problem suggesting locale, probably API change.");
     }
     if (hasLocale) {
       MessageUtils.info();

@@ -31,6 +31,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.plots.Plot;
 import pl.plajer.buildbattle.utils.Cuboid;
+import pl.plajerlair.core.debug.Debugger;
+import pl.plajerlair.core.debug.LogLevel;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.LocationUtils;
@@ -69,12 +71,12 @@ public class ArenaRegistry {
   }
 
   public static void registerArena(Arena arena) {
-    Main.debug(Main.LogLevel.INFO, "Registering new game instance, " + arena.getID());
+    Debugger.debug(LogLevel.INFO, "Registering new game instance, " + arena.getID());
     arenas.add(arena);
   }
 
   public static void unregisterArena(Arena arena) {
-    Main.debug(Main.LogLevel.INFO, "Unegistering game instance, " + arena.getID());
+    Debugger.debug(LogLevel.INFO, "Unegistering game instance, " + arena.getID());
     arenas.remove(arena);
   }
 
@@ -95,7 +97,7 @@ public class ArenaRegistry {
 
   public static void registerArenas() {
     try {
-      Main.debug(Main.LogLevel.INFO, "Initial arenas registration");
+      Debugger.debug(LogLevel.INFO, "Initial arenas registration");
       ArenaRegistry.getArenas().clear();
       FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
       for (String ID : config.getConfigurationSection("instances").getKeys(false)) {
@@ -151,7 +153,7 @@ public class ArenaRegistry {
         ArenaRegistry.registerArena(arena);
         arena.start();
       }
-      Main.debug(Main.LogLevel.INFO, "Arenas registration completed");
+      Debugger.debug(LogLevel.INFO, "Arenas registration completed");
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }

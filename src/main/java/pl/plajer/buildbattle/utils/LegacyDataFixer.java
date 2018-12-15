@@ -22,6 +22,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
+import pl.plajerlair.core.debug.Debugger;
+import pl.plajerlair.core.debug.LogLevel;
 import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
@@ -44,7 +46,7 @@ public class LegacyDataFixer {
     if (config.getInt("data-version", 0) >= DATA_VERSION || plugin.isDatabaseActivated()) {
       return;
     }
-    Main.debug(Main.LogLevel.TASK, "Legacy fixer started, fixing player data for yaml storage...");
+    Debugger.debug(LogLevel.TASK, "Legacy fixer started, fixing player data for yaml storage...");
 
     int migrated = 0;
 
@@ -68,12 +70,12 @@ public class LegacyDataFixer {
         config.set(key + "." + stat, null);
         migratedLocal++;
       }
-      Main.debug(Main.LogLevel.TASK, "[Legacy fixer] Migrated new record, " + migratedLocal + " records fixed");
+      Debugger.debug(LogLevel.TASK, "[Legacy fixer] Migrated new record, " + migratedLocal + " records fixed");
       migrated++;
     }
     config.set("data-version", DATA_VERSION);
     ConfigUtils.saveConfig(plugin, config, "stats");
-    Main.debug(Main.LogLevel.TASK, "[Legacy fixer] Fixed and migrated " + migrated + " records. Data scheme fixed.");
+    Debugger.debug(LogLevel.TASK, "[Legacy fixer] Fixed and migrated " + migrated + " records. Data scheme fixed.");
   }
 
 }

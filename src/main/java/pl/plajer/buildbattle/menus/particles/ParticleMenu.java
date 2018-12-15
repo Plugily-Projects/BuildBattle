@@ -37,6 +37,8 @@ import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.plots.Plot;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.utils.Utils;
+import pl.plajerlair.core.debug.Debugger;
+import pl.plajerlair.core.debug.LogLevel;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.XMaterial;
 
@@ -80,7 +82,7 @@ public class ParticleMenu {
       } else {
         if (!config.isSet(particle.toString() + ".material-name")) {
           config.set(particle.toString() + ".material-name", Material.PAPER.name());
-          Main.debug(Main.LogLevel.WARN, "Found outdated item in particles.yml! We've converted it to the newest version!");
+          Debugger.debug(LogLevel.WARN, "Found outdated item in particles.yml! We've converted it to the newest version!");
         }
       }
       ConfigUtils.saveConfig(JavaPlugin.getPlugin(Main.class), config, "particles");
