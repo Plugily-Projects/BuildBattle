@@ -44,7 +44,7 @@ public class LegacyDataFixer {
     if (config.getInt("data-version", 0) >= DATA_VERSION || plugin.isDatabaseActivated()) {
       return;
     }
-    Main.debug("Legacy fixer started, fixing player data for yaml storage...", System.currentTimeMillis());
+    Main.debug(Main.LogLevel.TASK, "Legacy fixer started, fixing player data for yaml storage...");
 
     int migrated = 0;
 
@@ -68,12 +68,12 @@ public class LegacyDataFixer {
         config.set(key + "." + stat, null);
         migratedLocal++;
       }
-      Main.debug("[Legacy fixer] Migrated new record, " + migratedLocal + " records fixed", System.currentTimeMillis());
+      Main.debug(Main.LogLevel.TASK, "[Legacy fixer] Migrated new record, " + migratedLocal + " records fixed");
       migrated++;
     }
     config.set("data-version", DATA_VERSION);
     ConfigUtils.saveConfig(plugin, config, "stats");
-    Main.debug("[Legacy fixer] Fixed and migrated " + migrated + " records. Data scheme fixed.", System.currentTimeMillis());
+    Main.debug(Main.LogLevel.TASK, "[Legacy fixer] Fixed and migrated " + migrated + " records. Data scheme fixed.");
   }
 
 }

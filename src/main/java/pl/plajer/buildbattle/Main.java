@@ -89,17 +89,28 @@ public class Main extends JavaPlugin {
   private String version;
   private List<String> filesToGenerate = Arrays.asList("arenas", "particles", "lobbyitems", "stats", "voteItems", "mysql");
 
-  @Deprecated
-  //use new debugger version
-  public static void debug(String thing, long millis) {
-    long elapsed = System.currentTimeMillis() - millis;
+  public static void debug(LogLevel level, String thing) {
     if (debug) {
-      Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[BB Debugger] Running task '" + thing + "'");
-    }
-    if (elapsed > 15) {
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BB Debugger] Slow server response, games may be affected.");
+      switch (level) {
+        case INFO:
+          Bukkit.getConsoleSender().sendMessage("[Build Battle Debugger] " + thing);
+          break;
+        case WARN:
+          Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[Build Battle Debugger] " + thing);
+          break;
+        case ERROR:
+          Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Build Battle Debugger] " + thing);
+          break;
+        case WTF:
+          Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_RED + "[Build Battle Debugger] [SEVERE]" + thing);
+          break;
+        case TASK:
+          Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[Build Battle Debugger] Running task '" + thing + "'");
+          break;
+      }
     }
   }
+
 
   public CuboidSelector getCuboidSelector() {
     return cuboidSelector;
@@ -169,7 +180,7 @@ public class Main extends JavaPlugin {
         LanguageMigrator.migrateToNewFormat();
       }
       debug = getConfig().getBoolean("Debug");
-      debug("Main setup start", System.currentTimeMillis());
+      debug(LogLevel.INFO, "Main setup started");
       saveDefaultConfig();
       LanguageManager.init(this);
       new LegacyDataFixer(this);
@@ -353,6 +364,10 @@ public class Main extends JavaPlugin {
         }
       });
     }
+  }
+
+  public enum LogLevel {
+    INFO, WARN, ERROR, WTF /*what a terrible failure*/, TASK
   }
 
 }

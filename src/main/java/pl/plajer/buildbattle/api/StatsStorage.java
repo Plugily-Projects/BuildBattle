@@ -52,7 +52,7 @@ public class StatsStorage {
    * @return Map of UUID keys and Integer values sorted in ascending order of requested statistic type
    */
   public static Map<UUID, Integer> getStats(StatisticType stat) {
-    Main.debug("BuildBattle API getStats(" + stat.getName() + ") run", System.currentTimeMillis());
+    Main.debug(Main.LogLevel.INFO, "BuildBattle API getStats(" + stat.getName() + ") run");
     if (plugin.isDatabaseActivated()) {
       ResultSet set = plugin.getMySQLDatabase().executeQuery("SELECT UUID, " + stat.getName() + " FROM buildbattlestats ORDER BY " + stat.getName() + " ASC;");
       Map<java.util.UUID, java.lang.Integer> column = new LinkedHashMap<>();
@@ -87,7 +87,7 @@ public class StatsStorage {
    * @see StatisticType
    */
   public static int getUserStats(Player player, StatisticType statisticType) {
-    Main.debug("BuildBattle API getUserStats(" + player.getName() + ", " + statisticType.getName() + ") run", System.currentTimeMillis());
+    Main.debug(Main.LogLevel.INFO, "BuildBattle API getUserStats(" + player.getName() + ", " + statisticType.getName() + ") run");
     return UserManager.getUser(player.getUniqueId()).getStat(statisticType);
   }
 

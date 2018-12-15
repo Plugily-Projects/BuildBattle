@@ -34,7 +34,7 @@ public class UserManager {
     if (users.containsKey(uuid)) {
       return users.get(uuid);
     } else {
-      Main.debug("Registering new user with UUID: " + uuid, System.currentTimeMillis());
+      Main.debug(Main.LogLevel.INFO, "Registering new user with UUID: " + uuid);
       users.put(uuid, new User(uuid));
       return users.get(uuid);
     }
