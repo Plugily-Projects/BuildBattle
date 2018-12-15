@@ -44,6 +44,8 @@ import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
+import pl.plajerlair.core.debug.Debugger;
+import pl.plajerlair.core.debug.LogLevel;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.LocationUtils;
@@ -174,7 +176,7 @@ public class SignManager implements Listener {
         if (loc.getBlock().getState() instanceof Sign) {
           loadedSigns.put((Sign) loc.getBlock().getState(), ArenaRegistry.getArena(path));
         } else {
-          Main.debug(Main.LogLevel.WARN, "Block at loc " + loc + " for arena " + path + " not a sign");
+          Debugger.debug(LogLevel.WARN, "Block at loc " + loc + " for arena " + path + " not a sign");
         }
       }
     }

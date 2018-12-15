@@ -27,6 +27,8 @@ import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.user.data.FileStats;
 import pl.plajer.buildbattle.user.data.MySQLManager;
+import pl.plajerlair.core.debug.Debugger;
+import pl.plajerlair.core.debug.LogLevel;
 
 /**
  * Created by Tom on 27/07/2014.
@@ -51,7 +53,7 @@ public class UserManager {
     if (users.containsKey(uuid)) {
       return users.get(uuid);
     } else {
-      Main.debug(Main.LogLevel.INFO, "Registering new user with UUID: " + uuid);
+      Debugger.debug(LogLevel.INFO, "Registering new user with UUID: " + uuid);
       users.put(uuid, new User(uuid));
       return users.get(uuid);
     }

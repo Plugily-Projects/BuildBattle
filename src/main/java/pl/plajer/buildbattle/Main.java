@@ -58,6 +58,8 @@ import pl.plajer.buildbattle.utils.CuboidSelector;
 import pl.plajer.buildbattle.utils.LegacyDataFixer;
 import pl.plajer.buildbattle.utils.MessageUtils;
 import pl.plajerlair.core.database.MySQLDatabase;
+import pl.plajerlair.core.debug.Debugger;
+import pl.plajerlair.core.debug.LogLevel;
 import pl.plajerlair.core.services.ServiceRegistry;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.services.update.UpdateChecker;
@@ -68,7 +70,6 @@ import pl.plajerlair.core.utils.ConfigUtils;
  */
 public class Main extends JavaPlugin {
 
-  private static boolean debug;
   private boolean databaseActivated = false;
   private boolean forceDisable = false;
   private MySQLDatabase database;
@@ -83,29 +84,6 @@ public class Main extends JavaPlugin {
   private OptionsMenu optionsMenu;
   private String version;
   private List<String> filesToGenerate = Arrays.asList("arenas", "particles", "lobbyitems", "stats", "voteItems", "mysql");
-
-  public static void debug(LogLevel level, String thing) {
-    if (debug) {
-      switch (level) {
-        case INFO:
-          Bukkit.getConsoleSender().sendMessage("[Build Battle Debugger] " + thing);
-          break;
-        case WARN:
-          Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[Build Battle Debugger] " + thing);
-          break;
-        case ERROR:
-          Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Build Battle Debugger] " + thing);
-          break;
-        case WTF:
-          Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_RED + "[Build Battle Debugger] [SEVERE]" + thing);
-          break;
-        case TASK:
-          Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[Build Battle Debugger] Running task '" + thing + "'");
-          break;
-      }
-    }
-  }
-
 
   public CuboidSelector getCuboidSelector() {
     return cuboidSelector;
@@ -175,7 +153,9 @@ public class Main extends JavaPlugin {
       if (ConfigUtils.getConfig(this, "language").isSet("PREFIX") && ConfigUtils.getConfig(this, "language").isSet("Unlocks-at-level")) {
         LanguageMigrator.migrateToNewFormat();
       }
-      debug(LogLevel.INFO, "Main setup started");
+      Debugger.setEnabled(getConfig().getBoolean("Debug", false));
+      Debugger.setPrefix("[Build Battle Debugger]");
+      Debugger.debug(LogLevel.INFO, "Main setup started");
       saveDefaultConfig();
       LanguageManager.init(this);
       new LegacyDataFixer(this);
@@ -226,6 +206,7 @@ public class Main extends JavaPlugin {
     if (forceDisable) {
       return;
     }
+    Debugger.debug(LogLevel.INFO, "System disabling...");
     for (final Player player : getServer().getOnlinePlayers()) {
       Arena arena = ArenaRegistry.getArena(player);
       if (arena != null) {
@@ -247,7 +228,6 @@ public class Main extends JavaPlugin {
   }
 
   private void setupConfigValues() {
-    debug = getConfig().getBoolean("Debug", false);
     bungeeActivated = getConfig().getBoolean("BungeeActivated", false);
     inventoryManagerEnabled = getConfig().getBoolean("InventoryManager", true);
     databaseActivated = getConfig().getBoolean("DatabaseActivated", false);
@@ -323,10 +303,6 @@ public class Main extends JavaPlugin {
         userManager.loadStatistic(user, stat);
       }
     }
-  }
-
-  public enum LogLevel {
-    INFO, WARN, ERROR, WTF /*what a terrible failure*/, TASK
   }
 
 }

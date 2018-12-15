@@ -31,6 +31,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.handlers.ChatManager;
+import pl.plajerlair.core.debug.Debugger;
+import pl.plajerlair.core.debug.LogLevel;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.XMaterial;
 
@@ -65,7 +67,7 @@ public class SpecialItem {
     } else {
       if (!config.isSet(name + ".material-name")) {
         config.set(name + ".material-name", material.toString());
-        Main.debug(Main.LogLevel.WARN, "Found outdated item in lobbyitems.yml! We've converted it to the newest version!");
+        Debugger.debug(LogLevel.WARN, "Found outdated item in lobbyitems.yml! We've converted it to the newest version!");
       }
     }
     ConfigUtils.saveConfig(JavaPlugin.getPlugin(Main.class), config, "lobbyitems");
