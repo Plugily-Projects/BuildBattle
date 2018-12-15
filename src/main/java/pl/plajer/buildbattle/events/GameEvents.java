@@ -65,7 +65,7 @@ import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
-import pl.plajer.buildbattle.arena.plots.ArenaPlot;
+import pl.plajer.buildbattle.arena.plots.Plot;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.items.SpecialItemManager;
 import pl.plajer.buildbattle.menus.GameInventories;
@@ -178,7 +178,7 @@ public class GameEvents implements Listener {
   public void onPistonExtendEvent(BlockPistonExtendEvent event) {
     try {
       for (Arena arena : ArenaRegistry.getArenas()) {
-        for (ArenaPlot buildPlot : arena.getPlotManager().getPlots()) {
+        for (Plot buildPlot : arena.getPlotManager().getPlots()) {
           for (Block block : event.getBlocks()) {
             if (!buildPlot.getCuboid().isInWithMarge(block.getLocation(), -1) && buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
               event.setCancelled(true);
@@ -208,7 +208,7 @@ public class GameEvents implements Listener {
   public void onWaterFlowEvent(BlockFromToEvent event) {
     try {
       for (Arena arena : ArenaRegistry.getArenas()) {
-        for (ArenaPlot buildPlot : arena.getPlotManager().getPlots()) {
+        for (Plot buildPlot : arena.getPlotManager().getPlots()) {
           if (!buildPlot.getCuboid().isIn(event.getToBlock().getLocation()) && buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
             event.setCancelled(true);
           }
@@ -223,7 +223,7 @@ public class GameEvents implements Listener {
   public void onTNTExplode(EntityExplodeEvent event) {
     try {
       for (Arena arena : ArenaRegistry.getArenas()) {
-        for (ArenaPlot buildPlot : arena.getPlotManager().getPlots()) {
+        for (Plot buildPlot : arena.getPlotManager().getPlots()) {
           if (buildPlot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 0)) {
             event.blockList().clear();
             event.setCancelled(true);
@@ -291,7 +291,7 @@ public class GameEvents implements Listener {
       if (arena == null) {
         return;
       }
-      ArenaPlot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
+      Plot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
       if (buildPlot == null) {
         return;
       }
@@ -309,7 +309,7 @@ public class GameEvents implements Listener {
   @EventHandler
   public void onDispense(BlockDispenseEvent event) {
     for (Arena arena : ArenaRegistry.getArenas()) {
-      for (ArenaPlot buildPlot : arena.getPlotManager().getPlots()) {
+      for (Plot buildPlot : arena.getPlotManager().getPlots()) {
         if (!buildPlot.getCuboid().isInWithMarge(event.getBlock().getLocation(), -1) && buildPlot.getCuboid().isInWithMarge(event.getBlock().getLocation(), 5)) {
           event.setCancelled(true);
         }
@@ -330,7 +330,7 @@ public class GameEvents implements Listener {
       if (e.getInventory() == null || invName == null || !(e.getWhoClicked() instanceof Player) || arena == null) {
         return;
       }
-      ArenaPlot plot = arena.getPlotManager().getPlot(player);
+      Plot plot = arena.getPlotManager().getPlot(player);
       if (!Utils.isNamed(e.getCurrentItem()) || plot == null) {
         return;
       }
@@ -350,7 +350,7 @@ public class GameEvents implements Listener {
   }
 
   //todo move to better place
-  private void weatherInventoryClick(InventoryClickEvent e, ArenaPlot plot) {
+  private void weatherInventoryClick(InventoryClickEvent e, Plot plot) {
     if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Downfall"))) {
       plot.setWeatherType(WeatherType.DOWNFALL);
     } else if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Clear"))) {
@@ -365,20 +365,20 @@ public class GameEvents implements Listener {
   }
 
   //todo move to better place
-  private void timeInventoryClick(InventoryClickEvent e, ArenaPlot plot) {
-    plot.setTime(ArenaPlot.Time.valueOf(GameInventories.TimeClickPosition.getByPosition(e.getRawSlot()).toString()));
+  private void timeInventoryClick(InventoryClickEvent e, Plot plot) {
+    plot.setTime(Plot.Time.valueOf(GameInventories.TimeClickPosition.getByPosition(e.getRawSlot()).toString()));
     for (UUID owner : plot.getOwners()) {
       Player p = Bukkit.getPlayer(owner);
       if (p == null) {
         continue;
       }
-      p.setPlayerTime(ArenaPlot.Time.format(plot.getTime(), p.getWorld().getTime()), false);
+      p.setPlayerTime(Plot.Time.format(plot.getTime(), p.getWorld().getTime()), false);
       p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Time-Set"));
     }
   }
 
   //todo move to better place
-  private void biomeInventoryClick(InventoryClickEvent e, ArenaPlot plot) {
+  private void biomeInventoryClick(InventoryClickEvent e, Plot plot) {
     try {
       for (Block block : plot.getCuboid().blockList()) {
         block.setBiome(Biome.valueOf(ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName())));
@@ -536,7 +536,7 @@ public class GameEvents implements Listener {
       if (arena == null) {
         return;
       }
-      ArenaPlot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
+      Plot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
       if (buildPlot == null) {
         return;
       }
@@ -582,7 +582,7 @@ public class GameEvents implements Listener {
           event.setCancelled(true);
           return;
         }
-        for (ArenaPlot plot : arena.getPlotManager().getPlots()) {
+        for (Plot plot : arena.getPlotManager().getPlots()) {
           if (plot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 10)) {
             event.setCancelled(true);
             return;
@@ -611,7 +611,7 @@ public class GameEvents implements Listener {
   @EventHandler
   public void onLeavesDecay(LeavesDecayEvent event) {
     for (Arena arena : ArenaRegistry.getArenas()) {
-      for (ArenaPlot buildPlot : arena.getPlotManager().getPlots()) {
+      for (Plot buildPlot : arena.getPlotManager().getPlots()) {
         if (buildPlot.getCuboid().isInWithMarge(event.getBlock().getLocation(), 5)) {
           event.setCancelled(true);
         }
@@ -659,7 +659,7 @@ public class GameEvents implements Listener {
         return;
       }
       User user = plugin.getUserManager().getUser(event.getPlayer().getUniqueId());
-      ArenaPlot buildPlot = user.getCurrentPlot();
+      Plot buildPlot = user.getCurrentPlot();
       if (buildPlot == null) {
         event.setCancelled(true);
         return;
@@ -694,7 +694,7 @@ public class GameEvents implements Listener {
         return;
       }
       User user = plugin.getUserManager().getUser(event.getPlayer().getUniqueId());
-      ArenaPlot buildPlot = user.getCurrentPlot();
+      Plot buildPlot = user.getCurrentPlot();
       if (buildPlot == null) {
         event.setCancelled(true);
         return;

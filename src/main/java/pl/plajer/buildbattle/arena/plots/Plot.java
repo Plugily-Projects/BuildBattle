@@ -47,7 +47,7 @@ import pl.plajerlair.core.services.exception.ReportedException;
 /**
  * Created by Tom on 17/08/2015.
  */
-public class ArenaPlot {
+public class Plot {
 
   private Main plugin = JavaPlugin.getPlugin(Main.class);
   private Cuboid cuboid;
@@ -59,7 +59,7 @@ public class ArenaPlot {
   private WeatherType weatherType = WeatherType.CLEAR;
   private int entities = 0;
 
-  public ArenaPlot(Biome biome) {
+  public Plot(Biome biome) {
     plotDefaultBiome = biome;
   }
 

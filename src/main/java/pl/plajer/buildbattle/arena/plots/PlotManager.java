@@ -38,18 +38,18 @@ import pl.plajerlair.core.services.exception.ReportedException;
 /**
  * Created by Tom on 17/08/2015.
  */
-public class ArenaPlotManager {
+public class PlotManager {
 
   private Main plugin = JavaPlugin.getPlugin(Main.class);
-  private List<ArenaPlot> plots = new ArrayList<>();
-  private List<ArenaPlot> plotsToClear = new ArrayList<>();
+  private List<Plot> plots = new ArrayList<>();
+  private List<Plot> plotsToClear = new ArrayList<>();
   private Arena arena;
 
-  public ArenaPlotManager(Arena arena) {
+  public PlotManager(Arena arena) {
     this.arena = arena;
   }
 
-  public void addBuildPlot(ArenaPlot buildPlot) {
+  public void addBuildPlot(Plot buildPlot) {
     plots.add(buildPlot);
   }
 
@@ -58,7 +58,7 @@ public class ArenaPlotManager {
       List<Player> players = new ArrayList<>(arena.getPlayers());
       int times = arena.getArenaType() == Arena.ArenaType.SOLO ? 1 : 2;
       for (int i = 0; i < times; i++) {
-        for (ArenaPlot plot : plots) {
+        for (Plot plot : plots) {
           if (players.isEmpty()) break;
           if (plot.getOwners() != null) {
             if (arena.getArenaType() == Arena.ArenaType.SOLO || arena.getPlayers().size() == 2 /* in case of 2 min players set for team mode*/) {
@@ -91,8 +91,8 @@ public class ArenaPlotManager {
     }
   }
 
-  public ArenaPlot getPlot(Player player) {
-    for (ArenaPlot buildPlot : plots) {
+  public Plot getPlot(Player player) {
+    for (Plot buildPlot : plots) {
       if (buildPlot.getOwners() != null && !buildPlot.getOwners().isEmpty()) {
         if (buildPlot.getOwners().contains(player.getUniqueId())) return buildPlot;
       }
@@ -100,8 +100,8 @@ public class ArenaPlotManager {
     return null;
   }
 
-  public ArenaPlot getPlot(UUID uuid) {
-    for (ArenaPlot buildPlot : plots) {
+  public Plot getPlot(UUID uuid) {
+    for (Plot buildPlot : plots) {
       if (buildPlot.getOwners() != null && !buildPlot.getOwners().isEmpty()) {
         if (buildPlot.getOwners().contains(uuid)) return buildPlot;
       }
@@ -110,7 +110,7 @@ public class ArenaPlotManager {
   }
 
   public void resetQueuedPlots() {
-    for (ArenaPlot buildPlot : plotsToClear) {
+    for (Plot buildPlot : plotsToClear) {
       buildPlot.fullyResetPlot();
     }
     plotsToClear.clear();
@@ -129,7 +129,7 @@ public class ArenaPlotManager {
 
   public void teleportToPlots() {
     try {
-      for (ArenaPlot buildPlot : plots) {
+      for (Plot buildPlot : plots) {
         if (buildPlot.getOwners() != null && !buildPlot.getOwners().isEmpty()) {
           Location tploc = buildPlot.getCuboid().getCenter();
           while (tploc.getBlock().getType() != Material.AIR) {
@@ -152,7 +152,7 @@ public class ArenaPlotManager {
     }
   }
 
-  public List<ArenaPlot> getPlots() {
+  public List<Plot> getPlots() {
     return plots;
   }
 

@@ -51,8 +51,8 @@ import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.api.event.game.BBGameChangeStateEvent;
 import pl.plajer.buildbattle.api.event.game.BBGameEndEvent;
 import pl.plajer.buildbattle.api.event.game.BBGameStartEvent;
-import pl.plajer.buildbattle.arena.plots.ArenaPlot;
-import pl.plajer.buildbattle.arena.plots.ArenaPlotManager;
+import pl.plajer.buildbattle.arena.plots.Plot;
+import pl.plajer.buildbattle.arena.plots.PlotManager;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
 import pl.plajer.buildbattle.menus.themevoter.GTBTheme;
@@ -74,12 +74,12 @@ public class Arena extends BukkitRunnable {
   //todo hold players here
   private Map<Integer, List<UUID>> topList = new HashMap<>();
   private String theme = "Theme";
-  private ArenaPlotManager plotManager;
+  private PlotManager plotManager;
   private boolean receivedVoteItems;
   //todo hold players here
   private Queue<UUID> queue = new LinkedList<>();
   private int extraCounter;
-  private ArenaPlot votingPlot = null;
+  private Plot votingPlot = null;
   private boolean voteTime;
   private boolean themeVoteTime = true;
   private boolean themeTimerSet = false;
@@ -115,7 +115,7 @@ public class Arena extends BukkitRunnable {
     if (ConfigPreferences.isBossBarEnabled()) {
       gameBar = Bukkit.createBossBar(ChatManager.colorMessage("Bossbar.Waiting-For-Players"), BarColor.BLUE, BarStyle.SOLID);
     }
-    plotManager = new ArenaPlotManager(this);
+    plotManager = new PlotManager(this);
 
     for (ArenaState state : ArenaState.values()) {
       //not registering RESTARTING state and registering IN_GAME and ENDING later
@@ -190,7 +190,7 @@ public class Arena extends BukkitRunnable {
     this.themeVoteTime = themeVoteTime;
   }
 
-  public ArenaPlotManager getPlotManager() {
+  public PlotManager getPlotManager() {
     return plotManager;
   }
 
@@ -397,7 +397,7 @@ public class Arena extends BukkitRunnable {
             extraCounter = 0;
             for (Player player : getPlayers()) {
               User user = plugin.getUserManager().getUser(player.getUniqueId());
-              ArenaPlot buildPlot = user.getCurrentPlot();
+              Plot buildPlot = user.getCurrentPlot();
               if (buildPlot != null) {
                 if (!buildPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
                   player.teleport(buildPlot.getTeleportLocation());
@@ -427,7 +427,7 @@ public class Arena extends BukkitRunnable {
               }
             }
             if (arenaType == ArenaType.TEAM) {
-              for (ArenaPlot p : getPlotManager().getPlots()) {
+              for (Plot p : getPlotManager().getPlots()) {
                 if (p.getOwners() != null && p.getOwners().size() == 2) {
                   //removing second owner to not vote for same plot twice
                   queue.remove(p.getOwners().get(1));
@@ -443,7 +443,7 @@ public class Arena extends BukkitRunnable {
               }
             }
             calculateResults();
-            ArenaPlot winnerPlot = getPlotManager().getPlot(topList.get(1).get(0));
+            Plot winnerPlot = getPlotManager().getPlot(topList.get(1).get(0));
             announceResults();
 
             for (Player player : getPlayers()) {
@@ -981,7 +981,7 @@ public class Arena extends BukkitRunnable {
         for (Player p : getPlayers()) {
           p.teleport(getVotingPlot().getTeleportLocation());
           p.setPlayerWeather(getVotingPlot().getWeatherType());
-          p.setPlayerTime(ArenaPlot.Time.format(getVotingPlot().getTime(), p.getWorld().getTime()), false);
+          p.setPlayerTime(Plot.Time.format(getVotingPlot().getTime(), p.getWorld().getTime()), false);
           String owner = ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
           if (getArenaType() == ArenaType.TEAM) {
             if (getVotingPlot().getOwners().size() == 1) {
@@ -1005,11 +1005,11 @@ public class Arena extends BukkitRunnable {
    *
    * @return Plot object where players are voting
    */
-  public ArenaPlot getVotingPlot() {
+  public Plot getVotingPlot() {
     return votingPlot;
   }
 
-  private void setVotingPlot(ArenaPlot buildPlot) {
+  private void setVotingPlot(Plot buildPlot) {
     votingPlot = buildPlot;
   }
 
@@ -1087,7 +1087,7 @@ public class Arena extends BukkitRunnable {
     for (int b = 1; b <= getPlayers().size(); b++) {
       topList.put(b, new ArrayList<>());
     }
-    for (ArenaPlot buildPlot : getPlotManager().getPlots()) {
+    for (Plot buildPlot : getPlotManager().getPlots()) {
       long i = buildPlot.getPoints();
       for (int rang : topList.keySet()) {
         if (topList.get(rang) == null || topList.get(rang).isEmpty() || topList.get(rang).get(0) == null || getPlotManager().getPlot(topList.get(rang).get(0)) == null) {

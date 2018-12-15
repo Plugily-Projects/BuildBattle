@@ -25,7 +25,7 @@ import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.plots.ArenaPlot;
+import pl.plajer.buildbattle.arena.plots.Plot;
 
 /**
  * Created by Tom on 23/08/2015.
@@ -46,7 +46,7 @@ public class ParticleHandler extends BukkitRunnable {
   @Override
   public void run() {
     for (Arena arena : ArenaRegistry.getArenas()) {
-      for (ArenaPlot buildPlot : arena.getPlotManager().getPlots()) {
+      for (Plot buildPlot : arena.getPlotManager().getPlots()) {
         for (Location location : buildPlot.getParticles().keySet()) {
           if (!arena.getPlayers().isEmpty())
             location.getWorld().spawnParticle(buildPlot.getParticles().get(location), location, amount, 1, 1, 1);

@@ -26,7 +26,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.arena.plots.ArenaPlot;
+import pl.plajer.buildbattle.arena.plots.Plot;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajerlair.core.utils.ItemBuilder;
 import pl.plajerlair.core.utils.XMaterial;
@@ -44,7 +44,7 @@ public class OptionsMenu {
         .lore(ChatManager.colorMessage("Menus.Option-Menu.Option-Item-Lore")).build();
   }
 
-  private Inventory createMenu(ArenaPlot plot) {
+  private Inventory createMenu(Plot plot) {
     Inventory inv = Bukkit.createInventory(null, 5 * 9, ChatManager.colorMessage("Menus.Option-Menu.Inventory-Name"));
 
     ItemStack headOption;
@@ -85,7 +85,7 @@ public class OptionsMenu {
     return inv;
   }
 
-  public void openMenu(Player player, ArenaPlot buildPlot) {
+  public void openMenu(Player player, Plot buildPlot) {
     player.openInventory(createMenu(buildPlot));
   }
 

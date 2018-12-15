@@ -34,7 +34,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
-import pl.plajer.buildbattle.arena.plots.ArenaPlot;
+import pl.plajer.buildbattle.arena.plots.Plot;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.utils.Utils;
 import pl.plajerlair.core.utils.ConfigUtils;
@@ -105,7 +105,7 @@ public class ParticleMenu {
   }
 
 
-  public static void onClick(Player player, ItemStack itemStack, ArenaPlot buildPlot) {
+  public static void onClick(Player player, ItemStack itemStack, Plot buildPlot) {
     for (ParticleItem particleItem : particleItems) {
       if (particleItem.getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName()) && particleItem.getItemStack().getType() == itemStack.getType()) {
         if (!player.hasPermission(particleItem.getPermission())) {
