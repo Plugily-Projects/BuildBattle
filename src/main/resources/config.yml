@@ -86,9 +86,6 @@ Third-Place-Commands-Activated: false
 # Max amount of mobs to spawn per plot
 Mobs-Max-Amount-Per-Plot: 20
 
-# Should we hide players outside game?
-Hide-Players-Outside-Game: true
-
 # Time in lobby to wait before start
 Lobby-Starting-Time: 60
 
