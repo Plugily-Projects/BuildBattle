@@ -23,6 +23,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 
+import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.user.data.FileStats;
@@ -42,7 +43,7 @@ public class UserManager {
 
   public UserManager(Main plugin) {
     this.plugin = plugin;
-    if (plugin.isDatabaseActivated()) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       mySQLManager = new MySQLManager(plugin);
     } else {
       fileStats = new FileStats();
@@ -69,7 +70,7 @@ public class UserManager {
     if (!stat.isPersistent()) {
       return;
     }
-    if (plugin.isDatabaseActivated()) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> mySQLManager.saveStat(user, stat));
       return;
     }
@@ -86,7 +87,7 @@ public class UserManager {
     if (!stat.isPersistent()) {
       return;
     }
-    if (plugin.isDatabaseActivated()) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> user.setStat(stat, mySQLManager.getStat(user, stat)));
       return;
     }

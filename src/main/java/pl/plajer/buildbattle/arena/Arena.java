@@ -112,7 +112,7 @@ public class Arena extends BukkitRunnable {
     gameState = ArenaState.WAITING_FOR_PLAYERS;
     this.plugin = plugin;
     this.ID = ID;
-    if (ConfigPreferences.isBossBarEnabled()) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
       gameBar = Bukkit.createBossBar(ChatManager.colorMessage("Bossbar.Waiting-For-Players"), BarColor.BLUE, BarStyle.SOLID);
     }
     plotManager = new PlotManager(this);
@@ -212,11 +212,11 @@ public class Arena extends BukkitRunnable {
 
   public void setArenaType(ArenaType arenaType) {
     this.arenaType = arenaType;
-    buildTime = ConfigPreferences.getBuildTime(this);
+    buildTime = plugin.getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, this);
     if (arenaType == ArenaType.GUESS_THE_BUILD) {
-      themesCache.put("EASY", ConfigPreferences.getThemes(getArenaType().getPrefix() + "_EASY"));
-      themesCache.put("MEDIUM", ConfigPreferences.getThemes(getArenaType().getPrefix() + "_MEDIUM"));
-      themesCache.put("HARD", ConfigPreferences.getThemes(getArenaType().getPrefix() + "_HARD"));
+      themesCache.put("EASY", plugin.getConfigPreferences().getThemes(getArenaType().getPrefix() + "_EASY"));
+      themesCache.put("MEDIUM", plugin.getConfigPreferences().getThemes(getArenaType().getPrefix() + "_MEDIUM"));
+      themesCache.put("HARD", plugin.getConfigPreferences().getThemes(getArenaType().getPrefix() + "_HARD"));
     }
   }
 
@@ -262,7 +262,7 @@ public class Arena extends BukkitRunnable {
         return;
       }
       updateScoreboard();
-      if (ConfigPreferences.isBossBarEnabled()) {
+      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
         updateBossBar();
       }
       switch (arenaType) {
@@ -282,13 +282,13 @@ public class Arena extends BukkitRunnable {
   private void runClassicTeamsMode() {
     switch (getArenaState()) {
       case WAITING_FOR_PLAYERS:
-        if (plugin.isBungeeActivated()) {
+        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           plugin.getServer().setWhitelist(false);
         }
         getPlotManager().resetPlotsGradually();
         if (getPlayers().size() < getMinimumPlayers()) {
           if (getTimer() <= 0) {
-            setTimer(ConfigPreferences.getLobbyTimer());
+            setTimer(plugin.getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
             ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", String.valueOf(getMinimumPlayers())));
             return;
           }
@@ -296,7 +296,7 @@ public class Arena extends BukkitRunnable {
           ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
           setGameState(ArenaState.STARTING);
           Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
-          setTimer(ConfigPreferences.getLobbyTimer());
+          setTimer(plugin.getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
           this.showPlayers();
         }
         setTimer(getTimer() - 1);
@@ -310,7 +310,7 @@ public class Arena extends BukkitRunnable {
           ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", String.valueOf(getMinimumPlayers())));
           setGameState(ArenaState.WAITING_FOR_PLAYERS);
           Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
-          setTimer(ConfigPreferences.getLobbyTimer());
+          setTimer(plugin.getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
           for (Player player : getPlayers()) {
             player.setExp(1);
             player.setLevel(0);
@@ -325,7 +325,7 @@ public class Arena extends BukkitRunnable {
           setGameState(ArenaState.IN_GAME);
           getPlotManager().distributePlots();
           getPlotManager().teleportToPlots();
-          setTimer(ConfigPreferences.getThemeVoteTimer());
+          setTimer(plugin.getConfigPreferences().getTimer(ConfigPreferences.TimerType.THEME_VOTE, this));
           for (Player player : getPlayers()) {
             player.getInventory().clear();
             player.setGameMode(GameMode.CREATIVE);
@@ -341,7 +341,7 @@ public class Arena extends BukkitRunnable {
         setTimer(getTimer() - 1);
         break;
       case IN_GAME:
-        if (plugin.isBungeeActivated()) {
+        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           if (getMaximumPlayers() <= getPlayers().size()) {
             plugin.getServer().setWhitelist(true);
           } else {
@@ -350,7 +350,7 @@ public class Arena extends BukkitRunnable {
         }
         if (isThemeVoteTime()) {
           if (!themeTimerSet) {
-            setTimer(ConfigPreferences.getThemeVoteTimer());
+            setTimer(plugin.getConfigPreferences().getTimer(ConfigPreferences.TimerType.THEME_VOTE, this));
             themeTimerSet = true;
           }
           for (Player p : getPlayers()) {
@@ -360,7 +360,7 @@ public class Arena extends BukkitRunnable {
             setThemeVoteTime(false);
             String votedTheme = voteMenu.getVotePoll().getVotedTheme();
             setTheme(votedTheme);
-            setTimer(ConfigPreferences.getBuildTime(this));
+            setTimer(plugin.getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, this));
             String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started");
             for (Player p : getPlayers()) {
               p.closeInventory();
@@ -468,7 +468,7 @@ public class Arena extends BukkitRunnable {
         setTimer(getTimer() - 1);
         break;
       case ENDING:
-        if (plugin.isBungeeActivated()) {
+        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           plugin.getServer().setWhitelist(false);
         }
         setVoting(false);
@@ -480,7 +480,7 @@ public class Arena extends BukkitRunnable {
         if (getTimer() <= 0) {
           teleportAllToEndLocation();
           for (Player player : getPlayers()) {
-            if (ConfigPreferences.isBossBarEnabled()) {
+            if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
               gameBar.removePlayer(player);
             }
             player.getInventory().clear();
@@ -491,7 +491,7 @@ public class Arena extends BukkitRunnable {
             player.getInventory().setArmorContents(null);
             player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
             plugin.getUserManager().getUser(player.getUniqueId()).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
-            if (plugin.isInventoryManagerEnabled()) {
+            if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
               InventoryUtils.loadInventory(plugin, player);
             }
             //plot might be already deleted by team mate in TEAM game mode
@@ -502,7 +502,7 @@ public class Arena extends BukkitRunnable {
           giveRewards();
           clearPlayers();
           setGameState(ArenaState.RESTARTING);
-          if (plugin.isBungeeActivated()) {
+          if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
             for (Player player : plugin.getServer().getOnlinePlayers()) {
               this.addPlayer(player);
             }
@@ -514,7 +514,7 @@ public class Arena extends BukkitRunnable {
         setTimer(14);
         setVoting(false);
         receivedVoteItems = false;
-        if (plugin.isBungeeActivated() && ConfigPreferences.getBungeeShutdown()) {
+        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && plugin.getConfig().getBoolean("Bungee-Shutdown-On-End", false)) {
           plugin.getServer().shutdown();
         }
         setGameState(ArenaState.WAITING_FOR_PLAYERS);
@@ -528,7 +528,7 @@ public class Arena extends BukkitRunnable {
   /*private void runGuessTheBuild() {
     switch (getArenaState()) {
       case WAITING_FOR_PLAYERS:
-        if (plugin.isBungeeActivated()) {
+        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           plugin.getServer().setWhitelist(false);
         }
         getPlotManager().resetPlotsGradually();
@@ -596,7 +596,7 @@ public class Arena extends BukkitRunnable {
           //todo ineffective?
           playersPoints = Utils.sortByValue(playersPoints);
         }
-        if (plugin.isBungeeActivated()) {
+        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           if (getMaximumPlayers() <= getPlayers().size()) {
             plugin.getServer().setWhitelist(true);
           } else {
@@ -797,35 +797,35 @@ public class Arena extends BukkitRunnable {
 
 
   private void giveRewards() {
-    if (ConfigPreferences.isWinCommandsEnabled()) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.WIN_COMMANDS_ENABLED)) {
       if (topList.get(1) != null) {
-        for (String string : ConfigPreferences.getWinCommands(ConfigPreferences.Position.FIRST)) {
+        for (String string : plugin.getConfigPreferences().getWinCommands(ConfigPreferences.Position.FIRST)) {
           for (UUID u : topList.get(1)) {
             plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), string.replace("%PLAYER%", plugin.getServer().getOfflinePlayer(u).getName()));
           }
         }
       }
     }
-    if (ConfigPreferences.isSecondPlaceCommandsEnabled()) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.SECOND_PLACE_COMMANDS_ENABLED)) {
       if (topList.get(2) != null) {
-        for (String string : ConfigPreferences.getWinCommands(ConfigPreferences.Position.SECOND)) {
+        for (String string : plugin.getConfigPreferences().getWinCommands(ConfigPreferences.Position.SECOND)) {
           for (UUID u : topList.get(2)) {
             plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), string.replace("%PLAYER%", plugin.getServer().getOfflinePlayer(u).getName()));
           }
         }
       }
     }
-    if (ConfigPreferences.isThirdPlaceCommandsEnabled()) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.THIRD_PLACE_COMMANDS_ENABLED)) {
       if (topList.get(3) != null) {
-        for (String string : ConfigPreferences.getWinCommands(ConfigPreferences.Position.THIRD)) {
+        for (String string : plugin.getConfigPreferences().getWinCommands(ConfigPreferences.Position.THIRD)) {
           for (UUID u : topList.get(3)) {
             plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), string.replace("%PLAYER%", plugin.getServer().getOfflinePlayer(u).getName()));
           }
         }
       }
     }
-    if (ConfigPreferences.isEndGameCommandsEnabled()) {
-      for (String string : ConfigPreferences.getEndGameCommands()) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.END_GAME_COMMANDS_ENABLED)) {
+      for (String string : plugin.getConfigPreferences().getEndGameCommands()) {
         for (Player player : getPlayers()) {
           plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), string.replace("%PLAYER%", player.getName()).replace("%RANG%", Integer.toString(getRang(player))));
         }
@@ -966,7 +966,7 @@ public class Arena extends BukkitRunnable {
 
   private void voteRoutine() {
     if (!queue.isEmpty()) {
-      setTimer(ConfigPreferences.getVotingTime());
+      setTimer(plugin.getConfigPreferences().getTimer(ConfigPreferences.TimerType.PLOT_VOTE, this));
       OfflinePlayer player = plugin.getServer().getOfflinePlayer(queue.poll());
       while (getPlotManager().getPlot(player.getUniqueId()) == null && !queue.isEmpty()) {
         System.out.print("A PLAYER HAS NO PLOT!");
@@ -1274,7 +1274,7 @@ public class Arena extends BukkitRunnable {
 
   private void teleportAllToEndLocation() {
     try {
-      if (plugin.isBungeeActivated()) {
+      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
         for (Player player : getPlayers()) {
           plugin.getBungeeManager().connectToHub(player);
         }
@@ -1296,7 +1296,7 @@ public class Arena extends BukkitRunnable {
 
   public void teleportToEndLocation(Player player) {
     try {
-      if (plugin.isBungeeActivated()) {
+      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
         plugin.getBungeeManager().connectToHub(player);
         return;
       }

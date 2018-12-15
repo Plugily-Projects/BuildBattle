@@ -25,6 +25,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
@@ -46,7 +47,7 @@ public class JoinEvents implements Listener {
 
   @EventHandler
   public void onJoin(PlayerJoinEvent event) {
-    if (plugin.isBungeeActivated()) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       return;
     }
     for (Player player : plugin.getServer().getOnlinePlayers()) {
@@ -93,7 +94,7 @@ public class JoinEvents implements Listener {
   @EventHandler
   public void onJoinLoadStats(final PlayerJoinEvent event) {
     try {
-      if (plugin.isBungeeActivated() && ArenaRegistry.getArenas().size() >= 1) {
+      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && ArenaRegistry.getArenas().size() >= 1) {
         ArenaRegistry.getArenas().get(0).teleportToLobby(event.getPlayer());
       }
       for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {

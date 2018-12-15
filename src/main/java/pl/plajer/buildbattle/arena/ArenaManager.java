@@ -76,7 +76,7 @@ public class ArenaManager {
         p.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Join-Cancelled-Via-API"));
         return;
       }
-      if (!plugin.isBungeeActivated()) {
+      if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
         if (!(p.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", "*")) || p.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", a.getID())))) {
           p.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Join-No-Permission"));
           return;
@@ -95,10 +95,10 @@ public class ArenaManager {
         return;
       }
       Debugger.debug(LogLevel.INFO, "Final join attempt, " + p.getName());
-      if (plugin.isInventoryManagerEnabled()) {
+      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
         InventoryUtils.saveInventoryToFile(plugin, p);
       }
-      if (ConfigPreferences.isBossBarEnabled()) {
+      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
         a.getGameBar().addPlayer(p);
       }
       a.teleportToLobby(p);
@@ -162,7 +162,7 @@ public class ArenaManager {
       p.setAllowFlight(false);
       p.resetPlayerWeather();
       p.resetPlayerTime();
-      if (ConfigPreferences.isBossBarEnabled()) {
+      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
         a.getGameBar().removePlayer(p);
       }
       p.getInventory().setArmorContents(null);
@@ -176,7 +176,7 @@ public class ArenaManager {
         a.setTimer(0);
       }
       p.setGameMode(GameMode.SURVIVAL);
-      if (plugin.isInventoryManagerEnabled()) {
+      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
         InventoryUtils.loadInventory(plugin, p);
       }
       for (Player players : plugin.getServer().getOnlinePlayers()) {

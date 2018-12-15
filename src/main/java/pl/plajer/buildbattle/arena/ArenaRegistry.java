@@ -28,6 +28,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.plots.Plot;
 import pl.plajer.buildbattle.utils.Cuboid;
@@ -116,7 +117,7 @@ public class ArenaRegistry {
         if (config.contains(s + "lobbylocation")) arena.setLobbyLocation(LocationUtils.getLocation(config.getString(s + "lobbylocation")));
         if (config.contains(s + "Endlocation")) arena.setEndLocation(LocationUtils.getLocation(config.getString(s + "Endlocation")));
         else {
-          if (!plugin.isBungeeActivated()) {
+          if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
             System.out.print(ID + " doesn't contains an end location!");
             arena.setReady(false);
             ArenaRegistry.registerArena(arena);

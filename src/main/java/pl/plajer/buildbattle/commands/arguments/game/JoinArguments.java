@@ -21,6 +21,7 @@ package pl.plajer.buildbattle.commands.arguments.game;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
@@ -66,7 +67,7 @@ public class JoinArguments {
     });
 
     //random join argument, register only for multi arena
-    if (!registry.getPlugin().isBungeeActivated()) {
+    if (!registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       registry.mapArgument("buildbattle", new CommandArgument("randomjoin", "", CommandArgument.ExecutorType.PLAYER) {
         @Override
         public void execute(CommandSender sender, String[] args) {

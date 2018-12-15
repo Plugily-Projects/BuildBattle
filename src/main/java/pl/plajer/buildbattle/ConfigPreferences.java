@@ -26,40 +26,58 @@ import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import pl.plajer.buildbattle.arena.Arena;
-import pl.plajerlair.core.utils.XMaterial;
 
 /**
  * Created by Tom on 17/08/2015.
  */
 public class ConfigPreferences {
 
-  private static FileConfiguration config;
-  private static Map<String, List<String>> gameThemes = new HashMap<>();
-  private static Map<String, Integer> options = new HashMap<>();
-  private static List<String> endGameCommands = new ArrayList<>();
-  private static List<String> whitelistedCommands = new ArrayList<>();
+  private Main plugin;
+  private Map<String, List<String>> gameThemes = new HashMap<>();
+  private List<String> endGameCommands = new ArrayList<>();
+  private List<String> whitelistedCommands = new ArrayList<>();
+  private Map<Option, Boolean> options = new HashMap<>();
 
   public ConfigPreferences(Main plugin) {
-    config = plugin.getConfig();
+    this.plugin = plugin;
+
+    loadOptions();
   }
 
-  private static void loadThemes() {
-    gameThemes.put(Arena.ArenaType.SOLO.getPrefix(), config.getStringList("Themes.Classic"));
-    gameThemes.put(Arena.ArenaType.TEAM.getPrefix(), config.getStringList("Themes.Teams"));
-    gameThemes.put(Arena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_EASY", config.getStringList("Themes.Guess-The-Build.Easy"));
-    gameThemes.put(Arena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_MEDIUM", config.getStringList("Themes.Guess-The-Build.Medium"));
-    gameThemes.put(Arena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_HARD", config.getStringList("Themes.Guess-The-Build.Hard"));
+  /**
+   * Clears all options and loads them again
+   */
+  public void loadOptions() {
+    options.clear();
+    gameThemes.clear();
+    endGameCommands.clear();
+    whitelistedCommands.clear();
+
+    for (Option option : Option.values()) {
+      options.put(option, plugin.getConfig().getBoolean(option.getPath(), option.getDefault()));
+    }
+    endGameCommands.addAll(plugin.getConfig().getStringList("End-Game-Commands"));
+    whitelistedCommands.addAll(plugin.getConfig().getStringList("Whitelisted-Commands"));
+    loadThemes();
+    loadBlackList();
   }
 
-  public static List<String> getThemes(String accessor) {
+  private void loadThemes() {
+    gameThemes.put(Arena.ArenaType.SOLO.getPrefix(), plugin.getConfig().getStringList("Themes.Classic"));
+    gameThemes.put(Arena.ArenaType.TEAM.getPrefix(), plugin.getConfig().getStringList("Themes.Teams"));
+    gameThemes.put(Arena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_EASY", plugin.getConfig().getStringList("Themes.Guess-The-Build.Easy"));
+    gameThemes.put(Arena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_MEDIUM", plugin.getConfig().getStringList("Themes.Guess-The-Build.Medium"));
+    gameThemes.put(Arena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_HARD", plugin.getConfig().getStringList("Themes.Guess-The-Build.Hard"));
+  }
+
+  public List<String> getThemes(String accessor) {
     return gameThemes.get(accessor);
   }
 
-  public static boolean isThemeBlacklisted(String theme) {
-    for (String s : config.getStringList("Blacklisted-Themes")) {
+  public boolean isThemeBlacklisted(String theme) {
+    for (String s : plugin.getConfig().getStringList("Blacklisted-Themes")) {
       if (s.equalsIgnoreCase(theme)) {
         return true;
       }
@@ -67,40 +85,16 @@ public class ConfigPreferences {
     return false;
   }
 
-  private static void loadWhitelistedCommands() {
-    whitelistedCommands.addAll(config.getStringList("Whitelisted-Commands"));
+  public List<String> getWinCommands(Position pos) {
+    return plugin.getConfig().getStringList("Win-Commands." + pos.getName());
   }
 
-  public static List<String> getWinCommands(Position pos) {
-    return config.getStringList("Win-Commands." + pos.getName());
-  }
-
-  public static List<String> getEndGameCommands() {
+  public List<String> getEndGameCommands() {
     return endGameCommands;
   }
 
-  private static void loadEndGameCommands() {
-    endGameCommands.addAll(config.getStringList("End-Game-Commands"));
-  }
-
-  public static boolean isMobSpawningDisabled() {
-    return options.getOrDefault("Disable-Mob-Spawning-Completely", 1) == 1;
-  }
-
-  public static Material getDefaultFloorMaterial() {
-    return XMaterial.fromString(config.getString("Default-Floor-Material-Name", "LOG").toUpperCase()).parseMaterial();
-  }
-
-  public static int getThemeVoteTimer() {
-    return options.getOrDefault("Theme-Voting-Time-In-Seconds", 25);
-  }
-
-  public static int getLobbyTimer() {
-    return options.getOrDefault("Lobby-Starting-Time", 60);
-  }
-
-  private static void loadBlackList() {
-    for (String item : config.getStringList("Blacklisted-Item-Names")) {
+  private void loadBlackList() {
+    for (String item : plugin.getConfig().getStringList("Blacklisted-Item-Names")) {
       try {
         Arena.addToBlackList(Material.valueOf(item.toUpperCase()));
       } catch (IllegalArgumentException ex) {
@@ -109,96 +103,63 @@ public class ConfigPreferences {
     }
   }
 
-  public static boolean isBossBarEnabled() {
-    return options.getOrDefault("Boss-Bar-Enabled", 1) == 1;
-  }
-
-  public static List<String> getWhitelistedCommands() {
+  public List<String> getWhitelistedCommands() {
     return whitelistedCommands;
   }
 
-  public static int getAmountFromOneParticle() {
-    return options.getOrDefault("Amount-One-Particle-Effect-Contains", 20);
-  }
-
-  public static int getMaxParticles() {
-    return options.getOrDefault("Max-Amount-Particles", 25);
-  }
-
-  public static int getVotingTime() {
-    return options.getOrDefault("Voting-Time-In-Seconds", 20);
-  }
-
-  public static int getBuildTime(Arena arena) {
-    return config.getInt("Build-Time." + arena.getArenaType().getPrefix(), 100);
-  }
-
-  public static boolean getBungeeShutdown() {
-    return options.getOrDefault("Bungee-Shutdown-On-End", 0) == 1;
-  }
-
-  public static int getMaxMobs() {
-    return options.getOrDefault("Mobs-Max-Amount-Per-Plot", 20);
-  }
-
-  public static boolean isWinCommandsEnabled() {
-    return options.getOrDefault("Win-Commands-Activated", 0) == 1;
-  }
-
-  public static boolean isSecondPlaceCommandsEnabled() {
-    return options.getOrDefault("Second-Place-Commands-Activated", 0) == 1;
-  }
-
-  public static boolean isThirdPlaceCommandsEnabled() {
-    return options.getOrDefault("Third-Place-Commands-Activated", 0) == 1;
-  }
-
-  public static boolean isEndGameCommandsEnabled() {
-    return options.getOrDefault("End-Game-Commands-Activated", 0) == 1;
-  }
-
-  public static long getParticleRefreshTick() {
-    return options.getOrDefault("Particle-Refresh-Per-Tick", 10);
-  }
-
-  public static void loadOptions() {
-    List<String> loadOptions = new ArrayList<>();
-    loadOptions.add("Voting-Time-In-Seconds");
-    loadOptions.add("Boss-Bar-Enabled");
-    loadOptions.add("Fly-Range-Out-Plot");
-    loadOptions.add("Default-Floor-Material-Name");
-    loadOptions.add("Disable-Mob-Spawning-Completely");
-    loadOptions.add("Amount-One-Particle-Effect-Contains");
-    loadOptions.add("Max-Amount-Particles");
-    loadOptions.add("Particle-Refresh-Per-Tick");
-    loadOptions.add("Bungee-Shutdown-On-End");
-    loadOptions.add("Win-Commands-Activated");
-    loadOptions.add("End-Game-Commands-Activated");
-    loadOptions.add("Second-Place-Commands-Activated");
-    loadOptions.add("Third-Place-Commands-Activated");
-    loadOptions.add("Mobs-Max-Amount-Per-Plot");
-    loadOptions.add("Hide-Players-Outside-Game");
-    loadOptions.add("Lobby-Starting-Time");
-    loadOptions.add("Theme-Voting-Time-In-Seconds");
-
-    for (String option : loadOptions) {
-      if (config.contains(option)) {
-        if (config.isBoolean(option)) {
-          boolean b = config.getBoolean(option);
-          if (b) {
-            options.put(option, 1);
-          } else {
-            options.put(option, 0);
-          }
-        } else {
-          options.put(option, config.getInt(option));
-        }
-      }
+  public int getTimer(TimerType type, Arena arena) {
+    switch (type) {
+      case BUILD:
+        return plugin.getConfig().getInt("Build-Time." + arena.getArenaType().getPrefix(), 100);
+      case LOBBY:
+        return plugin.getConfig().getInt("Lobby-Starting-Time", 60);
+      case PLOT_VOTE:
+        return plugin.getConfig().getInt("Voting-Time-In-Seconds", 20);
+      case THEME_VOTE:
+        return plugin.getConfig().getInt("Theme-Voting-Time-In-Seconds", 25);
+      default:
+        return 0;
     }
-    loadThemes();
-    loadBlackList();
-    loadEndGameCommands();
-    loadWhitelistedCommands();
+  }
+
+  /**
+   * Returns whether option value is true or false
+   *
+   * @param option option to get value from
+   * @return true or false based on user plugin.getConfig()uration
+   */
+  public boolean getOption(Option option) {
+    return options.get(option);
+  }
+
+  public enum TimerType {
+    BUILD, LOBBY, PLOT_VOTE, THEME_VOTE
+  }
+
+  public enum Option {
+    BOSSBAR_ENABLED("Boss-Bar-Enabled", true), BUNGEE_ENABLED("BungeeActivated", false), DATABASE_ENABLED("DatabaseActivated", false),
+    INVENTORY_MANAGER_ENABLED("InventoryManager", true), WIN_COMMANDS_ENABLED("Win-Commands-Activated", false),
+    SECOND_PLACE_COMMANDS_ENABLED("Second-Place-Commands-Activated", false), THIRD_PLACE_COMMANDS_ENABLED("Third-Place-Commands-Activated", false),
+    END_GAME_COMMANDS_ENABLED("End-Game-Commands-Activated", false);
+
+    private String path;
+    private boolean def;
+
+    Option(String path, boolean def) {
+      this.path = path;
+      this.def = def;
+    }
+
+    public String getPath() {
+      return path;
+    }
+
+    /**
+     * @return default value of option if absent in plugin.getConfig()
+     */
+    public boolean getDefault() {
+      return def;
+    }
   }
 
   public enum Position {

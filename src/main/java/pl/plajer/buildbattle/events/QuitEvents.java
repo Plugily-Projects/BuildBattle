@@ -22,6 +22,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.Arena;
@@ -50,7 +51,7 @@ public class QuitEvents implements Listener {
     if (arena == null) {
       return;
     }
-    if (!plugin.isBungeeActivated()) {
+    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       ArenaManager.leaveAttempt(event.getPlayer(), arena);
     }
   }

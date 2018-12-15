@@ -69,13 +69,11 @@ import pl.plajerlair.core.utils.ConfigUtils;
  */
 public class Main extends JavaPlugin {
 
-  private boolean databaseActivated = false;
+  private ConfigPreferences configPreferences;
   private boolean forceDisable = false;
   private MySQLDatabase database;
   private UserManager userManager;
   private BungeeManager bungeeManager;
-  private boolean bungeeActivated;
-  private boolean inventoryManagerEnabled;
   private SignManager signManager;
   private CuboidSelector cuboidSelector;
   private GameInventories gameInventories;
@@ -104,16 +102,12 @@ public class Main extends JavaPlugin {
     return bungeeManager;
   }
 
-  public boolean isBungeeActivated() {
-    return bungeeActivated;
-  }
-
   public SignManager getSignManager() {
     return signManager;
   }
 
-  public boolean isInventoryManagerEnabled() {
-    return inventoryManagerEnabled;
+  public ConfigPreferences getConfigPreferences() {
+    return configPreferences;
   }
 
   public boolean is1_11_R1() {
@@ -147,10 +141,10 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().disablePlugin(this);
         return;
       }
-      setupConfigValues();
       Debugger.setEnabled(getConfig().getBoolean("Debug", false));
       Debugger.setPrefix("[Build Battle Debugger]");
       Debugger.debug(LogLevel.INFO, "Main setup started");
+      configPreferences = new ConfigPreferences(this);
       saveDefaultConfig();
       LanguageManager.init(this);
       new LegacyDataFixer(this);
@@ -161,7 +155,7 @@ public class Main extends JavaPlugin {
       for (String s : filesToGenerate) {
         ConfigUtils.getConfig(this, s);
       }
-      if (databaseActivated) {
+      if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
         FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
         database = new MySQLDatabase(this, config.getString("address"), config.getString("user"), config.getString("password"),
             config.getInt("min-connections"), config.getInt("max-connections"));
@@ -206,7 +200,7 @@ public class Main extends JavaPlugin {
       Arena arena = ArenaRegistry.getArena(player);
       if (arena != null) {
         player.setGameMode(GameMode.SURVIVAL);
-        if (ConfigPreferences.isBossBarEnabled()) {
+        if (configPreferences.getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
           arena.getGameBar().removePlayer(player);
         }
         ArenaManager.leaveAttempt(player, arena);
@@ -217,15 +211,9 @@ public class Main extends JavaPlugin {
       }
       userManager.removeUser(player.getUniqueId());
     }
-    if (databaseActivated) {
+    if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       getMySQLDatabase().getManager().shutdownConnPool();
     }
-  }
-
-  private void setupConfigValues() {
-    bungeeActivated = getConfig().getBoolean("BungeeActivated", false);
-    inventoryManagerEnabled = getConfig().getBoolean("InventoryManager", true);
-    databaseActivated = getConfig().getBoolean("DatabaseActivated", false);
   }
 
   private void initializeClasses() {
@@ -234,7 +222,6 @@ public class Main extends JavaPlugin {
     PermissionManager.init();
     new SetupInventoryEvents(this);
     new MainCommand(this);
-    ConfigPreferences.loadOptions();
     ParticleMenu.loadFromConfig();
     PlayerHeadsMenu.loadHeadItems();
     ArenaRegistry.registerArenas();
@@ -243,10 +230,9 @@ public class Main extends JavaPlugin {
     SpecialItem.loadAll();
     voteItems = new VoteItems();
     optionsMenu = new OptionsMenu();
-    ParticleHandler particleHandler = new ParticleHandler(this);
-    particleHandler.start();
+    new ParticleHandler(this);
     Metrics metrics = new Metrics(this);
-    metrics.addCustomChart(new Metrics.SimplePie("bungeecord_hooked", () -> String.valueOf(bungeeActivated)));
+    metrics.addCustomChart(new Metrics.SimplePie("bungeecord_hooked", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.BUNGEE_ENABLED))));
     metrics.addCustomChart(new Metrics.SimplePie("locale_used", () -> LanguageManager.getPluginLocale().getPrefix()));
     metrics.addCustomChart(new Metrics.SimplePie("update_notifier", () -> {
       if (getConfig().getBoolean("Update-Notifier.Enabled", true)) {
@@ -276,10 +262,6 @@ public class Main extends JavaPlugin {
     gameInventories = new GameInventories();
   }
 
-  public boolean isDatabaseActivated() {
-    return databaseActivated;
-  }
-
   public MySQLDatabase getMySQLDatabase() {
     return database;
   }
@@ -290,7 +272,7 @@ public class Main extends JavaPlugin {
 
   private void loadStatsForPlayersOnline() {
     for (final Player player : getServer().getOnlinePlayers()) {
-      if (bungeeActivated) {
+      if (configPreferences.getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
         ArenaRegistry.getArenas().get(0).teleportToLobby(player);
       }
       User user = userManager.getUser(player.getUniqueId());

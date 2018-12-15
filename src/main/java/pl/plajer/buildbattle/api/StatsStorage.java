@@ -30,6 +30,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.utils.MessageUtils;
 import pl.plajer.buildbattle.utils.Utils;
@@ -55,7 +56,7 @@ public class StatsStorage {
    */
   public static Map<UUID, Integer> getStats(StatisticType stat) {
     Debugger.debug(LogLevel.INFO, "BuildBattle API getStats(" + stat.getName() + ") run");
-    if (plugin.isDatabaseActivated()) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       ResultSet set = plugin.getMySQLDatabase().executeQuery("SELECT UUID, " + stat.getName() + " FROM buildbattlestats ORDER BY " + stat.getName() + " ASC;");
       Map<java.util.UUID, java.lang.Integer> column = new LinkedHashMap<>();
       try {

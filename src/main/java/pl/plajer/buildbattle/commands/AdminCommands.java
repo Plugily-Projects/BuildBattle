@@ -40,7 +40,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.Arena;
@@ -181,7 +180,7 @@ public class AdminCommands extends MainCommand {
     if (!hasPermission(sender, "buildbattle.admin.reload")) {
       return;
     }
-    ConfigPreferences.loadOptions();
+    plugin.getConfigPreferences().loadOptions();
     ArenaRegistry.registerArenas();
     sender.sendMessage(ChatColor.GREEN + "Plugin reloaded!");
   }
@@ -270,7 +269,7 @@ public class AdminCommands extends MainCommand {
       return;
     }
     if (arena.getArenaState() == ArenaState.IN_GAME && (arena.getBuildTime() - arena.getTimer()) <= 20) {
-      if (ConfigPreferences.isThemeBlacklisted(theme.toLowerCase())) {
+      if (plugin.getConfigPreferences().isThemeBlacklisted(theme.toLowerCase())) {
         sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Admin-Commands.Theme-Blacklisted"));
         return;
       }
