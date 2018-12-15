@@ -49,7 +49,6 @@ import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.user.User;
-import pl.plajer.buildbattle.user.UserManager;
 import pl.plajer.buildbattle.utils.CuboidSelector;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.LocationUtils;
@@ -296,7 +295,7 @@ public class AdminCommands extends MainCommand {
       sender.sendMessage(ChatManager.colorMessage("Commands.Player-Not-Found"));
       return;
     }
-    User user = UserManager.getUser(Bukkit.getPlayer(who).getUniqueId());
+    User user = plugin.getUserManager().getUser(Bukkit.getPlayer(who).getUniqueId());
     user.setStat(StatsStorage.StatisticType.SUPER_VOTES, Integer.parseInt(superVotes));
     sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&aSuper votes set."));
   }
@@ -311,7 +310,7 @@ public class AdminCommands extends MainCommand {
       sender.sendMessage(ChatManager.colorMessage("Commands.Player-Not-Found"));
       return;
     }
-    User user = UserManager.getUser(Bukkit.getPlayer(who).getUniqueId());
+    User user = plugin.getUserManager().getUser(Bukkit.getPlayer(who).getUniqueId());
     user.addStat(StatsStorage.StatisticType.SUPER_VOTES, Integer.parseInt(superVotes));
     sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&aSuper votes added."));
   }

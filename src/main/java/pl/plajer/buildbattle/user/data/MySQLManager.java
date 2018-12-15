@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle.database;
+package pl.plajer.buildbattle.user.data;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 
@@ -29,6 +29,7 @@ import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
+import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.utils.MessageUtils;
 import pl.plajerlair.core.database.MySQLDatabase;
 
@@ -83,23 +84,34 @@ public class MySQLManager {
     database.executeUpdate("INSERT INTO `buildbattlestats` (UUID,name,gamesplayed) VALUES ('" + player.getUniqueId().toString() + "','" + player.getName() + "',0)");
   }
 
-  public void setStat(Player player, StatsStorage.StatisticType stat, int number) {
+  public void saveStat(User user, StatsStorage.StatisticType stat) {
     if (!stat.isPersistent()) {
       return;
     }
-    database.executeUpdate("UPDATE `buildbattlestats` SET " + stat.getName() + "=" + number + " WHERE UUID='" + player.getUniqueId().toString() + "';");
+    database.executeUpdate("UPDATE `buildbattlestats` SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.toPlayer().getUniqueId().toString() + "';");
   }
 
-  public int getStat(Player player, StatsStorage.StatisticType stat) {
+  public int getStat(User user, StatsStorage.StatisticType stat) {
     if (!stat.isPersistent()) {
       return 0;
     }
-    ResultSet set = database.executeQuery("SELECT " + stat.getName() + " FROM `buildbattlestats` WHERE UUID='" + player.getUniqueId().toString() + "'");
+    ResultSet resultSet = database.executeQuery("SELECT UUID from buildbattlestats WHERE UUID='" + user.toPlayer().getUniqueId().toString() + "'");
+    //insert into the database
+    try {
+      if (!resultSet.next()) {
+        insertPlayer(user.toPlayer());
+      }
+    } catch (SQLException e1) {
+      System.out.print("CONNECTION FAILED FOR PLAYER " + user.toPlayer().getName());
+    }
+
+
+    ResultSet set = database.executeQuery("SELECT " + stat.getName() + " FROM `buildbattlestats` WHERE UUID='" + user.toPlayer().getUniqueId().toString() + "'");
     try {
       if (!set.next()) {
         return 0;
       }
-      return (set.getInt(1));
+      return set.getInt(1);
     } catch (SQLException e) {
       e.printStackTrace();
       MessageUtils.errorOccurred();

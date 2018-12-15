@@ -18,8 +18,6 @@
 
 package pl.plajer.buildbattle;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,8 +34,6 @@ import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.commands.MainCommand;
-import pl.plajer.buildbattle.database.FileStats;
-import pl.plajer.buildbattle.database.MySQLManager;
 import pl.plajer.buildbattle.events.GameEvents;
 import pl.plajer.buildbattle.events.JoinEvents;
 import pl.plajer.buildbattle.events.QuitEvents;
@@ -76,8 +72,7 @@ public class Main extends JavaPlugin {
   private boolean databaseActivated = false;
   private boolean forceDisable = false;
   private MySQLDatabase database;
-  private MySQLManager mySQLManager;
-  private FileStats fileStats;
+  private UserManager userManager;
   private BungeeManager bungeeManager;
   private boolean bungeeActivated;
   private boolean inventoryManagerEnabled;
@@ -197,10 +192,8 @@ public class Main extends JavaPlugin {
         FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
         database = new MySQLDatabase(this, config.getString("address"), config.getString("user"), config.getString("password"),
             config.getInt("min-connections"), config.getInt("max-connections"));
-        mySQLManager = new MySQLManager(this);
-      } else {
-        fileStats = new FileStats();
       }
+      userManager = new UserManager(this);
       loadStatsForPlayersOnline();
     } catch (Exception ex) {
       new ReportedException(this, ex);
@@ -244,26 +237,11 @@ public class Main extends JavaPlugin {
         }
         ArenaManager.leaveAttempt(player, arena);
       }
-      final User user = UserManager.getUser(player.getUniqueId());
-      for (StatsStorage.StatisticType s : StatsStorage.StatisticType.values()) {
-        if (this.isDatabaseActivated()) {
-          int i;
-          try {
-            i = getMySQLManager().getStat(player, s);
-          } catch (NullPointerException npe) {
-            i = 0;
-            System.out.print("COULDN'T GET STATS FROM PLAYER: " + player.getName());
-          }
-          if (i > user.getStat(s)) {
-            getMySQLManager().setStat(player, s, user.getStat(s) + i);
-          } else {
-            getMySQLManager().setStat(player, s, user.getStat(s));
-          }
-        } else {
-          getFileStats().saveStat(player, s);
-        }
+      final User user = userManager.getUser(player.getUniqueId());
+      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+        userManager.saveStatistic(user, stat);
       }
-      UserManager.removeUser(player.getUniqueId());
+      userManager.removeUser(player.getUniqueId());
     }
     if (databaseActivated) {
       getMySQLDatabase().getManager().shutdownConnPool();
@@ -308,7 +286,6 @@ public class Main extends JavaPlugin {
     }));
     new JoinEvents(this);
     new QuitEvents(this);
-    StatsStorage.plugin = this;
     if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       new PlaceholderManager().register();
     }
@@ -324,16 +301,12 @@ public class Main extends JavaPlugin {
     return databaseActivated;
   }
 
-  public FileStats getFileStats() {
-    return fileStats;
-  }
-
   public MySQLDatabase getMySQLDatabase() {
     return database;
   }
 
-  public MySQLManager getMySQLManager() {
-    return mySQLManager;
+  public UserManager getUserManager() {
+    return userManager;
   }
 
   private void loadStatsForPlayersOnline() {
@@ -341,28 +314,10 @@ public class Main extends JavaPlugin {
       if (bungeeActivated) {
         ArenaRegistry.getArenas().get(0).teleportToLobby(player);
       }
-      if (!this.isDatabaseActivated()) {
-        for (StatsStorage.StatisticType s : StatsStorage.StatisticType.values()) {
-          this.getFileStats().loadStat(player, s);
-        }
-        return;
+      User user = userManager.getUser(player.getUniqueId());
+      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+        userManager.loadStatistic(user, stat);
       }
-      Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
-        MySQLManager database = getMySQLManager();
-        ResultSet resultSet = this.database.executeQuery("SELECT UUID from buildbattlestats WHERE UUID='" + player.getUniqueId().toString() + "'");
-        try {
-          if (!resultSet.next()) {
-            database.insertPlayer(player);
-          }
-
-          User user = UserManager.getUser(player.getUniqueId());
-          for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-            user.setStat(stat, database.getStat(player, stat));
-          }
-        } catch (SQLException e1) {
-          System.out.print("CONNECTION FAILED FOR PLAYER " + player.getName());
-        }
-      });
     }
   }
 

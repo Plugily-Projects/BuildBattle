@@ -41,7 +41,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.user.User;
-import pl.plajer.buildbattle.user.UserManager;
 import pl.plajer.buildbattle.utils.Cuboid;
 import pl.plajerlair.core.services.exception.ReportedException;
 
@@ -130,7 +129,7 @@ public class ArenaPlot {
       resetPlot();
       if (uuids != null && !uuids.isEmpty()) {
         for (UUID u : uuids) {
-          User user = UserManager.getUser(u);
+          User user = plugin.getUserManager().getUser(u);
           user.setCurrentPlot(null);
           this.setOwners(new ArrayList<>());
           this.setPoints(0);

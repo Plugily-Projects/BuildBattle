@@ -18,8 +18,6 @@
 
 package pl.plajer.buildbattle.events;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -30,7 +28,6 @@ import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.user.User;
-import pl.plajer.buildbattle.user.UserManager;
 import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
@@ -65,33 +62,11 @@ public class QuitEvents implements Listener {
       if (arena != null) {
         ArenaManager.leaveAttempt(event.getPlayer(), arena);
       }
-      final User user = UserManager.getUser(event.getPlayer().getUniqueId());
-      final Player player = event.getPlayer();
-
-      if (plugin.isDatabaseActivated()) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-          for (StatsStorage.StatisticType s : StatsStorage.StatisticType.values()) {
-            int i;
-            try {
-              i = plugin.getMySQLManager().getStat(player, s);
-            } catch (NullPointerException npe) {
-              i = 0;
-              System.out.print("COULDN'T GET STATS FROM PLAYER: " + player.getName());
-            }
-
-            if (i > user.getStat(s)) {
-              plugin.getMySQLManager().setStat(player, s, user.getStat(s) + i);
-            } else {
-              plugin.getMySQLManager().setStat(player, s, user.getStat(s));
-            }
-          }
-        });
-      } else {
-        for (StatsStorage.StatisticType s : StatsStorage.StatisticType.values()) {
-          plugin.getFileStats().saveStat(player, s);
-        }
+      final User user = plugin.getUserManager().getUser(event.getPlayer().getUniqueId());
+      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+        plugin.getUserManager().saveStatistic(user, stat);
       }
-      UserManager.removeUser(event.getPlayer().getUniqueId());
+      plugin.getUserManager().removeUser(event.getPlayer().getUniqueId());
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }

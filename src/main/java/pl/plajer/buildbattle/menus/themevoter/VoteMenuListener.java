@@ -36,7 +36,6 @@ import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.user.User;
-import pl.plajer.buildbattle.user.UserManager;
 import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
@@ -80,7 +79,7 @@ public class VoteMenuListener implements Listener {
           }
         }
         if (e.getCurrentItem().getType() == Material.PAPER) {
-          User u = UserManager.getUser(e.getWhoClicked().getUniqueId());
+          User u = plugin.getUserManager().getUser(e.getWhoClicked().getUniqueId());
           if (u.getStat(StatsStorage.StatisticType.SUPER_VOTES) > 0) {
             u.setStat(StatsStorage.StatisticType.SUPER_VOTES, u.getStat(StatsStorage.StatisticType.SUPER_VOTES) - 1);
             ChatManager.broadcast(arena, ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Used")

@@ -21,16 +21,33 @@ package pl.plajer.buildbattle.user;
 import java.util.HashMap;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+
 import pl.plajer.buildbattle.Main;
+import pl.plajer.buildbattle.api.StatsStorage;
+import pl.plajer.buildbattle.user.data.FileStats;
+import pl.plajer.buildbattle.user.data.MySQLManager;
 
 /**
  * Created by Tom on 27/07/2014.
  */
 public class UserManager {
 
-  private static HashMap<UUID, User> users = new HashMap<>();
+  private FileStats fileStats;
+  private MySQLManager mySQLManager;
+  private Main plugin;
+  private HashMap<UUID, User> users = new HashMap<>();
 
-  public static User getUser(UUID uuid) {
+  public UserManager(Main plugin) {
+    this.plugin = plugin;
+    if (plugin.isDatabaseActivated()) {
+      mySQLManager = new MySQLManager(plugin);
+    } else {
+      fileStats = new FileStats();
+    }
+  }
+
+  public User getUser(UUID uuid) {
     if (users.containsKey(uuid)) {
       return users.get(uuid);
     } else {
@@ -40,7 +57,41 @@ public class UserManager {
     }
   }
 
-  public static void removeUser(UUID uuid) {
+  /**
+   * Saves player statistic into yaml or MySQL storage based on user choice
+   *
+   * @param user user to retrieve statistic from
+   * @param stat stat to save to storage
+   */
+  public void saveStatistic(User user, StatsStorage.StatisticType stat) {
+    if (!stat.isPersistent()) {
+      return;
+    }
+    if (plugin.isDatabaseActivated()) {
+      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> mySQLManager.saveStat(user, stat));
+      return;
+    }
+    fileStats.saveStat(user, stat);
+  }
+
+  /**
+   * Loads player statistic from yaml or MySQL storage based on user choice
+   *
+   * @param user user to load statistic for
+   * @param stat type of stat to load from storage
+   */
+  public void loadStatistic(User user, StatsStorage.StatisticType stat) {
+    if (!stat.isPersistent()) {
+      return;
+    }
+    if (plugin.isDatabaseActivated()) {
+      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> user.setStat(stat, mySQLManager.getStat(user, stat)));
+      return;
+    }
+    fileStats.loadStat(user, stat);
+  }
+
+  public void removeUser(UUID uuid) {
     users.remove(uuid);
   }
 }
