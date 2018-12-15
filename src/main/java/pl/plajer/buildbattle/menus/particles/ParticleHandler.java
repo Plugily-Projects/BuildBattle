@@ -18,10 +18,9 @@
 
 package pl.plajer.buildbattle.menus.particles;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
@@ -30,28 +29,28 @@ import pl.plajer.buildbattle.arena.plots.Plot;
 /**
  * Created by Tom on 23/08/2015.
  */
-public class ParticleHandler extends BukkitRunnable {
+public class ParticleHandler {
 
-  private static int amount = ConfigPreferences.getAmountFromOneParticle();
   private Main plugin;
 
-  public ParticleHandler(Main main) {
-    plugin = main;
+  public ParticleHandler(Main plugin) {
+    this.plugin = plugin;
+    start();
   }
 
-  public void start() {
-    this.runTaskTimer(plugin, ConfigPreferences.getParticleRefreshTick(), ConfigPreferences.getParticleRefreshTick());
-  }
-
-  @Override
-  public void run() {
-    for (Arena arena : ArenaRegistry.getArenas()) {
-      for (Plot buildPlot : arena.getPlotManager().getPlots()) {
-        for (Location location : buildPlot.getParticles().keySet()) {
-          if (!arena.getPlayers().isEmpty())
-            location.getWorld().spawnParticle(buildPlot.getParticles().get(location), location, amount, 1, 1, 1);
+  private void start() {
+    Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+      for (Arena arena : ArenaRegistry.getArenas()) {
+        for (Plot buildPlot : arena.getPlotManager().getPlots()) {
+          for (Location location : buildPlot.getParticles().keySet()) {
+            if (!arena.getPlayers().isEmpty()) {
+              location.getWorld().spawnParticle(buildPlot.getParticles().get(location), location, plugin.getConfig().getInt("Amount-One-Particle-Effect-Contains", 20),
+                  1, 1, 1);
+            }
+          }
         }
       }
-    }
+    }, plugin.getConfig().getInt("Particle-Refresh-Per-Tick", 10), plugin.getConfig().getInt("Particle-Refresh-Per-Tick", 10));
   }
+
 }

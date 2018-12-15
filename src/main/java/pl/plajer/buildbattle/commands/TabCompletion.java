@@ -28,6 +28,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
@@ -56,7 +57,7 @@ public class TabCompletion implements TabCompleter {
         return arenaIds;
       }
       if (args.length == 1) {
-        if (!plugin.isBungeeActivated()) {
+        if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           return Arrays.asList("join", "leave", "stats", "top", "create", "randomjoin");
         } else {
           return Arrays.asList("join", "leave", "stats", "top", "create");

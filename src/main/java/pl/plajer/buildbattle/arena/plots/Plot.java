@@ -38,11 +38,11 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.utils.Cuboid;
 import pl.plajerlair.core.services.exception.ReportedException;
+import pl.plajerlair.core.utils.XMaterial;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -168,7 +168,7 @@ public class Plot {
           }
         }
       }
-      changeFloor(ConfigPreferences.getDefaultFloorMaterial());
+      changeFloor(XMaterial.fromString(plugin.getConfig().getString("Default-Floor-Material-Name", "LOG").toUpperCase()).parseMaterial());
       cuboid.getCenter().getWorld().setBiome(cuboid.getMinPoint().getBlockX(), cuboid.getMaxPoint().getBlockZ(), plotDefaultBiome);
     } catch (Exception ex) {
       new ReportedException(JavaPlugin.getPlugin(Main.class), ex);

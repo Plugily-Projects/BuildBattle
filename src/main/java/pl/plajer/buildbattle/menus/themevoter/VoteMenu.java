@@ -33,7 +33,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.Arena;
@@ -66,7 +65,7 @@ public class VoteMenu {
 
   public void resetPoll() {
     try {
-      List<String> themesTotal = ConfigPreferences.getThemes(arena.getArenaType().getPrefix());
+      List<String> themesTotal = plugin.getConfigPreferences().getThemes(arena.getArenaType().getPrefix());
       //random themes order
       Collections.shuffle(themesTotal);
       List<String> randomThemes = new ArrayList<>();

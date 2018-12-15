@@ -139,7 +139,7 @@ public class GameEvents implements Listener {
       }
       if (key.equalsIgnoreCase("Leave")) {
         event.setCancelled(true);
-        if (plugin.isBungeeActivated()) {
+        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           plugin.getBungeeManager().connectToHub(event.getPlayer());
         } else {
           ArenaManager.leaveAttempt(event.getPlayer(), arena);
@@ -511,7 +511,7 @@ public class GameEvents implements Listener {
       if (ArenaRegistry.getArena(event.getPlayer()) == null) {
         return;
       }
-      for (String string : ConfigPreferences.getWhitelistedCommands()) {
+      for (String string : plugin.getConfigPreferences().getWhitelistedCommands()) {
         if (event.getMessage().contains(string)) {
           return;
         }
@@ -578,7 +578,7 @@ public class GameEvents implements Listener {
         if (event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) {
           return;
         }
-        if (event.getEntity().getType() == EntityType.WITHER || ConfigPreferences.isMobSpawningDisabled()) {
+        if (event.getEntity().getType() == EntityType.WITHER || plugin.getConfig().getBoolean("Disable-Mob-Spawning-Completely", true)) {
           event.setCancelled(true);
           return;
         }
@@ -588,7 +588,7 @@ public class GameEvents implements Listener {
             return;
           }
           if (plot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 1)) {
-            if (plot.getEntities() >= ConfigPreferences.getMaxMobs()) {
+            if (plot.getEntities() >= plugin.getConfig().getInt("Mobs-Max-Amount-Per-Plot", 20)) {
               //todo maybe only for spawner player?
               for (UUID u : plot.getOwners()) {
                 plugin.getServer().getPlayer(u).sendMessage(ChatManager.colorMessage("In-Game.Max-Entities-Limit-Reached"));

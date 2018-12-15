@@ -20,6 +20,7 @@ package pl.plajer.buildbattle.utils;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
+import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajerlair.core.debug.Debugger;
@@ -43,7 +44,7 @@ public class LegacyDataFixer {
 
   private void initiate() {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
-    if (config.getInt("data-version", 0) >= DATA_VERSION || plugin.isDatabaseActivated()) {
+    if (config.getInt("data-version", 0) >= DATA_VERSION || plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       return;
     }
     Debugger.debug(LogLevel.TASK, "Legacy fixer started, fixing player data for yaml storage...");

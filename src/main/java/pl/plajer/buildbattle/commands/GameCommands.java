@@ -28,6 +28,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.Arena;
@@ -81,7 +82,7 @@ public class GameCommands extends MainCommand {
       Arena arena = ArenaRegistry.getArena(p);
       if (arena == null) return;
       p.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
-      if (plugin.isBungeeActivated()) {
+      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
         plugin.getBungeeManager().connectToHub(p);
         System.out.print(p.getName() + " is teleported to the Hub Server");
       } else {
@@ -115,7 +116,7 @@ public class GameCommands extends MainCommand {
               .replace("%statistic%", statistic));
         } catch (NullPointerException ex) {
           UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
-          if (plugin.isDatabaseActivated()) {
+          if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
             ResultSet set = plugin.getMySQLDatabase().executeQuery("SELECT name FROM buildbattlestats WHERE UUID='" + current.toString() + "'");
             try {
               if (set.next()) {

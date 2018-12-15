@@ -27,6 +27,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.Arena;
 import pl.plajerlair.core.utils.ConfigUtils;
@@ -86,7 +87,7 @@ public class SetupInventory {
         .lore(isOptionDone("instances." + arena.getID() + ".maximumplayers"))
         .build());
 
-    if (!plugin.isBungeeActivated()) {
+    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       inventory.setItem(ClickPosition.ADD_SIGN.getPosition(), new ItemBuilder(new ItemStack(Material.SIGN))
           .name(ChatColor.GOLD + "► Add game" + ChatColor.AQUA + " sign")
           .lore(ChatColor.GRAY + "Target a sign and click this.")

@@ -31,7 +31,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.plots.Plot;
@@ -113,7 +112,7 @@ public class ParticleMenu {
         if (!player.hasPermission(particleItem.getPermission())) {
           player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.No-Permission-For-Particle"));
         } else {
-          if (buildPlot.getParticles().size() >= ConfigPreferences.getMaxParticles()) {
+          if (buildPlot.getParticles().size() >= plugin.getConfig().getInt("Max-Amount-Particles", 25)) {
             player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Max-Particles-Limit-Reached"));
           } else {
             buildPlot.addParticle(player.getLocation(), particleItem.getEffect());
