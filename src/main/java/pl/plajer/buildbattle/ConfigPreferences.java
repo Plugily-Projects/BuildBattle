@@ -117,12 +117,6 @@ public class ConfigPreferences {
     return whitelistedCommands;
   }
 
-  @Deprecated
-  //should be removed
-  public static boolean isHidePlayersOutsideGameEnabled() {
-    return options.getOrDefault("Hide-Players-Outside-Game", 1) == 1;
-  }
-
   public static int getAmountFromOneParticle() {
     return options.getOrDefault("Amount-One-Particle-Effect-Contains", 20);
   }

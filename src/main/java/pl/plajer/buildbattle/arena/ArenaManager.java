@@ -113,12 +113,10 @@ public class ArenaManager {
       for (Player player : a.getPlayers()) {
         a.showPlayer(player);
       }
-      if (ConfigPreferences.isHidePlayersOutsideGameEnabled()) {
-        for (Player player : plugin.getServer().getOnlinePlayers()) {
-          if (!a.getPlayers().contains(player)) {
-            p.hidePlayer(player);
-            player.hidePlayer(p);
-          }
+      for (Player player : plugin.getServer().getOnlinePlayers()) {
+        if (!a.getPlayers().contains(player)) {
+          p.hidePlayer(player);
+          player.hidePlayer(p);
         }
       }
       SpecialItem leaveItem = SpecialItemManager.getSpecialItem("Leave");

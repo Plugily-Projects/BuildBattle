@@ -331,9 +331,7 @@ public class Arena extends BukkitRunnable {
             player.setGameMode(GameMode.CREATIVE);
             player.setAllowFlight(true);
             player.setFlying(true);
-            if (ConfigPreferences.isHidePlayersOutsideGameEnabled()) {
               hidePlayersOutsideTheGame(player);
-            }
             player.getInventory().setItem(8, plugin.getOptionsMenu().getMenuItem());
             //to prevent Multiverse chaning gamemode bug
             Bukkit.getScheduler().runTaskLater(plugin, () -> player.setGameMode(GameMode.CREATIVE), 20);
