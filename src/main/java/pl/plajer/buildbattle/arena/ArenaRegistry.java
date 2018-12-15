@@ -29,7 +29,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.arena.plots.ArenaPlot;
+import pl.plajer.buildbattle.arena.plots.Plot;
 import pl.plajer.buildbattle.utils.Cuboid;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
@@ -129,7 +129,7 @@ public class ArenaRegistry {
             for (String plotName : config.getConfigurationSection(s + "plots").getKeys(false)) {
               if (config.isSet(s + "plots." + plotName + ".maxpoint") && config.isSet(s + "plots." + plotName + ".minpoint")) {
                 Location minPoint = LocationUtils.getLocation(config.getString(s + "plots." + plotName + ".minpoint"));
-                ArenaPlot buildPlot = new ArenaPlot(minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ()));
+                Plot buildPlot = new Plot(minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ()));
                 buildPlot.setCuboid(new Cuboid(minPoint, LocationUtils.getLocation(config.getString(s + "plots." + plotName + ".maxpoint"))));
                 buildPlot.fullyResetPlot();
                 arena.getPlotManager().addBuildPlot(buildPlot);

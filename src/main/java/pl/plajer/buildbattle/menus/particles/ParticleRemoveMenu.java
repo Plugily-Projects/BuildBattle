@@ -30,7 +30,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import pl.plajer.buildbattle.arena.plots.ArenaPlot;
+import pl.plajer.buildbattle.arena.plots.Plot;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajerlair.core.utils.MinigameUtils;
 
@@ -39,7 +39,7 @@ import pl.plajerlair.core.utils.MinigameUtils;
  */
 public class ParticleRemoveMenu {
 
-  public static void openMenu(Player player, ArenaPlot buildPlot) {
+  public static void openMenu(Player player, Plot buildPlot) {
     Inventory inventory = player.getServer().createInventory(player, 6 * 9, ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"));
 
     for (Location location : buildPlot.getParticles().keySet()) {
@@ -58,7 +58,7 @@ public class ParticleRemoveMenu {
     player.openInventory(inventory);
   }
 
-  public static void onClick(Player p, Inventory inventory, ItemStack itemStack, ArenaPlot buildPlot) {
+  public static void onClick(Player p, Inventory inventory, ItemStack itemStack, Plot buildPlot) {
     List<String> lore = itemStack.getItemMeta().getLore();
     double x = 0, y = 0, z = 0;
     for (String string : lore) {

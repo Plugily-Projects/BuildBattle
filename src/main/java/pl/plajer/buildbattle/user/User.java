@@ -32,7 +32,7 @@ import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.api.event.player.BBPlayerStatisticChangeEvent;
 import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.plots.ArenaPlot;
+import pl.plajer.buildbattle.arena.plots.Plot;
 
 /**
  * Created by Tom on 27/07/2014.
@@ -43,17 +43,17 @@ public class User {
   private ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
   private UUID uuid;
   private Map<StatsStorage.StatisticType, Integer> stats = new HashMap<>();
-  private ArenaPlot currentPlot;
+  private Plot currentPlot;
 
   public User(UUID uuid) {
     this.uuid = uuid;
   }
 
-  public ArenaPlot getCurrentPlot() {
+  public Plot getCurrentPlot() {
     return currentPlot;
   }
 
-  public void setCurrentPlot(ArenaPlot currentPlot) {
+  public void setCurrentPlot(Plot currentPlot) {
     this.currentPlot = currentPlot;
   }
 
