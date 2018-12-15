@@ -36,7 +36,6 @@ import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.plots.ArenaPlot;
 import pl.plajer.buildbattle.handlers.ChatManager;
-import pl.plajer.buildbattle.user.UserManager;
 import pl.plajer.buildbattle.utils.Utils;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.XMaterial;
@@ -46,6 +45,7 @@ import pl.plajerlair.core.utils.XMaterial;
  */
 public class ParticleMenu {
 
+  private static Main plugin = JavaPlugin.getPlugin(Main.class);
   private static List<ParticleItem> particleItems = new ArrayList<>();
 
   public static void openMenu(Player player) {
@@ -115,7 +115,7 @@ public class ParticleMenu {
             player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Max-Particles-Limit-Reached"));
           } else {
             buildPlot.addParticle(player.getLocation(), particleItem.getEffect());
-            UserManager.getUser(player.getUniqueId()).addStat(StatsStorage.StatisticType.PARTICLES_USED, 1);
+            plugin.getUserManager().getUser(player.getUniqueId()).addStat(StatsStorage.StatisticType.PARTICLES_USED, 1);
             player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Particle-Added"));
           }
         }

@@ -35,7 +35,6 @@ import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.user.User;
-import pl.plajer.buildbattle.user.UserManager;
 
 /**
  * @author Plajer
@@ -64,13 +63,13 @@ public class GameCommands extends MainCommand {
   }
 
   public void showStats(Player player) {
-    User user = UserManager.getUser(player.getUniqueId());
+    User user = plugin.getUserManager().getUser(player.getUniqueId());
     player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Header"));
     showStats(user);
   }
 
   public void showStatsOther(Player player, Player other) {
-    User user = UserManager.getUser(other.getUniqueId());
+    User user = plugin.getUserManager().getUser(other.getUniqueId());
     player.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Header-Other").replace("%player%", other.getName()));
     showStats(user);
   }

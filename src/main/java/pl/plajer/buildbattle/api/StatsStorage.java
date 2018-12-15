@@ -28,9 +28,9 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.user.UserManager;
 import pl.plajer.buildbattle.utils.MessageUtils;
 import pl.plajer.buildbattle.utils.Utils;
 import pl.plajerlair.core.utils.ConfigUtils;
@@ -43,7 +43,7 @@ import pl.plajerlair.core.utils.ConfigUtils;
  */
 public class StatsStorage {
 
-  public static Main plugin;
+  private static Main plugin = JavaPlugin.getPlugin(Main.class);
 
   /**
    * Get all UUID's sorted ascending by Statistic Type
@@ -88,7 +88,7 @@ public class StatsStorage {
    */
   public static int getUserStats(Player player, StatisticType statisticType) {
     Main.debug(Main.LogLevel.INFO, "BuildBattle API getUserStats(" + player.getName() + ", " + statisticType.getName() + ") run");
-    return UserManager.getUser(player.getUniqueId()).getStat(statisticType);
+    return plugin.getUserManager().getUser(player.getUniqueId()).getStat(statisticType);
   }
 
   /**

@@ -16,19 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle.database;
+package pl.plajer.buildbattle.user.data;
 
 import java.io.IOException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.user.User;
-import pl.plajer.buildbattle.user.UserManager;
 import pl.plajer.buildbattle.utils.MessageUtils;
 import pl.plajerlair.core.utils.ConfigUtils;
 
@@ -43,12 +41,11 @@ public class FileStats {
     config = ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "stats");
   }
 
-  public void saveStat(Player player, StatsStorage.StatisticType stat) {
+  public void saveStat(User user, StatsStorage.StatisticType stat) {
     if (!stat.isPersistent()) {
       return;
     }
-    User user = UserManager.getUser(player.getUniqueId());
-    config.set(player.getUniqueId().toString() + "." + stat.getName(), user.getStat(stat));
+    config.set(user.toPlayer().getUniqueId().toString() + "." + stat.getName(), user.getStat(stat));
     try {
       config.save(ConfigUtils.getFile(JavaPlugin.getPlugin(Main.class), "stats"));
     } catch (IOException e) {
@@ -59,16 +56,8 @@ public class FileStats {
     }
   }
 
-  public void loadStat(Player player, StatsStorage.StatisticType stat) {
-    if (!stat.isPersistent()) {
-      return;
-    }
-    User user = UserManager.getUser(player.getUniqueId());
-    if (config.contains(player.getUniqueId().toString() + "." + stat.getName())) {
-      user.setStat(stat, config.getInt(player.getUniqueId().toString() + "." + stat));
-    } else {
-      user.setStat(stat, 0);
-    }
+  public void loadStat(User user, StatsStorage.StatisticType stat) {
+    user.setStat(stat, config.getInt(user.toPlayer().getUniqueId().toString() + "." + stat.getName(), 0));
   }
 
 

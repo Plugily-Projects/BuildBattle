@@ -39,7 +39,6 @@ import pl.plajer.buildbattle.handlers.PermissionManager;
 import pl.plajer.buildbattle.handlers.items.SpecialItem;
 import pl.plajer.buildbattle.handlers.items.SpecialItemManager;
 import pl.plajer.buildbattle.user.User;
-import pl.plajer.buildbattle.user.UserManager;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.InventoryUtils;
 import pl.plajerlair.core.utils.MinigameUtils;
@@ -143,7 +142,7 @@ public class ArenaManager {
       BBGameLeaveEvent bbGameLeaveEvent = new BBGameLeaveEvent(p, a);
       Bukkit.getPluginManager().callEvent(bbGameLeaveEvent);
       a.getQueue().remove(p.getUniqueId());
-      User user = UserManager.getUser(p.getUniqueId());
+      User user = plugin.getUserManager().getUser(p.getUniqueId());
       if (a.getArenaState() == ArenaState.IN_GAME || a.getArenaState() == ArenaState.ENDING) {
         user.addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
       }
@@ -204,7 +203,7 @@ public class ArenaManager {
       BBGameEndEvent gameEndEvent = new BBGameEndEvent(arena);
       Bukkit.getPluginManager().callEvent(gameEndEvent);
       for (final Player p : arena.getPlayers()) {
-        UserManager.getUser(p.getUniqueId()).removeScoreboard();
+        plugin.getUserManager().getUser(p.getUniqueId()).removeScoreboard();
         if (!quickStop) {
           if (JavaPlugin.getPlugin(Main.class).getConfig().getBoolean("Firework-When-Game-Ends")) {
             new BukkitRunnable() {

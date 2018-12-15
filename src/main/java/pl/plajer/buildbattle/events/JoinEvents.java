@@ -18,9 +18,6 @@
 
 package pl.plajer.buildbattle.events;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -31,9 +28,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.database.MySQLManager;
-import pl.plajer.buildbattle.user.User;
-import pl.plajer.buildbattle.user.UserManager;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.services.update.UpdateChecker;
 
@@ -102,30 +96,9 @@ public class JoinEvents implements Listener {
       if (plugin.isBungeeActivated() && ArenaRegistry.getArenas().size() >= 1) {
         ArenaRegistry.getArenas().get(0).teleportToLobby(event.getPlayer());
       }
-      if (!plugin.isDatabaseActivated()) {
-        for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-          plugin.getFileStats().loadStat(event.getPlayer(), stat);
-        }
-        return;
+      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+        plugin.getUserManager().loadStatistic(plugin.getUserManager().getUser(event.getPlayer().getUniqueId()), stat);
       }
-      final Player player = event.getPlayer();
-
-      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-        MySQLManager database = plugin.getMySQLManager();
-        ResultSet resultSet = plugin.getMySQLDatabase().executeQuery("SELECT UUID from buildbattlestats WHERE UUID='" + player.getUniqueId().toString() + "'");
-        try {
-          if (!resultSet.next()) {
-            database.insertPlayer(player);
-            return;
-          }
-          User user = UserManager.getUser(player.getUniqueId());
-          for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-            user.setStat(stat, plugin.getMySQLManager().getStat(player, stat));
-          }
-        } catch (SQLException e1) {
-          System.out.print("CONNECTION FAILED FOR PLAYER " + player.getName());
-        }
-      });
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }

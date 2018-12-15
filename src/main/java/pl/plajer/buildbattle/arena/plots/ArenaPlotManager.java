@@ -32,7 +32,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaManager;
-import pl.plajer.buildbattle.user.UserManager;
 import pl.plajer.buildbattle.utils.MessageUtils;
 import pl.plajerlair.core.services.exception.ReportedException;
 
@@ -41,6 +40,7 @@ import pl.plajerlair.core.services.exception.ReportedException;
  */
 public class ArenaPlotManager {
 
+  private Main plugin = JavaPlugin.getPlugin(Main.class);
   private List<ArenaPlot> plots = new ArrayList<>();
   private List<ArenaPlot> plotsToClear = new ArrayList<>();
   private Arena arena;
@@ -64,14 +64,14 @@ public class ArenaPlotManager {
             if (arena.getArenaType() == Arena.ArenaType.SOLO || arena.getPlayers().size() == 2 /* in case of 2 min players set for team mode*/) {
               if (plot.getOwners().size() == 0) {
                 plot.addOwner(players.get(0).getUniqueId());
-                UserManager.getUser(players.get(0).getUniqueId()).setCurrentPlot(plot);
+                plugin.getUserManager().getUser(players.get(0).getUniqueId()).setCurrentPlot(plot);
 
                 players.remove(0);
               }
             } else if (arena.getArenaType() == Arena.ArenaType.TEAM) {
               if (plot.getOwners().size() < 2) {
                 plot.addOwner(players.get(0).getUniqueId());
-                UserManager.getUser(players.get(0).getUniqueId()).setCurrentPlot(plot);
+                plugin.getUserManager().getUser(players.get(0).getUniqueId()).setCurrentPlot(plot);
 
                 players.remove(0);
               }
