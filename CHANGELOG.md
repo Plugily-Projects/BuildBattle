@@ -36,6 +36,7 @@
    * Added biomes in Options menu
    * Added time in Options menu
    * Code improvements and changes
+   * Fixed arena signs were incorrectly saved via setup menu (4.0.0 pre issue)
    
 
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)

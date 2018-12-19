@@ -157,9 +157,9 @@ public class SetupInventoryEvents implements Listener {
           plugin.getSignManager().getLoadedSigns().put((Sign) location.getBlock().getState(), arena);
           player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Signs.Sign-Created"));
           String loc = location.getBlock().getWorld().getName() + "," + location.getBlock().getX() + "," + location.getBlock().getY() + "," + location.getBlock().getZ() + ",0.0,0.0";
-          List<String> locs = config.getStringList("instances." + arena + ".signs");
+          List<String> locs = config.getStringList("instances." + arena.getID() + ".signs");
           locs.add(loc);
-          config.set("instances." + arena + ".signs", locs);
+          config.set("instances." + arena.getID() + ".signs", locs);
           break;
         case SET_GAME_TYPE:
           Inventory inv = Bukkit.createInventory(null, 9, "Game type: " + arena.getID());
