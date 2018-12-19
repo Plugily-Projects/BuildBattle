@@ -14,7 +14,6 @@ Commands:
   Arena-Started: "&cThis arena already started, sorry!"
   Wait-For-Start: "&cYou must wait for arena start!"
   Added-Plot: "&aAdded plot for arena &7%ARENA%"
-  No-Selection: "&cPlease use WorldEdit selection first!"
   Plugin-Reloaded: "&aPlugin and configuration reloaded!"
   Player-Not-Found: "&cPlayer not found!"
   Invalid-Args: "&cInvalid arguments! Make sure you typed the command correctly!"
@@ -191,7 +190,7 @@ In-Game:
       Cant-Report-Own-Plot: "&cYou can't report your own plot!"
       Vote-Successful: "&aVoted successfully!"
       Report-Successful: "&aReported successfully!"
-      Report-Failed: "&aReport failed! Contact Adminitrator"
+      Report-Failed: "&aReport failed! Contact administrator!"
       Winner-Title: "&eWINNER: &a%player%"
       Summary:
         - "&a&l&m-------------------------------------------"
