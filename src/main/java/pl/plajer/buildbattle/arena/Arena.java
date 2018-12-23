@@ -99,6 +99,7 @@ public class Arena extends BukkitRunnable {
   private ArenaType arenaType;
   private VoteMenu voteMenu;
   private Map<String, List<String>> scoreboardContents = new HashMap<>();
+  private boolean forceStart = false;
 
   //guess the build mode
   private int round = 0;
@@ -306,7 +307,7 @@ public class Arena extends BukkitRunnable {
           player.setExp((float) (getTimer() / plugin.getConfig().getDouble("Lobby-Starting-Time", 60)));
           player.setLevel(getTimer());
         }
-        if (getPlayers().size() < getMinimumPlayers()) {
+        if (getPlayers().size() < getMinimumPlayers() && !forceStart) {
           ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", String.valueOf(getMinimumPlayers())));
           setGameState(ArenaState.WAITING_FOR_PLAYERS);
           Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
@@ -317,7 +318,7 @@ public class Arena extends BukkitRunnable {
           }
           break;
         }
-        if (getTimer() == 0) {
+        if (getTimer() == 0 || forceStart) {
           extraCounter = 0;
           if (!getPlotManager().isPlotsCleared()) {
             getPlotManager().resetQueuedPlots();
@@ -336,7 +337,9 @@ public class Arena extends BukkitRunnable {
             //to prevent Multiverse chaning gamemode bug
             Bukkit.getScheduler().runTaskLater(plugin, () -> player.setGameMode(GameMode.CREATIVE), 20);
           }
-          break;
+        }
+        if (forceStart) {
+          forceStart = false;
         }
         setTimer(getTimer() - 1);
         break;
@@ -962,6 +965,10 @@ public class Arena extends BukkitRunnable {
 
   public void setTheme(String theme) {
     this.theme = theme;
+  }
+
+  public void setForceStart(boolean forceStart) {
+    this.forceStart = forceStart;
   }
 
   private void voteRoutine() {
