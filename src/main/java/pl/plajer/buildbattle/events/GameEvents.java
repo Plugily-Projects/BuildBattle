@@ -62,7 +62,6 @@ import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.plots.Plot;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.items.SpecialItemManager;
-import pl.plajer.buildbattle.menus.playerheads.PlayerHeadsMenu;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.utils.Utils;
 import pl.plajerlair.core.services.exception.ReportedException;
@@ -317,8 +316,9 @@ public class GameEvents implements Listener {
     if (e.getInventory().getName() == null || ArenaRegistry.getArena((Player) e.getWhoClicked()) == null) {
       return;
     }
-    if (PlayerHeadsMenu.getMenuNames().contains(e.getInventory().getName())) {
-      PlayerHeadsMenu.onClickInDeeperMenu((Player) e.getWhoClicked(), e.getCurrentItem());
+    if (plugin.getOptionsRegistry().getPlayerHeadsRegistry().getMenuNames().contains(e.getInventory().getName())) {
+      e.getWhoClicked().getInventory().addItem(e.getCurrentItem().clone());
+      e.getWhoClicked().closeInventory();
     }
   }
 

@@ -49,7 +49,6 @@ import pl.plajer.buildbattle.menus.options.OptionsMenuHandler;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
 import pl.plajer.buildbattle.menus.particles.ParticleHandler;
 import pl.plajer.buildbattle.menus.particles.ParticleMenu;
-import pl.plajer.buildbattle.menus.playerheads.PlayerHeadsMenu;
 import pl.plajer.buildbattle.menus.themevoter.VoteMenuListener;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.user.UserManager;
@@ -218,7 +217,6 @@ public class Main extends JavaPlugin {
     new SetupInventoryEvents(this);
     new MainCommand(this);
     ParticleMenu.loadFromConfig();
-    PlayerHeadsMenu.loadHeadItems();
     ArenaRegistry.registerArenas();
     //load signs after arenas
     signManager = new SignManager(this);
