@@ -45,7 +45,6 @@ import pl.plajer.buildbattle.handlers.SignManager;
 import pl.plajer.buildbattle.handlers.items.SpecialItem;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
 import pl.plajer.buildbattle.handlers.setup.SetupInventoryEvents;
-import pl.plajer.buildbattle.menus.OptionsMenu;
 import pl.plajer.buildbattle.menus.options.OptionsMenuHandler;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
 import pl.plajer.buildbattle.menus.particles.ParticleHandler;
@@ -78,7 +77,6 @@ public class Main extends JavaPlugin {
   private SignManager signManager;
   private CuboidSelector cuboidSelector;
   private VoteItems voteItems;
-  private OptionsMenu optionsMenu;
   private OptionsRegistry optionsRegistry;
   private String version;
   private List<String> filesToGenerate = Arrays.asList("arenas", "particles", "lobbyitems", "stats", "voteItems", "mysql");
@@ -89,11 +87,6 @@ public class Main extends JavaPlugin {
 
   public VoteItems getVoteItems() {
     return voteItems;
-  }
-
-  @Deprecated
-  public OptionsMenu getOptionsMenu() {
-    return optionsMenu;
   }
 
   public OptionsRegistry getOptionsRegistry() {
@@ -231,7 +224,6 @@ public class Main extends JavaPlugin {
     signManager = new SignManager(this);
     SpecialItem.loadAll();
     voteItems = new VoteItems();
-    optionsMenu = new OptionsMenu();
     optionsRegistry = new OptionsRegistry(this);
     new OptionsMenuHandler(this);
     new ParticleHandler(this);
