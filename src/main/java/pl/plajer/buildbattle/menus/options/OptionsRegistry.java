@@ -31,10 +31,11 @@ import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.menus.options.registry.BiomeChangeOption;
 import pl.plajer.buildbattle.menus.options.registry.FloorChangeOption;
 import pl.plajer.buildbattle.menus.options.registry.ParticlesOption;
-import pl.plajer.buildbattle.menus.options.registry.PlayerHeadsOption;
 import pl.plajer.buildbattle.menus.options.registry.PlotResetOption;
 import pl.plajer.buildbattle.menus.options.registry.TimeChangeOption;
 import pl.plajer.buildbattle.menus.options.registry.WeatherChangeOption;
+import pl.plajer.buildbattle.menus.options.registry.playerheads.PlayerHeadsOption;
+import pl.plajer.buildbattle.menus.options.registry.playerheads.PlayerHeadsRegistry;
 import pl.plajerlair.core.utils.ItemBuilder;
 
 /**
@@ -44,6 +45,7 @@ import pl.plajerlair.core.utils.ItemBuilder;
  */
 public class OptionsRegistry {
 
+  private PlayerHeadsRegistry playerHeadsRegistry;
   private Set<MenuOption> registeredOptions = new HashSet<>();
   private int inventorySize = 5 * 9;
   private Main plugin;
@@ -57,7 +59,11 @@ public class OptionsRegistry {
     new BiomeChangeOption(this);
     new FloorChangeOption(this);
     new ParticlesOption(this);
+
+    //register player heads
+    playerHeadsRegistry = new PlayerHeadsRegistry();
     new PlayerHeadsOption(this);
+
     new PlotResetOption(this);
     new TimeChangeOption(this);
     new WeatherChangeOption(this);
@@ -113,6 +119,10 @@ public class OptionsRegistry {
     return new ItemBuilder(new ItemStack(Material.NETHER_STAR))
         .name(ChatManager.colorMessage("Menus.Option-Menu.Option-Item"))
         .lore(ChatManager.colorMessage("Menus.Option-Menu.Option-Item-Lore")).build();
+  }
+
+  public PlayerHeadsRegistry getPlayerHeadsRegistry() {
+    return playerHeadsRegistry;
   }
 
   public Main getPlugin() {

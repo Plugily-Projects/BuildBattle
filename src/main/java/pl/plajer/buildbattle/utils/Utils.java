@@ -89,10 +89,15 @@ public class Utils {
     return head;
   }
 
+  @Deprecated
   public static ItemStack setItemNameAndLore(ItemStack item, String name, String[] lore) {
+    return setItemNameAndLore(item, name, Arrays.asList(lore));
+  }
+
+  public static ItemStack setItemNameAndLore(ItemStack item, String name, List<String> lore) {
     ItemMeta im = item.getItemMeta();
     im.setDisplayName(name);
-    im.setLore(Arrays.asList(lore));
+    im.setLore(lore);
     item.setItemMeta(im);
     return item;
   }

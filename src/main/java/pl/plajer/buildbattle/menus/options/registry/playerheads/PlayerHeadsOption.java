@@ -16,18 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle.menus.options.registry;
+package pl.plajer.buildbattle.menus.options.registry.playerheads;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.menus.options.MenuOption;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
-import pl.plajer.buildbattle.menus.playerheads.PlayerHeadsMenu;
 import pl.plajerlair.core.utils.ItemBuilder;
+import pl.plajerlair.core.utils.MinigameUtils;
 import pl.plajerlair.core.utils.XMaterial;
 
 /**
@@ -37,6 +38,7 @@ import pl.plajerlair.core.utils.XMaterial;
  */
 public class PlayerHeadsOption {
 
+  //todo test
   public PlayerHeadsOption(OptionsRegistry registry) {
     ItemStack headOption;
     if (registry.getPlugin().is1_11_R1() || registry.getPlugin().is1_12_R1()) {
@@ -53,12 +55,29 @@ public class PlayerHeadsOption {
       @Override
       public void onClick(InventoryClickEvent e) {
         e.getWhoClicked().closeInventory();
-        PlayerHeadsMenu.openMenu((Player) e.getWhoClicked());
+
+        Inventory inventory = Bukkit.getServer().createInventory(null,
+            MinigameUtils.serializeInt(registry.getPlayerHeadsRegistry().getCategories().size()),
+            ChatManager.colorMessage("Menus.Option-Menu.Items.Players-Heads.Inventory-Name"));
+        for (HeadsCategory categoryItem : registry.getPlayerHeadsRegistry().getCategories().keySet()) {
+          inventory.addItem(categoryItem.getItemStack());
+        }
+        e.getWhoClicked().openInventory(inventory);
       }
 
       @Override
       public void onTargetClick(InventoryClickEvent e) {
-        PlayerHeadsMenu.onClickInMainMenu((Player) e.getWhoClicked(), e.getCurrentItem());
+        for (HeadsCategory category : registry.getPlayerHeadsRegistry().getCategories().keySet()) {
+          if (!category.getItemStack().isSimilar(e.getCurrentItem())) {
+            continue;
+          }
+          if (e.getWhoClicked().hasPermission(category.getPermission())) {
+            e.getWhoClicked().openInventory(category.getInventory());
+            return;
+          }
+          e.getWhoClicked().sendMessage(ChatManager.colorMessage("Menus.Option-Menu.Items.Players-Heads.No-Permission"));
+          return;
+        }
       }
     });
   }
