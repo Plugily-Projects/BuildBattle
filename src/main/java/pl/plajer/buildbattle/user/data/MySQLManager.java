@@ -85,16 +85,10 @@ public class MySQLManager {
   }
 
   public void saveStat(User user, StatsStorage.StatisticType stat) {
-    if (!stat.isPersistent()) {
-      return;
-    }
     database.executeUpdate("UPDATE `buildbattlestats` SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.toPlayer().getUniqueId().toString() + "';");
   }
 
   public int getStat(User user, StatsStorage.StatisticType stat) {
-    if (!stat.isPersistent()) {
-      return 0;
-    }
     ResultSet resultSet = database.executeQuery("SELECT UUID from buildbattlestats WHERE UUID='" + user.toPlayer().getUniqueId().toString() + "'");
     //insert into the database
     try {

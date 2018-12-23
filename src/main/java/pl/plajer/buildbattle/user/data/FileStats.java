@@ -18,16 +18,12 @@
 
 package pl.plajer.buildbattle.user.data;
 
-import java.io.IOException;
-
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.user.User;
-import pl.plajer.buildbattle.utils.MessageUtils;
 import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
@@ -36,24 +32,16 @@ import pl.plajerlair.core.utils.ConfigUtils;
 public class FileStats {
 
   private FileConfiguration config;
+  private Main plugin;
 
-  public FileStats() {
+  public FileStats(Main plugin) {
+    this.plugin = plugin;
     config = ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "stats");
   }
 
   public void saveStat(User user, StatsStorage.StatisticType stat) {
-    if (!stat.isPersistent()) {
-      return;
-    }
     config.set(user.toPlayer().getUniqueId().toString() + "." + stat.getName(), user.getStat(stat));
-    try {
-      config.save(ConfigUtils.getFile(JavaPlugin.getPlugin(Main.class), "stats"));
-    } catch (IOException e) {
-      e.printStackTrace();
-      MessageUtils.errorOccurred();
-      Bukkit.getConsoleSender().sendMessage("Cannot save stats.yml file!");
-      Bukkit.getConsoleSender().sendMessage("Restart the server, file COULD BE OVERRIDDEN!");
-    }
+    ConfigUtils.saveConfig(plugin, config, "stats");
   }
 
   public void loadStat(User user, StatsStorage.StatisticType stat) {
