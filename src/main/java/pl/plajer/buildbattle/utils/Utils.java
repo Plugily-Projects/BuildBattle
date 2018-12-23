@@ -23,7 +23,6 @@ import com.mojang.authlib.properties.Property;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -87,11 +86,6 @@ public class Utils {
 
     head.setItemMeta(headMeta);
     return head;
-  }
-
-  @Deprecated
-  public static ItemStack setItemNameAndLore(ItemStack item, String name, String[] lore) {
-    return setItemNameAndLore(item, name, Arrays.asList(lore));
   }
 
   public static ItemStack setItemNameAndLore(ItemStack item, String name, List<String> lore) {

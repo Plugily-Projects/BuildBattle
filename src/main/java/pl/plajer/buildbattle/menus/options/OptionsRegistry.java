@@ -30,10 +30,11 @@ import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.menus.options.registry.BiomeChangeOption;
 import pl.plajer.buildbattle.menus.options.registry.FloorChangeOption;
-import pl.plajer.buildbattle.menus.options.registry.ParticlesOption;
 import pl.plajer.buildbattle.menus.options.registry.PlotResetOption;
 import pl.plajer.buildbattle.menus.options.registry.TimeChangeOption;
 import pl.plajer.buildbattle.menus.options.registry.WeatherChangeOption;
+import pl.plajer.buildbattle.menus.options.registry.particles.ParticleRegistry;
+import pl.plajer.buildbattle.menus.options.registry.particles.ParticlesOption;
 import pl.plajer.buildbattle.menus.options.registry.playerheads.PlayerHeadsOption;
 import pl.plajer.buildbattle.menus.options.registry.playerheads.PlayerHeadsRegistry;
 import pl.plajerlair.core.utils.ItemBuilder;
@@ -45,6 +46,7 @@ import pl.plajerlair.core.utils.ItemBuilder;
  */
 public class OptionsRegistry {
 
+  private ParticleRegistry particleRegistry;
   private PlayerHeadsRegistry playerHeadsRegistry;
   private Set<MenuOption> registeredOptions = new HashSet<>();
   private int inventorySize = 5 * 9;
@@ -58,6 +60,9 @@ public class OptionsRegistry {
   private void registerOptions() {
     new BiomeChangeOption(this);
     new FloorChangeOption(this);
+
+    //register particles
+    particleRegistry = new ParticleRegistry(this);
     new ParticlesOption(this);
 
     //register player heads
@@ -123,6 +128,10 @@ public class OptionsRegistry {
 
   public PlayerHeadsRegistry getPlayerHeadsRegistry() {
     return playerHeadsRegistry;
+  }
+
+  public ParticleRegistry getParticleRegistry() {
+    return particleRegistry;
   }
 
   public Main getPlugin() {

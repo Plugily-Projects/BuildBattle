@@ -16,18 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle.menus.options.registry;
+package pl.plajer.buildbattle.menus.options.registry.particles;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
+import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
+import pl.plajer.buildbattle.arena.plots.Plot;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.menus.options.MenuOption;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
-import pl.plajer.buildbattle.menus.particles.ParticleMenu;
-import pl.plajer.buildbattle.menus.particles.ParticleRemoveMenu;
 import pl.plajerlair.core.utils.ItemBuilder;
 import pl.plajerlair.core.utils.XMaterial;
 
@@ -38,11 +38,12 @@ import pl.plajerlair.core.utils.XMaterial;
  */
 public class ParticlesOption {
 
+
   public ParticlesOption(OptionsRegistry registry) {
     registry.registerOption(new MenuOption(13, "PARTICLES", new ItemBuilder(XMaterial.DANDELION.parseItem())
         .name(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.Item-Name"))
         .lore(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.Item-Lore"))
-        .build(), ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name")) {
+        .build(), ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.Inventory-Name")) {
 
       @Override
       public void onClick(InventoryClickEvent e) {
@@ -58,7 +59,7 @@ public class ParticlesOption {
           return;
         }
         e.getWhoClicked().closeInventory();
-        ParticleMenu.openMenu((Player) e.getWhoClicked());
+        e.getWhoClicked().openInventory(registry.getParticleRegistry().getInventory());
       }
 
       @Override
@@ -67,8 +68,32 @@ public class ParticlesOption {
         if (arena == null) {
           return;
         }
-        ParticleRemoveMenu.onClick((Player) e.getWhoClicked(), e.getInventory(), e.getCurrentItem(),
-            arena.getPlotManager().getPlot((Player) e.getWhoClicked()));
+
+        if (e.getCurrentItem().getItemMeta().getDisplayName()
+            .contains(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))) {
+          e.setCancelled(false);
+          e.getWhoClicked().closeInventory();
+          ParticleRemoveMenu.openMenu((Player) e.getWhoClicked(), arena.getPlotManager().getPlot((Player) e.getWhoClicked()));
+          return;
+        }
+        for (ParticleItem particleItem : registry.getParticleRegistry().getRegisteredParticles()) {
+          if (!e.getCurrentItem().isSimilar(particleItem.getItemStack())) {
+            continue;
+          }
+          Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());
+          if (!e.getWhoClicked().hasPermission(particleItem.getPermission())) {
+            e.getWhoClicked().sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.No-Permission-For-Particle"));
+            continue;
+          }
+          if (plot.getParticles().size() >= registry.getPlugin().getConfig().getInt("Max-Amount-Particles", 25)) {
+            e.getWhoClicked().sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Max-Particles-Limit-Reached"));
+            return;
+          }
+          plot.addParticle(e.getWhoClicked().getLocation(), particleItem.getEffect());
+          registry.getPlugin().getUserManager().getUser(e.getWhoClicked().getUniqueId())
+              .addStat(StatsStorage.StatisticType.PARTICLES_USED, 1);
+          e.getWhoClicked().sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Particle-Added"));
+        }
       }
     });
   }

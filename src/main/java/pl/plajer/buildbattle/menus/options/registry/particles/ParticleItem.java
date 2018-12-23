@@ -16,12 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle.menus.particles;
+package pl.plajer.buildbattle.menus.options.registry.particles;
 
 import org.bukkit.Particle;
 import org.bukkit.inventory.ItemStack;
-
-import pl.plajer.buildbattle.handlers.ChatManager;
 
 /**
  * Created by Tom on 23/08/2015.
@@ -31,7 +29,6 @@ public class ParticleItem {
   private ItemStack itemStack;
   private Particle effect;
   private String permission;
-  private boolean enabled = true;
 
   public String getPermission() {
     return permission;
@@ -41,16 +38,8 @@ public class ParticleItem {
     this.permission = permission;
   }
 
-  public boolean isEnabled() {
-    return enabled;
-  }
-
-  public void setEnabled(boolean enabled) {
-    this.enabled = enabled;
-  }
-
   public String getDisplayName() {
-    return ChatManager.colorRawMessage(itemStack.getItemMeta().getDisplayName());
+    return itemStack.getItemMeta().getDisplayName();
   }
 
   public Particle getEffect() {

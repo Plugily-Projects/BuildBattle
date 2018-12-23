@@ -6,7 +6,6 @@ EXPLOSION_NORMAL:
   - Click to activate
   - on your location
   material-name: SNOWBALL
-  enabled: true
   permission: particles.VIP
 EXPLOSION_LARGE:
   displayname: '&6EXPLOSION_LARGE'
@@ -14,7 +13,6 @@ EXPLOSION_LARGE:
   - Click to activate
   - on your location
   material-name: SNOWBALL
-  enabled: true
   permission: particles.VIP
 EXPLOSION_HUGE:
   displayname: '&6EXPLOSION_HUGE'
@@ -22,7 +20,6 @@ EXPLOSION_HUGE:
   - Click to activate
   - on your location
   material-name: SNOWBALL
-  enabled: true
   permission: particles.VIP
 FIREWORKS_SPARK:
   displayname: '&6FIREWORKS_SPARK'
@@ -30,7 +27,6 @@ FIREWORKS_SPARK:
   - Click to activate
   - on your location
   material-name: BONE_MEAL
-  enabled: true
   permission: particles.VIP
 WATER_BUBBLE:
   displayname: '&6WATER_BUBBLE'
@@ -38,7 +34,6 @@ WATER_BUBBLE:
   - Click to activate
   - on your location
   material-name: WATER_BUCKET
-  enabled: true
   permission: particles.VIP
 WATER_SPLASH:
   displayname: '&6WATER_SPLASH'
@@ -46,7 +41,6 @@ WATER_SPLASH:
   - Click to activate
   - on your location
   material-name: WATER_BUCKET
-  enabled: true
   permission: particles.VIP
 WATER_WAKE:
   displayname: '&6WATER_WAKE'
@@ -54,7 +48,6 @@ WATER_WAKE:
   - Click to activate
   - on your location
   material-name: WATER_BUCKET
-  enabled: true
   permission: particles.VIP
 SUSPENDED:
   displayname: '&6SUSPENDED'
@@ -62,7 +55,6 @@ SUSPENDED:
   - Click to activate
   - on your location
   material-name: INK_SAC
-  enabled: true
   permission: particles.VIP
 SUSPENDED_DEPTH:
   displayname: '&6SUSPENDED_DEPTH'
@@ -70,7 +62,6 @@ SUSPENDED_DEPTH:
   - Click to activate
   - on your location
   material-name: INK_SAC
-  enabled: true
   permission: particles.VIP
 CRIT:
   displayname: '&6CRIT'
@@ -78,7 +69,6 @@ CRIT:
   - Click to activate
   - on your location
   material-name: LIGHT_GRAY_DYE
-  enabled: true
   permission: particles.VIP
 CRIT_MAGIC:
   displayname: '&6CRIT_MAGIC'
@@ -86,7 +76,6 @@ CRIT_MAGIC:
   - Click to activate
   - on your location
   material-name: CYAN_DYE
-  enabled: true
   permission: particles.VIP
 SMOKE_NORMAL:
   data: 0
@@ -95,7 +84,6 @@ SMOKE_NORMAL:
   - Click to activate
   - on your location
   material-name: FLINT
-  enabled: true
   permission: particles.VIP
 SMOKE_LARGE:
   displayname: '&6SMOKE_LARGE'
@@ -103,7 +91,6 @@ SMOKE_LARGE:
   - Click to activate
   - on your location
   material-name: COAL_BLOCK
-  enabled: true
   permission: particles.VIP
 SPELL:
   displayname: '&6SPELL'
@@ -111,7 +98,6 @@ SPELL:
   - Click to activate
   - on your location
   material-name: NETHER_WART
-  enabled: true
   permission: particles.VIP
 SPELL_INSTANT:
   displayname: '&6SPELL_INSTANT'
@@ -119,7 +105,6 @@ SPELL_INSTANT:
   - Click to activate
   - on your location
   material-name: NETHER_WART
-  enabled: true
   permission: particles.VIP
 SPELL_MOB:
   displayname: '&6SPELL_MOB'
@@ -127,7 +112,6 @@ SPELL_MOB:
   - Click to activate
   - on your location
   material-name: NETHER_WART
-  enabled: true
   permission: particles.VIP
 SPELL_MOB_AMBIENT:
   displayname: '&6SPELL_MOB_AMBIENT'
@@ -135,7 +119,6 @@ SPELL_MOB_AMBIENT:
   - Click to activate
   - on your location
   material-name: NETHER_WART
-  enabled: true
   permission: particles.VIP
 SPELL_WITCH:
   displayname: '&6SPELL_WITCH'
@@ -143,7 +126,6 @@ SPELL_WITCH:
   - Click to activate
   - on your location
   material-name: NETHER_WART
-  enabled: true
   permission: particles.VIP
 DRIP_WATER:
   displayname: '&6DRIP_WATER'
@@ -151,7 +133,6 @@ DRIP_WATER:
   - Click to activate
   - on your location
   material-name: POTION
-  enabled: true
   permission: particles.VIP
 DRIP_LAVA:
   displayname: '&6DRIP_LAVA'
@@ -159,7 +140,6 @@ DRIP_LAVA:
   - Click to activate
   - on your location
   material-name: LAVA_BUCKET
-  enabled: true
   permission: particles.VIP
 VILLAGER_ANGRY:
   displayname: '&6VILLAGER_ANGRY'
@@ -167,7 +147,6 @@ VILLAGER_ANGRY:
   - Click to activate
   - on your location
   material-name: EMERALD
-  enabled: true
   permission: particles.VIP
 VILLAGER_HAPPY:
   displayname: '&6VILLAGER_HAPPY'
@@ -175,7 +154,6 @@ VILLAGER_HAPPY:
   - Click to activate
   - on your location
   material-name: EMERALD
-  enabled: true
   permission: particles.VIP
 TOWN_AURA:
   displayname: '&6TOWN_AURA'
@@ -183,7 +161,6 @@ TOWN_AURA:
   - Click to activate
   - on your location
   material-name: COAL
-  enabled: true
   permission: particles.VIP
 NOTE:
   displayname: '&6NOTE'
@@ -191,7 +168,6 @@ NOTE:
   - Click to activate
   - on your location
   material-name: BLAZE_POWDER
-  enabled: true
   permission: particles.VIP
 PORTAL:
   displayname: '&6PORTAL'
@@ -199,7 +175,6 @@ PORTAL:
   - Click to activate
   - on your location
   material-name: ENDER_EYE
-  enabled: true
   permission: particles.VIP
 ENCHANTMENT_TABLE:
   displayname: '&6ENCHANTMENT_TABLE'
@@ -207,7 +182,6 @@ ENCHANTMENT_TABLE:
   - Click to activate
   - on your location
   material-name: ENCHANTING_TABLE
-  enabled: true
   permission: particles.VIP
 FLAME:
   displayname: '&6FLAME'
@@ -215,7 +189,6 @@ FLAME:
   - Click to activate
   - on your location
   material-name: BLAZE_POWDER
-  enabled: true
   permission: particles.VIP
 LAVA:
   displayname: '&6LAVA'
@@ -223,7 +196,6 @@ LAVA:
   - Click to activate
   - on your location
   material-name: LAVA_BUCKET
-  enabled: true
   permission: particles.VIP
 CLOUD:
   displayname: '&6CLOUD'
@@ -231,7 +203,6 @@ CLOUD:
   - Click to activate
   - on your location
   material-name: SNOW_BLOCK
-  enabled: true
   permission: particles.VIP
 SNOWBALL:
   displayname: '&6SNOWBALL'
@@ -239,7 +210,6 @@ SNOWBALL:
   - Click to activate
   - on your location
   material-name: SNOWBALL
-  enabled: true
   permission: particles.VIP
 SNOW_SHOVEL:
   displayname: '&6SNOW_SHOVEL'
@@ -247,7 +217,6 @@ SNOW_SHOVEL:
   - Click to activate
   - on your location
   material-name: SNOWBALL
-  enabled: true
   permission: particles.VIP
 SLIME:
   displayname: '&6SLIME'
@@ -255,7 +224,6 @@ SLIME:
   - Click to activate
   - on your location
   material-name: SLIME_BLOCK
-  enabled: true
   permission: particles.VIP
 HEART:
   displayname: '&6HEART'
@@ -263,7 +231,6 @@ HEART:
   - Click to activate
   - on your location
   material-name: REDSTONE
-  enabled: true
   permission: particles.VIP
 BARRIER:
   displayname: '&6BARRIER'
@@ -271,7 +238,6 @@ BARRIER:
   - Click to activate
   - on your location
   material-name: BARRIER
-  enabled: true
   permission: particles.VIP
 WATER_DROP:
   displayname: '&6WATER_DROP'
@@ -279,5 +245,4 @@ WATER_DROP:
   - Click to activate
   - on your location
   material-name: WATER_BUCKET
-  enabled: true
   permission: particles.VIP

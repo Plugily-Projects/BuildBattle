@@ -47,8 +47,7 @@ import pl.plajer.buildbattle.handlers.language.LanguageManager;
 import pl.plajer.buildbattle.handlers.setup.SetupInventoryEvents;
 import pl.plajer.buildbattle.menus.options.OptionsMenuHandler;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
-import pl.plajer.buildbattle.menus.particles.ParticleHandler;
-import pl.plajer.buildbattle.menus.particles.ParticleMenu;
+import pl.plajer.buildbattle.menus.options.registry.particles.ParticleRefreshScheduler;
 import pl.plajer.buildbattle.menus.themevoter.VoteMenuListener;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.user.UserManager;
@@ -216,7 +215,6 @@ public class Main extends JavaPlugin {
     PermissionManager.init();
     new SetupInventoryEvents(this);
     new MainCommand(this);
-    ParticleMenu.loadFromConfig();
     ArenaRegistry.registerArenas();
     //load signs after arenas
     signManager = new SignManager(this);
@@ -224,7 +222,7 @@ public class Main extends JavaPlugin {
     voteItems = new VoteItems();
     optionsRegistry = new OptionsRegistry(this);
     new OptionsMenuHandler(this);
-    new ParticleHandler(this);
+    new ParticleRefreshScheduler(this);
     Metrics metrics = new Metrics(this);
     metrics.addCustomChart(new Metrics.SimplePie("bungeecord_hooked", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.BUNGEE_ENABLED))));
     metrics.addCustomChart(new Metrics.SimplePie("locale_used", () -> LanguageManager.getPluginLocale().getPrefix()));
