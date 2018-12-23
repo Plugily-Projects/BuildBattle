@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle.menus.particles;
+package pl.plajer.buildbattle.menus.options.registry.particles;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -29,24 +29,19 @@ import pl.plajer.buildbattle.arena.plots.Plot;
 /**
  * Created by Tom on 23/08/2015.
  */
-public class ParticleHandler {
+public class ParticleRefreshScheduler {
 
-  private Main plugin;
 
-  public ParticleHandler(Main plugin) {
-    this.plugin = plugin;
-    start();
-  }
-
-  private void start() {
+  public ParticleRefreshScheduler(Main plugin) {
     Bukkit.getScheduler().runTaskTimer(plugin, () -> {
       for (Arena arena : ArenaRegistry.getArenas()) {
         for (Plot buildPlot : arena.getPlotManager().getPlots()) {
           for (Location location : buildPlot.getParticles().keySet()) {
-            if (!arena.getPlayers().isEmpty()) {
-              location.getWorld().spawnParticle(buildPlot.getParticles().get(location), location, plugin.getConfig().getInt("Amount-One-Particle-Effect-Contains", 20),
-                  1, 1, 1);
+            if (arena.getPlayers().isEmpty()) {
+              continue;
             }
+            location.getWorld().spawnParticle(buildPlot.getParticles().get(location), location,
+                plugin.getConfig().getInt("Amount-One-Particle-Effect-Contains", 20), 1, 1, 1);
           }
         }
       }

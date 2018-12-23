@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle.menus.particles;
+package pl.plajer.buildbattle.menus.options.registry.particles;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.java.JavaPlugin;
 
+import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.plots.Plot;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajerlair.core.utils.MinigameUtils;
@@ -37,13 +39,16 @@ import pl.plajerlair.core.utils.MinigameUtils;
 /**
  * Created by Tom on 24/08/2015.
  */
+@Deprecated
 public class ParticleRemoveMenu {
 
+  @Deprecated
   public static void openMenu(Player player, Plot buildPlot) {
     Inventory inventory = player.getServer().createInventory(player, 6 * 9, ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"));
 
     for (Location location : buildPlot.getParticles().keySet()) {
-      ParticleItem particleItem = ParticleMenu.getParticleItem(buildPlot.getParticles().get(location));
+      ParticleItem particleItem = JavaPlugin.getPlugin(Main.class).getOptionsRegistry().getParticleRegistry()
+          .getItemByEffect(buildPlot.getParticles().get(location));
       ItemStack itemStack = particleItem.getItemStack();
       ItemMeta itemMeta = itemStack.getItemMeta();
       itemMeta.setLore(new ArrayList<>());
@@ -58,6 +63,7 @@ public class ParticleRemoveMenu {
     player.openInventory(inventory);
   }
 
+  @Deprecated
   public static void onClick(Player p, Inventory inventory, ItemStack itemStack, Plot buildPlot) {
     List<String> lore = itemStack.getItemMeta().getLore();
     double x = 0, y = 0, z = 0;

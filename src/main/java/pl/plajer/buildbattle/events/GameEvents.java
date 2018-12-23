@@ -62,6 +62,7 @@ import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.plots.Plot;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.items.SpecialItemManager;
+import pl.plajer.buildbattle.menus.options.registry.particles.ParticleRemoveMenu;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.utils.Utils;
 import pl.plajerlair.core.services.exception.ReportedException;
@@ -308,17 +309,22 @@ public class GameEvents implements Listener {
   }
 
   @Deprecated
+  //only a temporary code
   @EventHandler
   public void onPlayerHeadsClick(InventoryClickEvent e) {
     if (e.getInventory() == null || !Utils.isNamed(e.getCurrentItem()) || !(e.getWhoClicked() instanceof Player)) {
       return;
     }
-    if (e.getInventory().getName() == null || ArenaRegistry.getArena((Player) e.getWhoClicked()) == null) {
+    Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+    if (e.getInventory().getName() == null || arena == null) {
       return;
     }
     if (plugin.getOptionsRegistry().getPlayerHeadsRegistry().getMenuNames().contains(e.getInventory().getName())) {
       e.getWhoClicked().getInventory().addItem(e.getCurrentItem().clone());
       e.getWhoClicked().closeInventory();
+    } else if (e.getInventory().getName().equals(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))) {
+      ParticleRemoveMenu.onClick((Player) e.getWhoClicked(), e.getInventory(), e.getCurrentItem(),
+          arena.getPlotManager().getPlot((Player) e.getWhoClicked()));
     }
   }
 
