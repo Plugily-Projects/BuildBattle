@@ -34,6 +34,7 @@ import pl.plajerlair.core.utils.XMaterial;
 /**
  * Created by Tom on 18/08/2015.
  */
+@Deprecated
 public class OptionsMenu {
 
   private Main plugin = JavaPlugin.getPlugin(Main.class);

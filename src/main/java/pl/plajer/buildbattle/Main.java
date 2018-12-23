@@ -45,8 +45,9 @@ import pl.plajer.buildbattle.handlers.SignManager;
 import pl.plajer.buildbattle.handlers.items.SpecialItem;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
 import pl.plajer.buildbattle.handlers.setup.SetupInventoryEvents;
-import pl.plajer.buildbattle.menus.GameInventories;
 import pl.plajer.buildbattle.menus.OptionsMenu;
+import pl.plajer.buildbattle.menus.options.OptionsMenuHandler;
+import pl.plajer.buildbattle.menus.options.OptionsRegistry;
 import pl.plajer.buildbattle.menus.particles.ParticleHandler;
 import pl.plajer.buildbattle.menus.particles.ParticleMenu;
 import pl.plajer.buildbattle.menus.playerheads.PlayerHeadsMenu;
@@ -76,9 +77,9 @@ public class Main extends JavaPlugin {
   private BungeeManager bungeeManager;
   private SignManager signManager;
   private CuboidSelector cuboidSelector;
-  private GameInventories gameInventories;
   private VoteItems voteItems;
   private OptionsMenu optionsMenu;
+  private OptionsRegistry optionsRegistry;
   private String version;
   private List<String> filesToGenerate = Arrays.asList("arenas", "particles", "lobbyitems", "stats", "voteItems", "mysql");
 
@@ -86,16 +87,17 @@ public class Main extends JavaPlugin {
     return cuboidSelector;
   }
 
-  public GameInventories getGameInventories() {
-    return gameInventories;
-  }
-
   public VoteItems getVoteItems() {
     return voteItems;
   }
 
+  @Deprecated
   public OptionsMenu getOptionsMenu() {
     return optionsMenu;
+  }
+
+  public OptionsRegistry getOptionsRegistry() {
+    return optionsRegistry;
   }
 
   public BungeeManager getBungeeManager() {
@@ -230,6 +232,8 @@ public class Main extends JavaPlugin {
     SpecialItem.loadAll();
     voteItems = new VoteItems();
     optionsMenu = new OptionsMenu();
+    optionsRegistry = new OptionsRegistry(this);
+    new OptionsMenuHandler(this);
     new ParticleHandler(this);
     Metrics metrics = new Metrics(this);
     metrics.addCustomChart(new Metrics.SimplePie("bungeecord_hooked", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.BUNGEE_ENABLED))));
@@ -259,7 +263,6 @@ public class Main extends JavaPlugin {
     checkUpdate();
     new GameEvents(this);
     new VoteMenuListener(this);
-    gameInventories = new GameInventories();
   }
 
   public MySQLDatabase getMySQLDatabase() {
