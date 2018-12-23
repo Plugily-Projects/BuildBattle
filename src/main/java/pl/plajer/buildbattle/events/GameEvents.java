@@ -20,15 +20,9 @@ package pl.plajer.buildbattle.events;
 
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
 import org.bukkit.Material;
-import org.bukkit.WeatherType;
-import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
@@ -68,9 +62,6 @@ import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.plots.Plot;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.items.SpecialItemManager;
-import pl.plajer.buildbattle.menus.GameInventories;
-import pl.plajer.buildbattle.menus.particles.ParticleMenu;
-import pl.plajer.buildbattle.menus.particles.ParticleRemoveMenu;
 import pl.plajer.buildbattle.menus.playerheads.PlayerHeadsMenu;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.utils.Utils;
@@ -165,10 +156,10 @@ public class GameEvents implements Listener {
       if (arena == null || arena.getArenaState() != ArenaState.IN_GAME || arena.isVoting()) {
         return;
       }
-      if (!plugin.getOptionsMenu().getMenuItem().getItemMeta().getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())) {
+      if (!plugin.getOptionsRegistry().getMenuItem().getItemMeta().getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())) {
         return;
       }
-      plugin.getOptionsMenu().openMenu(event.getPlayer(), arena.getPlotManager().getPlot(event.getPlayer()));
+      event.getPlayer().openInventory(plugin.getOptionsRegistry().formatInventory());
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
@@ -317,189 +308,36 @@ public class GameEvents implements Listener {
     }
   }
 
-  //todo move to better place
-  @EventHandler
-  public void onMenuClick(InventoryClickEvent e) {
-    try {
-      if (!(e.getWhoClicked() instanceof Player)) {
-        return;
-      }
-      Player player = (Player) e.getWhoClicked();
-      Arena arena = ArenaRegistry.getArena(player);
-      String invName = e.getInventory().getName();
-      if (e.getInventory() == null || invName == null || !(e.getWhoClicked() instanceof Player) || arena == null) {
-        return;
-      }
-      Plot plot = arena.getPlotManager().getPlot(player);
-      if (!Utils.isNamed(e.getCurrentItem()) || plot == null) {
-        return;
-      }
-      if (invName.equals(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Inventory-Name"))) {
-        e.setCancelled(true);
-        weatherInventoryClick(e, plot);
-      } else if (invName.equals(ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Inventory-Name"))) {
-        e.setCancelled(true);
-        timeInventoryClick(e, plot);
-      } else if (invName.equals(ChatManager.colorMessage("Menus.Option-Menu.Items.Biome.Inventory-Name"))) {
-        e.setCancelled(true);
-        biomeInventoryClick(e, plot);
-      }
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
-    }
-  }
-
-  //todo move to better place
-  private void weatherInventoryClick(InventoryClickEvent e, Plot plot) {
-    if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Downfall"))) {
-      plot.setWeatherType(WeatherType.DOWNFALL);
-    } else if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Clear"))) {
-      plot.setWeatherType(WeatherType.CLEAR);
-    }
-    for (UUID owner : plot.getOwners()) {
-      if (Bukkit.getPlayer(owner).isOnline()) {
-        Bukkit.getPlayer(owner).setPlayerWeather(plot.getWeatherType());
-        Bukkit.getPlayer(owner).sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Weather-Set"));
-      }
-    }
-  }
-
-  //todo move to better place
-  private void timeInventoryClick(InventoryClickEvent e, Plot plot) {
-    plot.setTime(Plot.Time.valueOf(GameInventories.TimeClickPosition.getByPosition(e.getRawSlot()).toString()));
-    for (UUID owner : plot.getOwners()) {
-      Player p = Bukkit.getPlayer(owner);
-      if (p == null) {
-        continue;
-      }
-      p.setPlayerTime(Plot.Time.format(plot.getTime(), p.getWorld().getTime()), false);
-      p.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Time-Set"));
-    }
-  }
-
-  //todo move to better place
-  private void biomeInventoryClick(InventoryClickEvent e, Plot plot) {
-    try {
-      for (Block block : plot.getCuboid().blockList()) {
-        block.setBiome(Biome.valueOf(ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName())));
-      }
-      for (Chunk chunk : plot.getCuboid().chunkList()) {
-        for (Player p : Bukkit.getOnlinePlayers()) {
-          Utils.sendPacket(p, Utils.getNMSClass("PacketPlayOutMapChunk").getConstructor(Utils.getNMSClass("Chunk"), int.class)
-              .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535));
-        }
-      }
-      for (UUID owner : plot.getOwners()) {
-        Player p = Bukkit.getPlayer(owner);
-        if (p == null) {
-          continue;
-        }
-        p.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Menus.Option-Menu.Items.Biome.Biome-Set"));
-      }
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
-    }
-  }
-
-  //todo code must be changed
   @Deprecated
   @EventHandler
-  public void onOptionMenuClick(InventoryClickEvent e) {
+  public void onPlayerHeadsClick(InventoryClickEvent e) {
+    if (e.getInventory() == null || !Utils.isNamed(e.getCurrentItem()) || !(e.getWhoClicked() instanceof Player)) {
+      return;
+    }
+    if (e.getInventory().getName() == null || ArenaRegistry.getArena((Player) e.getWhoClicked()) == null) {
+      return;
+    }
+    if (PlayerHeadsMenu.getMenuNames().contains(e.getInventory().getName())) {
+      PlayerHeadsMenu.onClickInDeeperMenu((Player) e.getWhoClicked(), e.getCurrentItem());
+    }
+  }
+
+  @Deprecated
+  @EventHandler
+  public void onOptionItemClick(InventoryClickEvent e) {
     try {
-      if (e.getWhoClicked() instanceof Player && ArenaRegistry.getArena((Player) e.getWhoClicked()) != null && Utils.isNamed(e.getCurrentItem()) &&
-          e.getCurrentItem().getType() == Material.NETHER_STAR &&
-          e.getCurrentItem().getItemMeta().getDisplayName().equals(ChatManager.colorMessage("Menus.Option-Menu.Option-Item"))) {
-        e.setResult(Event.Result.DENY);
-        e.setCancelled(true);
-      }
-      if (e.getInventory() == null || !Utils.isNamed(e.getCurrentItem())) {
+      if (!(e.getWhoClicked() instanceof Player) || !Utils.isNamed(e.getCurrentItem())) {
         return;
       }
-      String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
-      Player player = (Player) e.getWhoClicked();
-      if (e.getInventory().getName().equals(ChatManager.colorMessage("Menus.Option-Menu.Inventory-Name"))) {
-        e.setCancelled(true);
-      }
-      Arena arena = ArenaRegistry.getArena(player);
-      if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+      Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+      if (e.getCurrentItem().getType() != Material.NETHER_STAR || arena == null) {
         return;
       }
-      if (displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.Item-Name"))) {
-        player.closeInventory();
-        ParticleMenu.openMenu(player);
-        return;
-      } else if (displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Reset.Item-Name"))) {
-        player.closeInventory();
-        arena.getPlotManager().getPlot(player).resetPlot();
-        player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Menus.Option-Menu.Items.Reset.Plot-Reset"));
-        return;
-      } else if (displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Weather.Item-Name"))) {
-        player.closeInventory();
-        plugin.getGameInventories().openInventory(GameInventories.InventoryType.WEATHER, player);
-        return;
-      } else if (displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Item-Name"))) {
-        player.closeInventory();
-        plugin.getGameInventories().openInventory(GameInventories.InventoryType.TIME, player);
-        return;
-      } else if (displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Biome.Item-Name"))) {
-        player.closeInventory();
-        plugin.getGameInventories().openInventory(GameInventories.InventoryType.BIOME, player);
+      if (!e.getCurrentItem().getItemMeta().getDisplayName().equals(ChatManager.colorMessage("Menus.Option-Menu.Option-Item"))) {
         return;
       }
-      if (e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))) {
-        ParticleRemoveMenu.onClick(player, e.getInventory(), e.getCurrentItem(), arena.getPlotManager().getPlot(player));
-        return;
-      } else if (e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Player-Heads.Players-Heads.Inventory-Name"))) {
-        PlayerHeadsMenu.onClickInMainMenu(player, e.getCurrentItem());
-        return;
-      } else if (PlayerHeadsMenu.getMenuNames().contains(e.getInventory().getName())) {
-        PlayerHeadsMenu.onClickInDeeperMenu(player, e.getCurrentItem());
-        return;
-      } else if (displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Players-Heads.Item-Name"))) {
-        PlayerHeadsMenu.openMenu(player);
-        return;
-      } else if (e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.Inventory-Name"))) {
-        if (displayName.contains(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))) {
-          player.closeInventory();
-          ParticleRemoveMenu.openMenu(player, arena.getPlotManager().getPlot(player));
-          return;
-        }
-        e.setCancelled(true);
-        ParticleMenu.onClick(player, e.getCurrentItem(), arena.getPlotManager().getPlot(player));
-        return;
-      }
-      if (e.getCursor() == null) {
-        return;
-      }
-      if (!((e.getCursor().getType().isBlock() && e.getCursor().getType().isSolid()) || e.getCursor().getType() == Material.WATER_BUCKET || e.getCursor().getType() == Material.LAVA_BUCKET)) {
-        return;
-      }
-      if (e.getCursor().getType() == null || e.getCursor().getType() == Material.IRON_TRAPDOOR || e.getCursor().getType() == Material.ACACIA_DOOR || e.getCursor().getType() == Material.BIRCH_DOOR || e.getCursor().getType() == Material.JUNGLE_DOOR || e.getCursor().getType() == Material.SPRUCE_DOOR || e.getCursor().getType() == Material.IRON_DOOR || e.getCursor().getType() == Material.CHEST || e.getCursor().getType() == Material.TRAPPED_CHEST || e.getCursor().getType() == Material.LADDER || e.getCursor().getType() == Material.JUNGLE_FENCE_GATE || e.getCursor().getType() == Material.SIGN || e.getCursor().getType() == Material.WALL_SIGN || e.getCursor().getType() == Material.CACTUS || e.getCursor().getType() == Material.ENDER_CHEST
-          || e.getCursor().getType() == Material.TNT || e.getCursor().getType() == Material.AIR) {
-        e.setCancelled(true);
-        return;
-      }
-      if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
-        if (e.getCursor().getType() == Material.valueOf("SAPLING") || e.getCursor().getType() == Material.valueOf("TRAP_DOOR") || e.getCursor().getType() == Material.valueOf("WOOD_DOOR") ||
-            e.getCursor().getType() == Material.valueOf("WOODEN_DOOR") || e.getCursor().getType() == Material.valueOf("WOOD_DOOR") || e.getCursor().getType() == Material.valueOf("FENCE_GATE") ||
-            e.getCursor().getType() == Material.valueOf("BED") || e.getCursor().getType() == Material.valueOf("JUNGLE_DOOR_ITEM") || e.getCursor().getType() == Material.valueOf("SIGN_POST") || e.getCursor().getType() == Material.valueOf("PISTON_BASE")) {
-          e.setCancelled(true);
-          return;
-        }
-      }
-      if (displayName.equalsIgnoreCase(ChatManager.colorMessage("Menus.Option-Menu.Items.Floor.Item-Name"))) {
-        arena.getPlotManager().getPlot(player).changeFloor(e.getCursor().getType(), e.getCursor().getData().getData());
-        player.sendMessage(ChatManager.colorMessage("Menus.Option-Menu.Items.Floor.Floor-Changed"));
-        e.getCursor().setAmount(0);
-        e.getCursor().setType(Material.AIR);
-        e.getCurrentItem().setType(Material.AIR);
-        player.closeInventory();
-        for (Entity entity : player.getNearbyEntities(5, 5, 5)) {
-          if (entity.getType() == EntityType.DROPPED_ITEM) {
-            entity.remove();
-          }
-        }
-      }
+      e.setResult(Event.Result.DENY);
+      e.setCancelled(true);
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
