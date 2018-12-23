@@ -33,6 +33,7 @@ import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
+import pl.plajer.buildbattle.arena.vote.VoteItems;
 import pl.plajer.buildbattle.commands.MainCommand;
 import pl.plajer.buildbattle.events.GameEvents;
 import pl.plajer.buildbattle.events.JoinEvents;
@@ -42,7 +43,7 @@ import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.PermissionManager;
 import pl.plajer.buildbattle.handlers.PlaceholderManager;
 import pl.plajer.buildbattle.handlers.SignManager;
-import pl.plajer.buildbattle.handlers.items.SpecialItem;
+import pl.plajer.buildbattle.handlers.items.SpecialItemsRegistry;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
 import pl.plajer.buildbattle.handlers.setup.SetupInventoryEvents;
 import pl.plajer.buildbattle.menus.options.OptionsMenuHandler;
@@ -76,6 +77,7 @@ public class Main extends JavaPlugin {
   private CuboidSelector cuboidSelector;
   private VoteItems voteItems;
   private OptionsRegistry optionsRegistry;
+  private SpecialItemsRegistry specialItemsRegistry;
   private String version;
   private List<String> filesToGenerate = Arrays.asList("arenas", "particles", "lobbyitems", "stats", "voteItems", "mysql");
 
@@ -101,6 +103,10 @@ public class Main extends JavaPlugin {
 
   public ConfigPreferences getConfigPreferences() {
     return configPreferences;
+  }
+
+  public SpecialItemsRegistry getSpecialItemsRegistry() {
+    return specialItemsRegistry;
   }
 
   public boolean is1_11_R1() {
@@ -218,7 +224,7 @@ public class Main extends JavaPlugin {
     ArenaRegistry.registerArenas();
     //load signs after arenas
     signManager = new SignManager(this);
-    SpecialItem.loadAll();
+    specialItemsRegistry = new SpecialItemsRegistry(this);
     voteItems = new VoteItems();
     optionsRegistry = new OptionsRegistry(this);
     new OptionsMenuHandler(this);

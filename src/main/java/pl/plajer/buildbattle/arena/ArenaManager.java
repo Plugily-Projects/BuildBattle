@@ -37,7 +37,6 @@ import pl.plajer.buildbattle.api.event.game.BBGameLeaveEvent;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.PermissionManager;
 import pl.plajer.buildbattle.handlers.items.SpecialItem;
-import pl.plajer.buildbattle.handlers.items.SpecialItemManager;
 import pl.plajer.buildbattle.user.User;
 import pl.plajerlair.core.debug.Debugger;
 import pl.plajerlair.core.debug.LogLevel;
@@ -121,7 +120,7 @@ public class ArenaManager {
           player.hidePlayer(p);
         }
       }
-      SpecialItem leaveItem = SpecialItemManager.getSpecialItem("Leave");
+      SpecialItem leaveItem = plugin.getSpecialItemsRegistry().getSpecialItem("Leave");
       p.getInventory().setItem(leaveItem.getSlot(), leaveItem.getItemStack());
     } catch (Exception ex) {
       new ReportedException(plugin, ex);

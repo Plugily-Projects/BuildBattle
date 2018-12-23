@@ -61,7 +61,7 @@ import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.plots.Plot;
 import pl.plajer.buildbattle.handlers.ChatManager;
-import pl.plajer.buildbattle.handlers.items.SpecialItemManager;
+import pl.plajer.buildbattle.handlers.items.SpecialItem;
 import pl.plajer.buildbattle.menus.options.registry.particles.ParticleRemoveMenu;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.utils.Utils;
@@ -79,37 +79,6 @@ public class GameEvents implements Listener {
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
-  @EventHandler
-  public void onVote(PlayerInteractEvent event) {
-    try {
-      if (event.getHand() == EquipmentSlot.OFF_HAND || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-        return;
-      }
-      if (!Utils.isNamed(event.getItem())) {
-        return;
-      }
-      Arena arena = ArenaRegistry.getArena(event.getPlayer());
-      if (arena == null || arena.getArenaState() != ArenaState.IN_GAME || !arena.isVoting()) {
-        return;
-      }
-      if (plugin.getVoteItems().getReportItem().equals(event.getItem())) {
-        //todo attempt report
-        event.setCancelled(true);
-        return;
-      }
-      if (arena.getVotingPlot().getOwners().contains(event.getPlayer().getUniqueId())) {
-        event.getPlayer().sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Cant-Vote-Own-Plot"));
-        event.setCancelled(true);
-        return;
-      }
-      plugin.getUserManager().getUser(event.getPlayer().getUniqueId()).setStat(StatsStorage.StatisticType.LOCAL_POINTS, plugin.getVoteItems().getPoints(event.getItem()));
-      event.getPlayer().sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Vote-Successful"));
-      event.setCancelled(true);
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
-    }
-  }
-
   @EventHandler(priority = EventPriority.LOWEST)
   public void onLeave(PlayerInteractEvent event) {
     try {
@@ -124,11 +93,11 @@ public class GameEvents implements Listener {
       if (!Utils.isNamed(itemStack)) {
         return;
       }
-      String key = SpecialItemManager.getRelatedSpecialItem(itemStack);
-      if (key == null) {
+      SpecialItem item = plugin.getSpecialItemsRegistry().getRelatedSpecialItem(itemStack);
+      if (item == null) {
         return;
       }
-      if (key.equalsIgnoreCase("Leave")) {
+      if (item.getName().equalsIgnoreCase("Leave")) {
         event.setCancelled(true);
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           plugin.getBungeeManager().connectToHub(event.getPlayer());

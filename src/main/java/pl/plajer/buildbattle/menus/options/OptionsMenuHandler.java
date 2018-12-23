@@ -29,6 +29,7 @@ import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.utils.Utils;
+import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
  * @author Plajer
@@ -46,40 +47,48 @@ public class OptionsMenuHandler implements Listener {
 
   @EventHandler
   public void onOptionsMenuClick(InventoryClickEvent e) {
-    if (!(e.getWhoClicked() instanceof Player) || e.getInventory() == null || e.getCurrentItem() == null) {
-      return;
-    }
-    if (!Utils.isNamed(e.getCurrentItem()) || !e.getInventory().getName().equals(ChatManager.colorMessage("Menus.Option-Menu.Inventory-Name"))) {
-      return;
-    }
-    Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
-    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
-      return;
-    }
-    for (MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
-      if (!option.getItemStack().isSimilar(e.getCurrentItem())) {
-        continue;
+    try {
+      if (!(e.getWhoClicked() instanceof Player) || e.getInventory() == null || e.getCurrentItem() == null) {
+        return;
       }
-      e.setCancelled(true);
-      option.onClick(e);
-      return;
+      if (!Utils.isNamed(e.getCurrentItem()) || !e.getInventory().getName().equals(ChatManager.colorMessage("Menus.Option-Menu.Inventory-Name"))) {
+        return;
+      }
+      Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+      if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+        return;
+      }
+      for (MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
+        if (!option.getItemStack().isSimilar(e.getCurrentItem())) {
+          continue;
+        }
+        e.setCancelled(true);
+        option.onClick(e);
+        return;
+      }
+    } catch (Exception ex) {
+      new ReportedException(plugin, ex);
     }
   }
 
   @EventHandler
   public void onRegisteredMenuOptionsClick(InventoryClickEvent e) {
-    if (!(e.getWhoClicked() instanceof Player) || e.getInventory() == null || e.getInventory().getName() == null) {
-      return;
-    }
-    for (MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
-      if (!option.isInventoryEnabled()) {
-        continue;
-      }
-      if (option.getInventoryName().equals(e.getInventory().getName())) {
-        e.setCancelled(true);
-        option.onTargetClick(e);
+    try {
+      if (!(e.getWhoClicked() instanceof Player) || e.getInventory() == null || e.getInventory().getName() == null) {
         return;
       }
+      for (MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
+        if (!option.isInventoryEnabled()) {
+          continue;
+        }
+        if (option.getInventoryName().equals(e.getInventory().getName())) {
+          e.setCancelled(true);
+          option.onTargetClick(e);
+          return;
+        }
+      }
+    } catch (Exception ex) {
+      new ReportedException(plugin, ex);
     }
   }
 
