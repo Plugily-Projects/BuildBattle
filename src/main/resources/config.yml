@@ -47,6 +47,9 @@ Build-Time:
   Teams: 540
   Guess-The-Build: 120
 
+# Should we fire some cool fireworks at location of every player after the game ends?
+Firework-When-Game-Ends: true
+
 # Total time of voting per player plot
 Voting-Time-In-Seconds: 20
 
