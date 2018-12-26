@@ -1,6 +1,6 @@
 /*
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ import pl.plajerlair.core.utils.XMaterial;
  */
 public class SetupInventory {
 
-  public static final String VIDEO_LINK = "https://bit.ly/2w8eKmI";
+  public static final String VIDEO_LINK = "https://tutorial.plajer.xyz";
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
   private Inventory inventory;
 
