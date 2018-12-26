@@ -30,7 +30,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.api.event.player.BBPlayerPlotReceiveEvent;
+import pl.plajer.buildbattle.api.event.plot.BBPlayerPlotReceiveEvent;
 import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.utils.MessageUtils;

@@ -214,7 +214,7 @@ public class SetupInventoryEvents implements Listener {
               return;
             }
             Location minPoint = LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint"));
-            Plot buildPlot = new Plot(minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ()));
+            Plot buildPlot = new Plot(arena, minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ()));
             buildPlot.setCuboid(new Cuboid(minPoint, LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint"))));
             buildPlot.fullyResetPlot();
             arena.getPlotManager().addBuildPlot(buildPlot);
@@ -242,7 +242,7 @@ public class SetupInventoryEvents implements Listener {
 
           for (String plotName : config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false)) {
             Location minPoint = LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint"));
-            Plot buildPlot = new Plot(minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ()));
+            Plot buildPlot = new Plot(arena, minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ()));
             buildPlot.setCuboid(new Cuboid(minPoint, LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint"))));
             buildPlot.fullyResetPlot();
             arena.getPlotManager().addBuildPlot(buildPlot);
