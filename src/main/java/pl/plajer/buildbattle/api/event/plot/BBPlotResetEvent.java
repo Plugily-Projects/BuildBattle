@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle.api.event.player;
+package pl.plajer.buildbattle.api.event.plot;
 
 import org.bukkit.event.HandlerList;
 
@@ -28,14 +28,14 @@ import pl.plajer.buildbattle.arena.plots.Plot;
  * @author Plajer
  * @since 4.0.0-pre-12
  * <p>
- * Called when player receive plot in game after the game starts
+ * Called when plot is being reset
  */
-public class BBPlayerPlotReceiveEvent extends BBEvent {
+public class BBPlotResetEvent extends BBEvent {
 
   private static final HandlerList HANDLERS = new HandlerList();
   private Plot plot;
 
-  public BBPlayerPlotReceiveEvent(Arena eventArena, Plot plot) {
+  public BBPlotResetEvent(Arena eventArena, Plot plot) {
     super(eventArena);
     this.plot = plot;
   }
@@ -51,4 +51,5 @@ public class BBPlayerPlotReceiveEvent extends BBEvent {
   public Plot getPlot() {
     return plot;
   }
+
 }

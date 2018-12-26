@@ -39,6 +39,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
+import pl.plajer.buildbattle.api.event.plot.BBPlotResetEvent;
+import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.utils.Cuboid;
 import pl.plajerlair.core.services.exception.ReportedException;
@@ -49,6 +51,7 @@ import pl.plajerlair.core.utils.XMaterial;
  */
 public class Plot {
 
+  private Arena arena;
   private Main plugin = JavaPlugin.getPlugin(Main.class);
   private Cuboid cuboid;
   private int points;
@@ -59,7 +62,8 @@ public class Plot {
   private WeatherType weatherType = WeatherType.CLEAR;
   private int entities = 0;
 
-  public Plot(Biome biome) {
+  public Plot(Arena arena, Biome biome) {
+    this.arena = arena;
     plotDefaultBiome = biome;
   }
 
@@ -170,6 +174,8 @@ public class Plot {
       }
       changeFloor(XMaterial.fromString(plugin.getConfig().getString("Default-Floor-Material-Name", "LOG").toUpperCase()).parseMaterial());
       cuboid.getCenter().getWorld().setBiome(cuboid.getMinPoint().getBlockX(), cuboid.getMaxPoint().getBlockZ(), plotDefaultBiome);
+      BBPlotResetEvent event = new BBPlotResetEvent(arena, this);
+      Bukkit.getServer().getPluginManager().callEvent(event);
     } catch (Exception ex) {
       new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
     }

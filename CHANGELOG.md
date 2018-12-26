@@ -1,6 +1,6 @@
 ## BuildBattle 3 changelog
 
-### 4.0.0 Beta pre (03.10.2018/27.10.2018 - 03.12.2018)
+### 4.0.0 Beta pre (03.10.2018 - 26.12.2018)
 #### Pre 3:
    * Removed annoying "Please enable bStats" message
    * Code improvements
@@ -40,6 +40,7 @@
 ### Pre 12;
    * Added BBPlayersPlotReceiveEvent to API
    * Fixed /bba forcestart wasn't working properly
+   * Added BBPlotResetEvent to API
    
 
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)
