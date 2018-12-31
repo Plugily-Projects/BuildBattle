@@ -1,6 +1,6 @@
 /*
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -75,6 +75,9 @@ public class StatsStorage {
       FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
       Map<UUID, Integer> stats = new TreeMap<>();
       for (String string : config.getKeys(false)) {
+        if (string.equals("data-version")) {
+          continue;
+        }
         stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));
       }
       return Utils.sortByValue(stats);
