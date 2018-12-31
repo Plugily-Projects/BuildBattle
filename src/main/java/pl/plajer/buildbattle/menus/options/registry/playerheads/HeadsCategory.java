@@ -1,6 +1,6 @@
 /*
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,9 +30,14 @@ import org.bukkit.inventory.ItemStack;
  */
 public class HeadsCategory {
 
+  private String categoryID;
   private ItemStack itemStack;
   private String permission;
   private Inventory inventory;
+
+  public HeadsCategory(String categoryID) {
+    this.categoryID = categoryID;
+  }
 
   public ItemStack getItemStack() {
     return itemStack;

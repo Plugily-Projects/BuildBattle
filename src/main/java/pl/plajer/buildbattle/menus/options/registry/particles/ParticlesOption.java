@@ -52,12 +52,6 @@ public class ParticlesOption {
         if (arena == null) {
           return;
         }
-
-        if (e.getCurrentItem().getItemMeta().getDisplayName()
-            .contains(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))) {
-          ParticleRemoveMenu.openMenu((Player) e.getWhoClicked(), arena.getPlotManager().getPlot((Player) e.getWhoClicked()));
-          return;
-        }
         e.getWhoClicked().openInventory(registry.getParticleRegistry().getInventory());
       }
 
