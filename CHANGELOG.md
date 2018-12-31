@@ -42,6 +42,7 @@
    * Fixed /bba forcestart wasn't working properly
    * Added BBPlotResetEvent to API
    * Particles speed is now 1, they may behave better for builders now
+   * Now you can properly execute all /bb and /bba commands in-game while being non op player
    
 
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)
