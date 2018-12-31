@@ -50,7 +50,7 @@ public class PlayerHeadsOption {
     registry.registerOption(new MenuOption(11, "PLAYER_HEADS", new ItemBuilder(headOption)
         .name(ChatManager.colorMessage("Menus.Option-Menu.Items.Players-Heads.Item-Name"))
         .lore(ChatManager.colorMessage("Menus.Option-Menu.Items.Players-Heads.Item-Lore"))
-        .build(), ChatManager.colorMessage("Menus.Option-Menu.Items.Player-Heads.Players-Heads.Inventory-Name")) {
+        .build(), ChatManager.colorMessage("Menus.Option-Menu.Items.Players-Heads.Inventory-Name")) {
 
       @Override
       public void onClick(InventoryClickEvent e) {
