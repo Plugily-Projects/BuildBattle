@@ -38,6 +38,7 @@ import pl.plajer.buildbattle.arena.vote.VoteItems;
 import pl.plajer.buildbattle.commands.MainCommand;
 import pl.plajer.buildbattle.events.GameEvents;
 import pl.plajer.buildbattle.events.JoinEvents;
+import pl.plajer.buildbattle.events.LobbyEvents;
 import pl.plajer.buildbattle.events.QuitEvents;
 import pl.plajer.buildbattle.handlers.BungeeManager;
 import pl.plajer.buildbattle.handlers.ChatManager;
@@ -228,6 +229,7 @@ public class Main extends JavaPlugin {
     specialItemsRegistry = new SpecialItemsRegistry(this);
     voteItems = new VoteItems();
     new VoteEvents(this);
+    new LobbyEvents(this);
     optionsRegistry = new OptionsRegistry(this);
     new OptionsMenuHandler(this);
     new ParticleRefreshScheduler(this);
