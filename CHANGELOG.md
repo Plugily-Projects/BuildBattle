@@ -44,6 +44,7 @@
    * Particles speed is now 1, they may behave better for builders now
    * Now you can properly execute all /bb and /bba commands in-game while being non op player
    * Somehow plugin was lacking lobby events and you could lose food and health in lobby
+   * Added chat events so in-game chat is no separated from server chat (I thought it's obvious)
    
 
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)
