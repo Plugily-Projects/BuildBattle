@@ -1,6 +1,6 @@
 /*
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -81,7 +81,7 @@ public class ParticleRemoveMenu {
     for (Location location : buildPlot.getParticles().keySet()) {
       if (Math.round(location.getX()) == x && Math.round(location.getY()) == y && Math.round(location.getZ()) == z) {
         buildPlot.getParticles().remove(location);
-        p.sendMessage(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.Particle-Removed"));
+        p.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.Particle-Removed"));
         inventory.remove(itemStack);
         p.updateInventory();
         break;

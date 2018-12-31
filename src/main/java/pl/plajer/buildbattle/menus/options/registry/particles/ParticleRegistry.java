@@ -1,6 +1,6 @@
 /*
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -63,8 +63,21 @@ public class ParticleRegistry {
 
   private void registerParticles() {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "particles");
+    Debugger.debug(LogLevel.TASK, "Registering particles!");
+    int i = 0;
     for (Particle particle : Particle.values()) {
-      if (blackListedParticles.contains(particle.toString())) {
+      if (i >= 52) {
+        Debugger.debug(LogLevel.WARN, "There are too many particles to register! Menu can't hold any more!");
+        break;
+      }
+      boolean blacklisted = false;
+      for (String blackList : blackListedParticles) {
+        if (particle.name().contains(blackList)) {
+          blacklisted = true;
+          break;
+        }
+      }
+      if (blacklisted) {
         continue;
       }
       ParticleItem particleItem = new ParticleItem();
@@ -77,7 +90,9 @@ public class ParticleRegistry {
       particleItem.setPermission(config.getString(particle.toString() + ".permission"));
       particleItem.setEffect(particle);
       registeredParticles.add(particleItem);
+      i++;
     }
+    Debugger.debug(LogLevel.INFO, "Registered in total " + i + " particles!");
     ConfigUtils.saveConfig(plugin, config, "particles");
   }
 
@@ -100,12 +115,12 @@ public class ParticleRegistry {
   }
 
   public Inventory getInventory() {
-    Inventory inv = Bukkit.createInventory(null, MinigameUtils.serializeInt(registeredParticles.size()) + 9,
+    Inventory inv = Bukkit.createInventory(null, MinigameUtils.serializeInt(registeredParticles.size()),
         ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.Inventory-Name"));
     for (ParticleItem item : registeredParticles) {
       inv.addItem(item.getItemStack());
     }
-    inv.setItem(inv.getSize(), new ItemBuilder(new ItemStack(Material.REDSTONE_BLOCK))
+    inv.setItem(MinigameUtils.serializeInt(registeredParticles.size()) - 1, new ItemBuilder(new ItemStack(Material.REDSTONE_BLOCK))
         .name(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))
         .lore(Collections.singletonList(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Lore")))
         .build());

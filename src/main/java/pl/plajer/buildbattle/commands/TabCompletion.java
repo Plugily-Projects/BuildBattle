@@ -1,6 +1,6 @@
 /*
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
@@ -40,11 +39,17 @@ import pl.plajer.buildbattle.arena.ArenaRegistry;
  */
 public class TabCompletion implements TabCompleter {
 
-  private Main plugin = JavaPlugin.getPlugin(Main.class);
+  private Main plugin;
+
+  public TabCompletion(Main plugin) {
+    this.plugin = plugin;
+  }
 
   @Override
   public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-    if (!(sender instanceof Player)) return null;
+    if (!(sender instanceof Player)) {
+      return null;
+    }
     if (cmd.getName().equalsIgnoreCase("buildbattleadmin") && args.length == 1) {
       return Arrays.asList("addplot", "removeplot", "addnpc", "stop", "list", "forcestart", "reload", "delete", "addvotes", "setvotes");
     }
