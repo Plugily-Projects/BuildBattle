@@ -332,7 +332,8 @@ public class GameEvents implements Listener {
       if (event.getPlayer().isOp() || event.getPlayer().hasPermission("buildbattle.admin") || event.getPlayer().hasPermission("buildbattle.command.bypass")) {
         return;
       }
-      if (event.getMessage().contains("leave") || event.getMessage().contains("stats")) {
+      if (event.getMessage().startsWith("/bb") || event.getMessage().startsWith("/buildbattle") || event.getMessage().startsWith("/bba") ||
+          event.getMessage().startsWith("/buildbattleadmin")) {
         return;
       }
       event.setCancelled(true);
