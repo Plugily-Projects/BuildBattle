@@ -337,7 +337,7 @@ public class GameEvents implements Listener {
         return;
       }
       event.setCancelled(true);
-      event.getPlayer().sendMessage(ChatManager.colorMessage("In-Game.Only-Command-Ingame-Is-Leave"));
+      event.getPlayer().sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Only-Command-Ingame-Is-Leave"));
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }

@@ -248,7 +248,7 @@ public class MainCommand implements CommandExecutor {
           if (args.length == 2) {
             gameCommands.sendTopStatistics(sender, args[1]);
           } else {
-            sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Type-Name"));
+            sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Statistics.Type-Name"));
           }
           return true;
         } else if (args[0].equalsIgnoreCase("leave")) {

@@ -1,6 +1,6 @@
 /*
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -138,7 +138,7 @@ public class GameCommands extends MainCommand {
         }
       }
     } catch (IllegalArgumentException e) {
-      sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Invalid-Name"));
+      sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Statistics.Invalid-Name"));
     }
   }
 
