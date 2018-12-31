@@ -39,6 +39,10 @@ public class HeadsCategory {
     this.categoryID = categoryID;
   }
 
+  public String getCategoryID() {
+    return categoryID;
+  }
+
   public ItemStack getItemStack() {
     return itemStack;
   }
