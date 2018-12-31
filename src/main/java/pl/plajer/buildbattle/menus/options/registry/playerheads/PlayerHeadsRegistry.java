@@ -1,6 +1,6 @@
 /*
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,7 +56,7 @@ public class PlayerHeadsRegistry {
       if (!config.getBoolean(str + ".enabled", true)) {
         continue;
       }
-      HeadsCategory category = new HeadsCategory();
+      HeadsCategory category = new HeadsCategory(str);
 
       //todo test stream
       category.setItemStack(new ItemBuilder(Utils.getSkull(config.getString(str + ".texture")))
