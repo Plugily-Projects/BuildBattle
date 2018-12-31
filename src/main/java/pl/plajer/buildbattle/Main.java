@@ -1,6 +1,6 @@
 /*
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
+import pl.plajer.buildbattle.arena.vote.VoteEvents;
 import pl.plajer.buildbattle.arena.vote.VoteItems;
 import pl.plajer.buildbattle.commands.MainCommand;
 import pl.plajer.buildbattle.events.GameEvents;
@@ -226,6 +227,7 @@ public class Main extends JavaPlugin {
     signManager = new SignManager(this);
     specialItemsRegistry = new SpecialItemsRegistry(this);
     voteItems = new VoteItems();
+    new VoteEvents(this);
     optionsRegistry = new OptionsRegistry(this);
     new OptionsMenuHandler(this);
     new ParticleRefreshScheduler(this);
