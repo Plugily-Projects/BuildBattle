@@ -48,5 +48,4 @@ public class FileStats {
     user.setStat(stat, config.getInt(user.toPlayer().getUniqueId().toString() + "." + stat.getName(), 0));
   }
 
-
 }

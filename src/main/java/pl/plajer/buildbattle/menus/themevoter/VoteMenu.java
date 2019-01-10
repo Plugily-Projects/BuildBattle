@@ -88,7 +88,7 @@ public class VoteMenu {
         setItem(new ItemBuilder(new ItemStack(Material.SIGN))
             .name(ChatManager.colorMessage("Menus.Theme-Voting.Theme-Item-Name").replace("%theme%", randomThemes.get(i)))
             .lore(ChatManager.colorMessage("Menus.Theme-Voting.Theme-Item-Lore").replace("%theme%", randomThemes.get(i))
-                .replace("%percent%", String.valueOf("0.0")).replace("%time-left%", String.valueOf(arena.getTimer())).split(";"))
+                .replace("%percent%", "0.0").replace("%time-left%", String.valueOf(arena.getTimer())).split(";"))
             .build(), i * 9);
         setItem(new ItemBuilder(XMaterial.IRON_BARS.parseItem()).build(), (i * 9) + 1);
         for (int j = 0; j < 6; j++) {
@@ -156,7 +156,7 @@ public class VoteMenu {
         }
         i++;
       }
-      player.openInventory(inventory);
+      player.updateInventory();
     } catch (Exception ex) {
       new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
     }

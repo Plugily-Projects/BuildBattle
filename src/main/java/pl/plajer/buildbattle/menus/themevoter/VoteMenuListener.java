@@ -21,12 +21,14 @@ package pl.plajer.buildbattle.menus.themevoter;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.ConfigPreferences;
@@ -34,6 +36,7 @@ import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
+import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.user.User;
 import pl.plajerlair.core.services.exception.ReportedException;
@@ -50,6 +53,24 @@ public class VoteMenuListener implements Listener {
   public VoteMenuListener(Main plugin) {
     this.plugin = plugin;
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
+  }
+
+  @EventHandler
+  public void onInventoryClose(InventoryCloseEvent e) {
+    try {
+      Arena arena = ArenaRegistry.getArena((Player) e.getPlayer());
+      if (e.getInventory() == null || e.getInventory().getName() == null || arena == null) {
+        return;
+      }
+      if (e.getInventory().getName().equals(ChatManager.colorMessage("Menus.Theme-Voting.Inventory-Name"))) {
+        if (!arena.isThemeVoteTime() || arena.getArenaState() != ArenaState.IN_GAME) {
+          return;
+        }
+        Bukkit.getScheduler().runTask(plugin, () -> e.getPlayer().openInventory(arena.getVoteMenu().getInventory()));
+      }
+    } catch (Exception ex) {
+      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
+    }
   }
 
   @EventHandler
