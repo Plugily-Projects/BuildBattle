@@ -27,6 +27,7 @@ import org.bukkit.entity.Player;
 import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.user.data.FileStats;
 import pl.plajer.buildbattle.user.data.MySQLManager;
 import pl.plajerlair.core.debug.Debugger;
@@ -48,6 +49,19 @@ public class UserManager {
       mySQLManager = new MySQLManager(plugin);
     } else {
       fileStats = new FileStats(plugin);
+    }
+    loadStatsForPlayersOnline();
+  }
+
+  private void loadStatsForPlayersOnline() {
+    for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+        ArenaRegistry.getArenas().get(0).teleportToLobby(player);
+      }
+      User user = getUser(player.getUniqueId());
+      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+        loadStatistic(user, stat);
+      }
     }
   }
 
