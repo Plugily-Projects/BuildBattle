@@ -23,7 +23,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import pl.plajer.buildbattle.api.event.plot.BBPlotResetEvent;
 import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.plots.Plot;
@@ -53,7 +52,6 @@ public class PlotResetOption {
         }
         Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());
         plot.resetPlot();
-        BBPlotResetEvent event = new BBPlotResetEvent(arena, plot);
         e.getWhoClicked().sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Menus.Option-Menu.Items.Reset.Plot-Reset"));
       }
     });

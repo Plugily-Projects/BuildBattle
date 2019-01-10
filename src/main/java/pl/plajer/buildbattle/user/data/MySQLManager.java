@@ -84,8 +84,8 @@ public class MySQLManager {
     database.executeUpdate("INSERT INTO `buildbattlestats` (UUID,name,gamesplayed) VALUES ('" + player.getUniqueId().toString() + "','" + player.getName() + "',0)");
   }
 
-  public void saveStat(User user, StatsStorage.StatisticType stat) {
-    database.executeUpdate("UPDATE `buildbattlestats` SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.toPlayer().getUniqueId().toString() + "';");
+  public void saveStat(User user, Player player, StatsStorage.StatisticType stat) {
+    database.executeUpdate("UPDATE `buildbattlestats` SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + player.getUniqueId().toString() + "';");
   }
 
   public int getStat(User user, StatsStorage.StatisticType stat) {

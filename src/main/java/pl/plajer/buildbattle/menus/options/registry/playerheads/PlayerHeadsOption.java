@@ -1,6 +1,6 @@
 /*
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,17 +19,15 @@
 package pl.plajer.buildbattle.menus.options.registry.playerheads;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.menus.options.MenuOption;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
+import pl.plajer.buildbattle.utils.Utils;
 import pl.plajerlair.core.utils.ItemBuilder;
 import pl.plajerlair.core.utils.MinigameUtils;
-import pl.plajerlair.core.utils.XMaterial;
 
 /**
  * @author Plajer
@@ -38,16 +36,8 @@ import pl.plajerlair.core.utils.XMaterial;
  */
 public class PlayerHeadsOption {
 
-  //todo test
   public PlayerHeadsOption(OptionsRegistry registry) {
-    ItemStack headOption;
-    if (registry.getPlugin().is1_11_R1() || registry.getPlugin().is1_12_R1()) {
-      headOption = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
-    } else {
-      headOption = XMaterial.PLAYER_HEAD.parseItem();
-    }
-
-    registry.registerOption(new MenuOption(11, "PLAYER_HEADS", new ItemBuilder(headOption)
+    registry.registerOption(new MenuOption(11, "PLAYER_HEADS", new ItemBuilder(Utils.PLAYER_HEAD_ITEM.clone())
         .name(ChatManager.colorMessage("Menus.Option-Menu.Items.Players-Heads.Item-Name"))
         .lore(ChatManager.colorMessage("Menus.Option-Menu.Items.Players-Heads.Item-Lore"))
         .build(), ChatManager.colorMessage("Menus.Option-Menu.Items.Players-Heads.Inventory-Name")) {

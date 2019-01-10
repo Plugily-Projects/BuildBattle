@@ -1,6 +1,6 @@
 ## BuildBattle 3 changelog
 
-### 4.0.0 Beta pre (03.10.2018 - 31.12.2018)
+### 4.0.0 Beta pre (03.10.2018 - 04.01.2019)
 #### Pre 3:
    * Removed annoying "Please enable bStats" message
    * Code improvements
@@ -45,6 +45,7 @@
    * Now you can properly execute all /bb and /bba commands in-game while being non op player
    * Somehow plugin was lacking lobby events and you could lose food and health in lobby
    * Added chat events so in-game chat is no separated from server chat (I thought it's obvious)
+   * Now after selection of head in heads inventory won't be closed, user will close it when he wants
    
 
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)
