@@ -84,8 +84,8 @@ public class User {
     stats.put(stat, i);
 
     Bukkit.getScheduler().runTask(plugin, () -> {
-      BBPlayerStatisticChangeEvent bbPlayerStatisticChangeEvent = new BBPlayerStatisticChangeEvent(getArena(), toPlayer(), stat, i);
-      Bukkit.getPluginManager().callEvent(bbPlayerStatisticChangeEvent);
+      BBPlayerStatisticChangeEvent event = new BBPlayerStatisticChangeEvent(getArena(), toPlayer(), stat, i);
+      Bukkit.getPluginManager().callEvent(event);
     });
   }
 
@@ -93,8 +93,8 @@ public class User {
     stats.put(stat, getStat(stat) + i);
 
     Bukkit.getScheduler().runTask(plugin, () -> {
-      BBPlayerStatisticChangeEvent bbPlayerStatisticChangeEvent = new BBPlayerStatisticChangeEvent(getArena(), toPlayer(), stat, getStat(stat));
-      Bukkit.getPluginManager().callEvent(bbPlayerStatisticChangeEvent);
+      BBPlayerStatisticChangeEvent event = new BBPlayerStatisticChangeEvent(getArena(), toPlayer(), stat, getStat(stat));
+      Bukkit.getPluginManager().callEvent(event);
     });
   }
 

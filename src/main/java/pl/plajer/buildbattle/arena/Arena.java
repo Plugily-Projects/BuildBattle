@@ -170,6 +170,10 @@ public class Arena extends BukkitRunnable {
     return voteMenu.getVotePoll();
   }
 
+  public VoteMenu getVoteMenu() {
+    return voteMenu;
+  }
+
   /**
    * Is voting time in game?
    *
@@ -355,6 +359,9 @@ public class Arena extends BukkitRunnable {
           if (!themeTimerSet) {
             setTimer(plugin.getConfigPreferences().getTimer(ConfigPreferences.TimerType.THEME_VOTE, this));
             themeTimerSet = true;
+            for (Player p : getPlayers()) {
+              p.openInventory(voteMenu.getInventory());
+            }
           }
           for (Player p : getPlayers()) {
             voteMenu.updateInventory(p);
