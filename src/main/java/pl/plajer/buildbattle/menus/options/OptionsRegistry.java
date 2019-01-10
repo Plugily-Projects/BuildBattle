@@ -94,6 +94,19 @@ public class OptionsRegistry {
   }
 
   /**
+   * Unregisters menu option that available in options menu
+   *
+   * @param option option to unregister
+   * @throws IllegalArgumentException if option doesn't exist
+   */
+  public void unregisterOption(MenuOption option) {
+    if (!registeredOptions.contains(option)) {
+      throw new IllegalArgumentException("Cannot remove non existing option!");
+    }
+    registeredOptions.remove(option);
+  }
+
+  /**
    * Defines new size of options inventory
    *
    * @param size size to set

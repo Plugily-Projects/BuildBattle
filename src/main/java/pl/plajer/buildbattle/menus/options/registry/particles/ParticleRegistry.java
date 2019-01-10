@@ -1,6 +1,6 @@
 /*
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,6 +51,7 @@ import pl.plajerlair.core.utils.XMaterial;
  */
 public class ParticleRegistry {
 
+  private Inventory inventory;
   private List<String> blackListedParticles = Arrays.asList("BLOCK_CRACK", "ITEM_CRACK", "ITEM_TAKE", "BLOCK_DUST", "MOB_APPEARANCE", "FOOTSTEP", "REDSTONE");
   private Set<ParticleItem> registeredParticles = new HashSet<>();
   private Main plugin;
@@ -59,6 +60,7 @@ public class ParticleRegistry {
     this.plugin = registry.getPlugin();
     updateParticlesFile();
     registerParticles();
+    registerInventory();
   }
 
   private void registerParticles() {
@@ -114,7 +116,7 @@ public class ParticleRegistry {
     ConfigUtils.saveConfig(plugin, config, "particles");
   }
 
-  public Inventory getInventory() {
+  private void registerInventory() {
     Inventory inv = Bukkit.createInventory(null, MinigameUtils.serializeInt(registeredParticles.size()),
         ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.Inventory-Name"));
     for (ParticleItem item : registeredParticles) {
@@ -124,7 +126,15 @@ public class ParticleRegistry {
         .name(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))
         .lore(Collections.singletonList(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Lore")))
         .build());
-    return inv;
+    inventory = inv;
+  }
+
+  public Inventory getInventory() {
+    return inventory;
+  }
+
+  public void setInventory(Inventory inventory) {
+    this.inventory = inventory;
   }
 
   @Nullable

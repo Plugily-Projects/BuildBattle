@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
@@ -70,8 +71,11 @@ public class UserManager {
     if (!stat.isPersistent()) {
       return;
     }
+    Player player = user.toPlayer().getPlayer();
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> mySQLManager.saveStat(user, stat));
+      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+        mySQLManager.saveStat(user, player, stat);
+      });
       return;
     }
     fileStats.saveStat(user, stat);

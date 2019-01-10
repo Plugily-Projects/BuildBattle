@@ -854,11 +854,12 @@ public class Arena extends BukkitRunnable {
       return;
     }
     GameScoreboard scoreboard;
+    String title = ChatManager.colorMessage("Scoreboard.Title");
     for (Player p : getPlayers()) {
       if (p == null) {
         continue;
       }
-      scoreboard = new GameScoreboard("PL_BB3", "BB_CR", ChatManager.colorMessage("Scoreboard.Title"));
+      scoreboard = new GameScoreboard("PL_BB", "BB_CR", title);
       List<String> lines = scoreboardContents.get(getArenaState().getFormattedName());
       if (getArenaState() == ArenaState.IN_GAME || getArenaState() == ArenaState.ENDING) {
         lines = scoreboardContents.get(getArenaState().getFormattedName() + "_" + getArenaType().getPrefix());

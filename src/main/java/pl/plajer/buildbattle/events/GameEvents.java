@@ -1,6 +1,6 @@
 /*
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -289,8 +289,11 @@ public class GameEvents implements Listener {
       return;
     }
     if (plugin.getOptionsRegistry().getPlayerHeadsRegistry().getMenuNames().contains(e.getInventory().getName())) {
+      if (e.getCurrentItem().getType() != Utils.PLAYER_HEAD_ITEM.getType()) {
+        return;
+      }
       e.getWhoClicked().getInventory().addItem(e.getCurrentItem().clone());
-      e.getWhoClicked().closeInventory();
+      e.setCancelled(true);
     } else if (e.getInventory().getName().equals(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))) {
       ParticleRemoveMenu.onClick((Player) e.getWhoClicked(), e.getInventory(), e.getCurrentItem(),
           arena.getPlotManager().getPlot((Player) e.getWhoClicked()));
