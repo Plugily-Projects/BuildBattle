@@ -1,6 +1,6 @@
 /*
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ import java.util.Properties;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.handlers.ChatManager;
@@ -53,12 +54,14 @@ public class LanguageManager {
   private static Main plugin;
   private static Locale pluginLocale;
   private static Properties properties = new Properties();
+  private static FileConfiguration languageConfig;
 
   public static void init(Main plugin) {
     LanguageManager.plugin = plugin;
     if (!new File(plugin.getDataFolder() + File.separator + "language.yml").exists()) {
       plugin.saveResource("language.yml", false);
     }
+    languageConfig = ConfigUtils.getConfig(plugin, "language");
     registerLocales();
     setupLocale();
     //we will wait until server is loaded, we won't soft depend those plugins
@@ -201,7 +204,7 @@ public class LanguageManager {
 
   public static List<String> getLanguageList(String path) {
     if (isDefaultLanguageUsed()) {
-      return ConfigUtils.getConfig(plugin, "language").getStringList(path);
+      return languageConfig.getStringList(path);
     } else {
       return Arrays.asList(ChatManager.colorMessage(path).split(";"));
     }
@@ -209,7 +212,7 @@ public class LanguageManager {
 
   public static String getLanguageMessage(String message) {
     if (isDefaultLanguageUsed()) {
-      return ConfigUtils.getConfig(plugin, "language").getString(message, "ERR_MESSAGE_NOT_FOUND");
+      return languageConfig.getString(message, "ERR_MESSAGE_NOT_FOUND");
     }
     try {
       return properties.getProperty(ChatColor.translateAlternateColorCodes('&', message));
