@@ -1,6 +1,6 @@
 ## BuildBattle 3 changelog
 
-### 4.0.0 Beta pre (03.10.2018 - 04.01.2019)
+### 4.0.0 Beta pre (03.10.2018 - 10.01.2019)
 #### Pre 3:
    * Removed annoying "Please enable bStats" message
    * Code improvements
@@ -46,6 +46,7 @@
    * Somehow plugin was lacking lobby events and you could lose food and health in lobby
    * Added chat events so in-game chat is no separated from server chat (I thought it's obvious)
    * Now after selection of head in heads inventory won't be closed, user will close it when he wants
+   * Now language manager will use cached language.yml file so plugin will perform bit better
    
 
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)
