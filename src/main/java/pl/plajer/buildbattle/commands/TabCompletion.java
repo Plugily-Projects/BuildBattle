@@ -1,6 +1,6 @@
 /*
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,18 +19,18 @@
 package pl.plajer.buildbattle.commands;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import pl.plajer.buildbattle.ConfigPreferences;
-import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
+import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
+import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
 
 /**
  * @author Plajer
@@ -39,10 +39,10 @@ import pl.plajer.buildbattle.arena.ArenaRegistry;
  */
 public class TabCompletion implements TabCompleter {
 
-  private Main plugin;
+  private ArgumentsRegistry registry;
 
-  public TabCompletion(Main plugin) {
-    this.plugin = plugin;
+  public TabCompletion(ArgumentsRegistry registry) {
+    this.registry = registry;
   }
 
   @Override
@@ -51,10 +51,10 @@ public class TabCompletion implements TabCompleter {
       return null;
     }
     if (cmd.getName().equalsIgnoreCase("buildbattleadmin") && args.length == 1) {
-      return Arrays.asList("addplot", "removeplot", "addnpc", "stop", "list", "forcestart", "reload", "delete", "addvotes", "setvotes");
+      return registry.getMappedArguments().get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName).collect(Collectors.toList());
     }
     if (cmd.getName().equalsIgnoreCase("buildbattle")) {
-      if (args.length == 0) {
+      if (args.length == 2 && args[0].equalsIgnoreCase("join")) {
         List<String> arenaIds = new ArrayList<>();
         for (Arena arena : ArenaRegistry.getArenas()) {
           arenaIds.add(arena.getID());
@@ -62,11 +62,7 @@ public class TabCompletion implements TabCompleter {
         return arenaIds;
       }
       if (args.length == 1) {
-        if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-          return Arrays.asList("join", "leave", "stats", "top", "create", "randomjoin");
-        } else {
-          return Arrays.asList("join", "leave", "stats", "top", "create");
-        }
+        return registry.getMappedArguments().get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName).collect(Collectors.toList());
       }
     }
     return null;

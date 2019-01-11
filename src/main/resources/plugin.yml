@@ -26,6 +26,7 @@ permissions:
       buildbattle.admin.addsign: true
       buildbattle.admin.reload: true
       buildbattle.admin.forcestart: true
+      buildbattle.admin.forcestart.theme: true
       buildbattle.admin.addplot: true
       buildbattle.admin.removeplot: true
       buildbattle.admin.plotwand: true

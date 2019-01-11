@@ -1,6 +1,6 @@
 /*
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
 
 package pl.plajer.buildbattle.handlers.setup;
 
+import java.util.Random;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -30,6 +32,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.Arena;
+import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.ItemBuilder;
 import pl.plajerlair.core.utils.LocationUtils;
@@ -177,6 +180,24 @@ public class SetupInventory {
 
   public void openInventory(Player player) {
     player.openInventory(inventory);
+  }
+
+  public static void sendProTip(Player p) {
+    int rand = new Random().nextInt(3 + 1);
+    switch (rand) {
+      case 0:
+        p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Plajer-Lair/BuildBattle"));
+        break;
+      case 1:
+        p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7Help us translating plugin to your language here: https://translate.plajer.xyz"));
+        break;
+      case 2:
+        p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7Download some free maps! Get them here: https://wiki.plajer.xyz/minecraft/buildbattle/free_maps.php"));
+        break;
+      case 3:
+        p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7You can use PlaceholderAPI placeholders from our plugin! Check: https://wiki.plajer.xyz/minecraft/buildbattle/papi_placeholders.php"));
+        break;
+    }
   }
 
   public enum ClickPosition {
