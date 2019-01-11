@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle.arena.plots;
+package pl.plajer.buildbattle.arena.managers.plots;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +31,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.event.plot.BBPlayerPlotReceiveEvent;
-import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaManager;
+import pl.plajer.buildbattle.arena.impl.Arena;
 import pl.plajer.buildbattle.utils.MessageUtils;
 import pl.plajerlair.core.services.exception.ReportedException;
 

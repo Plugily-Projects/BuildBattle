@@ -1,6 +1,6 @@
 /*
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,9 +22,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.plots.Plot;
+import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.managers.plots.Plot;
 
 /**
  * Created by Tom on 23/08/2015.

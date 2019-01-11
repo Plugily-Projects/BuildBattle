@@ -26,7 +26,7 @@ import java.util.Map;
 
 import org.bukkit.entity.Player;
 
-import pl.plajer.buildbattle.arena.Arena;
+import pl.plajer.buildbattle.arena.impl.Arena;
 
 /**
  * @author Plajer

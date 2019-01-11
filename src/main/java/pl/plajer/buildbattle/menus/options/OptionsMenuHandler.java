@@ -24,9 +24,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
+import pl.plajer.buildbattle.arena.impl.Arena;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.utils.Utils;
 import pl.plajerlair.core.services.exception.ReportedException;

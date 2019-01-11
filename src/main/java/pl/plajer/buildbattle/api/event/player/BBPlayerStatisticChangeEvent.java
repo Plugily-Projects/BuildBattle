@@ -25,7 +25,7 @@ import org.bukkit.event.HandlerList;
 
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.api.event.BBEvent;
-import pl.plajer.buildbattle.arena.Arena;
+import pl.plajer.buildbattle.arena.impl.Arena;
 
 /**
  * @author Plajer

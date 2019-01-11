@@ -27,7 +27,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
-import pl.plajer.buildbattle.arena.Arena;
+import pl.plajer.buildbattle.arena.impl.Arena;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -38,6 +38,7 @@ public class ConfigPreferences {
   private Map<String, List<String>> gameThemes = new HashMap<>();
   private List<String> endGameCommands = new ArrayList<>();
   private List<String> whitelistedCommands = new ArrayList<>();
+  private List<Material> itemBlacklist = new ArrayList<>();
   private Map<Option, Boolean> options = new HashMap<>();
 
   public ConfigPreferences(Main plugin) {
@@ -93,10 +94,14 @@ public class ConfigPreferences {
     return endGameCommands;
   }
 
+  public List<Material> getItemBlacklist() {
+    return itemBlacklist;
+  }
+
   private void loadBlackList() {
     for (String item : plugin.getConfig().getStringList("Blacklisted-Item-Names")) {
       try {
-        Arena.addToBlackList(Material.valueOf(item.toUpperCase()));
+        itemBlacklist.add((Material.matchMaterial(item)));
       } catch (IllegalArgumentException ex) {
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Invalid black listed item! " + item + " doesn't exist, are you sure it's properly named?");
       }

@@ -22,10 +22,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle.ConfigPreferences;
-import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
+import pl.plajer.buildbattle.arena.impl.Arena;
 import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
 import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
 import pl.plajer.buildbattle.handlers.ChatManager;

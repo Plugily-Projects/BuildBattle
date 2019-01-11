@@ -30,7 +30,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.arena.plots.Plot;
+import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.utils.Cuboid;
 import pl.plajerlair.core.debug.Debugger;
 import pl.plajerlair.core.debug.LogLevel;

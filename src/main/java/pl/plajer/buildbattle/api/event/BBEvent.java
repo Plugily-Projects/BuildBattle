@@ -20,7 +20,7 @@ package pl.plajer.buildbattle.api.event;
 
 import org.bukkit.event.Event;
 
-import pl.plajer.buildbattle.arena.Arena;
+import pl.plajer.buildbattle.arena.impl.Arena;
 
 /**
  * Represents BuildBattle game related events.
