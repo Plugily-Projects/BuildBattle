@@ -55,11 +55,11 @@ import org.bukkit.inventory.ItemStack;
 import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
-import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
-import pl.plajer.buildbattle.arena.plots.Plot;
+import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.items.SpecialItem;
 import pl.plajer.buildbattle.menus.options.registry.particles.ParticleRemoveMenu;
@@ -474,7 +474,7 @@ public class GameEvents implements Listener {
         event.setCancelled(true);
         return;
       }
-      if (arena.getBlacklistedBlocks().contains(event.getBlock().getType())) {
+      if (plugin.getConfigPreferences().getItemBlacklist().contains(event.getBlock().getType())) {
         event.setCancelled(true);
         return;
       }
@@ -505,7 +505,7 @@ public class GameEvents implements Listener {
         event.setCancelled(true);
         return;
       }
-      if (arena.getBlacklistedBlocks().contains(event.getBlock().getType())) {
+      if (plugin.getConfigPreferences().getItemBlacklist().contains(event.getBlock().getType())) {
         event.setCancelled(true);
         return;
       }
@@ -566,7 +566,7 @@ public class GameEvents implements Listener {
         if (!e.getPlayer().getInventory().getItemInMainHand().getType().isBlock()) {
           return;
         }
-        if (arena.getBlacklistedBlocks().contains(e.getPlayer().getInventory().getItemInMainHand().getType())) {
+        if (plugin.getConfigPreferences().getItemBlacklist().contains(e.getPlayer().getInventory().getItemInMainHand().getType())) {
           return;
         }
         arena.getPlotManager().getPlot(e.getPlayer()).changeFloor(e.getPlayer().getInventory().getItemInMainHand().getType(), e.getPlayer().getInventory().getItemInMainHand().getData().getData());

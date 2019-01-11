@@ -34,6 +34,7 @@ import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.api.event.game.BBGameEndEvent;
 import pl.plajer.buildbattle.api.event.game.BBGameJoinEvent;
 import pl.plajer.buildbattle.api.event.game.BBGameLeaveEvent;
+import pl.plajer.buildbattle.arena.impl.Arena;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.PermissionManager;
 import pl.plajer.buildbattle.handlers.items.SpecialItem;

@@ -37,8 +37,8 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
+import pl.plajer.buildbattle.arena.impl.Arena;
 import pl.plajer.buildbattle.commands.TabCompletion;
 import pl.plajer.buildbattle.commands.arguments.admin.ListArenasArgument;
 import pl.plajer.buildbattle.commands.arguments.admin.arena.DeleteArgument;

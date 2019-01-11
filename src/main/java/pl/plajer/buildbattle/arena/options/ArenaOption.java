@@ -16,42 +16,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle.api.event.game;
-
-import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
-
-import pl.plajer.buildbattle.api.event.BBEvent;
-import pl.plajer.buildbattle.arena.impl.Arena;
+package pl.plajer.buildbattle.arena.options;
 
 /**
- * Called when player leaves arena
+ * @author Plajer
+ * <p>
+ * Created at 11.01.2019
  */
-public class BBGameLeaveEvent extends BBEvent {
-
-  private static final HandlerList handlers = new HandlerList();
-  private Player player;
-
-  public BBGameLeaveEvent(Player player, Arena arena) {
-    super(arena);
-    this.player = player;
-  }
-
-  public static HandlerList getHandlerList() {
-    return handlers;
-  }
-
-  @Override
-  public HandlerList getHandlers() {
-    return handlers;
-  }
-
+public enum ArenaOption {
   /**
-   * Get player associated with this event
-   *
-   * @return player
+   * Current arena timer, ex. 30 seconds before game starts.
    */
-  public Player getPlayer() {
-    return player;
+  TIMER(0),
+  /**
+   * Minimum players in arena needed to start.
+   */
+  MINIMUM_PLAYERS(2),
+  /**
+   * Maximum players arena can hold, users with full games permission can bypass this!
+   */
+  MAXIMUM_PLAYERS(10),
+  /**
+   * Value for checking whether player is in plot or not, otherwise teleport him back.
+   * <p>
+   * Each time values reach 1 check will be run.
+   */
+  IN_PLOT_CHECKER(0);
+
+  private int defaultValue;
+
+  ArenaOption(int defaultValue) {
+    this.defaultValue = defaultValue;
   }
+
+  public int getDefaultValue() {
+    return defaultValue;
+  }
+
 }

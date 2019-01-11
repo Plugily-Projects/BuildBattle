@@ -21,8 +21,8 @@ package pl.plajer.buildbattle.api.event.plot;
 import org.bukkit.event.HandlerList;
 
 import pl.plajer.buildbattle.api.event.BBEvent;
-import pl.plajer.buildbattle.arena.Arena;
-import pl.plajer.buildbattle.arena.plots.Plot;
+import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.managers.plots.Plot;
 
 /**
  * @author Plajer

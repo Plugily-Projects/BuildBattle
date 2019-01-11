@@ -21,7 +21,7 @@ package pl.plajer.buildbattle.api.event.game;
 import org.bukkit.event.HandlerList;
 
 import pl.plajer.buildbattle.api.event.BBEvent;
-import pl.plajer.buildbattle.arena.Arena;
+import pl.plajer.buildbattle.arena.impl.Arena;
 
 /**
  * Called when game is ended

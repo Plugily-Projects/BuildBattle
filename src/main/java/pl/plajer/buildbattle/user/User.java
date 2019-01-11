@@ -30,9 +30,9 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.api.event.player.BBPlayerStatisticChangeEvent;
-import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.plots.Plot;
+import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.managers.plots.Plot;
 
 /**
  * Created by Tom on 27/07/2014.

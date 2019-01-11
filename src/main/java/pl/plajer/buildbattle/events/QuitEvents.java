@@ -25,9 +25,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
-import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
+import pl.plajer.buildbattle.arena.impl.Arena;
 import pl.plajer.buildbattle.user.User;
 import pl.plajerlair.core.services.exception.ReportedException;
 

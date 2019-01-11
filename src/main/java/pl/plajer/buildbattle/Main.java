@@ -30,9 +30,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.api.StatsStorage;
-import pl.plajer.buildbattle.arena.Arena;
 import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
+import pl.plajer.buildbattle.arena.impl.Arena;
 import pl.plajer.buildbattle.arena.vote.VoteEvents;
 import pl.plajer.buildbattle.arena.vote.VoteItems;
 import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
