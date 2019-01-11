@@ -24,6 +24,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -31,8 +37,30 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle.Main;
+import pl.plajer.buildbattle.arena.Arena;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
+import pl.plajer.buildbattle.commands.TabCompletion;
+import pl.plajer.buildbattle.commands.arguments.admin.ListArenasArgument;
+import pl.plajer.buildbattle.commands.arguments.admin.arena.DeleteArgument;
+import pl.plajer.buildbattle.commands.arguments.admin.arena.ForceStartArguments;
+import pl.plajer.buildbattle.commands.arguments.admin.arena.ReloadArgument;
+import pl.plajer.buildbattle.commands.arguments.admin.arena.SetThemeArgument;
+import pl.plajer.buildbattle.commands.arguments.admin.arena.StopArgument;
+import pl.plajer.buildbattle.commands.arguments.admin.plot.AddPlotArgument;
+import pl.plajer.buildbattle.commands.arguments.admin.plot.PlotWandArgument;
+import pl.plajer.buildbattle.commands.arguments.admin.plot.RemovePlotArgument;
+import pl.plajer.buildbattle.commands.arguments.admin.votes.AddVotesArgument;
+import pl.plajer.buildbattle.commands.arguments.admin.votes.SetVotesArgument;
 import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
+import pl.plajer.buildbattle.commands.arguments.data.LabelData;
+import pl.plajer.buildbattle.commands.arguments.data.LabeledCommandArgument;
+import pl.plajer.buildbattle.commands.arguments.game.CreateArgument;
+import pl.plajer.buildbattle.commands.arguments.game.JoinArguments;
+import pl.plajer.buildbattle.commands.arguments.game.LeaderboardArgument;
+import pl.plajer.buildbattle.commands.arguments.game.LeaveArgument;
+import pl.plajer.buildbattle.commands.arguments.game.StatsArgument;
 import pl.plajer.buildbattle.handlers.ChatManager;
+import pl.plajer.buildbattle.handlers.setup.SetupInventory;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.StringMatcher;
 
@@ -46,13 +74,103 @@ public class ArgumentsRegistry implements CommandExecutor {
   private Main plugin;
   private Map<String, List<CommandArgument>> mappedArguments = new HashMap<>();
 
-  //todo help commands
-  //todo add rest of command arguments
+  public ArgumentsRegistry(Main plugin) {
+    this.plugin = plugin;
+    TabCompletion completion = new TabCompletion(this);
+    plugin.getCommand("buildbattle").setExecutor(this);
+    plugin.getCommand("buildbattle").setTabCompleter(completion);
+    plugin.getCommand("buildbattleadmin").setExecutor(this);
+    plugin.getCommand("buildbattleadmin").setTabCompleter(completion);
+
+    //register Build Battle basic arguments
+    new CreateArgument(this);
+    new JoinArguments(this);
+    new LeaderboardArgument(this);
+    new LeaveArgument(this);
+    new StatsArgument(this);
+
+    //register Build Battle admin arguments
+    //arena related arguments
+    new DeleteArgument(this);
+    new ForceStartArguments(this);
+    new ReloadArgument(this);
+    new SetThemeArgument(this);
+    new StopArgument(this);
+
+    //player super votes related arguments
+    new AddVotesArgument(this);
+    new SetVotesArgument(this);
+
+    //other admin related arguments
+    new AddPlotArgument(this);
+    new PlotWandArgument(this);
+    new RemovePlotArgument(this);
+    new ListArenasArgument(this);
+  }
+
   @Override
   public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
     try {
       for (String mainCommand : mappedArguments.keySet()) {
         if (cmd.getName().equalsIgnoreCase(mainCommand)) {
+          if (cmd.getName().equalsIgnoreCase("buildbattle")) {
+            if (args.length == 0) {
+              sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Header"));
+              sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Description"));
+              if (sender.hasPermission("buildbattle.admin")) {
+                sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Admin-Bonus-Description"));
+              }
+              sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Footer"));
+              return true;
+            }
+            if (args.length > 1 && args[1].equalsIgnoreCase("edit")) {
+              if (args[1].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("create")) {
+                if (!checkSenderIsExecutorType(sender, CommandArgument.ExecutorType.PLAYER) || !hasPermission(sender, "buildbattle.admin.create")) {
+                  return true;
+                }
+                Arena arena = ArenaRegistry.getArena(args[0]);
+                if (arena == null) {
+                  sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+                  return true;
+                }
+
+                SetupInventory.sendProTip((Player) sender);
+                new SetupInventory(arena).openInventory((Player) sender);
+                return true;
+              }
+            }
+          }
+          if (cmd.getName().equalsIgnoreCase("buildbattleadmin")) {
+            if (args.length == 0) {
+              if (!sender.hasPermission("buildbattle.admin")) {
+                return true;
+              }
+              sender.sendMessage(ChatColor.GREEN + "  " + ChatColor.BOLD + "Build Battle " + ChatColor.GRAY + plugin.getDescription().getVersion());
+              sender.sendMessage(ChatColor.RED + " []" + ChatColor.GRAY + " = optional  " + ChatColor.GOLD + "<>" + ChatColor.GRAY + " = required");
+              if (sender instanceof Player) {
+                sender.sendMessage(ChatColor.GRAY + "Hover command to see more, click command to suggest it.");
+              }
+              List<LabelData> data = mappedArguments.get("buildbattleadmin").stream().filter(arg -> arg instanceof LabeledCommandArgument)
+                  .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList());
+              data.add(new LabelData("/bb &6<arena>&f edit", "/bb <arena> edit",
+                  "&7Edit existing arena\n&6Permission: &7buildbattle.admin.edit"));
+              data.addAll(mappedArguments.get("buildbattle").stream().filter(arg -> arg instanceof LabeledCommandArgument)
+                  .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList()));
+              for (LabelData labelData : data) {
+                TextComponent component;
+                if (sender instanceof Player) {
+                  component = new TextComponent(labelData.getText());
+                } else {
+                  //more descriptive for console - split at \n to show only basic description
+                  component = new TextComponent(labelData.getText() + " - " + labelData.getDescription().split("\n")[0]);
+                }
+                component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, labelData.getCommand()));
+                component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(labelData.getDescription()).create()));
+                sender.spigot().sendMessage(component);
+              }
+              return true;
+            }
+          }
           for (CommandArgument argument : mappedArguments.get(mainCommand)) {
             if (argument.getArgumentName().equalsIgnoreCase(args[0])) {
               boolean hasPerm = false;
@@ -118,6 +236,14 @@ public class ArgumentsRegistry implements CommandExecutor {
     List<CommandArgument> args = mappedArguments.getOrDefault(mainCommand, new ArrayList<>());
     args.add(argument);
     mappedArguments.put(mainCommand, args);
+  }
+
+  public boolean hasPermission(CommandSender sender, String perm) {
+    if (sender.hasPermission(perm)) {
+      return true;
+    }
+    sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.No-Permission"));
+    return false;
   }
 
   public Map<String, List<CommandArgument>> getMappedArguments() {

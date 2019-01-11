@@ -171,7 +171,7 @@ public class ArenaManager {
       }
       p.setFireTicks(0);
       if (a.getPlayers().size() == 0 && a.getArenaState() != ArenaState.WAITING_FOR_PLAYERS) {
-        a.setGameState(ArenaState.RESTARTING);
+        a.setArenaState(ArenaState.RESTARTING);
         a.setTimer(0);
       }
       p.setGameMode(GameMode.SURVIVAL);
@@ -222,7 +222,7 @@ public class ArenaManager {
           }
         }
       }
-      arena.setGameState(ArenaState.ENDING);
+      arena.setArenaState(ArenaState.ENDING);
       arena.setTimer(10);
       arena.setVoting(false);
       Debugger.debug(LogLevel.INFO, "Game stop event finish, arena " + arena.getID());

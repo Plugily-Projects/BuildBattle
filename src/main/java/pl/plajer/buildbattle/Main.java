@@ -35,7 +35,7 @@ import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.vote.VoteEvents;
 import pl.plajer.buildbattle.arena.vote.VoteItems;
-import pl.plajer.buildbattle.commands.MainCommand;
+import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
 import pl.plajer.buildbattle.events.ChatEvents;
 import pl.plajer.buildbattle.events.GameEvents;
 import pl.plajer.buildbattle.events.JoinEvents;
@@ -222,7 +222,7 @@ public class Main extends JavaPlugin {
     new ChatManager(ChatManager.colorMessage("In-Game.Plugin-Prefix"));
     PermissionManager.init();
     new SetupInventoryEvents(this);
-    new MainCommand(this);
+    new ArgumentsRegistry(this);
     ArenaRegistry.registerArenas();
     //load signs after arenas
     signManager = new SignManager(this);

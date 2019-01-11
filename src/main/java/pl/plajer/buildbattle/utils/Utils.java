@@ -103,6 +103,19 @@ public class Utils {
     return sortedMap;
   }
 
+  /**
+   * @param s string to check whether is integer number
+   * @return true if it is, false otherwise, like 12a, 12.03 33333333333333 etc.
+   */
+  public static boolean isInteger(String s) {
+    try {
+      Integer.parseInt(s);
+      return true;
+    } catch (NumberFormatException ex) {
+      return false;
+    }
+  }
+
   public static void sendPacket(Player player, Object packet) {
     try {
       Object handle = player.getClass().getMethod("getHandle").invoke(player);

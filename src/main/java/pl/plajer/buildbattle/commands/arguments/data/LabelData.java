@@ -16,23 +16,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle.commands;
+package pl.plajer.buildbattle.commands.arguments.data;
+
+import org.bukkit.plugin.java.JavaPlugin;
+
+import pl.plajer.buildbattle.Main;
+import pl.plajer.buildbattle.handlers.ChatManager;
 
 /**
  * @author Plajer
  * <p>
- * Created at 08.06.2018
+ * Created at 11.01.2019
  */
-public class CommandData {
+public class LabelData {
 
+  private Main plugin = JavaPlugin.getPlugin(Main.class);
   private String text;
   private String command;
   private String description;
 
-  public CommandData(String text, String command, String description) {
-    this.text = text;
+  public LabelData(String text, String command, String description) {
+    this.text = ChatManager.colorRawMessage(text);
     this.command = command;
-    this.description = description;
+    this.description = ChatManager.colorRawMessage(description);
   }
 
   public String getText() {
@@ -43,7 +49,16 @@ public class CommandData {
     return command;
   }
 
+  public void setCommand(String command) {
+    this.command = command;
+  }
+
   public String getDescription() {
     return description;
   }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
 }

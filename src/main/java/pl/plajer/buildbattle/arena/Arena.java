@@ -299,7 +299,7 @@ public class Arena extends BukkitRunnable {
           }
         } else {
           ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
-          setGameState(ArenaState.STARTING);
+          setArenaState(ArenaState.STARTING);
           Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
           setTimer(plugin.getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
           this.showPlayers();
@@ -313,7 +313,7 @@ public class Arena extends BukkitRunnable {
         }
         if (getPlayers().size() < getMinimumPlayers() && !forceStart) {
           ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", String.valueOf(getMinimumPlayers())));
-          setGameState(ArenaState.WAITING_FOR_PLAYERS);
+          setArenaState(ArenaState.WAITING_FOR_PLAYERS);
           Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
           setTimer(plugin.getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
           for (Player player : getPlayers()) {
@@ -327,7 +327,7 @@ public class Arena extends BukkitRunnable {
           if (!getPlotManager().isPlotsCleared()) {
             getPlotManager().resetQueuedPlots();
           }
-          setGameState(ArenaState.IN_GAME);
+          setArenaState(ArenaState.IN_GAME);
           getPlotManager().distributePlots();
           getPlotManager().teleportToPlots();
           setTimer(plugin.getConfigPreferences().getTimer(ConfigPreferences.TimerType.THEME_VOTE, this));
@@ -388,7 +388,7 @@ public class Arena extends BukkitRunnable {
               && getPlotManager().getPlot(((Player) getPlayers().toArray()[0]).getUniqueId()).getOwners().contains(((Player) getPlayers().toArray()[1]).getUniqueId()))) {
             String message = ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Only-You-Playing");
             ChatManager.broadcast(this, message);
-            setGameState(ArenaState.ENDING);
+            setArenaState(ArenaState.ENDING);
             Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
             setTimer(10);
           }
@@ -470,7 +470,7 @@ public class Arena extends BukkitRunnable {
               }
               player.sendTitle(winner, null, 5, 35, 5);
             }
-            this.setGameState(ArenaState.ENDING);
+            this.setArenaState(ArenaState.ENDING);
             Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
             setTimer(10);
           }
@@ -511,7 +511,7 @@ public class Arena extends BukkitRunnable {
           }
           giveRewards();
           clearPlayers();
-          setGameState(ArenaState.RESTARTING);
+          setArenaState(ArenaState.RESTARTING);
           if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
             for (Player player : plugin.getServer().getOnlinePlayers()) {
               this.addPlayer(player);
@@ -527,7 +527,7 @@ public class Arena extends BukkitRunnable {
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && plugin.getConfig().getBoolean("Bungee-Shutdown-On-End", false)) {
           plugin.getServer().shutdown();
         }
-        setGameState(ArenaState.WAITING_FOR_PLAYERS);
+        setArenaState(ArenaState.WAITING_FOR_PLAYERS);
         topList.clear();
         themeTimerSet = false;
         setThemeVoteTime(true);
@@ -1229,7 +1229,7 @@ public class Arena extends BukkitRunnable {
    * @param gameState arena state to change
    * @see BBGameChangeStateEvent
    */
-  public void setGameState(ArenaState gameState) {
+  public void setArenaState(ArenaState gameState) {
     if (getArenaState() != null) {
       BBGameChangeStateEvent gameChangeStateEvent = new BBGameChangeStateEvent(gameState, this, getArenaState());
       plugin.getServer().getPluginManager().callEvent(gameChangeStateEvent);
