@@ -49,6 +49,8 @@
    * Now language manager will use cached language.yml file so plugin will perform bit better
    * Theme vote GUI is now properly listening for click events, you don't need to click few times to make it vote
    * Added useSSL=false argument in mysql.yml address to avoid mysql warnings in console (not harmful)
+   * Whole plugin runs now definitely faster and code execution time and plugin load decreases in timings
+   * Setup GUI option for setting min/max players amount now runs smoothly
    
 
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)

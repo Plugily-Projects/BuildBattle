@@ -52,7 +52,6 @@ import pl.plajerlair.core.utils.LocationUtils;
 /**
  * Created by Tom on 15/06/2015.
  */
-//todo recodeee
 public class SetupInventoryEvents implements Listener {
 
   private Main plugin;
@@ -105,9 +104,13 @@ public class SetupInventoryEvents implements Listener {
         return;
       }
 
+      SetupInventory.ClickPosition slot = SetupInventory.ClickPosition.getByPosition(e.getRawSlot());
+
       //do not close inventory nor cancel event when setting arena name via name tag
       if (e.getCurrentItem().getType() != Material.NAME_TAG) {
-        player.closeInventory();
+        if (!(slot == SetupInventory.ClickPosition.SET_MINIMUM_PLAYERS || slot == SetupInventory.ClickPosition.SET_MAXIMUM_PLAYERS)) {
+          player.closeInventory();
+        }
         e.setCancelled(true);
       }
 
@@ -119,7 +122,7 @@ public class SetupInventoryEvents implements Listener {
       String locationString = player.getLocation().getWorld().getName() + "," + player.getLocation().getX() + "," + player.getLocation().getY() + "," +
           player.getLocation().getZ() + "," + player.getLocation().getYaw() + ",0.0";
       FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-      switch (SetupInventory.ClickPosition.getByPosition(e.getRawSlot())) {
+      switch (slot) {
         case SET_ENDING:
           config.set("instances." + arena.getID() + ".Endlocation", locationString);
           player.sendMessage(ChatManager.colorRawMessage("&e✔ Completed | &aEnding location for arena " + arena.getID() + " set at your location!"));
@@ -136,7 +139,7 @@ public class SetupInventoryEvents implements Listener {
             e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
           }
           config.set("instances." + arena.getID() + ".minimumplayers", e.getCurrentItem().getAmount());
-          player.openInventory(new SetupInventory(arena).getInventory());
+          player.updateInventory();
           break;
         case SET_MAXIMUM_PLAYERS:
           if (clickType.isRightClick()) {
@@ -146,7 +149,7 @@ public class SetupInventoryEvents implements Listener {
             e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
           }
           config.set("instances." + arena.getID() + ".maximumplayers", e.getCurrentItem().getAmount());
-          player.openInventory(new SetupInventory(arena).getInventory());
+          player.updateInventory();
           break;
         case ADD_SIGN:
           Location location = player.getTargetBlock(null, 10).getLocation();
