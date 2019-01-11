@@ -1,6 +1,6 @@
 ## BuildBattle 3 changelog
 
-### 4.0.0 Beta pre (03.10.2018 - 10.01.2019)
+### 4.0.0 Beta pre (03.10.2018 - 11.01.2019)
 #### Pre 3:
    * Removed annoying "Please enable bStats" message
    * Code improvements
