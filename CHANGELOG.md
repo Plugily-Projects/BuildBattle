@@ -48,6 +48,7 @@
    * Now after selection of head in heads inventory won't be closed, user will close it when he wants
    * Now language manager will use cached language.yml file so plugin will perform bit better
    * Theme vote GUI is now properly listening for click events, you don't need to click few times to make it vote
+   * Added useSSL=false argument in mysql.yml address to avoid mysql warnings in console (not harmful)
    
 
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)
