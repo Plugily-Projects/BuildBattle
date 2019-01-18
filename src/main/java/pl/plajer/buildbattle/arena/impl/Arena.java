@@ -847,6 +847,7 @@ public class Arena extends BukkitRunnable {
    *
    * @return building time left
    */
+  @Deprecated
   public long getTimeLeft() {
     return getTimer();
   }

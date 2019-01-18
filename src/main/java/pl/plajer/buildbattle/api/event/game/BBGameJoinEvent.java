@@ -23,7 +23,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
 import pl.plajer.buildbattle.api.event.BBEvent;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 
 /**
  * Called when player joins arena
@@ -34,7 +34,7 @@ public class BBGameJoinEvent extends BBEvent implements Cancellable {
   private boolean cancelled;
   private Player player;
 
-  public BBGameJoinEvent(Player player, Arena arena) {
+  public BBGameJoinEvent(Player player, BaseArena arena) {
     super(arena);
     this.player = player;
   }

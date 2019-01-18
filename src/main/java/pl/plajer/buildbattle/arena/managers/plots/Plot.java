@@ -40,7 +40,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.event.plot.BBPlotResetEvent;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.utils.Cuboid;
 import pl.plajerlair.core.services.exception.ReportedException;
@@ -51,18 +51,18 @@ import pl.plajerlair.core.utils.XMaterial;
  */
 public class Plot {
 
-  private Arena arena;
+  private BaseArena arena;
   private Main plugin = JavaPlugin.getPlugin(Main.class);
   private Cuboid cuboid;
   private int points;
-  private List<UUID> uuids = new ArrayList<>();
+  private List<Player> owners = new ArrayList<>();
   private Map<Location, Particle> particles = new HashMap<>();
   private Time time = Time.WORLD_TIME;
   private Biome plotDefaultBiome;
   private WeatherType weatherType = WeatherType.CLEAR;
   private int entities = 0;
 
-  public Plot(Arena arena, Biome biome) {
+  public Plot(BaseArena arena, Biome biome) {
     this.arena = arena;
     plotDefaultBiome = biome;
   }
@@ -116,24 +116,24 @@ public class Plot {
     this.cuboid = cuboid;
   }
 
-  public List<UUID> getOwners() {
-    return uuids;
+  public List<Player> getOwners() {
+    return owners;
   }
 
-  public void setOwners(List<UUID> players) {
-    this.uuids = players;
+  public void setOwners(List<Player> players) {
+    this.owners = players;
   }
 
-  public void addOwner(UUID player) {
-    this.uuids.add(player);
+  public void addOwner(Player player) {
+    this.owners.add(player);
   }
 
   public void fullyResetPlot() {
     try {
       resetPlot();
-      if (uuids != null && !uuids.isEmpty()) {
-        for (UUID u : uuids) {
-          User user = plugin.getUserManager().getUser(u);
+      if (owners != null && !owners.isEmpty()) {
+        for (Player p : owners) {
+          User user = plugin.getUserManager().getUser(p.getUniqueId());
           user.setCurrentPlot(null);
           this.setOwners(new ArrayList<>());
           this.setPoints(0);
@@ -153,7 +153,7 @@ public class Plot {
         }
       }
       getParticles().clear();
-      for (UUID u : uuids) {
+      for (UUID u : owners) {
         Player p = Bukkit.getPlayer(u);
         if (p == null) {
           continue;

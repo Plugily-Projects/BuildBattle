@@ -33,6 +33,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
 import pl.plajerlair.core.utils.GameScoreboard;
@@ -48,9 +49,9 @@ public class ScoreboardManager {
   private Map<String, List<String>> scoreboardContents = new HashMap<>();
   private Main plugin = JavaPlugin.getPlugin(Main.class);
   private String boardTitle = ChatManager.colorMessage("Scoreboard.Title");
-  private Arena arena;
+  private BaseArena arena;
 
-  public ScoreboardManager(Arena arena) {
+  public ScoreboardManager(BaseArena arena) {
     this.arena = arena;
     for (ArenaState state : ArenaState.values()) {
       //not registering RESTARTING state and registering IN_GAME and ENDING later
@@ -61,7 +62,7 @@ public class ScoreboardManager {
       List<String> lines = LanguageManager.getLanguageList("Scoreboard.Content." + state.getFormattedName());
       scoreboardContents.put(state.getFormattedName(), lines);
     }
-    for (Arena.ArenaType type : Arena.ArenaType.values()) {
+    for (BaseArena.ArenaType type : BaseArena.ArenaType.values()) {
       List<String> playing = LanguageManager.getLanguageList("Scoreboard.Content.Playing-States." + type.getPrefix());
       List<String> ending = LanguageManager.getLanguageList("Scoreboard.Content.Ending-States." + type.getPrefix());
       //todo locale
@@ -95,11 +96,12 @@ public class ScoreboardManager {
     }
   }
 
+  @Deprecated
   private String formatScoreboardLine(String string, Player player) {
     String returnString = string;
     returnString = StringUtils.replace(returnString, "%PLAYERS%", Integer.toString(arena.getPlayers().size()));
     returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());
-    if (arena.getArenaType() != Arena.ArenaType.GUESS_THE_BUILD) {
+    if (arena.getArenaType() != BaseArena.ArenaType.GUESS_THE_BUILD) {
       if (arena.isThemeVoteTime()) {
         returnString = StringUtils.replace(returnString, "%THEME%", ChatManager.colorMessage("In-Game.No-Theme-Yet"));
       } else {

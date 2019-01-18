@@ -20,26 +20,28 @@ package pl.plajer.buildbattle.api.event;
 
 import org.bukkit.event.Event;
 
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 
 /**
  * Represents BuildBattle game related events.
  */
 public abstract class BBEvent extends Event {
 
-  protected Arena arena;
+  protected BaseArena arena;
 
-  public BBEvent(Arena eventArena) {
+  public BBEvent(BaseArena eventArena) {
     arena = eventArena;
   }
 
   /**
    * Returns event arena
    * Returns null when called from BBPlayerStatisticChangeEvent when super votes are added via command
+   * To get more information about arena you can check instanceof SoloArena, TeamArena and GuessTheBuildArena
+   * and then cast it.
    *
    * @return event arena
    */
-  public Arena getArena() {
+  public BaseArena getArena() {
     return arena;
   }
 }
