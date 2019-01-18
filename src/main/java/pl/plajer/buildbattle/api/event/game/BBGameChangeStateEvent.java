@@ -22,7 +22,7 @@ import org.bukkit.event.HandlerList;
 
 import pl.plajer.buildbattle.api.event.BBEvent;
 import pl.plajer.buildbattle.arena.ArenaState;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 
 /**
  * Called when arena states changes
@@ -33,7 +33,7 @@ public class BBGameChangeStateEvent extends BBEvent {
   private ArenaState gameState;
   private ArenaState previous;
 
-  public BBGameChangeStateEvent(ArenaState gameState, Arena arena, ArenaState previous) {
+  public BBGameChangeStateEvent(ArenaState gameState, BaseArena arena, ArenaState previous) {
     super(arena);
     this.gameState = gameState;
     this.previous = previous;

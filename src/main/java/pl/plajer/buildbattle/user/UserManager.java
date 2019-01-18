@@ -36,6 +36,7 @@ import pl.plajerlair.core.debug.LogLevel;
 /**
  * Created by Tom on 27/07/2014.
  */
+@Deprecated //switch uuids to players
 public class UserManager {
 
   private FileStats fileStats;
@@ -65,6 +66,7 @@ public class UserManager {
     }
   }
 
+  @Deprecated
   public User getUser(UUID uuid) {
     if (users.containsKey(uuid)) {
       return users.get(uuid);
@@ -112,7 +114,9 @@ public class UserManager {
     fileStats.loadStat(user, stat);
   }
 
+  @Deprecated
   public void removeUser(UUID uuid) {
     users.remove(uuid);
   }
+
 }

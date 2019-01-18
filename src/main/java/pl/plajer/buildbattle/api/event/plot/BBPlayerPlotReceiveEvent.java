@@ -21,7 +21,7 @@ package pl.plajer.buildbattle.api.event.plot;
 import org.bukkit.event.HandlerList;
 
 import pl.plajer.buildbattle.api.event.BBEvent;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 
 /**
@@ -35,7 +35,7 @@ public class BBPlayerPlotReceiveEvent extends BBEvent {
   private static final HandlerList HANDLERS = new HandlerList();
   private Plot plot;
 
-  public BBPlayerPlotReceiveEvent(Arena eventArena, Plot plot) {
+  public BBPlayerPlotReceiveEvent(BaseArena eventArena, Plot plot) {
     super(eventArena);
     this.plot = plot;
   }

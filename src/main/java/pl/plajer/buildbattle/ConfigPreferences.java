@@ -28,6 +28,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -112,7 +113,7 @@ public class ConfigPreferences {
     return whitelistedCommands;
   }
 
-  public int getTimer(TimerType type, Arena arena) {
+  public int getTimer(TimerType type, BaseArena arena) {
     switch (type) {
       case BUILD:
         return plugin.getConfig().getInt("Build-Time." + arena.getArenaType().getPrefix(), 100);

@@ -21,7 +21,7 @@ package pl.plajer.buildbattle.api.event.game;
 import org.bukkit.event.HandlerList;
 
 import pl.plajer.buildbattle.api.event.BBEvent;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 
 /**
  * Called when game is ended
@@ -30,7 +30,7 @@ public class BBGameEndEvent extends BBEvent {
 
   private static final HandlerList handlers = new HandlerList();
 
-  public BBGameEndEvent(Arena arena) {
+  public BBGameEndEvent(BaseArena arena) {
     super(arena);
   }
 

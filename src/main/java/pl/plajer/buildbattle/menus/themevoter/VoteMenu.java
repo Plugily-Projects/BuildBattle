@@ -35,7 +35,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ItemBuilder;
@@ -52,9 +52,9 @@ public class VoteMenu {
   private Main plugin = JavaPlugin.getPlugin(Main.class);
   private Inventory inventory;
   private VotePoll votePoll;
-  private Arena arena;
+  private BaseArena arena;
 
-  public VoteMenu(Arena arena) {
+  public VoteMenu(BaseArena arena) {
     this.arena = arena;
     this.inventory = Bukkit.createInventory(null, 9 * 5, ChatManager.colorMessage("Menus.Theme-Voting.Inventory-Name"));
   }
