@@ -227,15 +227,12 @@ public class SoloArena extends BaseArena {
               break;
             }
           }
-          if (getPlayers().size() <= 2) {
-            if ((getPlayers().size() == 1 && getArenaType() == ArenaType.SOLO) || (getPlayers().size() == 2 && getArenaType() == ArenaType.TEAM
-                && getPlotManager().getPlot(getPlayers().get(0)).getOwners().contains(getPlayers().get(1)))) {
+          if (getPlayers().size() <= 2 && !enoughPlayersToContinue()) {
               String message = ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Only-You-Playing");
               ChatManager.broadcast(this, message);
               setArenaState(ArenaState.ENDING);
               Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
               setTimer(10);
-            }
           }
           if ((getTimer() == (4 * 60) || getTimer() == (3 * 60) || getTimer() == 5 * 60 || getTimer() == 30 || getTimer() == 2 * 60 || getTimer() == 60 || getTimer() == 15) && !this.isVoting()) {
             String message = ChatManager.colorMessage("In-Game.Messages.Time-Left-To-Build").replace("%FORMATTEDTIME%", MinigameUtils.formatIntoMMSS(getTimer()));
@@ -272,21 +269,7 @@ public class SoloArena extends BaseArena {
           if (getTimer() == 0 && receivedVoteItems) {
             setVoting(true);
             if (!queue.isEmpty()) {
-              if (getVotingPlot() != null) {
-                for (Player player : getPlayers()) {
-                  getVotingPlot().setPoints(getVotingPlot().getPoints() + getPlugin().getUserManager().getUser(player.getUniqueId()).getStat(StatsStorage.StatisticType.LOCAL_POINTS));
-                  getPlugin().getUserManager().getUser(player.getUniqueId()).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
-                }
-              }
-              if (getArenaType() == ArenaType.TEAM) {
-                for (Plot p : getPlotManager().getPlots()) {
-                  if (p.getOwners() != null && p.getOwners().size() == 2) {
-                    //removing second owner to not vote for same plot twice
-                    queue.remove(p.getOwners().get(1));
-                  }
-                }
-              }
-              voteRoutine();
+              voteForNextPlot();
             } else {
               if (getVotingPlot() != null) {
                 for (Player player : getPlayers()) {
@@ -301,15 +284,7 @@ public class SoloArena extends BaseArena {
               for (Player player : getPlayers()) {
                 player.teleport(winnerPlot.getTeleportLocation());
                 String winner = ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Title");
-                if (getArenaType() == ArenaType.TEAM) {
-                  if (winnerPlot.getOwners().size() == 1) {
-                    winner = winner.replace("%player%", topList.get(1).get(0).getName());
-                  } else {
-                    winner = winner.replace("%player%", topList.get(1).get(0).getName() + " & " + topList.get(1).get(1).getName());
-                  }
-                } else {
-                  winner = winner.replace("%player%", topList.get(1).get(0).getName());
-                }
+                winner = formatWinners(winnerPlot, winner);
                 player.sendTitle(winner, null, 5, 35, 5);
               }
               this.setArenaState(ArenaState.ENDING);
@@ -414,7 +389,7 @@ public class SoloArena extends BaseArena {
     }
   }
 
-  private void voteRoutine() {
+  public void voteRoutine() {
     if (!queue.isEmpty()) {
       setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.PLOT_VOTE, this));
       Player player = queue.poll();
@@ -433,21 +408,26 @@ public class SoloArena extends BaseArena {
           p.setPlayerWeather(getVotingPlot().getWeatherType());
           p.setPlayerTime(Plot.Time.format(getVotingPlot().getTime(), p.getWorld().getTime()), false);
           String owner = ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
-          if (getArenaType() == BaseArena.ArenaType.TEAM) {
-            if (getVotingPlot().getOwners().size() == 1) {
-              owner = owner.replace("%player%", player.getName());
-            } else {
-              owner = owner.replace("%player%", getVotingPlot().getOwners().get(0).getName() + " & " + getVotingPlot().getOwners().get(1).getName());
-            }
-          } else {
-            owner = owner.replace("%player%", player.getName());
-          }
+          owner = formatWinners(getVotingPlot(), owner);
           p.sendTitle(owner, null, 5, 40, 5);
           p.sendMessage(ChatManager.getPrefix() + message);
         }
       }
     }
+  }
 
+  public String formatWinners(Plot plot, String string) {
+    return string.replace("%player%", plot.getOwners().get(0).getName());
+  }
+
+  public void voteForNextPlot() {
+    if (getVotingPlot() != null) {
+      for (Player player : getPlayers()) {
+        getVotingPlot().setPoints(getVotingPlot().getPoints() + getPlugin().getUserManager().getUser(player.getUniqueId()).getStat(StatsStorage.StatisticType.LOCAL_POINTS));
+        getPlugin().getUserManager().getUser(player.getUniqueId()).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
+      }
+    }
+    voteRoutine();
   }
 
   /**
@@ -563,6 +543,10 @@ public class SoloArena extends BaseArena {
     if (!(pos > getPlayers().size()) && after != null) {
       moveScore(pos + 1, after);
     }
+  }
+
+  public boolean enoughPlayersToContinue() {
+    return getPlayers().size() > 1;
   }
 
   public void giveRewards() {
