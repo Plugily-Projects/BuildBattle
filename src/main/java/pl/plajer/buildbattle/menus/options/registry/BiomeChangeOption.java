@@ -18,8 +18,6 @@
 
 package pl.plajer.buildbattle.menus.options.registry;
 
-import java.util.UUID;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -32,7 +30,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.menus.options.MenuOption;
@@ -68,7 +66,7 @@ public class BiomeChangeOption {
 
       @Override
       public void onTargetClick(InventoryClickEvent e) {
-        Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+        BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
         if (arena == null) {
           return;
         }
@@ -83,11 +81,7 @@ public class BiomeChangeOption {
                   .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535));
             }
           }
-          for (UUID owner : plot.getOwners()) {
-            Player p = Bukkit.getPlayer(owner);
-            if (p == null) {
-              continue;
-            }
+          for (Player p : plot.getOwners()) {
             p.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Menus.Option-Menu.Items.Biome.Biome-Set"));
           }
         } catch (Exception ex) {

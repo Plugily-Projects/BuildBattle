@@ -124,6 +124,25 @@ public class SoloArena extends BaseArena {
     this.theme = theme;
   }
 
+  @Override
+  public void updateBossBar() {
+    switch (getArenaState()) {
+      case WAITING_FOR_PLAYERS:
+        getGameBar().setTitle(ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
+        break;
+      case STARTING:
+        getGameBar().setTitle(ChatManager.colorMessage("Bossbar.Starting-In").replace("%time%", String.valueOf(getTimer())));
+        break;
+      case IN_GAME:
+        if (!isVoting()) {
+          getGameBar().setTitle(ChatManager.colorMessage("Bossbar.Time-Left").replace("%time%", String.valueOf(getTimer())));
+        } else {
+          getGameBar().setTitle(ChatManager.colorMessage("Bossbar.Vote-Time-Left").replace("%time%", String.valueOf(getTimer())));
+        }
+        break;
+    }
+  }
+
   private void voteRoutine() {
     if (!queue.isEmpty()) {
       setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.PLOT_VOTE, this));

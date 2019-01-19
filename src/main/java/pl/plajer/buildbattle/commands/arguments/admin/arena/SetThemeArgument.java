@@ -23,7 +23,8 @@ import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
+import pl.plajer.buildbattle.arena.impl.SoloArena;
 import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
 import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
 import pl.plajer.buildbattle.commands.arguments.data.LabelData;
@@ -43,9 +44,14 @@ public class SetThemeArgument {
             "&7Set new arena theme\n&6Permission: &7buildbattle.admin.settheme\n&6You can set arena theme only when it started\n&6and only for 20 seconds after start!")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        Arena arena = ArenaRegistry.getArena((Player) sender);
+        BaseArena arena = ArenaRegistry.getArena((Player) sender);
         if (arena == null) {
           sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.No-Playing"));
+          return;
+        }
+        if(!(arena instanceof SoloArena)) {
+          //todo translatable
+          sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorRawMessage("&cCan't set theme on this arena type!"));
           return;
         }
         if (args.length == 1) {
@@ -53,12 +59,12 @@ public class SetThemeArgument {
           sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorRawMessage("&cPlease type arena theme!"));
           return;
         }
-        if (arena.getArenaState() == ArenaState.IN_GAME && (arena.getBuildTime() - arena.getTimer()) <= 20) {
+        if (arena.getArenaState() == ArenaState.IN_GAME && (((SoloArena) arena).getBuildTime() - arena.getTimer()) <= 20) {
           if (registry.getPlugin().getConfigPreferences().isThemeBlacklisted(args[1].toLowerCase())) {
             sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Admin-Commands.Theme-Blacklisted"));
             return;
           }
-          arena.setTheme(args[1]);
+          ((SoloArena) arena).setTheme(args[1]);
           ChatManager.broadcast(arena, ChatManager.colorMessage("In-Game.Messages.Admin-Messages.Changed-Theme").replace("%THEME%", args[1]));
         } else {
           if (arena.getArenaState() == ArenaState.STARTING) {

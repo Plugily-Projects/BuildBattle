@@ -24,7 +24,7 @@ import org.bukkit.entity.Player;
 import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
 import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
 import pl.plajer.buildbattle.handlers.ChatManager;
@@ -44,7 +44,7 @@ public class LeaveArgument {
       public void execute(CommandSender sender, String[] args) {
         if (!registry.getPlugin().getConfig().getBoolean("Disable-Leave-Command", false)) {
           Player p = (Player) sender;
-          Arena arena = ArenaRegistry.getArena(p);
+          BaseArena arena = ArenaRegistry.getArena(p);
           if (arena == null) {
             p.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Not-Playing"));
             return;

@@ -18,10 +18,16 @@
 
 package pl.plajer.buildbattle.arena.impl;
 
+import pl.plajer.buildbattle.Main;
+
 /**
  * @author Plajer
  * <p>
  * Created at 11.01.2019
  */
-public class GuessTheBuildArena {
+public class GuessTheBuildArena extends BaseArena {
+
+  public GuessTheBuildArena(String id, Main plugin) {
+    super(id, plugin);
+  }
 }

@@ -22,7 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
 import pl.plajer.buildbattle.api.event.BBEvent;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 
 /**
  * Called when player leaves arena
@@ -32,7 +32,7 @@ public class BBGameLeaveEvent extends BBEvent {
   private static final HandlerList handlers = new HandlerList();
   private Player player;
 
-  public BBGameLeaveEvent(Player player, Arena arena) {
+  public BBGameLeaveEvent(Player player, BaseArena arena) {
     super(arena);
     this.player = player;
   }

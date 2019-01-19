@@ -27,7 +27,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
+import pl.plajer.buildbattle.arena.impl.SoloArena;
 import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
 import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
 import pl.plajer.buildbattle.commands.arguments.data.LabelData;
@@ -58,7 +59,7 @@ public class CreateArgument {
           return;
         }
         Player player = (Player) sender;
-        for (Arena arena : ArenaRegistry.getArenas()) {
+        for (BaseArena arena : ArenaRegistry.getArenas()) {
           if (arena.getID().equalsIgnoreCase(args[1])) {
             player.sendMessage(ChatColor.DARK_RED + "Arena with that ID already exists!");
             player.sendMessage(ChatColor.DARK_RED + "Usage: /vd create <ID>");
@@ -97,14 +98,14 @@ public class CreateArgument {
     config.set(path + "world", config.getString("instances.default.world"));
     ConfigUtils.saveConfig(registry.getPlugin(), config, "arenas");
 
-    Arena arena = new Arena(id, registry.getPlugin());
+    SoloArena arena = new SoloArena(id, registry.getPlugin());
 
     arena.setMinimumPlayers(ConfigUtils.getConfig(registry.getPlugin(), "arenas").getInt(path + "minimumplayers"));
     arena.setMaximumPlayers(ConfigUtils.getConfig(registry.getPlugin(), "arenas").getInt(path + "maximumplayers"));
     arena.setMapName(ConfigUtils.getConfig(registry.getPlugin(), "arenas").getString(path + "mapname"));
     arena.setLobbyLocation(LocationUtils.getLocation(ConfigUtils.getConfig(registry.getPlugin(), "arenas").getString(path + "lobbylocation")));
     arena.setEndLocation(LocationUtils.getLocation(ConfigUtils.getConfig(registry.getPlugin(), "arenas").getString(path + "Endlocation")));
-    arena.setArenaType(Arena.ArenaType.valueOf(ConfigUtils.getConfig(registry.getPlugin(), "arenas").getString(path + "gametype").toUpperCase()));
+    arena.setArenaType(BaseArena.ArenaType.SOLO);
     arena.setReady(false);
     arena.initPoll();
     ArenaRegistry.registerArena(arena);

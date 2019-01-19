@@ -23,7 +23,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
 import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
 import pl.plajer.buildbattle.commands.arguments.data.LabelData;
@@ -52,7 +52,7 @@ public class AddPlotArgument {
           player.sendMessage(ChatManager.getPrefix() + ChatManager.colorRawMessage("&cPlease type arena name!"));
           return;
         }
-        Arena arena = ArenaRegistry.getArena(args[1]);
+        BaseArena arena = ArenaRegistry.getArena(args[1]);
         if (arena == null) {
           player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
           return;

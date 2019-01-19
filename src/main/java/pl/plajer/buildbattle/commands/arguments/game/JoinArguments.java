@@ -25,7 +25,7 @@ import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
 import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
 import pl.plajer.buildbattle.handlers.ChatManager;
@@ -50,7 +50,7 @@ public class JoinArguments {
           sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Already-Playing"));
           return;
         }
-        for (Arena arena : ArenaRegistry.getArenas()) {
+        for (BaseArena arena : ArenaRegistry.getArenas()) {
           if (args[1].equalsIgnoreCase(arena.getID())) {
             if (arena.getPlayers().size() >= arena.getMaximumPlayers()) {
               sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Arena-Is-Full"));
@@ -75,11 +75,12 @@ public class JoinArguments {
             sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Already-Playing"));
             return;
           }
+          //todo gtb case
           switch (args[1].toLowerCase()) {
             case "solo":
             case "team":
-              Arena.ArenaType type = Arena.ArenaType.valueOf(args[1].toUpperCase());
-              for (Arena arena : ArenaRegistry.getArenas()) {
+              BaseArena.ArenaType type = BaseArena.ArenaType.valueOf(args[1].toUpperCase());
+              for (BaseArena arena : ArenaRegistry.getArenas()) {
                 if (arena.getArenaType() == type) {
                   if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
                     ArenaManager.joinAttempt((Player) sender, arena);

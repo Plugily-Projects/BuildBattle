@@ -21,7 +21,7 @@ package pl.plajer.buildbattle.commands.arguments.admin;
 import org.bukkit.command.CommandSender;
 
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
 import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
 import pl.plajer.buildbattle.commands.arguments.data.LabelData;
@@ -43,7 +43,7 @@ public class ListArenasArgument {
       public void execute(CommandSender sender, String[] args) {
         sender.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.List-Command.Header"));
         int i = 0;
-        for (Arena arena : ArenaRegistry.getArenas()) {
+        for (BaseArena arena : ArenaRegistry.getArenas()) {
           sender.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.List-Command.Format").replace("%arena%", arena.getID())
               .replace("%status%", arena.getArenaState().getFormattedName()).replace("%players%", String.valueOf(arena.getPlayers().size()))
               .replace("%maxplayers%", String.valueOf(arena.getMaximumPlayers())));

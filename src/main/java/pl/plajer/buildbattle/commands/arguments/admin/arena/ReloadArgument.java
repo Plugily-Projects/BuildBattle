@@ -23,7 +23,7 @@ import org.bukkit.command.CommandSender;
 
 import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
 import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
 import pl.plajer.buildbattle.commands.arguments.data.LabelData;
@@ -42,7 +42,7 @@ public class ReloadArgument {
             + "&c&lNot recommended!\n&6Permission: &7buildbattle.admin.reload")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        for (Arena arena : ArenaRegistry.getArenas()) {
+        for (BaseArena arena : ArenaRegistry.getArenas()) {
           ArenaManager.stopGame(true, arena);
         }
         registry.getPlugin().getConfigPreferences().loadOptions();

@@ -25,7 +25,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.menus.options.MenuOption;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
@@ -47,7 +47,7 @@ public class FloorChangeOption {
         .build()) {
       @Override
       public void onClick(InventoryClickEvent e) {
-        Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+        BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
         if (arena == null) {
           return;
         }

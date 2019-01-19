@@ -26,7 +26,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.utils.Utils;
 import pl.plajerlair.core.services.exception.ReportedException;
@@ -54,7 +54,7 @@ public class OptionsMenuHandler implements Listener {
       if (!Utils.isNamed(e.getCurrentItem()) || !e.getInventory().getName().equals(ChatManager.colorMessage("Menus.Option-Menu.Inventory-Name"))) {
         return;
       }
-      Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+      BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
       if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
         return;
       }

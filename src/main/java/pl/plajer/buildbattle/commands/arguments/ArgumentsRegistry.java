@@ -38,7 +38,7 @@ import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.commands.TabCompletion;
 import pl.plajer.buildbattle.commands.arguments.admin.ListArenasArgument;
 import pl.plajer.buildbattle.commands.arguments.admin.arena.DeleteArgument;
@@ -128,7 +128,7 @@ public class ArgumentsRegistry implements CommandExecutor {
                 if (!checkSenderIsExecutorType(sender, CommandArgument.ExecutorType.PLAYER) || !hasPermission(sender, "buildbattle.admin.create")) {
                   return true;
                 }
-                Arena arena = ArenaRegistry.getArena(args[0]);
+                BaseArena arena = ArenaRegistry.getArena(args[0]);
                 if (arena == null) {
                   sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
                   return true;

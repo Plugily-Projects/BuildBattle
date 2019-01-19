@@ -18,8 +18,6 @@
 
 package pl.plajer.buildbattle.events;
 
-import java.util.UUID;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -58,7 +56,8 @@ import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
+import pl.plajer.buildbattle.arena.impl.SoloArena;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.items.SpecialItem;
@@ -85,7 +84,7 @@ public class GameEvents implements Listener {
       if (event.getHand() == EquipmentSlot.OFF_HAND || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
         return;
       }
-      Arena arena = ArenaRegistry.getArena(event.getPlayer());
+      BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
       if (arena == null) {
         return;
       }
@@ -121,8 +120,11 @@ public class GameEvents implements Listener {
       if (!Utils.isNamed(itemStack)) {
         return;
       }
-      Arena arena = ArenaRegistry.getArena(event.getPlayer());
-      if (arena == null || arena.getArenaState() != ArenaState.IN_GAME || arena.isVoting()) {
+      BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
+      if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+        return;
+      }
+      if (arena instanceof SoloArena && ((SoloArena) arena).isVoting()) {
         return;
       }
       if (!plugin.getOptionsRegistry().getMenuItem().getItemMeta().getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())) {
@@ -137,7 +139,7 @@ public class GameEvents implements Listener {
   @EventHandler
   public void onPistonExtendEvent(BlockPistonExtendEvent event) {
     try {
-      for (Arena arena : ArenaRegistry.getArenas()) {
+      for (BaseArena arena : ArenaRegistry.getArenas()) {
         for (Plot buildPlot : arena.getPlotManager().getPlots()) {
           for (Block block : event.getBlocks()) {
             if (!buildPlot.getCuboid().isInWithMarge(block.getLocation(), -1) && buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
@@ -167,7 +169,7 @@ public class GameEvents implements Listener {
   @EventHandler
   public void onWaterFlowEvent(BlockFromToEvent event) {
     try {
-      for (Arena arena : ArenaRegistry.getArenas()) {
+      for (BaseArena arena : ArenaRegistry.getArenas()) {
         for (Plot buildPlot : arena.getPlotManager().getPlots()) {
           if (!buildPlot.getCuboid().isIn(event.getToBlock().getLocation()) && buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
             event.setCancelled(true);
@@ -182,7 +184,7 @@ public class GameEvents implements Listener {
   @EventHandler
   public void onTNTExplode(EntityExplodeEvent event) {
     try {
-      for (Arena arena : ArenaRegistry.getArenas()) {
+      for (BaseArena arena : ArenaRegistry.getArenas()) {
         for (Plot buildPlot : arena.getPlotManager().getPlots()) {
           if (buildPlot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 0)) {
             event.blockList().clear();
@@ -206,7 +208,7 @@ public class GameEvents implements Listener {
         return;
       }
       Player player = event.getPlayer();
-      Arena arena = ArenaRegistry.getArena(player);
+      BaseArena arena = ArenaRegistry.getArena(player);
       if (arena == null) {
         return;
       }
@@ -234,7 +236,7 @@ public class GameEvents implements Listener {
         return;
       }
       Player player = (Player) event.getEntity();
-      Arena arena = ArenaRegistry.getArena(player);
+      BaseArena arena = ArenaRegistry.getArena(player);
       if (arena == null) {
         return;
       }
@@ -247,7 +249,7 @@ public class GameEvents implements Listener {
   @EventHandler
   public void onTreeGrow(StructureGrowEvent event) {
     try {
-      Arena arena = ArenaRegistry.getArena(event.getPlayer());
+      BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
       if (arena == null) {
         return;
       }
@@ -268,7 +270,7 @@ public class GameEvents implements Listener {
   //todo weird code?
   @EventHandler
   public void onDispense(BlockDispenseEvent event) {
-    for (Arena arena : ArenaRegistry.getArenas()) {
+    for (BaseArena arena : ArenaRegistry.getArenas()) {
       for (Plot buildPlot : arena.getPlotManager().getPlots()) {
         if (!buildPlot.getCuboid().isInWithMarge(event.getBlock().getLocation(), -1) && buildPlot.getCuboid().isInWithMarge(event.getBlock().getLocation(), 5)) {
           event.setCancelled(true);
@@ -284,7 +286,7 @@ public class GameEvents implements Listener {
     if (e.getInventory() == null || !Utils.isNamed(e.getCurrentItem()) || !(e.getWhoClicked() instanceof Player)) {
       return;
     }
-    Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+    BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
     if (e.getInventory().getName() == null || arena == null) {
       return;
     }
@@ -307,7 +309,7 @@ public class GameEvents implements Listener {
       if (!(e.getWhoClicked() instanceof Player) || !Utils.isNamed(e.getCurrentItem())) {
         return;
       }
-      Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+      BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
       if (e.getCurrentItem().getType() != Material.NETHER_STAR || arena == null) {
         return;
       }
@@ -349,7 +351,7 @@ public class GameEvents implements Listener {
   @EventHandler
   public void onBucketEmpty(PlayerBucketEmptyEvent event) {
     try {
-      Arena arena = ArenaRegistry.getArena(event.getPlayer());
+      BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
       if (arena == null) {
         return;
       }
@@ -368,7 +370,7 @@ public class GameEvents implements Listener {
   @EventHandler
   public void onBlockSpread(BlockSpreadEvent event) {
     try {
-      for (Arena arena : ArenaRegistry.getArenas()) {
+      for (BaseArena arena : ArenaRegistry.getArenas()) {
         if (!arena.getPlotManager().getPlots().isEmpty() && arena.getPlotManager().getPlots().get(0) != null) {
           if (arena.getPlotManager().getPlots().get(0).getCuboid() == null) {
             continue;
@@ -388,7 +390,7 @@ public class GameEvents implements Listener {
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onCreatureSpawn(CreatureSpawnEvent event) {
     try {
-      for (Arena arena : ArenaRegistry.getArenas()) {
+      for (BaseArena arena : ArenaRegistry.getArenas()) {
         if (arena.getPlotManager().getPlots() == null || arena.getPlotManager().getPlots().isEmpty()) {
           continue;
         }
@@ -410,8 +412,8 @@ public class GameEvents implements Listener {
           if (plot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 1)) {
             if (plot.getEntities() >= plugin.getConfig().getInt("Mobs-Max-Amount-Per-Plot", 20)) {
               //todo maybe only for spawner player?
-              for (UUID u : plot.getOwners()) {
-                plugin.getServer().getPlayer(u).sendMessage(ChatManager.colorMessage("In-Game.Max-Entities-Limit-Reached"));
+              for (Player p : plot.getOwners()) {
+                p.sendMessage(ChatManager.colorMessage("In-Game.Max-Entities-Limit-Reached"));
               }
               event.setCancelled(true);
               return;
@@ -430,7 +432,7 @@ public class GameEvents implements Listener {
 
   @EventHandler
   public void onLeavesDecay(LeavesDecayEvent event) {
-    for (Arena arena : ArenaRegistry.getArenas()) {
+    for (BaseArena arena : ArenaRegistry.getArenas()) {
       for (Plot buildPlot : arena.getPlotManager().getPlots()) {
         if (buildPlot.getCuboid().isInWithMarge(event.getBlock().getLocation(), 5)) {
           event.setCancelled(true);
@@ -462,7 +464,7 @@ public class GameEvents implements Listener {
   @EventHandler(priority = EventPriority.HIGH)
   public void onBreak(BlockBreakEvent event) {
     try {
-      Arena arena = ArenaRegistry.getArena(event.getPlayer());
+      BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
       if (arena == null) {
         return;
       }
@@ -470,7 +472,7 @@ public class GameEvents implements Listener {
         event.setCancelled(true);
         return;
       }
-      if (arena.isVoting()) {
+      if (arena instanceof SoloArena && ((SoloArena) arena).isVoting()) {
         event.setCancelled(true);
         return;
       }
@@ -497,7 +499,7 @@ public class GameEvents implements Listener {
   @EventHandler(priority = EventPriority.HIGH)
   public void onPlace(BlockPlaceEvent event) {
     try {
-      Arena arena = ArenaRegistry.getArena(event.getPlayer());
+      BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
       if (arena == null) {
         return;
       }
@@ -509,7 +511,7 @@ public class GameEvents implements Listener {
         event.setCancelled(true);
         return;
       }
-      if (arena.isVoting()) {
+      if (arena instanceof SoloArena && ((SoloArena) arena).isVoting()) {
         event.setCancelled(true);
         return;
       }
@@ -532,7 +534,7 @@ public class GameEvents implements Listener {
   @EventHandler
   public void onInventoryClick(InventoryClickEvent event) {
     try {
-      Arena arena = ArenaRegistry.getArena((Player) event.getWhoClicked());
+      BaseArena arena = ArenaRegistry.getArena((Player) event.getWhoClicked());
       if (arena == null) {
         return;
       }
@@ -540,7 +542,7 @@ public class GameEvents implements Listener {
         event.setCancelled(true);
         return;
       }
-      if (!arena.isVoting()) {
+      if (arena instanceof SoloArena && !((SoloArena) arena).isVoting()) {
         return;
       }
       event.setCancelled(true);
@@ -559,8 +561,11 @@ public class GameEvents implements Listener {
         return;
       }
       if (e.getRightClicked() instanceof Villager && e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.NPC.Floor-Change-NPC-Name"))) {
-        Arena arena = ArenaRegistry.getArena(e.getPlayer());
-        if (arena == null || arena.getArenaState() != ArenaState.IN_GAME || arena.isVoting()) {
+        BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
+        if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+          return;
+        }
+        if(arena instanceof SoloArena && ((SoloArena) arena).isVoting()) {
           return;
         }
         if (!e.getPlayer().getInventory().getItemInMainHand().getType().isBlock()) {

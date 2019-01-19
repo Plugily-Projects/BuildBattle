@@ -41,7 +41,7 @@ import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
 import pl.plajerlair.core.debug.Debugger;
 import pl.plajerlair.core.debug.LogLevel;
@@ -58,7 +58,7 @@ import pl.plajerlair.core.utils.XMaterial;
 public class SignManager implements Listener {
 
   private Main plugin;
-  private Map<Sign, Arena> loadedSigns = new HashMap<>();
+  private Map<Sign, BaseArena> loadedSigns = new HashMap<>();
   private Map<ArenaState, String> gameStateToString = new HashMap<>();
   private List<String> signLines;
 
@@ -88,7 +88,7 @@ public class SignManager implements Listener {
         e.getPlayer().sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Signs.Please-Type-Arena-Name"));
         return;
       }
-      for (Arena arena : ArenaRegistry.getArenas()) {
+      for (BaseArena arena : ArenaRegistry.getArenas()) {
         if (!arena.getID().equalsIgnoreCase(e.getLine(1))) {
           continue;
         }
@@ -111,7 +111,7 @@ public class SignManager implements Listener {
     }
   }
 
-  private String formatSign(String msg, Arena a) {
+  private String formatSign(String msg, BaseArena a) {
     String formatted = msg;
     formatted = StringUtils.replace(formatted, "%mapname%", a.getMapName());
     if (a.getPlayers().size() >= a.getMaximumPlayers()) {
@@ -186,7 +186,7 @@ public class SignManager implements Listener {
       return;
     }
     Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-      for (Map.Entry<Sign, Arena> entry : loadedSigns.entrySet()) {
+      for (Map.Entry<Sign, BaseArena> entry : loadedSigns.entrySet()) {
         Sign s = entry.getKey();
         for (int i = 0; i < signLines.size(); i++) {
           s.setLine(i, formatSign(signLines.get(i), loadedSigns.get(s)));
@@ -229,7 +229,7 @@ public class SignManager implements Listener {
     }, 10, 10);
   }
 
-  public Map<Sign, Arena> getLoadedSigns() {
+  public Map<Sign, BaseArena> getLoadedSigns() {
     return loadedSigns;
   }
 }

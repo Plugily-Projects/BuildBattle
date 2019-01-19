@@ -38,7 +38,10 @@ import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
+import pl.plajer.buildbattle.arena.impl.GuessTheBuildArena;
+import pl.plajer.buildbattle.arena.impl.SoloArena;
+import pl.plajer.buildbattle.arena.impl.TeamArena;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.PermissionManager;
@@ -72,7 +75,7 @@ public class SetupInventoryEvents implements Listener {
       }
       Player player = (Player) e.getWhoClicked();
       String name = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
-      Arena arena = ArenaRegistry.getArena(e.getInventory().getName().replace("Game type: ", ""));
+      BaseArena arena = ArenaRegistry.getArena(e.getInventory().getName().replace("Game type: ", ""));
       if (arena == null) {
         return;
       }
@@ -80,12 +83,12 @@ public class SetupInventoryEvents implements Listener {
       player.closeInventory();
       FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
       if (name.contains("Solo")) {
-        arena.setArenaType(Arena.ArenaType.SOLO);
+        arena.setArenaType(BaseArena.ArenaType.SOLO);
         config.set("instances." + arena.getID() + ".gametype", "SOLO");
       } else if (name.contains("Team")) {
-        arena.setArenaType(Arena.ArenaType.TEAM);
+        arena.setArenaType(BaseArena.ArenaType.TEAM);
         config.set("instances." + arena.getID() + ".gametype", "TEAM");
-      }
+      } //todo add gtb type
       player.sendMessage(ChatColor.GREEN + "Game type of arena set to " + ChatColor.GRAY + name);
       ConfigUtils.saveConfig(plugin, config, "arenas");
     } catch (Exception ex) {
@@ -114,7 +117,7 @@ public class SetupInventoryEvents implements Listener {
         e.setCancelled(true);
       }
 
-      Arena arena = ArenaRegistry.getArena(e.getInventory().getName().replace("BB Arena: ", ""));
+      BaseArena arena = ArenaRegistry.getArena(e.getInventory().getName().replace("BB Arena: ", ""));
       if (arena == null) {
         return;
       }
@@ -234,14 +237,28 @@ public class SetupInventoryEvents implements Listener {
               }
             }
           }
-          arena = new Arena(arena.getID(), plugin);
+          if(!config.contains("instances." + arena.getID() + ".gametype")) {
+            arena = new SoloArena(arena.getID(), plugin);
+          } else {
+            switch (BaseArena.ArenaType.valueOf(config.getString("instances." + arena.getID() + ".gametype").toUpperCase())) {
+              case SOLO:
+                arena = new SoloArena(arena.getID(), plugin);
+                break;
+              case TEAM:
+                arena = new TeamArena(arena.getID(), plugin);
+                break;
+              case GUESS_THE_BUILD:
+                arena = new GuessTheBuildArena(arena.getID(), plugin);
+                break;
+            }
+          }
           arena.setReady(true);
           arena.setMinimumPlayers(config.getInt("instances." + arena.getID() + ".minimumplayers"));
           arena.setMaximumPlayers(config.getInt("instances." + arena.getID() + ".maximumplayers"));
           arena.setMapName(config.getString("instances." + arena.getID() + ".mapname"));
           arena.setLobbyLocation(LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".lobbylocation")));
           arena.setEndLocation(LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".Endlocation")));
-          arena.setArenaType(Arena.ArenaType.valueOf(config.getString("instances." + arena.getID() + ".gametype").toUpperCase()));
+          arena.setArenaType(BaseArena.ArenaType.valueOf(config.getString("instances." + arena.getID() + ".gametype").toUpperCase()));
 
           for (String plotName : config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false)) {
             Location minPoint = LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint"));
@@ -250,7 +267,9 @@ public class SetupInventoryEvents implements Listener {
             buildPlot.fullyResetPlot();
             arena.getPlotManager().addBuildPlot(buildPlot);
           }
-          arena.initPoll();
+          if(arena instanceof SoloArena) {
+            ((SoloArena) arena).initPoll();
+          }
           ArenaRegistry.registerArena(arena);
           arena.start();
           for (Sign s : signsToUpdate) {

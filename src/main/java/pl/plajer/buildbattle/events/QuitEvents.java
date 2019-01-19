@@ -27,7 +27,7 @@ import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.user.User;
 import pl.plajerlair.core.services.exception.ReportedException;
 
@@ -47,7 +47,7 @@ public class QuitEvents implements Listener {
 
   @EventHandler
   public void onQuit(PlayerQuitEvent event) {
-    Arena arena = ArenaRegistry.getArena(event.getPlayer());
+    BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
     if (arena == null) {
       return;
     }
@@ -59,7 +59,7 @@ public class QuitEvents implements Listener {
   @EventHandler
   public void onQuitSaveStats(PlayerQuitEvent event) {
     try {
-      Arena arena = ArenaRegistry.getArena(event.getPlayer());
+      BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
       if (arena != null) {
         ArenaManager.leaveAttempt(event.getPlayer(), arena);
       }
