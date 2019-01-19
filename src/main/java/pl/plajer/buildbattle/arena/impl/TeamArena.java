@@ -18,7 +18,11 @@
 
 package pl.plajer.buildbattle.arena.impl;
 
+import org.bukkit.entity.Player;
+
 import pl.plajer.buildbattle.Main;
+import pl.plajer.buildbattle.api.StatsStorage;
+import pl.plajer.buildbattle.arena.managers.plots.Plot;
 
 /**
  * @author Plajer
@@ -29,6 +33,39 @@ public class TeamArena extends SoloArena {
 
   public TeamArena(String id, Main plugin) {
     super(id, plugin);
+  }
+
+  @Override
+  public String formatWinners(Plot plot, String string) {
+    String str = string;
+    if (plot.getOwners().size() == 1) {
+      str = str.replace("%player%", plot.getOwners().get(0).getName());
+    } else {
+      str = str.replace("%player%", plot.getOwners().get(0).getName() + " & " + plot.getOwners().get(1).getName());
+    }
+    return str;
+  }
+
+  @Override
+  public void voteForNextPlot() {
+    if (getVotingPlot() != null) {
+      for (Player player : getPlayers()) {
+        getVotingPlot().setPoints(getVotingPlot().getPoints() + getPlugin().getUserManager().getUser(player.getUniqueId()).getStat(StatsStorage.StatisticType.LOCAL_POINTS));
+        getPlugin().getUserManager().getUser(player.getUniqueId()).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
+      }
+    }
+    for (Plot p : getPlotManager().getPlots()) {
+      if (p.getOwners() != null && p.getOwners().size() == 2) {
+        //removing second owner to not vote for same plot twice
+        getQueue().remove(p.getOwners().get(1));
+      }
+    }
+    voteRoutine();
+  }
+
+  @Override
+  public boolean enoughPlayersToContinue() {
+    return getPlayers().size() > 2 && getPlotManager().getPlot(getPlayers().get(0)).getOwners().contains(getPlayers().get(1));
   }
 
 }
