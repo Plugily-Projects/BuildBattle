@@ -35,6 +35,7 @@ import pl.plajer.buildbattle.api.event.game.BBGameEndEvent;
 import pl.plajer.buildbattle.api.event.game.BBGameJoinEvent;
 import pl.plajer.buildbattle.api.event.game.BBGameLeaveEvent;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
+import pl.plajer.buildbattle.arena.impl.SoloArena;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.PermissionManager;
 import pl.plajer.buildbattle.handlers.items.SpecialItem;
@@ -60,7 +61,7 @@ public class ArenaManager {
    * Can be cancelled only via above-mentioned event
    *
    * @param player player to join
-   * @param arena arena to join
+   * @param arena  arena to join
    * @see BBGameJoinEvent
    */
   public static void joinAttempt(Player player, BaseArena arena) {
@@ -109,16 +110,16 @@ public class ArenaManager {
       player.setFoodLevel(20);
       player.getInventory().setArmorContents(new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
       player.getInventory().clear();
-      arena.showPlayers();
+      ArenaUtils.showPlayers(arena);
       ChatManager.broadcastAction(arena, player, ChatManager.ActionType.JOIN);
       player.updateInventory();
-      for (Player player : arena.getPlayers()) {
-        arena.showPlayer(player);
+      for (Player p : arena.getPlayers()) {
+        ArenaUtils.showPlayer(arena, p);
       }
-      for (Player player : plugin.getServer().getOnlinePlayers()) {
+      for (Player p : plugin.getServer().getOnlinePlayers()) {
         if (!arena.getPlayers().contains(player)) {
-          player.hidePlayer(player);
-          player.hidePlayer(player);
+          player.hidePlayer(p);
+          p.hidePlayer(player);
         }
       }
       SpecialItem leaveItem = plugin.getSpecialItemsRegistry().getSpecialItem("Leave");
@@ -132,58 +133,60 @@ public class ArenaManager {
    * Attempts player to leave arena.
    * Calls BBGameLeaveEvent event.
    *
-   * @param p player to leave
-   * @param a arena to leave
+   * @param player player to leave
+   * @param arena arena to leave
    * @see BBGameLeaveEvent
    */
-  public static void leaveAttempt(Player p, BaseArena a) {
+  public static void leaveAttempt(Player player, BaseArena arena) {
     try {
-      Debugger.debug(LogLevel.INFO, "Initial leave attempt, " + p.getName());
-      BBGameLeaveEvent bbGameLeaveEvent = new BBGameLeaveEvent(p, a);
+      Debugger.debug(LogLevel.INFO, "Initial leave attempt, " + player.getName());
+      BBGameLeaveEvent bbGameLeaveEvent = new BBGameLeaveEvent(player, arena);
       Bukkit.getPluginManager().callEvent(bbGameLeaveEvent);
-      a.getQueue().remove(p.getUniqueId());
-      User user = plugin.getUserManager().getUser(p.getUniqueId());
-      if (a.getArenaState() == ArenaState.IN_GAME || a.getArenaState() == ArenaState.ENDING) {
+      if (arena instanceof SoloArena) {
+        ((SoloArena) arena).getQueue().remove(player);
+      }
+      User user = plugin.getUserManager().getUser(player.getUniqueId());
+      if (arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
         user.addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
       }
-      a.teleportToEndLocation(p);
-      a.removePlayer(p);
-      ChatManager.broadcastAction(a, p, ChatManager.ActionType.LEAVE);
+      arena.teleportToEndLocation(player);
+      arena.removePlayer(player);
+      ChatManager.broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
       user.removeScoreboard();
-      if (a.getPlotManager().getPlot(p) != null) {
-        a.getPlotManager().getPlot(p).fullyResetPlot();
+      if (arena.getPlotManager().getPlot(player) != null) {
+        arena.getPlotManager().getPlot(player).fullyResetPlot();
       }
 
-      p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
-      p.setExp(0);
-      p.setLevel(0);
-      p.setFoodLevel(20);
-      p.setFlying(false);
-      p.setAllowFlight(false);
-      p.resetPlayerWeather();
-      p.resetPlayerTime();
+      player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
+      player.setExp(0);
+      player.setLevel(0);
+      player.setFoodLevel(20);
+      player.setFlying(false);
+      player.setAllowFlight(false);
+      player.resetPlayerWeather();
+      player.resetPlayerTime();
       if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-        a.getGameBar().removePlayer(p);
+        arena.getGameBar().removePlayer(player);
       }
-      p.getInventory().setArmorContents(null);
-      p.getInventory().clear();
-      for (PotionEffect effect : p.getActivePotionEffects()) {
-        p.removePotionEffect(effect.getType());
+      player.getInventory().setArmorContents(null);
+      player.getInventory().clear();
+      for (PotionEffect effect : player.getActivePotionEffects()) {
+        player.removePotionEffect(effect.getType());
       }
-      p.setFireTicks(0);
-      if (a.getPlayers().size() == 0 && a.getArenaState() != ArenaState.WAITING_FOR_PLAYERS) {
-        a.setArenaState(ArenaState.RESTARTING);
-        a.setTimer(0);
+      player.setFireTicks(0);
+      if (arena.getPlayers().size() == 0 && arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS) {
+        arena.setArenaState(ArenaState.RESTARTING);
+        arena.setTimer(0);
       }
-      p.setGameMode(GameMode.SURVIVAL);
+      player.setGameMode(GameMode.SURVIVAL);
       if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-        InventoryUtils.loadInventory(plugin, p);
+        InventoryUtils.loadInventory(plugin, player);
       }
       for (Player players : plugin.getServer().getOnlinePlayers()) {
         if (ArenaRegistry.getArena(players) == null) {
-          players.showPlayer(p);
+          players.showPlayer(player);
         }
-        p.showPlayer(players);
+        player.showPlayer(players);
       }
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
@@ -225,7 +228,9 @@ public class ArenaManager {
       }
       arena.setArenaState(ArenaState.ENDING);
       arena.setTimer(10);
-      arena.setVoting(false);
+      if (arena instanceof SoloArena) {
+        ((SoloArena) arena).setVoting(false);
+      }
       Debugger.debug(LogLevel.INFO, "Game stop event finish, arena " + arena.getID());
     } catch (Exception ex) {
       new ReportedException(plugin, ex);

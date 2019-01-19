@@ -20,7 +20,6 @@ package pl.plajer.buildbattle.arena.managers.plots;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -60,18 +59,20 @@ public class PlotManager {
       int times = arena.getArenaType() == BaseArena.ArenaType.SOLO ? 1 : 2;
       for (int i = 0; i < times; i++) {
         for (Plot plot : plots) {
-          if (players.isEmpty()) break;
+          if (players.isEmpty()) {
+            break;
+          }
           if (plot.getOwners() != null) {
             if (arena.getArenaType() == BaseArena.ArenaType.SOLO || arena.getPlayers().size() == 2 /* in case of 2 min players set for team mode*/) {
               if (plot.getOwners().size() == 0) {
-                plot.addOwner(players.get(0).getUniqueId());
+                plot.addOwner(players.get(0));
                 plugin.getUserManager().getUser(players.get(0).getUniqueId()).setCurrentPlot(plot);
 
                 players.remove(0);
               }
             } else if (arena.getArenaType() == BaseArena.ArenaType.TEAM) {
               if (plot.getOwners().size() < 2) {
-                plot.addOwner(players.get(0).getUniqueId());
+                plot.addOwner(players.get(0));
                 plugin.getUserManager().getUser(players.get(0).getUniqueId()).setCurrentPlot(plot);
 
                 players.remove(0);
@@ -95,16 +96,9 @@ public class PlotManager {
   public Plot getPlot(Player player) {
     for (Plot buildPlot : plots) {
       if (buildPlot.getOwners() != null && !buildPlot.getOwners().isEmpty()) {
-        if (buildPlot.getOwners().contains(player.getUniqueId())) return buildPlot;
-      }
-    }
-    return null;
-  }
-
-  public Plot getPlot(UUID uuid) {
-    for (Plot buildPlot : plots) {
-      if (buildPlot.getOwners() != null && !buildPlot.getOwners().isEmpty()) {
-        if (buildPlot.getOwners().contains(uuid)) return buildPlot;
+        if (buildPlot.getOwners().contains(player)) {
+          return buildPlot;
+        }
       }
     }
     return null;
@@ -122,7 +116,9 @@ public class PlotManager {
   }
 
   public void resetPlotsGradually() {
-    if (plotsToClear.isEmpty()) return;
+    if (plotsToClear.isEmpty()) {
+      return;
+    }
 
     plotsToClear.get(0).fullyResetPlot();
     plotsToClear.remove(0);
@@ -140,11 +136,8 @@ public class PlotManager {
               tploc = buildPlot.getCuboid().getCenter().clone().add(1, 0, 1);
             }
           }
-          for (UUID u : buildPlot.getOwners()) {
-            Player player = Bukkit.getServer().getPlayer(u);
-            if (player != null) {
-              player.teleport(buildPlot.getCuboid().getCenter());
-            }
+          for (Player p : buildPlot.getOwners()) {
+            p.teleport(buildPlot.getCuboid().getCenter());
           }
         }
         BBPlayerPlotReceiveEvent event = new BBPlayerPlotReceiveEvent(arena, buildPlot);

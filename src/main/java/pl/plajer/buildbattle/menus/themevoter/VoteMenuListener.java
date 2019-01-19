@@ -68,10 +68,10 @@ public class VoteMenuListener implements Listener {
         return;
       }
       if (e.getInventory().getName().equals(ChatManager.colorMessage("Menus.Theme-Voting.Inventory-Name"))) {
-        if (!arena.isThemeVoteTime() || arena.getArenaState() != ArenaState.IN_GAME) {
+        if (!((SoloArena) arena).isThemeVoteTime() || arena.getArenaState() != ArenaState.IN_GAME) {
           return;
         }
-        Bukkit.getScheduler().runTask(plugin, () -> e.getPlayer().openInventory(arena.getVoteMenu().getInventory()));
+        Bukkit.getScheduler().runTask(plugin, () -> e.getPlayer().openInventory(((SoloArena) arena).getVoteMenu().getInventory()));
       }
     } catch (Exception ex) {
       new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
@@ -160,8 +160,9 @@ public class VoteMenuListener implements Listener {
             default:
               return;
           }
-          ((GuessTheBuildArena) arena).setCurrentGTBTheme(theme);
-          ((GuessTheBuildArena) arena).setGTBThemeSet(true);
+          //todo
+          //((GuessTheBuildArena) arena).setCurrentGTBTheme(theme);
+          //((GuessTheBuildArena) arena).setGTBThemeSet(true);
           ((Player) e.getWhoClicked()).spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatManager.colorMessage("In-Game.Guess-The-Build.Theme-Is-Name")
               .replace("%THEME%", theme.getTheme())));
 
