@@ -189,7 +189,7 @@ public class BaseArena extends BukkitRunnable {
     players.remove(player);
   }
 
-  private void clearPlayers() {
+  public void clearPlayers() {
     players.clear();
   }
 
