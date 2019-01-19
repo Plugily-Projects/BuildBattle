@@ -70,7 +70,7 @@ public class SetupInventoryEvents implements Listener {
       if (!(e.getWhoClicked() instanceof Player || e.getWhoClicked().hasPermission(PermissionManager.getEditGames()))) {
         return;
       }
-      if (e.getInventory() == null || !e.getInventory().getName().equals("Game type:") || !Utils.isNamed(e.getCurrentItem())) {
+      if (e.getInventory() == null || !e.getInventory().getName().contains("Game type:") || !Utils.isNamed(e.getCurrentItem())) {
         return;
       }
       Player player = (Player) e.getWhoClicked();
