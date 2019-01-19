@@ -18,9 +18,10 @@
 
 package pl.plajer.buildbattle.arena.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -38,6 +39,7 @@ import pl.plajer.buildbattle.arena.managers.ScoreboardManager;
 import pl.plajer.buildbattle.arena.managers.plots.PlotManager;
 import pl.plajer.buildbattle.arena.options.ArenaOption;
 import pl.plajer.buildbattle.handlers.ChatManager;
+import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
  * @author Plajer
@@ -55,7 +57,7 @@ public class BaseArena extends BukkitRunnable {
   private BossBar gameBar;
   private ArenaType arenaType;
   private boolean forceStart = false;
-  private Set<Player> players;
+  private List<Player> players = new ArrayList<>();
   //instead of 2 (lobby, end) location fields we use map with GameLocation enum
   private Map<GameLocation, Location> gameLocations = new HashMap<>();
   //all arena values that are integers, contains constant and floating values
@@ -247,14 +249,62 @@ public class BaseArena extends BukkitRunnable {
   /**
    * Get players in game
    *
-   * @return HashSet with players
+   * @return List with players
    */
-  public Set<Player> getPlayers() {
+  public List<Player> getPlayers() {
     return players;
   }
 
   public Main getPlugin() {
     return plugin;
+  }
+
+  public void teleportAllToEndLocation() {
+    try {
+      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+        for (Player player : getPlayers()) {
+          plugin.getBungeeManager().connectToHub(player);
+        }
+        return;
+      }
+      Location location = getEndLocation();
+
+      if (location == null) {
+        location = getLobbyLocation();
+        System.out.print("EndLocation for arena " + getID() + " isn't intialized!");
+      }
+      for (Player player : getPlayers()) {
+        player.teleport(location);
+      }
+    } catch (Exception ex) {
+      new ReportedException(plugin, ex);
+    }
+  }
+
+  public void teleportToLobby(Player player) {
+    Location location = getLobbyLocation();
+    if (location == null) {
+      System.out.print("LobbyLocation isn't intialized for arena " + getID());
+    }
+    player.teleport(location);
+  }
+
+  public void teleportToEndLocation(Player player) {
+    try {
+      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+        plugin.getBungeeManager().connectToHub(player);
+        return;
+      }
+      Location location = getEndLocation();
+      if (location == null) {
+        location = getLobbyLocation();
+        System.out.print("EndLocation for arena " + getID() + " isn't intialized!");
+      }
+
+      player.teleport(location);
+    } catch (Exception ex) {
+      new ReportedException(plugin, ex);
+    }
   }
 
   /**

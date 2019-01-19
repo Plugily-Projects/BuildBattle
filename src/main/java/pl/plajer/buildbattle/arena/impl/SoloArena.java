@@ -39,6 +39,7 @@ import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.api.event.game.BBGameEndEvent;
 import pl.plajer.buildbattle.api.event.game.BBGameStartEvent;
 import pl.plajer.buildbattle.arena.ArenaState;
+import pl.plajer.buildbattle.arena.ArenaUtils;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.arena.options.ArenaOption;
 import pl.plajer.buildbattle.handlers.ChatManager;
@@ -46,6 +47,7 @@ import pl.plajer.buildbattle.handlers.language.LanguageManager;
 import pl.plajer.buildbattle.menus.themevoter.VoteMenu;
 import pl.plajer.buildbattle.menus.themevoter.VotePoll;
 import pl.plajer.buildbattle.user.User;
+import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.InventoryUtils;
 import pl.plajerlair.core.utils.MinigameUtils;
 
@@ -119,252 +121,264 @@ public class SoloArena extends BaseArena {
   @Deprecated //split teams into separate class
   @Override
   public void run() {
-    switch (getArenaState()) {
-      case WAITING_FOR_PLAYERS:
-        if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-          getPlugin().getServer().setWhitelist(false);
-        }
-        getPlotManager().resetPlotsGradually();
-        if (getPlayers().size() < getMinimumPlayers()) {
-          if (getTimer() <= 0) {
-            setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
-            ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", String.valueOf(getMinimumPlayers())));
-            return;
-          }
-        } else {
-          ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
-          setArenaState(ArenaState.STARTING);
-          Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
-          setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
-          this.showPlayers();
-        }
-        setTimer(getTimer() - 1);
-        break;
-      case STARTING:
-        for (Player player : getPlayers()) {
-          player.setExp((float) (getTimer() / getPlugin().getConfig().getDouble("Lobby-Starting-Time", 60)));
-          player.setLevel(getTimer());
-        }
-        if (getPlayers().size() < getMinimumPlayers() && !forceStart) {
-          ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", String.valueOf(getMinimumPlayers())));
-          setArenaState(ArenaState.WAITING_FOR_PLAYERS);
-          Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
-          setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
-          for (Player player : getPlayers()) {
-            player.setExp(1);
-            player.setLevel(0);
-          }
-          break;
-        }
-        if (getTimer() == 0 || isForceStart()) {
-          if (!getPlotManager().isPlotsCleared()) {
-            getPlotManager().resetQueuedPlots();
-          }
-          setArenaState(ArenaState.IN_GAME);
-          getPlotManager().distributePlots();
-          getPlotManager().teleportToPlots();
-          setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.THEME_VOTE, this));
-          for (Player player : getPlayers()) {
-            player.getInventory().clear();
-            player.setGameMode(GameMode.CREATIVE);
-            player.setAllowFlight(true);
-            player.setFlying(true);
-            hidePlayersOutsideTheGame(player);
-            player.getInventory().setItem(8, getPlugin().getOptionsRegistry().getMenuItem());
-            //to prevent Multiverse chaning gamemode bug
-            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setGameMode(GameMode.CREATIVE), 20);
-          }
-        }
-        if (isForceStart()) {
-          setForceStart(false);
-        }
-        setTimer(getTimer() - 1);
-        break;
-      case IN_GAME:
-        if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-          if (getMaximumPlayers() <= getPlayers().size()) {
-            getPlugin().getServer().setWhitelist(true);
-          } else {
+    try {
+      //idle task
+      if (getPlayers().size() == 0 && getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+        return;
+      }
+      getScoreboardManager().updateScoreboard();
+      if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+        updateBossBar();
+      }
+      switch (getArenaState()) {
+        case WAITING_FOR_PLAYERS:
+          if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
             getPlugin().getServer().setWhitelist(false);
           }
-        }
-        if (isThemeVoteTime()) {
-          if (!themeTimerSet) {
+          getPlotManager().resetPlotsGradually();
+          if (getPlayers().size() < getMinimumPlayers()) {
+            if (getTimer() <= 0) {
+              setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
+              ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", String.valueOf(getMinimumPlayers())));
+              return;
+            }
+          } else {
+            ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
+            setArenaState(ArenaState.STARTING);
+            Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
+            setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
+            ArenaUtils.showPlayers(this);
+          }
+          setTimer(getTimer() - 1);
+          break;
+        case STARTING:
+          for (Player player : getPlayers()) {
+            player.setExp((float) (getTimer() / getPlugin().getConfig().getDouble("Lobby-Starting-Time", 60)));
+            player.setLevel(getTimer());
+          }
+          if (getPlayers().size() < getMinimumPlayers() && !isForceStart()) {
+            ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", String.valueOf(getMinimumPlayers())));
+            setArenaState(ArenaState.WAITING_FOR_PLAYERS);
+            Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
+            setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
+            for (Player player : getPlayers()) {
+              player.setExp(1);
+              player.setLevel(0);
+            }
+            break;
+          }
+          if (getTimer() == 0 || isForceStart()) {
+            if (!getPlotManager().isPlotsCleared()) {
+              getPlotManager().resetQueuedPlots();
+            }
+            setArenaState(ArenaState.IN_GAME);
+            getPlotManager().distributePlots();
+            getPlotManager().teleportToPlots();
             setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.THEME_VOTE, this));
-            themeTimerSet = true;
-            for (Player p : getPlayers()) {
-              p.openInventory(voteMenu.getInventory());
-            }
-          }
-          for (Player p : getPlayers()) {
-            voteMenu.updateInventory(p);
-          }
-          if (getTimer() == 0) {
-            setThemeVoteTime(false);
-            String votedTheme = voteMenu.getVotePoll().getVotedTheme();
-            setTheme(votedTheme);
-            setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, this));
-            String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started");
-            for (Player p : getPlayers()) {
-              p.closeInventory();
-              p.teleport(getPlotManager().getPlot(p).getTeleportLocation());
-              p.sendMessage(ChatManager.getPrefix() + message);
-            }
-            break;
-          } else {
-            setTimer(getTimer() - 1);
-            break;
-          }
-        }
-        if (getPlayers().size() <= 2) {
-          if ((getPlayers().size() == 1 && getArenaType() == ArenaType.SOLO) || (getPlayers().size() == 2 && getArenaType() == ArenaType.TEAM
-              && getPlotManager().getPlot(((Player) getPlayers().toArray()[0]).getUniqueId()).getOwners().contains(((Player) getPlayers().toArray()[1]).getUniqueId()))) {
-            String message = ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Only-You-Playing");
-            ChatManager.broadcast(this, message);
-            setArenaState(ArenaState.ENDING);
-            Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
-            setTimer(10);
-          }
-        }
-        if ((getTimer() == (4 * 60) || getTimer() == (3 * 60) || getTimer() == 5 * 60 || getTimer() == 30 || getTimer() == 2 * 60 || getTimer() == 60 || getTimer() == 15) && !this.isVoting()) {
-          String message = ChatManager.colorMessage("In-Game.Messages.Time-Left-To-Build").replace("%FORMATTEDTIME%", MinigameUtils.formatIntoMMSS(getTimer()));
-          String subtitle = ChatManager.colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", String.valueOf(getTimer()));
-          for (Player p : getPlayers()) {
-            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
-            p.sendMessage(ChatManager.getPrefix() + message);
-            p.sendTitle(null, subtitle, 5, 30, 5);
-          }
-        }
-        if (getTimer() != 0 && !receivedVoteItems) {
-          if (getOption(ArenaOption.IN_PLOT_CHECKER) == 1) {
-            setOptionValue(ArenaOption.IN_PLOT_CHECKER, 0);
             for (Player player : getPlayers()) {
-              User user = getPlugin().getUserManager().getUser(player.getUniqueId());
-              Plot buildPlot = user.getCurrentPlot();
-              if (buildPlot != null) {
-                if (!buildPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
-                  player.teleport(buildPlot.getTeleportLocation());
-                  player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Messages.Cant-Fly-Outside-Plot"));
-                }
-              }
+              player.getInventory().clear();
+              player.setGameMode(GameMode.CREATIVE);
+              player.setAllowFlight(true);
+              player.setFlying(true);
+              ArenaUtils.hidePlayersOutsideTheGame(this, player);
+              player.getInventory().setItem(8, getPlugin().getOptionsRegistry().getMenuItem());
+              //to prevent Multiverse chaning gamemode bug
+              Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setGameMode(GameMode.CREATIVE), 20);
             }
           }
-          addOptionValue(ArenaOption.IN_PLOT_CHECKER, 1);
-        } else if (getTimer() == 0 && !receivedVoteItems) {
-          queue.addAll(getPlayers());
-          for (Player player : getPlayers()) {
-            player.getInventory().clear();
-            getPlugin().getVoteItems().giveVoteItems(player);
+          if (isForceStart()) {
+            setForceStart(false);
           }
-          receivedVoteItems = true;
-        }
-        if (getTimer() == 0 && receivedVoteItems) {
-          setVoting(true);
-          if (!queue.isEmpty()) {
-            if (getVotingPlot() != null) {
-              for (Player player : getPlayers()) {
-                getVotingPlot().setPoints(getVotingPlot().getPoints() + getPlugin().getUserManager().getUser(player.getUniqueId()).getStat(StatsStorage.StatisticType.LOCAL_POINTS));
-                getPlugin().getUserManager().getUser(player.getUniqueId()).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
-              }
-            }
-            if (getArenaType() == ArenaType.TEAM) {
-              for (Plot p : getPlotManager().getPlots()) {
-                if (p.getOwners() != null && p.getOwners().size() == 2) {
-                  //removing second owner to not vote for same plot twice
-                  queue.remove(p.getOwners().get(1));
-                }
-              }
-            }
-            voteRoutine();
-          } else {
-            if (getVotingPlot() != null) {
-              for (Player player : getPlayers()) {
-                getVotingPlot().setPoints(getVotingPlot().getPoints() + getPlugin().getUserManager().getUser(player.getUniqueId()).getStat(StatsStorage.StatisticType.LOCAL_POINTS));
-                getPlugin().getUserManager().getUser(player.getUniqueId()).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
-              }
-            }
-            calculateResults();
-            Plot winnerPlot = getPlotManager().getPlot(topList.get(1).get(0));
-            announceResults();
-
-            for (Player player : getPlayers()) {
-              player.teleport(winnerPlot.getTeleportLocation());
-              String winner = ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Title");
-              if (getArenaType() == ArenaType.TEAM) {
-                if (winnerPlot.getOwners().size() == 1) {
-                  winner = winner.replace("%player%", Bukkit.getOfflinePlayer(topList.get(1).get(0)).getName());
-                } else {
-                  winner = winner.replace("%player%", Bukkit.getOfflinePlayer(topList.get(1).get(0)).getName() + " & " + Bukkit.getOfflinePlayer(topList.get(1).get(1)).getName());
-                }
-              } else {
-                winner = winner.replace("%player%", Bukkit.getOfflinePlayer(topList.get(1).get(0)).getName());
-              }
-              player.sendTitle(winner, null, 5, 35, 5);
-            }
-            this.setArenaState(ArenaState.ENDING);
-            Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
-            setTimer(10);
-          }
-        }
-        setTimer(getTimer() - 1);
-        break;
-      case ENDING:
-        if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-          getPlugin().getServer().setWhitelist(false);
-        }
-        setVoting(false);
-        themeTimerSet = false;
-        for (Player player : getPlayers()) {
-          MinigameUtils.spawnRandomFirework(player.getLocation());
-          showPlayers();
-        }
-        if (getTimer() <= 0) {
-          teleportAllToEndLocation();
-          for (Player player : getPlayers()) {
-            if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-              gameBar.removePlayer(player);
-            }
-            player.getInventory().clear();
-            getPlugin().getUserManager().getUser(player.getUniqueId()).removeScoreboard();
-            player.setGameMode(GameMode.SURVIVAL);
-            player.setFlying(false);
-            player.setAllowFlight(false);
-            player.getInventory().setArmorContents(null);
-            player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
-            getPlugin().getUserManager().getUser(player.getUniqueId()).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
-            if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-              InventoryUtils.loadInventory(getPlugin(), player);
-            }
-            //plot might be already deleted by team mate in TEAM game mode
-            if (getPlotManager().getPlot(player) != null) {
-              getPlotManager().getPlot(player).fullyResetPlot();
-            }
-          }
-          giveRewards();
-          clearPlayers();
-          setArenaState(ArenaState.RESTARTING);
+          setTimer(getTimer() - 1);
+          break;
+        case IN_GAME:
           if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-            for (Player player : getPlugin().getServer().getOnlinePlayers()) {
-              this.addPlayer(player);
+            if (getMaximumPlayers() <= getPlayers().size()) {
+              getPlugin().getServer().setWhitelist(true);
+            } else {
+              getPlugin().getServer().setWhitelist(false);
             }
           }
-        }
-        setTimer(getTimer() - 1);
-        break;
-      case RESTARTING:
-        setTimer(14);
-        setVoting(false);
-        receivedVoteItems = false;
-        if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && getPlugin().getConfig().getBoolean("Bungee-Shutdown-On-End", false)) {
-          getPlugin().getServer().shutdown();
-        }
+          if (isThemeVoteTime()) {
+            if (!themeTimerSet) {
+              setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.THEME_VOTE, this));
+              themeTimerSet = true;
+              for (Player p : getPlayers()) {
+                p.openInventory(voteMenu.getInventory());
+              }
+            }
+            for (Player p : getPlayers()) {
+              voteMenu.updateInventory(p);
+            }
+            if (getTimer() == 0) {
+              setThemeVoteTime(false);
+              String votedTheme = voteMenu.getVotePoll().getVotedTheme();
+              setTheme(votedTheme);
+              setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, this));
+              String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started");
+              for (Player p : getPlayers()) {
+                p.closeInventory();
+                p.teleport(getPlotManager().getPlot(p).getTeleportLocation());
+                p.sendMessage(ChatManager.getPrefix() + message);
+              }
+              break;
+            } else {
+              setTimer(getTimer() - 1);
+              break;
+            }
+          }
+          if (getPlayers().size() <= 2) {
+            if ((getPlayers().size() == 1 && getArenaType() == ArenaType.SOLO) || (getPlayers().size() == 2 && getArenaType() == ArenaType.TEAM
+                && getPlotManager().getPlot(getPlayers().get(0)).getOwners().contains(getPlayers().get(1)))) {
+              String message = ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Only-You-Playing");
+              ChatManager.broadcast(this, message);
+              setArenaState(ArenaState.ENDING);
+              Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
+              setTimer(10);
+            }
+          }
+          if ((getTimer() == (4 * 60) || getTimer() == (3 * 60) || getTimer() == 5 * 60 || getTimer() == 30 || getTimer() == 2 * 60 || getTimer() == 60 || getTimer() == 15) && !this.isVoting()) {
+            String message = ChatManager.colorMessage("In-Game.Messages.Time-Left-To-Build").replace("%FORMATTEDTIME%", MinigameUtils.formatIntoMMSS(getTimer()));
+            String subtitle = ChatManager.colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", String.valueOf(getTimer()));
+            for (Player p : getPlayers()) {
+              p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
+              p.sendMessage(ChatManager.getPrefix() + message);
+              p.sendTitle(null, subtitle, 5, 30, 5);
+            }
+          }
+          if (getTimer() != 0 && !receivedVoteItems) {
+            if (getOption(ArenaOption.IN_PLOT_CHECKER) == 1) {
+              setOptionValue(ArenaOption.IN_PLOT_CHECKER, 0);
+              for (Player player : getPlayers()) {
+                User user = getPlugin().getUserManager().getUser(player.getUniqueId());
+                Plot buildPlot = user.getCurrentPlot();
+                if (buildPlot != null) {
+                  if (!buildPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
+                    player.teleport(buildPlot.getTeleportLocation());
+                    player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Messages.Cant-Fly-Outside-Plot"));
+                  }
+                }
+              }
+            }
+            addOptionValue(ArenaOption.IN_PLOT_CHECKER, 1);
+          } else if (getTimer() == 0 && !receivedVoteItems) {
+            queue.addAll(getPlayers());
+            for (Player player : getPlayers()) {
+              player.getInventory().clear();
+              getPlugin().getVoteItems().giveVoteItems(player);
+            }
+            receivedVoteItems = true;
+          }
+          if (getTimer() == 0 && receivedVoteItems) {
+            setVoting(true);
+            if (!queue.isEmpty()) {
+              if (getVotingPlot() != null) {
+                for (Player player : getPlayers()) {
+                  getVotingPlot().setPoints(getVotingPlot().getPoints() + getPlugin().getUserManager().getUser(player.getUniqueId()).getStat(StatsStorage.StatisticType.LOCAL_POINTS));
+                  getPlugin().getUserManager().getUser(player.getUniqueId()).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
+                }
+              }
+              if (getArenaType() == ArenaType.TEAM) {
+                for (Plot p : getPlotManager().getPlots()) {
+                  if (p.getOwners() != null && p.getOwners().size() == 2) {
+                    //removing second owner to not vote for same plot twice
+                    queue.remove(p.getOwners().get(1));
+                  }
+                }
+              }
+              voteRoutine();
+            } else {
+              if (getVotingPlot() != null) {
+                for (Player player : getPlayers()) {
+                  getVotingPlot().setPoints(getVotingPlot().getPoints() + getPlugin().getUserManager().getUser(player.getUniqueId()).getStat(StatsStorage.StatisticType.LOCAL_POINTS));
+                  getPlugin().getUserManager().getUser(player.getUniqueId()).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
+                }
+              }
+              calculateResults();
+              Plot winnerPlot = getPlotManager().getPlot(topList.get(1).get(0));
+              announceResults();
 
-        setOptionValue(ArenaOption.IN_PLOT_CHECKER, 0);
-        setArenaState(ArenaState.WAITING_FOR_PLAYERS);
-        topList.clear();
-        themeTimerSet = false;
-        setThemeVoteTime(true);
-        voteMenu.resetPoll();
+              for (Player player : getPlayers()) {
+                player.teleport(winnerPlot.getTeleportLocation());
+                String winner = ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Winner-Title");
+                if (getArenaType() == ArenaType.TEAM) {
+                  if (winnerPlot.getOwners().size() == 1) {
+                    winner = winner.replace("%player%", topList.get(1).get(0).getName());
+                  } else {
+                    winner = winner.replace("%player%", topList.get(1).get(0).getName() + " & " + topList.get(1).get(1).getName());
+                  }
+                } else {
+                  winner = winner.replace("%player%", topList.get(1).get(0).getName());
+                }
+                player.sendTitle(winner, null, 5, 35, 5);
+              }
+              this.setArenaState(ArenaState.ENDING);
+              Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
+              setTimer(10);
+            }
+          }
+          setTimer(getTimer() - 1);
+          break;
+        case ENDING:
+          if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+            getPlugin().getServer().setWhitelist(false);
+          }
+          setVoting(false);
+          themeTimerSet = false;
+          for (Player player : getPlayers()) {
+            MinigameUtils.spawnRandomFirework(player.getLocation());
+            ArenaUtils.showPlayers(this);
+          }
+          if (getTimer() <= 0) {
+            teleportAllToEndLocation();
+            for (Player player : getPlayers()) {
+              if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+                getGameBar().removePlayer(player);
+              }
+              player.getInventory().clear();
+              getPlugin().getUserManager().getUser(player.getUniqueId()).removeScoreboard();
+              player.setGameMode(GameMode.SURVIVAL);
+              player.setFlying(false);
+              player.setAllowFlight(false);
+              player.getInventory().setArmorContents(null);
+              player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
+              getPlugin().getUserManager().getUser(player.getUniqueId()).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
+              if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+                InventoryUtils.loadInventory(getPlugin(), player);
+              }
+              //plot might be already deleted by team mate in TEAM game mode
+              if (getPlotManager().getPlot(player) != null) {
+                getPlotManager().getPlot(player).fullyResetPlot();
+              }
+            }
+            giveRewards();
+            clearPlayers();
+            setArenaState(ArenaState.RESTARTING);
+            if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+              for (Player player : getPlugin().getServer().getOnlinePlayers()) {
+                this.addPlayer(player);
+              }
+            }
+          }
+          setTimer(getTimer() - 1);
+          break;
+        case RESTARTING:
+          setTimer(14);
+          setVoting(false);
+          receivedVoteItems = false;
+          if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && getPlugin().getConfig().getBoolean("Bungee-Shutdown-On-End", false)) {
+            getPlugin().getServer().shutdown();
+          }
+
+          setOptionValue(ArenaOption.IN_PLOT_CHECKER, 0);
+          setArenaState(ArenaState.WAITING_FOR_PLAYERS);
+          topList.clear();
+          themeTimerSet = false;
+          setThemeVoteTime(true);
+          voteMenu.resetPoll();
+      }
+    } catch (Exception ex) {
+      new ReportedException(getPlugin(), ex);
     }
   }
 
@@ -549,6 +563,52 @@ public class SoloArena extends BaseArena {
     if (!(pos > getPlayers().size()) && after != null) {
       moveScore(pos + 1, after);
     }
+  }
+
+  public void giveRewards() {
+    if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.WIN_COMMANDS_ENABLED)) {
+      if (topList.get(1) != null) {
+        for (String string : getPlugin().getConfigPreferences().getWinCommands(ConfigPreferences.Position.FIRST)) {
+          for (Player p : topList.get(1)) {
+            getPlugin().getServer().dispatchCommand(getPlugin().getServer().getConsoleSender(), string.replace("%PLAYER%", p.getName()));
+          }
+        }
+      }
+    }
+    if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.SECOND_PLACE_COMMANDS_ENABLED)) {
+      if (topList.get(2) != null) {
+        for (String string : getPlugin().getConfigPreferences().getWinCommands(ConfigPreferences.Position.SECOND)) {
+          for (Player p : topList.get(2)) {
+            getPlugin().getServer().dispatchCommand(getPlugin().getServer().getConsoleSender(), string.replace("%PLAYER%", p.getName()));
+          }
+        }
+      }
+    }
+    if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.THIRD_PLACE_COMMANDS_ENABLED)) {
+      if (topList.get(3) != null) {
+        for (String string : getPlugin().getConfigPreferences().getWinCommands(ConfigPreferences.Position.THIRD)) {
+          for (Player p : topList.get(3)) {
+            getPlugin().getServer().dispatchCommand(getPlugin().getServer().getConsoleSender(), string.replace("%PLAYER%", p.getName()));
+          }
+        }
+      }
+    }
+    if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.END_GAME_COMMANDS_ENABLED)) {
+      for (String string : getPlugin().getConfigPreferences().getEndGameCommands()) {
+        for (Player player : getPlayers()) {
+          getPlugin().getServer().dispatchCommand(getPlugin().getServer().getConsoleSender(), string.replace("%PLAYER%", player.getName()).replace("%RANG%", Integer.toString(getRang(player))));
+        }
+      }
+    }
+  }
+
+  public Integer getRang(Player player) {
+    for (int i : topList.keySet()) {
+      if (topList.get(i).contains(player)) {
+        return i;
+      }
+    }
+    return 0;
   }
 
 }

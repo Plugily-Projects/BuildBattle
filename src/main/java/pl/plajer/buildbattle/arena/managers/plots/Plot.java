@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import net.citizensnpcs.api.CitizensAPI;
 
@@ -153,11 +152,7 @@ public class Plot {
         }
       }
       getParticles().clear();
-      for (UUID u : owners) {
-        Player p = Bukkit.getPlayer(u);
-        if (p == null) {
-          continue;
-        }
+      for (Player p : owners) {
         p.resetPlayerWeather();
         setWeatherType(p.getPlayerWeather());
         p.resetPlayerTime();

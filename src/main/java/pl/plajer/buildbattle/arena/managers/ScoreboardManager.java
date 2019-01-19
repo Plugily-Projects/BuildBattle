@@ -21,18 +21,17 @@ package pl.plajer.buildbattle.arena.managers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
+import pl.plajer.buildbattle.arena.impl.SoloArena;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
 import pl.plajerlair.core.utils.GameScoreboard;
@@ -101,12 +100,12 @@ public class ScoreboardManager {
     returnString = StringUtils.replace(returnString, "%PLAYERS%", Integer.toString(arena.getPlayers().size()));
     returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());
     if (arena.getArenaType() != BaseArena.ArenaType.GUESS_THE_BUILD) {
-      if (arena.isThemeVoteTime()) {
+      if (((SoloArena) arena).isThemeVoteTime()) {
         returnString = StringUtils.replace(returnString, "%THEME%", ChatManager.colorMessage("In-Game.No-Theme-Yet"));
       } else {
-        returnString = StringUtils.replace(returnString, "%THEME%", arena.getTheme());
+        returnString = StringUtils.replace(returnString, "%THEME%", ((SoloArena) arena).getTheme());
       }
-    } else {
+    } /*else {
       if (arena.isGTBThemeSet()) {
         returnString = StringUtils.replace(returnString, "%CURRENT_TIMER%", ChatManager.colorMessage("Scoreboard.GTB-Current-Timer.Build-Time"));
       } else {
@@ -131,21 +130,22 @@ public class ScoreboardManager {
         returnString = StringUtils.replace(returnString, "%" + i + "%", Bukkit.getOfflinePlayer((UUID) arena.getPlayersPoints().keySet().toArray()[i]).getName());
         returnString = StringUtils.replace(returnString, "%" + i + "_PTS%", String.valueOf(arena.getPlayersPoints().get(arena.getPlayersPoints().keySet().toArray()[i])));
       }
-    }
+    }*/
     returnString = StringUtils.replace(returnString, "%MIN_PLAYERS%", Integer.toString(arena.getMinimumPlayers()));
     returnString = StringUtils.replace(returnString, "%MAX_PLAYERS%", Integer.toString(arena.getMaximumPlayers()));
     returnString = StringUtils.replace(returnString, "%TIMER%", Integer.toString(arena.getTimer()));
-    returnString = StringUtils.replace(returnString, "%TIME_LEFT%", Long.toString(arena.getTimeLeft()));
+    //todo its the same
+    returnString = StringUtils.replace(returnString, "%TIME_LEFT%", Long.toString(arena.getTimer()));
     returnString = StringUtils.replace(returnString, "%FORMATTED_TIME_LEFT%", MinigameUtils.formatIntoMMSS(arena.getTimer()));
     returnString = StringUtils.replace(returnString, "%ARENA_ID%", arena.getID());
     returnString = StringUtils.replace(returnString, "%MAPNAME%", arena.getMapName());
-    if (!arena.isThemeVoteTime()) {
+    if (!((SoloArena) arena).isThemeVoteTime()) {
       if (arena.getArenaType() == BaseArena.ArenaType.TEAM && arena.getPlotManager().getPlot(player) != null) {
         if (arena.getPlotManager().getPlot(player).getOwners().size() == 2) {
-          if (arena.getPlotManager().getPlot(player).getOwners().get(0).equals(player.getUniqueId())) {
-            returnString = StringUtils.replace(returnString, "%TEAMMATE%", Bukkit.getOfflinePlayer(arena.getPlotManager().getPlot(player).getOwners().get(1)).getName());
+          if (arena.getPlotManager().getPlot(player).getOwners().get(0).equals(player)) {
+            returnString = StringUtils.replace(returnString, "%TEAMMATE%", arena.getPlotManager().getPlot(player).getOwners().get(1).getName());
           } else {
-            returnString = StringUtils.replace(returnString, "%TEAMMATE%", Bukkit.getOfflinePlayer(arena.getPlotManager().getPlot(player).getOwners().get(0)).getName());
+            returnString = StringUtils.replace(returnString, "%TEAMMATE%", arena.getPlotManager().getPlot(player).getOwners().get(0).getName());
           }
         } else {
           returnString = StringUtils.replace(returnString, "%TEAMMATE%", ChatManager.colorMessage("In-Game.Nobody"));
