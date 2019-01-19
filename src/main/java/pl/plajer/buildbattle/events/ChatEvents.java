@@ -27,7 +27,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
@@ -47,9 +47,9 @@ public class ChatEvents implements Listener {
   @EventHandler
   public void onChatIngame(AsyncPlayerChatEvent event) {
     try {
-      Arena arena = ArenaRegistry.getArena(event.getPlayer());
+      BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
       if (arena == null) {
-        for (Arena loopArena : ArenaRegistry.getArenas()) {
+        for (BaseArena loopArena : ArenaRegistry.getArenas()) {
           for (Player player : loopArena.getPlayers()) {
             event.getRecipients().remove(player);
           }

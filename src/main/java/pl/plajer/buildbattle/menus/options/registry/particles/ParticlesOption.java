@@ -23,7 +23,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.menus.options.MenuOption;
@@ -48,7 +48,7 @@ public class ParticlesOption {
       @Override
       public void onClick(InventoryClickEvent e) {
         e.getWhoClicked().closeInventory();
-        Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+        BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
         if (arena == null) {
           return;
         }
@@ -57,7 +57,7 @@ public class ParticlesOption {
 
       @Override
       public void onTargetClick(InventoryClickEvent e) {
-        Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+        BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
         if (arena == null) {
           return;
         }

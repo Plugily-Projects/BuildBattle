@@ -28,7 +28,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
 import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
 
@@ -56,7 +56,7 @@ public class TabCompletion implements TabCompleter {
     if (cmd.getName().equalsIgnoreCase("buildbattle")) {
       if (args.length == 2 && args[0].equalsIgnoreCase("join")) {
         List<String> arenaIds = new ArrayList<>();
-        for (Arena arena : ArenaRegistry.getArenas()) {
+        for (BaseArena arena : ArenaRegistry.getArenas()) {
           arenaIds.add(arena.getID());
         }
         return arenaIds;

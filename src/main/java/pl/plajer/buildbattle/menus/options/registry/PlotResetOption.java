@@ -24,7 +24,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.menus.options.MenuOption;
@@ -46,7 +46,7 @@ public class PlotResetOption {
       @Override
       public void onClick(InventoryClickEvent e) {
         e.getWhoClicked().closeInventory();
-        Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+        BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
         if (arena == null) {
           return;
         }

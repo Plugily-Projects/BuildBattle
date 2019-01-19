@@ -30,7 +30,7 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
@@ -54,10 +54,10 @@ public class LobbyEvents implements Listener {
         return;
       }
       Player player = (Player) event.getEntity();
-      if (ArenaRegistry.getArena(player) == null) {
+      BaseArena arena = ArenaRegistry.getArena(player);
+      if (arena == null) {
         return;
       }
-      Arena arena = ArenaRegistry.getArena(player);
       if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
         event.setCancelled(true);
       }
@@ -73,7 +73,7 @@ public class LobbyEvents implements Listener {
         return;
       }
       Player player = (Player) event.getEntity();
-      Arena arena = ArenaRegistry.getArena(player);
+      BaseArena arena = ArenaRegistry.getArena(player);
       if (arena == null || arena.getArenaState() == ArenaState.IN_GAME) {
         return;
       }

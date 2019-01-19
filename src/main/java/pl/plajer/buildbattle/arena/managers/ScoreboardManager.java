@@ -32,7 +32,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.ArenaState;
-import pl.plajer.buildbattle.arena.impl.Arena;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
@@ -122,7 +121,7 @@ public class ScoreboardManager {
         returnString = StringUtils.replace(returnString, "%BUILDER%", Bukkit.getPlayer(arena.getCurrentBuilder()).getName());
       }
     }
-    if (arena.getArenaType() == Arena.ArenaType.GUESS_THE_BUILD) {
+    if (arena.getArenaType() == BaseArena.ArenaType.GUESS_THE_BUILD) {
       //todo ineffective
       for (int i = 1; i < 11; i++) {
         if (arena.getArenaState() != ArenaState.ENDING && i > 3) {
@@ -141,7 +140,7 @@ public class ScoreboardManager {
     returnString = StringUtils.replace(returnString, "%ARENA_ID%", arena.getID());
     returnString = StringUtils.replace(returnString, "%MAPNAME%", arena.getMapName());
     if (!arena.isThemeVoteTime()) {
-      if (arena.getArenaType() == Arena.ArenaType.TEAM && arena.getPlotManager().getPlot(player) != null) {
+      if (arena.getArenaType() == BaseArena.ArenaType.TEAM && arena.getPlotManager().getPlot(player) != null) {
         if (arena.getPlotManager().getPlot(player).getOwners().size() == 2) {
           if (arena.getPlotManager().getPlot(player).getOwners().get(0).equals(player.getUniqueId())) {
             returnString = StringUtils.replace(returnString, "%TEAMMATE%", Bukkit.getOfflinePlayer(arena.getPlotManager().getPlot(player).getOwners().get(1)).getName());

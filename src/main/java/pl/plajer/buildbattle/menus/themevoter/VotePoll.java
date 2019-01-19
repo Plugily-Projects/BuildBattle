@@ -26,7 +26,7 @@ import java.util.Map;
 
 import org.bukkit.entity.Player;
 
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.SoloArena;
 
 /**
  * @author Plajer
@@ -35,11 +35,11 @@ import pl.plajer.buildbattle.arena.impl.Arena;
  */
 public class VotePoll {
 
-  private Arena arena;
+  private SoloArena arena;
   private Map<String, Integer> votedThemes = new LinkedHashMap<>();
   private Map<Player, String> playerVote = new HashMap<>();
 
-  public VotePoll(Arena arena, List<String> votedThemes) {
+  public VotePoll(SoloArena arena, List<String> votedThemes) {
     this.arena = arena;
     for (String theme : votedThemes) {
       this.votedThemes.put(theme, 0);
@@ -57,7 +57,7 @@ public class VotePoll {
     return sortedMap;
   }
 
-  public Arena getArena() {
+  public SoloArena getArena() {
     return arena;
   }
 

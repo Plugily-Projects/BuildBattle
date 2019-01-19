@@ -33,7 +33,7 @@ import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
@@ -57,7 +57,7 @@ public class BungeeManager implements Listener {
   }
 
   private String getMOTD() {
-    Arena arena = ArenaRegistry.getArenas().get(0);
+    BaseArena arena = ArenaRegistry.getArenas().get(0);
     if (arena.getArenaState() == ArenaState.STARTING && (arena.getTimer() <= 3)) {
       return ArenaState.IN_GAME.toString();
     } else {

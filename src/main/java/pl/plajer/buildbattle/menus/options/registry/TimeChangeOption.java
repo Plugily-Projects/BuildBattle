@@ -18,15 +18,13 @@
 
 package pl.plajer.buildbattle.menus.options.registry;
 
-import java.util.UUID;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.menus.options.MenuOption;
@@ -67,17 +65,13 @@ public class TimeChangeOption {
 
       @Override
       public void onTargetClick(InventoryClickEvent e) {
-        Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+        BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
         if (arena == null) {
           return;
         }
         Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());
         plot.setTime(Plot.Time.valueOf(TimeClickPosition.getByPosition(e.getRawSlot()).toString()));
-        for (UUID owner : plot.getOwners()) {
-          Player p = Bukkit.getPlayer(owner);
-          if (p == null) {
-            continue;
-          }
+        for (Player p : plot.getOwners()) {
           p.setPlayerTime(Plot.Time.format(plot.getTime(), p.getWorld().getTime()), false);
           p.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Time-Set"));
         }

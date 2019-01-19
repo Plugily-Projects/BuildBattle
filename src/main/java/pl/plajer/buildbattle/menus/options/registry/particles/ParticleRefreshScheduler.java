@@ -23,7 +23,7 @@ import org.bukkit.Location;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 
 /**
@@ -34,7 +34,7 @@ public class ParticleRefreshScheduler {
 
   public ParticleRefreshScheduler(Main plugin) {
     Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-      for (Arena arena : ArenaRegistry.getArenas()) {
+      for (BaseArena arena : ArenaRegistry.getArenas()) {
         for (Plot buildPlot : arena.getPlotManager().getPlots()) {
           for (Location location : buildPlot.getParticles().keySet()) {
             if (arena.getPlayers().isEmpty()) {

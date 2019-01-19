@@ -23,7 +23,8 @@ import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
+import pl.plajer.buildbattle.arena.impl.SoloArena;
 import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
 import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
 import pl.plajer.buildbattle.commands.arguments.data.LabelData;
@@ -43,7 +44,7 @@ public class ForceStartArguments {
             "&7Force starts arena you're in\n&6Permission: &7buildbattle.admin.forcestart")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        Arena arena = ArenaRegistry.getArena((Player) sender);
+        BaseArena arena = ArenaRegistry.getArena((Player) sender);
         if (arena == null) {
           sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Not-Playing"));
           return;
@@ -58,9 +59,9 @@ public class ForceStartArguments {
           arena.setArenaState(ArenaState.STARTING);
           arena.setForceStart(true);
           arena.setTimer(0);
-          if (args.length == 2) {
-            arena.setThemeVoteTime(false);
-            arena.setTheme(args[1]);
+          if (args.length == 2 && arena instanceof SoloArena) {
+            ((SoloArena) arena).setThemeVoteTime(false);
+            ((SoloArena) arena).setTheme(args[1]);
           }
           ChatManager.broadcast(arena, ChatManager.colorMessage("In-Game.Messages.Admin-Messages.Set-Starting-In-To-0"));
         }

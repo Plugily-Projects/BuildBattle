@@ -21,7 +21,7 @@ package pl.plajer.buildbattle.api.event.game;
 import org.bukkit.event.HandlerList;
 
 import pl.plajer.buildbattle.api.event.BBEvent;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 
 /**
  * Called when game is started
@@ -30,7 +30,7 @@ public class BBGameStartEvent extends BBEvent {
 
   private static final HandlerList handlers = new HandlerList();
 
-  public BBGameStartEvent(Arena arena) {
+  public BBGameStartEvent(BaseArena arena) {
     super(arena);
   }
 

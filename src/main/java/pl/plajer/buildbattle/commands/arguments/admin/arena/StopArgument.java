@@ -24,7 +24,7 @@ import org.bukkit.entity.Player;
 import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
 import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
 import pl.plajer.buildbattle.commands.arguments.data.LabelData;
@@ -44,7 +44,7 @@ public class StopArgument {
             "&7Stops the arena you're in\n&7&lYou must be in target arena!\n&6Permission: &7buildbattle.admin.stop")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        Arena arena = ArenaRegistry.getArena((Player) sender);
+        BaseArena arena = ArenaRegistry.getArena((Player) sender);
         if (arena == null) {
           sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Not-Playing"));
           return;

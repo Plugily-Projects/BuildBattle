@@ -25,7 +25,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.MinigameUtils;
@@ -48,7 +48,7 @@ public class ChatManager {
     return prefix;
   }
 
-  public static void broadcast(Arena arena, String message) {
+  public static void broadcast(BaseArena arena, String message) {
     for (Player p : arena.getPlayers()) {
       p.sendMessage(prefix + message);
     }
@@ -74,14 +74,14 @@ public class ChatManager {
     return ChatColor.translateAlternateColorCodes('&', msg);
   }
 
-  public static String formatMessage(Arena arena, String message, Player player) {
+  public static String formatMessage(BaseArena arena, String message, Player player) {
     String returnString = message;
     returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());
     returnString = colorRawMessage(formatPlaceholders(returnString, arena));
     return returnString;
   }
 
-  private static String formatPlaceholders(String message, Arena arena) {
+  private static String formatPlaceholders(String message, BaseArena arena) {
     String returnString = message;
     returnString = StringUtils.replace(returnString, "%TIME%", Integer.toString(arena.getTimer()));
     returnString = StringUtils.replace(returnString, "%FORMATTEDTIME%", MinigameUtils.formatIntoMMSS((arena.getTimer())));
@@ -91,7 +91,7 @@ public class ChatManager {
     return returnString;
   }
 
-  public static void broadcastAction(Arena arena, Player p, ActionType action) {
+  public static void broadcastAction(BaseArena arena, Player p, ActionType action) {
     switch (action) {
       case JOIN:
         broadcast(arena, formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Join"), p));

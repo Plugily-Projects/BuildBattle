@@ -113,22 +113,7 @@ public class BaseArena extends BukkitRunnable {
     this.runTaskTimer(plugin, 20L, 20L);
   }
 
-  private void updateBossBar() {
-    switch (getArenaState()) {
-      case WAITING_FOR_PLAYERS:
-        gameBar.setTitle(ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
-        break;
-      case STARTING:
-        gameBar.setTitle(ChatManager.colorMessage("Bossbar.Starting-In").replace("%time%", String.valueOf(getTimer())));
-        break;
-      case IN_GAME:
-        if (!isVoting()) {
-          gameBar.setTitle(ChatManager.colorMessage("Bossbar.Time-Left").replace("%time%", String.valueOf(getTimer())));
-        } else {
-          gameBar.setTitle(ChatManager.colorMessage("Bossbar.Vote-Time-Left").replace("%time%", String.valueOf(getTimer())));
-        }
-        break;
-    }
+  public void updateBossBar() {
   }
 
   public ScoreboardManager getScoreboardManager() {
@@ -151,6 +136,19 @@ public class BaseArena extends BukkitRunnable {
    */
   public String getID() {
     return id;
+  }
+
+  /**
+   * Lobby location of arena
+   *
+   * @return lobby loc of arena
+   */
+  public Location getLobbyLocation() {
+    return gameLocations.get(BaseArena.GameLocation.LOBBY);
+  }
+
+  public void setLobbyLocation(Location loc) {
+    gameLocations.put(BaseArena.GameLocation.LOBBY, loc);
   }
 
   /**

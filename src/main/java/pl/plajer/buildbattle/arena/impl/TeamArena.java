@@ -18,10 +18,17 @@
 
 package pl.plajer.buildbattle.arena.impl;
 
+import pl.plajer.buildbattle.Main;
+
 /**
  * @author Plajer
  * <p>
  * Created at 11.01.2019
  */
-public class TeamsArena {
+public class TeamArena extends SoloArena {
+
+  public TeamArena(String id, Main plugin) {
+    super(id, plugin);
+  }
+
 }

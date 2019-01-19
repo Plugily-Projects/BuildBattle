@@ -25,7 +25,7 @@ import org.bukkit.event.HandlerList;
 
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.api.event.BBEvent;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 
 /**
  * @author Plajer
@@ -41,7 +41,7 @@ public class BBPlayerStatisticChangeEvent extends BBEvent {
   private StatsStorage.StatisticType statisticType;
   private int number;
 
-  public BBPlayerStatisticChangeEvent(@Nullable Arena eventArena, Player player, StatsStorage.StatisticType statisticType, int number) {
+  public BBPlayerStatisticChangeEvent(@Nullable BaseArena eventArena, Player player, StatsStorage.StatisticType statisticType, int number) {
     super(eventArena);
     this.player = player;
     this.statisticType = statisticType;

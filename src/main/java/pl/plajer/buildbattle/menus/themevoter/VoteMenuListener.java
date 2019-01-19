@@ -36,7 +36,9 @@ import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
+import pl.plajer.buildbattle.arena.impl.GuessTheBuildArena;
+import pl.plajer.buildbattle.arena.impl.SoloArena;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.user.User;
 import pl.plajerlair.core.services.exception.ReportedException;
@@ -58,8 +60,11 @@ public class VoteMenuListener implements Listener {
   @EventHandler
   public void onInventoryClose(InventoryCloseEvent e) {
     try {
-      Arena arena = ArenaRegistry.getArena((Player) e.getPlayer());
+      BaseArena arena = ArenaRegistry.getArena((Player) e.getPlayer());
       if (e.getInventory() == null || e.getInventory().getName() == null || arena == null) {
+        return;
+      }
+      if(!(arena instanceof SoloArena)) {
         return;
       }
       if (e.getInventory().getName().equals(ChatManager.colorMessage("Menus.Theme-Voting.Inventory-Name"))) {
@@ -82,17 +87,17 @@ public class VoteMenuListener implements Listener {
       if (e.getCurrentItem() == null) {
         return;
       }
+      BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+      if(!(arena instanceof SoloArena)) {
+        return;
+      }
       if (e.getInventory().getName().equals(ChatManager.colorMessage("Menus.Theme-Voting.Inventory-Name"))) {
         e.setCancelled(true);
-        Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
-        if (arena == null) {
-          return;
-        }
         if (e.getCurrentItem().getType() == Material.SIGN || /*1.13*/ ((plugin.is1_11_R1() || plugin.is1_12_R1()) &&
             e.getCurrentItem().getType() == Material.valueOf("SIGN_POST"))) {
           String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
           displayName = ChatColor.stripColor(displayName);
-          boolean success = arena.getVotePoll().addVote((Player) e.getWhoClicked(), displayName);
+          boolean success = ((SoloArena) arena).getVotePoll().addVote((Player) e.getWhoClicked(), displayName);
           if (!success) {
             e.getWhoClicked().sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Menus.Theme-Voting.Already-Voted"));
           } else {
@@ -104,9 +109,10 @@ public class VoteMenuListener implements Listener {
           if (u.getStat(StatsStorage.StatisticType.SUPER_VOTES) > 0) {
             u.setStat(StatsStorage.StatisticType.SUPER_VOTES, u.getStat(StatsStorage.StatisticType.SUPER_VOTES) - 1);
             ChatManager.broadcast(arena, ChatManager.getPrefix() + ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Used")
-                .replace("%player%", e.getWhoClicked().getName()).replace("%theme%", arena.getVotePoll().getThemeByPosition(e.getSlot() + 1)));
-            arena.setThemeVoteTime(false);
-            arena.setTheme(arena.getVotePoll().getThemeByPosition(e.getSlot() + 1));
+                .replace("%player%", e.getWhoClicked().getName()).replace("%theme%",
+                    ((SoloArena) arena).getVotePoll().getThemeByPosition(e.getSlot() + 1)));
+            ((SoloArena) arena).setThemeVoteTime(false);
+            ((SoloArena) arena).setTheme(((SoloArena) arena).getVotePoll().getThemeByPosition(e.getSlot() + 1));
             arena.setTimer(plugin.getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, arena));
             String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started");
             for (Player p : arena.getPlayers()) {
@@ -131,12 +137,12 @@ public class VoteMenuListener implements Listener {
       if (e.getCurrentItem() == null) {
         return;
       }
+      BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+      if (!(arena instanceof GuessTheBuildArena)) {
+        return;
+      }
       if (e.getInventory().getName().equals(ChatManager.colorMessage("Menus.Guess-The-Build-Theme-Selector.Inventory-Name"))) {
         e.setCancelled(true);
-        Arena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
-        if (arena == null) {
-          return;
-        }
         if (e.getCurrentItem().getType() == Material.PAPER) {
           GTBTheme theme;
           String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
@@ -154,8 +160,8 @@ public class VoteMenuListener implements Listener {
             default:
               return;
           }
-          arena.setCurrentGTBTheme(theme);
-          arena.setGTBThemeSet(true);
+          ((GuessTheBuildArena) arena).setCurrentGTBTheme(theme);
+          ((GuessTheBuildArena) arena).setGTBThemeSet(true);
           ((Player) e.getWhoClicked()).spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatManager.colorMessage("In-Game.Guess-The-Build.Theme-Is-Name")
               .replace("%THEME%", theme.getTheme())));
 

@@ -31,7 +31,7 @@ import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.api.event.player.BBPlayerStatisticChangeEvent;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 
 /**
@@ -61,7 +61,7 @@ public class User {
     return Bukkit.getServer().getPlayer(uuid);
   }
 
-  public Arena getArena() {
+  public BaseArena getArena() {
     return ArenaRegistry.getArena(Bukkit.getPlayer(uuid));
   }
 

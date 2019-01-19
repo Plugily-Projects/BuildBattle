@@ -28,7 +28,9 @@ import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
+import pl.plajer.buildbattle.arena.impl.GuessTheBuildArena;
+import pl.plajer.buildbattle.arena.impl.SoloArena;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.utils.Utils;
 import pl.plajerlair.core.services.exception.ReportedException;
@@ -56,8 +58,11 @@ public class VoteEvents implements Listener {
       if (!Utils.isNamed(event.getItem())) {
         return;
       }
-      Arena arena = ArenaRegistry.getArena(event.getPlayer());
-      if (arena == null || arena.getArenaState() != ArenaState.IN_GAME || !arena.isVoting()) {
+      BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
+      if(arena instanceof GuessTheBuildArena) {
+        return;
+      }
+      if (arena == null || arena.getArenaState() != ArenaState.IN_GAME || !((SoloArena) arena).isVoting()) {
         return;
       }
       if (plugin.getVoteItems().getReportItem().equals(event.getItem())) {
@@ -65,7 +70,7 @@ public class VoteEvents implements Listener {
         event.setCancelled(true);
         return;
       }
-      if (arena.getVotingPlot().getOwners().contains(event.getPlayer().getUniqueId())) {
+      if (((SoloArena) arena).getVotingPlot().getOwners().contains(event.getPlayer())) {
         event.getPlayer().sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Cant-Vote-Own-Plot"));
         event.setCancelled(true);
         return;

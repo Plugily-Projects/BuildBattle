@@ -27,7 +27,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
-import pl.plajer.buildbattle.arena.impl.Arena;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 
 /**
@@ -67,11 +66,11 @@ public class ConfigPreferences {
   }
 
   private void loadThemes() {
-    gameThemes.put(Arena.ArenaType.SOLO.getPrefix(), plugin.getConfig().getStringList("Themes.Classic"));
-    gameThemes.put(Arena.ArenaType.TEAM.getPrefix(), plugin.getConfig().getStringList("Themes.Teams"));
-    gameThemes.put(Arena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_EASY", plugin.getConfig().getStringList("Themes.Guess-The-Build.Easy"));
-    gameThemes.put(Arena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_MEDIUM", plugin.getConfig().getStringList("Themes.Guess-The-Build.Medium"));
-    gameThemes.put(Arena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_HARD", plugin.getConfig().getStringList("Themes.Guess-The-Build.Hard"));
+    gameThemes.put(BaseArena.ArenaType.SOLO.getPrefix(), plugin.getConfig().getStringList("Themes.Classic"));
+    gameThemes.put(BaseArena.ArenaType.TEAM.getPrefix(), plugin.getConfig().getStringList("Themes.Teams"));
+    gameThemes.put(BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_EASY", plugin.getConfig().getStringList("Themes.Guess-The-Build.Easy"));
+    gameThemes.put(BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_MEDIUM", plugin.getConfig().getStringList("Themes.Guess-The-Build.Medium"));
+    gameThemes.put(BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_HARD", plugin.getConfig().getStringList("Themes.Guess-The-Build.Hard"));
   }
 
   public List<String> getThemes(String accessor) {

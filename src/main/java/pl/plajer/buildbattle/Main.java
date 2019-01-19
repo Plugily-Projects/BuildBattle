@@ -32,7 +32,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.impl.Arena;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.vote.VoteEvents;
 import pl.plajer.buildbattle.arena.vote.VoteItems;
 import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
@@ -198,7 +198,7 @@ public class Main extends JavaPlugin {
     }
     Debugger.debug(LogLevel.INFO, "System disabling...");
     for (final Player player : getServer().getOnlinePlayers()) {
-      Arena arena = ArenaRegistry.getArena(player);
+      BaseArena arena = ArenaRegistry.getArena(player);
       if (arena != null) {
         player.setGameMode(GameMode.SURVIVAL);
         if (configPreferences.getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
