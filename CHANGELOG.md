@@ -1,6 +1,6 @@
 ## BuildBattle 3 changelog
 
-### 4.0.0 Beta pre (03.10.2018 - 11.01.2019)
+### 4.0.0 Beta pre (03.10.2018 - 20.01.2019)
 #### Pre 3:
    * Removed annoying "Please enable bStats" message
    * Code improvements
@@ -37,7 +37,7 @@
    * Added time in Options menu
    * Code improvements and changes
    * Fixed arena signs were incorrectly saved via setup menu (4.0.0 pre issue)
-### Pre 12;
+### Pre 12:
    * Added BBPlayersPlotReceiveEvent to API
    * Fixed /bba forcestart wasn't working properly
    * Added BBPlotResetEvent to API
@@ -51,6 +51,8 @@
    * Added useSSL=false argument in mysql.yml address to avoid mysql warnings in console (not harmful)
    * Whole plugin runs now definitely faster and code execution time and plugin load decreases in timings
    * Setup GUI option for setting min/max players amount now runs smoothly
+### Pre 13:
+   * Added GuessTheBuild game mode (alpha)
    
 
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)
