@@ -18,20 +18,17 @@
 
 package pl.plajer.buildbattle.arena.managers;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
-import pl.plajer.buildbattle.arena.impl.SoloArena;
+import pl.plajer.buildbattle.arena.impl.GuessTheBuildArena;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
 import pl.plajerlair.core.utils.GameScoreboard;
@@ -42,15 +39,13 @@ import pl.plajerlair.core.utils.MinigameUtils;
  * <p>
  * Created at 11.01.2019
  */
-public class ScoreboardManager {
+public class GuessTheBuildScoreboardManager extends ScoreboardManager {
 
-  private Map<String, List<String>> scoreboardContents = new HashMap<>();
-  private Main plugin = JavaPlugin.getPlugin(Main.class);
-  private String boardTitle = ChatManager.colorMessage("Scoreboard.Title");
-  private BaseArena arena;
+  private GuessTheBuildArena arena;
 
-  public ScoreboardManager(BaseArena arena) {
-    this.arena = arena;
+  public GuessTheBuildScoreboardManager(BaseArena arena) {
+    super(arena);
+    this.arena = (GuessTheBuildArena) arena;
     for (ArenaState state : ArenaState.values()) {
       //not registering RESTARTING state and registering IN_GAME and ENDING later
       if (state == ArenaState.RESTARTING || state == ArenaState.IN_GAME || state == ArenaState.ENDING) {
@@ -58,14 +53,14 @@ public class ScoreboardManager {
       }
       //todo migrator
       List<String> lines = LanguageManager.getLanguageList("Scoreboard.Content." + state.getFormattedName());
-      scoreboardContents.put(state.getFormattedName(), lines);
+      getScoreboardContents().put(state.getFormattedName(), lines);
     }
     for (BaseArena.ArenaType type : BaseArena.ArenaType.values()) {
       List<String> playing = LanguageManager.getLanguageList("Scoreboard.Content.Playing-States." + type.getPrefix());
       List<String> ending = LanguageManager.getLanguageList("Scoreboard.Content.Ending-States." + type.getPrefix());
       //todo locale
-      scoreboardContents.put(ArenaState.IN_GAME.getFormattedName() + "_" + type.getPrefix(), playing);
-      scoreboardContents.put(ArenaState.ENDING.getFormattedName() + "_" + type.getPrefix(), ending);
+      getScoreboardContents().put(ArenaState.IN_GAME.getFormattedName() + "_" + type.getPrefix(), playing);
+      getScoreboardContents().put(ArenaState.ENDING.getFormattedName() + "_" + type.getPrefix(), ending);
     }
   }
 
@@ -81,10 +76,10 @@ public class ScoreboardManager {
       if (p == null) {
         continue;
       }
-      scoreboard = new GameScoreboard("PL_BB", "BB_CR", boardTitle);
-      List<String> lines = scoreboardContents.get(arena.getArenaState().getFormattedName());
+      scoreboard = new GameScoreboard("PL_BB", "BB_CR", getBoardTitle());
+      List<String> lines = getScoreboardContents().get(arena.getArenaState().getFormattedName());
       if (arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
-        lines = scoreboardContents.get(arena.getArenaState().getFormattedName() + "_" + arena.getArenaType().getPrefix());
+        lines = getScoreboardContents().get(arena.getArenaState().getFormattedName() + "_" + arena.getArenaType().getPrefix());
       }
       for (String line : lines) {
         scoreboard.addRow(formatScoreboardLine(line, p));
@@ -100,37 +95,39 @@ public class ScoreboardManager {
     returnString = StringUtils.replace(returnString, "%PLAYERS%", Integer.toString(arena.getPlayers().size()));
     returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());
     if (arena.getArenaType() != BaseArena.ArenaType.GUESS_THE_BUILD) {
-      if (((SoloArena) arena).isThemeVoteTime()) {
+      if (arena.isThemeVoteTime()) {
         returnString = StringUtils.replace(returnString, "%THEME%", ChatManager.colorMessage("In-Game.No-Theme-Yet"));
       } else {
         returnString = StringUtils.replace(returnString, "%THEME%", arena.getTheme());
       }
-    } /*else {
-      if (arena.isGTBThemeSet()) {
+    } else {
+      if (arena.isThemeSet()) {
         returnString = StringUtils.replace(returnString, "%CURRENT_TIMER%", ChatManager.colorMessage("Scoreboard.GTB-Current-Timer.Build-Time"));
       } else {
         returnString = StringUtils.replace(returnString, "%CURRENT_TIMER%", ChatManager.colorMessage("Scoreboard.GTB-Current-Timer.Starts-In"));
       }
-      if (arena.getCurrentBuilder() != null) {
-        if (player.getUniqueId() == arena.getCurrentBuilder()) {
-          returnString = StringUtils.replace(returnString, "%THEME%", arena.getCurrentGTBTheme().getTheme());
-        } else {
-          returnString = StringUtils.replace(returnString, "%THEME%", ChatManager.colorMessage("Scoreboard.Theme-Unknown"));
-        }
-        returnString = StringUtils.replace(returnString, "%BUILDER%", Bukkit.getPlayer(arena.getCurrentBuilder()).getName());
+      if (arena.getCurrentBuilder().equals(player)) {
+        returnString = StringUtils.replace(returnString, "%THEME%", arena.getCurrentGTBTheme().getTheme());
+      } else {
+        returnString = StringUtils.replace(returnString, "%THEME%", ChatManager.colorMessage("Scoreboard.Theme-Unknown"));
       }
+      returnString = StringUtils.replace(returnString, "%BUILDER%", arena.getCurrentBuilder().getName());
     }
-    if (arena.getArenaType() == BaseArena.ArenaType.GUESS_THE_BUILD) {
-      //todo ineffective
+    //todo ineffective
+    try {
       for (int i = 1; i < 11; i++) {
         if (arena.getArenaState() != ArenaState.ENDING && i > 3) {
           break;
         }
         //todo may be errors?
-        returnString = StringUtils.replace(returnString, "%" + i + "%", Bukkit.getOfflinePlayer((UUID) arena.getPlayersPoints().keySet().toArray()[i]).getName());
-        returnString = StringUtils.replace(returnString, "%" + i + "_PTS%", String.valueOf(arena.getPlayersPoints().get(arena.getPlayersPoints().keySet().toArray()[i])));
+        returnString = StringUtils.replace(returnString, "%" + i + "%",
+            ((Player) arena.getPlayersPoints().keySet().toArray()[i]).getName());
+        returnString = StringUtils.replace(returnString, "%" + i + "_PTS%",
+            String.valueOf(arena.getPlayersPoints().get(arena.getPlayersPoints().keySet().toArray()[i])));
       }
-    }*/
+    } catch (Exception ex) {
+      Bukkit.broadcastMessage("Exception was called");
+    }
     returnString = StringUtils.replace(returnString, "%MIN_PLAYERS%", Integer.toString(arena.getMinimumPlayers()));
     returnString = StringUtils.replace(returnString, "%MAX_PLAYERS%", Integer.toString(arena.getMaximumPlayers()));
     returnString = StringUtils.replace(returnString, "%TIMER%", Integer.toString(arena.getTimer()));
@@ -139,7 +136,7 @@ public class ScoreboardManager {
     returnString = StringUtils.replace(returnString, "%FORMATTED_TIME_LEFT%", MinigameUtils.formatIntoMMSS(arena.getTimer()));
     returnString = StringUtils.replace(returnString, "%ARENA_ID%", arena.getID());
     returnString = StringUtils.replace(returnString, "%MAPNAME%", arena.getMapName());
-    if (!((SoloArena) arena).isThemeVoteTime()) {
+    if (!arena.isThemeVoteTime()) {
       if (arena.getArenaType() == BaseArena.ArenaType.TEAM && arena.getPlotManager().getPlot(player) != null) {
         if (arena.getPlotManager().getPlot(player).getOwners().size() == 2) {
           if (arena.getPlotManager().getPlot(player).getOwners().get(0).equals(player)) {
@@ -154,22 +151,11 @@ public class ScoreboardManager {
     } else {
       returnString = StringUtils.replace(returnString, "%TEAMMATE%", ChatManager.colorMessage("In-Game.Nobody"));
     }
-    if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+    if (getPlugin().getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       PlaceholderAPI.setPlaceholders(player, returnString);
     }
     returnString = ChatManager.colorRawMessage(returnString);
     return returnString;
   }
 
-  public Map<String, List<String>> getScoreboardContents() {
-    return scoreboardContents;
-  }
-
-  public String getBoardTitle() {
-    return boardTitle;
-  }
-
-  public Main getPlugin() {
-    return plugin;
-  }
 }

@@ -59,13 +59,10 @@ import pl.plajerlair.core.utils.MinigameUtils;
 public class SoloArena extends BaseArena {
 
   private Map<Integer, List<Player>> topList = new HashMap<>();
-  private String theme = "Theme";
   private boolean receivedVoteItems;
   private Queue<Player> queue = new LinkedList<>();
   private Plot votingPlot = null;
   private boolean voteTime;
-  private boolean themeVoteTime = true;
-  private boolean themeTimerSet = false;
   private int buildTime;
   private VoteMenu voteMenu;
 
@@ -100,14 +97,6 @@ public class SoloArena extends BaseArena {
 
   public void setVoting(boolean voting) {
     voteTime = voting;
-  }
-
-  public boolean isThemeVoteTime() {
-    return themeVoteTime;
-  }
-
-  public void setThemeVoteTime(boolean themeVoteTime) {
-    this.themeVoteTime = themeVoteTime;
   }
 
   public int getBuildTime() {
@@ -200,9 +189,9 @@ public class SoloArena extends BaseArena {
             }
           }
           if (isThemeVoteTime()) {
-            if (!themeTimerSet) {
+            if (!isThemeTimerSet()) {
               setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.THEME_VOTE, this));
-              themeTimerSet = true;
+              setThemeTimerSet(true);
               for (Player p : getPlayers()) {
                 p.openInventory(voteMenu.getInventory());
               }
@@ -299,7 +288,7 @@ public class SoloArena extends BaseArena {
             getPlugin().getServer().setWhitelist(false);
           }
           setVoting(false);
-          themeTimerSet = false;
+          setThemeTimerSet(false);
           for (Player player : getPlayers()) {
             MinigameUtils.spawnRandomFirework(player.getLocation());
             ArenaUtils.showPlayers(this);
@@ -348,26 +337,13 @@ public class SoloArena extends BaseArena {
           setOptionValue(ArenaOption.IN_PLOT_CHECKER, 0);
           setArenaState(ArenaState.WAITING_FOR_PLAYERS);
           topList.clear();
-          themeTimerSet = false;
+          setThemeTimerSet(false);
           setThemeVoteTime(true);
           voteMenu.resetPoll();
       }
     } catch (Exception ex) {
       new ReportedException(getPlugin(), ex);
     }
-  }
-
-  /**
-   * Get current arena theme
-   *
-   * @return arena theme String
-   */
-  public String getTheme() {
-    return theme;
-  }
-
-  public void setTheme(String theme) {
-    this.theme = theme;
   }
 
   @Override
