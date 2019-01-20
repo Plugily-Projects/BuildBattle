@@ -21,6 +21,7 @@ package pl.plajer.buildbattle.commands.arguments.admin.arena;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
@@ -59,7 +60,7 @@ public class SetThemeArgument {
           sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorRawMessage("&cPlease type arena theme!"));
           return;
         }
-        if (arena.getArenaState() == ArenaState.IN_GAME && (((SoloArena) arena).getBuildTime() - arena.getTimer()) <= 20) {
+        if (arena.getArenaState() == ArenaState.IN_GAME && registry.getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, arena) - arena.getTimer() <= 20) {
           if (registry.getPlugin().getConfigPreferences().isThemeBlacklisted(args[1].toLowerCase())) {
             sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Admin-Commands.Theme-Blacklisted"));
             return;

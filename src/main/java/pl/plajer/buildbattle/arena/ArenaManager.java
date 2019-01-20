@@ -149,6 +149,8 @@ public class ArenaManager {
       if (arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
         user.addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
       }
+      //todo maybe not
+      user.setStat(StatsStorage.StatisticType.LOCAL_GUESS_THE_BUILD_POINTS, 0);
       arena.teleportToEndLocation(player);
       arena.removePlayer(player);
       ChatManager.broadcastAction(arena, player, ChatManager.ActionType.LEAVE);

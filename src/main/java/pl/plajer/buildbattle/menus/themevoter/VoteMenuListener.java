@@ -141,6 +141,7 @@ public class VoteMenuListener implements Listener {
       if (!(arena instanceof GuessTheBuildArena)) {
         return;
       }
+      //todo once you close you cant choose rip
       if (e.getInventory().getName().equals(ChatManager.colorMessage("Menus.Guess-The-Build-Theme-Selector.Inventory-Name"))) {
         e.setCancelled(true);
         if (e.getCurrentItem().getType() == Material.PAPER) {
@@ -160,12 +161,19 @@ public class VoteMenuListener implements Listener {
             default:
               return;
           }
-          //todo
-          //((GuessTheBuildArena) arena).setCurrentGTBTheme(theme);
-          //((GuessTheBuildArena) arena).setGTBThemeSet(true);
+          ((GuessTheBuildArena) arena).setCurrentTheme(theme);
+          ((GuessTheBuildArena) arena).setThemeSet(true);
           ((Player) e.getWhoClicked()).spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatManager.colorMessage("In-Game.Guess-The-Build.Theme-Is-Name")
               .replace("%THEME%", theme.getTheme())));
+          e.getWhoClicked().closeInventory();
 
+          String roundMessage = ChatManager.colorMessage("In-Game.Guess-The-Build.Current-Round")
+              .replace("%ROUND%", String.valueOf(((GuessTheBuildArena) arena).getRound()))
+              .replace("%MAXPLAYERS%", String.valueOf(arena.getPlayers().size()));
+          for (Player p : arena.getPlayers()) {
+            p.sendTitle(ChatManager.colorMessage("In-Game.Guess-The-Build.Start-Guessing-Title"), null, 5, 25, 5);
+            p.sendMessage(roundMessage);
+          }
         }
       }
     } catch (Exception ex) {

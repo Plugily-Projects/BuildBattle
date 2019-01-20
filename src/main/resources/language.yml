@@ -162,11 +162,23 @@ In-Game:
   Nobody: "&eNobody"
   No-Theme-Yet: "&cVoting"
   #todo locale
+  # todo reorganize
   Guess-The-Build:
     Current-Builder: "&eBuilder: &7%BUILDER%"
     Current-Round: "&eRound: &7%ROUND%/%MAXPLAYERS%"
     Theme-Is-Long: "&eThe theme is &7%NUM% &echaracters long"
     Theme-Is-Name: "&eThe theme is a &e%THEME%"
+    #todo migrator + locale
+    Theme-Was-Name: "&eThe theme was: &a%THEME%&e!"
+    Theme-Was-Title: "&eThe theme was"
+    Theme-Was-Subtitle: "&a%THEME%!"
+    Theme-Being-Selected: "&eTheme is being selected..."
+    Start-Guessing-Title: "&eStart Guessing!"
+    Plus-Points: "&a+%pts% points!"
+    Chat:
+      Guessed-The-Theme: "&7%player% &ecorrectly guessed the theme!"
+      Cant-Talk-When-Guessed: "&cYou can't talk if you already guessed!"
+      Cant-Talk-When-Building: "&cYou can't talk when you're building!"
   NPC:
     Floor-Change-NPC-Name: "&aChange floor NPC"
     NPC-Created: "&aFloor NPC created successfully!"
@@ -218,7 +230,7 @@ Menus:
     Inventory-Name: "&aOptions menu"
     Option-Item: "&aOptions"
     Option-Item-Lore: "&7Right click to open menu"
-    <!-- New -->
+    #<!-- New -->
     Items:
       Particle:
         Inventory-Name: "&aParticles menu"
@@ -226,7 +238,7 @@ Menus:
         Item-Lore: "&7Click to get particles"
         In-Inventory-Item-Name: "&cRemove particles"
         In-Inventory-Item-Lore: "&7Right click to open menu"
-        <!-- Moved from In-Game.Particle-Removed -->
+        #<!-- Moved from In-Game.Particle-Removed -->
         Particle-Removed: "&cParticle successfully removed!"
       Players-Heads:
         Inventory-Name: "&aPlayers heads menu"
@@ -265,8 +277,8 @@ Menus:
         Item-Name: "&cReset plot"
         Item-Lore: "&7Fully reset plot, &c&lcan't be undone!"
         Plot-Reset: "&cPlot fully reset!"
-    <!-- New end -->
-    <!-- Old -->
+    #<!-- New end -->
+    #<!-- Old -->
     Particle-Inventory-Name: "&aParticles menu"
     Particle-Option: "&aChoose particles"
     Particle-Option-Lore: "&7Click to get particles"
@@ -288,7 +300,7 @@ Menus:
     Weather-Set: "&eWeather has been changed"
     Weather-Downfall: "&eDownfall"
     Weather-Clear: "&eClear"
-    <!-- Old end -->
+    #<!-- Old end -->
   Theme-Voting:
     Inventory-Name: "What theme?"
     Theme-Item-Name: "&6%theme%"

@@ -42,7 +42,17 @@ public class GTBTheme {
   }
 
   public enum Difficulty {
-    EASY, MEDIUM, HARD
+    EASY(1), MEDIUM(2), HARD(3);
+
+    private int pointsReward;
+
+    Difficulty(int pointsReward) {
+      this.pointsReward = pointsReward;
+    }
+
+    public int getPointsReward() {
+      return pointsReward;
+    }
   }
 
 }

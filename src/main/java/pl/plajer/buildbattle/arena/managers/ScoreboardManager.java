@@ -78,9 +78,6 @@ public class ScoreboardManager {
     }
     GameScoreboard scoreboard;
     for (Player p : arena.getPlayers()) {
-      if (p == null) {
-        continue;
-      }
       scoreboard = new GameScoreboard("PL_BB", "BB_CR", boardTitle);
       List<String> lines = scoreboardContents.get(arena.getArenaState().getFormattedName());
       if (arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
