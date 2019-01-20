@@ -51,6 +51,7 @@ public class BaseArena extends BukkitRunnable {
   private Main plugin;
   private String id;
   private String mapName = "";
+  //todo move?
   private String theme = "Theme";
   private PlotManager plotManager;
   private ScoreboardManager scoreboardManager;
@@ -58,8 +59,6 @@ public class BaseArena extends BukkitRunnable {
   private BossBar gameBar;
   private ArenaType arenaType;
   private boolean forceStart = false;
-  private boolean themeVoteTime = true;
-  private boolean themeTimerSet = false;
   private List<Player> players = new ArrayList<>();
   //instead of 2 (lobby, end) location fields we use map with GameLocation enum
   private Map<GameLocation, Location> gameLocations = new HashMap<>();
@@ -188,9 +187,6 @@ public class BaseArena extends BukkitRunnable {
   }
 
   public void removePlayer(Player player) {
-    if (player == null) {
-      return;
-    }
     players.remove(player);
   }
 
@@ -310,6 +306,9 @@ public class BaseArena extends BukkitRunnable {
     }
   }
 
+  public void giveRewards() {
+  }
+
   /**
    * Get current arena theme
    *
@@ -321,22 +320,6 @@ public class BaseArena extends BukkitRunnable {
 
   public void setTheme(String theme) {
     this.theme = theme;
-  }
-
-  public boolean isThemeVoteTime() {
-    return themeVoteTime;
-  }
-
-  public void setThemeVoteTime(boolean themeVoteTime) {
-    this.themeVoteTime = themeVoteTime;
-  }
-
-  public boolean isThemeTimerSet() {
-    return themeTimerSet;
-  }
-
-  public void setThemeTimerSet(boolean themeTimerSet) {
-    this.themeTimerSet = themeTimerSet;
   }
 
   /**

@@ -59,10 +59,6 @@ public class QuitEvents implements Listener {
   @EventHandler
   public void onQuitSaveStats(PlayerQuitEvent event) {
     try {
-      BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
-      if (arena != null) {
-        ArenaManager.leaveAttempt(event.getPlayer(), arena);
-      }
       final User user = plugin.getUserManager().getUser(event.getPlayer().getUniqueId());
       for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
         plugin.getUserManager().saveStatistic(user, stat);

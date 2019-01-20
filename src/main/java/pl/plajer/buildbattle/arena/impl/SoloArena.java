@@ -63,7 +63,8 @@ public class SoloArena extends BaseArena {
   private Queue<Player> queue = new LinkedList<>();
   private Plot votingPlot = null;
   private boolean voteTime;
-  private int buildTime;
+  private boolean themeVoteTime = true;
+  private boolean themeTimerSet = false;
   private VoteMenu voteMenu;
 
   public SoloArena(String id, Main plugin) {
@@ -97,10 +98,6 @@ public class SoloArena extends BaseArena {
 
   public void setVoting(boolean voting) {
     voteTime = voting;
-  }
-
-  public int getBuildTime() {
-    return buildTime;
   }
 
   public Queue<Player> getQueue() {
@@ -453,7 +450,7 @@ public class SoloArena extends BaseArena {
       formattedSummary.add(message);
     }
     getPlayers().forEach((player) -> formattedSummary.forEach((msg) -> MinigameUtils.sendCenteredMessage(player, msg)));
-    for (Integer rang : topList.keySet()) {
+    for (int rang : topList.keySet()) {
       if (topList.get(rang) != null) {
         for (Player p : topList.get(rang)) {
           if (rang > 3) {
@@ -525,6 +522,7 @@ public class SoloArena extends BaseArena {
     return getPlayers().size() > 1;
   }
 
+  @Override
   public void giveRewards() {
     if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.WIN_COMMANDS_ENABLED)) {
       if (topList.get(1) != null) {
@@ -569,6 +567,22 @@ public class SoloArena extends BaseArena {
       }
     }
     return 0;
+  }
+
+  public boolean isThemeVoteTime() {
+    return themeVoteTime;
+  }
+
+  public void setThemeVoteTime(boolean themeVoteTime) {
+    this.themeVoteTime = themeVoteTime;
+  }
+
+  public boolean isThemeTimerSet() {
+    return themeTimerSet;
+  }
+
+  public void setThemeTimerSet(boolean themeTimerSet) {
+    this.themeTimerSet = themeTimerSet;
   }
 
 }

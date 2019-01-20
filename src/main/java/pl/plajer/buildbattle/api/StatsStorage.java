@@ -1,6 +1,6 @@
 /*
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -101,8 +101,9 @@ public class StatsStorage {
    * Available statistics to get.
    */
   public enum StatisticType {
-    BLOCKS_PLACED("blocksplaced", true), BLOCKS_BROKEN("blocksbroken", true), GAMES_PLAYED("gamesplayed", true), WINS("wins", true), LOSES("loses", true),
-    HIGHEST_WIN("highestwin", true), PARTICLES_USED("particles", true), SUPER_VOTES("supervotes", true), LOCAL_POINTS("points", false);
+    BLOCKS_PLACED("blocksplaced", true), BLOCKS_BROKEN("blocksbroken", true), GAMES_PLAYED("gamesplayed", true), WINS("wins", true),
+    LOSES("loses", true), HIGHEST_WIN("highestwin", true), PARTICLES_USED("particles", true), SUPER_VOTES("supervotes", true),
+    LOCAL_POINTS("points", false), LOCAL_GUESS_THE_BUILD_POINTS("gtb_points", false);
 
     private String name;
     private boolean persistent;
