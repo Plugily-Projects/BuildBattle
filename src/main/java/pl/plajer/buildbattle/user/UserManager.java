@@ -18,8 +18,8 @@
 
 package pl.plajer.buildbattle.user;
 
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -36,13 +36,12 @@ import pl.plajerlair.core.debug.LogLevel;
 /**
  * Created by Tom on 27/07/2014.
  */
-@Deprecated //switch uuids to players
 public class UserManager {
 
   private FileStats fileStats;
   private MySQLManager mySQLManager;
   private Main plugin;
-  private HashMap<UUID, User> users = new HashMap<>();
+  private List<User> users = new ArrayList<>();
 
   public UserManager(Main plugin) {
     this.plugin = plugin;
@@ -59,22 +58,23 @@ public class UserManager {
       if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
         ArenaRegistry.getArenas().get(0).teleportToLobby(player);
       }
-      User user = getUser(player.getUniqueId());
+      User user = getUser(player);
       for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
         loadStatistic(user, stat);
       }
     }
   }
 
-  @Deprecated
-  public User getUser(UUID uuid) {
-    if (users.containsKey(uuid)) {
-      return users.get(uuid);
-    } else {
-      Debugger.debug(LogLevel.INFO, "Registering new user with UUID: " + uuid);
-      users.put(uuid, new User(uuid));
-      return users.get(uuid);
+  public User getUser(Player player) {
+    for (User user : users) {
+      if (user.getPlayer().equals(player)) {
+        return user;
+      }
     }
+    Debugger.debug(LogLevel.INFO, "Registering new user with UUID: " + player.getUniqueId() + " (" + player.getName() + ")");
+    User user = new User(player);
+    users.add(user);
+    return user;
   }
 
   /**
@@ -87,11 +87,9 @@ public class UserManager {
     if (!stat.isPersistent()) {
       return;
     }
-    Player player = user.toPlayer().getPlayer();
+    Player player = user.getPlayer();
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-        mySQLManager.saveStat(user, player, stat);
-      });
+      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> mySQLManager.saveStat(user, player, stat));
       return;
     }
     fileStats.saveStat(user, stat);
@@ -114,9 +112,8 @@ public class UserManager {
     fileStats.loadStat(user, stat);
   }
 
-  @Deprecated
-  public void removeUser(UUID uuid) {
-    users.remove(uuid);
+  public void removeUser(User user) {
+    users.remove(user);
   }
 
 }

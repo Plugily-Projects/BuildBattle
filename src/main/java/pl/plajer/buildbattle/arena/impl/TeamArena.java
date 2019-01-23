@@ -50,8 +50,8 @@ public class TeamArena extends SoloArena {
   public void voteForNextPlot() {
     if (getVotingPlot() != null) {
       for (Player player : getPlayers()) {
-        getVotingPlot().setPoints(getVotingPlot().getPoints() + getPlugin().getUserManager().getUser(player.getUniqueId()).getStat(StatsStorage.StatisticType.LOCAL_POINTS));
-        getPlugin().getUserManager().getUser(player.getUniqueId()).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
+        getVotingPlot().setPoints(getVotingPlot().getPoints() + getPlugin().getUserManager().getUser(player).getStat(StatsStorage.StatisticType.LOCAL_POINTS));
+        getPlugin().getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
       }
     }
     for (Plot p : getPlotManager().getPlots()) {

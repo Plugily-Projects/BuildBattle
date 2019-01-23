@@ -132,7 +132,7 @@ public class Plot {
       resetPlot();
       if (owners != null && !owners.isEmpty()) {
         for (Player p : owners) {
-          User user = plugin.getUserManager().getUser(p.getUniqueId());
+          User user = plugin.getUserManager().getUser(p);
           user.setCurrentPlot(null);
           this.setOwners(new ArrayList<>());
           this.setPoints(0);

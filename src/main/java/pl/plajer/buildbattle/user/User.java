@@ -20,7 +20,6 @@ package pl.plajer.buildbattle.user;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -41,12 +40,12 @@ public class User {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
   private ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
-  private UUID uuid;
+  private Player player;
   private Map<StatsStorage.StatisticType, Integer> stats = new HashMap<>();
   private Plot currentPlot;
 
-  public User(UUID uuid) {
-    this.uuid = uuid;
+  public User(Player player) {
+    this.player = player;
   }
 
   public Plot getCurrentPlot() {
@@ -57,12 +56,12 @@ public class User {
     this.currentPlot = currentPlot;
   }
 
-  public Player toPlayer() {
-    return Bukkit.getServer().getPlayer(uuid);
+  public Player getPlayer() {
+    return player;
   }
 
   public BaseArena getArena() {
-    return ArenaRegistry.getArena(Bukkit.getPlayer(uuid));
+    return ArenaRegistry.getArena(player);
   }
 
   public int getStat(StatsStorage.StatisticType stat) {
@@ -77,14 +76,14 @@ public class User {
   }
 
   public void removeScoreboard() {
-    this.toPlayer().setScoreboard(scoreboardManager.getNewScoreboard());
+    player.setScoreboard(scoreboardManager.getNewScoreboard());
   }
 
   public void setStat(StatsStorage.StatisticType stat, int i) {
     stats.put(stat, i);
 
     Bukkit.getScheduler().runTask(plugin, () -> {
-      BBPlayerStatisticChangeEvent event = new BBPlayerStatisticChangeEvent(getArena(), toPlayer(), stat, i);
+      BBPlayerStatisticChangeEvent event = new BBPlayerStatisticChangeEvent(getArena(), player, stat, i);
       Bukkit.getPluginManager().callEvent(event);
     });
   }
@@ -93,7 +92,7 @@ public class User {
     stats.put(stat, getStat(stat) + i);
 
     Bukkit.getScheduler().runTask(plugin, () -> {
-      BBPlayerStatisticChangeEvent event = new BBPlayerStatisticChangeEvent(getArena(), toPlayer(), stat, getStat(stat));
+      BBPlayerStatisticChangeEvent event = new BBPlayerStatisticChangeEvent(getArena(), player, stat, getStat(stat));
       Bukkit.getPluginManager().callEvent(event);
     });
   }

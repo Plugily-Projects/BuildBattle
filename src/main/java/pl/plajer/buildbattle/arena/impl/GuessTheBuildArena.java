@@ -292,7 +292,7 @@ public class GuessTheBuildArena extends BaseArena {
             if (getOption(ArenaOption.IN_PLOT_CHECKER) == 1) {
               setOptionValue(ArenaOption.IN_PLOT_CHECKER, 0);
               for (Player player : getPlayers()) {
-                User user = getPlugin().getUserManager().getUser(player.getUniqueId());
+                User user = getPlugin().getUserManager().getUser(player);
                 Plot buildPlot = user.getCurrentPlot();
                 if (buildPlot != null && !buildPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
                   player.teleport(buildPlot.getTeleportLocation());
@@ -319,13 +319,13 @@ public class GuessTheBuildArena extends BaseArena {
                 getGameBar().removePlayer(player);
               }
               player.getInventory().clear();
-              getPlugin().getUserManager().getUser(player.getUniqueId()).removeScoreboard();
+              getPlugin().getUserManager().getUser(player).removeScoreboard();
               player.setGameMode(GameMode.SURVIVAL);
               player.setFlying(false);
               player.setAllowFlight(false);
               player.getInventory().setArmorContents(null);
               player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
-              getPlugin().getUserManager().getUser(player.getUniqueId()).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
+              getPlugin().getUserManager().getUser(player).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
               if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
                 InventoryUtils.loadInventory(getPlugin(), player);
               }
