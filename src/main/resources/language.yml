@@ -50,6 +50,10 @@ Commands:
     &b/bb randomjoin <solo/team>: &7Randomly joins free arena!"
     Admin-Bonus-Description: "\n&b/bba help: &7Shows all the admin commands"
     Footer: "&6-------------------------------------------------"
+  # todo locale, migrator
+  Arguments:
+    Super-Votes-Added: "&aYou received &b%amount% Super Votes&a!"
+    Super-Votes-Set: "&aYour &bSuper Votes &aamount was set to &b%amount%&a!"
 
 Bossbar:
   Waiting-For-Players: "&4&lWaiting for more players..."

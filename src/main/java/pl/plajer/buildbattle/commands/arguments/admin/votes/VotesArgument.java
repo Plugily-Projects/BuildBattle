@@ -18,6 +18,7 @@
 
 package pl.plajer.buildbattle.commands.arguments.admin.votes;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -35,25 +36,29 @@ import pl.plajer.buildbattle.utils.Utils;
 /**
  * @author Plajer
  * <p>
- * Created at 11.01.2019
+ * Created at 23.01.2019
  */
-public class AddVotesArgument {
+public class VotesArgument {
 
-  public AddVotesArgument(ArgumentsRegistry registry) {
-    registry.mapArgument("buildbattleadmin", new LabeledCommandArgument("addvotes", "buildbattle.admin.supervotes.add",
-        CommandArgument.ExecutorType.BOTH, new LabelData("/bba addvotes  &6<amount> &c[player]", "/bba addvotes <amount>",
-        "&7Add super votes to yourself or target player\n&7Can be used from console too\n&6Permission: &7buildbattle.admin.supervotes.add")) {
+  public VotesArgument(ArgumentsRegistry registry) {
+    registry.mapArgument("buildbattleadmin", new LabeledCommandArgument("votes", "buildbattle.admin.supervotes.manage",
+        CommandArgument.ExecutorType.BOTH, new LabelData("/bba votes &6<add/set> <amount> &c[player]", "/bba votes <action> <amount>",
+        "&7Set or add super votes to yourself or target player\n&7Can be used from console too\n&6Permission: &7buildbattle.admin.supervotes.manage")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
         if (args.length == 1) {
-          sender.sendMessage(ChatManager.getPrefix() + ChatColor.RED + "Please type amount of super votes to add!");
+          sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Invalid-Args"));
+          return;
+        }
+        if (args.length == 2 || (!args[1].equalsIgnoreCase("add") && args[1].equalsIgnoreCase("set"))) {
+          sender.sendMessage(ChatManager.getPrefix() + ChatColor.RED + "Please type amount of super votes to add or set!");
           return;
         }
         Player target;
-        if (args.length == 2) {
+        if (args.length == 3) {
           target = (Player) sender;
         } else {
-          target = Bukkit.getPlayerExact(args[2]);
+          target = Bukkit.getPlayerExact(args[3]);
         }
 
         if (target == null) {
@@ -61,11 +66,22 @@ public class AddVotesArgument {
           return;
         }
 
-        if (Utils.isInteger(args[1])) {
+        if (Utils.isInteger(args[2])) {
           User user = registry.getPlugin().getUserManager().getUser(target.getUniqueId());
-          user.addStat(StatsStorage.StatisticType.SUPER_VOTES, Integer.parseInt(args[1]));
+
+          String successMessage;
+          if (args[1].equalsIgnoreCase("add")) {
+            user.addStat(StatsStorage.StatisticType.SUPER_VOTES, Integer.parseInt(args[2]));
+            successMessage = ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Arguments.Super-Votes-Received");
+            successMessage = StringUtils.replace(successMessage, "%amount%", args[2]);
+          } else {
+            user.setStat(StatsStorage.StatisticType.SUPER_VOTES, Integer.parseInt(args[2]));
+            successMessage = ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Arguments.Super-Votes-Set");
+            successMessage = StringUtils.replace(successMessage, "%amount%", args[2]);
+          }
           //todo translatable?
-          sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorRawMessage("&aSuper votes added."));
+          sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorRawMessage("&aSuper votes amount modified!"));
+          target.sendMessage(successMessage);
         } else {
           //todo translatable?
           sender.sendMessage(ChatManager.colorRawMessage("&cArgument isn't a number!"));

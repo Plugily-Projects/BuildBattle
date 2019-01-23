@@ -61,7 +61,7 @@ public class ForceStartArguments {
           arena.setTimer(0);
           if (args.length == 2 && arena instanceof SoloArena) {
             ((SoloArena) arena).setThemeVoteTime(false);
-            ((SoloArena) arena).setTheme(args[1]);
+            arena.setTheme(args[1]);
           }
           ChatManager.broadcast(arena, ChatManager.colorMessage("In-Game.Messages.Admin-Messages.Set-Starting-In-To-0"));
         }
