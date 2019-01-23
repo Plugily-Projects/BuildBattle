@@ -1,6 +1,6 @@
 ## BuildBattle 3 changelog
 
-### 4.0.0 Beta pre (03.10.2018 - 20.01.2019)
+### 4.0.0 Beta pre (03.10.2018 - 23.01.2019)
 #### Pre 3:
    * Removed annoying "Please enable bStats" message
    * Code improvements
@@ -53,6 +53,7 @@
    * Setup GUI option for setting min/max players amount now runs smoothly
 ### Pre 13:
    * Added GuessTheBuild game mode (alpha)
+   * When using super vote you won't see two game prefixes now
    
 
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)
