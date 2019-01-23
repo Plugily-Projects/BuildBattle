@@ -38,7 +38,7 @@ import pl.plajerlair.core.database.MySQLDatabase;
  * <p>
  * Created at 28.09.2018
  */
-public class MySQLManager {
+public class MySQLManager implements UserDatabase {
 
   private MySQLDatabase database;
 
@@ -84,11 +84,13 @@ public class MySQLManager {
     database.executeUpdate("INSERT INTO `buildbattlestats` (UUID,name,gamesplayed) VALUES ('" + player.getUniqueId().toString() + "','" + player.getName() + "',0)");
   }
 
-  public void saveStat(User user, Player player, StatsStorage.StatisticType stat) {
-    database.executeUpdate("UPDATE `buildbattlestats` SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + player.getUniqueId().toString() + "';");
+  @Override
+  public void saveStatistic(User user, StatsStorage.StatisticType stat) {
+    database.executeUpdate("UPDATE `buildbattlestats` SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
   }
 
-  public int getStat(User user, StatsStorage.StatisticType stat) {
+  @Override
+  public void loadStatistic(User user, StatsStorage.StatisticType stat) {
     ResultSet resultSet = database.executeQuery("SELECT UUID from buildbattlestats WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'");
     //insert into the database
     try {
@@ -103,15 +105,15 @@ public class MySQLManager {
     ResultSet set = database.executeQuery("SELECT " + stat.getName() + " FROM `buildbattlestats` WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'");
     try {
       if (!set.next()) {
-        return 0;
+        user.setStat(stat, 0);
       }
-      return set.getInt(1);
+      user.setStat(stat, set.getInt(1));
     } catch (SQLException e) {
       e.printStackTrace();
       MessageUtils.errorOccurred();
       Bukkit.getConsoleSender().sendMessage("Cannot get contents from MySQL database!");
       Bukkit.getConsoleSender().sendMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
-      return 0;
+      user.setStat(stat, 0);
     }
   }
 
