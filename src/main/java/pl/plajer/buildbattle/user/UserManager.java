@@ -77,13 +77,7 @@ public class UserManager implements UserDatabase {
     users.add(user);
     return user;
   }
-
-  /**
-   * Saves player statistic into yaml or MySQL storage based on user choice
-   *
-   * @param user user to retrieve statistic from
-   * @param stat stat to save to storage
-   */
+  
   @Override
   public void saveStatistic(User user, StatsStorage.StatisticType stat) {
     if (!stat.isPersistent()) {
@@ -96,12 +90,6 @@ public class UserManager implements UserDatabase {
     fileStats.saveStatistic(user, stat);
   }
 
-  /**
-   * Loads player statistic from yaml or MySQL storage based on user choice
-   *
-   * @param user user to load statistic for
-   * @param stat type of stat to load from storage
-   */
   @Override
   public void loadStatistic(User user, StatsStorage.StatisticType stat) {
     if (!stat.isPersistent()) {
