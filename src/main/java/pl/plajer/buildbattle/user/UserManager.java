@@ -30,13 +30,14 @@ import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.user.data.FileStats;
 import pl.plajer.buildbattle.user.data.MySQLManager;
+import pl.plajer.buildbattle.user.data.UserDatabase;
 import pl.plajerlair.core.debug.Debugger;
 import pl.plajerlair.core.debug.LogLevel;
 
 /**
  * Created by Tom on 27/07/2014.
  */
-public class UserManager {
+public class UserManager implements UserDatabase {
 
   private FileStats fileStats;
   private MySQLManager mySQLManager;
@@ -83,6 +84,7 @@ public class UserManager {
    * @param user user to retrieve statistic from
    * @param stat stat to save to storage
    */
+  @Override
   public void saveStatistic(User user, StatsStorage.StatisticType stat) {
     if (!stat.isPersistent()) {
       return;
@@ -100,6 +102,7 @@ public class UserManager {
    * @param user user to load statistic for
    * @param stat type of stat to load from storage
    */
+  @Override
   public void loadStatistic(User user, StatsStorage.StatisticType stat) {
     if (!stat.isPersistent()) {
       return;
