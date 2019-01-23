@@ -108,7 +108,7 @@ public class VoteMenuListener implements Listener {
           User u = plugin.getUserManager().getUser(e.getWhoClicked().getUniqueId());
           if (u.getStat(StatsStorage.StatisticType.SUPER_VOTES) > 0) {
             u.setStat(StatsStorage.StatisticType.SUPER_VOTES, u.getStat(StatsStorage.StatisticType.SUPER_VOTES) - 1);
-            ChatManager.broadcast(arena, ChatManager.getPrefix() + ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Used")
+            ChatManager.broadcast(arena, ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Used")
                 .replace("%player%", e.getWhoClicked().getName()).replace("%theme%",
                     ((SoloArena) arena).getVotePoll().getThemeByPosition(e.getSlot() + 1)));
             ((SoloArena) arena).setThemeVoteTime(false);
