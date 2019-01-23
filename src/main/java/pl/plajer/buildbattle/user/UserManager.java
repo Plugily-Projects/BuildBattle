@@ -87,12 +87,11 @@ public class UserManager {
     if (!stat.isPersistent()) {
       return;
     }
-    Player player = user.getPlayer();
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> mySQLManager.saveStat(user, player, stat));
+      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> mySQLManager.saveStatistic(user, stat));
       return;
     }
-    fileStats.saveStat(user, stat);
+    fileStats.saveStatistic(user, stat);
   }
 
   /**
@@ -106,10 +105,10 @@ public class UserManager {
       return;
     }
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> user.setStat(stat, mySQLManager.getStat(user, stat)));
+      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> mySQLManager.loadStatistic(user, stat));
       return;
     }
-    fileStats.loadStat(user, stat);
+    fileStats.loadStatistic(user, stat);
   }
 
   public void removeUser(User user) {
