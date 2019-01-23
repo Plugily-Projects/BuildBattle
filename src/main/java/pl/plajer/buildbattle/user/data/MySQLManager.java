@@ -106,6 +106,7 @@ public class MySQLManager implements UserDatabase {
     try {
       if (!set.next()) {
         user.setStat(stat, 0);
+        return;
       }
       user.setStat(stat, set.getInt(1));
     } catch (SQLException e) {
