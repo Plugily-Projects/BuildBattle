@@ -233,7 +233,7 @@ public class SoloArena extends BaseArena {
             if (getOption(ArenaOption.IN_PLOT_CHECKER) == 1) {
               setOptionValue(ArenaOption.IN_PLOT_CHECKER, 0);
               for (Player player : getPlayers()) {
-                User user = getPlugin().getUserManager().getUser(player.getUniqueId());
+                User user = getPlugin().getUserManager().getUser(player);
                 Plot buildPlot = user.getCurrentPlot();
                 if (buildPlot != null) {
                   if (!buildPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
@@ -259,8 +259,8 @@ public class SoloArena extends BaseArena {
             } else {
               if (getVotingPlot() != null) {
                 for (Player player : getPlayers()) {
-                  getVotingPlot().setPoints(getVotingPlot().getPoints() + getPlugin().getUserManager().getUser(player.getUniqueId()).getStat(StatsStorage.StatisticType.LOCAL_POINTS));
-                  getPlugin().getUserManager().getUser(player.getUniqueId()).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
+                  getVotingPlot().setPoints(getVotingPlot().getPoints() + getPlugin().getUserManager().getUser(player).getStat(StatsStorage.StatisticType.LOCAL_POINTS));
+                  getPlugin().getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
                 }
               }
               calculateResults();
@@ -297,13 +297,13 @@ public class SoloArena extends BaseArena {
                 getGameBar().removePlayer(player);
               }
               player.getInventory().clear();
-              getPlugin().getUserManager().getUser(player.getUniqueId()).removeScoreboard();
+              getPlugin().getUserManager().getUser(player).removeScoreboard();
               player.setGameMode(GameMode.SURVIVAL);
               player.setFlying(false);
               player.setAllowFlight(false);
               player.getInventory().setArmorContents(null);
               player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
-              getPlugin().getUserManager().getUser(player.getUniqueId()).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
+              getPlugin().getUserManager().getUser(player).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
               if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
                 InventoryUtils.loadInventory(getPlugin(), player);
               }
@@ -396,8 +396,8 @@ public class SoloArena extends BaseArena {
   public void voteForNextPlot() {
     if (getVotingPlot() != null) {
       for (Player player : getPlayers()) {
-        getVotingPlot().setPoints(getVotingPlot().getPoints() + getPlugin().getUserManager().getUser(player.getUniqueId()).getStat(StatsStorage.StatisticType.LOCAL_POINTS));
-        getPlugin().getUserManager().getUser(player.getUniqueId()).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
+        getVotingPlot().setPoints(getVotingPlot().getPoints() + getPlugin().getUserManager().getUser(player).getStat(StatsStorage.StatisticType.LOCAL_POINTS));
+        getPlugin().getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
       }
     }
     voteRoutine();
@@ -456,7 +456,7 @@ public class SoloArena extends BaseArena {
           if (rang > 3) {
             p.sendMessage(ChatManager.colorMessage("In-Game.Messages.Voting-Messages.Summary-Other-Place").replace("%number%", String.valueOf(rang)));
           }
-          User user = getPlugin().getUserManager().getUser(p.getUniqueId());
+          User user = getPlugin().getUserManager().getUser(p);
           if (rang != 1) {
             user.addStat(StatsStorage.StatisticType.LOSES, 1);
             continue;

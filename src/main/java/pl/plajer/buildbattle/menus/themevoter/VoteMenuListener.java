@@ -105,9 +105,9 @@ public class VoteMenuListener implements Listener {
           }
         }
         if (e.getCurrentItem().getType() == Material.PAPER) {
-          User u = plugin.getUserManager().getUser(e.getWhoClicked().getUniqueId());
-          if (u.getStat(StatsStorage.StatisticType.SUPER_VOTES) > 0) {
-            u.setStat(StatsStorage.StatisticType.SUPER_VOTES, u.getStat(StatsStorage.StatisticType.SUPER_VOTES) - 1);
+          User user = plugin.getUserManager().getUser((Player) e.getWhoClicked());
+          if (user.getStat(StatsStorage.StatisticType.SUPER_VOTES) > 0) {
+            user.setStat(StatsStorage.StatisticType.SUPER_VOTES, user.getStat(StatsStorage.StatisticType.SUPER_VOTES) - 1);
             ChatManager.broadcast(arena, ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Used")
                 .replace("%player%", e.getWhoClicked().getName()).replace("%theme%",
                     ((SoloArena) arena).getVotePoll().getThemeByPosition(e.getSlot() + 1)));

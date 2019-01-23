@@ -40,12 +40,12 @@ public class FileStats {
   }
 
   public void saveStat(User user, StatsStorage.StatisticType stat) {
-    config.set(user.toPlayer().getUniqueId().toString() + "." + stat.getName(), user.getStat(stat));
+    config.set(user.getPlayer().getUniqueId().toString() + "." + stat.getName(), user.getStat(stat));
     ConfigUtils.saveConfig(plugin, config, "stats");
   }
 
   public void loadStat(User user, StatsStorage.StatisticType stat) {
-    user.setStat(stat, config.getInt(user.toPlayer().getUniqueId().toString() + "." + stat.getName(), 0));
+    user.setStat(stat, config.getInt(user.getPlayer().getUniqueId().toString() + "." + stat.getName(), 0));
   }
 
 }

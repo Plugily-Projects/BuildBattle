@@ -134,7 +134,7 @@ public class ArenaManager {
    * Calls BBGameLeaveEvent event.
    *
    * @param player player to leave
-   * @param arena arena to leave
+   * @param arena  arena to leave
    * @see BBGameLeaveEvent
    */
   public static void leaveAttempt(Player player, BaseArena arena) {
@@ -145,7 +145,7 @@ public class ArenaManager {
       if (arena instanceof SoloArena) {
         ((SoloArena) arena).getQueue().remove(player);
       }
-      User user = plugin.getUserManager().getUser(player.getUniqueId());
+      User user = plugin.getUserManager().getUser(player);
       if (arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
         user.addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
       }
@@ -207,25 +207,23 @@ public class ArenaManager {
       Debugger.debug(LogLevel.INFO, "Game stop event initiate, arena " + arena.getID());
       BBGameEndEvent gameEndEvent = new BBGameEndEvent(arena);
       Bukkit.getPluginManager().callEvent(gameEndEvent);
-      for (final Player p : arena.getPlayers()) {
-        plugin.getUserManager().getUser(p.getUniqueId()).removeScoreboard();
-        if (!quickStop) {
-          if (JavaPlugin.getPlugin(Main.class).getConfig().getBoolean("Firework-When-Game-Ends")) {
-            new BukkitRunnable() {
-              int i = 0;
+      for (Player p : arena.getPlayers()) {
+        plugin.getUserManager().getUser(p).removeScoreboard();
+        if (!quickStop && plugin.getConfig().getBoolean("Firework-When-Game-Ends")) {
+          new BukkitRunnable() {
+            int i = 0;
 
-              public void run() {
-                if (i == 4) {
-                  this.cancel();
-                }
-                if (!arena.getPlayers().contains(p)) {
-                  this.cancel();
-                }
-                MinigameUtils.spawnRandomFirework(p.getLocation());
-                i++;
+            public void run() {
+              if (i == 4) {
+                this.cancel();
               }
-            }.runTaskTimer(JavaPlugin.getPlugin(Main.class), 30, 30);
-          }
+              if (!arena.getPlayers().contains(p)) {
+                this.cancel();
+              }
+              MinigameUtils.spawnRandomFirework(p.getLocation());
+              i++;
+            }
+          }.runTaskTimer(JavaPlugin.getPlugin(Main.class), 30, 30);
         }
       }
       arena.setArenaState(ArenaState.ENDING);

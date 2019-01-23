@@ -83,7 +83,7 @@ public class ParticlesOption {
             return;
           }
           plot.addParticle(e.getWhoClicked().getLocation(), particleItem.getEffect());
-          registry.getPlugin().getUserManager().getUser(e.getWhoClicked().getUniqueId())
+          registry.getPlugin().getUserManager().getUser((Player) e.getWhoClicked())
               .addStat(StatsStorage.StatisticType.PARTICLES_USED, 1);
           e.getWhoClicked().sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Particle-Added"));
         }

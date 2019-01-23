@@ -480,14 +480,14 @@ public class GameEvents implements Listener {
         event.setCancelled(true);
         return;
       }
-      User user = plugin.getUserManager().getUser(event.getPlayer().getUniqueId());
+      User user = plugin.getUserManager().getUser(event.getPlayer());
       Plot buildPlot = user.getCurrentPlot();
       if (buildPlot == null) {
         event.setCancelled(true);
         return;
       }
       if (buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
-        plugin.getUserManager().getUser(event.getPlayer().getUniqueId()).addStat(StatsStorage.StatisticType.BLOCKS_BROKEN, 1);
+        user.addStat(StatsStorage.StatisticType.BLOCKS_BROKEN, 1);
         return;
       }
       event.setCancelled(true);
@@ -515,14 +515,14 @@ public class GameEvents implements Listener {
         event.setCancelled(true);
         return;
       }
-      User user = plugin.getUserManager().getUser(event.getPlayer().getUniqueId());
+      User user = plugin.getUserManager().getUser(event.getPlayer());
       Plot buildPlot = user.getCurrentPlot();
       if (buildPlot == null) {
         event.setCancelled(true);
         return;
       }
       if (buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
-        plugin.getUserManager().getUser(event.getPlayer().getUniqueId()).addStat(StatsStorage.StatisticType.BLOCKS_PLACED, 1);
+        user.addStat(StatsStorage.StatisticType.BLOCKS_PLACED, 1);
         return;
       }
       event.setCancelled(true);

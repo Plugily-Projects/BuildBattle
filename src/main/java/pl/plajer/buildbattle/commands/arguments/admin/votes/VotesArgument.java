@@ -67,7 +67,7 @@ public class VotesArgument {
         }
 
         if (Utils.isInteger(args[2])) {
-          User user = registry.getPlugin().getUserManager().getUser(target.getUniqueId());
+          User user = registry.getPlugin().getUserManager().getUser(target);
 
           String successMessage;
           if (args[1].equalsIgnoreCase("add")) {

@@ -59,11 +59,11 @@ public class QuitEvents implements Listener {
   @EventHandler
   public void onQuitSaveStats(PlayerQuitEvent event) {
     try {
-      final User user = plugin.getUserManager().getUser(event.getPlayer().getUniqueId());
+      User user = plugin.getUserManager().getUser(event.getPlayer());
       for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
         plugin.getUserManager().saveStatistic(user, stat);
       }
-      plugin.getUserManager().removeUser(event.getPlayer().getUniqueId());
+      plugin.getUserManager().removeUser(user);
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }

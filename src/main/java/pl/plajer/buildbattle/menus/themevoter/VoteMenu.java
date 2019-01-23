@@ -37,6 +37,7 @@ import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.impl.SoloArena;
 import pl.plajer.buildbattle.handlers.ChatManager;
+import pl.plajer.buildbattle.user.User;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ItemBuilder;
 import pl.plajerlair.core.utils.MinigameUtils;
@@ -117,6 +118,7 @@ public class VoteMenu {
     try {
       int totalVotes = votePoll.getPlayerVote().size();
       int i = 0;
+      User user = plugin.getUserManager().getUser(player);
       for (String theme : votePoll.getVotedThemes().keySet()) {
         double percent;
         if (Double.isNaN(votePoll.getVotedThemes().get(theme)) || votePoll.getVotedThemes().get(theme) == 0) {
@@ -142,7 +144,7 @@ public class VoteMenu {
         setItem(new ItemBuilder(new ItemStack(Material.PAPER))
             .name(ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Item-Name").replace("%theme%", theme))
             .lore(ChatManager.colorMessage("Menus.Theme-Voting.Super-Vote-Item-Lore").replace("%theme%", theme)
-                .replace("%owned%", String.valueOf(plugin.getUserManager().getUser(player.getUniqueId()).getStat(StatsStorage.StatisticType.SUPER_VOTES))).split(";"))
+                .replace("%owned%", String.valueOf(user.getStat(StatsStorage.StatisticType.SUPER_VOTES))).split(";"))
             .build(), (i * 9) + 8);
         if (votePoll.getVotedThemes().get(theme) > 0) {
           double vote = 0;

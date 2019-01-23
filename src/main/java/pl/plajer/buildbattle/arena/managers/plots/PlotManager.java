@@ -66,14 +66,14 @@ public class PlotManager {
             if (arena.getArenaType() == BaseArena.ArenaType.SOLO || arena.getPlayers().size() == 2 /* in case of 2 min players set for team mode*/) {
               if (plot.getOwners().size() == 0) {
                 plot.addOwner(players.get(0));
-                plugin.getUserManager().getUser(players.get(0).getUniqueId()).setCurrentPlot(plot);
+                plugin.getUserManager().getUser(players.get(0)).setCurrentPlot(plot);
 
                 players.remove(0);
               }
             } else if (arena.getArenaType() == BaseArena.ArenaType.TEAM) {
               if (plot.getOwners().size() < 2) {
                 plot.addOwner(players.get(0));
-                plugin.getUserManager().getUser(players.get(0).getUniqueId()).setCurrentPlot(plot);
+                plugin.getUserManager().getUser(players.get(0)).setCurrentPlot(plot);
 
                 players.remove(0);
               }

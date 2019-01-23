@@ -89,18 +89,18 @@ public class MySQLManager {
   }
 
   public int getStat(User user, StatsStorage.StatisticType stat) {
-    ResultSet resultSet = database.executeQuery("SELECT UUID from buildbattlestats WHERE UUID='" + user.toPlayer().getUniqueId().toString() + "'");
+    ResultSet resultSet = database.executeQuery("SELECT UUID from buildbattlestats WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'");
     //insert into the database
     try {
       if (!resultSet.next()) {
-        insertPlayer(user.toPlayer());
+        insertPlayer(user.getPlayer());
       }
     } catch (SQLException e1) {
-      System.out.print("CONNECTION FAILED FOR PLAYER " + user.toPlayer().getName());
+      System.out.print("CONNECTION FAILED FOR PLAYER " + user.getPlayer().getName());
     }
 
 
-    ResultSet set = database.executeQuery("SELECT " + stat.getName() + " FROM `buildbattlestats` WHERE UUID='" + user.toPlayer().getUniqueId().toString() + "'");
+    ResultSet set = database.executeQuery("SELECT " + stat.getName() + " FROM `buildbattlestats` WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'");
     try {
       if (!set.next()) {
         return 0;

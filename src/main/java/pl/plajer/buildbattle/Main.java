@@ -206,11 +206,11 @@ public class Main extends JavaPlugin {
         }
         ArenaManager.leaveAttempt(player, arena);
       }
-      final User user = userManager.getUser(player.getUniqueId());
+      final User user = userManager.getUser(player);
       for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
         userManager.saveStatistic(user, stat);
       }
-      userManager.removeUser(player.getUniqueId());
+      userManager.removeUser(user);
     }
     if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       getMySQLDatabase().getManager().shutdownConnPool();

@@ -98,7 +98,7 @@ public class JoinEvents implements Listener {
         ArenaRegistry.getArenas().get(0).teleportToLobby(event.getPlayer());
       }
       for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-        plugin.getUserManager().loadStatistic(plugin.getUserManager().getUser(event.getPlayer().getUniqueId()), stat);
+        plugin.getUserManager().loadStatistic(plugin.getUserManager().getUser(event.getPlayer()), stat);
       }
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
