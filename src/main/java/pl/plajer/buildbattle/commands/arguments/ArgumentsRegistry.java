@@ -49,8 +49,7 @@ import pl.plajer.buildbattle.commands.arguments.admin.arena.StopArgument;
 import pl.plajer.buildbattle.commands.arguments.admin.plot.AddPlotArgument;
 import pl.plajer.buildbattle.commands.arguments.admin.plot.PlotWandArgument;
 import pl.plajer.buildbattle.commands.arguments.admin.plot.RemovePlotArgument;
-import pl.plajer.buildbattle.commands.arguments.admin.votes.AddVotesArgument;
-import pl.plajer.buildbattle.commands.arguments.admin.votes.SetVotesArgument;
+import pl.plajer.buildbattle.commands.arguments.admin.votes.VotesArgument;
 import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
 import pl.plajer.buildbattle.commands.arguments.data.LabelData;
 import pl.plajer.buildbattle.commands.arguments.data.LabeledCommandArgument;
@@ -96,10 +95,7 @@ public class ArgumentsRegistry implements CommandExecutor {
     new ReloadArgument(this);
     new SetThemeArgument(this);
     new StopArgument(this);
-
-    //player super votes related arguments
-    new AddVotesArgument(this);
-    new SetVotesArgument(this);
+    new VotesArgument(this);
 
     //other admin related arguments
     new AddPlotArgument(this);

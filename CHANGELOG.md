@@ -54,6 +54,8 @@
 ### Pre 13:
    * Added GuessTheBuild game mode (alpha)
    * When using super vote you won't see two game prefixes now
+   * Merged /bba addvotes and /bba setvotes into /bba votes add/set command
+   * Added message sent to player when receives super votes
    
 
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)

@@ -112,7 +112,7 @@ public class VoteMenuListener implements Listener {
                 .replace("%player%", e.getWhoClicked().getName()).replace("%theme%",
                     ((SoloArena) arena).getVotePoll().getThemeByPosition(e.getSlot() + 1)));
             ((SoloArena) arena).setThemeVoteTime(false);
-            ((SoloArena) arena).setTheme(((SoloArena) arena).getVotePoll().getThemeByPosition(e.getSlot() + 1));
+            arena.setTheme(((SoloArena) arena).getVotePoll().getThemeByPosition(e.getSlot() + 1));
             arena.setTimer(plugin.getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, arena));
             String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started");
             for (Player p : arena.getPlayers()) {
