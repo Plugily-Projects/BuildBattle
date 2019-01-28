@@ -1,248 +1,248 @@
 # Items from particles menu
 
 EXPLOSION_NORMAL:
-  displayname: '&6EXPLOSION_NORMAL'
+  displayname: '&6Explosion Normal'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: SNOWBALL
   permission: particles.VIP
 EXPLOSION_LARGE:
-  displayname: '&6EXPLOSION_LARGE'
+  displayname: '&6Explosion Large'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: SNOWBALL
   permission: particles.VIP
 EXPLOSION_HUGE:
-  displayname: '&6EXPLOSION_HUGE'
+  displayname: '&6Explosion Huge'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: SNOWBALL
   permission: particles.VIP
 FIREWORKS_SPARK:
-  displayname: '&6FIREWORKS_SPARK'
+  displayname: '&6Fireworks Spark'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: BONE_MEAL
   permission: particles.VIP
 WATER_BUBBLE:
-  displayname: '&6WATER_BUBBLE'
+  displayname: '&6Water Bubble'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: WATER_BUCKET
   permission: particles.VIP
 WATER_SPLASH:
-  displayname: '&6WATER_SPLASH'
+  displayname: '&6Water Splash'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: WATER_BUCKET
   permission: particles.VIP
 WATER_WAKE:
-  displayname: '&6WATER_WAKE'
+  displayname: '&6Water Wake'
   lore:
-  - Click to activate
-  - on your location
+    - "Click to activate"
+    - "on your location"
   material-name: WATER_BUCKET
   permission: particles.VIP
 SUSPENDED:
-  displayname: '&6SUSPENDED'
+  displayname: '&6Suspended'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: INK_SAC
   permission: particles.VIP
 SUSPENDED_DEPTH:
-  displayname: '&6SUSPENDED_DEPTH'
+  displayname: '&6Suspended Depth'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: INK_SAC
   permission: particles.VIP
 CRIT:
-  displayname: '&6CRIT'
+  displayname: '&6Critical'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: LIGHT_GRAY_DYE
   permission: particles.VIP
 CRIT_MAGIC:
-  displayname: '&6CRIT_MAGIC'
+  displayname: '&6Critical Magic'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: CYAN_DYE
   permission: particles.VIP
 SMOKE_NORMAL:
   data: 0
-  displayname: '&6SMOKE_NORMAL'
+  displayname: '&6Smoke Normal'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: FLINT
   permission: particles.VIP
 SMOKE_LARGE:
-  displayname: '&6SMOKE_LARGE'
+  displayname: '&6Smoke Large'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: COAL_BLOCK
   permission: particles.VIP
 SPELL:
-  displayname: '&6SPELL'
+  displayname: '&6Spell'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: NETHER_WART
   permission: particles.VIP
 SPELL_INSTANT:
-  displayname: '&6SPELL_INSTANT'
+  displayname: '&6Spell Instant'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: NETHER_WART
   permission: particles.VIP
 SPELL_MOB:
-  displayname: '&6SPELL_MOB'
+  displayname: '&6Spell Mob'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: NETHER_WART
   permission: particles.VIP
 SPELL_MOB_AMBIENT:
-  displayname: '&6SPELL_MOB_AMBIENT'
+  displayname: '&6Spell Mob Ambient'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: NETHER_WART
   permission: particles.VIP
 SPELL_WITCH:
-  displayname: '&6SPELL_WITCH'
+  displayname: '&6Spell Witch'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: NETHER_WART
   permission: particles.VIP
 DRIP_WATER:
-  displayname: '&6DRIP_WATER'
+  displayname: '&6Drip Water'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: POTION
   permission: particles.VIP
 DRIP_LAVA:
-  displayname: '&6DRIP_LAVA'
+  displayname: '&6Drip Lava'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: LAVA_BUCKET
   permission: particles.VIP
 VILLAGER_ANGRY:
-  displayname: '&6VILLAGER_ANGRY'
+  displayname: '&6Villager Angry'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: EMERALD
   permission: particles.VIP
 VILLAGER_HAPPY:
-  displayname: '&6VILLAGER_HAPPY'
+  displayname: '&6Villager Happy'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: EMERALD
   permission: particles.VIP
 TOWN_AURA:
-  displayname: '&6TOWN_AURA'
+  displayname: '&6Town Aura'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: COAL
   permission: particles.VIP
 NOTE:
   displayname: '&6NOTE'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: BLAZE_POWDER
   permission: particles.VIP
 PORTAL:
-  displayname: '&6PORTAL'
+  displayname: '&6Portal'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: ENDER_EYE
   permission: particles.VIP
 ENCHANTMENT_TABLE:
-  displayname: '&6ENCHANTMENT_TABLE'
+  displayname: '&6Enchantment Table'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: ENCHANTING_TABLE
   permission: particles.VIP
 FLAME:
-  displayname: '&6FLAME'
+  displayname: '&6Flame'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: BLAZE_POWDER
   permission: particles.VIP
 LAVA:
-  displayname: '&6LAVA'
+  displayname: '&6Lava'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: LAVA_BUCKET
   permission: particles.VIP
 CLOUD:
-  displayname: '&6CLOUD'
+  displayname: '&6Cloud'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: SNOW_BLOCK
   permission: particles.VIP
 SNOWBALL:
-  displayname: '&6SNOWBALL'
+  displayname: '&6Snowball'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: SNOWBALL
   permission: particles.VIP
 SNOW_SHOVEL:
-  displayname: '&6SNOW_SHOVEL'
+  displayname: '&6Snow Shovel'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: SNOWBALL
   permission: particles.VIP
 SLIME:
-  displayname: '&6SLIME'
+  displayname: '&6Slime'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: SLIME_BLOCK
   permission: particles.VIP
 HEART:
-  displayname: '&6HEART'
+  displayname: '&6Heart'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: REDSTONE
   permission: particles.VIP
 BARRIER:
-  displayname: '&6BARRIER'
+  displayname: '&6Barrier'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: BARRIER
   permission: particles.VIP
 WATER_DROP:
-  displayname: '&6WATER_DROP'
+  displayname: '&6Water Drop'
   lore:
-  - Click to activate
-  - on your location
+    - "&7Click to activate"
+    - "&7on your location"
   material-name: WATER_BUCKET
   permission: particles.VIP
