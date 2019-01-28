@@ -70,7 +70,7 @@ public class TimeChangeOption {
           return;
         }
         Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());
-        plot.setTime(Plot.Time.valueOf(TimeClickPosition.getByPosition(e.getRawSlot()).toString()));
+        plot.setTime(Plot.Time.valueOf(TimeClickPosition.getByPosition(e.getSlot()).toString()));
         for (Player p : plot.getOwners()) {
           p.setPlayerTime(Plot.Time.format(plot.getTime(), p.getWorld().getTime()), false);
           p.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Menus.Option-Menu.Items.Time.Time-Set"));
