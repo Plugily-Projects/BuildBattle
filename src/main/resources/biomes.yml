@@ -1,0 +1,23 @@
+# Items from biomes menu
+
+BIRCH_FOREST:
+  displayname: '&6Birch Forest'
+  lore:
+    - "&7Click to set biome"
+    - "&7in your plot"
+  material-name: BIRCH_LOG
+  permission: biomes.VIP
+DARK_FOREST:
+  displayname: '&6Dark Forest'
+  lore:
+    - "&7Click to set biome"
+    - "&7in your plot"
+  material-name: DARK_OAK_WOOD
+  permission: biomes.VIP
+TAIGA:
+  displayname: '&6Taiga'
+  lore:
+    - "&7Click to set biome"
+    - "&7in your plot"
+  material-name: DARK_OAK_WOOD
+  permission: biomes.VIP
