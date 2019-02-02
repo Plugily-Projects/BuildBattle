@@ -1,6 +1,6 @@
 ## BuildBattle 3 changelog
 
-### 4.0.0 Beta pre (03.10.2018 - 28.01.2019)
+### 4.0.0 Beta pre (03.10.2018 - 02.02.2019)
 #### Pre 3:
    * Removed annoying "Please enable bStats" message
    * Code improvements
@@ -59,6 +59,7 @@
 ### Pre 14:
    * Fixed time couldn't be set for plots because we were checking raw slot click instead of normal slot
    * Made particles.yml particle items more user friendly (lores and names looks now better)
+   * Fixed bba addplot command didn't work properly
    
 
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)
