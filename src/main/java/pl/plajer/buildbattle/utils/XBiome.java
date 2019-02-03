@@ -21,9 +21,12 @@ package pl.plajer.buildbattle.utils;
 import org.bukkit.block.Biome;
 
 /**
- * @author Plajer
+ * Compatibility bridge class between 1.12 and 1.13 biomes.
  * <p>
- * Created at 03.02.2019
+ * Uses 1.13 biome names as enum values and 1.12 old mappings as alias String.
+ *
+ * @author Plajer
+ * @version 1.0.0
  */
 public enum XBiome {
 
@@ -107,9 +110,16 @@ public enum XBiome {
     this.legacyValue = legacyValue;
   }
 
+  /**
+   * Attempts to return XBiome from parameter biome.
+   * Firstly checks enum values then enum aliases for legacy mapping.
+   *
+   * @param biome name of biome you want to search for
+   * @return XBiome bridge for 1.12 and 1.13 biome names
+   */
   public static XBiome fromString(String biome) {
     try {
-      return XBiome.valueOf(biome);
+      return XBiome.valueOf(biome.toUpperCase());
     } catch (Exception ex) {
       for (XBiome xbiome : XBiome.values()) {
         if (xbiome.getLegacyValue().equalsIgnoreCase(biome)) {
@@ -120,10 +130,23 @@ public enum XBiome {
     return null;
   }
 
+  /**
+   * Returns legacy (1.12) biome name mapping.
+   *
+   * @return 1.12 biome name
+   */
   public String getLegacyValue() {
     return legacyValue;
   }
 
+  /**
+   * Attempts to parse XBiome into real Biome.
+   * If XBiome enum value is not found it will attempt to check legacy value of biome.
+   *
+   * @return Biome from XBiome
+   * @throws IllegalArgumentException if both enum value and enum alias are not found
+   * @see #getLegacyValue()
+   */
   public Biome parseBiome() {
     try {
       return Biome.valueOf(this.toString());
