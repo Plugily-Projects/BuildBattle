@@ -28,11 +28,12 @@ import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.handlers.ChatManager;
-import pl.plajer.buildbattle.menus.options.registry.BiomeChangeOption;
 import pl.plajer.buildbattle.menus.options.registry.FloorChangeOption;
 import pl.plajer.buildbattle.menus.options.registry.PlotResetOption;
 import pl.plajer.buildbattle.menus.options.registry.TimeChangeOption;
 import pl.plajer.buildbattle.menus.options.registry.WeatherChangeOption;
+import pl.plajer.buildbattle.menus.options.registry.biomes.BiomeChangeOption;
+import pl.plajer.buildbattle.menus.options.registry.biomes.BiomesRegistry;
 import pl.plajer.buildbattle.menus.options.registry.particles.ParticleRegistry;
 import pl.plajer.buildbattle.menus.options.registry.particles.ParticlesOption;
 import pl.plajer.buildbattle.menus.options.registry.playerheads.PlayerHeadsOption;
@@ -47,6 +48,7 @@ import pl.plajerlair.core.utils.ItemBuilder;
 public class OptionsRegistry {
 
   private ParticleRegistry particleRegistry;
+  private BiomesRegistry biomesRegistry;
   private PlayerHeadsRegistry playerHeadsRegistry;
   private Set<MenuOption> registeredOptions = new HashSet<>();
   private int inventorySize = 5 * 9;
@@ -58,7 +60,9 @@ public class OptionsRegistry {
   }
 
   private void registerOptions() {
+    biomesRegistry = new BiomesRegistry(this);
     new BiomeChangeOption(this);
+
     new FloorChangeOption(this);
 
     //register particles
@@ -137,6 +141,10 @@ public class OptionsRegistry {
     return new ItemBuilder(new ItemStack(Material.NETHER_STAR))
         .name(ChatManager.colorMessage("Menus.Option-Menu.Option-Item"))
         .lore(ChatManager.colorMessage("Menus.Option-Menu.Option-Item-Lore")).build();
+  }
+
+  public BiomesRegistry getBiomesRegistry() {
+    return biomesRegistry;
   }
 
   public PlayerHeadsRegistry getPlayerHeadsRegistry() {

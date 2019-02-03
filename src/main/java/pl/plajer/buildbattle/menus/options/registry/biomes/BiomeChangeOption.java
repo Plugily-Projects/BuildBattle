@@ -16,18 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle.menus.options.registry;
+package pl.plajer.buildbattle.menus.options.registry.biomes;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
-import org.bukkit.Material;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
@@ -57,9 +54,11 @@ public class BiomeChangeOption {
       @Override
       public void onClick(InventoryClickEvent e) {
         e.getWhoClicked().closeInventory();
-        Inventory biomeInv = Bukkit.createInventory(null, MinigameUtils.serializeInt(Biome.values().length), ChatManager.colorMessage("Menus.Option-Menu.Items.Biome.Inventory-Name"));
-        for (Biome biome : Biome.values()) {
-          biomeInv.addItem(new ItemBuilder(new ItemStack(Material.GRASS)).name(ChatManager.colorRawMessage("&6" + biome.name())).build());
+
+        Inventory biomeInv = Bukkit.createInventory(null, MinigameUtils.serializeInt(registry.getBiomesRegistry().getBiomes().size()),
+            ChatManager.colorMessage("Menus.Option-Menu.Items.Biome.Inventory-Name"));
+        for (BiomeItem biome : registry.getBiomesRegistry().getBiomes()) {
+          biomeInv.addItem(biome.getItemStack());
         }
         e.getWhoClicked().openInventory(biomeInv);
       }
@@ -72,8 +71,14 @@ public class BiomeChangeOption {
         }
         Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());
         try {
+          Biome biome = registry.
+              getBiomesRegistry()
+              .getByItem(e
+                  .getCurrentItem())
+              .getBiome()
+              .parseBiome();
           for (Block block : plot.getCuboid().blockList()) {
-            block.setBiome(Biome.valueOf(ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName())));
+            block.setBiome(biome);
           }
           for (Chunk chunk : plot.getCuboid().chunkList()) {
             for (Player p : Bukkit.getOnlinePlayers()) {

@@ -87,6 +87,11 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>com.github.stefvanschie.inventoryframework</groupId>
+            <artifactId>IF</artifactId>
+            <version>0.3.1</version>
+        </dependency>
+        <dependency>
             <groupId>net.ess3</groupId>
             <artifactId>EssentialsX</artifactId>
             <version>2.0.1</version>
@@ -201,6 +206,10 @@
                                 <relocation>
                                     <pattern>org.bstats</pattern>
                                     <shadedPattern>pl.plajer.buildbattle.utils</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.github.stefvanschie.inventoryframework</pattern>
+                                    <shadedPattern>pl.plajer.buildbattle.inventoryframework</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>

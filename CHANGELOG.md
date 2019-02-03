@@ -60,6 +60,7 @@
    * Fixed time couldn't be set for plots because we were checking raw slot click instead of normal slot
    * Made particles.yml particle items more user friendly (lores and names looks now better)
    * Fixed bba addplot command didn't work properly
+   * Added fully configurable biomes in biomes.yml
    
 
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)
