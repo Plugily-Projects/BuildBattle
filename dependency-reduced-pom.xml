@@ -84,6 +84,10 @@
                   <pattern>org.bstats</pattern>
                   <shadedPattern>pl.plajer.buildbattle.utils</shadedPattern>
                 </relocation>
+                  <relocation>
+                      <pattern>com.github.stefvanschie.inventoryframework</pattern>
+                      <shadedPattern>pl.plajer.buildbattle.inventoryframework</shadedPattern>
+                  </relocation>
               </relocations>
             </configuration>
           </execution>

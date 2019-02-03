@@ -82,7 +82,7 @@ public class Main extends JavaPlugin {
   private OptionsRegistry optionsRegistry;
   private SpecialItemsRegistry specialItemsRegistry;
   private String version;
-  private List<String> filesToGenerate = Arrays.asList("arenas", "particles", "lobbyitems", "stats", "voteItems", "mysql");
+  private List<String> filesToGenerate = Arrays.asList("arenas", "particles", "lobbyitems", "stats", "voteItems", "mysql", "biomes");
 
   public CuboidSelector getCuboidSelector() {
     return cuboidSelector;
