@@ -71,12 +71,7 @@ public class BiomeChangeOption {
         }
         Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());
         try {
-          Biome biome = registry.
-              getBiomesRegistry()
-              .getByItem(e
-                  .getCurrentItem())
-              .getBiome()
-              .parseBiome();
+          Biome biome = registry.getBiomesRegistry().getByItem(e.getCurrentItem()).getBiome().parseBiome();
           for (Block block : plot.getCuboid().blockList()) {
             block.setBiome(biome);
           }

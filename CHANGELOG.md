@@ -1,6 +1,6 @@
 ## BuildBattle 3 changelog
 
-### 4.0.0 Beta pre (03.10.2018 - 02.02.2019)
+### 4.0.0 Beta pre (03.10.2018 - 03.02.2019)
 #### Pre 3:
    * Removed annoying "Please enable bStats" message
    * Code improvements
@@ -61,6 +61,8 @@
    * Made particles.yml particle items more user friendly (lores and names looks now better)
    * Fixed bba addplot command didn't work properly
    * Added fully configurable biomes in biomes.yml
+   * Fixed biomes are now properly reset in plot reset option and after arena reset
+   * Added "Go Back" button in particles remove menu
    
 
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)

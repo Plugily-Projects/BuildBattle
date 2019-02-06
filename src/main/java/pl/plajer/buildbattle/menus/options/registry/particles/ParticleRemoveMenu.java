@@ -18,15 +18,16 @@
 
 package pl.plajer.buildbattle.menus.options.registry.particles;
 
+import com.github.stefvanschie.inventoryframework.Gui;
+import com.github.stefvanschie.inventoryframework.GuiItem;
+import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+
 import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -34,6 +35,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.handlers.ChatManager;
+import pl.plajerlair.core.utils.ItemBuilder;
 import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
@@ -42,13 +44,17 @@ import pl.plajerlair.core.utils.MinigameUtils;
 @Deprecated
 public class ParticleRemoveMenu {
 
+  private static Main plugin = JavaPlugin.getPlugin(Main.class);
+
   @Deprecated
   public static void openMenu(Player player, Plot buildPlot) {
-    Inventory inventory = player.getServer().createInventory(player, 6 * 9, ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"));
+    Gui gui = new Gui(plugin, 6, ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"));
+    StaticPane pane = new StaticPane(9, 6);
 
+    int x = 0;
+    int y = 0;
     for (Location location : buildPlot.getParticles().keySet()) {
-      ParticleItem particleItem = JavaPlugin.getPlugin(Main.class).getOptionsRegistry().getParticleRegistry()
-          .getItemByEffect(buildPlot.getParticles().get(location));
+      ParticleItem particleItem = plugin.getOptionsRegistry().getParticleRegistry().getItemByEffect(buildPlot.getParticles().get(location));
       ItemStack itemStack = particleItem.getItemStack();
       ItemMeta itemMeta = itemStack.getItemMeta();
       itemMeta.setLore(new ArrayList<>());
@@ -57,44 +63,32 @@ public class ParticleRemoveMenu {
       MinigameUtils.addLore(itemStack, ChatColor.GRAY + "  x: " + Math.round(location.getX()));
       MinigameUtils.addLore(itemStack, ChatColor.GRAY + "  y: " + Math.round(location.getY()));
       MinigameUtils.addLore(itemStack, ChatColor.GRAY + "  z: " + Math.round(location.getZ()));
-      inventory.addItem(itemStack);
-    }
-
-    player.openInventory(inventory);
-  }
-
-  @Deprecated
-  public static void onClick(Player p, Inventory inventory, ItemStack itemStack, Plot buildPlot) {
-    List<String> lore = itemStack.getItemMeta().getLore();
-    double x = 0, y = 0, z = 0;
-    for (String string : lore) {
-      if (string.contains("x:")) {
-        x = getInt(ChatColor.stripColor(string));
-      }
-      if (string.contains("y:")) {
-        y = getInt(ChatColor.stripColor(string));
-      }
-      if (string.contains("z:")) {
-        z = getInt(ChatColor.stripColor(string));
-      }
-    }
-    for (Location location : buildPlot.getParticles().keySet()) {
-      if (Math.round(location.getX()) == x && Math.round(location.getY()) == y && Math.round(location.getZ()) == z) {
+      pane.addItem(new GuiItem(itemStack, event -> {
         buildPlot.getParticles().remove(location);
-        p.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.Particle-Removed"));
-        inventory.remove(itemStack);
-        p.updateInventory();
-        break;
+        event.getWhoClicked().sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.Particle-Removed"));
+        gui.getItems().forEach(item -> {
+          if (item.getItem().isSimilar(itemStack)) {
+            item.setVisible(false);
+          }
+        });
+        gui.update();
+      }), x, y);
+      x++;
+      if (x == 9) {
+        x = 0;
+        y++;
       }
     }
+
+    pane.addItem(new GuiItem(new ItemBuilder(new ItemStack(Material.ARROW))
+        .name(ChatManager.colorMessage("Menus.Buttons.Back-Button.Name"))
+        .lore(ChatManager.colorMessage("Menus.Buttons.Back-Button.Lore"))
+        .build(), event -> {
+      event.getWhoClicked().closeInventory();
+      event.getWhoClicked().openInventory(plugin.getOptionsRegistry().getParticleRegistry().getInventory());
+    }), 4, 5);
+    gui.addPane(pane);
+    gui.show(player);
   }
 
-  private static int getInt(String string) {
-    Pattern pattern = Pattern.compile("-?\\d+");
-    Matcher matcher = pattern.matcher(string);
-    if (matcher.find()) {
-      return Integer.parseInt(matcher.group());
-    }
-    return 0;
-  }
 }

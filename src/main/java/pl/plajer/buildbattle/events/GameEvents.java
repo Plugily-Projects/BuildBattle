@@ -61,7 +61,6 @@ import pl.plajer.buildbattle.arena.impl.SoloArena;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.items.SpecialItem;
-import pl.plajer.buildbattle.menus.options.registry.particles.ParticleRemoveMenu;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.utils.Utils;
 import pl.plajerlair.core.services.exception.ReportedException;
@@ -296,9 +295,6 @@ public class GameEvents implements Listener {
       }
       e.getWhoClicked().getInventory().addItem(e.getCurrentItem().clone());
       e.setCancelled(true);
-    } else if (e.getInventory().getName().equals(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))) {
-      ParticleRemoveMenu.onClick((Player) e.getWhoClicked(), e.getInventory(), e.getCurrentItem(),
-          arena.getPlotManager().getPlot((Player) e.getWhoClicked()));
     }
   }
 

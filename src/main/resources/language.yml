@@ -324,6 +324,11 @@ Menus:
       Easy: "&aEASY"
       Medium: "&eMEDIUM"
       Hard: "&cHARD"
+  #todo locale, migrator
+  Buttons:
+    Back-Button:
+      Name: "&cGo Back"
+      Lore: "&7Click to go back."
 
 Signs:
   Please-Type-Arena-Name: "&cPlease type arena name in second line!"
