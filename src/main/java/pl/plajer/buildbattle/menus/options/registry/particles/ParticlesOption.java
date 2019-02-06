@@ -61,6 +61,9 @@ public class ParticlesOption {
         if (arena == null) {
           return;
         }
+        if (e.getCurrentItem() == null) {
+          return;
+        }
 
         if (e.getCurrentItem().getItemMeta().getDisplayName()
             .contains(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))) {

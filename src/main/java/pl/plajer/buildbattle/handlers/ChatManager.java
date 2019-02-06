@@ -58,12 +58,12 @@ public class ChatManager {
     try {
       return ChatColor.translateAlternateColorCodes('&', LanguageManager.getLanguageMessage(message));
     } catch (NullPointerException e1) {
-      new ReportedException(JavaPlugin.getPlugin(Main.class), e1);
       Bukkit.getConsoleSender().sendMessage("Game message not found!");
       if (LanguageManager.isDefaultLanguageUsed()) {
         Bukkit.getConsoleSender().sendMessage("Please regenerate your language.yml file! If error still occurs report it to the developer!");
       } else {
         Bukkit.getConsoleSender().sendMessage("Locale message string not found! Please contact developer!");
+        new ReportedException(JavaPlugin.getPlugin(Main.class), e1);
       }
       Bukkit.getConsoleSender().sendMessage("Access string: " + message);
       return "ERR_MESSAGE_NOT_FOUND";

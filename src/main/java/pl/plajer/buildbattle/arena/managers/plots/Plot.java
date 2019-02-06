@@ -26,6 +26,7 @@ import java.util.Map;
 import net.citizensnpcs.api.CitizensAPI;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -42,6 +43,7 @@ import pl.plajer.buildbattle.api.event.plot.BBPlotResetEvent;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.utils.Cuboid;
+import pl.plajer.buildbattle.utils.Utils;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.XMaterial;
 
@@ -165,6 +167,15 @@ public class Plot {
           if (entity.getType() != EntityType.PLAYER) {
             entity.remove();
           }
+        }
+      }
+      for (Block block : getCuboid().blockList()) {
+        block.setBiome(plotDefaultBiome);
+      }
+      for (Chunk chunk : getCuboid().chunkList()) {
+        for (Player p : Bukkit.getOnlinePlayers()) {
+          Utils.sendPacket(p, Utils.getNMSClass("PacketPlayOutMapChunk").getConstructor(Utils.getNMSClass("Chunk"), int.class)
+              .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535));
         }
       }
       changeFloor(XMaterial.fromString(plugin.getConfig().getString("Default-Floor-Material-Name", "LOG").toUpperCase()).parseMaterial());

@@ -212,6 +212,10 @@ public class LanguageManager {
 
   public static String getLanguageMessage(String message) {
     if (isDefaultLanguageUsed()) {
+      //error
+      if (languageConfig.getString(message, "ERR_MESSAGE_NOT_FOUND").equals("ERR_MESSAGE_NOT_FOUND")) {
+        Debugger.debug(LogLevel.WARN, "No message found for string accessor: " + message);
+      }
       return languageConfig.getString(message, "ERR_MESSAGE_NOT_FOUND");
     }
     try {
