@@ -26,7 +26,6 @@ import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
 import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
 import pl.plajer.buildbattle.commands.arguments.data.LabelData;
 import pl.plajer.buildbattle.commands.arguments.data.LabeledCommandArgument;
-import pl.plajer.buildbattle.handlers.ChatManager;
 
 /**
  * @author Plajer
@@ -41,17 +40,17 @@ public class ListArenasArgument {
             "&7Shows list with all loaded arenas\n&6Permission: &7buildbattle.admin.list")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        sender.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.List-Command.Header"));
+        sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Admin-Commands.List-Command.Header"));
         int i = 0;
         for (BaseArena arena : ArenaRegistry.getArenas()) {
-          sender.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.List-Command.Format").replace("%arena%", arena.getID())
+          sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Admin-Commands.List-Command.Format").replace("%arena%", arena.getID())
               .replace("%status%", arena.getArenaState().getFormattedName()).replace("%players%", String.valueOf(arena.getPlayers().size()))
               .replace("%maxplayers%", String.valueOf(arena.getMaximumPlayers())));
           i++;
         }
         if (i == 0) {
-          sender.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.List-Command.No-Arenas"));
-          sender.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7You can get free maps with configs at our wiki! Just head to https://wiki.plajer.xyz/minecraft/buildbattle/free_maps.php"));
+          sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Admin-Commands.List-Command.No-Arenas"));
+          sender.sendMessage(registry.getPlugin().getChatManager().colorRawMessage("&e&lTIP: &7You can get free maps with configs at our wiki! Just head to https://wiki.plajer.xyz/minecraft/buildbattle/free_maps.php"));
         }
       }
     });

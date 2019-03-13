@@ -59,7 +59,6 @@ import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.impl.SoloArena;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
-import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.items.SpecialItem;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.utils.Utils;
@@ -309,7 +308,7 @@ public class GameEvents implements Listener {
       if (e.getCurrentItem().getType() != Material.NETHER_STAR || arena == null) {
         return;
       }
-      if (!e.getCurrentItem().getItemMeta().getDisplayName().equals(ChatManager.colorMessage("Menus.Option-Menu.Option-Item"))) {
+      if (!e.getCurrentItem().getItemMeta().getDisplayName().equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item"))) {
         return;
       }
       e.setResult(Event.Result.DENY);
@@ -338,7 +337,7 @@ public class GameEvents implements Listener {
         return;
       }
       event.setCancelled(true);
-      event.getPlayer().sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Only-Command-Ingame-Is-Leave"));
+      event.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Only-Command-Ingame-Is-Leave"));
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
@@ -409,7 +408,7 @@ public class GameEvents implements Listener {
             if (plot.getEntities() >= plugin.getConfig().getInt("Mobs-Max-Amount-Per-Plot", 20)) {
               //todo maybe only for spawner player?
               for (Player p : plot.getOwners()) {
-                p.sendMessage(ChatManager.colorMessage("In-Game.Max-Entities-Limit-Reached"));
+                p.sendMessage(plugin.getChatManager().colorMessage("In-Game.Max-Entities-Limit-Reached"));
               }
               event.setCancelled(true);
               return;
@@ -448,7 +447,7 @@ public class GameEvents implements Listener {
       if (!Utils.isNamed(drop)) {
         return;
       }
-      if (drop.getItemMeta().getDisplayName().equals(ChatManager.colorMessage("Menus.Option-Menu.Inventory-Name")) || plugin.getVoteItems().getPoints(drop) != 0) {
+      if (drop.getItemMeta().getDisplayName().equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name")) || plugin.getVoteItems().getPoints(drop) != 0) {
         event.setCancelled(true);
       }
     } catch (Exception ex) {
@@ -556,7 +555,7 @@ public class GameEvents implements Listener {
       if (e.getPlayer().getInventory().getItemInMainHand() == null || e.getPlayer().getInventory().getItemInMainHand().getType() == Material.AIR) {
         return;
       }
-      if (e.getRightClicked() instanceof Villager && e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.NPC.Floor-Change-NPC-Name"))) {
+      if (e.getRightClicked() instanceof Villager && e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equalsIgnoreCase(plugin.getChatManager().colorMessage("In-Game.NPC.Floor-Change-NPC-Name"))) {
         BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
         if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
           return;
@@ -571,7 +570,7 @@ public class GameEvents implements Listener {
           return;
         }
         arena.getPlotManager().getPlot(e.getPlayer()).changeFloor(e.getPlayer().getInventory().getItemInMainHand().getType(), e.getPlayer().getInventory().getItemInMainHand().getData().getData());
-        e.getPlayer().sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Menus.Option-Menu.Items.Floor.Floor-Changed"));
+        e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Floor.Floor-Changed"));
       }
     } catch (Exception ex) {
       new ReportedException(plugin, ex);

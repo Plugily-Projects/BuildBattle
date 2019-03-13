@@ -26,7 +26,6 @@ import org.bukkit.inventory.ItemStack;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
-import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.menus.options.MenuOption;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
 import pl.plajerlair.core.utils.ItemBuilder;
@@ -40,8 +39,8 @@ public class PlotResetOption {
 
   public PlotResetOption(OptionsRegistry registry) {
     registry.registerOption(new MenuOption(34, "RESET", new ItemBuilder(new ItemStack(Material.BARRIER))
-        .name(ChatManager.colorMessage("Menus.Option-Menu.Items.Reset.Item-Name"))
-        .lore(ChatManager.colorMessage("Menus.Option-Menu.Items.Reset.Item-Lore"))
+        .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Reset.Item-Name"))
+        .lore(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Reset.Item-Lore"))
         .build()) {
       @Override
       public void onClick(InventoryClickEvent e) {
@@ -52,7 +51,7 @@ public class PlotResetOption {
         }
         Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());
         plot.resetPlot();
-        e.getWhoClicked().sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Menus.Option-Menu.Items.Reset.Plot-Reset"));
+        e.getWhoClicked().sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Reset.Plot-Reset"));
       }
     });
   }

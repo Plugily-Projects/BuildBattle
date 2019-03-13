@@ -26,7 +26,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
-import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.menus.options.MenuOption;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
 import pl.plajerlair.core.utils.ItemBuilder;
@@ -42,8 +41,8 @@ public class FloorChangeOption {
   public FloorChangeOption(OptionsRegistry registry) {
     //todo material change
     registry.registerOption(new MenuOption(15, "FLOOR", new ItemBuilder(XMaterial.OAK_LOG.parseItem())
-        .name(ChatManager.colorMessage("Menus.Option-Menu.Items.Floor.Item-Name"))
-        .lore(ChatManager.colorMessage("Menus.Option-Menu.Items.Floor.Item-Lore"))
+        .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Floor.Item-Name"))
+        .lore(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Floor.Item-Lore"))
         .build()) {
       @Override
       public void onClick(InventoryClickEvent e) {
@@ -65,7 +64,7 @@ public class FloorChangeOption {
         }
 
         arena.getPlotManager().getPlot((Player) e.getWhoClicked()).changeFloor(e.getCursor().getType(), e.getCursor().getData().getData());
-        e.getWhoClicked().sendMessage(ChatManager.colorMessage("Menus.Option-Menu.Items.Floor.Floor-Changed"));
+        e.getWhoClicked().sendMessage(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Floor.Floor-Changed"));
         e.getCursor().setAmount(0);
         e.getCursor().setType(Material.AIR);
         e.getCurrentItem().setType(Material.AIR);

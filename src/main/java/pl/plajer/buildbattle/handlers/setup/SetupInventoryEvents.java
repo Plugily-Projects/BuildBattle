@@ -43,7 +43,6 @@ import pl.plajer.buildbattle.arena.impl.GuessTheBuildArena;
 import pl.plajer.buildbattle.arena.impl.SoloArena;
 import pl.plajer.buildbattle.arena.impl.TeamArena;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
-import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.PermissionManager;
 import pl.plajer.buildbattle.utils.Cuboid;
 import pl.plajer.buildbattle.utils.Utils;
@@ -128,11 +127,11 @@ public class SetupInventoryEvents implements Listener {
       switch (slot) {
         case SET_ENDING:
           config.set("instances." + arena.getID() + ".Endlocation", locationString);
-          player.sendMessage(ChatManager.colorRawMessage("&e✔ Completed | &aEnding location for arena " + arena.getID() + " set at your location!"));
+          player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aEnding location for arena " + arena.getID() + " set at your location!"));
           break;
         case SET_LOBBY:
           config.set("instances." + arena.getID() + ".lobbylocation", locationString);
-          player.sendMessage(ChatManager.colorRawMessage("&e✔ Completed | &aLobby location for arena " + arena.getID() + " set at your location!"));
+          player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aLobby location for arena " + arena.getID() + " set at your location!"));
           break;
         case SET_MINIMUM_PLAYERS:
           if (clickType.isRightClick()) {
@@ -157,11 +156,11 @@ public class SetupInventoryEvents implements Listener {
         case ADD_SIGN:
           Location location = player.getTargetBlock(null, 10).getLocation();
           if (!(location.getBlock().getState() instanceof Sign)) {
-            player.sendMessage(ChatManager.colorMessage("Commands.Look-Sign"));
+            player.sendMessage(plugin.getChatManager().colorMessage("Commands.Look-Sign"));
             break;
           }
           plugin.getSignManager().getLoadedSigns().put((Sign) location.getBlock().getState(), arena);
-          player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Signs.Sign-Created"));
+          player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Sign-Created"));
           String loc = location.getBlock().getWorld().getName() + "," + location.getBlock().getX() + "," + location.getBlock().getY() + "," + location.getBlock().getZ() + ",0.0,0.0";
           List<String> locs = config.getStringList("instances." + arena.getID() + ".signs");
           locs.add(loc);
@@ -187,7 +186,7 @@ public class SetupInventoryEvents implements Listener {
             }
             String newName = e.getCursor().getItemMeta().getDisplayName();
             config.set("instances." + arena.getID() + ".mapname", newName);
-            player.sendMessage(ChatManager.colorRawMessage("&e✔ Completed | &aName of arena " + arena.getID() + " set to " + newName));
+            player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aName of arena " + arena.getID() + " set to " + newName));
             e.getCurrentItem().getItemMeta().setDisplayName(ChatColor.GOLD + "Set a mapname (currently: " + newName);
           }
           break;
@@ -277,7 +276,7 @@ public class SetupInventoryEvents implements Listener {
           }
           break;
         case VIEW_SETUP_VIDEO:
-          player.sendMessage(ChatManager.getPrefix() + ChatManager.colorRawMessage("&6Check out this video: " + SetupInventory.VIDEO_LINK));
+          player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorRawMessage("&6Check out this video: " + SetupInventory.VIDEO_LINK));
           break;
       }
       ConfigUtils.saveConfig(plugin, config, "arenas");

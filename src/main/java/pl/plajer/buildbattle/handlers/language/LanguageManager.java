@@ -34,7 +34,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.utils.MessageUtils;
 import pl.plajerlair.core.debug.Debugger;
 import pl.plajerlair.core.debug.LogLevel;
@@ -206,7 +205,7 @@ public class LanguageManager {
     if (isDefaultLanguageUsed()) {
       return languageConfig.getStringList(path);
     } else {
-      return Arrays.asList(ChatManager.colorMessage(path).split(";"));
+      return Arrays.asList(plugin.getChatManager().colorMessage(path).split(";"));
     }
   }
 

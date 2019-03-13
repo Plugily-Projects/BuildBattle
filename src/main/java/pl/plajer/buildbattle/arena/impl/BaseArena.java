@@ -38,7 +38,6 @@ import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.managers.ScoreboardManager;
 import pl.plajer.buildbattle.arena.managers.plots.PlotManager;
 import pl.plajer.buildbattle.arena.options.ArenaOption;
-import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
@@ -71,7 +70,7 @@ public class BaseArena extends BukkitRunnable {
     this.plugin = plugin;
     this.id = id;
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-      gameBar = Bukkit.createBossBar(ChatManager.colorMessage("Bossbar.Waiting-For-Players"), BarColor.BLUE, BarStyle.SOLID);
+      gameBar = Bukkit.createBossBar(plugin.getChatManager().colorMessage("Bossbar.Waiting-For-Players"), BarColor.BLUE, BarStyle.SOLID);
     }
     plotManager = new PlotManager(this);
     scoreboardManager = new ScoreboardManager(this);

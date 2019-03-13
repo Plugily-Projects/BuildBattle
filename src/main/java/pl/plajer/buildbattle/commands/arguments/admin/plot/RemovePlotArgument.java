@@ -28,7 +28,6 @@ import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
 import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
 import pl.plajer.buildbattle.commands.arguments.data.LabelData;
 import pl.plajer.buildbattle.commands.arguments.data.LabeledCommandArgument;
-import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
@@ -49,21 +48,21 @@ public class RemovePlotArgument {
         Player player = (Player) sender;
         if (args.length < 2) {
           //todo translatable
-          player.sendMessage(ChatManager.getPrefix() + ChatManager.colorRawMessage("&cPlease type arena name and plot ID!"));
+          player.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorRawMessage("&cPlease type arena name and plot ID!"));
           return;
         }
         BaseArena arena = ArenaRegistry.getArena(args[1]);
         if (arena == null) {
-          player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+          player.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Arena-Like-That"));
           return;
         }
         FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
         if (config.contains("instances." + arena.getID() + ".plots." + args[2])) {
           config.set("instances." + arena.getID() + ".plots." + args[2], null);
           ConfigUtils.saveConfig(registry.getPlugin(), config, "arenas");
-          player.sendMessage(ChatManager.getPrefix() + ChatManager.colorRawMessage("&aPlot with ID &e" + args[2] + "&a removed from arena &e" + arena.getID()));
+          player.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorRawMessage("&aPlot with ID &e" + args[2] + "&a removed from arena &e" + arena.getID()));
         } else {
-          player.sendMessage(ChatManager.getPrefix() + ChatManager.colorRawMessage("&cPlot with that ID doesn't exist!"));
+          player.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorRawMessage("&cPlot with that ID doesn't exist!"));
         }
       }
     });

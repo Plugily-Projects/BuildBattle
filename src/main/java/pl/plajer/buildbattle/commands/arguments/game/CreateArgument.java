@@ -33,7 +33,6 @@ import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
 import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
 import pl.plajer.buildbattle.commands.arguments.data.LabelData;
 import pl.plajer.buildbattle.commands.arguments.data.LabeledCommandArgument;
-import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.setup.SetupInventory;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.LocationUtils;
@@ -55,7 +54,7 @@ public class CreateArgument {
       @Override
       public void execute(CommandSender sender, String[] args) {
         if (args.length == 1) {
-          sender.sendMessage(ChatManager.colorMessage("Commands.Type-Arena-Name"));
+          sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Type-Arena-Name"));
           return;
         }
         Player player = (Player) sender;

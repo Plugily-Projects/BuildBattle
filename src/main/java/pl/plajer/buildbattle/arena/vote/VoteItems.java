@@ -28,7 +28,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajerlair.core.debug.Debugger;
 import pl.plajerlair.core.debug.LogLevel;
 import pl.plajerlair.core.utils.ConfigUtils;
@@ -55,7 +54,7 @@ public class VoteItems {
         continue;
       }
       ItemStack stack = new ItemBuilder(XMaterial.fromString(config.getString(key + ".material-name").toUpperCase()).parseItem())
-          .name(ChatManager.colorRawMessage(config.getString(key + ".displayname")))
+          .name(JavaPlugin.getPlugin(Main.class).getChatManager().colorRawMessage(config.getString(key + ".displayname")))
           .build();
       if (config.getBoolean(key + ".report-item-function", false)) {
         reportItem = stack;

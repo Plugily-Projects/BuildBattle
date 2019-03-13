@@ -28,7 +28,6 @@ import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
 import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
 import pl.plajer.buildbattle.commands.arguments.data.LabelData;
 import pl.plajer.buildbattle.commands.arguments.data.LabeledCommandArgument;
-import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.utils.CuboidSelector;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.LocationUtils;
@@ -49,17 +48,17 @@ public class AddPlotArgument {
         Player player = (Player) sender;
         if (args.length == 0) {
           //todo translatable
-          player.sendMessage(ChatManager.getPrefix() + ChatManager.colorRawMessage("&cPlease type arena name!"));
+          player.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorRawMessage("&cPlease type arena name!"));
           return;
         }
         BaseArena arena = ArenaRegistry.getArena(args[1]);
         if (arena == null) {
-          player.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+          player.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Arena-Like-That"));
           return;
         }
         CuboidSelector.Selection selection = registry.getPlugin().getCuboidSelector().getSelection(player);
         if (selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
-          player.sendMessage(ChatManager.colorRawMessage(ChatManager.getPrefix() + "&cPlease select both corners before adding a plot!"));
+          player.sendMessage(registry.getPlugin().getChatManager().colorRawMessage(registry.getPlugin().getChatManager().getPrefix() + "&cPlease select both corners before adding a plot!"));
           return;
         }
         FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
@@ -69,7 +68,7 @@ public class AddPlotArgument {
         }
         LocationUtils.saveLoc(registry.getPlugin(), config, "arenas", "instances." + arena.getID() + ".plots." + id + ".minpoint", selection.getFirstPos());
         LocationUtils.saveLoc(registry.getPlugin(), config, "arenas", "instances." + arena.getID() + ".plots." + id + ".maxpoint", selection.getSecondPos());
-        player.sendMessage(ChatManager.getPrefix() + ChatManager.colorRawMessage("&aPlot with ID &e" + id + "&a added to arena instance &e" + arena.getID()));
+        player.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorRawMessage("&aPlot with ID &e" + id + "&a added to arena instance &e" + arena.getID()));
         registry.getPlugin().getCuboidSelector().removeSelection(player);
       }
     });

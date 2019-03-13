@@ -32,7 +32,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
-import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.ItemBuilder;
 import pl.plajerlair.core.utils.LocationUtils;
@@ -186,16 +185,16 @@ public class SetupInventory {
     int rand = new Random().nextInt(3 + 1);
     switch (rand) {
       case 0:
-        p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Plajer-Lair/BuildBattle"));
+        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Plajer-Lair/BuildBattle"));
         break;
       case 1:
-        p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7Help us translating plugin to your language here: https://translate.plajer.xyz"));
+        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Help us translating plugin to your language here: https://translate.plajer.xyz"));
         break;
       case 2:
-        p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7Download some free maps! Get them here: https://wiki.plajer.xyz/minecraft/buildbattle/free_maps.php"));
+        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Download some free maps! Get them here: https://wiki.plajer.xyz/minecraft/buildbattle/free_maps.php"));
         break;
       case 3:
-        p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7You can use PlaceholderAPI placeholders from our plugin! Check: https://wiki.plajer.xyz/minecraft/buildbattle/papi_placeholders.php"));
+        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7You can use PlaceholderAPI placeholders from our plugin! Check: https://wiki.plajer.xyz/minecraft/buildbattle/papi_placeholders.php"));
         break;
     }
   }

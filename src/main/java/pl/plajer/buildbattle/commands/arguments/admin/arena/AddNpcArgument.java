@@ -28,7 +28,6 @@ import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
 import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
 import pl.plajer.buildbattle.commands.arguments.data.LabelData;
 import pl.plajer.buildbattle.commands.arguments.data.LabeledCommandArgument;
-import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
@@ -45,12 +44,12 @@ public class AddNpcArgument {
       @Override
       public void execute(CommandSender sender, String[] args) {
         if (args.length == 1) {
-          sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Type-Arena-Name"));
+          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Type-Arena-Name"));
           return;
         }
         BaseArena arena = ArenaRegistry.getArena(args[1]);
         if (arena == null) {
-          sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Arena-Like-That"));
           return;
         }
         ArenaManager.stopGame(false, arena);
@@ -58,7 +57,7 @@ public class AddNpcArgument {
         config.set("instances." + args[1], null);
         ConfigUtils.saveConfig(registry.getPlugin(), config, "arenas");
         ArenaRegistry.unregisterArena(arena);
-        sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Removed-Game-Instance"));
+        sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Removed-Game-Instance"));
       }
     });
   }

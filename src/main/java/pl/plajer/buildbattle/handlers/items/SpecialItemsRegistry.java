@@ -29,7 +29,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajerlair.core.debug.Debugger;
 import pl.plajerlair.core.debug.LogLevel;
 import pl.plajerlair.core.utils.ConfigUtils;
@@ -91,8 +90,8 @@ public class SpecialItemsRegistry {
     for (String key : config.getKeys(false)) {
       addItem(new SpecialItem(key, new ItemBuilder(XMaterial
           .fromString(config.getString(key + ".material-name").toUpperCase()).parseItem())
-          .name(ChatManager.colorRawMessage(config.getString(key + ".displayname")))
-          .lore(config.getStringList(key + ".lore").stream().map((lore) -> lore = ChatManager.colorRawMessage(lore))
+          .name(plugin.getChatManager().colorRawMessage(config.getString(key + ".displayname")))
+          .lore(config.getStringList(key + ".lore").stream().map((lore) -> lore = plugin.getChatManager().colorRawMessage(lore))
               .collect(Collectors.toList()))
           .build(), config.getInt(key + ".slot")));
     }

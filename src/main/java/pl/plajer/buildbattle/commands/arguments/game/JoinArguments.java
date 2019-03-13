@@ -28,7 +28,6 @@ import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
 import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
-import pl.plajer.buildbattle.handlers.ChatManager;
 
 /**
  * @author Plajer
@@ -43,26 +42,26 @@ public class JoinArguments {
       @Override
       public void execute(CommandSender sender, String[] args) {
         if (args.length == 1) {
-          sender.sendMessage(ChatManager.colorMessage("Commands.Type-Arena-Name"));
+          sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Type-Arena-Name"));
           return;
         }
         if (ArenaRegistry.getArena(((Player) sender)) != null) {
-          sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Already-Playing"));
+          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.Already-Playing"));
           return;
         }
         for (BaseArena arena : ArenaRegistry.getArenas()) {
           if (args[1].equalsIgnoreCase(arena.getID())) {
             if (arena.getPlayers().size() >= arena.getMaximumPlayers()) {
-              sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Arena-Is-Full"));
+              sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Arena-Is-Full"));
             } else if (arena.getArenaState() == ArenaState.IN_GAME) {
-              sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Arena-Started"));
+              sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Arena-Started"));
             } else {
               ArenaManager.joinAttempt((Player) sender, arena);
             }
             return;
           }
         }
-        sender.sendMessage(ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+        sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.No-Arena-Like-That"));
       }
     });
 
@@ -72,7 +71,7 @@ public class JoinArguments {
         @Override
         public void execute(CommandSender sender, String[] args) {
           if (ArenaRegistry.getArena(((Player) sender)) != null) {
-            sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("In-Game.Already-Playing"));
+            sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.Already-Playing"));
             return;
           }
           //todo gtb case
@@ -88,10 +87,10 @@ public class JoinArguments {
                   }
                 }
               }
-              sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.No-Free-Arenas"));
+              sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Free-Arenas"));
               return;
             default:
-              sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Invalid-Args"));
+              sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Invalid-Args"));
           }
         }
       });

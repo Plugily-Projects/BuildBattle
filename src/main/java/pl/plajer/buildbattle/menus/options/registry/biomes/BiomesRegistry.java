@@ -30,7 +30,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
 import pl.plajer.buildbattle.utils.XBiome;
 import pl.plajerlair.core.debug.Debugger;
@@ -68,9 +67,9 @@ public class BiomesRegistry {
       }
       BiomeItem biomeItem = new BiomeItem(new ItemBuilder(XMaterial.fromString(config
           .getString(biome + ".material-name").toUpperCase()).parseItem())
-          .name(ChatManager.colorRawMessage(config.getString(biome + ".displayname")))
+          .name(plugin.getChatManager().colorRawMessage(config.getString(biome + ".displayname")))
           .lore(config.getStringList(biome + ".lore")
-              .stream().map((lore) -> lore = ChatManager.colorRawMessage(lore)).collect(Collectors.toList()))
+              .stream().map((lore) -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()))
           .build(), config.getString(biome + ".permission"), XBiome.fromString(biome));
       biomes.add(biomeItem);
       i++;
@@ -80,7 +79,7 @@ public class BiomesRegistry {
 
   private void registerInventory() {
     Inventory inv = Bukkit.createInventory(null, MinigameUtils.serializeInt(biomes.size()),
-        ChatManager.colorMessage("Menus.Option-Menu.Items.Biome.Inventory-Name"));
+        plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Biome.Inventory-Name"));
     for (BiomeItem item : biomes) {
       inv.addItem(item.getItemStack());
     }

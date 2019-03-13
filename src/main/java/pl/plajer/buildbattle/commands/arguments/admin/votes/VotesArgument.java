@@ -29,7 +29,6 @@ import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
 import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
 import pl.plajer.buildbattle.commands.arguments.data.LabelData;
 import pl.plajer.buildbattle.commands.arguments.data.LabeledCommandArgument;
-import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.utils.Utils;
 
@@ -47,11 +46,11 @@ public class VotesArgument {
       @Override
       public void execute(CommandSender sender, String[] args) {
         if (args.length == 1) {
-          sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Invalid-Args"));
+          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Invalid-Args"));
           return;
         }
         if (args.length == 2 || (!args[1].equalsIgnoreCase("add") && args[1].equalsIgnoreCase("set"))) {
-          sender.sendMessage(ChatManager.getPrefix() + ChatColor.RED + "Please type amount of super votes to add or set!");
+          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + ChatColor.RED + "Please type amount of super votes to add or set!");
           return;
         }
         Player target;
@@ -62,7 +61,7 @@ public class VotesArgument {
         }
 
         if (target == null) {
-          sender.sendMessage(ChatManager.colorMessage("Commands.Player-Not-Found"));
+          sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Player-Not-Found"));
           return;
         }
 
@@ -72,19 +71,19 @@ public class VotesArgument {
           String successMessage;
           if (args[1].equalsIgnoreCase("add")) {
             user.addStat(StatsStorage.StatisticType.SUPER_VOTES, Integer.parseInt(args[2]));
-            successMessage = ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Arguments.Super-Votes-Received");
+            successMessage = registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Arguments.Super-Votes-Received");
             successMessage = StringUtils.replace(successMessage, "%amount%", args[2]);
           } else {
             user.setStat(StatsStorage.StatisticType.SUPER_VOTES, Integer.parseInt(args[2]));
-            successMessage = ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Arguments.Super-Votes-Set");
+            successMessage = registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Arguments.Super-Votes-Set");
             successMessage = StringUtils.replace(successMessage, "%amount%", args[2]);
           }
           //todo translatable?
-          sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorRawMessage("&aSuper votes amount modified!"));
+          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorRawMessage("&aSuper votes amount modified!"));
           target.sendMessage(successMessage);
         } else {
           //todo translatable?
-          sender.sendMessage(ChatManager.colorRawMessage("&cArgument isn't a number!"));
+          sender.sendMessage(registry.getPlugin().getChatManager().colorRawMessage("&cArgument isn't a number!"));
         }
       }
     });

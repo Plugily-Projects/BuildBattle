@@ -30,7 +30,6 @@ import org.bukkit.entity.Player;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.impl.GuessTheBuildArena;
-import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
 import pl.plajerlair.core.utils.GameScoreboard;
 import pl.plajerlair.core.utils.MinigameUtils;
@@ -93,15 +92,15 @@ public class GuessTheBuildScoreboardManager extends ScoreboardManager {
     returnString = StringUtils.replace(returnString, "%PLAYERS%", Integer.toString(arena.getPlayers().size()));
     returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());
     if (arena.isThemeSet()) {
-      returnString = StringUtils.replace(returnString, "%CURRENT_TIMER%", ChatManager.colorMessage("Scoreboard.GTB-Current-Timer.Build-Time"));
+      returnString = StringUtils.replace(returnString, "%CURRENT_TIMER%", getPlugin().getChatManager().colorMessage("Scoreboard.GTB-Current-Timer.Build-Time"));
     } else {
-      returnString = StringUtils.replace(returnString, "%CURRENT_TIMER%", ChatManager.colorMessage("Scoreboard.GTB-Current-Timer.Starts-In"));
+      returnString = StringUtils.replace(returnString, "%CURRENT_TIMER%", getPlugin().getChatManager().colorMessage("Scoreboard.GTB-Current-Timer.Starts-In"));
     }
     if (arena.getCurrentBuilder() != null) {
       if ((arena.getCurrentBuilder().equals(player) && arena.getCurrentTheme() != null) || arena.getWhoGuessed().contains(player)) {
         returnString = StringUtils.replace(returnString, "%THEME%", arena.getCurrentTheme().getTheme());
       } else {
-        returnString = StringUtils.replace(returnString, "%THEME%", ChatManager.colorMessage("Scoreboard.Theme-Unknown"));
+        returnString = StringUtils.replace(returnString, "%THEME%", getPlugin().getChatManager().colorMessage("Scoreboard.Theme-Unknown"));
       }
       returnString = StringUtils.replace(returnString, "%BUILDER%", arena.getCurrentBuilder().getName());
     }
@@ -133,7 +132,7 @@ public class GuessTheBuildScoreboardManager extends ScoreboardManager {
     if (getPlugin().getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       PlaceholderAPI.setPlaceholders(player, returnString);
     }
-    returnString = ChatManager.colorRawMessage(returnString);
+    returnString = getPlugin().getChatManager().colorRawMessage(returnString);
     return returnString;
   }
 

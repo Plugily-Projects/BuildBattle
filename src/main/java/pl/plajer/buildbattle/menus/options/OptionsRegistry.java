@@ -27,7 +27,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.menus.options.registry.FloorChangeOption;
 import pl.plajer.buildbattle.menus.options.registry.PlotResetOption;
 import pl.plajer.buildbattle.menus.options.registry.TimeChangeOption;
@@ -70,7 +69,7 @@ public class OptionsRegistry {
     new ParticlesOption(this);
 
     //register player heads
-    playerHeadsRegistry = new PlayerHeadsRegistry();
+    playerHeadsRegistry = new PlayerHeadsRegistry(this);
     new PlayerHeadsOption(this);
 
     new PlotResetOption(this);
@@ -125,7 +124,7 @@ public class OptionsRegistry {
    * @return options inventory
    */
   public Inventory formatInventory() {
-    Inventory inv = Bukkit.createInventory(null, inventorySize, ChatManager.colorMessage("Menus.Option-Menu.Inventory-Name"));
+    Inventory inv = Bukkit.createInventory(null, inventorySize, plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name"));
     for (MenuOption option : registeredOptions) {
       inv.setItem(option.getSlot(), option.getItemStack());
     }
@@ -139,8 +138,8 @@ public class OptionsRegistry {
   @Deprecated
   public ItemStack getMenuItem() {
     return new ItemBuilder(new ItemStack(Material.NETHER_STAR))
-        .name(ChatManager.colorMessage("Menus.Option-Menu.Option-Item"))
-        .lore(ChatManager.colorMessage("Menus.Option-Menu.Option-Item-Lore")).build();
+        .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item"))
+        .lore(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item-Lore")).build();
   }
 
   public BiomesRegistry getBiomesRegistry() {
