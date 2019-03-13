@@ -40,9 +40,11 @@ import pl.plajerlair.core.database.MySQLDatabase;
  */
 public class MySQLManager implements UserDatabase {
 
+  private Main plugin;
   private MySQLDatabase database;
 
   public MySQLManager(Main plugin) {
+    this.plugin = plugin;
     database = plugin.getMySQLDatabase();
     Connection conn = database.getManager().getConnection();
     try {
@@ -86,36 +88,38 @@ public class MySQLManager implements UserDatabase {
 
   @Override
   public void saveStatistic(User user, StatsStorage.StatisticType stat) {
-    database.executeUpdate("UPDATE `buildbattlestats` SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate("UPDATE `buildbattlestats` SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';"));
   }
 
   @Override
   public void loadStatistic(User user, StatsStorage.StatisticType stat) {
-    ResultSet resultSet = database.executeQuery("SELECT UUID from buildbattlestats WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'");
-    //insert into the database
-    try {
-      if (!resultSet.next()) {
-        insertPlayer(user.getPlayer());
+    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+      ResultSet resultSet = database.executeQuery("SELECT UUID from buildbattlestats WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'");
+      //insert into the database
+      try {
+        if (!resultSet.next()) {
+          insertPlayer(user.getPlayer());
+        }
+      } catch (SQLException e1) {
+        System.out.print("CONNECTION FAILED FOR PLAYER " + user.getPlayer().getName());
       }
-    } catch (SQLException e1) {
-      System.out.print("CONNECTION FAILED FOR PLAYER " + user.getPlayer().getName());
-    }
 
 
-    ResultSet set = database.executeQuery("SELECT " + stat.getName() + " FROM `buildbattlestats` WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'");
-    try {
-      if (!set.next()) {
+      ResultSet set = database.executeQuery("SELECT " + stat.getName() + " FROM `buildbattlestats` WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'");
+      try {
+        if (!set.next()) {
+          user.setStat(stat, 0);
+          return;
+        }
+        user.setStat(stat, set.getInt(1));
+      } catch (SQLException e) {
+        e.printStackTrace();
+        MessageUtils.errorOccurred();
+        Bukkit.getConsoleSender().sendMessage("Cannot get contents from MySQL database!");
+        Bukkit.getConsoleSender().sendMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
         user.setStat(stat, 0);
-        return;
       }
-      user.setStat(stat, set.getInt(1));
-    } catch (SQLException e) {
-      e.printStackTrace();
-      MessageUtils.errorOccurred();
-      Bukkit.getConsoleSender().sendMessage("Cannot get contents from MySQL database!");
-      Bukkit.getConsoleSender().sendMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
-      user.setStat(stat, 0);
-    }
+    });
   }
 
 }

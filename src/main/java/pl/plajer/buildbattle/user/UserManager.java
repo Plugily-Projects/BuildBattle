@@ -37,19 +37,18 @@ import pl.plajerlair.core.debug.LogLevel;
 /**
  * Created by Tom on 27/07/2014.
  */
-public class UserManager implements UserDatabase {
+public class UserManager {
 
-  private FileStats fileStats;
-  private MySQLManager mySQLManager;
+  private UserDatabase database;
   private Main plugin;
   private List<User> users = new ArrayList<>();
 
   public UserManager(Main plugin) {
     this.plugin = plugin;
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      mySQLManager = new MySQLManager(plugin);
+      database = new MySQLManager(plugin);
     } else {
-      fileStats = new FileStats(plugin);
+      database = new FileStats(plugin);
     }
     loadStatsForPlayersOnline();
   }
@@ -77,29 +76,19 @@ public class UserManager implements UserDatabase {
     users.add(user);
     return user;
   }
-  
-  @Override
+
   public void saveStatistic(User user, StatsStorage.StatisticType stat) {
     if (!stat.isPersistent()) {
       return;
     }
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> mySQLManager.saveStatistic(user, stat));
-      return;
-    }
-    fileStats.saveStatistic(user, stat);
+    database.saveStatistic(user, stat);
   }
 
-  @Override
   public void loadStatistic(User user, StatsStorage.StatisticType stat) {
     if (!stat.isPersistent()) {
       return;
     }
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> mySQLManager.loadStatistic(user, stat));
-      return;
-    }
-    fileStats.loadStatistic(user, stat);
+    database.loadStatistic(user, stat);
   }
 
   public void removeUser(User user) {
