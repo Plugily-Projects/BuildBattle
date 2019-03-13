@@ -35,7 +35,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
 import pl.plajerlair.core.debug.Debugger;
 import pl.plajerlair.core.debug.LogLevel;
@@ -85,9 +84,9 @@ public class ParticleRegistry {
       ParticleItem particleItem = new ParticleItem();
       particleItem.setItemStack(new ItemBuilder(XMaterial.fromString(config
           .getString(particle.toString() + ".material-name").toUpperCase()).parseItem())
-          .name(ChatManager.colorRawMessage(config.getString(particle.toString() + ".displayname")))
+          .name(plugin.getChatManager().colorRawMessage(config.getString(particle.toString() + ".displayname")))
           .lore(config.getStringList(particle.toString() + ".lore")
-              .stream().map((lore) -> lore = ChatManager.colorRawMessage(lore)).collect(Collectors.toList()))
+              .stream().map((lore) -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()))
           .build());
       particleItem.setPermission(config.getString(particle.toString() + ".permission"));
       particleItem.setEffect(particle);
@@ -118,13 +117,13 @@ public class ParticleRegistry {
 
   private void registerInventory() {
     Inventory inv = Bukkit.createInventory(null, MinigameUtils.serializeInt(registeredParticles.size()),
-        ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.Inventory-Name"));
+        plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.Inventory-Name"));
     for (ParticleItem item : registeredParticles) {
       inv.addItem(item.getItemStack());
     }
     inv.setItem(MinigameUtils.serializeInt(registeredParticles.size()) - 1, new ItemBuilder(new ItemStack(Material.REDSTONE_BLOCK))
-        .name(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))
-        .lore(Collections.singletonList(ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Lore")))
+        .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))
+        .lore(Collections.singletonList(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Lore")))
         .build());
     inventory = inv;
   }

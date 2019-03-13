@@ -32,7 +32,6 @@ import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.impl.SoloArena;
-import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
 import pl.plajerlair.core.utils.GameScoreboard;
 import pl.plajerlair.core.utils.MinigameUtils;
@@ -46,11 +45,12 @@ public class ScoreboardManager {
 
   private Map<String, List<String>> scoreboardContents = new HashMap<>();
   private Main plugin = JavaPlugin.getPlugin(Main.class);
-  private String boardTitle = ChatManager.colorMessage("Scoreboard.Title");
+  private String boardTitle;
   private BaseArena arena;
 
   public ScoreboardManager(BaseArena arena) {
     this.arena = arena;
+    this.boardTitle = plugin.getChatManager().colorMessage("Scoreboard.Title");
     for (ArenaState state : ArenaState.values()) {
       //not registering RESTARTING state and registering IN_GAME and ENDING later
       if (state == ArenaState.RESTARTING || state == ArenaState.IN_GAME || state == ArenaState.ENDING) {
@@ -98,21 +98,21 @@ public class ScoreboardManager {
     returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());
     if (arena.getArenaType() != BaseArena.ArenaType.GUESS_THE_BUILD) {
       if (((SoloArena) arena).isThemeVoteTime()) {
-        returnString = StringUtils.replace(returnString, "%THEME%", ChatManager.colorMessage("In-Game.No-Theme-Yet"));
+        returnString = StringUtils.replace(returnString, "%THEME%", plugin.getChatManager().colorMessage("In-Game.No-Theme-Yet"));
       } else {
         returnString = StringUtils.replace(returnString, "%THEME%", arena.getTheme());
       }
     } /*else {
       if (arena.isGTBThemeSet()) {
-        returnString = StringUtils.replace(returnString, "%CURRENT_TIMER%", ChatManager.colorMessage("Scoreboard.GTB-Current-Timer.Build-Time"));
+        returnString = StringUtils.replace(returnString, "%CURRENT_TIMER%", plugin.getChatManager().colorMessage("Scoreboard.GTB-Current-Timer.Build-Time"));
       } else {
-        returnString = StringUtils.replace(returnString, "%CURRENT_TIMER%", ChatManager.colorMessage("Scoreboard.GTB-Current-Timer.Starts-In"));
+        returnString = StringUtils.replace(returnString, "%CURRENT_TIMER%", plugin.getChatManager().colorMessage("Scoreboard.GTB-Current-Timer.Starts-In"));
       }
       if (arena.getCurrentBuilder() != null) {
         if (player.getUniqueId() == arena.getCurrentBuilder()) {
           returnString = StringUtils.replace(returnString, "%THEME%", arena.getCurrentGTBTheme().getTheme());
         } else {
-          returnString = StringUtils.replace(returnString, "%THEME%", ChatManager.colorMessage("Scoreboard.Theme-Unknown"));
+          returnString = StringUtils.replace(returnString, "%THEME%", plugin.getChatManager().colorMessage("Scoreboard.Theme-Unknown"));
         }
         returnString = StringUtils.replace(returnString, "%BUILDER%", Bukkit.getPlayer(arena.getCurrentBuilder()).getName());
       }
@@ -145,16 +145,16 @@ public class ScoreboardManager {
             returnString = StringUtils.replace(returnString, "%TEAMMATE%", arena.getPlotManager().getPlot(player).getOwners().get(0).getName());
           }
         } else {
-          returnString = StringUtils.replace(returnString, "%TEAMMATE%", ChatManager.colorMessage("In-Game.Nobody"));
+          returnString = StringUtils.replace(returnString, "%TEAMMATE%", plugin.getChatManager().colorMessage("In-Game.Nobody"));
         }
       }
     } else {
-      returnString = StringUtils.replace(returnString, "%TEAMMATE%", ChatManager.colorMessage("In-Game.Nobody"));
+      returnString = StringUtils.replace(returnString, "%TEAMMATE%", plugin.getChatManager().colorMessage("In-Game.Nobody"));
     }
     if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       PlaceholderAPI.setPlaceholders(player, returnString);
     }
-    returnString = ChatManager.colorRawMessage(returnString);
+    returnString = plugin.getChatManager().colorRawMessage(returnString);
     return returnString;
   }
 

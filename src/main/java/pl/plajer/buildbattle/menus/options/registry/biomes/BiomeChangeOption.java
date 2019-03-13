@@ -26,10 +26,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
+import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
-import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.menus.options.MenuOption;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
 import pl.plajer.buildbattle.utils.Utils;
@@ -45,18 +45,21 @@ import pl.plajerlair.core.utils.XMaterial;
  */
 public class BiomeChangeOption {
 
+  private Main plugin;
+
   public BiomeChangeOption(OptionsRegistry registry) {
+    this.plugin = registry.getPlugin();
     registry.registerOption(new MenuOption(32, "BIOME", new ItemBuilder(XMaterial.MYCELIUM.parseItem())
-        .name(ChatManager.colorMessage("Menus.Option-Menu.Items.Biome.Item-Name"))
-        .lore(ChatManager.colorMessage("Menus.Option-Menu.Items.Biome.Item-Lore"))
-        .build(), ChatManager.colorMessage("Menus.Option-Menu.Items.Biome.Inventory-Name")) {
+        .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Biome.Item-Name"))
+        .lore(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Biome.Item-Lore"))
+        .build(), plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Biome.Inventory-Name")) {
 
       @Override
       public void onClick(InventoryClickEvent e) {
         e.getWhoClicked().closeInventory();
 
         Inventory biomeInv = Bukkit.createInventory(null, MinigameUtils.serializeInt(registry.getBiomesRegistry().getBiomes().size()),
-            ChatManager.colorMessage("Menus.Option-Menu.Items.Biome.Inventory-Name"));
+            plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Biome.Inventory-Name"));
         for (BiomeItem biome : registry.getBiomesRegistry().getBiomes()) {
           biomeInv.addItem(biome.getItemStack());
         }
@@ -82,7 +85,7 @@ public class BiomeChangeOption {
             }
           }
           for (Player p : plot.getOwners()) {
-            p.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Menus.Option-Menu.Items.Biome.Biome-Set"));
+            p.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Biome.Biome-Set"));
           }
         } catch (Exception ex) {
           new ReportedException(registry.getPlugin(), ex);

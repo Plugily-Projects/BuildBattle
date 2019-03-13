@@ -27,7 +27,6 @@ import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
-import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.utils.Utils;
 import pl.plajerlair.core.services.exception.ReportedException;
 
@@ -51,7 +50,7 @@ public class OptionsMenuHandler implements Listener {
       if (!(e.getWhoClicked() instanceof Player) || e.getInventory() == null || e.getCurrentItem() == null) {
         return;
       }
-      if (!Utils.isNamed(e.getCurrentItem()) || !e.getInventory().getName().equals(ChatManager.colorMessage("Menus.Option-Menu.Inventory-Name"))) {
+      if (!Utils.isNamed(e.getCurrentItem()) || !e.getInventory().getName().equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name"))) {
         return;
       }
       BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());

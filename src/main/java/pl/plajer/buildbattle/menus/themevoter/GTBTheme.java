@@ -23,6 +23,7 @@ package pl.plajer.buildbattle.menus.themevoter;
  * <p>
  * Created at 15.09.2018
  */
+@Deprecated // should be renamed
 public class GTBTheme {
 
   private String theme;

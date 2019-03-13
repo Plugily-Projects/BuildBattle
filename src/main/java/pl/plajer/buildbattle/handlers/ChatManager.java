@@ -35,26 +35,26 @@ import pl.plajerlair.core.utils.MinigameUtils;
  */
 public class ChatManager {
 
-  private static String prefix;
+  private String prefix;
 
   public ChatManager(String prefix) {
-    ChatManager.prefix = prefix;
+    this.prefix = prefix;
   }
 
   /**
    * @return game prefix
    */
-  public static String getPrefix() {
+  public String getPrefix() {
     return prefix;
   }
 
-  public static void broadcast(BaseArena arena, String message) {
+  public void broadcast(BaseArena arena, String message) {
     for (Player p : arena.getPlayers()) {
       p.sendMessage(prefix + message);
     }
   }
 
-  public static String colorMessage(String message) {
+  public String colorMessage(String message) {
     try {
       return ChatColor.translateAlternateColorCodes('&', LanguageManager.getLanguageMessage(message));
     } catch (NullPointerException e1) {
@@ -70,11 +70,11 @@ public class ChatManager {
     }
   }
 
-  public static String colorRawMessage(String msg) {
+  public String colorRawMessage(String msg) {
     return ChatColor.translateAlternateColorCodes('&', msg);
   }
 
-  public static String formatMessage(BaseArena arena, String message, Player player) {
+  public String formatMessage(BaseArena arena, String message, Player player) {
     String returnString = message;
     returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());
     returnString = colorRawMessage(formatPlaceholders(returnString, arena));
@@ -91,13 +91,13 @@ public class ChatManager {
     return returnString;
   }
 
-  public static void broadcastAction(BaseArena arena, Player p, ActionType action) {
+  public void broadcastAction(BaseArena arena, Player p, ActionType action) {
     switch (action) {
       case JOIN:
-        broadcast(arena, formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Join"), p));
+        broadcast(arena, formatMessage(arena, colorMessage("In-Game.Messages.Join"), p));
         break;
       case LEAVE:
-        broadcast(arena, formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Leave"), p));
+        broadcast(arena, formatMessage(arena, colorMessage("In-Game.Messages.Leave"), p));
         break;
     }
   }

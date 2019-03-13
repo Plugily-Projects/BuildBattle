@@ -34,21 +34,20 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
-import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajerlair.core.utils.ItemBuilder;
 import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
  * Created by Tom on 24/08/2015.
  */
-@Deprecated
+@Deprecated //should be moved
 public class ParticleRemoveMenu {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
 
   @Deprecated
   public static void openMenu(Player player, Plot buildPlot) {
-    Gui gui = new Gui(plugin, 6, ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"));
+    Gui gui = new Gui(plugin, 6, plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"));
     StaticPane pane = new StaticPane(9, 6);
 
     int x = 0;
@@ -59,13 +58,13 @@ public class ParticleRemoveMenu {
       ItemMeta itemMeta = itemStack.getItemMeta();
       itemMeta.setLore(new ArrayList<>());
       itemStack.setItemMeta(itemMeta);
-      MinigameUtils.addLore(itemStack, ChatManager.colorMessage("Menus.Location-Message"));
+      MinigameUtils.addLore(itemStack, plugin.getChatManager().colorMessage("Menus.Location-Message"));
       MinigameUtils.addLore(itemStack, ChatColor.GRAY + "  x: " + Math.round(location.getX()));
       MinigameUtils.addLore(itemStack, ChatColor.GRAY + "  y: " + Math.round(location.getY()));
       MinigameUtils.addLore(itemStack, ChatColor.GRAY + "  z: " + Math.round(location.getZ()));
       pane.addItem(new GuiItem(itemStack, event -> {
         buildPlot.getParticles().remove(location);
-        event.getWhoClicked().sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Menus.Option-Menu.Items.Particle.Particle-Removed"));
+        event.getWhoClicked().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.Particle-Removed"));
         gui.getItems().forEach(item -> {
           if (item.getItem().isSimilar(itemStack)) {
             item.setVisible(false);
@@ -81,8 +80,8 @@ public class ParticleRemoveMenu {
     }
 
     pane.addItem(new GuiItem(new ItemBuilder(new ItemStack(Material.ARROW))
-        .name(ChatManager.colorMessage("Menus.Buttons.Back-Button.Name"))
-        .lore(ChatManager.colorMessage("Menus.Buttons.Back-Button.Lore"))
+        .name(plugin.getChatManager().colorMessage("Menus.Buttons.Back-Button.Name"))
+        .lore(plugin.getChatManager().colorMessage("Menus.Buttons.Back-Button.Lore"))
         .build(), event -> {
       event.getWhoClicked().closeInventory();
       event.getWhoClicked().openInventory(plugin.getOptionsRegistry().getParticleRegistry().getInventory());

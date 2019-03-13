@@ -29,7 +29,6 @@ import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
 import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
 import pl.plajer.buildbattle.commands.arguments.data.LabelData;
 import pl.plajer.buildbattle.commands.arguments.data.LabeledCommandArgument;
-import pl.plajer.buildbattle.handlers.ChatManager;
 
 /**
  * @author Plajer
@@ -46,13 +45,13 @@ public class StopArgument {
       public void execute(CommandSender sender, String[] args) {
         BaseArena arena = ArenaRegistry.getArena((Player) sender);
         if (arena == null) {
-          sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Not-Playing"));
+          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Not-Playing"));
           return;
         }
         if (arena.getArenaState() != ArenaState.ENDING) {
           ArenaManager.stopGame(false, ArenaRegistry.getArena((Player) sender));
         }
-        sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.Arguments.Success"));
+        sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Arguments.Success"));
       }
     });
   }

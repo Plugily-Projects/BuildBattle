@@ -21,7 +21,6 @@ package pl.plajer.buildbattle.commands.arguments.data;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.handlers.ChatManager;
 
 /**
  * @author Plajer
@@ -36,9 +35,9 @@ public class LabelData {
   private String description;
 
   public LabelData(String text, String command, String description) {
-    this.text = ChatManager.colorRawMessage(text);
+    this.text = plugin.getChatManager().colorRawMessage(text);
     this.command = command;
-    this.description = ChatManager.colorRawMessage(description);
+    this.description = plugin.getChatManager().colorRawMessage(description);
   }
 
   public String getText() {

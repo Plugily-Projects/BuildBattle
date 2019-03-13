@@ -22,7 +22,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
-import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.menus.options.MenuOption;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
 import pl.plajer.buildbattle.utils.Utils;
@@ -38,9 +37,9 @@ public class PlayerHeadsOption {
 
   public PlayerHeadsOption(OptionsRegistry registry) {
     registry.registerOption(new MenuOption(11, "PLAYER_HEADS", new ItemBuilder(Utils.PLAYER_HEAD_ITEM.clone())
-        .name(ChatManager.colorMessage("Menus.Option-Menu.Items.Players-Heads.Item-Name"))
-        .lore(ChatManager.colorMessage("Menus.Option-Menu.Items.Players-Heads.Item-Lore"))
-        .build(), ChatManager.colorMessage("Menus.Option-Menu.Items.Players-Heads.Inventory-Name")) {
+        .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Players-Heads.Item-Name"))
+        .lore(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Players-Heads.Item-Lore"))
+        .build(), registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Players-Heads.Inventory-Name")) {
 
       @Override
       public void onClick(InventoryClickEvent e) {
@@ -48,7 +47,7 @@ public class PlayerHeadsOption {
 
         Inventory inventory = Bukkit.getServer().createInventory(null,
             MinigameUtils.serializeInt(registry.getPlayerHeadsRegistry().getCategories().size()),
-            ChatManager.colorMessage("Menus.Option-Menu.Items.Players-Heads.Inventory-Name"));
+            registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Players-Heads.Inventory-Name"));
         for (HeadsCategory categoryItem : registry.getPlayerHeadsRegistry().getCategories().keySet()) {
           inventory.addItem(categoryItem.getItemStack());
         }
@@ -66,7 +65,7 @@ public class PlayerHeadsOption {
             e.getWhoClicked().openInventory(category.getInventory());
             return;
           }
-          e.getWhoClicked().sendMessage(ChatManager.colorMessage("Menus.Option-Menu.Items.Players-Heads.No-Permission"));
+          e.getWhoClicked().sendMessage(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Players-Heads.No-Permission"));
           return;
         }
       }

@@ -30,7 +30,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajerlair.core.utils.ItemBuilder;
 
 /**
@@ -40,18 +39,20 @@ import pl.plajerlair.core.utils.ItemBuilder;
  */
 public class CuboidSelector implements Listener {
 
+  private Main plugin;
   private Map<Player, Selection> selections = new HashMap<>();
 
   public CuboidSelector(Main plugin) {
+    this.plugin = plugin;
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
   public void giveSelectorWand(Player p) {
-    ItemStack stack = new ItemBuilder(new ItemStack(Material.BLAZE_ROD)).name(ChatManager.colorRawMessage("&6&lPlot selector")).build();
+    ItemStack stack = new ItemBuilder(new ItemStack(Material.BLAZE_ROD)).name(plugin.getChatManager().colorRawMessage("&6&lPlot selector")).build();
     p.getInventory().addItem(stack);
 
-    p.sendMessage(ChatManager.colorRawMessage(ChatManager.getPrefix() + "&eYou received plot selector wand!"));
-    p.sendMessage(ChatManager.colorRawMessage(ChatManager.getPrefix() + "&eSelect bottom corner using left click!"));
+    p.sendMessage(plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&eYou received plot selector wand!"));
+    p.sendMessage(plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&eSelect bottom corner using left click!"));
   }
 
   public Selection getSelection(Player p) {
@@ -64,28 +65,28 @@ public class CuboidSelector implements Listener {
 
   @EventHandler
   public void onWandUse(PlayerInteractEvent e) {
-    if (!Utils.isNamed(e.getItem()) || !e.getItem().getItemMeta().getDisplayName().equals(ChatManager.colorRawMessage("&6&lPlot selector"))) {
+    if (!Utils.isNamed(e.getItem()) || !e.getItem().getItemMeta().getDisplayName().equals(plugin.getChatManager().colorRawMessage("&6&lPlot selector"))) {
       return;
     }
     e.setCancelled(true);
     switch (e.getAction()) {
       case LEFT_CLICK_BLOCK:
         selections.put(e.getPlayer(), new Selection(e.getClickedBlock().getLocation(), null));
-        e.getPlayer().sendMessage(ChatManager.colorRawMessage(ChatManager.getPrefix() + "&eNow select top corner using right click!"));
+        e.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&eNow select top corner using right click!"));
         break;
       case RIGHT_CLICK_BLOCK:
         if (!selections.containsKey(e.getPlayer())) {
-          e.getPlayer().sendMessage(ChatManager.colorRawMessage(ChatManager.getPrefix() + "&cPlease select bottom corner using left click first!"));
+          e.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&cPlease select bottom corner using left click first!"));
           break;
         }
         selections.put(e.getPlayer(), new Selection(selections.get(e.getPlayer()).getFirstPos(), e.getClickedBlock().getLocation()));
-        e.getPlayer().sendMessage(ChatManager.colorRawMessage(ChatManager.getPrefix() + "&eNow you can add plot via setup menu!"));
+        e.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&eNow you can add plot via setup menu!"));
         break;
       case LEFT_CLICK_AIR:
-        e.getPlayer().sendMessage(ChatManager.colorRawMessage(ChatManager.getPrefix() + "&cPlease select solid block (not air)!"));
+        e.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&cPlease select solid block (not air)!"));
         break;
       case RIGHT_CLICK_AIR:
-        e.getPlayer().sendMessage(ChatManager.colorRawMessage(ChatManager.getPrefix() + "&cPlease select solid block (not air)!"));
+        e.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&cPlease select solid block (not air)!"));
         break;
       default:
         break;

@@ -58,7 +58,6 @@ import pl.plajer.buildbattle.commands.arguments.game.JoinArguments;
 import pl.plajer.buildbattle.commands.arguments.game.LeaderboardArgument;
 import pl.plajer.buildbattle.commands.arguments.game.LeaveArgument;
 import pl.plajer.buildbattle.commands.arguments.game.StatsArgument;
-import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.setup.SetupInventory;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.StringMatcher;
@@ -111,12 +110,12 @@ public class ArgumentsRegistry implements CommandExecutor {
         if (cmd.getName().equalsIgnoreCase(mainCommand)) {
           if (cmd.getName().equalsIgnoreCase("buildbattle")) {
             if (args.length == 0) {
-              sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Header"));
-              sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Description"));
+              sender.sendMessage(plugin.getChatManager().colorMessage("Commands.Main-Command.Header"));
+              sender.sendMessage(plugin.getChatManager().colorMessage("Commands.Main-Command.Description"));
               if (sender.hasPermission("buildbattle.admin")) {
-                sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Admin-Bonus-Description"));
+                sender.sendMessage(plugin.getChatManager().colorMessage("Commands.Main-Command.Admin-Bonus-Description"));
               }
-              sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Footer"));
+              sender.sendMessage(plugin.getChatManager().colorMessage("Commands.Main-Command.Footer"));
               return true;
             }
             if (args.length > 1 && args[1].equalsIgnoreCase("edit")) {
@@ -126,7 +125,7 @@ public class ArgumentsRegistry implements CommandExecutor {
                 }
                 BaseArena arena = ArenaRegistry.getArena(args[0]);
                 if (arena == null) {
-                  sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+                  sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.No-Arena-Like-That"));
                   return true;
                 }
 
@@ -194,7 +193,7 @@ public class ArgumentsRegistry implements CommandExecutor {
           //sending did you mean help
           List<StringMatcher.Match> matches = StringMatcher.match(args[0], mappedArguments.get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName).collect(Collectors.toList()));
           if (!matches.isEmpty()) {
-            sender.sendMessage(ChatManager.colorMessage("Commands.Did-You-Mean").replace("%command%", label + " " + matches.get(0).getMatch()));
+            sender.sendMessage(plugin.getChatManager().colorMessage("Commands.Did-You-Mean").replace("%command%", label + " " + matches.get(0).getMatch()));
             return true;
           }
         }
@@ -215,7 +214,7 @@ public class ArgumentsRegistry implements CommandExecutor {
         if (sender instanceof Player) {
           return true;
         }
-        sender.sendMessage(ChatManager.colorMessage("Commands.Only-By-Player"));
+        sender.sendMessage(plugin.getChatManager().colorMessage("Commands.Only-By-Player"));
         return false;
       default:
         return false;
@@ -238,7 +237,7 @@ public class ArgumentsRegistry implements CommandExecutor {
     if (sender.hasPermission(perm)) {
       return true;
     }
-    sender.sendMessage(ChatManager.getPrefix() + ChatManager.colorMessage("Commands.No-Permission"));
+    sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.No-Permission"));
     return false;
   }
 

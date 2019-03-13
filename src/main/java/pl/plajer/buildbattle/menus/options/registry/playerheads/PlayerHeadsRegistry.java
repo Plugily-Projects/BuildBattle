@@ -1,6 +1,6 @@
 /*
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
-import pl.plajer.buildbattle.handlers.ChatManager;
+import pl.plajer.buildbattle.menus.options.OptionsRegistry;
 import pl.plajer.buildbattle.utils.Utils;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.ItemBuilder;
@@ -44,9 +44,11 @@ import pl.plajerlair.core.utils.MinigameUtils;
  */
 public class PlayerHeadsRegistry {
 
+  private Main plugin;
   private Map<HeadsCategory, Inventory> categories = new HashMap<>();
 
-  public PlayerHeadsRegistry() {
+  public PlayerHeadsRegistry(OptionsRegistry registry) {
+    this.plugin = registry.getPlugin();
     registerCategories();
   }
 
@@ -58,11 +60,10 @@ public class PlayerHeadsRegistry {
       }
       HeadsCategory category = new HeadsCategory(str);
 
-      //todo test stream
       category.setItemStack(new ItemBuilder(Utils.getSkull(config.getString(str + ".texture")))
-          .name(ChatManager.colorRawMessage(config.getString(str + ".displayname")))
+          .name(plugin.getChatManager().colorRawMessage(config.getString(str + ".displayname")))
           .lore(config.getStringList(str + ".lore").stream()
-              .map((lore) -> lore = ChatManager.colorRawMessage(lore)).collect(Collectors.toList()))
+              .map((lore) -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()))
           .build());
       category.setPermission(config.getString(str + ".permission"));
 
@@ -74,13 +75,13 @@ public class PlayerHeadsRegistry {
           continue;
         }
         ItemStack stack = Utils.getSkull(categoryConfig.getString(path + ".texture"));
-        Utils.setItemNameAndLore(stack, ChatManager.colorRawMessage(categoryConfig.getString(path + ".displayname")),
+        Utils.setItemNameAndLore(stack, plugin.getChatManager().colorRawMessage(categoryConfig.getString(path + ".displayname")),
             categoryConfig.getStringList(path + ".lore").stream()
-                .map((lore) -> lore = ChatManager.colorRawMessage(lore)).collect(Collectors.toList()));
+                .map((lore) -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()));
         playerHeads.add(stack);
       }
       Inventory inv = Bukkit.createInventory(null, MinigameUtils.serializeInt(playerHeads.size()),
-          ChatManager.colorRawMessage(config.getString(str + ".menuname")));
+          plugin.getChatManager().colorRawMessage(config.getString(str + ".menuname")));
       for (ItemStack item : playerHeads) {
         inv.addItem(item);
       }

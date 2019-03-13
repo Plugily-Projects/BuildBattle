@@ -71,6 +71,7 @@ import pl.plajerlair.core.utils.ConfigUtils;
  */
 public class Main extends JavaPlugin {
 
+  private ChatManager chatManager;
   private ConfigPreferences configPreferences;
   private boolean forceDisable = false;
   private MySQLDatabase database;
@@ -146,6 +147,7 @@ public class Main extends JavaPlugin {
       Debugger.setEnabled(getConfig().getBoolean("Debug", false));
       Debugger.setPrefix("[Build Battle Debugger]");
       Debugger.debug(LogLevel.INFO, "Main setup started");
+      chatManager = new ChatManager(ChatColor.translateAlternateColorCodes('&', LanguageManager.getLanguageMessage("In-Game.Plugin-Prefix")));
       configPreferences = new ConfigPreferences(this);
       saveDefaultConfig();
       LanguageManager.init(this);
@@ -218,8 +220,6 @@ public class Main extends JavaPlugin {
   }
 
   private void initializeClasses() {
-    new ConfigPreferences(this);
-    new ChatManager(ChatManager.colorMessage("In-Game.Plugin-Prefix"));
     PermissionManager.init();
     new SetupInventoryEvents(this);
     new ArgumentsRegistry(this);
@@ -262,6 +262,10 @@ public class Main extends JavaPlugin {
     checkUpdate();
     new GameEvents(this);
     new VoteMenuListener(this);
+  }
+
+  public ChatManager getChatManager() {
+    return chatManager;
   }
 
   public MySQLDatabase getMySQLDatabase() {
