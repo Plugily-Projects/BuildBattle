@@ -39,7 +39,7 @@ import pl.plajerlair.core.utils.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int LANGUAGE_FILE_VERSION = 8;
+  public static final int LANGUAGE_FILE_VERSION = 9;
   public static final int CONFIG_FILE_VERSION = 5;
   private List<String> migratable = Arrays.asList("bungee", "config", "language", "MySQL");
   private Main plugin;
@@ -216,7 +216,70 @@ public class LanguageMigrator {
           MigratorUtils.insertAfterLine(file, "Super-Vote-Used:", "  Guess-The-Build-Theme-Selector:\r\n    Inventory-Name: \"Select a theme to build!\"\r\n" +
               "    Theme-Item-Name: \"&b%theme%\"\r\n    Theme-Item-Lore: \"%difficulty%;;&b+%points% &7points if player's guess it correctly;;&eClick to select!\"\r\n" +
               "    Difficulties:\r\n      Easy: \"&aEASY\"\r\n      Medium: \"&eMEDIUM\"\r\n      Hard: \"&cHARD\"");
-          //todo new migrator messages!
+        case 8:
+          MigratorUtils.insertAfterLine(file, "Option-Menu:", "    Items:\r\n" +
+              "      Particle:\r\n" +
+              "        Inventory-Name: \"&aParticles menu\"\r\n" +
+              "        Item-Name: \"&aChoose particles\"\r\n" +
+              "        Item-Lore: \"&7Click to get particles\"\r\n" +
+              "        In-Inventory-Item-Name: \"&cRemove particles\"\r\n" +
+              "        In-Inventory-Item-Lore: \"&7Right click to open menu\"\r\n" +
+              "        Particle-Removed: \"&cParticle successfully removed!\"\r\n" +
+              "      Players-Heads:\r\n" +
+              "        Inventory-Name: \"&aPlayers heads menu\"\r\n" +
+              "        Item-Name: \"&aGet player heads\"\r\n" +
+              "        Item-Lore: \"&7Click to get heads\"\r\n" +
+              "        No-Permission: \"&cYou don't have permission!\"\r\n" +
+              "      Floor:\r\n" +
+              "        Item-Name: \"&aChange floor material\"\r\n" +
+              "        Item-Lore: \"&7Drag block here to change floor\"\r\n" +
+              "        Floor-Changed: \"&aFloor material changed!\"\r\n" +
+              "      Time:\r\n" +
+              "        Inventory-Name: \"&aSet time\"\r\n" +
+              "        Item-Name: \"&aChange plot time\"\r\n" +
+              "        Item-Lore: \"&7Right click to open menu\"\r\n" +
+              "        Time-Type:\r\n" +
+              "          World-Time: \"&eWorld time\"\r\n" +
+              "          Day: \"&eDay (1000 ticks)\"\r\n" +
+              "          Sunset: \"&eSunset (12000 ticks)\"\r\n" +
+              "          Night: \"&eNight (13000 ticks)\"\r\n" +
+              "          Sunrise: \"&eSunrise (23000 ticks)\"\r\n" +
+              "        Time-Set: \"&eTime has been changed\"\r\n" +
+              "      Biome:\r\n" +
+              "        Inventory-Name: \"&aSet biome\"\r\n" +
+              "        Item-Name: \"&aChange plot biome\"\r\n" +
+              "        Item-Lore: \"&7Right click to open menu\"\r\n" +
+              "        Biome-Set: \"&eBiome has been changed\"\r\n" +
+              "      Weather:\r\n" +
+              "        Inventory-Name: \"&aSet weather\"\r\n" +
+              "        Item-Name: \"&aChange plot weather\"\r\n" +
+              "        Item-Lore: \"&7Right click to open menu\"\r\n" +
+              "        Weather-Type:\r\n" +
+              "          Downfall: \"&eDownfall\"\r\n" +
+              "          Clear: \"&eClear\"\r\n" +
+              "        Weather-Set: \"&eWeather has been changed\"\r\n" +
+              "      Reset:\r\n" +
+              "        Item-Name: \"&cReset plot\"\r\n" +
+              "        Item-Lore: \"&7Fully reset plot, &c&lcan't be undone!\"\r\n" +
+              "        Plot-Reset: \"&cPlot fully reset!\"");
+          MigratorUtils.insertAfterLine(file, "Menus:", "  Buttons:\r\n" +
+              "    Back-Button:\r\n" +
+              "      Name: \"&cGo Back\"\r\n" +
+              "      Lore: \"&7Click to go back.\"");
+          MigratorUtils.insertAfterLine(file, "Commands:", "  Arguments:\r\n" +
+              "    Super-Votes-Added: \"&aYou received &b%amount% Super Votes&a!\"\r\n" +
+              "    Super-Votes-Set: \"&aYour &bSuper Votes &aamount was set to &b%amount%&a!\"\r\n" +
+              "    Success: \"&aCommand executed successfully!\"");
+          MigratorUtils.insertAfterLine(file, "Theme-Is-Name:", "    Theme-Was-Name: \"&eThe theme was: &a%THEME%&e!\"\r\n" +
+              "    Theme-Was-Title: \"&eThe theme was\"\r\n" +
+              "    Theme-Was-Subtitle: \"&a%THEME%!\"\r\n" +
+              "    Theme-Being-Selected: \"&eTheme is being selected...\"\r\n" +
+              "    Start-Guessing-Title: \"&eStart Guessing!\"\r\n" +
+              "    Plus-Points: \"&a+%pts% points!\"\r\n" +
+              "    Chat:\r\n" +
+              "      Guessed-The-Theme: \"&7%player% &ecorrectly guessed the theme!\"\r\n" +
+              "      Cant-Talk-When-Guessed: \"&cYou can't talk if you already guessed!\"\r\n" +
+              "      Cant-Talk-When-Building: \"&cYou can't talk when you're building!\"");
       }
       version++;
     }
