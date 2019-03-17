@@ -3,6 +3,7 @@
 #
 #     Some messages support their own placeholders
 #               like %player% etc.
+#todo validate new messages and insert them to locales at poeditor
 
 Commands:
   Did-You-Mean: "&6Did you mean &e/%command%&6?"
@@ -50,7 +51,6 @@ Commands:
     &b/bb randomjoin <solo/team>: &7Randomly joins free arena!"
     Admin-Bonus-Description: "\n&b/bba help: &7Shows all the admin commands"
     Footer: "&6-------------------------------------------------"
-  # todo locale, migrator
   Arguments:
     Super-Votes-Added: "&aYou received &b%amount% Super Votes&a!"
     Super-Votes-Set: "&aYour &bSuper Votes &aamount was set to &b%amount%&a!"
@@ -69,7 +69,6 @@ Scoreboard:
     Build-Time: "&fTime: &e%FORMATTED_TIME_LEFT%"
     Starts-In: "&fStarts In: &e%FORMATTED_TIME_LEFT%"
   Content:
-    #todo accessors change + migrator
     Playing-States:
       Classic:
         - "&fTime Left: &e%FORMATTED_TIME_LEFT%"
@@ -93,7 +92,6 @@ Scoreboard:
         - "&e%TEAMMATE%"
         - ""
         - "&ewww.plajer.xyz"
-        #todo migrator
       Guess-The-Build:
         - "&7Guess The Build Mode"
         - "&fBuilder:"
@@ -160,7 +158,6 @@ In-Game:
   No-Permission-For-Particle: "&cYou don't have permission for this particle!"
   Particle-Added: "&aParticle successfully added!"
   Join-No-Permission: "&cYou don't have permission to join this arena!"
-  # todo moved for Menus.Option-Menu.Items.Particle.Particle-Removed Particle-Removed: "&cParticle successfully removed!"
   Arena-Not-Configured: "&cArena is not configured yet! Contact staff!"
   # Join cancelled via external plugin that uses BuildBattle API.
   Join-Cancelled-Via-API: "&cYou can't join this game!"
@@ -173,7 +170,6 @@ In-Game:
     Current-Round: "&eRound: &7%ROUND%/%MAXPLAYERS%"
     Theme-Is-Long: "&eThe theme is &7%NUM% &echaracters long"
     Theme-Is-Name: "&eThe theme is a &e%THEME%"
-    #todo migrator + locale
     Theme-Was-Name: "&eThe theme was: &a%THEME%&e!"
     Theme-Was-Title: "&eThe theme was"
     Theme-Was-Subtitle: "&a%THEME%!"
@@ -204,10 +200,7 @@ In-Game:
       Plot-Owner-Title: "&aPlot owner: &7%player%"
       Voting-For-Player-Plot: "&7Now voting for &e&l%PLAYER%'s &7plot!"
       Cant-Vote-Own-Plot: "&cYou can't vote for your plot!"
-      Cant-Report-Own-Plot: "&cYou can't report your own plot!"
       Vote-Successful: "&aVoted successfully!"
-      Report-Successful: "&aReported successfully!"
-      Report-Failed: "&aReport failed! Contact administrator!"
       Winner-Title: "&eWINNER: &a%player%"
       Summary:
         - "&a&l&m-------------------------------------------"
@@ -229,13 +222,10 @@ In-Game:
 
 Menus:
   Location-Message: "&aLocation: "
-  #todo recoded addddddd to locales
-  #todo migrator
   Option-Menu:
     Inventory-Name: "&aOptions menu"
     Option-Item: "&aOptions"
     Option-Item-Lore: "&7Right click to open menu"
-    #<!-- New -->
     Items:
       Particle:
         Inventory-Name: "&aParticles menu"
@@ -243,7 +233,6 @@ Menus:
         Item-Lore: "&7Click to get particles"
         In-Inventory-Item-Name: "&cRemove particles"
         In-Inventory-Item-Lore: "&7Right click to open menu"
-        #<!-- Moved from In-Game.Particle-Removed -->
         Particle-Removed: "&cParticle successfully removed!"
       Players-Heads:
         Inventory-Name: "&aPlayers heads menu"
@@ -282,30 +271,6 @@ Menus:
         Item-Name: "&cReset plot"
         Item-Lore: "&7Fully reset plot, &c&lcan't be undone!"
         Plot-Reset: "&cPlot fully reset!"
-    #<!-- New end -->
-    #<!-- Old -->
-    Particle-Inventory-Name: "&aParticles menu"
-    Particle-Option: "&aChoose particles"
-    Particle-Option-Lore: "&7Click to get particles"
-    Particle-Remove: "&cRemove particles"
-    Particle-Remove-Lore: "&7Right click to open menu"
-    Players-Heads-Inventory-Name: "&aPlayers heads menu"
-    Players-Heads-Option: "&aGet player heads"
-    Players-Heads-Option-Lore: "&7Click to get heads"
-    Players-Heads-No-Permission: "&cYou don't have permission!"
-    Floor-Option: "&aChange floor material"
-    Floor-Option-Lore: "&7Drag block here to change floor"
-    Floor-Changed: "&aFloor material changed!"
-    Reset-Option: "&cReset plot"
-    Reset-Option-Lore: "&7Fully reset plot, &c&lcan't be undone!"
-    Reset-Option-Done: "&cPlot fully reset!"
-    Weather-Inventory-Name: "&aSet weather"
-    Weather-Option: "&aChange plot weather"
-    Weather-Option-Lore: "&7Right click to open menu"
-    Weather-Set: "&eWeather has been changed"
-    Weather-Downfall: "&eDownfall"
-    Weather-Clear: "&eClear"
-    #<!-- Old end -->
   Theme-Voting:
     Inventory-Name: "What theme?"
     Theme-Item-Name: "&6%theme%"
@@ -324,7 +289,6 @@ Menus:
       Easy: "&aEASY"
       Medium: "&eMEDIUM"
       Hard: "&cHARD"
-  #todo locale, migrator
   Buttons:
     Back-Button:
       Name: "&cGo Back"
@@ -349,4 +313,4 @@ Signs:
     - "&5[%playersize%/%maxplayers%]"
 
 # Do not modify!
-File-Version-Do-Not-Edit: 8
+File-Version-Do-Not-Edit: 9

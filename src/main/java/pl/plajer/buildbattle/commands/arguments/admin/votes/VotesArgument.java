@@ -71,7 +71,7 @@ public class VotesArgument {
           String successMessage;
           if (args[1].equalsIgnoreCase("add")) {
             user.addStat(StatsStorage.StatisticType.SUPER_VOTES, Integer.parseInt(args[2]));
-            successMessage = registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Arguments.Super-Votes-Received");
+            successMessage = registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Arguments.Super-Votes-Added");
             successMessage = StringUtils.replace(successMessage, "%amount%", args[2]);
           } else {
             user.setStat(StatsStorage.StatisticType.SUPER_VOTES, Integer.parseInt(args[2]));

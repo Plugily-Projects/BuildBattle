@@ -60,7 +60,6 @@ public class LanguageManager {
     if (!new File(plugin.getDataFolder() + File.separator + "language.yml").exists()) {
       plugin.saveResource("language.yml", false);
     }
-    languageConfig = ConfigUtils.getConfig(plugin, "language");
     registerLocales();
     setupLocale();
     //we will wait until server is loaded, we won't soft depend those plugins
@@ -70,6 +69,8 @@ public class LanguageManager {
       }
     }, 100);
     new LanguageMigrator(plugin);
+    //get file after all migrations are done
+    languageConfig = ConfigUtils.getConfig(plugin, "language");
   }
 
   private static void registerLocales() {

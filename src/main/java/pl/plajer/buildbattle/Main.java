@@ -147,17 +147,17 @@ public class Main extends JavaPlugin {
       Debugger.setEnabled(getConfig().getBoolean("Debug", false));
       Debugger.setPrefix("[Build Battle Debugger]");
       Debugger.debug(LogLevel.INFO, "Main setup started");
+      saveDefaultConfig();
+      for (String s : filesToGenerate) {
+        ConfigUtils.getConfig(this, s);
+      }
+      LanguageManager.init(this);
       chatManager = new ChatManager(ChatColor.translateAlternateColorCodes('&', LanguageManager.getLanguageMessage("In-Game.Plugin-Prefix")));
       configPreferences = new ConfigPreferences(this);
-      saveDefaultConfig();
-      LanguageManager.init(this);
       new LegacyDataFixer(this);
       initializeClasses();
       if (getConfig().getBoolean("BungeeActivated")) {
         bungeeManager = new BungeeManager(this);
-      }
-      for (String s : filesToGenerate) {
-        ConfigUtils.getConfig(this, s);
       }
       if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
         FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
