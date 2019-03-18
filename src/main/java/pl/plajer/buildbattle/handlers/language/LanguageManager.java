@@ -50,6 +50,7 @@ import pl.plajerlair.core.utils.ConfigUtils;
  */
 public class LanguageManager {
 
+  private static boolean betaVersion = false;
   private static Main plugin;
   private static Locale pluginLocale;
   private static Properties properties = new Properties();
@@ -64,7 +65,7 @@ public class LanguageManager {
     setupLocale();
     //we will wait until server is loaded, we won't soft depend those plugins
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
-      if (isDefaultLanguageUsed()) {
+      if (isDefaultLanguageUsed() && !betaVersion) {
         suggestLocale();
       }
     }, 100);
@@ -133,6 +134,7 @@ public class LanguageManager {
     }
     /* is beta release */
     if (plugin.getDescription().getVersion().contains("b") || plugin.getDescription().getVersion().contains("pre")) {
+      betaVersion = true;
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Locales aren't supported in beta versions because they're lacking latest translations! Enabling English one...");
       pluginLocale = LocaleRegistry.getByName("English");
       return;
@@ -188,7 +190,7 @@ public class LanguageManager {
         }
       }
     } catch (Exception e) {
-      Debugger.debug(LogLevel.WARN, "Plugin has occured a problem suggesting locale, probably API change.");
+      Debugger.debug(LogLevel.WARN, "Plugin has occurred a problem suggesting locale, probably API change.");
     }
     if (hasLocale) {
       MessageUtils.info();
