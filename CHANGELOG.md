@@ -1,43 +1,19 @@
 ## BuildBattle 3 changelog
 
-### 4.0.0 Beta pre (03.10.2018 - 03.02.2019)
-#### Pre 3:
-   * Removed annoying "Please enable bStats" message
-   * Code improvements
-   * Added PR0 TIPS when editing arena
-#### Pre 4:
-   * API change - now you can access BuildBattle API via pl.plajer.buildbattle.api
-   * Maybe a fix for https://plajer.xyz/errorservice/viewer.php?id=244
-#### Pre 5:
-   * You cannot join game now infinitely through command (lol????)
-   * Now players that will leave game will be visible by other players outside game
-#### Pre 6:
-   * Particles in menu are now incrementing automatically
-   * Particle redstone requires DustOptions and causes errors so it was removed from menu
-   * Fixed possible NPEs in block spread event (https://plajer.xyz/errorservice/viewer.php?id=282)
-   * Fixed NPE when teleporting to plot, now players will be teleported 1 x and z block away from center if
-   height reach Y plot limit (https://plajer.xyz/errorservice/viewer.php?id=283)
-#### Pre 7:
-   * Updates are now checked async without freezing the main thread which caused TPS to drop a bit
-#### Pre 8:
-   * Fixed NPE because of wrong string access in code
-   * Locales will be now automatically disabled in this version - ppl don't read warnings about locales so I force them
-   to disable
-   * Now /bba reload /bba addvotes/setvotes and /bba list can be now properly executed from console
-#### Pre 9:
-   * Fixed NPE when player was null (https://plajer.xyz/errorservice/viewer.php?id=347)
-   * Code must be changed to avoid those NPE's in the future
-#### Pre 10:
-   * Added setup tutorial link to setup menu
-   * Added tip about downloadable maps when no arenas are set up while typing /bba list
-   * Added tab completer for /bb <arena> edit -- todo remove
-   * Fixed exp not saving properly with InventoryManager
-#### Pre 11:
-   * Added biomes in Options menu
-   * Added time in Options menu
-   * Code improvements and changes
-   * Fixed arena signs were incorrectly saved via setup menu (4.0.0 pre issue)
-### Pre 12:
+### 4.0.0 Beta Pre Releases 3-14 (03.10.2018 - 17.03.2019)
+   > Pre 14 
+   * Fixed time couldn't be set for plots because we were checking raw slot click instead of normal slot
+   * Made particles.yml particle items more user friendly (lores and names looks now better)
+   * Fixed bba addplot command didn't work properly
+   * Added fully configurable biomes in biomes.yml
+   * Fixed biomes are now properly reset in plot reset option and after arena reset
+   * Added "Go Back" button in particles remove menu
+   > Pre 13
+   * Added GuessTheBuild game mode (alpha)
+   * When using super vote you won't see two game prefixes now
+   * Merged /bba addvotes and /bba setvotes into /bba votes add/set command
+   * Added message sent to player when receives super votes
+   > Pre 12
    * Added BBPlayersPlotReceiveEvent to API
    * Fixed /bba forcestart wasn't working properly
    * Added BBPlotResetEvent to API
@@ -51,19 +27,41 @@
    * Added useSSL=false argument in mysql.yml address to avoid mysql warnings in console (not harmful)
    * Whole plugin runs now definitely faster and code execution time and plugin load decreases in timings
    * Setup GUI option for setting min/max players amount now runs smoothly
-### Pre 13:
-   * Added GuessTheBuild game mode (alpha)
-   * When using super vote you won't see two game prefixes now
-   * Merged /bba addvotes and /bba setvotes into /bba votes add/set command
-   * Added message sent to player when receives super votes
-### Pre 14:
-   * Fixed time couldn't be set for plots because we were checking raw slot click instead of normal slot
-   * Made particles.yml particle items more user friendly (lores and names looks now better)
-   * Fixed bba addplot command didn't work properly
-   * Added fully configurable biomes in biomes.yml
-   * Fixed biomes are now properly reset in plot reset option and after arena reset
-   * Added "Go Back" button in particles remove menu
-   
+   > Pre 11
+   * Added biomes in Options menu
+   * Added time in Options menu
+   * Code improvements and changes
+   * Fixed arena signs were incorrectly saved via setup menu (4.0.0 pre issue)
+   > Pre 10
+   * Added setup tutorial link to setup menu
+   * Added tip about downloadable maps when no arenas are set up while typing /bba list
+   * Fixed exp not saving properly with InventoryManager
+   > Pre 9
+   * Fixed NPE when player was null (https://plajer.xyz/errorservice/viewer.php?id=347)
+   * Code must be changed to avoid those NPE's in the future
+   > Pre 8
+   * Fixed NPE because of wrong string access in code
+   * Locales will be now automatically disabled in this version - ppl don't read warnings about locales so I force them
+   to disable
+   * Now /bba reload /bba addvotes/setvotes and /bba list can be now properly executed from console
+   > Pre 7
+   * Updates are now checked async without freezing the main thread which caused TPS to drop a bit
+   > Pre 6
+   * Particles in menu are now incrementing automatically
+   * Particle redstone requires DustOptions and causes errors so it was removed from menu
+   * Fixed possible NPEs in block spread event (https://plajer.xyz/errorservice/viewer.php?id=282)
+   * Fixed NPE when teleporting to plot, now players will be teleported 1 x and z block away from center if
+   height reach Y plot limit (https://plajer.xyz/errorservice/viewer.php?id=283)
+   > Pre 5
+   * You cannot join game now infinitely through command (lol????)
+   * Now players that will leave game will be visible by other players outside game
+   > Pre 4
+   * API change - now you can access BuildBattle API via pl.plajer.buildbattle.api
+   * Maybe a fix for https://plajer.xyz/errorservice/viewer.php?id=244
+   > Pre 3
+   * Removed annoying "Please enable bStats" message
+   * Code improvements
+   * Added PR0 TIPS when editing arena
 
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)
 * Fixed NullPointerException for users who where no longer online
