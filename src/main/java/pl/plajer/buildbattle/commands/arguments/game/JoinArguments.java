@@ -74,6 +74,10 @@ public class JoinArguments {
             sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.Already-Playing"));
             return;
           }
+          if (args.length == 1) {
+            sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Invalid-Args"));
+            return;
+          }
           //todo gtb case
           switch (args[1].toLowerCase()) {
             case "solo":

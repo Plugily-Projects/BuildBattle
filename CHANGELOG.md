@@ -1,6 +1,9 @@
 ## BuildBattle 3 changelog
 
-### 4.0.0 Beta Pre Releases 3-14 (03.10.2018 - 17.03.2019)
+### 4.0.0 Beta Pre Releases 3-15 (03.10.2018 - 23.03.2019)
+   > Pre 15
+   * Fixed [#595 /bb randomjoin command exception](https://www.plajer.xyz/errorservice/viewer.php?id=595) when no arena type
+   args were specified
    > Pre 14 
    * Fixed time couldn't be set for plots because we were checking raw slot click instead of normal slot
    * Made particles.yml particle items more user friendly (lores and names looks now better)
