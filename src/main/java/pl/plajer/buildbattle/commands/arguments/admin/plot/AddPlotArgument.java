@@ -46,7 +46,7 @@ public class AddPlotArgument {
       @Override
       public void execute(CommandSender sender, String[] args) {
         Player player = (Player) sender;
-        if (args.length == 0) {
+        if (args.length == 1) {
           //todo translatable
           player.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorRawMessage("&cPlease type arena name!"));
           return;
