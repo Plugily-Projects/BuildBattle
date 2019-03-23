@@ -74,7 +74,6 @@ public class GuessTheBuildArena extends BaseArena {
 
   @Override
   public void run() {
-    try {
       //idle task
       if (getPlayers().size() == 0 && getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
         return;
@@ -351,10 +350,6 @@ public class GuessTheBuildArena extends BaseArena {
           setCurrentTheme(null);
           break;
       }
-    } catch (Exception ex) {
-      ex.printStackTrace();
-      //halt
-    }
   }
 
   @Override

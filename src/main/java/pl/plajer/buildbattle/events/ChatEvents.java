@@ -30,7 +30,6 @@ import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.impl.GuessTheBuildArena;
-import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
  * @author Plajer
@@ -48,7 +47,6 @@ public class ChatEvents implements Listener {
 
   @EventHandler
   public void onChatIngame(AsyncPlayerChatEvent event) {
-    try {
       BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
       if (arena == null) {
         for (BaseArena loopArena : ArenaRegistry.getArenas()) {
@@ -88,9 +86,6 @@ public class ChatEvents implements Listener {
       gameArena.addWhoGuessed(event.getPlayer());
 
       //todo add api event for successful guess
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
-    }
   }
 
 }

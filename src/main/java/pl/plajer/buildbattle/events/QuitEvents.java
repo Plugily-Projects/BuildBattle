@@ -29,7 +29,6 @@ import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.user.User;
-import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
  * @author Plajer
@@ -46,27 +45,23 @@ public class QuitEvents implements Listener {
   }
 
   @EventHandler
-  public void onQuit(PlayerQuitEvent event) {
-    BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
+  public void onQuit(PlayerQuitEvent e) {
+    BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
     if (arena == null) {
       return;
     }
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-      ArenaManager.leaveAttempt(event.getPlayer(), arena);
+      ArenaManager.leaveAttempt(e.getPlayer(), arena);
     }
   }
 
   @EventHandler
-  public void onQuitSaveStats(PlayerQuitEvent event) {
-    try {
-      User user = plugin.getUserManager().getUser(event.getPlayer());
+  public void onQuitSaveStats(PlayerQuitEvent e) {
+    User user = plugin.getUserManager().getUser(e.getPlayer());
       for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
         plugin.getUserManager().saveStatistic(user, stat);
       }
       plugin.getUserManager().removeUser(user);
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
-    }
   }
 
 }

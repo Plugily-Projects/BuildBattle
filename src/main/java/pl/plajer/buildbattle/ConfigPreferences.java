@@ -43,7 +43,6 @@ public class ConfigPreferences {
 
   public ConfigPreferences(Main plugin) {
     this.plugin = plugin;
-
     loadOptions();
   }
 

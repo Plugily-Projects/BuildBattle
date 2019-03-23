@@ -33,7 +33,6 @@ import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.menus.options.MenuOption;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
 import pl.plajer.buildbattle.utils.Utils;
-import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ItemBuilder;
 import pl.plajerlair.core.utils.MinigameUtils;
 import pl.plajerlair.core.utils.XMaterial;
@@ -73,23 +72,21 @@ public class BiomeChangeOption {
           return;
         }
         Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());
-        try {
           Biome biome = registry.getBiomesRegistry().getByItem(e.getCurrentItem()).getBiome().parseBiome();
           for (Block block : plot.getCuboid().blockList()) {
             block.setBiome(biome);
           }
+        try {
           for (Chunk chunk : plot.getCuboid().chunkList()) {
             for (Player p : Bukkit.getOnlinePlayers()) {
               Utils.sendPacket(p, Utils.getNMSClass("PacketPlayOutMapChunk").getConstructor(Utils.getNMSClass("Chunk"), int.class)
                   .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535));
             }
           }
+        } catch (ReflectiveOperationException ignored) {/*fail silently*/}
           for (Player p : plot.getOwners()) {
             p.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Biome.Biome-Set"));
           }
-        } catch (Exception ex) {
-          new ReportedException(registry.getPlugin(), ex);
-        }
       }
     });
   }

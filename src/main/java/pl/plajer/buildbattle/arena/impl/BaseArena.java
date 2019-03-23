@@ -38,7 +38,6 @@ import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.managers.ScoreboardManager;
 import pl.plajer.buildbattle.arena.managers.plots.PlotManager;
 import pl.plajer.buildbattle.arena.options.ArenaOption;
-import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
  * @author Plajer
@@ -258,7 +257,6 @@ public class BaseArena extends BukkitRunnable {
   }
 
   public void teleportAllToEndLocation() {
-    try {
       if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
         for (Player player : getPlayers()) {
           plugin.getBungeeManager().connectToHub(player);
@@ -274,9 +272,6 @@ public class BaseArena extends BukkitRunnable {
       for (Player player : getPlayers()) {
         player.teleport(location);
       }
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
-    }
   }
 
   public void teleportToLobby(Player player) {
@@ -288,7 +283,6 @@ public class BaseArena extends BukkitRunnable {
   }
 
   public void teleportToEndLocation(Player player) {
-    try {
       if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
         plugin.getBungeeManager().connectToHub(player);
         return;
@@ -300,9 +294,6 @@ public class BaseArena extends BukkitRunnable {
       }
 
       player.teleport(location);
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
-    }
   }
 
   public void giveRewards() {

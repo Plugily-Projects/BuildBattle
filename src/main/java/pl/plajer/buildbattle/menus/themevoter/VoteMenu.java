@@ -37,7 +37,6 @@ import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.impl.SoloArena;
 import pl.plajer.buildbattle.user.User;
-import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ItemBuilder;
 import pl.plajerlair.core.utils.MinigameUtils;
 import pl.plajerlair.core.utils.XMaterial;
@@ -65,7 +64,6 @@ public class VoteMenu {
   }
 
   public void resetPoll() {
-    try {
       List<String> themesTotal = plugin.getConfigPreferences().getThemes(arena.getArenaType().getPrefix());
       //random themes order
       Collections.shuffle(themesTotal);
@@ -101,9 +99,6 @@ public class VoteMenu {
             .build(), (i * 9) + 8);
       }
       votePoll = new VotePoll(arena, randomThemes);
-    } catch (Exception ex) {
-      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
-    }
   }
 
   public Inventory getInventory() {
@@ -115,7 +110,6 @@ public class VoteMenu {
   }
 
   public void updateInventory(Player player) {
-    try {
       int totalVotes = votePoll.getPlayerVote().size();
       int i = 0;
       User user = plugin.getUserManager().getUser(player);
@@ -159,9 +153,6 @@ public class VoteMenu {
         i++;
       }
       player.updateInventory();
-    } catch (Exception ex) {
-      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
-    }
   }
 
 }

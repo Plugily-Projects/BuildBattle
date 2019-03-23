@@ -56,13 +56,13 @@ import pl.plajer.buildbattle.menus.themevoter.VoteMenuListener;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.user.UserManager;
 import pl.plajer.buildbattle.utils.CuboidSelector;
+import pl.plajer.buildbattle.utils.ExceptionLogHandler;
 import pl.plajer.buildbattle.utils.LegacyDataFixer;
 import pl.plajer.buildbattle.utils.MessageUtils;
 import pl.plajerlair.core.database.MySQLDatabase;
 import pl.plajerlair.core.debug.Debugger;
 import pl.plajerlair.core.debug.LogLevel;
 import pl.plajerlair.core.services.ServiceRegistry;
-import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.services.update.UpdateChecker;
 import pl.plajerlair.core.utils.ConfigUtils;
 
@@ -71,6 +71,7 @@ import pl.plajerlair.core.utils.ConfigUtils;
  */
 public class Main extends JavaPlugin {
 
+  private ExceptionLogHandler exceptionLogHandler;
   private ChatManager chatManager;
   private ConfigPreferences configPreferences;
   private boolean forceDisable = false;
@@ -124,50 +125,47 @@ public class Main extends JavaPlugin {
   @Override
   public void onEnable() {
     ServiceRegistry.registerService(this);
+    exceptionLogHandler = new ExceptionLogHandler();
+    version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
     try {
-      version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
-      try {
-        Class.forName("org.spigotmc.SpigotConfig");
-      } catch (Exception e) {
-        MessageUtils.thisVersionIsNotSupported();
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server software is not supported by Build Battle!");
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "We support only Spigot and Spigot forks only! Shutting off...");
-        forceDisable = true;
-        getServer().getPluginManager().disablePlugin(this);
-        return;
-      }
-      if (version.contains("v1_10") || version.contains("v1_9") || version.contains("v1_8") || version.contains("v1_7") || version.contains("v1_6")) {
-        MessageUtils.thisVersionIsNotSupported();
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by BuildBattle!");
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider updating your server version?");
-        forceDisable = true;
-        getServer().getPluginManager().disablePlugin(this);
-        return;
-      }
-      Debugger.setEnabled(getConfig().getBoolean("Debug", false));
-      Debugger.setPrefix("[Build Battle Debugger]");
-      Debugger.debug(LogLevel.INFO, "Main setup started");
-      saveDefaultConfig();
-      for (String s : filesToGenerate) {
-        ConfigUtils.getConfig(this, s);
-      }
-      LanguageManager.init(this);
-      chatManager = new ChatManager(ChatColor.translateAlternateColorCodes('&', LanguageManager.getLanguageMessage("In-Game.Plugin-Prefix")));
-      configPreferences = new ConfigPreferences(this);
-      new LegacyDataFixer(this);
-      initializeClasses();
-      if (getConfig().getBoolean("BungeeActivated")) {
-        bungeeManager = new BungeeManager(this);
-      }
-      if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-        FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
-        database = new MySQLDatabase(this, config.getString("address"), config.getString("user"), config.getString("password"),
-            config.getInt("min-connections"), config.getInt("max-connections"));
-      }
-      userManager = new UserManager(this);
-    } catch (Exception ex) {
-      new ReportedException(this, ex);
+      Class.forName("org.spigotmc.SpigotConfig");
+    } catch (Exception e) {
+      MessageUtils.thisVersionIsNotSupported();
+      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server software is not supported by Build Battle!");
+      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "We support only Spigot and Spigot forks only! Shutting off...");
+      forceDisable = true;
+      getServer().getPluginManager().disablePlugin(this);
+      return;
     }
+    if (version.contains("v1_10") || version.contains("v1_9") || version.contains("v1_8") || version.contains("v1_7") || version.contains("v1_6")) {
+      MessageUtils.thisVersionIsNotSupported();
+      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by BuildBattle!");
+      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider updating your server version?");
+      forceDisable = true;
+      getServer().getPluginManager().disablePlugin(this);
+      return;
+    }
+    Debugger.setEnabled(getConfig().getBoolean("Debug", false));
+    Debugger.setPrefix("[Build Battle Debugger]");
+    Debugger.debug(LogLevel.INFO, "Main setup started");
+    saveDefaultConfig();
+    for (String s : filesToGenerate) {
+      ConfigUtils.getConfig(this, s);
+    }
+    LanguageManager.init(this);
+    chatManager = new ChatManager(ChatColor.translateAlternateColorCodes('&', LanguageManager.getLanguageMessage("In-Game.Plugin-Prefix")));
+    configPreferences = new ConfigPreferences(this);
+    new LegacyDataFixer(this);
+    initializeClasses();
+    if (getConfig().getBoolean("BungeeActivated")) {
+      bungeeManager = new BungeeManager(this);
+    }
+    if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+      FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
+      database = new MySQLDatabase(this, config.getString("address"), config.getString("user"), config.getString("password"),
+          config.getInt("min-connections"), config.getInt("max-connections"));
+    }
+    userManager = new UserManager(this);
   }
 
   private void checkUpdate() {
@@ -199,6 +197,7 @@ public class Main extends JavaPlugin {
       return;
     }
     Debugger.debug(LogLevel.INFO, "System disabling...");
+    Bukkit.getLogger().removeHandler(exceptionLogHandler);
     for (final Player player : getServer().getOnlinePlayers()) {
       BaseArena arena = ArenaRegistry.getArena(player);
       if (arena != null) {

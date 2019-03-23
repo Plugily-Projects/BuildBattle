@@ -29,7 +29,6 @@ import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.services.update.UpdateChecker;
 
 /**
@@ -45,8 +44,9 @@ public class JoinEvents implements Listener {
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
+  @Deprecated
   @EventHandler
-  public void onJoin(PlayerJoinEvent event) {
+  public void onJoin(PlayerJoinEvent e) {
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       return;
     }
@@ -54,54 +54,46 @@ public class JoinEvents implements Listener {
       if (ArenaRegistry.getArena(player) == null) {
         continue;
       }
-      player.hidePlayer(event.getPlayer());
-      event.getPlayer().hidePlayer(player);
+      player.hidePlayer(e.getPlayer());
+      e.getPlayer().hidePlayer(player);
     }
   }
 
   @EventHandler
-  public void onJoinCheckVersion(final PlayerJoinEvent event) {
-    try {
-      //we want to be the first :)
-      Bukkit.getScheduler().runTaskLater(plugin, () -> {
-        if (!event.getPlayer().hasPermission("buildbattle.updatenotify") || !plugin.getConfig().getBoolean("Update-Notifier.Enabled", true)) {
+  public void onJoinCheckVersion(PlayerJoinEvent e) {
+    //we want to be the first :)
+    Bukkit.getScheduler().runTaskLater(plugin, () -> {
+      if (!e.getPlayer().hasPermission("buildbattle.updatenotify") || !plugin.getConfig().getBoolean("Update-Notifier.Enabled", true)) {
+        return;
+      }
+      UpdateChecker.init(plugin, 44703).requestUpdateCheck().whenComplete((result, exception) -> {
+        if (!result.requiresUpdate()) {
           return;
         }
-        UpdateChecker.init(plugin, 44703).requestUpdateCheck().whenComplete((result, exception) -> {
-          if (!result.requiresUpdate()) {
-            return;
+        if (result.getNewestVersion().contains("b")) {
+          if (plugin.getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
+            e.getPlayer().sendMessage("");
+            e.getPlayer().sendMessage(ChatColor.BOLD + "BUILD BATTLE UPDATE NOTIFY");
+            e.getPlayer().sendMessage(ChatColor.RED + "BETA version of software is ready for update! Proceed with caution.");
+            e.getPlayer().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + plugin.getDescription().getVersion() + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + result.getNewestVersion());
           }
-          if (result.getNewestVersion().contains("b")) {
-            if (plugin.getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
-              event.getPlayer().sendMessage("");
-              event.getPlayer().sendMessage(ChatColor.BOLD + "BUILD BATTLE UPDATE NOTIFY");
-              event.getPlayer().sendMessage(ChatColor.RED + "BETA version of software is ready for update! Proceed with caution.");
-              event.getPlayer().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + plugin.getDescription().getVersion() + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + result.getNewestVersion());
-            }
-            return;
-          }
-          event.getPlayer().sendMessage("");
-          event.getPlayer().sendMessage(ChatColor.BOLD + "BUILD BATTLE UPDATE NOTIFY");
-          event.getPlayer().sendMessage(ChatColor.GREEN + "Software is ready for update! Download it to keep with latest changes and fixes.");
-          event.getPlayer().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + plugin.getDescription().getVersion() + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + result.getNewestVersion());
-        });
-      }, 25);
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
-    }
+          return;
+        }
+        e.getPlayer().sendMessage("");
+        e.getPlayer().sendMessage(ChatColor.BOLD + "BUILD BATTLE UPDATE NOTIFY");
+        e.getPlayer().sendMessage(ChatColor.GREEN + "Software is ready for update! Download it to keep with latest changes and fixes.");
+        e.getPlayer().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + plugin.getDescription().getVersion() + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + result.getNewestVersion());
+      });
+    }, 25);
   }
 
   @EventHandler
-  public void onJoinLoadStats(final PlayerJoinEvent event) {
-    try {
-      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && ArenaRegistry.getArenas().size() >= 1) {
-        ArenaRegistry.getArenas().get(0).teleportToLobby(event.getPlayer());
-      }
-      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-        plugin.getUserManager().loadStatistic(plugin.getUserManager().getUser(event.getPlayer()), stat);
-      }
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
+  public void onJoinLoadStats(PlayerJoinEvent e) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && ArenaRegistry.getArenas().size() >= 1) {
+      ArenaRegistry.getArenas().get(0).teleportToLobby(e.getPlayer());
+    }
+    for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+      plugin.getUserManager().loadStatistic(plugin.getUserManager().getUser(e.getPlayer()), stat);
     }
   }
 

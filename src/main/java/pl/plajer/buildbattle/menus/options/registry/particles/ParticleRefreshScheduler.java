@@ -31,7 +31,6 @@ import pl.plajer.buildbattle.arena.managers.plots.Plot;
  */
 public class ParticleRefreshScheduler {
 
-
   public ParticleRefreshScheduler(Main plugin) {
     Bukkit.getScheduler().runTaskTimer(plugin, () -> {
       for (BaseArena arena : ArenaRegistry.getArenas()) {

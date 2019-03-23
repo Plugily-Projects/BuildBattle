@@ -38,7 +38,6 @@ import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.utils.Cuboid;
 import pl.plajerlair.core.debug.Debugger;
 import pl.plajerlair.core.debug.LogLevel;
-import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.LocationUtils;
 
@@ -105,7 +104,6 @@ public class ArenaRegistry {
   }
 
   public static void registerArenas() {
-    try {
       Debugger.debug(LogLevel.INFO, "Initial arenas registration");
       ArenaRegistry.getArenas().clear();
       FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
@@ -198,9 +196,6 @@ public class ArenaRegistry {
         arena.start();
       }
       Debugger.debug(LogLevel.INFO, "Arenas registration completed");
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
-    }
   }
 
 }

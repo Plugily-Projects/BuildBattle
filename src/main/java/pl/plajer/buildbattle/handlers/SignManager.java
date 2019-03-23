@@ -45,7 +45,6 @@ import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
 import pl.plajerlair.core.debug.Debugger;
 import pl.plajerlair.core.debug.LogLevel;
-import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.LocationUtils;
 import pl.plajerlair.core.utils.XMaterial;
@@ -77,38 +76,34 @@ public class SignManager implements Listener {
 
   @EventHandler
   public void onSignChange(SignChangeEvent e) {
-    try {
-      if (!e.getPlayer().hasPermission("buildbattle.admin.sign.create")) {
-        return;
-      }
-      if (!e.getLine(0).equalsIgnoreCase("[buildbattle]")) {
-        return;
-      }
-      if (e.getLine(1).isEmpty()) {
-        e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Please-Type-Arena-Name"));
-        return;
-      }
-      for (BaseArena arena : ArenaRegistry.getArenas()) {
-        if (!arena.getID().equalsIgnoreCase(e.getLine(1))) {
-          continue;
-        }
-        for (int i = 0; i < signLines.size(); i++) {
-          e.setLine(i, formatSign(signLines.get(i), arena));
-        }
-        loadedSigns.put((Sign) e.getBlock().getState(), arena);
-        e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Sign-Created"));
-        String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + "," + e.getBlock().getY() + "," + e.getBlock().getZ() + ",0.0,0.0";
-        FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-        List<String> locs = config.getStringList("instances." + arena.getID() + ".signs");
-        locs.add(location);
-        config.set("instances." + arena.getID() + ".signs", locs);
-        ConfigUtils.saveConfig(plugin, config, "arenas");
-        return;
-      }
-      e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Arena-Doesnt-Exists"));
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
+    if (!e.getPlayer().hasPermission("buildbattle.admin.sign.create")) {
+      return;
     }
+    if (!e.getLine(0).equalsIgnoreCase("[buildbattle]")) {
+      return;
+    }
+    if (e.getLine(1).isEmpty()) {
+      e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Please-Type-Arena-Name"));
+      return;
+    }
+    for (BaseArena arena : ArenaRegistry.getArenas()) {
+      if (!arena.getID().equalsIgnoreCase(e.getLine(1))) {
+        continue;
+      }
+      for (int i = 0; i < signLines.size(); i++) {
+        e.setLine(i, formatSign(signLines.get(i), arena));
+      }
+      loadedSigns.put((Sign) e.getBlock().getState(), arena);
+      e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Sign-Created"));
+      String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + "," + e.getBlock().getY() + "," + e.getBlock().getZ() + ",0.0,0.0";
+      FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+      List<String> locs = config.getStringList("instances." + arena.getID() + ".signs");
+      locs.add(location);
+      config.set("instances." + arena.getID() + ".signs", locs);
+      ConfigUtils.saveConfig(plugin, config, "arenas");
+      return;
+    }
+    e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Arena-Doesnt-Exists"));
   }
 
   private String formatSign(String msg, BaseArena a) {
@@ -127,33 +122,29 @@ public class SignManager implements Listener {
 
   @EventHandler
   public void onSignDestroy(BlockBreakEvent e) {
-    try {
-      if (!e.getPlayer().hasPermission("buildbattle.admin.sign.break")) {
-        return;
-      }
-      if (loadedSigns.get(e.getBlock().getState()) == null) {
-        return;
-      }
-      loadedSigns.remove(e.getBlock().getState());
-      FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-      String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + ".0," + e.getBlock().getY() + ".0," + e.getBlock().getZ() + ".0," + "0.0,0.0";
-      for (String arena : config.getConfigurationSection("instances").getKeys(false)) {
-        for (String sign : config.getStringList("instances." + arena + ".signs")) {
-          if (!sign.equals(location)) {
-            continue;
-          }
-          List<String> signs = config.getStringList("instances." + arena + ".signs");
-          signs.remove(location);
-          config.set(arena + ".signs", signs);
-          ConfigUtils.saveConfig(plugin, config, "arenas");
-          e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Sign-Removed"));
-          return;
-        }
-      }
-      e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + ChatColor.RED + "Couldn't remove sign from configuration! Please do this manually!");
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
+    if (!e.getPlayer().hasPermission("buildbattle.admin.sign.break")) {
+      return;
     }
+    if (loadedSigns.get(e.getBlock().getState()) == null) {
+      return;
+    }
+    loadedSigns.remove(e.getBlock().getState());
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+    String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + ".0," + e.getBlock().getY() + ".0," + e.getBlock().getZ() + ".0," + "0.0,0.0";
+    for (String arena : config.getConfigurationSection("instances").getKeys(false)) {
+      for (String sign : config.getStringList("instances." + arena + ".signs")) {
+        if (!sign.equals(location)) {
+          continue;
+        }
+        List<String> signs = config.getStringList("instances." + arena + ".signs");
+        signs.remove(location);
+        config.set(arena + ".signs", signs);
+        ConfigUtils.saveConfig(plugin, config, "arenas");
+        e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Sign-Removed"));
+        return;
+      }
+    }
+    e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + ChatColor.RED + "Couldn't remove sign from configuration! Please do this manually!");
   }
 
   @EventHandler
@@ -182,47 +173,46 @@ public class SignManager implements Listener {
   }
 
   private void updateSignScheduler() {
-    if (!plugin.getConfig().getBoolean("Signs-Block-States-Enabled", true)) {
-      return;
-    }
     Bukkit.getScheduler().runTaskTimer(plugin, () -> {
       for (Map.Entry<Sign, BaseArena> entry : loadedSigns.entrySet()) {
         Sign s = entry.getKey();
         for (int i = 0; i < signLines.size(); i++) {
           s.setLine(i, formatSign(signLines.get(i), loadedSigns.get(s)));
         }
-        Block behind = s.getBlock().getRelative(((org.bukkit.material.Sign) s.getData()).getAttachedFace());
-        switch (entry.getValue().getArenaState()) {
-          case WAITING_FOR_PLAYERS:
-            behind.setType(XMaterial.WHITE_STAINED_GLASS.parseMaterial());
-            if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
-              behind.setData((byte) 0);
-            }
-            break;
-          case STARTING:
-            behind.setType(XMaterial.YELLOW_STAINED_GLASS.parseMaterial());
-            if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
-              behind.setData((byte) 4);
-            }
-            break;
-          case IN_GAME:
-            behind.setType(XMaterial.ORANGE_STAINED_GLASS.parseMaterial());
-            if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
-              behind.setData((byte) 1);
-            }
-            break;
-          case ENDING:
-            behind.setType(XMaterial.GRAY_STAINED_GLASS.parseMaterial());
-            if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
-              behind.setData((byte) 7);
-            }
-            break;
-          case RESTARTING:
-            behind.setType(XMaterial.BLACK_STAINED_GLASS.parseMaterial());
-            if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
-              behind.setData((byte) 15);
-            }
-            break;
+        if (plugin.getConfig().getBoolean("Signs-Block-States-Enabled", true)) {
+          Block behind = s.getBlock().getRelative(((org.bukkit.material.Sign) s.getData()).getAttachedFace());
+          switch (entry.getValue().getArenaState()) {
+            case WAITING_FOR_PLAYERS:
+              behind.setType(XMaterial.WHITE_STAINED_GLASS.parseMaterial());
+              if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+                behind.setData((byte) 0);
+              }
+              break;
+            case STARTING:
+              behind.setType(XMaterial.YELLOW_STAINED_GLASS.parseMaterial());
+              if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+                behind.setData((byte) 4);
+              }
+              break;
+            case IN_GAME:
+              behind.setType(XMaterial.ORANGE_STAINED_GLASS.parseMaterial());
+              if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+                behind.setData((byte) 1);
+              }
+              break;
+            case ENDING:
+              behind.setType(XMaterial.GRAY_STAINED_GLASS.parseMaterial());
+              if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+                behind.setData((byte) 7);
+              }
+              break;
+            case RESTARTING:
+              behind.setType(XMaterial.BLACK_STAINED_GLASS.parseMaterial());
+              if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+                behind.setData((byte) 15);
+              }
+              break;
+          }
         }
         s.update();
       }

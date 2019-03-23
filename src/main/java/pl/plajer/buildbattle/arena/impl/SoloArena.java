@@ -46,7 +46,6 @@ import pl.plajer.buildbattle.handlers.language.LanguageManager;
 import pl.plajer.buildbattle.menus.themevoter.VoteMenu;
 import pl.plajer.buildbattle.menus.themevoter.VotePoll;
 import pl.plajer.buildbattle.user.User;
-import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.InventoryUtils;
 import pl.plajerlair.core.utils.MinigameUtils;
 
@@ -103,10 +102,8 @@ public class SoloArena extends BaseArena {
     return queue;
   }
 
-  @Deprecated //split teams into separate class
   @Override
   public void run() {
-    try {
       //idle task
       if (getPlayers().size() == 0 && getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
         return;
@@ -337,9 +334,6 @@ public class SoloArena extends BaseArena {
           setThemeVoteTime(true);
           voteMenu.resetPoll();
       }
-    } catch (Exception ex) {
-      new ReportedException(getPlugin(), ex);
-    }
   }
 
   @Override

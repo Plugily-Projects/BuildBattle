@@ -28,7 +28,6 @@ import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.utils.Utils;
-import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
  * @author Plajer
@@ -46,7 +45,6 @@ public class OptionsMenuHandler implements Listener {
 
   @EventHandler
   public void onOptionsMenuClick(InventoryClickEvent e) {
-    try {
       if (!(e.getWhoClicked() instanceof Player) || e.getInventory() == null || e.getCurrentItem() == null) {
         return;
       }
@@ -65,14 +63,10 @@ public class OptionsMenuHandler implements Listener {
         option.onClick(e);
         return;
       }
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
-    }
   }
 
   @EventHandler
   public void onRegisteredMenuOptionsClick(InventoryClickEvent e) {
-    try {
       if (!(e.getWhoClicked() instanceof Player) || e.getInventory() == null || e.getInventory().getName() == null) {
         return;
       }
@@ -89,9 +83,6 @@ public class OptionsMenuHandler implements Listener {
           return;
         }
       }
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
-    }
   }
 
 }

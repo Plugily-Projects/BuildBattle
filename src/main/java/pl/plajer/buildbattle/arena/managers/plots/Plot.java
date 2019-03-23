@@ -44,7 +44,6 @@ import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.utils.Cuboid;
 import pl.plajer.buildbattle.utils.Utils;
-import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.XMaterial;
 
 /**
@@ -77,7 +76,9 @@ public class Plot {
   }
 
   public void removeEntity() {
-    if (entities == 0) return;
+    if (entities == 0) {
+      return;
+    }
     entities--;
   }
 
@@ -130,61 +131,57 @@ public class Plot {
   }
 
   public void fullyResetPlot() {
-    try {
-      resetPlot();
-      if (owners != null && !owners.isEmpty()) {
-        for (Player p : owners) {
-          User user = plugin.getUserManager().getUser(p);
-          user.setCurrentPlot(null);
-          this.setOwners(new ArrayList<>());
-          this.setPoints(0);
-        }
+    resetPlot();
+    if (owners != null && !owners.isEmpty()) {
+      for (Player p : owners) {
+        User user = plugin.getUserManager().getUser(p);
+        user.setCurrentPlot(null);
+        this.setOwners(new ArrayList<>());
+        this.setPoints(0);
       }
-      getParticles().clear();
-    } catch (Exception ex) {
-      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
     }
+    getParticles().clear();
   }
 
   public void resetPlot() {
+    for (Block block : cuboid.blockList()) {
+      if (block.getType() != Material.AIR) {
+        block.setType(Material.AIR);
+      }
+    }
+    getParticles().clear();
+    for (Player p : owners) {
+      p.resetPlayerWeather();
+      setWeatherType(p.getPlayerWeather());
+      p.resetPlayerTime();
+    }
+    for (Entity entity : cuboid.getCenter().getWorld().getEntities()) {
+      if (cuboid.isInWithMarge(entity.getLocation(), 3)) {
+        if (JavaPlugin.getPlugin(Main.class).getServer().getPluginManager().isPluginEnabled("Citizens")) {
+          if (CitizensAPI.getNPCRegistry().isNPC(entity)) {
+            continue;
+          }
+        }
+        if (entity.getType() != EntityType.PLAYER) {
+          entity.remove();
+        }
+      }
+    }
+    for (Block block : getCuboid().blockList()) {
+      block.setBiome(plotDefaultBiome);
+    }
     try {
-      for (Block block : cuboid.blockList()) {
-        if (block.getType() != Material.AIR) {
-          block.setType(Material.AIR);
-        }
-      }
-      getParticles().clear();
-      for (Player p : owners) {
-        p.resetPlayerWeather();
-        setWeatherType(p.getPlayerWeather());
-        p.resetPlayerTime();
-      }
-      for (Entity entity : cuboid.getCenter().getWorld().getEntities()) {
-        if (cuboid.isInWithMarge(entity.getLocation(), 3)) {
-          if (JavaPlugin.getPlugin(Main.class).getServer().getPluginManager().isPluginEnabled("Citizens")) {
-            if (CitizensAPI.getNPCRegistry().isNPC(entity)) continue;
-          }
-          if (entity.getType() != EntityType.PLAYER) {
-            entity.remove();
-          }
-        }
-      }
-      for (Block block : getCuboid().blockList()) {
-        block.setBiome(plotDefaultBiome);
-      }
       for (Chunk chunk : getCuboid().chunkList()) {
         for (Player p : Bukkit.getOnlinePlayers()) {
           Utils.sendPacket(p, Utils.getNMSClass("PacketPlayOutMapChunk").getConstructor(Utils.getNMSClass("Chunk"), int.class)
               .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535));
         }
       }
-      changeFloor(XMaterial.fromString(plugin.getConfig().getString("Default-Floor-Material-Name", "LOG").toUpperCase()).parseMaterial());
-      cuboid.getCenter().getWorld().setBiome(cuboid.getMinPoint().getBlockX(), cuboid.getMaxPoint().getBlockZ(), plotDefaultBiome);
-      BBPlotResetEvent event = new BBPlotResetEvent(arena, this);
-      Bukkit.getServer().getPluginManager().callEvent(event);
-    } catch (Exception ex) {
-      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
-    }
+    } catch (ReflectiveOperationException ignored) {/*continue safely*/}
+    changeFloor(XMaterial.fromString(plugin.getConfig().getString("Default-Floor-Material-Name", "LOG").toUpperCase()).parseMaterial());
+    cuboid.getCenter().getWorld().setBiome(cuboid.getMinPoint().getBlockX(), cuboid.getMaxPoint().getBlockZ(), plotDefaultBiome);
+    BBPlotResetEvent event = new BBPlotResetEvent(arena, this);
+    Bukkit.getServer().getPluginManager().callEvent(event);
   }
 
   public int getPoints() {
@@ -196,79 +193,53 @@ public class Plot {
   }
 
   private void changeFloor(Material material) {
-    try {
-      double y;
-      if (cuboid.getMinPoint().getY() > cuboid.getMaxPoint().getY()) {
-        y = cuboid.getMaxPoint().getY();
-      } else {
-        y = cuboid.getMinPoint().getY();
+    double y;
+    if (cuboid.getMinPoint().getY() > cuboid.getMaxPoint().getY()) {
+      y = cuboid.getMaxPoint().getY();
+    } else {
+      y = cuboid.getMinPoint().getY();
+    }
+    Location min = cuboid.getMinPoint();
+    Location max = cuboid.getMaxPoint();
+    for (int x = min.getBlockX(); x <= max.getBlockX(); x = x + 1) {
+      for (int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
+        Location tmpblock = new Location(cuboid.getMaxPoint().getWorld(), x, y, z);
+        tmpblock.getBlock().setType(material);
       }
-      Location min = cuboid.getMinPoint();
-      Location max = cuboid.getMaxPoint();
-      for (int x = min.getBlockX(); x <= max.getBlockX(); x = x + 1) {
-        for (int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
-          Location tmpblock = new Location(cuboid.getMaxPoint().getWorld(), x, y, z);
-          tmpblock.getBlock().setType(material);
-        }
-      }
-    } catch (Exception ex) {
-      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
     }
   }
 
   public void changeFloor(Material material, byte data) {
-    try {
-      if (material == Material.WATER_BUCKET) material = Material.WATER;
-      if (material == Material.LAVA_BUCKET) material = Material.LAVA;
-      double y;
-      if (cuboid.getMinPoint().getY() > cuboid.getMaxPoint().getY()) {
-        y = cuboid.getMaxPoint().getY();
-      } else {
-        y = cuboid.getMinPoint().getY();
-      }
-      Location min = cuboid.getMinPoint();
-      Location max = cuboid.getMaxPoint();
-      for (int x = min.getBlockX(); x <= max.getBlockX(); x = x + 1) {
-        for (int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
-          Location tmpblock = new Location(cuboid.getMaxPoint().getWorld(), x, y, z);
-          tmpblock.getBlock().setType(material);
-          if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
-            tmpblock.getBlock().setData(data);
-          }
+    if (material == Material.WATER_BUCKET) {
+      material = Material.WATER;
+    }
+    if (material == Material.LAVA_BUCKET) {
+      material = Material.LAVA;
+    }
+    double y;
+    if (cuboid.getMinPoint().getY() > cuboid.getMaxPoint().getY()) {
+      y = cuboid.getMaxPoint().getY();
+    } else {
+      y = cuboid.getMinPoint().getY();
+    }
+    Location min = cuboid.getMinPoint();
+    Location max = cuboid.getMaxPoint();
+    for (int x = min.getBlockX(); x <= max.getBlockX(); x = x + 1) {
+      for (int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
+        Location tmpblock = new Location(cuboid.getMaxPoint().getWorld(), x, y, z);
+        tmpblock.getBlock().setType(material);
+        if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+          tmpblock.getBlock().setData(data);
         }
       }
-    } catch (Exception ex) {
-      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
-    }
-  }
-
-  public Material getFloorMaterial() {
-    try {
-      Location location;
-      if (cuboid.getMinPoint().getY() > cuboid.getMaxPoint().getY()) {
-        location = cuboid.getMaxPoint().clone();
-      } else {
-        location = cuboid.getMinPoint().clone();
-      }
-      Material material = location.getBlock().getType();
-      if (material == Material.WATER || ((plugin.is1_11_R1() || plugin.is1_12_R1()) && material == Material.valueOf("STATIONARY_WATER"))) {
-        return Material.WATER_BUCKET;
-      }
-      if (material == Material.LAVA || ((plugin.is1_11_R1() || plugin.is1_12_R1()) && material == Material.valueOf("STATIONARY_LAVA"))) {
-        return Material.LAVA_BUCKET;
-      }
-      if (material == Material.AIR || material == null) return Material.REDSTONE_BLOCK;
-      return material;
-    } catch (Exception ex) {
-      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
-      return Material.REDSTONE_BLOCK;
     }
   }
 
   public Location getTeleportLocation() {
-    try {
       Location tploc = cuboid.getCenter();
-      while (tploc.getBlock().getType() != Material.AIR || tploc.add(0, 1, 0).getBlock().getType() != Material.AIR) tploc = tploc.add(0, 1, 0);
+    while (tploc.getBlock().getType() != Material.AIR || tploc.add(0, 1, 0).getBlock().getType() != Material.AIR) {
+      tploc = tploc.add(0, 1, 0);
+    }
       boolean enclosed = false;
       int counter = 0;
       Location location = tploc.clone();
@@ -287,10 +258,6 @@ public class Plot {
         }
       }
       return tploc;
-    } catch (Exception ex) {
-      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
-      return new Location(Bukkit.getWorld("world"), 0, 0, 0);
-    }
   }
 
   /**

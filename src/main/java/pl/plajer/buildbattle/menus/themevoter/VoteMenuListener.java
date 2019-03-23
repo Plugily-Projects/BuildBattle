@@ -29,7 +29,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
@@ -40,7 +39,6 @@ import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.impl.GuessTheBuildArena;
 import pl.plajer.buildbattle.arena.impl.SoloArena;
 import pl.plajer.buildbattle.user.User;
-import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
  * @author Plajer
@@ -58,7 +56,6 @@ public class VoteMenuListener implements Listener {
 
   @EventHandler
   public void onInventoryClose(InventoryCloseEvent e) {
-    try {
       BaseArena arena = ArenaRegistry.getArena((Player) e.getPlayer());
       if (e.getInventory() == null || e.getInventory().getName() == null || arena == null) {
         return;
@@ -72,14 +69,10 @@ public class VoteMenuListener implements Listener {
         }
         Bukkit.getScheduler().runTask(plugin, () -> e.getPlayer().openInventory(((SoloArena) arena).getVoteMenu().getInventory()));
       }
-    } catch (Exception ex) {
-      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
-    }
   }
 
   @EventHandler
   public void onInventoryClick(InventoryClickEvent e) {
-    try {
       if (e.getInventory() == null || e.getInventory().getName() == null) {
         return;
       }
@@ -122,14 +115,10 @@ public class VoteMenuListener implements Listener {
           }
         }
       }
-    } catch (Exception ex) {
-      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
-    }
   }
 
   @EventHandler
   public void onInventoryClickOnGuessTheBuild(InventoryClickEvent e) {
-    try {
       if (e.getInventory() == null || e.getInventory().getName() == null) {
         return;
       }
@@ -175,9 +164,6 @@ public class VoteMenuListener implements Listener {
           }
         }
       }
-    } catch (Exception ex) {
-      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
-    }
   }
 
 }

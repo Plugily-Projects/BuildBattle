@@ -31,7 +31,6 @@ import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
-import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
  * @author Plajer
@@ -48,40 +47,32 @@ public class LobbyEvents implements Listener {
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)
-  public void onFoodLose(FoodLevelChangeEvent event) {
-    try {
-      if (event.getEntity().getType() != EntityType.PLAYER) {
+  public void onFoodLose(FoodLevelChangeEvent e) {
+    if (e.getEntity().getType() != EntityType.PLAYER) {
         return;
       }
-      Player player = (Player) event.getEntity();
+    Player player = (Player) e.getEntity();
       BaseArena arena = ArenaRegistry.getArena(player);
       if (arena == null) {
         return;
       }
       if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
-        event.setCancelled(true);
+        e.setCancelled(true);
       }
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
-    }
   }
 
   @EventHandler
-  public void onLobbyDamage(EntityDamageEvent event) {
-    try {
-      if (event.getEntity().getType() != EntityType.PLAYER) {
+  public void onLobbyDamage(EntityDamageEvent e) {
+    if (e.getEntity().getType() != EntityType.PLAYER) {
         return;
       }
-      Player player = (Player) event.getEntity();
+    Player player = (Player) e.getEntity();
       BaseArena arena = ArenaRegistry.getArena(player);
       if (arena == null || arena.getArenaState() == ArenaState.IN_GAME) {
         return;
       }
-      event.setCancelled(true);
+    e.setCancelled(true);
       player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
-    }
   }
 
 }

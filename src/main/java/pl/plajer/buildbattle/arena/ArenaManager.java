@@ -42,7 +42,6 @@ import pl.plajer.buildbattle.handlers.items.SpecialItem;
 import pl.plajer.buildbattle.user.User;
 import pl.plajerlair.core.debug.Debugger;
 import pl.plajerlair.core.debug.LogLevel;
-import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.InventoryUtils;
 import pl.plajerlair.core.utils.MinigameUtils;
 
@@ -65,7 +64,6 @@ public class ArenaManager {
    * @see BBGameJoinEvent
    */
   public static void joinAttempt(Player player, BaseArena arena) {
-    try {
       Debugger.debug(LogLevel.INFO, "Initial join attempt, " + player.getName());
       BBGameJoinEvent bbGameJoinEvent = new BBGameJoinEvent(player, arena);
       Bukkit.getPluginManager().callEvent(bbGameJoinEvent);
@@ -124,9 +122,6 @@ public class ArenaManager {
       }
       SpecialItem leaveItem = plugin.getSpecialItemsRegistry().getSpecialItem("Leave");
       player.getInventory().setItem(leaveItem.getSlot(), leaveItem.getItemStack());
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
-    }
   }
 
   /**
@@ -138,7 +133,6 @@ public class ArenaManager {
    * @see BBGameLeaveEvent
    */
   public static void leaveAttempt(Player player, BaseArena arena) {
-    try {
       Debugger.debug(LogLevel.INFO, "Initial leave attempt, " + player.getName());
       BBGameLeaveEvent bbGameLeaveEvent = new BBGameLeaveEvent(player, arena);
       Bukkit.getPluginManager().callEvent(bbGameLeaveEvent);
@@ -190,9 +184,6 @@ public class ArenaManager {
         }
         player.showPlayer(players);
       }
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
-    }
   }
 
   /**
@@ -203,7 +194,6 @@ public class ArenaManager {
    * @see BBGameEndEvent
    */
   public static void stopGame(boolean quickStop, BaseArena arena) {
-    try {
       Debugger.debug(LogLevel.INFO, "Game stop event initiate, arena " + arena.getID());
       BBGameEndEvent gameEndEvent = new BBGameEndEvent(arena);
       Bukkit.getPluginManager().callEvent(gameEndEvent);
@@ -232,9 +222,6 @@ public class ArenaManager {
         ((SoloArena) arena).setVoting(false);
       }
       Debugger.debug(LogLevel.INFO, "Game stop event finish, arena " + arena.getID());
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
-    }
   }
 
 }

@@ -33,7 +33,6 @@ import pl.plajer.buildbattle.api.event.plot.BBPlayerPlotReceiveEvent;
 import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.utils.MessageUtils;
-import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -54,7 +53,6 @@ public class PlotManager {
   }
 
   public void distributePlots() {
-    try {
       List<Player> players = new ArrayList<>(arena.getPlayers());
       int times = arena.getArenaType() == BaseArena.ArenaType.SOLO ? 1 : 2;
       for (int i = 0; i < times; i++) {
@@ -88,9 +86,6 @@ public class PlotManager {
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[PLOT WARNING] Instance was stopped!");
         ArenaManager.stopGame(false, arena);
       }
-    } catch (Exception ex) {
-      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
-    }
   }
 
   public Plot getPlot(Player player) {
@@ -125,7 +120,6 @@ public class PlotManager {
   }
 
   public void teleportToPlots() {
-    try {
       for (Plot buildPlot : plots) {
         if (buildPlot.getOwners() != null && !buildPlot.getOwners().isEmpty()) {
           Location tploc = buildPlot.getCuboid().getCenter();
@@ -143,9 +137,6 @@ public class PlotManager {
         BBPlayerPlotReceiveEvent event = new BBPlayerPlotReceiveEvent(arena, buildPlot);
         Bukkit.getPluginManager().callEvent(event);
       }
-    } catch (Exception ex) {
-      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
-    }
   }
 
   public List<Plot> getPlots() {

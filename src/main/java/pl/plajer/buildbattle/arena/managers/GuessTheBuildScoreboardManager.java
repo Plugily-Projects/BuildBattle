@@ -117,8 +117,8 @@ public class GuessTheBuildScoreboardManager extends ScoreboardManager {
           returnString = StringUtils.replace(returnString, "%" + i + "_PTS%",
               String.valueOf(arena.getPlayersPoints().get(arena.getPlayersPoints().keySet().toArray()[i])));
         }
-      } catch (Exception ex) {
-
+      } catch (Exception ignored) {
+        //ignore for test purposes
       }
     }
     returnString = StringUtils.replace(returnString, "%MIN_PLAYERS%", Integer.toString(arena.getMinimumPlayers()));

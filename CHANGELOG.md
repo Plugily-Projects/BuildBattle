@@ -8,6 +8,9 @@
    was typed
    * Fixed [#589 options menu click exceptions](https://plajer.xyz/errorservice/viewer.php?id=589) when click was on
    air or outside inventory slots
+   * Fixed Signs weren't updating if Signs-Block-States-Enabled option was false
+   * Abandoned the direct try-catch exception handling in most of methods and event listeners in favour of
+   logger listening, code looks better now
    > Pre 14 
    * Fixed time couldn't be set for plots because we were checking raw slot click instead of normal slot
    * Made particles.yml particle items more user friendly (lores and names looks now better)

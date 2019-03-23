@@ -52,7 +52,9 @@ public class PlaceholderManager extends PlaceholderExpansion {
   }
 
   public String onPlaceholderRequest(Player player, String id) {
-    if (player == null) return null;
+    if (player == null) {
+      return null;
+    }
     switch (id) {
       case "blocks_broken":
         return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.BLOCKS_BROKEN));

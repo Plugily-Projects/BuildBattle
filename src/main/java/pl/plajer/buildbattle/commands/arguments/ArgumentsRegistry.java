@@ -59,7 +59,6 @@ import pl.plajer.buildbattle.commands.arguments.game.LeaderboardArgument;
 import pl.plajer.buildbattle.commands.arguments.game.LeaveArgument;
 import pl.plajer.buildbattle.commands.arguments.game.StatsArgument;
 import pl.plajer.buildbattle.handlers.setup.SetupInventory;
-import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.StringMatcher;
 
 /**
@@ -105,7 +104,6 @@ public class ArgumentsRegistry implements CommandExecutor {
 
   @Override
   public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-    try {
       for (String mainCommand : mappedArguments.keySet()) {
         if (cmd.getName().equalsIgnoreCase(mainCommand)) {
           if (cmd.getName().equalsIgnoreCase("buildbattle")) {
@@ -198,9 +196,6 @@ public class ArgumentsRegistry implements CommandExecutor {
           }
         }
       }
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
-    }
     return false;
   }
 

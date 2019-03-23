@@ -32,7 +32,6 @@ import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.impl.GuessTheBuildArena;
 import pl.plajer.buildbattle.arena.impl.SoloArena;
 import pl.plajer.buildbattle.utils.Utils;
-import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
  * @author Plajer
@@ -50,7 +49,6 @@ public class VoteEvents implements Listener {
 
   @EventHandler
   public void onVote(PlayerInteractEvent event) {
-    try {
       if (event.getHand() == EquipmentSlot.OFF_HAND || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
         return;
       }
@@ -77,9 +75,6 @@ public class VoteEvents implements Listener {
       plugin.getUserManager().getUser(event.getPlayer()).setStat(StatsStorage.StatisticType.LOCAL_POINTS, plugin.getVoteItems().getPoints(event.getItem()));
       event.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Vote-Successful"));
       event.setCancelled(true);
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
-    }
   }
 
 }
