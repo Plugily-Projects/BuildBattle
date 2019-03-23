@@ -76,6 +76,9 @@ public class OptionsMenuHandler implements Listener {
       if (!(e.getWhoClicked() instanceof Player) || e.getInventory() == null || e.getInventory().getName() == null) {
         return;
       }
+      if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta() || !e.getCurrentItem().getItemMeta().hasDisplayName()) {
+        return;
+      }
       for (MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
         if (!option.isInventoryEnabled()) {
           continue;

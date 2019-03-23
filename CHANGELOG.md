@@ -6,6 +6,8 @@
    args were specified
    * Fixed [#592 /bba addplot command exception](https://www.plajer.xyz/errorservice/viewer.php?id=592) when no arena name
    was typed
+   * Fixed [#589 options menu click exceptions](https://plajer.xyz/errorservice/viewer.php?id=589) when click was on
+   air or outside inventory slots
    > Pre 14 
    * Fixed time couldn't be set for plots because we were checking raw slot click instead of normal slot
    * Made particles.yml particle items more user friendly (lores and names looks now better)
