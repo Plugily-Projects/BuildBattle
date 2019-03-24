@@ -175,12 +175,12 @@ public class SignManager implements Listener {
   private void updateSignScheduler() {
     Bukkit.getScheduler().runTaskTimer(plugin, () -> {
       for (Map.Entry<Sign, BaseArena> entry : loadedSigns.entrySet()) {
-        Sign s = entry.getKey();
+        Sign sign = entry.getKey();
         for (int i = 0; i < signLines.size(); i++) {
-          s.setLine(i, formatSign(signLines.get(i), loadedSigns.get(s)));
+          sign.setLine(i, formatSign(signLines.get(i), entry.getValue()));
         }
         if (plugin.getConfig().getBoolean("Signs-Block-States-Enabled", true)) {
-          Block behind = s.getBlock().getRelative(((org.bukkit.material.Sign) s.getData()).getAttachedFace());
+          Block behind = sign.getBlock().getRelative(((org.bukkit.material.Sign) sign.getData()).getAttachedFace());
           switch (entry.getValue().getArenaState()) {
             case WAITING_FOR_PLAYERS:
               behind.setType(XMaterial.WHITE_STAINED_GLASS.parseMaterial());
@@ -214,7 +214,7 @@ public class SignManager implements Listener {
               break;
           }
         }
-        s.update();
+        sign.update();
       }
     }, 10, 10);
   }

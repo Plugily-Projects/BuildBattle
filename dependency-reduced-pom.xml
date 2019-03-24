@@ -22,7 +22,7 @@
   <groupId>pl.plajer</groupId>
   <artifactId>buildbattle</artifactId>
   <name>BuildBattle</name>
-    <version>4.0.0-pre-14</version>
+    <version>4.0.0-pre-15</version>
   <build>
     <extensions>
       <extension>
