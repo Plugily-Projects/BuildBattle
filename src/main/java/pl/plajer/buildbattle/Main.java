@@ -191,6 +191,7 @@ public class Main extends JavaPlugin {
     });
   }
 
+  @Deprecated //unsafe async saving when plugin is disabling, will lead to errors
   @Override
   public void onDisable() {
     if (forceDisable) {
