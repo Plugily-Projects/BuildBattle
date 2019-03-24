@@ -72,6 +72,10 @@ public class ConfigPreferences {
     gameThemes.put(BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_HARD", plugin.getConfig().getStringList("Themes.Guess-The-Build.Hard"));
   }
 
+  public Map<String, List<String>> getGameThemes() {
+    return gameThemes;
+  }
+
   public List<String> getThemes(String accessor) {
     return gameThemes.get(accessor);
   }

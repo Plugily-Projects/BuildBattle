@@ -11,6 +11,8 @@
    * Fixed Signs weren't updating if Signs-Block-States-Enabled option was false
    * Abandoned the direct try-catch exception handling in most of methods and event listeners in favour of
    logger listening, code looks better now
+   * Implemented Holiday Events for April Fools, Christmas and Halloween, special themes
+   for solo and teams will be applied if enabled
    > Pre 14 
    * Fixed time couldn't be set for plots because we were checking raw slot click instead of normal slot
    * Made particles.yml particle items more user friendly (lores and names looks now better)

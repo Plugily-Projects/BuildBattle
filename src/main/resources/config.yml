@@ -127,6 +127,38 @@ Themes:
       - Typewriter
       - Solar System
 
+# Should holiday events for Build Battle be enabled?
+# Eg. 4 days before and 4 days after Halloween
+# special themes will be applied!
+# USING THIS ALL THEMES FOR SOLO/TEAM WHEN SPECIAL DAY
+# OCCURS WILL BE REPLACED WITH HOLIDAY THEMES ONLY
+Holidays-Enabled: true
+
+# Special holiday themes ONLY FOR solo and teams
+# that will be used during holiday events if enabled.
+Holiday-Themes:
+  April-Fools:
+    - Hypercube
+    - Nothing
+    - Void
+    - Minecraft
+    - Mojang
+  Valentines-Day:
+    - Heart
+    - Love
+    - Cupid
+    - Chocolate Box
+  Halloween:
+    - Pumpkin
+    - Skeleton
+    - Jack'o'Lantern
+    - Candies
+  Christmas:
+    - Santa
+    - Presents
+    - Snowman
+    - Stocking
+
 # Theme names that are blacklisted.
 Blacklisted-Themes:
 - Fuck
@@ -179,6 +211,6 @@ DatabaseActivated: false
 Debug: false
 
 # Don't modify.
-Version: 5
+Version: 6
 
 # No way! You've reached the end! But... where's the dragon!?

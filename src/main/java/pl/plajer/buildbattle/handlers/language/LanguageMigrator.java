@@ -40,7 +40,7 @@ import pl.plajerlair.core.utils.MigratorUtils;
 public class LanguageMigrator {
 
   public static final int LANGUAGE_FILE_VERSION = 9;
-  public static final int CONFIG_FILE_VERSION = 5;
+  public static final int CONFIG_FILE_VERSION = 6;
   private List<String> migratable = Arrays.asList("bungee", "config", "language", "MySQL");
   private Main plugin;
 
@@ -88,33 +88,66 @@ public class LanguageMigrator {
     for (int i = 0; i < CONFIG_FILE_VERSION; i++) {
       switch (version) {
         case 0:
-          MigratorUtils.addNewLines(file, "# Should blocks behind game signs change their color based on game state?\r\n# They will change color to:\r\n" +
+          MigratorUtils.addNewLines(file, "\r\n# Should blocks behind game signs change their color based on game state?\r\n# They will change color to:\r\n" +
               "# - white (waiting for players) stained glass\r\n# - yellow (starting) stained glass\r\n# - orange (in game) stained glass\r\n# - gray (ending) stained glass\r\n" +
               "# - black (restarting) stained glass\r\nSigns-Block-States-Enabled: true\r\n\r\n");
           break;
         case 1:
-          MigratorUtils.addNewLines(file, "# Total time of building in game in TEAM game mode\n" +
+          MigratorUtils.addNewLines(file, "\r\n# Total time of building in game in TEAM game mode\n" +
               "Team-Build-Time-In-Seconds: 540\r\n\r\n# Total time of voting for themes before starting\n" +
               "Theme-Voting-Time-In-Seconds: 25\r\n\r\n");
           break;
         case 2:
-          MigratorUtils.addNewLines(file, "# Default floor material name\r\n" +
+          MigratorUtils.addNewLines(file, "\r\n# Default floor material name\r\n" +
               "Default-Floor-Material-Name: log\r\n\r\n");
           MigratorUtils.addNewLines(file, "# Blacklisted item names, you can't use them while building.\r\n" +
               "Blacklisted-Item-Names:\r\n- tnt\r\n- diamond_block\r\n\r\n");
           break;
         case 3:
-          MigratorUtils.addNewLines(file, "# Theme names that are blacklisted.\r\nBlacklisted-Themes:\r\n- Fuck\r\n\r\n");
-          MigratorUtils.addNewLines(file, "# Team game mode themes.\r\nGame-Themes-Team:\r\n- Pirates\r\n- Castle");
+          MigratorUtils.addNewLines(file, "\r\n# Theme names that are blacklisted.\r\nBlacklisted-Themes:\r\n- Fuck\r\n\r\n");
+          MigratorUtils.addNewLines(file, "\r\n# Team game mode themes.\r\nGame-Themes-Team:\r\n- Pirates\r\n- Castle");
           break;
         case 4:
-          MigratorUtils.addNewLines(file, "# Total build times of game modes\r\nBuild-Time:\r\n  Classic: 480\r\n  Teams: 540\r\n  Guess-The-Build: 120");
-          MigratorUtils.addNewLines(file, "# All game themes players will build.\r\nThemes:\r\n  # Solo themes.\r\n  Classic:\r\n    - Heart\r\n    - Castle\r\n" +
+          MigratorUtils.addNewLines(file, "\r\n# Total build times of game modes\r\nBuild-Time:\r\n  Classic: 480\r\n  Teams: 540\r\n  Guess-The-Build: 120");
+          MigratorUtils.addNewLines(file, "\r\n# All game themes players will build.\r\nThemes:\r\n  # Solo themes.\r\n  Classic:\r\n    - Heart\r\n    - Castle\r\n" +
               "    - Emoji\r\n    - House\r\n    - Flower\r\n  # Team mode themes.\r\n  Teams:\r\n    - Well\r\n    - Car\r\n    - Rainbow\r\n    - Arcade Machine\r\n" +
               "  # Guess the build themes.\r\n  Guess-The-Build:\r\n    Easy:\r\n      - Apple\r\n      - Sun\r\n      - Bread\r\n      - Book\r\n      - Dollar\r\n    Medium:\r\n      - School Bus\r\n" +
               "      - Horse\r\n      - Fountain\r\n      - Sumo\r\n      - Bicycle\r\n    Hard:\r\n      - Soccer\r\n      - Birthday Cake\r\n      - Typewriter\r\n      - Solar System\r\n\r\n");
           MigratorUtils.addNewLines(file, "# Commands executed when player wins\r\n# Use %PLAYER% placeholder to replace it with winner's name\r\nWin-Commands:\r\n" +
               "  First:\r\n    - say %PLAYER% won the game!\r\n  Second:\r\n    - say %PLAYER% become second\r\n  Third:\r\n    - say %PLAYER% became third\r\n\r\n");
+        case 5:
+          MigratorUtils.addNewLines(file, "\r\n" +
+              "# Should holiday events for Build Battle be enabled?\r\n" +
+              "# Eg. 4 days before and 4 days after Halloween\r\n" +
+              "# special themes will be applied!\r\n" +
+              "# USING THIS ALL THEMES FOR SOLO/TEAM WHEN SPECIAL DAY\r\n" +
+              "# OCCURS WILL BE REPLACED WITH HOLIDAY THEMES ONLY\r\n" +
+              "Holidays-Enabled: true\r\n" +
+              "\r\n" +
+              "# Special holiday themes ONLY FOR solo and teams\r\n" +
+              "# that will be used during holiday events if enabled.\r\n" +
+              "Holiday-Themes:\r\n" +
+              "  April-Fools:\r\n" +
+              "    - Hypercube\r\n" +
+              "    - Nothing\r\n" +
+              "    - Void\r\n" +
+              "    - Minecraft\r\n" +
+              "    - Mojang\r\n" +
+              "  Valentines-Day:\r\n" +
+              "    - Heart\r\n" +
+              "    - Love\r\n" +
+              "    - Cupid\r\n" +
+              "    - Chocolate Box\r\n" +
+              "  Halloween:\r\n" +
+              "    - Pumpkin\r\n" +
+              "    - Skeleton\r\n" +
+              "    - Jack'o'Lantern\r\n" +
+              "    - Candies\r\n" +
+              "  Christmas:\r\n" +
+              "    - Santa\r\n" +
+              "    - Presents\r\n" +
+              "    - Snowman\r\n" +
+              "    - Stocking");
       }
       version++;
     }
