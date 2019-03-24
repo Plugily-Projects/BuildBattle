@@ -43,6 +43,7 @@ import pl.plajer.buildbattle.events.LobbyEvents;
 import pl.plajer.buildbattle.events.QuitEvents;
 import pl.plajer.buildbattle.handlers.BungeeManager;
 import pl.plajer.buildbattle.handlers.ChatManager;
+import pl.plajer.buildbattle.handlers.HolidayManager;
 import pl.plajer.buildbattle.handlers.PermissionManager;
 import pl.plajer.buildbattle.handlers.PlaceholderManager;
 import pl.plajer.buildbattle.handlers.SignManager;
@@ -262,6 +263,7 @@ public class Main extends JavaPlugin {
     checkUpdate();
     new GameEvents(this);
     new VoteMenuListener(this);
+    new HolidayManager(this);
   }
 
   public ChatManager getChatManager() {

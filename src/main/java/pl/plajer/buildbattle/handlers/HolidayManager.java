@@ -30,16 +30,11 @@ import pl.plajer.buildbattle.Main;
 public class HolidayManager {
 
   private HolidayType currentHoliday = HolidayType.NONE;
-  private boolean enabled = true;
-  private Main plugin;
 
-  //todo add christmas and april fools
   public HolidayManager(Main plugin) {
     if (!plugin.getConfig().getBoolean("Holidays-Enabled", true)) {
-      enabled = false;
       return;
     }
-    this.plugin = plugin;
     LocalDateTime time = LocalDateTime.now();
 
     int day = time.getDayOfMonth();
@@ -54,9 +49,25 @@ public class HolidayManager {
           plugin.getConfigPreferences().getGameThemes().put("Team", plugin.getConfig().getStringList("Holiday-Themes.Valentines-Day"));
         }
         break;
+      case 3:
+        //4 days before april fools
+        if (day >= 28) {
+          currentHoliday = HolidayType.APRIL_FOOLS;
+          plugin.getConfigPreferences().getGameThemes().put("Classic", plugin.getConfig().getStringList("Holiday-Themes.April-Fools"));
+          plugin.getConfigPreferences().getGameThemes().put("Team", plugin.getConfig().getStringList("Holiday-Themes.April-Fools"));
+        }
+        break;
+      case 4:
+        //4 days after april fools
+        if (day <= 5) {
+          currentHoliday = HolidayType.APRIL_FOOLS;
+          plugin.getConfigPreferences().getGameThemes().put("Classic", plugin.getConfig().getStringList("Holiday-Themes.April-Fools"));
+          plugin.getConfigPreferences().getGameThemes().put("Team", plugin.getConfig().getStringList("Holiday-Themes.April-Fools"));
+        }
+        break;
       case 10:
         //4 days before halloween
-        if (31 - day <= 4) {
+        if (day >= 27) {
           currentHoliday = HolidayType.HALLOWEEN;
           plugin.getConfigPreferences().getGameThemes().put("Classic", plugin.getConfig().getStringList("Holiday-Themes.Halloween"));
           plugin.getConfigPreferences().getGameThemes().put("Team", plugin.getConfig().getStringList("Holiday-Themes.Halloween"));
@@ -70,6 +81,12 @@ public class HolidayManager {
           plugin.getConfigPreferences().getGameThemes().put("Team", plugin.getConfig().getStringList("Holiday-Themes.Halloween"));
         }
         break;
+      case 12:
+        if (day >= 21 && day <= 29) {
+          currentHoliday = HolidayType.CHRISTMAS;
+          plugin.getConfigPreferences().getGameThemes().put("Classic", plugin.getConfig().getStringList("Holiday-Themes.Christmas"));
+          plugin.getConfigPreferences().getGameThemes().put("Team", plugin.getConfig().getStringList("Holiday-Themes.Christmas"));
+        }
       default:
         break;
     }
@@ -80,7 +97,7 @@ public class HolidayManager {
   }
 
   public enum HolidayType {
-    HALLOWEEN, NONE, VALENTINES_DAY
+    HALLOWEEN, APRIL_FOOLS, CHRISTMAS, NONE, VALENTINES_DAY
   }
 
 }
