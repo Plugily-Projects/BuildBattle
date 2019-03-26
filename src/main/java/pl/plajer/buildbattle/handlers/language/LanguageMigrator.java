@@ -147,7 +147,7 @@ public class LanguageMigrator {
               "    - Santa\r\n" +
               "    - Presents\r\n" +
               "    - Snowman\r\n" +
-              "    - Stocking");
+              "    - Stocking\r\n\r\n");
       }
       version++;
     }

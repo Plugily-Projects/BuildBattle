@@ -1,6 +1,9 @@
 ## BuildBattle 3 changelog
 
-### 4.0.0 Beta Pre Releases 3-15 (03.10.2018 - 23.03.2019)
+### 4.0.0 Beta Pre Releases 3-15 (03.10.2018 - 26.03.2019)
+   > Pre 16
+   * Fixed animals couldn't spawn and breed outside arenas
+   * Fixed spawning animals on arena even if option for disable-spawning was false
    > Pre 15
    * Fixed [#595 /bb randomjoin command exception](https://www.plajer.xyz/errorservice/viewer.php?id=595) when no arena type
    args were specified

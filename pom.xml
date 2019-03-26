@@ -24,7 +24,7 @@
 
     <groupId>pl.plajer</groupId>
     <artifactId>buildbattle</artifactId>
-    <version>4.0.0-pre-15</version>
+    <version>4.0.0-pre-16</version>
     <name>BuildBattle</name>
 
     <properties>

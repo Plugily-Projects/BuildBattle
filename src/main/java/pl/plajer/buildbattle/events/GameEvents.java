@@ -339,7 +339,7 @@ public class GameEvents implements Listener {
       if (arena.getPlotManager().getPlots() == null || arena.getPlotManager().getPlots().isEmpty()) {
         continue;
       }
-      if (arena.getPlotManager().getPlots().get(0) == null || e.getEntity().getWorld().equals(arena.getPlotManager().getPlots().get(0).getCuboid().getCenter().getWorld())) {
+      if (arena.getPlotManager().getPlots().get(0) == null || !e.getEntity().getWorld().equals(arena.getPlotManager().getPlots().get(0).getCuboid().getCenter().getWorld())) {
         continue;
       }
       if (e.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) {
@@ -350,10 +350,6 @@ public class GameEvents implements Listener {
         return;
       }
       for (Plot plot : arena.getPlotManager().getPlots()) {
-        if (plot.getCuboid().isInWithMarge(e.getEntity().getLocation(), 10)) {
-          e.setCancelled(true);
-          return;
-        }
         if (plot.getCuboid().isInWithMarge(e.getEntity().getLocation(), 1)) {
           if (plot.getEntities() >= plugin.getConfig().getInt("Mobs-Max-Amount-Per-Plot", 20)) {
             //todo maybe only for spawner player?

@@ -59,7 +59,7 @@ Theme-Voting-Time-In-Seconds: 25
 # Default floor material name
 Default-Floor-Material-Name: log
 
-# Should mob spawning be disabled?
+# Should mob spawning on arenas be disabled?
 Disable-Mob-Spawning-Completely: true
 
 # How many particle effects should have one spawned particle
