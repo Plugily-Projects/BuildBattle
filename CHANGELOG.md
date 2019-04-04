@@ -4,6 +4,7 @@
    > Pre 16
    * Fixed animals couldn't spawn and breed outside arenas
    * Fixed spawning animals on arena even if option for disable-spawning was false
+   * Fixed /bba addnpc didn't work
    > Pre 15
    * Fixed [#595 /bb randomjoin command exception](https://www.plajer.xyz/errorservice/viewer.php?id=595) when no arena type
    args were specified

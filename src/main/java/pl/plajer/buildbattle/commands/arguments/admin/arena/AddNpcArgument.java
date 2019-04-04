@@ -18,17 +18,17 @@
 
 package pl.plajer.buildbattle.commands.arguments.admin.arena;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
 
-import pl.plajer.buildbattle.arena.ArenaManager;
-import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajer.buildbattle.arena.impl.BaseArena;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+
 import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
 import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
 import pl.plajer.buildbattle.commands.arguments.data.LabelData;
 import pl.plajer.buildbattle.commands.arguments.data.LabeledCommandArgument;
-import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
  * @author Plajer
@@ -38,26 +38,20 @@ import pl.plajerlair.core.utils.ConfigUtils;
 public class AddNpcArgument {
 
   public AddNpcArgument(ArgumentsRegistry registry) {
-    registry.mapArgument("buildbattleadmin", new LabeledCommandArgument("delete", "buildbattle.admin.delete", CommandArgument.ExecutorType.PLAYER,
-        new LabelData("/bba delete &6<arena>", "/bba delete <arena>",
+    registry.mapArgument("buildbattleadmin", new LabeledCommandArgument("addnpc", "buildbattle.admin.delete", CommandArgument.ExecutorType.PLAYER,
+        new LabelData("/bba addnpc &6<arena>", "/bba delete <arena>",
             "&7Deletes specified arena\n&6Permission: &7buildbattle.admin.delete")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        if (args.length == 1) {
-          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Type-Arena-Name"));
-          return;
+        if (registry.getPlugin().getServer().getPluginManager().isPluginEnabled("Citizens")) {
+          NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.VILLAGER, registry.getPlugin().getChatManager().colorMessage("In-Game.NPC.Floor-Change-NPC-Name"));
+          npc.spawn(((Player) sender).getLocation());
+          npc.setProtected(true);
+          npc.setName(registry.getPlugin().getChatManager().colorMessage("In-Game.NPC.Floor-Change-NPC-Name"));
+          sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("In-Game.NPC.NPC-Created"));
+        } else {
+          sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("In-Game.NPC.Install-Citizens"));
         }
-        BaseArena arena = ArenaRegistry.getArena(args[1]);
-        if (arena == null) {
-          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Arena-Like-That"));
-          return;
-        }
-        ArenaManager.stopGame(false, arena);
-        FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
-        config.set("instances." + args[1], null);
-        ConfigUtils.saveConfig(registry.getPlugin(), config, "arenas");
-        ArenaRegistry.unregisterArena(arena);
-        sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Removed-Game-Instance"));
       }
     });
   }
