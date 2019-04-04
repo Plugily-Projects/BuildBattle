@@ -41,6 +41,7 @@ import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.commands.TabCompletion;
 import pl.plajer.buildbattle.commands.arguments.admin.ListArenasArgument;
+import pl.plajer.buildbattle.commands.arguments.admin.arena.AddNpcArgument;
 import pl.plajer.buildbattle.commands.arguments.admin.arena.DeleteArgument;
 import pl.plajer.buildbattle.commands.arguments.admin.arena.ForceStartArguments;
 import pl.plajer.buildbattle.commands.arguments.admin.arena.ReloadArgument;
@@ -88,6 +89,7 @@ public class ArgumentsRegistry implements CommandExecutor {
 
     //register Build Battle admin arguments
     //arena related arguments
+    new AddNpcArgument(this);
     new DeleteArgument(this);
     new ForceStartArguments(this);
     new ReloadArgument(this);

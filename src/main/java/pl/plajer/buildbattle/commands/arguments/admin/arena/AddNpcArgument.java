@@ -38,9 +38,9 @@ import pl.plajer.buildbattle.commands.arguments.data.LabeledCommandArgument;
 public class AddNpcArgument {
 
   public AddNpcArgument(ArgumentsRegistry registry) {
-    registry.mapArgument("buildbattleadmin", new LabeledCommandArgument("addnpc", "buildbattle.admin.delete", CommandArgument.ExecutorType.PLAYER,
-        new LabelData("/bba addnpc &6<arena>", "/bba delete <arena>",
-            "&7Deletes specified arena\n&6Permission: &7buildbattle.admin.delete")) {
+    registry.mapArgument("buildbattleadmin", new LabeledCommandArgument("addnpc", "buildbattle.admin.addnpc", CommandArgument.ExecutorType.PLAYER,
+        new LabelData("/bba addnpc &6<arena>", "/bba addnpc <arena>",
+            "&7Deletes specified arena\n&6Permission: &7buildbattle.admin.addnpc")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
         if (registry.getPlugin().getServer().getPluginManager().isPluginEnabled("Citizens")) {

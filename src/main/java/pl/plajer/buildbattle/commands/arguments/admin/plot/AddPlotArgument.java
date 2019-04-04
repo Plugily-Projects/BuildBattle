@@ -64,7 +64,7 @@ public class AddPlotArgument {
         FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
         int id = 0;
         if (config.getConfigurationSection("instances." + arena.getID() + ".plots") != null) {
-          id = config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false).size();
+          id = config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false).size() + 1;
         }
         LocationUtils.saveLoc(registry.getPlugin(), config, "arenas", "instances." + arena.getID() + ".plots." + id + ".minpoint", selection.getFirstPos());
         LocationUtils.saveLoc(registry.getPlugin(), config, "arenas", "instances." + arena.getID() + ".plots." + id + ".maxpoint", selection.getSecondPos());
