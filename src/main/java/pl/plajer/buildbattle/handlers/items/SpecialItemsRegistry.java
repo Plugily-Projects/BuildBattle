@@ -89,7 +89,7 @@ public class SpecialItemsRegistry {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "lobbyitems");
     for (String key : config.getKeys(false)) {
       addItem(new SpecialItem(key, new ItemBuilder(XMaterial
-          .fromString(config.getString(key + ".material-name").toUpperCase()).parseItem())
+          .fromString(config.getString(key + ".material-name", "BEDROCK").toUpperCase()).parseItem())
           .name(plugin.getChatManager().colorRawMessage(config.getString(key + ".displayname")))
           .lore(config.getStringList(key + ".lore").stream().map((lore) -> lore = plugin.getChatManager().colorRawMessage(lore))
               .collect(Collectors.toList()))
