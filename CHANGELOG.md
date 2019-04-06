@@ -6,6 +6,7 @@
    * Fixed spawning animals on arena even if option for disable-spawning was false
    * Fixed /bba addnpc didn't work
    * Fixed setup GUI didn't work properly
+   * Fixed [#612 exception when registering arenas](https://www.plajer.xyz/errorservice/viewer.php?id=612) when arenas.yml file was empty
    > Pre 15
    * Fixed [#595 /bb randomjoin command exception](https://www.plajer.xyz/errorservice/viewer.php?id=595) when no arena type
    args were specified
