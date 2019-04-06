@@ -149,6 +149,32 @@ public class SetupInventory {
 
   }
 
+  public static void sendProTip(Player p) {
+    int rand = new Random().nextInt(5 + 1);
+    switch (rand) {
+      case 0:
+        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Plajer-Lair/BuildBattle"));
+        break;
+      case 1:
+        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Help us translating plugin to your language here: https://translate.plajer.xyz"));
+        break;
+      case 2:
+        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Download some free maps! Get them here: https://wiki.plajer.xyz/minecraft/buildbattle/free_maps.php"));
+        break;
+      case 3:
+        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7You can use PlaceholderAPI placeholders from our plugin! Check: https://wiki.plajer.xyz/minecraft/buildbattle/papi_placeholders.php"));
+        break;
+      case 4:
+        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Suggest new ideas for the plugin or vote on current ones! https://uservoice.plajer.xyz/index.php?id=BuildBattle"));
+        break;
+      case 5:
+        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Console can execute /bba votes <add/set> [amount] (player) command! Add super votes via console!"));
+        break;
+      default:
+        break;
+    }
+  }
+
   private String isOptionDoneList(String path) {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
     if (!config.isSet(path)) {
@@ -179,24 +205,6 @@ public class SetupInventory {
 
   public void openInventory(Player player) {
     player.openInventory(inventory);
-  }
-
-  public static void sendProTip(Player p) {
-    int rand = new Random().nextInt(3 + 1);
-    switch (rand) {
-      case 0:
-        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Plajer-Lair/BuildBattle"));
-        break;
-      case 1:
-        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Help us translating plugin to your language here: https://translate.plajer.xyz"));
-        break;
-      case 2:
-        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Download some free maps! Get them here: https://wiki.plajer.xyz/minecraft/buildbattle/free_maps.php"));
-        break;
-      case 3:
-        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7You can use PlaceholderAPI placeholders from our plugin! Check: https://wiki.plajer.xyz/minecraft/buildbattle/papi_placeholders.php"));
-        break;
-    }
   }
 
   public enum ClickPosition {
