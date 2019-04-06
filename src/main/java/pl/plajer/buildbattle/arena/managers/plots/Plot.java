@@ -157,7 +157,7 @@ public class Plot {
     }
     for (Entity entity : cuboid.getCenter().getWorld().getEntities()) {
       if (cuboid.isInWithMarge(entity.getLocation(), 3)) {
-        if (JavaPlugin.getPlugin(Main.class).getServer().getPluginManager().isPluginEnabled("Citizens")) {
+        if (plugin.getServer().getPluginManager().isPluginEnabled("Citizens")) {
           if (CitizensAPI.getNPCRegistry().isNPC(entity)) {
             continue;
           }
