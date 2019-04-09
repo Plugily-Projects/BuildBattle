@@ -1,6 +1,8 @@
 ## BuildBattle 3 changelog
 
-### 4.0.0 Beta Pre Releases 3-15 (03.10.2018 - 06.04.2019)
+### 4.0.0 Beta Pre Releases 3-15 (03.10.2018 - 08.04.2019)
+   > RC 2
+   * Fixed plugin couldn't start if Cloudflare was blocked in your country (or services were offline)
    > RC 1
    * Fixed animals couldn't spawn and breed outside arenas
    * Fixed spawning animals on arena even if option for disable-spawning was false
