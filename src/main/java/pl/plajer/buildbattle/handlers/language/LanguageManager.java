@@ -18,10 +18,6 @@
 
 package pl.plajer.buildbattle.handlers.language;
 
-import com.earth2me.essentials.Essentials;
-import com.wasteofplastic.askyblock.ASLocale;
-import com.wasteofplastic.askyblock.ASkyBlock;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -50,7 +46,6 @@ import pl.plajerlair.core.utils.ConfigUtils;
  */
 public class LanguageManager {
 
-  private static boolean betaVersion = false;
   private static Main plugin;
   private static Locale pluginLocale;
   private static Properties properties = new Properties();
@@ -63,12 +58,6 @@ public class LanguageManager {
     }
     registerLocales();
     setupLocale();
-    //we will wait until server is loaded, we won't soft depend those plugins
-    Bukkit.getScheduler().runTaskLater(plugin, () -> {
-      if (isDefaultLanguageUsed() && !betaVersion) {
-        suggestLocale();
-      }
-    }, 100);
     new LanguageMigrator(plugin);
     //get file after all migrations are done
     languageConfig = ConfigUtils.getConfig(plugin, "language");
@@ -139,7 +128,6 @@ public class LanguageManager {
     }
     /* is beta release */
     if (plugin.getDescription().getVersion().contains("b") || plugin.getDescription().getVersion().contains("pre")) {
-      betaVersion = true;
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Locales aren't supported in beta versions because they're lacking latest translations! Enabling English one...");
       pluginLocale = LocaleRegistry.getByName("English");
       return;
@@ -147,62 +135,6 @@ public class LanguageManager {
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] Loaded locale " + pluginLocale.getName() + " (" + pluginLocale.getOriginalName() + " ID: " +
         pluginLocale.getPrefix() + ") by " + pluginLocale.getAuthor());
     loadProperties();
-  }
-
-  private static void suggestLocale() {
-    //we will catch any exceptions in case of api changes
-    boolean hasLocale = false;
-    String localeName = "";
-    try {
-      if (plugin.getServer().getPluginManager().isPluginEnabled("ASkyBlock")) {
-        ASLocale locale = ASkyBlock.getPlugin().myLocale();
-        switch (locale.getLocaleName()) {
-          case "pl-PL":
-          case "es-ES":
-          case "de-DE":
-          case "zh-CN":
-          case "vn-VN":
-          case "hu-HU":
-          case "ko-KR":
-          case "fr-FR":
-          case "tr-TR":
-          case "ru-RU":
-          case "cs-CS":
-            hasLocale = true;
-            localeName = locale.getLocaleName();
-        }
-      }
-      if (plugin.getServer().getPluginManager().isPluginEnabled("Essentials")) {
-        Essentials ess = (Essentials) plugin.getServer().getPluginManager().getPlugin("Essentials");
-        java.util.Locale locale = ess.getI18n().getCurrentLocale();
-        switch (locale.getCountry()) {
-          case "PL":
-          case "ES":
-          case "DE":
-          case "HU":
-          case "VN":
-          case "ZH":
-          case "KR":
-          case "FR":
-          case "ID":
-          case "TR":
-          case "RU":
-          case "ET":
-          case "CS":
-          case "RO":
-            hasLocale = true;
-            localeName = locale.getDisplayName();
-        }
-      }
-    } catch (Exception e) {
-      Debugger.debug(LogLevel.WARN, "Plugin has occurred a problem suggesting locale, probably API change.");
-    }
-    if (hasLocale) {
-      MessageUtils.info();
-      Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[BuildBattle] We've found that you use locale " + localeName + " in other plugins.");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "We recommend you to change plugin's locale to " + localeName + " to have best plugin experience.");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "You can change plugin's locale in config.yml in locale section!");
-    }
   }
 
   public static boolean isDefaultLanguageUsed() {
