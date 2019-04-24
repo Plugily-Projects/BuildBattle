@@ -87,23 +87,22 @@ public class CreateArgument {
     FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
     LocationUtils.saveLoc(registry.getPlugin(), config, "arenas", path + "lobbylocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
     LocationUtils.saveLoc(registry.getPlugin(), config, "arenas", path + "Endlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
-    config.set(path + "minimumplayers", config.getInt("instances.default.minimumplayers"));
-    config.set(path + "maximumplayers", config.getInt("instances.default.maximumplayers"));
+    config.set(path + "minimumplayers", 2);
+    config.set(path + "maximumplayers", 4);
     config.set(path + "mapname", id);
     config.set(path + "signs", new ArrayList<>());
     config.createSection(path + "plots");
     config.set(path + "gametype", "SOLO");
     config.set(path + "isdone", false);
-    config.set(path + "world", config.getString("instances.default.world"));
     ConfigUtils.saveConfig(registry.getPlugin(), config, "arenas");
 
     SoloArena arena = new SoloArena(id, registry.getPlugin());
 
-    arena.setMinimumPlayers(ConfigUtils.getConfig(registry.getPlugin(), "arenas").getInt(path + "minimumplayers"));
-    arena.setMaximumPlayers(ConfigUtils.getConfig(registry.getPlugin(), "arenas").getInt(path + "maximumplayers"));
-    arena.setMapName(ConfigUtils.getConfig(registry.getPlugin(), "arenas").getString(path + "mapname"));
-    arena.setLobbyLocation(LocationUtils.getLocation(ConfigUtils.getConfig(registry.getPlugin(), "arenas").getString(path + "lobbylocation")));
-    arena.setEndLocation(LocationUtils.getLocation(ConfigUtils.getConfig(registry.getPlugin(), "arenas").getString(path + "Endlocation")));
+    arena.setMinimumPlayers(config.getInt(path + "minimumplayers"));
+    arena.setMaximumPlayers(config.getInt(path + "maximumplayers"));
+    arena.setMapName(config.getString(path + "mapname"));
+    arena.setLobbyLocation(LocationUtils.getLocation(config.getString(path + "lobbylocation")));
+    arena.setEndLocation(LocationUtils.getLocation(config.getString(path + "Endlocation")));
     arena.setArenaType(BaseArena.ArenaType.SOLO);
     arena.setReady(false);
     arena.initPoll();

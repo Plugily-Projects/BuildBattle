@@ -1,9 +1,10 @@
 ## BuildBattle 3 changelog
 
-### 4.0.0 Beta Pre Releases 3-15 (03.10.2018 - 19.04.2019)
+### 4.0.0 Beta Pre Releases 3-15 (03.10.2018 - 24.04.2019)
    > RC 2
    * Fixed plugin couldn't start if Cloudflare was blocked in your country (or services were offline)
    * Removed locale suggester, it will no longer spam console when English (default) locale is used
+   * Fixed issue with plot adding via setup menu
    > RC 1
    * Fixed animals couldn't spawn and breed outside arenas
    * Fixed spawning animals on arena even if option for disable-spawning was false

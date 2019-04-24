@@ -186,7 +186,7 @@ public class SetupInventoryEvents implements Listener {
         break;
       case ADD_GAME_PLOT:
         player.performCommand("bba addplot " + arena.getID());
-        break;
+        return;
       case ADD_FLOOR_CHANGER_NPC:
         player.performCommand("bba addnpc");
         break;
