@@ -37,21 +37,12 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
-            <id>ess-repo</id>
-            <url>https://ci.ender.zone/plugin/repository/everything/</url>
-        </repository>
-        <repository>
             <id>citizens-repo</id>
             <url>http://repo.citizensnpcs.co/</url>
         </repository>
         <repository>
             <id>papi-repo</id>
             <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
-        </repository>
-        <repository>
-            <id>bintray-tastybento-maven-repo</id>
-            <name>bintray</name>
-            <url>http://dl.bintray.com/tastybento/maven-repo</url>
         </repository>
         <repository>
             <id>plajerlair-repo</id>
@@ -92,12 +83,6 @@
             <version>0.3.2</version>
         </dependency>
         <dependency>
-            <groupId>net.ess3</groupId>
-            <artifactId>EssentialsX</artifactId>
-            <version>2.0.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>net.citizensnpcs</groupId>
             <artifactId>citizensapi</artifactId>
             <version>2.0.18-SNAPSHOT</version>
@@ -113,12 +98,6 @@
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
             <version>2.8.6</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.wasteofplastic</groupId>
-            <artifactId>askyblock</artifactId>
-            <version>3.0.8.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
