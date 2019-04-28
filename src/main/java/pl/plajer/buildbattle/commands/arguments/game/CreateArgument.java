@@ -34,8 +34,8 @@ import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
 import pl.plajer.buildbattle.commands.arguments.data.LabelData;
 import pl.plajer.buildbattle.commands.arguments.data.LabeledCommandArgument;
 import pl.plajer.buildbattle.handlers.setup.SetupInventory;
-import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.LocationUtils;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 
 /**
  * @author Plajer
@@ -85,8 +85,8 @@ public class CreateArgument {
   private void createInstanceInConfig(String id) {
     String path = "instances." + id + ".";
     FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
-    LocationUtils.saveLoc(registry.getPlugin(), config, "arenas", path + "lobbylocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
-    LocationUtils.saveLoc(registry.getPlugin(), config, "arenas", path + "Endlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "lobbylocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "Endlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
     config.set(path + "minimumplayers", 2);
     config.set(path + "maximumplayers", 4);
     config.set(path + "mapname", id);
@@ -101,8 +101,8 @@ public class CreateArgument {
     arena.setMinimumPlayers(config.getInt(path + "minimumplayers"));
     arena.setMaximumPlayers(config.getInt(path + "maximumplayers"));
     arena.setMapName(config.getString(path + "mapname"));
-    arena.setLobbyLocation(LocationUtils.getLocation(config.getString(path + "lobbylocation")));
-    arena.setEndLocation(LocationUtils.getLocation(config.getString(path + "Endlocation")));
+    arena.setLobbyLocation(LocationSerializer.getLocation(config.getString(path + "lobbylocation")));
+    arena.setEndLocation(LocationSerializer.getLocation(config.getString(path + "Endlocation")));
     arena.setArenaType(BaseArena.ArenaType.SOLO);
     arena.setReady(false);
     arena.initPoll();

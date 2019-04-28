@@ -46,8 +46,8 @@ import pl.plajer.buildbattle.menus.themevoter.VoteMenu;
 import pl.plajer.buildbattle.menus.themevoter.VotePoll;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.utils.MessageUtils;
-import pl.plajerlair.core.utils.InventoryUtils;
-import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
+import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 
 /**
  * @author Plajer
@@ -277,7 +277,7 @@ public class SoloArena extends BaseArena {
         setVoting(false);
         setThemeTimerSet(false);
         for (Player player : getPlayers()) {
-          MinigameUtils.spawnRandomFirework(player.getLocation());
+          MiscUtils.spawnRandomFirework(player.getLocation());
           ArenaUtils.showPlayers(this);
         }
         if (getTimer() <= 0) {
@@ -293,7 +293,7 @@ public class SoloArena extends BaseArena {
             player.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("Commands.Teleported-To-The-Lobby"));
             getPlugin().getUserManager().getUser(player).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
             if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-              InventoryUtils.loadInventory(getPlugin(), player);
+              InventorySerializer.loadInventory(getPlugin(), player);
             }
             //plot might be already deleted by team mate in TEAM game mode
             if (getPlotManager().getPlot(player) != null) {
@@ -461,7 +461,7 @@ public class SoloArena extends BaseArena {
       }
       formattedSummary.add(message);
     }
-    getPlayers().forEach((player) -> formattedSummary.forEach((msg) -> MinigameUtils.sendCenteredMessage(player, msg)));
+    getPlayers().forEach((player) -> formattedSummary.forEach((msg) -> MiscUtils.sendCenteredMessage(player, msg)));
     for (int rang : topList.keySet()) {
       if (topList.get(rang) != null) {
         for (Player p : topList.get(rang)) {

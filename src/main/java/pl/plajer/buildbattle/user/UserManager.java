@@ -31,8 +31,7 @@ import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.user.data.FileStats;
 import pl.plajer.buildbattle.user.data.MySQLManager;
 import pl.plajer.buildbattle.user.data.UserDatabase;
-import pl.plajerlair.core.debug.Debugger;
-import pl.plajerlair.core.debug.LogLevel;
+import pl.plajer.buildbattle.utils.Debugger;
 
 /**
  * Created by Tom on 27/07/2014.
@@ -71,7 +70,7 @@ public class UserManager {
         return user;
       }
     }
-    Debugger.debug(LogLevel.INFO, "Registering new user with UUID: " + player.getUniqueId() + " (" + player.getName() + ")");
+    Debugger.debug(Debugger.Level.INFO, "Registering new user with UUID: " + player.getUniqueId() + " (" + player.getName() + ")");
     User user = new User(player);
     users.add(user);
     return user;

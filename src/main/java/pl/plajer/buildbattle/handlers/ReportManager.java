@@ -24,4 +24,5 @@ package pl.plajer.buildbattle.handlers;
  * Created at 22.11.2018
  */
 public class ReportManager {
+  //todo
 }

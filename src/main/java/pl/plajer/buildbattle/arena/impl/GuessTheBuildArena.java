@@ -33,7 +33,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
@@ -50,9 +49,9 @@ import pl.plajer.buildbattle.menus.themevoter.GTBTheme;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.utils.MessageUtils;
 import pl.plajer.buildbattle.utils.Utils;
-import pl.plajerlair.core.utils.InventoryUtils;
-import pl.plajerlair.core.utils.ItemBuilder;
-import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
+import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 
 /**
  * @author Plajer
@@ -165,19 +164,21 @@ public class GuessTheBuildArena extends BaseArena {
           Random r = new Random();
 
           Inventory inv = Bukkit.createInventory(null, 27, getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Inventory-Name"));
-          inv.setItem(11, new ItemBuilder(new ItemStack(Material.PAPER)).name(getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Name")
+          inv.setItem(11, new ItemBuilder(Material.PAPER).name(getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Name")
               .replace("%theme%", getPlugin().getConfigPreferences().getThemes("Guess-The-Build_EASY")
                   .get(r.nextInt(getPlugin().getConfigPreferences().getThemes("Guess-The-Build_EASY").size()))))
               .lore(getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Lore")
                   .replace("%difficulty%", getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Difficulties.Easy"))
                   .replace("%points%", String.valueOf(1)).split(";")).build());
-          inv.setItem(13, new ItemBuilder(new ItemStack(Material.PAPER)).name(getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Name")
+
+          inv.setItem(13, new ItemBuilder(Material.PAPER).name(getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Name")
               .replace("%theme%", getPlugin().getConfigPreferences().getThemes("Guess-The-Build_MEDIUM")
                   .get(r.nextInt(getPlugin().getConfigPreferences().getThemes("Guess-The-Build_MEDIUM").size()))))
               .lore(getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Lore")
                   .replace("%difficulty%", getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Difficulties.Medium"))
                   .replace("%points%", String.valueOf(2)).split(";")).build());
-          inv.setItem(15, new ItemBuilder(new ItemStack(Material.PAPER)).name(getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Name")
+
+          inv.setItem(15, new ItemBuilder(Material.PAPER).name(getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Name")
               .replace("%theme%", getPlugin().getConfigPreferences().getThemes("Guess-The-Build_HARD")
                   .get(r.nextInt(getPlugin().getConfigPreferences().getThemes("Guess-The-Build_HARD").size()))))
               .lore(getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Lore")
@@ -303,7 +304,7 @@ public class GuessTheBuildArena extends BaseArena {
           getPlugin().getServer().setWhitelist(false);
         }
         for (Player player : getPlayers()) {
-          MinigameUtils.spawnRandomFirework(player.getLocation());
+          MiscUtils.spawnRandomFirework(player.getLocation());
           ArenaUtils.showPlayers(this);
         }
         if (getTimer() <= 0) {
@@ -321,7 +322,7 @@ public class GuessTheBuildArena extends BaseArena {
             player.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("Commands.Teleported-To-The-Lobby"));
             getPlugin().getUserManager().getUser(player).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
             if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-              InventoryUtils.loadInventory(getPlugin(), player);
+              InventorySerializer.loadInventory(getPlugin(), player);
             }
             getPlotManager().getPlot(player).fullyResetPlot();
           }

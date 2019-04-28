@@ -30,7 +30,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.buildbattle.Main;
-import pl.plajerlair.core.utils.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
 /**
  * @author Plajer
@@ -48,7 +48,7 @@ public class CuboidSelector implements Listener {
   }
 
   public void giveSelectorWand(Player p) {
-    ItemStack stack = new ItemBuilder(new ItemStack(Material.BLAZE_ROD)).name(plugin.getChatManager().colorRawMessage("&6&lPlot selector")).build();
+    ItemStack stack = new ItemBuilder(Material.BLAZE_ROD).name(plugin.getChatManager().colorRawMessage("&6&lPlot selector")).build();
     p.getInventory().addItem(stack);
 
     p.sendMessage(plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&eYou received plot selector wand!"));

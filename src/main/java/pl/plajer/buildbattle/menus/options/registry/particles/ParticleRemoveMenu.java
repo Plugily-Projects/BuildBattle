@@ -22,20 +22,16 @@ import com.github.stefvanschie.inventoryframework.Gui;
 import com.github.stefvanschie.inventoryframework.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 
-import java.util.ArrayList;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
-import pl.plajerlair.core.utils.ItemBuilder;
-import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
 /**
  * Created by Tom on 24/08/2015.
@@ -54,14 +50,11 @@ public class ParticleRemoveMenu {
     int y = 0;
     for (Location location : buildPlot.getParticles().keySet()) {
       ParticleItem particleItem = plugin.getOptionsRegistry().getParticleRegistry().getItemByEffect(buildPlot.getParticles().get(location));
-      ItemStack itemStack = particleItem.getItemStack();
-      ItemMeta itemMeta = itemStack.getItemMeta();
-      itemMeta.setLore(new ArrayList<>());
-      itemStack.setItemMeta(itemMeta);
-      MinigameUtils.addLore(itemStack, plugin.getChatManager().colorMessage("Menus.Location-Message"));
-      MinigameUtils.addLore(itemStack, ChatColor.GRAY + "  x: " + Math.round(location.getX()));
-      MinigameUtils.addLore(itemStack, ChatColor.GRAY + "  y: " + Math.round(location.getY()));
-      MinigameUtils.addLore(itemStack, ChatColor.GRAY + "  z: " + Math.round(location.getZ()));
+
+      ItemStack itemStack = new ItemBuilder(particleItem.getItemStack()).lore(plugin.getChatManager().colorMessage("Menus.Location-Message"),
+          ChatColor.GRAY + "  x: " + Math.round(location.getX()),
+          ChatColor.GRAY + "  y: " + Math.round(location.getY()),
+          ChatColor.GRAY + "  z: " + Math.round(location.getZ())).build();
       pane.addItem(new GuiItem(itemStack, event -> {
         buildPlot.getParticles().remove(location);
         event.getWhoClicked().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.Particle-Removed"));

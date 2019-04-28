@@ -76,7 +76,7 @@ public class LeaderboardArgument {
             } catch (NullPointerException ex) {
               UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
               if (registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-                ResultSet set = registry.getPlugin().getMySQLDatabase().executeQuery("SELECT name FROM buildbattlestats WHERE UUID='" + current.toString() + "'");
+                ResultSet set = registry.getPlugin().getMysqlDatabase().executeQuery("SELECT name FROM buildbattlestats WHERE UUID='" + current.toString() + "'");
                 try {
                   if (set.next()) {
                     String message = registry.getPlugin().getChatManager().colorMessage("Commands.Statistics.Format");

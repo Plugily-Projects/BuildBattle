@@ -27,8 +27,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
-import pl.plajerlair.core.services.exception.ReportedException;
-import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajerlair.commonsbox.string.StringFormatUtils;
+import pl.plajerlair.services.exception.ReportedException;
 
 /**
  * Created by Tom on 27/07/2014.
@@ -39,6 +39,16 @@ public class ChatManager {
 
   public ChatManager(String prefix) {
     this.prefix = prefix;
+  }
+
+  private static String formatPlaceholders(String message, BaseArena arena) {
+    String returnString = message;
+    returnString = StringUtils.replace(returnString, "%TIME%", Integer.toString(arena.getTimer()));
+    returnString = StringUtils.replace(returnString, "%FORMATTEDTIME%", StringFormatUtils.formatIntoMMSS((arena.getTimer())));
+    returnString = StringUtils.replace(returnString, "%PLAYERSIZE%", Integer.toString(arena.getPlayers().size()));
+    returnString = StringUtils.replace(returnString, "%MAXPLAYERS%", Integer.toString(arena.getMaximumPlayers()));
+    returnString = StringUtils.replace(returnString, "%MINPLAYERS%", Integer.toString(arena.getMinimumPlayers()));
+    return returnString;
   }
 
   /**
@@ -78,16 +88,6 @@ public class ChatManager {
     String returnString = message;
     returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());
     returnString = colorRawMessage(formatPlaceholders(returnString, arena));
-    return returnString;
-  }
-
-  private static String formatPlaceholders(String message, BaseArena arena) {
-    String returnString = message;
-    returnString = StringUtils.replace(returnString, "%TIME%", Integer.toString(arena.getTimer()));
-    returnString = StringUtils.replace(returnString, "%FORMATTEDTIME%", MinigameUtils.formatIntoMMSS((arena.getTimer())));
-    returnString = StringUtils.replace(returnString, "%PLAYERSIZE%", Integer.toString(arena.getPlayers().size()));
-    returnString = StringUtils.replace(returnString, "%MAXPLAYERS%", Integer.toString(arena.getMaximumPlayers()));
-    returnString = StringUtils.replace(returnString, "%MINPLAYERS%", Integer.toString(arena.getMinimumPlayers()));
     return returnString;
   }
 

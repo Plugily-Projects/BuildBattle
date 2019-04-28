@@ -24,14 +24,13 @@ import org.bukkit.WeatherType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.menus.options.MenuOption;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
-import pl.plajerlair.core.utils.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
 /**
  * @author Plajer
@@ -41,7 +40,7 @@ import pl.plajerlair.core.utils.ItemBuilder;
 public class WeatherChangeOption {
 
   public WeatherChangeOption(OptionsRegistry registry) {
-    registry.registerOption(new MenuOption(28, "WEATHER", new ItemBuilder(new ItemStack(Material.BUCKET))
+    registry.registerOption(new MenuOption(28, "WEATHER", new ItemBuilder(Material.BUCKET)
         .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Item-Name"))
         .lore(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Item-Lore"))
         .build(), registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Inventory-Name")) {
@@ -51,8 +50,8 @@ public class WeatherChangeOption {
         e.getWhoClicked().closeInventory();
 
         Inventory weatherInv = Bukkit.createInventory(null, 9, registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Inventory-Name"));
-        weatherInv.addItem(new ItemBuilder(new ItemStack(Material.BUCKET)).name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Clear")).build());
-        weatherInv.addItem(new ItemBuilder(new ItemStack(Material.BUCKET)).name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Downfall")).build());
+        weatherInv.addItem(new ItemBuilder(Material.BUCKET).name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Clear")).build());
+        weatherInv.addItem(new ItemBuilder(Material.BUCKET).name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Downfall")).build());
         e.getWhoClicked().openInventory(weatherInv);
       }
 

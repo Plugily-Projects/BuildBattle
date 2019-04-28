@@ -25,8 +25,7 @@ import org.bukkit.inventory.Inventory;
 import pl.plajer.buildbattle.menus.options.MenuOption;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
 import pl.plajer.buildbattle.utils.Utils;
-import pl.plajerlair.core.utils.ItemBuilder;
-import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
 /**
  * @author Plajer
@@ -46,7 +45,7 @@ public class PlayerHeadsOption {
         e.getWhoClicked().closeInventory();
 
         Inventory inventory = Bukkit.getServer().createInventory(null,
-            MinigameUtils.serializeInt(registry.getPlayerHeadsRegistry().getCategories().size()),
+            Utils.serializeInt(registry.getPlayerHeadsRegistry().getCategories().size()),
             registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Players-Heads.Inventory-Name"));
         for (HeadsCategory categoryItem : registry.getPlayerHeadsRegistry().getCategories().keySet()) {
           inventory.addItem(categoryItem.getItemStack());

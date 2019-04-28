@@ -27,8 +27,7 @@ import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
 import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
-import pl.plajerlair.core.debug.Debugger;
-import pl.plajerlair.core.debug.LogLevel;
+import pl.plajer.buildbattle.utils.Debugger;
 
 /**
  * @author Plajer
@@ -51,11 +50,11 @@ public class LeaveArgument {
           p.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Teleported-To-The-Lobby"));
           if (registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
             registry.getPlugin().getBungeeManager().connectToHub(p);
-            Debugger.debug(LogLevel.INFO, p.getName() + " was teleported to the Hub server");
+            Debugger.debug(Debugger.Level.INFO, p.getName() + " was teleported to the Hub server");
           } else {
             arena.teleportToEndLocation(p);
             ArenaManager.leaveAttempt(p, arena);
-            Debugger.debug(LogLevel.INFO, p.getName() + " has left the arena! He is teleported to the end location.");
+            Debugger.debug(Debugger.Level.INFO, p.getName() + " has left the arena! He is teleported to the end location.");
           }
         }
       }

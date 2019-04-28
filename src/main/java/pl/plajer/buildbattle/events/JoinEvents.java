@@ -29,7 +29,7 @@ import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
-import pl.plajerlair.core.services.update.UpdateChecker;
+import pl.plajer.buildbattle.utils.UpdateChecker;
 
 /**
  * Created by Tom on 10/07/2015.

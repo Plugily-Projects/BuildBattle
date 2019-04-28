@@ -33,9 +33,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
 import pl.plajer.buildbattle.utils.Utils;
-import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.ItemBuilder;
-import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
 /**
  * @author Plajer
@@ -80,7 +79,7 @@ public class PlayerHeadsRegistry {
                 .map((lore) -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()));
         playerHeads.add(stack);
       }
-      Inventory inv = Bukkit.createInventory(null, MinigameUtils.serializeInt(playerHeads.size()),
+      Inventory inv = Bukkit.createInventory(null, Utils.serializeInt(playerHeads.size()),
           plugin.getChatManager().colorRawMessage(config.getString(str + ".menuname")));
       for (ItemStack item : playerHeads) {
         inv.addItem(item);

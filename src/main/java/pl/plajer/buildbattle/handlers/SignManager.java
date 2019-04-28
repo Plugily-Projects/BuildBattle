@@ -43,11 +43,10 @@ import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
-import pl.plajerlair.core.debug.Debugger;
-import pl.plajerlair.core.debug.LogLevel;
-import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.LocationUtils;
-import pl.plajerlair.core.utils.XMaterial;
+import pl.plajer.buildbattle.utils.Debugger;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 
 /**
  * @author Plajer
@@ -162,11 +161,11 @@ public class SignManager implements Listener {
     loadedSigns.clear();
     for (String path : ConfigUtils.getConfig(plugin, "arenas").getConfigurationSection("instances").getKeys(false)) {
       for (String sign : ConfigUtils.getConfig(plugin, "arenas").getStringList("instances." + path + ".signs")) {
-        Location loc = LocationUtils.getLocation(sign);
+        Location loc = LocationSerializer.getLocation(sign);
         if (loc.getBlock().getState() instanceof Sign) {
           loadedSigns.put((Sign) loc.getBlock().getState(), ArenaRegistry.getArena(path));
         } else {
-          Debugger.debug(LogLevel.WARN, "Block at loc " + loc + " for arena " + path + " not a sign");
+          Debugger.debug(Debugger.Level.WARN, "Block at loc " + loc + " for arena " + path + " not a sign");
         }
       }
     }
@@ -177,6 +176,7 @@ public class SignManager implements Listener {
       for (Map.Entry<Sign, BaseArena> entry : loadedSigns.entrySet()) {
         Sign sign = entry.getKey();
         for (int i = 0; i < signLines.size(); i++) {
+          //todo entries
           sign.setLine(i, formatSign(signLines.get(i), entry.getValue()));
         }
         if (plugin.getConfig().getBoolean("Signs-Block-States-Enabled", true)) {

@@ -41,7 +41,7 @@ import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.managers.ScoreboardManager;
 import pl.plajer.buildbattle.arena.managers.plots.PlotManager;
 import pl.plajer.buildbattle.arena.options.ArenaOption;
-import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajerlair.commonsbox.string.StringFormatUtils;
 
 /**
  * @author Plajer
@@ -145,7 +145,7 @@ public class BaseArena extends BukkitRunnable {
   }
 
   public void sendBuildLeftTimeMessage() {
-    String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Time-Left-To-Build").replace("%FORMATTEDTIME%", MinigameUtils.formatIntoMMSS(getTimer()));
+    String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Time-Left-To-Build").replace("%FORMATTEDTIME%", StringFormatUtils.formatIntoMMSS(getTimer()));
     String subtitle = getPlugin().getChatManager().colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", String.valueOf(getTimer()));
     for (Player p : getPlayers()) {
       p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));

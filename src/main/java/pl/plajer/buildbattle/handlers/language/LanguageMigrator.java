@@ -29,8 +29,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.utils.MessageUtils;
-import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.MigratorUtils;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
 
 /**
  * @author Plajer
@@ -63,9 +63,10 @@ public class LanguageMigrator {
     MessageUtils.gonnaMigrate();
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Build Battle is migrating all files to the new file format...");
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Don't worry! Old files will be renamed not overridden!");
-    for (String file : migratable) {
-      if (ConfigUtils.getFile(plugin, file).exists()) {
-        ConfigUtils.getFile(plugin, file).renameTo(new File(plugin.getDataFolder(), "BB2_" + file + ".yml"));
+    for (String fileName : migratable) {
+      File file = new File(plugin.getDataFolder() + File.separator + fileName + ".yml");
+      if (file.exists()) {
+        file.renameTo(new File(plugin.getDataFolder(), "BB2_" + file + ".yml"));
         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Renamed file " + file + ".yml");
       }
     }

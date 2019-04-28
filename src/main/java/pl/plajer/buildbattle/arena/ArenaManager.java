@@ -41,10 +41,9 @@ import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.PermissionManager;
 import pl.plajer.buildbattle.handlers.items.SpecialItem;
 import pl.plajer.buildbattle.user.User;
-import pl.plajerlair.core.debug.Debugger;
-import pl.plajerlair.core.debug.LogLevel;
-import pl.plajerlair.core.utils.InventoryUtils;
-import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajer.buildbattle.utils.Debugger;
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
+import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 
 /**
  * @author Plajer
@@ -65,62 +64,62 @@ public class ArenaManager {
    * @see BBGameJoinEvent
    */
   public static void joinAttempt(Player player, BaseArena arena) {
-      Debugger.debug(LogLevel.INFO, "Initial join attempt, " + player.getName());
-      BBGameJoinEvent bbGameJoinEvent = new BBGameJoinEvent(player, arena);
-      Bukkit.getPluginManager().callEvent(bbGameJoinEvent);
-      if (!arena.isReady()) {
-        player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Arena-Not-Configured"));
+    Debugger.debug(Debugger.Level.INFO, "Initial join attempt, " + player.getName());
+    BBGameJoinEvent bbGameJoinEvent = new BBGameJoinEvent(player, arena);
+    Bukkit.getPluginManager().callEvent(bbGameJoinEvent);
+    if (!arena.isReady()) {
+      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Arena-Not-Configured"));
+      return;
+    }
+    if (bbGameJoinEvent.isCancelled()) {
+      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Join-Cancelled-Via-API"));
+      return;
+    }
+    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+      if (!(player.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", "*")) || player.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", arena.getID())))) {
+        player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Join-No-Permission"));
         return;
       }
-      if (bbGameJoinEvent.isCancelled()) {
-        player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Join-Cancelled-Via-API"));
-        return;
-      }
-      if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-        if (!(player.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", "*")) || player.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", arena.getID())))) {
-          player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Join-No-Permission"));
-          return;
-        }
-      }
-      if (ArenaRegistry.getArena(player) != null) {
-        player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Messages.Already-Playing"));
-        return;
-      }
-      if ((arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING)) {
-        player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Arena-Started"));
-        return;
-      }
-      if (arena.getPlayers().size() == arena.getMaximumPlayers()) {
-        player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Arena-Is-Full"));
-        return;
-      }
-      Debugger.debug(LogLevel.INFO, "Final join attempt, " + player.getName());
-      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-        InventoryUtils.saveInventoryToFile(plugin, player);
-      }
+    }
+    if (ArenaRegistry.getArena(player) != null) {
+      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Messages.Already-Playing"));
+      return;
+    }
+    if ((arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING)) {
+      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Arena-Started"));
+      return;
+    }
+    if (arena.getPlayers().size() == arena.getMaximumPlayers()) {
+      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Arena-Is-Full"));
+      return;
+    }
+    Debugger.debug(Debugger.Level.INFO, "Final join attempt, " + player.getName());
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+      InventorySerializer.saveInventoryToFile(plugin, player);
+    }
     arena.doBarAction(BaseArena.BarAction.ADD, player);
-      arena.teleportToLobby(player);
-      arena.addPlayer(player);
-      player.setExp(1);
-      player.setLevel(0);
-      player.setHealth(20.0);
-      player.setFoodLevel(20);
-      player.getInventory().setArmorContents(new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
-      player.getInventory().clear();
-      ArenaUtils.showPlayers(arena);
-      plugin.getChatManager().broadcastAction(arena, player, ChatManager.ActionType.JOIN);
-      player.updateInventory();
-      for (Player p : arena.getPlayers()) {
-        ArenaUtils.showPlayer(arena, p);
+    arena.teleportToLobby(player);
+    arena.addPlayer(player);
+    player.setExp(1);
+    player.setLevel(0);
+    player.setHealth(20.0);
+    player.setFoodLevel(20);
+    player.getInventory().setArmorContents(new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
+    player.getInventory().clear();
+    ArenaUtils.showPlayers(arena);
+    plugin.getChatManager().broadcastAction(arena, player, ChatManager.ActionType.JOIN);
+    player.updateInventory();
+    for (Player p : arena.getPlayers()) {
+      ArenaUtils.showPlayer(arena, p);
+    }
+    for (Player p : plugin.getServer().getOnlinePlayers()) {
+      if (!arena.getPlayers().contains(player)) {
+        player.hidePlayer(p);
+        p.hidePlayer(player);
       }
-      for (Player p : plugin.getServer().getOnlinePlayers()) {
-        if (!arena.getPlayers().contains(player)) {
-          player.hidePlayer(p);
-          p.hidePlayer(player);
-        }
-      }
-      SpecialItem leaveItem = plugin.getSpecialItemsRegistry().getSpecialItem("Leave");
-      player.getInventory().setItem(leaveItem.getSlot(), leaveItem.getItemStack());
+    }
+    SpecialItem leaveItem = plugin.getSpecialItemsRegistry().getSpecialItem("Leave");
+    player.getInventory().setItem(leaveItem.getSlot(), leaveItem.getItemStack());
   }
 
   /**
@@ -132,58 +131,58 @@ public class ArenaManager {
    * @see BBGameLeaveEvent
    */
   public static void leaveAttempt(Player player, BaseArena arena) {
-      Debugger.debug(LogLevel.INFO, "Initial leave attempt, " + player.getName());
-      BBGameLeaveEvent bbGameLeaveEvent = new BBGameLeaveEvent(player, arena);
-      Bukkit.getPluginManager().callEvent(bbGameLeaveEvent);
-      if (arena instanceof SoloArena) {
-        ((SoloArena) arena).getQueue().remove(player);
-      }
-      User user = plugin.getUserManager().getUser(player);
-      if (arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
-        user.addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
-      }
-      //todo maybe not
-      user.setStat(StatsStorage.StatisticType.LOCAL_GUESS_THE_BUILD_POINTS, 0);
-      arena.teleportToEndLocation(player);
-      arena.removePlayer(player);
-      plugin.getChatManager().broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
-      user.removeScoreboard();
-      if (arena.getPlotManager().getPlot(player) != null) {
-        arena.getPlotManager().getPlot(player).fullyResetPlot();
-      }
+    Debugger.debug(Debugger.Level.INFO, "Initial leave attempt, " + player.getName());
+    BBGameLeaveEvent bbGameLeaveEvent = new BBGameLeaveEvent(player, arena);
+    Bukkit.getPluginManager().callEvent(bbGameLeaveEvent);
+    if (arena instanceof SoloArena) {
+      ((SoloArena) arena).getQueue().remove(player);
+    }
+    User user = plugin.getUserManager().getUser(player);
+    if (arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
+      user.addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
+    }
+    //todo maybe not
+    user.setStat(StatsStorage.StatisticType.LOCAL_GUESS_THE_BUILD_POINTS, 0);
+    arena.teleportToEndLocation(player);
+    arena.removePlayer(player);
+    plugin.getChatManager().broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
+    user.removeScoreboard();
+    if (arena.getPlotManager().getPlot(player) != null) {
+      arena.getPlotManager().getPlot(player).fullyResetPlot();
+    }
     if (arena instanceof GuessTheBuildArena) {
       ((GuessTheBuildArena) arena).getWhoGuessed().remove(player);
     }
 
-      player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
-      player.setExp(0);
-      player.setLevel(0);
-      player.setFoodLevel(20);
-      player.setFlying(false);
-      player.setAllowFlight(false);
-      player.resetPlayerWeather();
-      player.resetPlayerTime();
+    player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
+    player.setExp(0);
+    player.setLevel(0);
+    player.setFoodLevel(20);
+    player.setFlying(false);
+    player.setAllowFlight(false);
+    player.resetPlayerWeather();
+    player.resetPlayerTime();
     arena.doBarAction(BaseArena.BarAction.REMOVE, player);
-      player.getInventory().setArmorContents(null);
-      player.getInventory().clear();
-      for (PotionEffect effect : player.getActivePotionEffects()) {
-        player.removePotionEffect(effect.getType());
+    player.getInventory().setArmorContents(null);
+    player.getInventory().clear();
+    for (PotionEffect effect : player.getActivePotionEffects()) {
+      player.removePotionEffect(effect.getType());
+    }
+    player.setFireTicks(0);
+    if (arena.getPlayers().size() == 0 && arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS) {
+      arena.setArenaState(ArenaState.RESTARTING);
+      arena.setTimer(0);
+    }
+    player.setGameMode(GameMode.SURVIVAL);
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+      InventorySerializer.loadInventory(plugin, player);
+    }
+    for (Player players : plugin.getServer().getOnlinePlayers()) {
+      if (ArenaRegistry.getArena(players) == null) {
+        players.showPlayer(player);
       }
-      player.setFireTicks(0);
-      if (arena.getPlayers().size() == 0 && arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS) {
-        arena.setArenaState(ArenaState.RESTARTING);
-        arena.setTimer(0);
-      }
-      player.setGameMode(GameMode.SURVIVAL);
-      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-        InventoryUtils.loadInventory(plugin, player);
-      }
-      for (Player players : plugin.getServer().getOnlinePlayers()) {
-        if (ArenaRegistry.getArena(players) == null) {
-          players.showPlayer(player);
-        }
-        player.showPlayer(players);
-      }
+      player.showPlayer(players);
+    }
   }
 
   /**
@@ -194,34 +193,34 @@ public class ArenaManager {
    * @see BBGameEndEvent
    */
   public static void stopGame(boolean quickStop, BaseArena arena) {
-      Debugger.debug(LogLevel.INFO, "Game stop event initiate, arena " + arena.getID());
-      BBGameEndEvent gameEndEvent = new BBGameEndEvent(arena);
-      Bukkit.getPluginManager().callEvent(gameEndEvent);
-      for (Player p : arena.getPlayers()) {
-        plugin.getUserManager().getUser(p).removeScoreboard();
-        if (!quickStop && plugin.getConfig().getBoolean("Firework-When-Game-Ends")) {
-          new BukkitRunnable() {
-            int i = 0;
+    Debugger.debug(Debugger.Level.INFO, "Game stop event initiate, arena " + arena.getID());
+    BBGameEndEvent gameEndEvent = new BBGameEndEvent(arena);
+    Bukkit.getPluginManager().callEvent(gameEndEvent);
+    for (Player p : arena.getPlayers()) {
+      plugin.getUserManager().getUser(p).removeScoreboard();
+      if (!quickStop && plugin.getConfig().getBoolean("Firework-When-Game-Ends")) {
+        new BukkitRunnable() {
+          int i = 0;
 
-            public void run() {
-              if (i == 4) {
-                this.cancel();
-              }
-              if (!arena.getPlayers().contains(p)) {
-                this.cancel();
-              }
-              MinigameUtils.spawnRandomFirework(p.getLocation());
-              i++;
+          public void run() {
+            if (i == 4) {
+              this.cancel();
             }
-          }.runTaskTimer(JavaPlugin.getPlugin(Main.class), 30, 30);
-        }
+            if (!arena.getPlayers().contains(p)) {
+              this.cancel();
+            }
+            MiscUtils.spawnRandomFirework(p.getLocation());
+            i++;
+          }
+        }.runTaskTimer(JavaPlugin.getPlugin(Main.class), 30, 30);
       }
-      arena.setArenaState(ArenaState.ENDING);
-      arena.setTimer(10);
-      if (arena instanceof SoloArena) {
-        ((SoloArena) arena).setVoting(false);
-      }
-      Debugger.debug(LogLevel.INFO, "Game stop event finish, arena " + arena.getID());
+    }
+    arena.setArenaState(ArenaState.ENDING);
+    arena.setTimer(10);
+    if (arena instanceof SoloArena) {
+      ((SoloArena) arena).setVoting(false);
+    }
+    Debugger.debug(Debugger.Level.INFO, "Game stop event finish, arena " + arena.getID());
   }
 
 }

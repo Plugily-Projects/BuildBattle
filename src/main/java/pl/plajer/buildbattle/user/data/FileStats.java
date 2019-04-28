@@ -23,7 +23,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.user.User;
-import pl.plajerlair.core.utils.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 
 /**
  * Created by Tom on 17/06/2015.

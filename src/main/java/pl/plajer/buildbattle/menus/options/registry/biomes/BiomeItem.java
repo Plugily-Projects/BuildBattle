@@ -20,7 +20,7 @@ package pl.plajer.buildbattle.menus.options.registry.biomes;
 
 import org.bukkit.inventory.ItemStack;
 
-import pl.plajer.buildbattle.utils.XBiome;
+import pl.plajerlair.commonsbox.minecraft.compat.XBiome;
 
 /**
  * @author Plajer

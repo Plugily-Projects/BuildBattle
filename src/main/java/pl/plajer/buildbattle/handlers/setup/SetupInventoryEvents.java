@@ -34,7 +34,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
@@ -44,11 +43,11 @@ import pl.plajer.buildbattle.arena.impl.SoloArena;
 import pl.plajer.buildbattle.arena.impl.TeamArena;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.handlers.PermissionManager;
-import pl.plajer.buildbattle.utils.Cuboid;
 import pl.plajer.buildbattle.utils.Utils;
-import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.ItemBuilder;
-import pl.plajerlair.core.utils.LocationUtils;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 
 /**
  * Created by Tom on 15/06/2015.
@@ -161,12 +160,13 @@ public class SetupInventoryEvents implements Listener {
         config.set("instances." + arena.getID() + ".signs", locs);
         break;
       case SET_GAME_TYPE:
+        //todo inventory framework
         Inventory inv = Bukkit.createInventory(null, 9, "Game type: " + arena.getID());
-        inv.addItem(new ItemBuilder(new ItemStack(Material.NAME_TAG))
+        inv.addItem(new ItemBuilder(Material.NAME_TAG)
             .name(ChatColor.GREEN + "Solo game mode")
             .lore(ChatColor.GRAY + "1 player per plot")
             .build());
-        inv.addItem(new ItemBuilder(new ItemStack(Material.NAME_TAG))
+        inv.addItem(new ItemBuilder(Material.NAME_TAG)
             .name(ChatColor.GREEN + "Team game mode")
             .lore(ChatColor.GRAY + "2 players per plot")
             .build());
@@ -197,7 +197,8 @@ public class SetupInventoryEvents implements Listener {
         }
         String[] locations = new String[] {"lobbylocation", "Endlocation"};
         for (String s : locations) {
-          if (!config.isSet("instances." + arena.getID() + "." + s) || config.getString("instances." + arena.getID() + "." + s).equals(LocationUtils.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
+          if (!config.isSet("instances." + arena.getID() + "." + s) || config.getString("instances." + arena.getID() + "." + s)
+              .equals(LocationSerializer.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
             e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure following spawn properly: " + s + " (cannot be world spawn location)");
             return;
           }
@@ -212,9 +213,9 @@ public class SetupInventoryEvents implements Listener {
             e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Plots are not configured properly! (missing selection values)");
             return;
           }
-          Location minPoint = LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint"));
+          Location minPoint = LocationSerializer.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint"));
           Plot buildPlot = new Plot(arena, minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ()));
-          buildPlot.setCuboid(new Cuboid(minPoint, LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint"))));
+          buildPlot.setCuboid(new Cuboid(minPoint, LocationSerializer.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint"))));
           buildPlot.fullyResetPlot();
           arena.getPlotManager().addBuildPlot(buildPlot);
         }
@@ -249,14 +250,14 @@ public class SetupInventoryEvents implements Listener {
         arena.setMinimumPlayers(config.getInt("instances." + arena.getID() + ".minimumplayers"));
         arena.setMaximumPlayers(config.getInt("instances." + arena.getID() + ".maximumplayers"));
         arena.setMapName(config.getString("instances." + arena.getID() + ".mapname"));
-        arena.setLobbyLocation(LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".lobbylocation")));
-        arena.setEndLocation(LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".Endlocation")));
+        arena.setLobbyLocation(LocationSerializer.getLocation(config.getString("instances." + arena.getID() + ".lobbylocation")));
+        arena.setEndLocation(LocationSerializer.getLocation(config.getString("instances." + arena.getID() + ".Endlocation")));
         arena.setArenaType(BaseArena.ArenaType.valueOf(config.getString("instances." + arena.getID() + ".gametype").toUpperCase()));
 
         for (String plotName : config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false)) {
-          Location minPoint = LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint"));
+          Location minPoint = LocationSerializer.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint"));
           Plot buildPlot = new Plot(arena, minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ()));
-          buildPlot.setCuboid(new Cuboid(minPoint, LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint"))));
+          buildPlot.setCuboid(new Cuboid(minPoint, LocationSerializer.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint"))));
           buildPlot.fullyResetPlot();
           arena.getPlotManager().addBuildPlot(buildPlot);
         }

@@ -29,11 +29,10 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.buildbattle.Main;
-import pl.plajerlair.core.debug.Debugger;
-import pl.plajerlair.core.debug.LogLevel;
-import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.ItemBuilder;
-import pl.plajerlair.core.utils.XMaterial;
+import pl.plajer.buildbattle.utils.Debugger;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
 /**
  * Created by Tom on 5/02/2016.
@@ -80,7 +79,7 @@ public class SpecialItemsRegistry {
         continue;
       }
       config.set(key + ".material-name", Material.PAPER.toString());
-      Debugger.debug(LogLevel.WARN, "Found outdated item in lobbyitems.yml! We've converted it to the newest version!");
+      Debugger.debug(Debugger.Level.WARN, "Found outdated item in lobbyitems.yml! We've converted it to the newest version!");
     }
     ConfigUtils.saveConfig(plugin, config, "lobbyitems");
   }

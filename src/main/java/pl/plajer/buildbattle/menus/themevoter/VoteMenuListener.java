@@ -127,7 +127,6 @@ public class VoteMenuListener implements Listener {
     if (!e.getInventory().getName().equals(plugin.getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Inventory-Name"))) {
       return;
     }
-    //cancel
     if (!((GuessTheBuildArena) arena).isThemeSet()) {
       Bukkit.getScheduler().runTask(plugin, () -> e.getPlayer().openInventory(e.getInventory()));
     }

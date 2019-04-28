@@ -38,7 +38,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
-import pl.plajerlair.core.utils.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 
 /**
  * Created by Tom on 29/07/2014.
@@ -60,6 +60,23 @@ public class Utils {
       return false;
     }
     return stack.hasItemMeta() && stack.getItemMeta().hasDisplayName();
+  }
+
+  /**
+   * Serialize int to use it in Inventories size
+   * ex. you have 38 kits and it will serialize it to 45 (9*5)
+   * because it is valid inventory size
+   * next ex. you have 55 items and it will serialize it to 63 (9*7) not 54 because it's too less
+   *
+   * @param i integer to serialize
+   * @return serialized number
+   */
+  public static int serializeInt(Integer i) {
+    if ((i % 9) == 0) {
+      return i;
+    } else {
+      return (int) ((Math.ceil(i / 9) * 9) + 9);
+    }
   }
 
   public static ItemStack getSkull(String url) {

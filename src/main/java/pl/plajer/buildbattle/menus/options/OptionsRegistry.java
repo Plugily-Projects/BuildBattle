@@ -37,7 +37,7 @@ import pl.plajer.buildbattle.menus.options.registry.particles.ParticleRegistry;
 import pl.plajer.buildbattle.menus.options.registry.particles.ParticlesOption;
 import pl.plajer.buildbattle.menus.options.registry.playerheads.PlayerHeadsOption;
 import pl.plajer.buildbattle.menus.options.registry.playerheads.PlayerHeadsRegistry;
-import pl.plajerlair.core.utils.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
 /**
  * @author Plajer
@@ -137,7 +137,7 @@ public class OptionsRegistry {
 
   @Deprecated
   public ItemStack getMenuItem() {
-    return new ItemBuilder(new ItemStack(Material.NETHER_STAR))
+    return new ItemBuilder(Material.NETHER_STAR)
         .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item"))
         .lore(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item-Lore")).build();
   }

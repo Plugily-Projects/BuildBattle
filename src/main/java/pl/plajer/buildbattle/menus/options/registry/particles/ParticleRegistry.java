@@ -36,12 +36,11 @@ import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
-import pl.plajerlair.core.debug.Debugger;
-import pl.plajerlair.core.debug.LogLevel;
-import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.ItemBuilder;
-import pl.plajerlair.core.utils.MinigameUtils;
-import pl.plajerlair.core.utils.XMaterial;
+import pl.plajer.buildbattle.utils.Debugger;
+import pl.plajer.buildbattle.utils.Utils;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
 /**
  * @author Plajer
@@ -64,11 +63,11 @@ public class ParticleRegistry {
 
   private void registerParticles() {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "particles");
-    Debugger.debug(LogLevel.TASK, "Registering particles!");
+    Debugger.debug(Debugger.Level.TASK, "Registering particles!");
     int i = 0;
     for (Particle particle : Particle.values()) {
       if (i >= 52) {
-        Debugger.debug(LogLevel.WARN, "There are too many particles to register! Menu can't hold any more!");
+        Debugger.debug(Debugger.Level.WARN, "There are too many particles to register! Menu can't hold any more!");
         break;
       }
       boolean blacklisted = false;
@@ -93,7 +92,7 @@ public class ParticleRegistry {
       registeredParticles.add(particleItem);
       i++;
     }
-    Debugger.debug(LogLevel.INFO, "Registered in total " + i + " particles!");
+    Debugger.debug(Debugger.Level.INFO, "Registered in total " + i + " particles!");
     ConfigUtils.saveConfig(plugin, config, "particles");
   }
 
@@ -109,19 +108,19 @@ public class ParticleRegistry {
       }
       if (!config.isSet(particle.toString() + ".material-name")) {
         config.set(particle.toString() + ".material-name", Material.PAPER.name());
-        Debugger.debug(LogLevel.WARN, "Found outdated item in particles.yml! We've converted it to the newest version!");
+        Debugger.debug(Debugger.Level.WARN, "Found outdated item in particles.yml! We've converted it to the newest version!");
       }
     }
     ConfigUtils.saveConfig(plugin, config, "particles");
   }
 
   private void registerInventory() {
-    Inventory inv = Bukkit.createInventory(null, MinigameUtils.serializeInt(registeredParticles.size()),
+    Inventory inv = Bukkit.createInventory(null, Utils.serializeInt(registeredParticles.size()),
         plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.Inventory-Name"));
     for (ParticleItem item : registeredParticles) {
       inv.addItem(item.getItemStack());
     }
-    inv.setItem(MinigameUtils.serializeInt(registeredParticles.size()) - 1, new ItemBuilder(new ItemStack(Material.REDSTONE_BLOCK))
+    inv.setItem(Utils.serializeInt(registeredParticles.size()) - 1, new ItemBuilder(new ItemStack(Material.REDSTONE_BLOCK))
         .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))
         .lore(Collections.singletonList(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Lore")))
         .build());

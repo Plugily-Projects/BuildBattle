@@ -30,14 +30,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import pl.plajer.buildbattle.Main;
+import pl.plajer.buildbattle.utils.Debugger;
 import pl.plajer.buildbattle.utils.MessageUtils;
-import pl.plajerlair.core.debug.Debugger;
-import pl.plajerlair.core.debug.LogLevel;
-import pl.plajerlair.core.services.ServiceRegistry;
-import pl.plajerlair.core.services.locale.Locale;
-import pl.plajerlair.core.services.locale.LocaleRegistry;
-import pl.plajerlair.core.services.locale.LocaleService;
-import pl.plajerlair.core.utils.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.services.ServiceRegistry;
+import pl.plajerlair.services.locale.Locale;
+import pl.plajerlair.services.locale.LocaleRegistry;
+import pl.plajerlair.services.locale.LocaleService;
 
 /**
  * @author Plajer
@@ -64,21 +63,21 @@ public class LanguageManager {
   }
 
   private static void registerLocales() {
-    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("Chinese (Simplified)", "简体中文", "zh_Hans", "POEditor contributors (Haoting)", Arrays.asList("简体中文", "中文", "chinese", "zh")));
-    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("Czech", "Český", "cs_CZ", "POEditor contributors", Arrays.asList("czech", "cesky", "český", "cs")));
-    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("English", "English", "en_GB", "Plajer", Arrays.asList("default", "english", "en")));
-    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("Estonian", "Eesti", "et_EE", "POEditor contributors (kaimokene)", Arrays.asList("estonian", "eesti", "et")));
-    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("French", "Français", "fr_FR", "POEditor contributors", Arrays.asList("french", "francais", "français", "fr")));
-    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("German", "Deutsch", "de_DE", "Tigerkatze and POEditor contributors", Arrays.asList("deutsch", "german", "de")));
-    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("Hungarian", "Magyar", "hu_HU", "POEditor contributors (montlikadani)", Arrays.asList("hungarian", "magyar", "hu")));
-    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("Indonesian", "Indonesia", "id_ID", "POEditor contributors", Arrays.asList("indonesian", "indonesia", "id")));
-    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("Korean", "한국의", "ko_KR", "POEditor contributors", Arrays.asList("korean", "한국의", "kr")));
-    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("Polish", "Polski", "pl_PL", "Plajer", Arrays.asList("polish", "polski", "pl")));
-    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("Romanian", "Românesc", "ro_RO", "POEditor contributors (Andrei)", Arrays.asList("romanian", "romanesc", "românesc", "ro")));
-    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("Russian", "Pусский", "ru_RU", "POEditor contributors (Mrake)", Arrays.asList("russian", "russkiy", "pусский", "ru")));
-    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("Spanish", "Español", "es_ES", "POEditor contributors", Arrays.asList("spanish", "espanol", "español", "es")));
-    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("Turkish", "Türk", "tr_TR", "POEditor contributors", Arrays.asList("turkish", "turk", "türk", "tr")));
-    LocaleRegistry.registerLocale(new pl.plajerlair.core.services.locale.Locale("Vietnamese", "Việt", "vn_VN", "POEditor contributors (HStreamGamer)", Arrays.asList("vietnamese", "viet", "việt", "vn")));
+    LocaleRegistry.registerLocale(new Locale("Chinese (Simplified)", "简体中文", "zh_Hans", "POEditor contributors (Haoting)", Arrays.asList("简体中文", "中文", "chinese", "zh")));
+    LocaleRegistry.registerLocale(new Locale("Czech", "Český", "cs_CZ", "POEditor contributors", Arrays.asList("czech", "cesky", "český", "cs")));
+    LocaleRegistry.registerLocale(new Locale("English", "English", "en_GB", "Plajer", Arrays.asList("default", "english", "en")));
+    LocaleRegistry.registerLocale(new Locale("Estonian", "Eesti", "et_EE", "POEditor contributors (kaimokene)", Arrays.asList("estonian", "eesti", "et")));
+    LocaleRegistry.registerLocale(new Locale("French", "Français", "fr_FR", "POEditor contributors", Arrays.asList("french", "francais", "français", "fr")));
+    LocaleRegistry.registerLocale(new Locale("German", "Deutsch", "de_DE", "Tigerkatze and POEditor contributors", Arrays.asList("deutsch", "german", "de")));
+    LocaleRegistry.registerLocale(new Locale("Hungarian", "Magyar", "hu_HU", "POEditor contributors (montlikadani)", Arrays.asList("hungarian", "magyar", "hu")));
+    LocaleRegistry.registerLocale(new Locale("Indonesian", "Indonesia", "id_ID", "POEditor contributors", Arrays.asList("indonesian", "indonesia", "id")));
+    LocaleRegistry.registerLocale(new Locale("Korean", "한국의", "ko_KR", "POEditor contributors", Arrays.asList("korean", "한국의", "kr")));
+    LocaleRegistry.registerLocale(new Locale("Polish", "Polski", "pl_PL", "Plajer", Arrays.asList("polish", "polski", "pl")));
+    LocaleRegistry.registerLocale(new Locale("Romanian", "Românesc", "ro_RO", "POEditor contributors (Andrei)", Arrays.asList("romanian", "romanesc", "românesc", "ro")));
+    LocaleRegistry.registerLocale(new Locale("Russian", "Pусский", "ru_RU", "POEditor contributors (Mrake)", Arrays.asList("russian", "russkiy", "pусский", "ru")));
+    LocaleRegistry.registerLocale(new Locale("Spanish", "Español", "es_ES", "POEditor contributors", Arrays.asList("spanish", "espanol", "español", "es")));
+    LocaleRegistry.registerLocale(new Locale("Turkish", "Türk", "tr_TR", "POEditor contributors", Arrays.asList("turkish", "turk", "türk", "tr")));
+    LocaleRegistry.registerLocale(new Locale("Vietnamese", "Việt", "vn_VN", "POEditor contributors (HStreamGamer)", Arrays.asList("vietnamese", "viet", "việt", "vn")));
   }
 
   private static void loadProperties() {
@@ -153,7 +152,7 @@ public class LanguageManager {
     if (isDefaultLanguageUsed()) {
       //error
       if (languageConfig.getString(message, "ERR_MESSAGE_NOT_FOUND").equals("ERR_MESSAGE_NOT_FOUND")) {
-        Debugger.debug(LogLevel.WARN, "No message found for string accessor: " + message);
+        Debugger.debug(Debugger.Level.WARN, "No message found for string accessor: " + message);
       }
       return languageConfig.getString(message, "ERR_MESSAGE_NOT_FOUND");
     }

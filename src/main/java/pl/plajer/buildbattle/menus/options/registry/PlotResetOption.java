@@ -21,14 +21,13 @@ package pl.plajer.buildbattle.menus.options.registry;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.menus.options.MenuOption;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
-import pl.plajerlair.core.utils.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
 /**
  * @author Plajer
@@ -38,7 +37,7 @@ import pl.plajerlair.core.utils.ItemBuilder;
 public class PlotResetOption {
 
   public PlotResetOption(OptionsRegistry registry) {
-    registry.registerOption(new MenuOption(34, "RESET", new ItemBuilder(new ItemStack(Material.BARRIER))
+    registry.registerOption(new MenuOption(34, "RESET", new ItemBuilder(Material.BARRIER)
         .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Reset.Item-Name"))
         .lore(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Reset.Item-Lore"))
         .build()) {

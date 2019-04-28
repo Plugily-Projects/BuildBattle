@@ -60,7 +60,7 @@ import pl.plajer.buildbattle.commands.arguments.game.LeaderboardArgument;
 import pl.plajer.buildbattle.commands.arguments.game.LeaveArgument;
 import pl.plajer.buildbattle.commands.arguments.game.StatsArgument;
 import pl.plajer.buildbattle.handlers.setup.SetupInventory;
-import pl.plajerlair.core.utils.StringMatcher;
+import pl.plajerlair.commonsbox.string.StringMatcher;
 
 /**
  * @author Plajer
@@ -104,100 +104,101 @@ public class ArgumentsRegistry implements CommandExecutor {
     new ListArenasArgument(this);
   }
 
+  //todo complex
   @Override
   public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-      for (String mainCommand : mappedArguments.keySet()) {
-        if (cmd.getName().equalsIgnoreCase(mainCommand)) {
-          if (cmd.getName().equalsIgnoreCase("buildbattle")) {
-            if (args.length == 0) {
-              sender.sendMessage(plugin.getChatManager().colorMessage("Commands.Main-Command.Header"));
-              sender.sendMessage(plugin.getChatManager().colorMessage("Commands.Main-Command.Description"));
-              if (sender.hasPermission("buildbattle.admin")) {
-                sender.sendMessage(plugin.getChatManager().colorMessage("Commands.Main-Command.Admin-Bonus-Description"));
+    for (String mainCommand : mappedArguments.keySet()) {
+      if (cmd.getName().equalsIgnoreCase(mainCommand)) {
+        if (cmd.getName().equalsIgnoreCase("buildbattle")) {
+          if (args.length == 0) {
+            sender.sendMessage(plugin.getChatManager().colorMessage("Commands.Main-Command.Header"));
+            sender.sendMessage(plugin.getChatManager().colorMessage("Commands.Main-Command.Description"));
+            if (sender.hasPermission("buildbattle.admin")) {
+              sender.sendMessage(plugin.getChatManager().colorMessage("Commands.Main-Command.Admin-Bonus-Description"));
+            }
+            sender.sendMessage(plugin.getChatManager().colorMessage("Commands.Main-Command.Footer"));
+            return true;
+          }
+          if (args.length > 1 && args[1].equalsIgnoreCase("edit")) {
+            if (args[1].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("create")) {
+              if (!checkSenderIsExecutorType(sender, CommandArgument.ExecutorType.PLAYER) || !hasPermission(sender, "buildbattle.admin.create")) {
+                return true;
               }
-              sender.sendMessage(plugin.getChatManager().colorMessage("Commands.Main-Command.Footer"));
+              BaseArena arena = ArenaRegistry.getArena(args[0]);
+              if (arena == null) {
+                sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.No-Arena-Like-That"));
+                return true;
+              }
+
+              SetupInventory.sendProTip((Player) sender);
+              new SetupInventory(arena).openInventory((Player) sender);
               return true;
             }
-            if (args.length > 1 && args[1].equalsIgnoreCase("edit")) {
-              if (args[1].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("create")) {
-                if (!checkSenderIsExecutorType(sender, CommandArgument.ExecutorType.PLAYER) || !hasPermission(sender, "buildbattle.admin.create")) {
-                  return true;
-                }
-                BaseArena arena = ArenaRegistry.getArena(args[0]);
-                if (arena == null) {
-                  sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.No-Arena-Like-That"));
-                  return true;
-                }
-
-                SetupInventory.sendProTip((Player) sender);
-                new SetupInventory(arena).openInventory((Player) sender);
-                return true;
-              }
-            }
           }
-          if (cmd.getName().equalsIgnoreCase("buildbattleadmin")) {
-            if (args.length == 0) {
-              if (!sender.hasPermission("buildbattle.admin")) {
-                return true;
-              }
-              sender.sendMessage(ChatColor.GREEN + "  " + ChatColor.BOLD + "Build Battle " + ChatColor.GRAY + plugin.getDescription().getVersion());
-              sender.sendMessage(ChatColor.RED + " []" + ChatColor.GRAY + " = optional  " + ChatColor.GOLD + "<>" + ChatColor.GRAY + " = required");
+        }
+        if (cmd.getName().equalsIgnoreCase("buildbattleadmin")) {
+          if (args.length == 0) {
+            if (!sender.hasPermission("buildbattle.admin")) {
+              return true;
+            }
+            sender.sendMessage(ChatColor.GREEN + "  " + ChatColor.BOLD + "Build Battle " + ChatColor.GRAY + plugin.getDescription().getVersion());
+            sender.sendMessage(ChatColor.RED + " []" + ChatColor.GRAY + " = optional  " + ChatColor.GOLD + "<>" + ChatColor.GRAY + " = required");
+            if (sender instanceof Player) {
+              sender.sendMessage(ChatColor.GRAY + "Hover command to see more, click command to suggest it.");
+            }
+            List<LabelData> data = mappedArguments.get("buildbattleadmin").stream().filter(arg -> arg instanceof LabeledCommandArgument)
+                .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList());
+            data.add(new LabelData("/bb &6<arena>&f edit", "/bb <arena> edit",
+                "&7Edit existing arena\n&6Permission: &7buildbattle.admin.edit"));
+            data.addAll(mappedArguments.get("buildbattle").stream().filter(arg -> arg instanceof LabeledCommandArgument)
+                .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList()));
+            for (LabelData labelData : data) {
+              TextComponent component;
               if (sender instanceof Player) {
-                sender.sendMessage(ChatColor.GRAY + "Hover command to see more, click command to suggest it.");
+                component = new TextComponent(labelData.getText());
+              } else {
+                //more descriptive for console - split at \n to show only basic description
+                component = new TextComponent(labelData.getText() + " - " + labelData.getDescription().split("\n")[0]);
               }
-              List<LabelData> data = mappedArguments.get("buildbattleadmin").stream().filter(arg -> arg instanceof LabeledCommandArgument)
-                  .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList());
-              data.add(new LabelData("/bb &6<arena>&f edit", "/bb <arena> edit",
-                  "&7Edit existing arena\n&6Permission: &7buildbattle.admin.edit"));
-              data.addAll(mappedArguments.get("buildbattle").stream().filter(arg -> arg instanceof LabeledCommandArgument)
-                  .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList()));
-              for (LabelData labelData : data) {
-                TextComponent component;
-                if (sender instanceof Player) {
-                  component = new TextComponent(labelData.getText());
-                } else {
-                  //more descriptive for console - split at \n to show only basic description
-                  component = new TextComponent(labelData.getText() + " - " + labelData.getDescription().split("\n")[0]);
-                }
-                component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, labelData.getCommand()));
-                component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(labelData.getDescription()).create()));
-                sender.spigot().sendMessage(component);
-              }
-              return true;
+              component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, labelData.getCommand()));
+              component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(labelData.getDescription()).create()));
+              sender.spigot().sendMessage(component);
             }
-          }
-          for (CommandArgument argument : mappedArguments.get(mainCommand)) {
-            if (argument.getArgumentName().equalsIgnoreCase(args[0])) {
-              boolean hasPerm = false;
-              for (String perm : argument.getPermissions()) {
-                if (perm.equals("")) {
-                  hasPerm = true;
-                  break;
-                }
-                if (sender.hasPermission(perm)) {
-                  hasPerm = true;
-                  break;
-                }
-              }
-              if (!hasPerm) {
-                return true;
-              }
-              if (checkSenderIsExecutorType(sender, argument.getValidExecutors())) {
-                argument.execute(sender, args);
-              }
-              //return true even if sender is not good executor or hasn't got permission
-              return true;
-            }
-          }
-
-          //sending did you mean help
-          List<StringMatcher.Match> matches = StringMatcher.match(args[0], mappedArguments.get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName).collect(Collectors.toList()));
-          if (!matches.isEmpty()) {
-            sender.sendMessage(plugin.getChatManager().colorMessage("Commands.Did-You-Mean").replace("%command%", label + " " + matches.get(0).getMatch()));
             return true;
           }
         }
+        for (CommandArgument argument : mappedArguments.get(mainCommand)) {
+          if (argument.getArgumentName().equalsIgnoreCase(args[0])) {
+            boolean hasPerm = false;
+            for (String perm : argument.getPermissions()) {
+              if (perm.equals("")) {
+                hasPerm = true;
+                break;
+              }
+              if (sender.hasPermission(perm)) {
+                hasPerm = true;
+                break;
+              }
+            }
+            if (!hasPerm) {
+              return true;
+            }
+            if (checkSenderIsExecutorType(sender, argument.getValidExecutors())) {
+              argument.execute(sender, args);
+            }
+            //return true even if sender is not good executor or hasn't got permission
+            return true;
+          }
+        }
+
+        //sending did you mean help
+        List<StringMatcher.Match> matches = StringMatcher.match(args[0], mappedArguments.get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName).collect(Collectors.toList()));
+        if (!matches.isEmpty()) {
+          sender.sendMessage(plugin.getChatManager().colorMessage("Commands.Did-You-Mean").replace("%command%", label + " " + matches.get(0).getMatch()));
+          return true;
+        }
       }
+    }
     return false;
   }
 

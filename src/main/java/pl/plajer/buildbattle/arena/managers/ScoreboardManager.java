@@ -33,8 +33,8 @@ import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.impl.SoloArena;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
+import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import pl.plajerlair.core.utils.GameScoreboard;
-import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
  * @author Plajer
@@ -132,7 +132,7 @@ public class ScoreboardManager {
     returnString = StringUtils.replace(returnString, "%TIMER%", Integer.toString(arena.getTimer()));
     //todo its the same
     returnString = StringUtils.replace(returnString, "%TIME_LEFT%", Long.toString(arena.getTimer()));
-    returnString = StringUtils.replace(returnString, "%FORMATTED_TIME_LEFT%", MinigameUtils.formatIntoMMSS(arena.getTimer()));
+    returnString = StringUtils.replace(returnString, "%FORMATTED_TIME_LEFT%", StringFormatUtils.formatIntoMMSS(arena.getTimer()));
     returnString = StringUtils.replace(returnString, "%ARENA_ID%", arena.getID());
     returnString = StringUtils.replace(returnString, "%MAPNAME%", arena.getMapName());
     if (!((SoloArena) arena).isThemeVoteTime()) {

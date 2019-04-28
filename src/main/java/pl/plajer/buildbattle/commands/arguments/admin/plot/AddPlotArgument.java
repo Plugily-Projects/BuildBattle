@@ -29,8 +29,8 @@ import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
 import pl.plajer.buildbattle.commands.arguments.data.LabelData;
 import pl.plajer.buildbattle.commands.arguments.data.LabeledCommandArgument;
 import pl.plajer.buildbattle.utils.CuboidSelector;
-import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.LocationUtils;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 
 /**
  * @author Plajer
@@ -66,8 +66,8 @@ public class AddPlotArgument {
         if (config.getConfigurationSection("instances." + arena.getID() + ".plots") != null) {
           id = config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false).size() + 1;
         }
-        LocationUtils.saveLoc(registry.getPlugin(), config, "arenas", "instances." + arena.getID() + ".plots." + id + ".minpoint", selection.getFirstPos());
-        LocationUtils.saveLoc(registry.getPlugin(), config, "arenas", "instances." + arena.getID() + ".plots." + id + ".maxpoint", selection.getSecondPos());
+        LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", "instances." + arena.getID() + ".plots." + id + ".minpoint", selection.getFirstPos());
+        LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", "instances." + arena.getID() + ".plots." + id + ".maxpoint", selection.getSecondPos());
         player.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorRawMessage("&aPlot with ID &e" + id + "&a added to arena instance &e" + arena.getID()));
         registry.getPlugin().getCuboidSelector().removeSelection(player);
       }

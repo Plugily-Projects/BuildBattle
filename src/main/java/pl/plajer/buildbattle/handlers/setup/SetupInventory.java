@@ -32,10 +32,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
-import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.ItemBuilder;
-import pl.plajerlair.core.utils.LocationUtils;
-import pl.plajerlair.core.utils.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 
 /**
  * Created by Tom on 15/06/2015.
@@ -49,7 +49,7 @@ public class SetupInventory {
   public SetupInventory(BaseArena arena) {
     this.inventory = Bukkit.createInventory(null, 9 * 2, "BB Arena: " + arena.getID());
 
-    inventory.setItem(ClickPosition.SET_ENDING.getPosition(), new ItemBuilder(new ItemStack(Material.REDSTONE_BLOCK))
+    inventory.setItem(ClickPosition.SET_ENDING.getPosition(), new ItemBuilder(Material.REDSTONE_BLOCK)
         .name(ChatColor.GOLD + "► Set" + ChatColor.RED + " ending " + ChatColor.GOLD + "location")
         .lore(ChatColor.GRAY + "Click to set the ending location")
         .lore(ChatColor.GRAY + "on the place where you are standing.")
@@ -57,18 +57,19 @@ public class SetupInventory {
         .lore(ChatColor.DARK_GRAY + "after the game)")
         .lore(isOptionDoneBool("instances." + arena.getID() + ".Endlocation"))
         .build());
-    inventory.setItem(ClickPosition.SET_LOBBY.getPosition(), new ItemBuilder(new ItemStack(Material.LAPIS_BLOCK))
+    inventory.setItem(ClickPosition.SET_LOBBY.getPosition(), new ItemBuilder(Material.LAPIS_BLOCK)
         .name(ChatColor.GOLD + "► Set" + ChatColor.WHITE + " lobby " + ChatColor.GOLD + "location")
         .lore(ChatColor.GRAY + "Click to set the lobby location")
         .lore(ChatColor.GRAY + "on the place where you are standing")
         .lore(isOptionDoneBool("instances." + arena.getID() + ".lobbylocation"))
         .build());
 
-    int min = ConfigUtils.getConfig(plugin, "arenas").getInt("instances." + arena.getID() + ".minimumplayers");
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+    int min = config.getInt("instances." + arena.getID() + ".minimumplayers");
     if (min == 0) {
       min = 1;
     }
-    inventory.setItem(ClickPosition.SET_MINIMUM_PLAYERS.getPosition(), new ItemBuilder(new ItemStack(Material.COAL, min))
+    inventory.setItem(ClickPosition.SET_MINIMUM_PLAYERS.getPosition(), new ItemBuilder(Material.COAL).amount(min)
         .name(ChatColor.GOLD + "► Set" + ChatColor.DARK_GREEN + " minimum players " + ChatColor.GOLD + "size")
         .lore(ChatColor.GRAY + "LEFT click to decrease")
         .lore(ChatColor.GRAY + "RIGHT click to increase")
@@ -77,11 +78,11 @@ public class SetupInventory {
         .lore(ChatColor.RED + "Set it minimum 3 when using TEAM game type!!!")
         .lore(isOptionDone("instances." + arena.getID() + ".minimumplayers"))
         .build());
-    int max = ConfigUtils.getConfig(plugin, "arenas").getInt("instances." + arena.getID() + ".maximumplayers");
+    int max = config.getInt("instances." + arena.getID() + ".maximumplayers");
     if (max == 0) {
       max = 1;
     }
-    inventory.setItem(ClickPosition.SET_MAXIMUM_PLAYERS.getPosition(), new ItemBuilder(new ItemStack(Material.REDSTONE, max))
+    inventory.setItem(ClickPosition.SET_MAXIMUM_PLAYERS.getPosition(), new ItemBuilder(Material.REDSTONE).amount(max)
         .name(ChatColor.GOLD + "► Set" + ChatColor.GREEN + " maximum players " + ChatColor.GOLD + "size")
         .lore(ChatColor.GRAY + "LEFT click to decrease")
         .lore(ChatColor.GRAY + "RIGHT click to increase")
@@ -90,7 +91,7 @@ public class SetupInventory {
         .build());
 
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-      inventory.setItem(ClickPosition.ADD_SIGN.getPosition(), new ItemBuilder(new ItemStack(Material.SIGN))
+      inventory.setItem(ClickPosition.ADD_SIGN.getPosition(), new ItemBuilder(Material.SIGN)
           .name(ChatColor.GOLD + "► Add game" + ChatColor.AQUA + " sign")
           .lore(ChatColor.GRAY + "Target a sign and click this.")
           .lore(ChatColor.DARK_GRAY + "(this will set target sign as game sign)")
@@ -105,14 +106,14 @@ public class SetupInventory {
         .lore(ChatColor.GRAY + "TEAM - 2 players per plot")
         .lore(isOptionDone("instances." + arena.getID() + ".gametype"))
         .build());
-    inventory.setItem(ClickPosition.SET_MAP_NAME.getPosition(), new ItemBuilder(new ItemStack(Material.NAME_TAG))
+    inventory.setItem(ClickPosition.SET_MAP_NAME.getPosition(), new ItemBuilder(Material.NAME_TAG)
         .name(ChatColor.GOLD + "► Set" + ChatColor.RED + " map name " + ChatColor.GOLD + "(currently: " + arena.getMapName() + ")")
         .lore(ChatColor.GRAY + "Replace this name tag with named name tag.")
         .lore(ChatColor.GRAY + "It will be set as arena name.")
         .lore(ChatColor.RED + "" + ChatColor.BOLD + "Drop name tag here don't move")
         .lore(ChatColor.RED + "" + ChatColor.BOLD + "it and replace with new!!!")
         .build());
-    inventory.setItem(ClickPosition.ADD_GAME_PLOT.getPosition(), new ItemBuilder(new ItemStack(Material.BARRIER))
+    inventory.setItem(ClickPosition.ADD_GAME_PLOT.getPosition(), new ItemBuilder(Material.BARRIER)
         .name(ChatColor.GOLD + "► Add game plot")
         .lore(ChatColor.GRAY + "Select your plot with our built-in")
         .lore(ChatColor.GRAY + "selector (select minimum and maximum")
@@ -122,7 +123,7 @@ public class SetupInventory {
         .lore(ChatColor.GREEN + "PLEASE SELECT FLOOR TOO!")
         .lore(isOptionDoneList("instances." + arena.getID() + ".plots"))
         .build());
-    inventory.setItem(ClickPosition.ADD_FLOOR_CHANGER_NPC.getPosition(), new ItemBuilder(new ItemStack(Material.GRASS))
+    inventory.setItem(ClickPosition.ADD_FLOOR_CHANGER_NPC.getPosition(), new ItemBuilder(Material.GRASS)
         .name(ChatColor.GOLD + "► Add floor changer NPC")
         .lore(ChatColor.GRAY + "Add floor changer NPC to your plot.")
         .lore(ChatColor.RED + "Requires Citizens plugin!")
@@ -189,7 +190,7 @@ public class SetupInventory {
     if (!config.isSet(path)) {
       return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.RED + "No";
     }
-    if (Bukkit.getServer().getWorlds().get(0).getSpawnLocation().equals(LocationUtils.getLocation(config.getString(path)))) {
+    if (Bukkit.getServer().getWorlds().get(0).getSpawnLocation().equals(LocationSerializer.getLocation(config.getString(path)))) {
       return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.RED + "No";
     }
     return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.GREEN + "Yes";

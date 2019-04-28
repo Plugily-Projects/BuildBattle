@@ -31,6 +31,7 @@ import pl.plajer.buildbattle.api.StatsStorage;
  */
 public class PlaceholderManager extends PlaceholderExpansion {
 
+  @Override
   public boolean persist() {
     return true;
   }

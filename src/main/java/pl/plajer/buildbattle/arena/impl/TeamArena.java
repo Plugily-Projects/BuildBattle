@@ -27,9 +27,8 @@ import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.arena.options.ArenaOption;
+import pl.plajer.buildbattle.utils.Debugger;
 import pl.plajer.buildbattle.utils.Partition;
-import pl.plajerlair.core.debug.Debugger;
-import pl.plajerlair.core.debug.LogLevel;
 
 /**
  * @author Plajer
@@ -45,7 +44,7 @@ public class TeamArena extends SoloArena {
   @Override
   public void setMinimumPlayers(int amount) {
     if (amount < 2) {
-      Debugger.debug(LogLevel.WARN, "Minimum players amount for TEAM game mode arena cannot be less than 3! Setting amount to 3!");
+      Debugger.debug(Debugger.Level.WARN, "Minimum players amount for TEAM game mode arena cannot be less than 3! Setting amount to 3!");
       setOptionValue(ArenaOption.MINIMUM_PLAYERS, 3);
       return;
     }

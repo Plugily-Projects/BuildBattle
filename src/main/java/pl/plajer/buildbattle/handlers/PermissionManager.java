@@ -21,8 +21,7 @@ package pl.plajer.buildbattle.handlers;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
-import pl.plajerlair.core.debug.Debugger;
-import pl.plajerlair.core.debug.LogLevel;
+import pl.plajer.buildbattle.utils.Debugger;
 
 /**
  * Created by Tom on 14/08/2014.
@@ -56,7 +55,7 @@ public class PermissionManager {
   private static void setupPermissions() {
     setEditGames(plugin.getConfig().getString("Basic-Permissions.Arena-Edit-Permission"));
     setJoinPerm(plugin.getConfig().getString("Basic-Permissions.Join-Permission"));
-    Debugger.debug(LogLevel.INFO, "Basic permissions registered");
+    Debugger.debug(Debugger.Level.INFO, "Basic permissions registered");
   }
 
 }

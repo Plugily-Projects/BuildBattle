@@ -42,17 +42,17 @@ import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.event.plot.BBPlotResetEvent;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.user.User;
-import pl.plajer.buildbattle.utils.Cuboid;
 import pl.plajer.buildbattle.utils.Utils;
-import pl.plajerlair.core.utils.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 
 /**
  * Created by Tom on 17/08/2015.
  */
 public class Plot {
 
+  private static Main plugin = JavaPlugin.getPlugin(Main.class);
   private BaseArena arena;
-  private Main plugin = JavaPlugin.getPlugin(Main.class);
   private Cuboid cuboid;
   private int points;
   private List<Player> owners = new ArrayList<>();
@@ -236,28 +236,28 @@ public class Plot {
   }
 
   public Location getTeleportLocation() {
-      Location tploc = cuboid.getCenter();
+    Location tploc = cuboid.getCenter();
     while (tploc.getBlock().getType() != Material.AIR || tploc.add(0, 1, 0).getBlock().getType() != Material.AIR) {
       tploc = tploc.add(0, 1, 0);
     }
-      boolean enclosed = false;
-      int counter = 0;
-      Location location = tploc.clone();
-      while (counter != 10) {
-        if (!(location.getBlock().getType() == Material.BARRIER || location.getBlock().getType() == Material.AIR)) {
-          enclosed = true;
-          tploc = location;
-          counter = 9;
-        }
-        location.add(0, 1, 0);
-        counter++;
+    boolean enclosed = false;
+    int counter = 0;
+    Location location = tploc.clone();
+    while (counter != 10) {
+      if (!(location.getBlock().getType() == Material.BARRIER || location.getBlock().getType() == Material.AIR)) {
+        enclosed = true;
+        tploc = location;
+        counter = 9;
       }
-      if (enclosed) {
-        while (tploc.getBlock().getType() != Material.AIR || tploc.add(0, 1, 0).getBlock().getType() != Material.AIR) {
-          tploc = tploc.add(0, 1, 0);
-        }
+      location.add(0, 1, 0);
+      counter++;
+    }
+    if (enclosed) {
+      while (tploc.getBlock().getType() != Material.AIR || tploc.add(0, 1, 0).getBlock().getType() != Material.AIR) {
+        tploc = tploc.add(0, 1, 0);
       }
-      return tploc;
+    }
+    return tploc;
   }
 
   /**

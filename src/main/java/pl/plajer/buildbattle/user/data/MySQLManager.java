@@ -20,9 +20,9 @@ package pl.plajer.buildbattle.user.data;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -31,7 +31,7 @@ import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.utils.MessageUtils;
-import pl.plajerlair.core.database.MySQLDatabase;
+import pl.plajerlair.commonsbox.database.MysqlDatabase;
 
 /**
  * @author Plajer
@@ -41,14 +41,13 @@ import pl.plajerlair.core.database.MySQLDatabase;
 public class MySQLManager implements UserDatabase {
 
   private Main plugin;
-  private MySQLDatabase database;
+  private MysqlDatabase database;
 
   public MySQLManager(Main plugin) {
     this.plugin = plugin;
-    database = plugin.getMySQLDatabase();
-    Connection conn = database.getManager().getConnection();
-    try {
-      conn.createStatement().executeUpdate(
+    database = plugin.getMysqlDatabase();
+    try (Statement statement = database.getConnection().createStatement()) {
+      statement.executeUpdate(
           "CREATE TABLE IF NOT EXISTS `buildbattlestats` (\n"
               + "  `UUID` text NOT NULL,\n"
               + "  `name` text NOT NULL,\n"
@@ -63,26 +62,25 @@ public class MySQLManager implements UserDatabase {
 
       //temporary workaround
       try {
-        conn.createStatement().executeUpdate("ALTER TABLE buildbattlestats ADD supervotes int(11) NOT NULL DEFAULT '0'");
+        statement.executeUpdate("ALTER TABLE buildbattlestats ADD supervotes int(11) NOT NULL DEFAULT '0'");
       } catch (MySQLSyntaxErrorException e) {
         if (!e.getMessage().contains("Duplicate column name")) {
           e.printStackTrace();
         }
       }
       try {
-        conn.createStatement().executeUpdate("ALTER TABLE buildbattlestats ADD name text NOT NULL");
+        statement.executeUpdate("ALTER TABLE buildbattlestats ADD name text NOT NULL");
       } catch (MySQLSyntaxErrorException e) {
         if (!e.getMessage().contains("Duplicate column name")) {
           e.printStackTrace();
         }
       }
-      database.getManager().closeConnection(conn);
     } catch (SQLException e) {
       e.printStackTrace();
     }
   }
 
-  public MySQLDatabase getDatabase() {
+  public MysqlDatabase getDatabase() {
     return database;
   }
 

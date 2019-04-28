@@ -36,11 +36,10 @@ import pl.plajer.buildbattle.arena.impl.GuessTheBuildArena;
 import pl.plajer.buildbattle.arena.impl.SoloArena;
 import pl.plajer.buildbattle.arena.impl.TeamArena;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
-import pl.plajer.buildbattle.utils.Cuboid;
-import pl.plajerlair.core.debug.Debugger;
-import pl.plajerlair.core.debug.LogLevel;
-import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.LocationUtils;
+import pl.plajer.buildbattle.utils.Debugger;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
+import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 
 /**
  * Created by Tom on 27/07/2014.
@@ -80,12 +79,12 @@ public class ArenaRegistry {
   }
 
   public static void registerArena(BaseArena arena) {
-    Debugger.debug(LogLevel.INFO, "Registering new game instance, " + arena.getID());
+    Debugger.debug(Debugger.Level.INFO, "Registering new game instance, " + arena.getID());
     arenas.add(arena);
   }
 
   public static void unregisterArena(BaseArena arena) {
-    Debugger.debug(LogLevel.INFO, "Unegistering game instance, " + arena.getID());
+    Debugger.debug(Debugger.Level.INFO, "Unegistering game instance, " + arena.getID());
     arenas.remove(arena);
   }
 
@@ -105,12 +104,12 @@ public class ArenaRegistry {
   }
 
   public static void registerArenas() {
-    Debugger.debug(LogLevel.INFO, "Initial arenas registration");
+    Debugger.debug(Debugger.Level.INFO, "Initial arenas registration");
     ArenaRegistry.getArenas().clear();
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
     ConfigurationSection section = config.getConfigurationSection("instances");
     if (section == null) {
-      Debugger.debug(LogLevel.WARN, "No instances configuration section in arenas.yml, skipping registration process! Was it manually edited?");
+      Debugger.debug(Debugger.Level.WARN, "No instances configuration section in arenas.yml, skipping registration process! Was it manually edited?");
       return;
     }
     for (String id : section.getKeys(false)) {
@@ -153,10 +152,10 @@ public class ArenaRegistry {
         arena.setMapName(config.getString("instances.default.mapname"));
       }
       if (config.contains(s + "lobbylocation")) {
-        arena.setLobbyLocation(LocationUtils.getLocation(config.getString(s + "lobbylocation")));
+        arena.setLobbyLocation(LocationSerializer.getLocation(config.getString(s + "lobbylocation")));
       }
       if (config.contains(s + "Endlocation")) {
-        arena.setEndLocation(LocationUtils.getLocation(config.getString(s + "Endlocation")));
+        arena.setEndLocation(LocationSerializer.getLocation(config.getString(s + "Endlocation")));
       } else {
         if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           System.out.print(id + " doesn't contains an end location!");
@@ -176,9 +175,9 @@ public class ArenaRegistry {
         if (config.isConfigurationSection(s + "plots")) {
           for (String plotName : config.getConfigurationSection(s + "plots").getKeys(false)) {
             if (config.isSet(s + "plots." + plotName + ".maxpoint") && config.isSet(s + "plots." + plotName + ".minpoint")) {
-              Location minPoint = LocationUtils.getLocation(config.getString(s + "plots." + plotName + ".minpoint"));
+              Location minPoint = LocationSerializer.getLocation(config.getString(s + "plots." + plotName + ".minpoint"));
               Plot buildPlot = new Plot(arena, minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ()));
-              buildPlot.setCuboid(new Cuboid(minPoint, LocationUtils.getLocation(config.getString(s + "plots." + plotName + ".maxpoint"))));
+              buildPlot.setCuboid(new Cuboid(minPoint, LocationSerializer.getLocation(config.getString(s + "plots." + plotName + ".maxpoint"))));
               buildPlot.fullyResetPlot();
               arena.getPlotManager().addBuildPlot(buildPlot);
             } else {
@@ -201,7 +200,7 @@ public class ArenaRegistry {
       ArenaRegistry.registerArena(arena);
       arena.start();
     }
-    Debugger.debug(LogLevel.INFO, "Arenas registration completed");
+    Debugger.debug(Debugger.Level.INFO, "Arenas registration completed");
   }
 
 }

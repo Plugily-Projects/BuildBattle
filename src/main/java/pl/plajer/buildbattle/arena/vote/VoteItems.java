@@ -28,11 +28,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
-import pl.plajerlair.core.debug.Debugger;
-import pl.plajerlair.core.debug.LogLevel;
-import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.ItemBuilder;
-import pl.plajerlair.core.utils.XMaterial;
+import pl.plajer.buildbattle.utils.Debugger;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -73,7 +72,7 @@ public class VoteItems {
         continue;
       }
       config.set(key + ".material-name", XMaterial.GREEN_TERRACOTTA.name());
-      Debugger.debug(LogLevel.WARN, "Found outdated item in votingItems.yml! We've converted it to the newest version!");
+      Debugger.debug(Debugger.Level.WARN, "Found outdated item in votingItems.yml! We've converted it to the newest version!");
     }
     ConfigUtils.saveConfig(JavaPlugin.getPlugin(Main.class), config, "voteItems");
   }

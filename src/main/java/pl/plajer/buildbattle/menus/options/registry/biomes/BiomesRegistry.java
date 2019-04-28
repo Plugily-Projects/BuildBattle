@@ -31,13 +31,12 @@ import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
-import pl.plajer.buildbattle.utils.XBiome;
-import pl.plajerlair.core.debug.Debugger;
-import pl.plajerlair.core.debug.LogLevel;
-import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.ItemBuilder;
-import pl.plajerlair.core.utils.MinigameUtils;
-import pl.plajerlair.core.utils.XMaterial;
+import pl.plajer.buildbattle.utils.Debugger;
+import pl.plajer.buildbattle.utils.Utils;
+import pl.plajerlair.commonsbox.minecraft.compat.XBiome;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
 /**
  * @author Plajer
@@ -58,11 +57,11 @@ public class BiomesRegistry {
 
   private void registerBiomes() {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "biomes");
-    Debugger.debug(LogLevel.TASK, "Registering biomes!");
+    Debugger.debug(Debugger.Level.TASK, "Registering biomes!");
     int i = 0;
     for (String biome : config.getKeys(false)) {
       if (i >= 52) {
-        Debugger.debug(LogLevel.WARN, "There are too many biomes to register! Menu can't hold any more!");
+        Debugger.debug(Debugger.Level.WARN, "There are too many biomes to register! Menu can't hold any more!");
         break;
       }
       BiomeItem biomeItem = new BiomeItem(new ItemBuilder(XMaterial.fromString(config
@@ -74,11 +73,11 @@ public class BiomesRegistry {
       biomes.add(biomeItem);
       i++;
     }
-    Debugger.debug(LogLevel.INFO, "Registered in total " + i + " biomes!");
+    Debugger.debug(Debugger.Level.INFO, "Registered in total " + i + " biomes!");
   }
 
   private void registerInventory() {
-    Inventory inv = Bukkit.createInventory(null, MinigameUtils.serializeInt(biomes.size()),
+    Inventory inv = Bukkit.createInventory(null, Utils.serializeInt(biomes.size()),
         plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Biome.Inventory-Name"));
     for (BiomeItem item : biomes) {
       inv.addItem(item.getItemStack());

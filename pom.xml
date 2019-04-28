@@ -57,6 +57,7 @@
             <url>https://repo.codemc.org/repository/maven-public</url>
         </repository>
     </repositories>
+
     <dependencies>
         <!--Spigot API-->
         <dependency>
@@ -72,9 +73,21 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>pl.plajerlair</groupId>
-            <artifactId>plcore</artifactId>
-            <version>1.4.9</version>
+            <groupId>pl.plajer</groupId>
+            <artifactId>commons-box-database</artifactId>
+            <version>1.0.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>pl.plajer</groupId>
+            <artifactId>commons-box-minecraft</artifactId>
+            <version>1.0.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>pl.plajer</groupId>
+            <artifactId>commons-box-classic</artifactId>
+            <version>1.0.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
