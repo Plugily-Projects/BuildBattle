@@ -117,6 +117,22 @@ public class VoteMenuListener implements Listener {
       }
   }
 
+  @Deprecated
+  @EventHandler
+  public void onGTBInventoryClose(InventoryCloseEvent e) {
+    BaseArena arena = ArenaRegistry.getArena((Player) e.getPlayer());
+    if (!(arena instanceof GuessTheBuildArena)) {
+      return;
+    }
+    if (!e.getInventory().getName().equals(plugin.getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Inventory-Name"))) {
+      return;
+    }
+    //cancel
+    if (!((GuessTheBuildArena) arena).isThemeSet()) {
+      Bukkit.getScheduler().runTask(plugin, () -> e.getPlayer().openInventory(e.getInventory()));
+    }
+  }
+
   @EventHandler
   public void onInventoryClickOnGuessTheBuild(InventoryClickEvent e) {
       if (e.getInventory() == null || e.getInventory().getName() == null) {

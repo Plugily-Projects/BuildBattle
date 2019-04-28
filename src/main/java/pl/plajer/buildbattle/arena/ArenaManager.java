@@ -35,6 +35,7 @@ import pl.plajer.buildbattle.api.event.game.BBGameEndEvent;
 import pl.plajer.buildbattle.api.event.game.BBGameJoinEvent;
 import pl.plajer.buildbattle.api.event.game.BBGameLeaveEvent;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
+import pl.plajer.buildbattle.arena.impl.GuessTheBuildArena;
 import pl.plajer.buildbattle.arena.impl.SoloArena;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.PermissionManager;
@@ -152,6 +153,9 @@ public class ArenaManager {
       if (arena.getPlotManager().getPlot(player) != null) {
         arena.getPlotManager().getPlot(player).fullyResetPlot();
       }
+    if (arena instanceof GuessTheBuildArena) {
+      ((GuessTheBuildArena) arena).getWhoGuessed().remove(player);
+    }
 
       player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
       player.setExp(0);

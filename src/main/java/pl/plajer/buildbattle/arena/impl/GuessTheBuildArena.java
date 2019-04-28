@@ -277,7 +277,7 @@ public class GuessTheBuildArena extends BaseArena {
             Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
             setTimer(10);
           }
-          if ((getTimer() == (4 * 60) || getTimer() == (3 * 60) || getTimer() == 5 * 60 || getTimer() == 30 || getTimer() == 2 * 60 || getTimer() == 60 || getTimer() == 15)) {
+          if (isThemeSet() && (getTimer() == (4 * 60) || getTimer() == (3 * 60) || getTimer() == 5 * 60 || getTimer() == 30 || getTimer() == 2 * 60 || getTimer() == 60 || getTimer() == 15)) {
             String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Time-Left-To-Build").replace("%FORMATTEDTIME%", MinigameUtils.formatIntoMMSS(getTimer()));
             String subtitle = getPlugin().getChatManager().colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", String.valueOf(getTimer()));
             for (Player p : getPlayers()) {
@@ -331,6 +331,7 @@ public class GuessTheBuildArena extends BaseArena {
             }
             giveRewards();
             clearPlayers();
+            //todo check if called
             setArenaState(ArenaState.RESTARTING);
             if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
               for (Player player : getPlugin().getServer().getOnlinePlayers()) {
@@ -343,6 +344,8 @@ public class GuessTheBuildArena extends BaseArena {
         case RESTARTING:
           setOptionValue(ArenaOption.IN_PLOT_CHECKER, 0);
           whoGuessed.clear();
+          //todo doesnt work!?!??
+          clearPlayers();
           setTimer(14);
           setArenaState(ArenaState.WAITING_FOR_PLAYERS);
           currentBuilder = null;

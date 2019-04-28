@@ -326,7 +326,6 @@ public class SoloArena extends BaseArena {
           if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && getPlugin().getConfig().getBoolean("Bungee-Shutdown-On-End", false)) {
             getPlugin().getServer().shutdown();
           }
-
           setOptionValue(ArenaOption.IN_PLOT_CHECKER, 0);
           setArenaState(ArenaState.WAITING_FOR_PLAYERS);
           topList.clear();

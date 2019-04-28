@@ -57,6 +57,7 @@ import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
+import pl.plajer.buildbattle.arena.impl.GuessTheBuildArena;
 import pl.plajer.buildbattle.arena.impl.SoloArena;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.handlers.items.SpecialItem;
@@ -441,6 +442,11 @@ public class GameEvents implements Listener {
       return;
     }
     if (arena instanceof SoloArena && ((SoloArena) arena).isVoting()) {
+      e.setCancelled(true);
+      return;
+    }
+    if (arena instanceof GuessTheBuildArena && ((GuessTheBuildArena) arena).getCurrentBuilder() != null
+        && !((GuessTheBuildArena) arena).getCurrentBuilder().equals(e.getPlayer())) {
       e.setCancelled(true);
       return;
     }
