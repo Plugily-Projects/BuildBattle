@@ -98,9 +98,7 @@ public class ArenaManager {
       if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
         InventoryUtils.saveInventoryToFile(plugin, player);
       }
-      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-        arena.getGameBar().addPlayer(player);
-      }
+    arena.doBarAction(BaseArena.BarAction.ADD, player);
       arena.teleportToLobby(player);
       arena.addPlayer(player);
       player.setExp(1);
@@ -165,9 +163,7 @@ public class ArenaManager {
       player.setAllowFlight(false);
       player.resetPlayerWeather();
       player.resetPlayerTime();
-      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-        arena.getGameBar().removePlayer(player);
-      }
+    arena.doBarAction(BaseArena.BarAction.REMOVE, player);
       player.getInventory().setArmorContents(null);
       player.getInventory().clear();
       for (PotionEffect effect : player.getActivePotionEffects()) {

@@ -283,9 +283,7 @@ public class SoloArena extends BaseArena {
         if (getTimer() <= 0) {
           teleportAllToEndLocation();
           for (Player player : getPlayers()) {
-            if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-              getGameBar().removePlayer(player);
-            }
+            doBarAction(BarAction.REMOVE, player);
             player.getInventory().clear();
             getPlugin().getUserManager().getUser(player).removeScoreboard();
             player.setGameMode(GameMode.SURVIVAL);
@@ -331,6 +329,9 @@ public class SoloArena extends BaseArena {
 
   @Override
   public void updateBossBar() {
+    if (!getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+      return;
+    }
     switch (getArenaState()) {
       case WAITING_FOR_PLAYERS:
         getGameBar().setTitle(getPlugin().getChatManager().colorMessage("Bossbar.Waiting-For-Players"));

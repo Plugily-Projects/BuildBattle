@@ -207,7 +207,7 @@ public class Main extends JavaPlugin {
     Bukkit.getLogger().removeHandler(exceptionLogHandler);
     for (BaseArena arena : ArenaRegistry.getArenas()) {
       for (Player player : arena.getPlayers()) {
-        arena.getGameBar().removePlayer(player);
+        arena.doBarAction(BaseArena.BarAction.REMOVE, player);
         arena.teleportToEndLocation(player);
         if (configPreferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
           InventoryUtils.loadInventory(this, player);

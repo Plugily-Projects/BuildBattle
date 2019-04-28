@@ -357,8 +357,13 @@ public class GuessTheBuildArena extends BaseArena {
   }
 
   @Override
-  public void updateBossBar() {
+  public void doBarAction(BarAction action, Player p) {
+    //todo
+  }
 
+  @Override
+  public void updateBossBar() {
+    //todo
   }
 
   @Override

@@ -99,11 +99,6 @@ public class BaseArena extends BukkitRunnable {
     return plotManager;
   }
 
-  @Deprecated //replace with doBarAction
-  public BossBar getGameBar() {
-    return gameBar;
-  }
-
   public ArenaType getArenaType() {
     return arenaType;
   }
@@ -120,7 +115,30 @@ public class BaseArena extends BukkitRunnable {
     this.runTaskTimer(plugin, 20L, 20L);
   }
 
+  /**
+   * Executes boss bar action for arena
+   *
+   * @param action add or remove a player from boss bar
+   * @param p      player
+   */
+  public void doBarAction(BarAction action, Player p) {
+    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+      return;
+    }
+    switch (action) {
+      case ADD:
+        gameBar.addPlayer(p);
+        break;
+      case REMOVE:
+        gameBar.removePlayer(p);
+        break;
+      default:
+        break;
+    }
+  }
+
   public void updateBossBar() {
+
   }
 
   public void distributePlots() {
@@ -275,21 +293,21 @@ public class BaseArena extends BukkitRunnable {
   }
 
   public void teleportAllToEndLocation() {
-      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-        for (Player player : getPlayers()) {
-          plugin.getBungeeManager().connectToHub(player);
-        }
-        return;
-      }
-      Location location = getEndLocation();
-
-      if (location == null) {
-        location = getLobbyLocation();
-        System.out.print("EndLocation for arena " + getID() + " isn't intialized!");
-      }
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       for (Player player : getPlayers()) {
-        player.teleport(location);
+        plugin.getBungeeManager().connectToHub(player);
       }
+      return;
+    }
+    Location location = getEndLocation();
+
+    if (location == null) {
+      location = getLobbyLocation();
+      System.out.print("EndLocation for arena " + getID() + " isn't intialized!");
+    }
+    for (Player player : getPlayers()) {
+      player.teleport(location);
+    }
   }
 
   public void teleportToLobby(Player player) {
@@ -301,17 +319,17 @@ public class BaseArena extends BukkitRunnable {
   }
 
   public void teleportToEndLocation(Player player) {
-      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-        plugin.getBungeeManager().connectToHub(player);
-        return;
-      }
-      Location location = getEndLocation();
-      if (location == null) {
-        location = getLobbyLocation();
-        System.out.print("EndLocation for arena " + getID() + " isn't intialized!");
-      }
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+      plugin.getBungeeManager().connectToHub(player);
+      return;
+    }
+    Location location = getEndLocation();
+    if (location == null) {
+      location = getLobbyLocation();
+      System.out.print("EndLocation for arena " + getID() + " isn't intialized!");
+    }
 
-      player.teleport(location);
+    player.teleport(location);
   }
 
   public void giveRewards() {
@@ -343,6 +361,10 @@ public class BaseArena extends BukkitRunnable {
     gameLocations.put(GameLocation.END, endLoc);
   }
 
+  protected BossBar getGameBar() {
+    return gameBar;
+  }
+
   public int getOption(ArenaOption option) {
     return arenaOptions.get(option);
   }
@@ -371,6 +393,10 @@ public class BaseArena extends BukkitRunnable {
 
   public enum GameLocation {
     LOBBY, END
+  }
+
+  public enum BarAction {
+    ADD, REMOVE
   }
 
 }
