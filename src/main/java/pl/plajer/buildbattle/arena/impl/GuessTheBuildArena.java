@@ -314,7 +314,6 @@ public class GuessTheBuildArena extends BaseArena {
               getGameBar().removePlayer(player);
             }
             player.getInventory().clear();
-            getPlugin().getUserManager().getUser(player).removeScoreboard();
             player.setGameMode(GameMode.SURVIVAL);
             player.setFlying(false);
             player.setAllowFlight(false);

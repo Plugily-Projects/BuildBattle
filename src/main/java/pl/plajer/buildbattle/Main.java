@@ -72,7 +72,6 @@ import pl.plajerlair.services.ServiceRegistry;
 /**
  * Created by Tom on 17/08/2015.
  */
-//todo scoreboardlib
 //todo inventoryframework
 public class Main extends JavaPlugin {
 
