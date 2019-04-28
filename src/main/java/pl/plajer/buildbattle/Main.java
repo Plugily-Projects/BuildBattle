@@ -28,11 +28,12 @@ import org.bukkit.GameMode;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
 
 import pl.plajer.buildbattle.api.StatsStorage;
-import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
+import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.arena.vote.VoteEvents;
 import pl.plajer.buildbattle.arena.vote.VoteItems;
 import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
@@ -56,6 +57,7 @@ import pl.plajer.buildbattle.menus.options.registry.particles.ParticleRefreshSch
 import pl.plajer.buildbattle.menus.themevoter.VoteMenuListener;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.user.UserManager;
+import pl.plajer.buildbattle.user.data.MySQLManager;
 import pl.plajer.buildbattle.utils.CuboidSelector;
 import pl.plajer.buildbattle.utils.ExceptionLogHandler;
 import pl.plajer.buildbattle.utils.LegacyDataFixer;
@@ -66,6 +68,7 @@ import pl.plajerlair.core.debug.LogLevel;
 import pl.plajerlair.core.services.ServiceRegistry;
 import pl.plajerlair.core.services.update.UpdateChecker;
 import pl.plajerlair.core.utils.ConfigUtils;
+import pl.plajerlair.core.utils.InventoryUtils;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -192,7 +195,6 @@ public class Main extends JavaPlugin {
     });
   }
 
-  @Deprecated //unsafe async saving when plugin is disabling, will lead to errors
   @Override
   public void onDisable() {
     if (forceDisable) {
@@ -200,21 +202,27 @@ public class Main extends JavaPlugin {
     }
     Debugger.debug(LogLevel.INFO, "System disabling...");
     Bukkit.getLogger().removeHandler(exceptionLogHandler);
-    for (final Player player : getServer().getOnlinePlayers()) {
-      BaseArena arena = ArenaRegistry.getArena(player);
-      if (arena != null) {
-        player.setGameMode(GameMode.SURVIVAL);
-        if (configPreferences.getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-          arena.getGameBar().removePlayer(player);
+    for (BaseArena arena : ArenaRegistry.getArenas()) {
+      for (Player player : arena.getPlayers()) {
+        arena.getGameBar().removePlayer(player);
+        arena.teleportToEndLocation(player);
+        if (configPreferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+          InventoryUtils.loadInventory(this, player);
+        } else {
+          player.setGameMode(GameMode.SURVIVAL);
+          player.getInventory().clear();
+          player.getInventory().setArmorContents(null);
+          for (PotionEffect pe : player.getActivePotionEffects()) {
+            player.removePotionEffect(pe.getType());
+          }
         }
-        ArenaManager.leaveAttempt(player, arena);
       }
-      final User user = userManager.getUser(player);
-      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-        userManager.saveStatistic(user, stat);
+      for (Plot plot : arena.getPlotManager().getPlots()) {
+        plot.fullyResetPlot();
       }
-      userManager.removeUser(user);
+      arena.teleportAllToEndLocation();
     }
+    saveAllUserStatistics();
     if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       getMySQLDatabase().getManager().shutdownConnPool();
     }
@@ -264,6 +272,24 @@ public class Main extends JavaPlugin {
     new GameEvents(this);
     new VoteMenuListener(this);
     new HolidayManager(this);
+  }
+
+  private void saveAllUserStatistics() {
+    for (Player player : getServer().getOnlinePlayers()) {
+      User user = userManager.getUser(player);
+
+      //copy of userManager#saveStatistic but without async database call that's not allowed in onDisable method.
+      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+        if (!stat.isPersistent()) {
+          continue;
+        }
+        if (userManager.getDatabase() instanceof MySQLManager) {
+          ((MySQLManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE buildbattlestats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+          continue;
+        }
+        userManager.getDatabase().saveStatistic(user, stat);
+      }
+    }
   }
 
   public ChatManager getChatManager() {

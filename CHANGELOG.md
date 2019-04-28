@@ -3,6 +3,7 @@
 ### 4.0.0 Beta Pre Releases 3-15 (03.10.2018 - 28.04.2019)
    > RC 3
    * Fixed typo in message accessor for guess the build game mode message
+   * Now players aren't saved async in onDisable method which led to exceptions in disable stage 
    > RC 2
    * Fixed plugin couldn't start if Cloudflare was blocked in your country (or services were offline)
    * Removed locale suggester, it will no longer spam console when English (default) locale is used

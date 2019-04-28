@@ -95,4 +95,7 @@ public class UserManager {
     users.remove(user);
   }
 
+  public UserDatabase getDatabase() {
+    return database;
+  }
 }

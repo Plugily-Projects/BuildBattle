@@ -82,6 +82,10 @@ public class MySQLManager implements UserDatabase {
     }
   }
 
+  public MySQLDatabase getDatabase() {
+    return database;
+  }
+
   public void insertPlayer(Player player) {
     database.executeUpdate("INSERT INTO `buildbattlestats` (UUID,name,gamesplayed) VALUES ('" + player.getUniqueId().toString() + "','" + player.getName() + "',0)");
   }
