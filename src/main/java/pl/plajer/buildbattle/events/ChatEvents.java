@@ -65,7 +65,7 @@ public class ChatEvents implements Listener {
       GuessTheBuildArena gameArena = (GuessTheBuildArena) arena;
       if (gameArena.getWhoGuessed().contains(event.getPlayer())) {
         event.setCancelled(true);
-        event.getPlayer().sendMessage(plugin.getChatManager().colorMessage("In-Game-Guess-The-Build.Chat.Cant-Talk-When-Guesses"));
+        event.getPlayer().sendMessage(plugin.getChatManager().colorMessage("In-Game-Guess-The-Build.Chat.Cant-Talk-When-Guessed"));
         return;
       }
       if (gameArena.getCurrentBuilder() != null && gameArena.getCurrentBuilder().equals(event.getPlayer())) {
