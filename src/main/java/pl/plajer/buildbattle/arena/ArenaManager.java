@@ -100,6 +100,8 @@ public class ArenaManager {
     arena.doBarAction(BaseArena.BarAction.ADD, player);
     arena.teleportToLobby(player);
     arena.addPlayer(player);
+    User user = plugin.getUserManager().getUser(player);
+    arena.getScoreboardManager().createScoreboard(user);
     player.setExp(1);
     player.setLevel(0);
     player.setHealth(20.0);
@@ -144,9 +146,9 @@ public class ArenaManager {
     //todo maybe not
     user.setStat(StatsStorage.StatisticType.LOCAL_GUESS_THE_BUILD_POINTS, 0);
     arena.teleportToEndLocation(player);
+    arena.getScoreboardManager().removeScoreboard(user);
     arena.removePlayer(player);
     plugin.getChatManager().broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
-    user.removeScoreboard();
     if (arena.getPlotManager().getPlot(player) != null) {
       arena.getPlotManager().getPlot(player).fullyResetPlot();
     }
@@ -196,31 +198,36 @@ public class ArenaManager {
     Debugger.debug(Debugger.Level.INFO, "Game stop event initiate, arena " + arena.getID());
     BBGameEndEvent gameEndEvent = new BBGameEndEvent(arena);
     Bukkit.getPluginManager().callEvent(gameEndEvent);
-    for (Player p : arena.getPlayers()) {
-      plugin.getUserManager().getUser(p).removeScoreboard();
-      if (!quickStop && plugin.getConfig().getBoolean("Firework-When-Game-Ends")) {
-        new BukkitRunnable() {
-          int i = 0;
-
-          public void run() {
-            if (i == 4) {
-              this.cancel();
-            }
-            if (!arena.getPlayers().contains(p)) {
-              this.cancel();
-            }
-            MiscUtils.spawnRandomFirework(p.getLocation());
-            i++;
-          }
-        }.runTaskTimer(JavaPlugin.getPlugin(Main.class), 30, 30);
+    for (Player player : arena.getPlayers()) {
+      if (!quickStop) {
+        spawnFireworks(arena, player);
       }
     }
+    arena.getScoreboardManager().stopAllScoreboards();
     arena.setArenaState(ArenaState.ENDING);
     arena.setTimer(10);
     if (arena instanceof SoloArena) {
       ((SoloArena) arena).setVoting(false);
     }
     Debugger.debug(Debugger.Level.INFO, "Game stop event finish, arena " + arena.getID());
+  }
+
+  private static void spawnFireworks(BaseArena arena, Player player) {
+    if (!plugin.getConfig().getBoolean("Firework-When-Game-Ends", true)) {
+      return;
+    }
+    new BukkitRunnable() {
+      int i = 0;
+
+      public void run() {
+        if (i == 4 || !arena.getPlayers().contains(player)) {
+          this.cancel();
+          return;
+        }
+        MiscUtils.spawnRandomFirework(player.getLocation());
+        i++;
+      }
+    }.runTaskTimer(plugin, 30, 30);
   }
 
 }

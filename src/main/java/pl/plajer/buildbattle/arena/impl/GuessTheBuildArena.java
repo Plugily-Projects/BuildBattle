@@ -79,7 +79,6 @@ public class GuessTheBuildArena extends BaseArena {
     if (getPlayers().size() == 0 && getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
       return;
     }
-    scoreboardManager.updateScoreboard();
     if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
       updateBossBar();
     }
@@ -300,6 +299,7 @@ public class GuessTheBuildArena extends BaseArena {
         setTimer(getTimer() - 1);
         break;
       case ENDING:
+        scoreboardManager.stopAllScoreboards();
         if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           getPlugin().getServer().setWhitelist(false);
         }

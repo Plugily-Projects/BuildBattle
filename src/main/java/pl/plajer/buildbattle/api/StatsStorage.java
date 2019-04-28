@@ -32,11 +32,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
+import pl.plajer.buildbattle.utils.Debugger;
 import pl.plajer.buildbattle.utils.MessageUtils;
 import pl.plajer.buildbattle.utils.Utils;
-import pl.plajerlair.core.debug.Debugger;
-import pl.plajerlair.core.debug.LogLevel;
-import pl.plajerlair.core.utils.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 
 /**
  * @author Plajer, TomTheDeveloper
@@ -55,7 +54,7 @@ public class StatsStorage {
    * @return Map of UUID keys and Integer values sorted in ascending order of requested statistic type
    */
   public static Map<UUID, Integer> getStats(StatisticType stat) {
-    Debugger.debug(LogLevel.INFO, "BuildBattle API getStats(" + stat.getName() + ") run");
+    Debugger.debug(Debugger.Level.INFO, "BuildBattle API getStats(" + stat.getName() + ") run");
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       ResultSet set = plugin.getMysqlDatabase().executeQuery("SELECT UUID, " + stat.getName() + " FROM buildbattlestats ORDER BY " + stat.getName() + " ASC;");
       Map<java.util.UUID, java.lang.Integer> column = new LinkedHashMap<>();
@@ -70,8 +69,7 @@ public class StatsStorage {
         Bukkit.getConsoleSender().sendMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
       }
       return column;
-    }
-    else {
+    } else {
       FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
       Map<UUID, Integer> stats = new TreeMap<>();
       for (String string : config.getKeys(false)) {
@@ -93,7 +91,7 @@ public class StatsStorage {
    * @see StatisticType
    */
   public static int getUserStats(Player player, StatisticType statisticType) {
-    Debugger.debug(LogLevel.INFO, "BuildBattle API getUserStats(" + player.getName() + ", " + statisticType.getName() + ") run");
+    Debugger.debug(Debugger.Level.INFO, "BuildBattle API getUserStats(" + player.getName() + ", " + statisticType.getName() + ") run");
     return plugin.getUserManager().getUser(player).getStat(statisticType);
   }
 

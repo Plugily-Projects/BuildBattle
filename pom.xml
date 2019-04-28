@@ -73,6 +73,24 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>me.tigerhix.lib</groupId>
+            <artifactId>scoreboard</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/ScoreboardLib.jar</systemPath>
+            <!-- Some broken and outdated repos -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org</groupId>
+                    <artifactId>spigotmc.api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org</groupId>
+                    <artifactId>spigotmc</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <groupId>pl.plajer</groupId>
             <artifactId>commons-box-database</artifactId>
             <version>1.0.1</version>
@@ -191,9 +209,10 @@
                         </goals>
                         <configuration>
                             <relocations>
+                                <!-- todo tigerhix's scoreboardlib relocation -->
                                 <relocation>
-                                    <pattern>pl.plajerlair.core</pattern>
-                                    <shadedPattern>pl.plajer.buildbattle.plajerlair.core</shadedPattern>
+                                    <pattern>pl.plajerlair.services</pattern>
+                                    <shadedPattern>pl.plajer.buildbattle.plajerlair.services</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.bstats</pattern>

@@ -24,7 +24,6 @@ import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.ScoreboardManager;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
@@ -39,7 +38,6 @@ import pl.plajer.buildbattle.arena.managers.plots.Plot;
 public class User {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
-  private ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
   private Player player;
   private Map<StatsStorage.StatisticType, Integer> stats = new HashMap<>();
   private Plot currentPlot;
@@ -73,10 +71,6 @@ public class User {
     }
 
     return stats.get(stat);
-  }
-
-  public void removeScoreboard() {
-    player.setScoreboard(scoreboardManager.getNewScoreboard());
   }
 
   public void setStat(StatsStorage.StatisticType stat, int i) {

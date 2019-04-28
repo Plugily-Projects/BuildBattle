@@ -18,11 +18,17 @@
 
 package pl.plajer.buildbattle.arena.managers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.tigerhix.lib.scoreboard.ScoreboardLib;
+import me.tigerhix.lib.scoreboard.common.EntryBuilder;
+import me.tigerhix.lib.scoreboard.type.Entry;
+import me.tigerhix.lib.scoreboard.type.Scoreboard;
+import me.tigerhix.lib.scoreboard.type.ScoreboardHandler;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
@@ -33,8 +39,8 @@ import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.impl.SoloArena;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
+import pl.plajer.buildbattle.user.User;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
-import pl.plajerlair.core.utils.GameScoreboard;
 
 /**
  * @author Plajer
@@ -43,14 +49,14 @@ import pl.plajerlair.core.utils.GameScoreboard;
  */
 public class ScoreboardManager {
 
+  private static Main plugin = JavaPlugin.getPlugin(Main.class);
   private Map<String, List<String>> scoreboardContents = new HashMap<>();
-  private Main plugin = JavaPlugin.getPlugin(Main.class);
-  private String boardTitle;
+  private List<Scoreboard> scoreboards = new ArrayList<>();
+  private String boardTitle = plugin.getChatManager().colorMessage("Scoreboard.Title");
   private BaseArena arena;
 
   public ScoreboardManager(BaseArena arena) {
     this.arena = arena;
-    this.boardTitle = plugin.getChatManager().colorMessage("Scoreboard.Title");
     for (ArenaState state : ArenaState.values()) {
       //not registering RESTARTING state and registering IN_GAME and ENDING later
       if (state == ArenaState.RESTARTING || state == ArenaState.IN_GAME || state == ArenaState.ENDING) {
@@ -70,29 +76,67 @@ public class ScoreboardManager {
   }
 
   /**
-   * Updates scoreboard to all players in arena
+   * Creates arena scoreboard for target user
+   *
+   * @param user user that represents game player
+   * @see User
    */
-  public void updateScoreboard() {
-    if (arena.getPlayers().size() == 0 || arena.getArenaState() == ArenaState.RESTARTING) {
-      return;
-    }
-    GameScoreboard scoreboard;
-    for (Player p : arena.getPlayers()) {
-      scoreboard = new GameScoreboard("PL_BB", "BB_CR", boardTitle);
-      List<String> lines = scoreboardContents.get(arena.getArenaState().getFormattedName());
-      if (arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
-        lines = scoreboardContents.get(arena.getArenaState().getFormattedName() + "_" + arena.getArenaType().getPrefix());
+  public void createScoreboard(User user) {
+    Scoreboard scoreboard = ScoreboardLib.createScoreboard(user.getPlayer()).setHandler(new ScoreboardHandler() {
+      @Override
+      public String getTitle(Player player) {
+        return boardTitle;
       }
-      for (String line : lines) {
-        scoreboard.addRow(formatScoreboardLine(line, p));
+
+      @Override
+      public List<Entry> getEntries(Player player) {
+        return formatScoreboard(user);
       }
-      scoreboard.finish();
-      scoreboard.display(p);
+    });
+    scoreboard.activate();
+    scoreboards.add(scoreboard);
+  }
+
+  /**
+   * Removes scoreboard of user
+   *
+   * @param user user that represents game player
+   * @see User
+   */
+  public void removeScoreboard(User user) {
+    for (Scoreboard board : scoreboards) {
+      if (board.getHolder().equals(user.getPlayer())) {
+        scoreboards.remove(board);
+        board.deactivate();
+        return;
+      }
     }
   }
 
-  @Deprecated
-  private String formatScoreboardLine(String string, Player player) {
+  /**
+   * Forces all scoreboards to deactivate.
+   */
+  public void stopAllScoreboards() {
+    for (Scoreboard board : scoreboards) {
+      board.deactivate();
+    }
+    scoreboards.clear();
+  }
+
+  public List<Entry> formatScoreboard(User user) {
+    EntryBuilder builder = new EntryBuilder();
+    List<String> lines = scoreboardContents.get(arena.getArenaState().getFormattedName());
+    if (arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
+      lines = scoreboardContents.get(arena.getArenaState().getFormattedName() + "_" + arena.getArenaType().getPrefix());
+    }
+    for (String line : lines) {
+      builder.next(formatScoreboardLine(line, user));
+    }
+    return builder.build();
+  }
+
+  public String formatScoreboardLine(String string, User user) {
+    Player player = user.getPlayer();
     String returnString = string;
     returnString = StringUtils.replace(returnString, "%PLAYERS%", Integer.toString(arena.getPlayers().size()));
     returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());
@@ -101,32 +145,6 @@ public class ScoreboardManager {
     } else {
       returnString = StringUtils.replace(returnString, "%THEME%", arena.getTheme());
     }
-      /*else {
-      if (arena.isGTBThemeSet()) {
-        returnString = StringUtils.replace(returnString, "%CURRENT_TIMER%", plugin.getChatManager().colorMessage("Scoreboard.GTB-Current-Timer.Build-Time"));
-      } else {
-        returnString = StringUtils.replace(returnString, "%CURRENT_TIMER%", plugin.getChatManager().colorMessage("Scoreboard.GTB-Current-Timer.Starts-In"));
-      }
-      if (arena.getCurrentBuilder() != null) {
-        if (player.getUniqueId() == arena.getCurrentBuilder()) {
-          returnString = StringUtils.replace(returnString, "%THEME%", arena.getCurrentGTBTheme().getTheme());
-        } else {
-          returnString = StringUtils.replace(returnString, "%THEME%", plugin.getChatManager().colorMessage("Scoreboard.Theme-Unknown"));
-        }
-        returnString = StringUtils.replace(returnString, "%BUILDER%", Bukkit.getPlayer(arena.getCurrentBuilder()).getName());
-      }
-    }
-    if (arena.getArenaType() == BaseArena.ArenaType.GUESS_THE_BUILD) {
-      //todo ineffective
-      for (int i = 1; i < 11; i++) {
-        if (arena.getArenaState() != ArenaState.ENDING && i > 3) {
-          break;
-        }
-        //todo may be errors?
-        returnString = StringUtils.replace(returnString, "%" + i + "%", Bukkit.getOfflinePlayer((UUID) arena.getPlayersPoints().keySet().toArray()[i]).getName());
-        returnString = StringUtils.replace(returnString, "%" + i + "_PTS%", String.valueOf(arena.getPlayersPoints().get(arena.getPlayersPoints().keySet().toArray()[i])));
-      }
-    }*/
     returnString = StringUtils.replace(returnString, "%MIN_PLAYERS%", Integer.toString(arena.getMinimumPlayers()));
     returnString = StringUtils.replace(returnString, "%MAX_PLAYERS%", Integer.toString(arena.getMaximumPlayers()));
     returnString = StringUtils.replace(returnString, "%TIMER%", Integer.toString(arena.getTimer()));
@@ -157,10 +175,6 @@ public class ScoreboardManager {
     return returnString;
   }
 
-  public Map<String, List<String>> getScoreboardContents() {
-    return scoreboardContents;
-  }
-
   public String getBoardTitle() {
     return boardTitle;
   }
@@ -168,4 +182,5 @@ public class ScoreboardManager {
   public Main getPlugin() {
     return plugin;
   }
+
 }

@@ -108,7 +108,6 @@ public class SoloArena extends BaseArena {
     if (getPlayers().size() == 0 && getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
       return;
     }
-    getScoreboardManager().updateScoreboard();
     if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
       updateBossBar();
     }
@@ -271,6 +270,7 @@ public class SoloArena extends BaseArena {
         setTimer(getTimer() - 1);
         break;
       case ENDING:
+        getScoreboardManager().stopAllScoreboards();
         if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           getPlugin().getServer().setWhitelist(false);
         }

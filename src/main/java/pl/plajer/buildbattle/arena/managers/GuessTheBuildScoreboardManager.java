@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.tigerhix.lib.scoreboard.common.EntryBuilder;
+import me.tigerhix.lib.scoreboard.type.Entry;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
@@ -31,8 +33,8 @@ import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.impl.GuessTheBuildArena;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
+import pl.plajer.buildbattle.user.User;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
-import pl.plajerlair.core.utils.GameScoreboard;
 
 /**
  * @author Plajer
@@ -63,31 +65,23 @@ public class GuessTheBuildScoreboardManager extends ScoreboardManager {
     scoreboardContents.put(ArenaState.ENDING.getFormattedName() + "_" + BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix(), ending);
   }
 
-  /**
-   * Updates scoreboard to all players in arena
-   */
+  //todo maybe not needed and private
   @Override
-  public void updateScoreboard() {
-    if (arena.getPlayers().size() == 0 || arena.getArenaState() == ArenaState.RESTARTING) {
-      return;
+  public List<Entry> formatScoreboard(User user) {
+    EntryBuilder builder = new EntryBuilder();
+    List<String> lines = scoreboardContents.get(arena.getArenaState().getFormattedName());
+    if (arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
+      lines = scoreboardContents.get(arena.getArenaState().getFormattedName() + "_" + BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix());
     }
-    GameScoreboard scoreboard;
-    for (Player p : arena.getPlayers()) {
-      scoreboard = new GameScoreboard("PL_BB", "BB_CR", getBoardTitle());
-      List<String> lines = scoreboardContents.get(arena.getArenaState().getFormattedName());
-      if (arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
-        lines = scoreboardContents.get(arena.getArenaState().getFormattedName() + "_" + BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix());
-      }
-      for (String line : lines) {
-        scoreboard.addRow(formatScoreboardLine(line, p));
-      }
-      scoreboard.finish();
-      scoreboard.display(p);
+    for (String line : lines) {
+      builder.next(formatScoreboardLine(line, user));
     }
+    return builder.build();
   }
 
-  @Deprecated
-  private String formatScoreboardLine(String string, Player player) {
+  @Override
+  public String formatScoreboardLine(String string, User user) {
+    Player player = user.getPlayer();
     String returnString = string;
     returnString = StringUtils.replace(returnString, "%PLAYERS%", Integer.toString(arena.getPlayers().size()));
     returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());

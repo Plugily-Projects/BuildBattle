@@ -77,8 +77,8 @@
             <configuration>
               <relocations>
                 <relocation>
-                  <pattern>pl.plajerlair.core</pattern>
-                  <shadedPattern>pl.plajer.buildbattle.plajerlair.core</shadedPattern>
+                    <pattern>pl.plajerlair.services</pattern>
+                    <shadedPattern>pl.plajer.buildbattle.plajerlair.services</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.bstats</pattern>
@@ -101,21 +101,12 @@
       <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
     </repository>
     <repository>
-      <id>ess-repo</id>
-      <url>https://ci.ender.zone/plugin/repository/everything/</url>
-    </repository>
-    <repository>
       <id>citizens-repo</id>
       <url>http://repo.citizensnpcs.co/</url>
     </repository>
     <repository>
       <id>papi-repo</id>
       <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
-    </repository>
-    <repository>
-      <id>bintray-tastybento-maven-repo</id>
-      <name>bintray</name>
-      <url>http://dl.bintray.com/tastybento/maven-repo</url>
     </repository>
     <repository>
       <id>plajerlair-repo</id>
@@ -146,10 +137,6 @@
           <groupId>com.googlecode.json-simple</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>guava</artifactId>
-          <groupId>com.google.guava</groupId>
-        </exclusion>
-        <exclusion>
           <artifactId>gson</artifactId>
           <groupId>com.google.code.gson</groupId>
         </exclusion>
@@ -178,10 +165,6 @@
           <groupId>com.googlecode.json-simple</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>guava</artifactId>
-          <groupId>com.google.guava</groupId>
-        </exclusion>
-        <exclusion>
           <artifactId>gson</artifactId>
           <groupId>com.google.code.gson</groupId>
         </exclusion>
@@ -190,12 +173,6 @@
           <groupId>org.yaml</groupId>
         </exclusion>
       </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>net.ess3</groupId>
-      <artifactId>EssentialsX</artifactId>
-      <version>2.0.1</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>net.citizensnpcs</groupId>
@@ -207,12 +184,6 @@
       <groupId>me.clip</groupId>
       <artifactId>placeholderapi</artifactId>
       <version>2.8.6</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.wasteofplastic</groupId>
-      <artifactId>askyblock</artifactId>
-      <version>3.0.8.2</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -256,15 +227,28 @@
           <groupId>org.apache.logging.log4j</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>guava</artifactId>
-          <groupId>com.google.guava</groupId>
-        </exclusion>
-        <exclusion>
           <artifactId>gson</artifactId>
           <groupId>com.google.code.gson</groupId>
         </exclusion>
       </exclusions>
     </dependency>
+      <dependency>
+          <groupId>me.tigerhix.lib</groupId>
+          <artifactId>scoreboard</artifactId>
+          <version>1.0.1-SNAPSHOT</version>
+          <scope>system</scope>
+          <systemPath>${project.basedir}/lib/ScoreboardLib.jar</systemPath>
+          <exclusions>
+              <exclusion>
+                  <artifactId>spigotmc.api</artifactId>
+                  <groupId>org</groupId>
+              </exclusion>
+              <exclusion>
+                  <artifactId>spigotmc</artifactId>
+                  <groupId>org</groupId>
+              </exclusion>
+          </exclusions>
+      </dependency>
   </dependencies>
   <distributionManagement>
     <repository>

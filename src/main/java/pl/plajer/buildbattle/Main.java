@@ -195,39 +195,6 @@ public class Main extends JavaPlugin {
     });
   }
 
-  @Override
-  public void onDisable() {
-    if (forceDisable) {
-      return;
-    }
-    Debugger.debug(Debugger.Level.INFO, "System disabling...");
-    Bukkit.getLogger().removeHandler(exceptionLogHandler);
-    for (BaseArena arena : ArenaRegistry.getArenas()) {
-      for (Player player : arena.getPlayers()) {
-        arena.doBarAction(BaseArena.BarAction.REMOVE, player);
-        arena.teleportToEndLocation(player);
-        if (configPreferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-          InventorySerializer.loadInventory(this, player);
-        } else {
-          player.setGameMode(GameMode.SURVIVAL);
-          player.getInventory().clear();
-          player.getInventory().setArmorContents(null);
-          for (PotionEffect pe : player.getActivePotionEffects()) {
-            player.removePotionEffect(pe.getType());
-          }
-        }
-      }
-      for (Plot plot : arena.getPlotManager().getPlots()) {
-        plot.fullyResetPlot();
-      }
-      arena.teleportAllToEndLocation();
-    }
-    saveAllUserStatistics();
-    if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      getMysqlDatabase().shutdownConnPool();
-    }
-  }
-
   private void initializeClasses() {
     PermissionManager.init();
     new SetupInventoryEvents(this);
@@ -272,6 +239,40 @@ public class Main extends JavaPlugin {
     new GameEvents(this);
     new VoteMenuListener(this);
     new HolidayManager(this);
+  }
+
+  @Override
+  public void onDisable() {
+    if (forceDisable) {
+      return;
+    }
+    Debugger.debug(Debugger.Level.INFO, "System disabling...");
+    Bukkit.getLogger().removeHandler(exceptionLogHandler);
+    for (BaseArena arena : ArenaRegistry.getArenas()) {
+      for (Player player : arena.getPlayers()) {
+        arena.getScoreboardManager().stopAllScoreboards();
+        arena.doBarAction(BaseArena.BarAction.REMOVE, player);
+        arena.teleportToEndLocation(player);
+        if (configPreferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+          InventorySerializer.loadInventory(this, player);
+        } else {
+          player.setGameMode(GameMode.SURVIVAL);
+          player.getInventory().clear();
+          player.getInventory().setArmorContents(null);
+          for (PotionEffect pe : player.getActivePotionEffects()) {
+            player.removePotionEffect(pe.getType());
+          }
+        }
+      }
+      for (Plot plot : arena.getPlotManager().getPlots()) {
+        plot.fullyResetPlot();
+      }
+      arena.teleportAllToEndLocation();
+    }
+    saveAllUserStatistics();
+    if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+      getMysqlDatabase().shutdownConnPool();
+    }
   }
 
   private void saveAllUserStatistics() {
