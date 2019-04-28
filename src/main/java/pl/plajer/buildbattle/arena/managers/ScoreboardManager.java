@@ -96,13 +96,12 @@ public class ScoreboardManager {
     String returnString = string;
     returnString = StringUtils.replace(returnString, "%PLAYERS%", Integer.toString(arena.getPlayers().size()));
     returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());
-    if (arena.getArenaType() != BaseArena.ArenaType.GUESS_THE_BUILD) {
-      if (((SoloArena) arena).isThemeVoteTime()) {
-        returnString = StringUtils.replace(returnString, "%THEME%", plugin.getChatManager().colorMessage("In-Game.No-Theme-Yet"));
-      } else {
-        returnString = StringUtils.replace(returnString, "%THEME%", arena.getTheme());
-      }
-    } /*else {
+    if (((SoloArena) arena).isThemeVoteTime()) {
+      returnString = StringUtils.replace(returnString, "%THEME%", plugin.getChatManager().colorMessage("In-Game.No-Theme-Yet"));
+    } else {
+      returnString = StringUtils.replace(returnString, "%THEME%", arena.getTheme());
+    }
+      /*else {
       if (arena.isGTBThemeSet()) {
         returnString = StringUtils.replace(returnString, "%CURRENT_TIMER%", plugin.getChatManager().colorMessage("Scoreboard.GTB-Current-Timer.Build-Time"));
       } else {

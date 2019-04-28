@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -30,9 +29,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.event.plot.BBPlayerPlotReceiveEvent;
-import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
-import pl.plajer.buildbattle.utils.MessageUtils;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -50,42 +47,6 @@ public class PlotManager {
 
   public void addBuildPlot(Plot buildPlot) {
     plots.add(buildPlot);
-  }
-
-  public void distributePlots() {
-      List<Player> players = new ArrayList<>(arena.getPlayers());
-      int times = arena.getArenaType() == BaseArena.ArenaType.SOLO ? 1 : 2;
-      for (int i = 0; i < times; i++) {
-        for (Plot plot : plots) {
-          if (players.isEmpty()) {
-            break;
-          }
-          if (plot.getOwners() != null) {
-            if (arena.getArenaType() == BaseArena.ArenaType.SOLO || arena.getPlayers().size() == 2 /* in case of 2 min players set for team mode*/) {
-              if (plot.getOwners().size() == 0) {
-                plot.addOwner(players.get(0));
-                plugin.getUserManager().getUser(players.get(0)).setCurrentPlot(plot);
-
-                players.remove(0);
-              }
-            } else if (arena.getArenaType() == BaseArena.ArenaType.TEAM) {
-              if (plot.getOwners().size() < 2) {
-                plot.addOwner(players.get(0));
-                plugin.getUserManager().getUser(players.get(0)).setCurrentPlot(plot);
-
-                players.remove(0);
-              }
-            }
-          }
-        }
-      }
-      if (!players.isEmpty()) {
-        MessageUtils.errorOccurred();
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] [PLOT WARNING] Not enough plots in arena " + arena.getID() + "!");
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[PLOT WARNING] Required " + (arena.getArenaType() == BaseArena.ArenaType.TEAM ? Math.ceil((double) arena.getPlayers().size() / 2) : arena.getPlayers().size()) + " but have " + plots.size());
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[PLOT WARNING] Instance was stopped!");
-        ArenaManager.stopGame(false, arena);
-      }
   }
 
   public Plot getPlot(Player player) {

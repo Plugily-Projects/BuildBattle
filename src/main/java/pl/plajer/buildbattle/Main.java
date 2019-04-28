@@ -73,6 +73,9 @@ import pl.plajerlair.core.utils.InventoryUtils;
 /**
  * Created by Tom on 17/08/2015.
  */
+//todo scoreboardlib
+//todo inventoryframework
+//todo commonsbox
 public class Main extends JavaPlugin {
 
   private ExceptionLogHandler exceptionLogHandler;

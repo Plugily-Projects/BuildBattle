@@ -23,6 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.boss.BarColor;
@@ -38,6 +41,7 @@ import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.managers.ScoreboardManager;
 import pl.plajer.buildbattle.arena.managers.plots.PlotManager;
 import pl.plajer.buildbattle.arena.options.ArenaOption;
+import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
  * @author Plajer
@@ -95,6 +99,7 @@ public class BaseArena extends BukkitRunnable {
     return plotManager;
   }
 
+  @Deprecated //replace with doBarAction
   public BossBar getGameBar() {
     return gameBar;
   }
@@ -116,6 +121,19 @@ public class BaseArena extends BukkitRunnable {
   }
 
   public void updateBossBar() {
+  }
+
+  public void distributePlots() {
+  }
+
+  public void sendBuildLeftTimeMessage() {
+    String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Time-Left-To-Build").replace("%FORMATTEDTIME%", MinigameUtils.formatIntoMMSS(getTimer()));
+    String subtitle = getPlugin().getChatManager().colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", String.valueOf(getTimer()));
+    for (Player p : getPlayers()) {
+      p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
+      p.sendMessage(getPlugin().getChatManager().getPrefix() + message);
+      p.sendTitle(null, subtitle, 5, 30, 5);
+    }
   }
 
   public ScoreboardManager getScoreboardManager() {

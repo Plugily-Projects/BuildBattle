@@ -18,11 +18,18 @@
 
 package pl.plajer.buildbattle.arena.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
+import pl.plajer.buildbattle.arena.options.ArenaOption;
+import pl.plajer.buildbattle.utils.Partition;
+import pl.plajerlair.core.debug.Debugger;
+import pl.plajerlair.core.debug.LogLevel;
 
 /**
  * @author Plajer
@@ -33,6 +40,37 @@ public class TeamArena extends SoloArena {
 
   public TeamArena(String id, Main plugin) {
     super(id, plugin);
+  }
+
+  @Override
+  public void setMinimumPlayers(int amount) {
+    if (amount < 2) {
+      Debugger.debug(LogLevel.WARN, "Minimum players amount for TEAM game mode arena cannot be less than 3! Setting amount to 3!");
+      setOptionValue(ArenaOption.MINIMUM_PLAYERS, 3);
+      return;
+    }
+    super.setMinimumPlayers(amount);
+  }
+
+  @Override
+  public void distributePlots() {
+    List<List<Player>> pairs = Partition.ofSize(new ArrayList<>(getPlayers()), 2);
+    int i = 0;
+    for (Plot plot : getPlotManager().getPlots()) {
+      if (pairs.size() <= i) {
+        break;
+      }
+      pairs.get(i).forEach(plot::addOwner);
+      pairs.get(i).forEach(player -> getPlugin().getUserManager().getUser(player).setCurrentPlot(plot));
+      i++;
+    }
+    /*if (!players.isEmpty()) {
+      MessageUtils.errorOccurred();
+      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] [PLOT WARNING] Not enough plots in arena " + getID() + "!");
+      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[PLOT WARNING] Required " + Math.ceil((double) getPlayers().size() / 2) + " but have " + getPlotManager().getPlots().size());
+      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[PLOT WARNING] Instance was stopped!");
+      ArenaManager.stopGame(false, this);
+    }*/
   }
 
   @Override
