@@ -7,6 +7,7 @@
    * Fixed bad logic of assigning players to teams in teams game mode
    * Teams game mode require now to have at least 3 minimum players to play, it will set it to 3 if
    it's set lower
+   * Improved faster and more efficient scoreboard library (thanks to TigerHix)
    > RC 2
    * Fixed plugin couldn't start if Cloudflare was blocked in your country (or services were offline)
    * Removed locale suggester, it will no longer spam console when English (default) locale is used

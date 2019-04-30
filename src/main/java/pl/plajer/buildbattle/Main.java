@@ -57,7 +57,7 @@ import pl.plajer.buildbattle.menus.options.registry.particles.ParticleRefreshSch
 import pl.plajer.buildbattle.menus.themevoter.VoteMenuListener;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.user.UserManager;
-import pl.plajer.buildbattle.user.data.MySQLManager;
+import pl.plajer.buildbattle.user.data.MysqlManager;
 import pl.plajer.buildbattle.utils.CuboidSelector;
 import pl.plajer.buildbattle.utils.Debugger;
 import pl.plajer.buildbattle.utils.ExceptionLogHandler;
@@ -283,8 +283,8 @@ public class Main extends JavaPlugin {
         if (!stat.isPersistent()) {
           continue;
         }
-        if (userManager.getDatabase() instanceof MySQLManager) {
-          ((MySQLManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE buildbattlestats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+        if (userManager.getDatabase() instanceof MysqlManager) {
+          ((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE buildbattlestats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
           continue;
         }
         userManager.getDatabase().saveStatistic(user, stat);

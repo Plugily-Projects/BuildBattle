@@ -38,12 +38,12 @@ import pl.plajerlair.commonsbox.database.MysqlDatabase;
  * <p>
  * Created at 28.09.2018
  */
-public class MySQLManager implements UserDatabase {
+public class MysqlManager implements UserDatabase {
 
   private Main plugin;
   private MysqlDatabase database;
 
-  public MySQLManager(Main plugin) {
+  public MysqlManager(Main plugin) {
     this.plugin = plugin;
     database = plugin.getMysqlDatabase();
     try (Statement statement = database.getConnection().createStatement()) {

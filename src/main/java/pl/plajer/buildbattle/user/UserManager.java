@@ -29,7 +29,7 @@ import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.user.data.FileStats;
-import pl.plajer.buildbattle.user.data.MySQLManager;
+import pl.plajer.buildbattle.user.data.MysqlManager;
 import pl.plajer.buildbattle.user.data.UserDatabase;
 import pl.plajer.buildbattle.utils.Debugger;
 
@@ -45,7 +45,7 @@ public class UserManager {
   public UserManager(Main plugin) {
     this.plugin = plugin;
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      database = new MySQLManager(plugin);
+      database = new MysqlManager(plugin);
     } else {
       database = new FileStats(plugin);
     }
