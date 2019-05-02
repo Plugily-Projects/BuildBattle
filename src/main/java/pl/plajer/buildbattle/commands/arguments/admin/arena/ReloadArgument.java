@@ -18,6 +18,10 @@
 
 package pl.plajer.buildbattle.commands.arguments.admin.arena;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -36,12 +40,22 @@ import pl.plajer.buildbattle.commands.arguments.data.LabeledCommandArgument;
  */
 public class ReloadArgument {
 
+  private Set<CommandSender> confirmations = new HashSet<>();
+
   public ReloadArgument(ArgumentsRegistry registry) {
     registry.mapArgument("buildbattleadmin", new LabeledCommandArgument("reload", "buildbattle.admin.reload", CommandArgument.ExecutorType.BOTH,
         new LabelData("/bba reload", "/bba reload", "&7Reload all game arenas\n&7&lThey will be stopped!\n"
             + "&c&lNot recommended!\n&6Permission: &7buildbattle.admin.reload")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
+        if (!confirmations.contains(sender)) {
+          confirmations.add(sender);
+          Bukkit.getScheduler().runTaskLater(registry.getPlugin(), () -> confirmations.remove(sender), 20 * 10);
+          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix()
+              + registry.getPlugin().getChatManager().colorRawMessage("&cAre you sure you want to do this action? Type the command again &6within 10 seconds &cto confirm!"));
+          return;
+        }
+        confirmations.remove(sender);
         for (BaseArena arena : ArenaRegistry.getArenas()) {
           ArenaManager.stopGame(true, arena);
         }

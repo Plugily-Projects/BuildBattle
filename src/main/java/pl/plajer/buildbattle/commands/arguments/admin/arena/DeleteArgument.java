@@ -18,6 +18,10 @@
 
 package pl.plajer.buildbattle.commands.arguments.admin.arena;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -37,6 +41,8 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
  */
 public class DeleteArgument {
 
+  private Set<CommandSender> confirmations = new HashSet<>();
+
   public DeleteArgument(ArgumentsRegistry registry) {
     registry.mapArgument("buildbattleadmin", new LabeledCommandArgument("delete", "buildbattle.admin.delete", CommandArgument.ExecutorType.PLAYER,
         new LabelData("/bba delete &6<arena>", "/bba delete <arena>",
@@ -52,6 +58,14 @@ public class DeleteArgument {
           sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Arena-Like-That"));
           return;
         }
+        if (!confirmations.contains(sender)) {
+          confirmations.add(sender);
+          Bukkit.getScheduler().runTaskLater(registry.getPlugin(), () -> confirmations.remove(sender), 20 * 10);
+          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix()
+              + registry.getPlugin().getChatManager().colorRawMessage("&cAre you sure you want to do this action? Type the command again &6within 10 seconds &cto confirm!"));
+          return;
+        }
+        confirmations.remove(sender);
         ArenaManager.stopGame(false, arena);
         FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
         config.set("instances." + args[1], null);

@@ -1,6 +1,6 @@
 ## BuildBattle 3 changelog
 
-### 4.0.0 Beta Pre Releases 3-15 (03.10.2018 - 28.04.2019)
+### 4.0.0 Beta Pre Releases 3-15 (03.10.2018 - 02.05.2019)
    > RC 3
    * Fixed typo in message accessor for guess the build game mode message
    * Now players aren't saved async in onDisable method which led to exceptions in disable stage
@@ -8,6 +8,7 @@
    * Teams game mode require now to have at least 3 minimum players to play, it will set it to 3 if
    it's set lower
    * Improved faster and more efficient scoreboard library (thanks to TigerHix)
+   * Reload and arena delete commands now require confirmation to execute, you must type the command twice to confirm the action
    > RC 2
    * Fixed plugin couldn't start if Cloudflare was blocked in your country (or services were offline)
    * Removed locale suggester, it will no longer spam console when English (default) locale is used
