@@ -216,7 +216,7 @@
                                 </relocation>
                                 <relocation>
                                     <pattern>pl.plajerlair.commonsbox</pattern>
-                                    <shadedPattern>pl.plajer.villagedefense.plajerlair.commonsbox</shadedPattern>
+                                    <shadedPattern>pl.plajer.buildbattle.plajerlair.commonsbox</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.bstats</pattern>
