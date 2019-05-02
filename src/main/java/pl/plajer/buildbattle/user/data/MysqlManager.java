@@ -107,6 +107,7 @@ public class MysqlManager implements UserDatabase {
         }
         user.setStat(stat, set.getInt(1));
       } catch (SQLException e) {
+        user.setStat(stat, 0);
         e.printStackTrace();
         MessageUtils.errorOccurred();
         Bukkit.getConsoleSender().sendMessage("Cannot get contents from MySQL database!");
