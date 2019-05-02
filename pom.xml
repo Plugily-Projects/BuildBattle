@@ -215,6 +215,10 @@
                                     <shadedPattern>pl.plajer.buildbattle.plajerlair.services</shadedPattern>
                                 </relocation>
                                 <relocation>
+                                    <pattern>pl.plajerlair.commonsbox</pattern>
+                                    <shadedPattern>pl.plajer.villagedefense.plajerlair.commonsbox</shadedPattern>
+                                </relocation>
+                                <relocation>
                                     <pattern>org.bstats</pattern>
                                     <shadedPattern>pl.plajer.buildbattle.utils</shadedPattern>
                                 </relocation>
