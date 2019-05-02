@@ -10,6 +10,7 @@
    * Improved faster and more efficient scoreboard library (thanks to TigerHix)
    * Reload and arena delete commands now require confirmation to execute, you must type the command twice to confirm the action
    * Implemented faster Hikari database connection pool library instead of BoneCP, jar is now 3 times smaller
+   * First time database creation is now made async not in main server thread
    > RC 2
    * Fixed plugin couldn't start if Cloudflare was blocked in your country (or services were offline)
    * Removed locale suggester, it will no longer spam console when English (default) locale is used
