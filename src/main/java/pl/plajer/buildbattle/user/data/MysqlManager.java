@@ -18,8 +18,7 @@
 
 package pl.plajer.buildbattle.user.data;
 
-import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
-
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -46,46 +45,45 @@ public class MysqlManager implements UserDatabase {
   public MysqlManager(Main plugin) {
     this.plugin = plugin;
     database = plugin.getMysqlDatabase();
-    try (Statement statement = database.getConnection().createStatement()) {
-      statement.executeUpdate(
-          "CREATE TABLE IF NOT EXISTS `buildbattlestats` (\n"
-              + "  `UUID` text NOT NULL,\n"
-              + "  `name` text NOT NULL,\n"
-              + "  `loses` int(11) NOT NULL DEFAULT '0',\n"
-              + "  `wins` int(11) NOT NULL DEFAULT '0',\n"
-              + "  `highestwin` int(11) NOT NULL DEFAULT '0',\n"
-              + "  `gamesplayed` int(11) NOT NULL DEFAULT '0',\n"
-              + "  `blocksbroken` int(11) NOT NULL DEFAULT '0',\n"
-              + "  `blocksplaced` int(11) NOT NULL DEFAULT '0',\n"
-              + "  `supervotes` int(11) NOT NULL DEFAULT '0',\n"
-              + "  `particles` int(11) NOT NULL DEFAULT '0');");
+    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+      try (Connection connection = database.getConnection()) {
+        Statement statement = connection.createStatement();
+        statement.executeUpdate(
+            "CREATE TABLE IF NOT EXISTS `buildbattlestats` (\n"
+                + "  `UUID` text NOT NULL,\n"
+                + "  `name` text NOT NULL,\n"
+                + "  `loses` int(11) NOT NULL DEFAULT '0',\n"
+                + "  `wins` int(11) NOT NULL DEFAULT '0',\n"
+                + "  `highestwin` int(11) NOT NULL DEFAULT '0',\n"
+                + "  `gamesplayed` int(11) NOT NULL DEFAULT '0',\n"
+                + "  `blocksbroken` int(11) NOT NULL DEFAULT '0',\n"
+                + "  `blocksplaced` int(11) NOT NULL DEFAULT '0',\n"
+                + "  `supervotes` int(11) NOT NULL DEFAULT '0',\n"
+                + "  `particles` int(11) NOT NULL DEFAULT '0');");
 
-      //temporary workaround
-      try {
-        statement.executeUpdate("ALTER TABLE buildbattlestats ADD supervotes int(11) NOT NULL DEFAULT '0'");
-      } catch (MySQLSyntaxErrorException e) {
-        if (!e.getMessage().contains("Duplicate column name")) {
-          e.printStackTrace();
+        //temporary workaround
+        try {
+          statement.executeUpdate("ALTER TABLE buildbattlestats ADD supervotes int(11) NOT NULL DEFAULT '0'");
+        } catch (SQLException e) {
+          if (!e.getMessage().contains("Duplicate column name")) {
+            e.printStackTrace();
+          }
         }
-      }
-      try {
-        statement.executeUpdate("ALTER TABLE buildbattlestats ADD name text NOT NULL");
-      } catch (MySQLSyntaxErrorException e) {
-        if (!e.getMessage().contains("Duplicate column name")) {
-          e.printStackTrace();
+        try {
+          statement.executeUpdate("ALTER TABLE buildbattlestats ADD name text NOT NULL");
+        } catch (SQLException e) {
+          if (!e.getMessage().contains("Duplicate column name")) {
+            e.printStackTrace();
+          }
         }
+      } catch (SQLException e) {
+        e.printStackTrace();
       }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
+    });
   }
 
   public MysqlDatabase getDatabase() {
     return database;
-  }
-
-  public void insertPlayer(Player player) {
-    database.executeUpdate("INSERT INTO `buildbattlestats` (UUID,name,gamesplayed) VALUES ('" + player.getUniqueId().toString() + "','" + player.getName() + "',0)");
   }
 
   @Override
@@ -96,19 +94,13 @@ public class MysqlManager implements UserDatabase {
   @Override
   public void loadStatistic(User user, StatsStorage.StatisticType stat) {
     Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-      ResultSet resultSet = database.executeQuery("SELECT UUID from buildbattlestats WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'");
-      //insert into the database
-      try {
-        if (!resultSet.next()) {
+      try (Connection connection = database.getConnection()) {
+        Statement statement = connection.createStatement();
+        if (!statement.executeQuery("SELECT UUID from buildbattlestats WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'").next()) {
           insertPlayer(user.getPlayer());
         }
-      } catch (SQLException e1) {
-        System.out.print("CONNECTION FAILED FOR PLAYER " + user.getPlayer().getName());
-      }
 
-
-      ResultSet set = database.executeQuery("SELECT " + stat.getName() + " FROM `buildbattlestats` WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'");
-      try {
+        ResultSet set = database.executeQuery("SELECT " + stat.getName() + " FROM `buildbattlestats` WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'");
         if (!set.next()) {
           user.setStat(stat, 0);
           return;
@@ -119,9 +111,12 @@ public class MysqlManager implements UserDatabase {
         MessageUtils.errorOccurred();
         Bukkit.getConsoleSender().sendMessage("Cannot get contents from MySQL database!");
         Bukkit.getConsoleSender().sendMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
-        user.setStat(stat, 0);
       }
     });
+  }
+
+  private void insertPlayer(Player player) {
+    database.executeUpdate("INSERT INTO `buildbattlestats` (UUID,name,gamesplayed) VALUES ('" + player.getUniqueId().toString() + "','" + player.getName() + "',0)");
   }
 
 }
