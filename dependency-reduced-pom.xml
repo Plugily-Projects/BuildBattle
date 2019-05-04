@@ -80,6 +80,10 @@
                     <pattern>pl.plajerlair.services</pattern>
                     <shadedPattern>pl.plajer.buildbattle.plajerlair.services</shadedPattern>
                 </relocation>
+                  <relocation>
+                      <pattern>pl.plajerlair.commonsbox</pattern>
+                      <shadedPattern>pl.plajer.buildbattle.plajerlair.commonsbox</shadedPattern>
+                </relocation>
                 <relocation>
                   <pattern>org.bstats</pattern>
                   <shadedPattern>pl.plajer.buildbattle.utils</shadedPattern>
@@ -136,6 +140,10 @@
           <artifactId>json-simple</artifactId>
           <groupId>com.googlecode.json-simple</groupId>
         </exclusion>
+          <exclusion>
+              <artifactId>guava</artifactId>
+              <groupId>com.google.guava</groupId>
+          </exclusion>
         <exclusion>
           <artifactId>gson</artifactId>
           <groupId>com.google.code.gson</groupId>
@@ -165,9 +173,13 @@
           <groupId>com.googlecode.json-simple</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>gson</artifactId>
-          <groupId>com.google.code.gson</groupId>
+            <artifactId>guava</artifactId>
+            <groupId>com.google.guava</groupId>
         </exclusion>
+          <exclusion>
+              <artifactId>gson</artifactId>
+              <groupId>com.google.code.gson</groupId>
+          </exclusion>
         <exclusion>
           <artifactId>snakeyaml</artifactId>
           <groupId>org.yaml</groupId>
@@ -190,12 +202,6 @@
       <groupId>com.google.code.findbugs</groupId>
       <artifactId>jsr305</artifactId>
       <version>3.0.2</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <version>5.1.6</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -226,6 +232,10 @@
           <artifactId>log4j-api</artifactId>
           <groupId>org.apache.logging.log4j</groupId>
         </exclusion>
+          <exclusion>
+              <artifactId>guava</artifactId>
+              <groupId>com.google.guava</groupId>
+          </exclusion>
         <exclusion>
           <artifactId>gson</artifactId>
           <groupId>com.google.code.gson</groupId>

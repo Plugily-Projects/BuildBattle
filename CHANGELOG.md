@@ -1,6 +1,6 @@
 ## BuildBattle 3 changelog
 
-### 4.0.0 Beta Pre Releases 3-15 (03.10.2018 - 02.05.2019)
+### 4.0.0 Beta Pre Releases 3-15 (03.10.2018 - 04.05.2019)
    > RC 3
    * Fixed typo in message accessor for guess the build game mode message
    * Now players aren't saved async in onDisable method which led to exceptions in disable stage
