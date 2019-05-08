@@ -134,6 +134,13 @@ public class SetupInventory {
         .lore(ChatColor.GRAY + "It will validate and register arena.")
         .build());
 
+    inventory.setItem(16, new ItemBuilder(XMaterial.GOLD_INGOT.parseItem())
+        .name(ChatColor.GOLD + "► Extras Addon (AD) ◄")
+        .lore(ChatColor.GRAY + "Add extras to Build Battle gameplay with paid addon!")
+        .lore(ChatColor.GOLD + "Features of this addon:")
+        .lore(ChatColor.GOLD + "Achievements, Chat Ranks, Replay Ability")
+        .lore(ChatColor.GRAY + "Click to get link for patron program!")
+        .build());
     inventory.setItem(17, new ItemBuilder(XMaterial.FILLED_MAP.parseItem())
         .name(ChatColor.GOLD + "► View setup video")
         .lore(ChatColor.GRAY + "Having problems with setup or wanna")
@@ -210,7 +217,7 @@ public class SetupInventory {
 
   public enum ClickPosition {
     SET_ENDING(0), SET_LOBBY(1), SET_MINIMUM_PLAYERS(2), SET_MAXIMUM_PLAYERS(3), ADD_SIGN(4), SET_GAME_TYPE(5), SET_MAP_NAME(6),
-    ADD_GAME_PLOT(7), ADD_FLOOR_CHANGER_NPC(8), REGISTER_ARENA(9), VIEW_SETUP_VIDEO(17);
+    ADD_GAME_PLOT(7), ADD_FLOOR_CHANGER_NPC(8), REGISTER_ARENA(9), EXTRAS_AD(16), VIEW_SETUP_VIDEO(17);
 
     private int position;
 
