@@ -495,13 +495,14 @@ public class GameEvents implements Listener {
       if (arena instanceof SoloArena && ((SoloArena) arena).isVoting()) {
         return;
       }
-      if (!e.getPlayer().getInventory().getItemInMainHand().getType().isBlock()) {
+      Material material = e.getPlayer().getInventory().getItemInMainHand().getType();
+      if (!material.isBlock() || !material.isOccluding()) {
         return;
       }
-      if (plugin.getConfigPreferences().getItemBlacklist().contains(e.getPlayer().getInventory().getItemInMainHand().getType())) {
+      if (plugin.getConfigPreferences().getItemBlacklist().contains(material)) {
         return;
       }
-      arena.getPlotManager().getPlot(e.getPlayer()).changeFloor(e.getPlayer().getInventory().getItemInMainHand().getType(), e.getPlayer().getInventory().getItemInMainHand().getData().getData());
+      arena.getPlotManager().getPlot(e.getPlayer()).changeFloor(material, e.getPlayer().getInventory().getItemInMainHand().getData().getData());
       e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Floor.Floor-Changed"));
     }
   }

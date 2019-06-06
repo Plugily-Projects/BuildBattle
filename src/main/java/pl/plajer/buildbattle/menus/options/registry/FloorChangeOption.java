@@ -62,6 +62,10 @@ public class FloorChangeOption {
           e.setCancelled(true);
           return;
         }
+        if (!e.getCursor().getType().isBlock() || !e.getCursor().getType().isOccluding()) {
+          e.setCancelled(true);
+          return;
+        }
 
         arena.getPlotManager().getPlot((Player) e.getWhoClicked()).changeFloor(e.getCursor().getType(), e.getCursor().getData().getData());
         e.getWhoClicked().sendMessage(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Floor.Floor-Changed"));
