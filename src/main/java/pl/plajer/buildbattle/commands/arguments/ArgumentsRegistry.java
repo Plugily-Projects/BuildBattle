@@ -110,7 +110,7 @@ public class ArgumentsRegistry implements CommandExecutor {
     for (String mainCommand : mappedArguments.keySet()) {
       if (cmd.getName().equalsIgnoreCase(mainCommand)) {
         if (cmd.getName().equalsIgnoreCase("buildbattle")) {
-          if (args.length == 0) {
+          if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
             sender.sendMessage(plugin.getChatManager().colorMessage("Commands.Main-Command.Header"));
             sender.sendMessage(plugin.getChatManager().colorMessage("Commands.Main-Command.Description"));
             if (sender.hasPermission("buildbattle.admin")) {
@@ -136,46 +136,40 @@ public class ArgumentsRegistry implements CommandExecutor {
             }
           }
         }
-        if (cmd.getName().equalsIgnoreCase("buildbattleadmin")) {
-          if (args.length == 0) {
-            if (!sender.hasPermission("buildbattle.admin")) {
-              return true;
-            }
-            sender.sendMessage(ChatColor.GREEN + "  " + ChatColor.BOLD + "Build Battle " + ChatColor.GRAY + plugin.getDescription().getVersion());
-            sender.sendMessage(ChatColor.RED + " []" + ChatColor.GRAY + " = optional  " + ChatColor.GOLD + "<>" + ChatColor.GRAY + " = required");
-            if (sender instanceof Player) {
-              sender.sendMessage(ChatColor.GRAY + "Hover command to see more, click command to suggest it.");
-            }
-            List<LabelData> data = mappedArguments.get("buildbattleadmin").stream().filter(arg -> arg instanceof LabeledCommandArgument)
-                .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList());
-            data.add(new LabelData("/bb &6<arena>&f edit", "/bb <arena> edit",
-                "&7Edit existing arena\n&6Permission: &7buildbattle.admin.edit"));
-            data.addAll(mappedArguments.get("buildbattle").stream().filter(arg -> arg instanceof LabeledCommandArgument)
-                .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList()));
-            for (LabelData labelData : data) {
-              TextComponent component;
-              if (sender instanceof Player) {
-                component = new TextComponent(labelData.getText());
-              } else {
-                //more descriptive for console - split at \n to show only basic description
-                component = new TextComponent(labelData.getText() + " - " + labelData.getDescription().split("\n")[0]);
-              }
-              component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, labelData.getCommand()));
-              component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(labelData.getDescription()).create()));
-              sender.spigot().sendMessage(component);
-            }
+        if (cmd.getName().equalsIgnoreCase("buildbattleadmin") && (args.length == 0 || args[0].equalsIgnoreCase("help"))) {
+          if (!sender.hasPermission("buildbattle.admin")) {
             return true;
           }
+          sender.sendMessage(ChatColor.GREEN + "  " + ChatColor.BOLD + "Build Battle " + ChatColor.GRAY + plugin.getDescription().getVersion());
+          sender.sendMessage(ChatColor.RED + " []" + ChatColor.GRAY + " = optional  " + ChatColor.GOLD + "<>" + ChatColor.GRAY + " = required");
+          if (sender instanceof Player) {
+            sender.sendMessage(ChatColor.GRAY + "Hover command to see more, click command to suggest it.");
+          }
+          List<LabelData> data = mappedArguments.get("buildbattleadmin").stream().filter(arg -> arg instanceof LabeledCommandArgument)
+              .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList());
+          data.add(new LabelData("/bb &6<arena>&f edit", "/bb <arena> edit",
+              "&7Edit existing arena\n&6Permission: &7buildbattle.admin.edit"));
+          data.addAll(mappedArguments.get("buildbattle").stream().filter(arg -> arg instanceof LabeledCommandArgument)
+              .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList()));
+          for (LabelData labelData : data) {
+            TextComponent component;
+            if (sender instanceof Player) {
+              component = new TextComponent(labelData.getText());
+            } else {
+              //more descriptive for console - split at \n to show only basic description
+              component = new TextComponent(labelData.getText() + " - " + labelData.getDescription().split("\n")[0]);
+            }
+            component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, labelData.getCommand()));
+            component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(labelData.getDescription()).create()));
+            sender.spigot().sendMessage(component);
+          }
+          return true;
         }
         for (CommandArgument argument : mappedArguments.get(mainCommand)) {
           if (argument.getArgumentName().equalsIgnoreCase(args[0])) {
             boolean hasPerm = false;
             for (String perm : argument.getPermissions()) {
-              if (perm.equals("")) {
-                hasPerm = true;
-                break;
-              }
-              if (sender.hasPermission(perm)) {
+              if (perm.equals("") || sender.hasPermission(perm)) {
                 hasPerm = true;
                 break;
               }
