@@ -38,7 +38,7 @@ public class ExceptionLogHandler extends Handler {
 
   //these classes if found in stacktraces won't be reported
   //to the Error Service
-  private List<String> blacklistedClasses = Arrays.asList("pl.plajer.buildbattle.user.data.MySQLManager", "pl.plajer.buildbattle.plajerlair.core.database.MySQLDatabase",
+  private List<String> blacklistedClasses = Arrays.asList("pl.plajer.buildbattle.user.data.MySQLManager", "pl.plajerlair.commonsbox.database.MySQLDatabase",
       "pl.plajer.buildbattle.arena.impl.GuessTheBuildArena" /* GTB mode is in beta, disabled for reporting */);
 
   public ExceptionLogHandler() {
