@@ -43,7 +43,7 @@ public class TeamArena extends SoloArena {
 
   @Override
   public void setMinimumPlayers(int amount) {
-    if (amount < 2) {
+    if (amount <= 2) {
       Debugger.debug(Debugger.Level.WARN, "Minimum players amount for TEAM game mode arena cannot be less than 3! Setting amount to 3!");
       setOptionValue(ArenaOption.MINIMUM_PLAYERS, 3);
       return;
