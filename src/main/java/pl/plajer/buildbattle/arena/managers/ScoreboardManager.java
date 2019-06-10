@@ -169,7 +169,7 @@ public class ScoreboardManager {
       returnString = StringUtils.replace(returnString, "%TEAMMATE%", plugin.getChatManager().colorMessage("In-Game.Nobody"));
     }
     if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-      PlaceholderAPI.setPlaceholders(player, returnString);
+      returnString = PlaceholderAPI.setPlaceholders(player, returnString);
     }
     returnString = plugin.getChatManager().colorRawMessage(returnString);
     return returnString;
