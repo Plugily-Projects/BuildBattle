@@ -207,9 +207,6 @@ Update-Notifier:
 # Disable or enable MySQL database here, see mysql.yml for more
 DatabaseActivated: false
 
-# Should plugin send 'debug spam' to console? IT CAN HELP IF YOU OCCUR SOME WEIRD BEHAVIOUR FROM PLUGIN
-Debug: false
-
 # Don't modify.
 Version: 6
 
