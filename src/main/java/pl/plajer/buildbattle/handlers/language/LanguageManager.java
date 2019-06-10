@@ -32,11 +32,11 @@ import org.bukkit.configuration.file.FileConfiguration;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.utils.Debugger;
 import pl.plajer.buildbattle.utils.MessageUtils;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajer.buildbattle.utils.services.ServiceRegistry;
 import pl.plajer.buildbattle.utils.services.locale.Locale;
 import pl.plajer.buildbattle.utils.services.locale.LocaleRegistry;
 import pl.plajer.buildbattle.utils.services.locale.LocaleService;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 
 /**
  * @author Plajer
@@ -169,6 +169,10 @@ public class LanguageManager {
 
   public static Locale getPluginLocale() {
     return pluginLocale;
+  }
+
+  public static void reloadConfig() {
+    LanguageManager.languageConfig = ConfigUtils.getConfig(plugin, "language");
   }
 
 }

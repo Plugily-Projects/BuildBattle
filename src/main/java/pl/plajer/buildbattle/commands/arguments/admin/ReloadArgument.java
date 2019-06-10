@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle.commands.arguments.admin.arena;
+package pl.plajer.buildbattle.commands.arguments.admin;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,7 +24,10 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
 
+import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
@@ -32,6 +35,8 @@ import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
 import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
 import pl.plajer.buildbattle.commands.arguments.data.LabelData;
 import pl.plajer.buildbattle.commands.arguments.data.LabeledCommandArgument;
+import pl.plajer.buildbattle.handlers.language.LanguageManager;
+import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 
 /**
  * @author Plajer
@@ -44,8 +49,7 @@ public class ReloadArgument {
 
   public ReloadArgument(ArgumentsRegistry registry) {
     registry.mapArgument("buildbattleadmin", new LabeledCommandArgument("reload", "buildbattle.admin.reload", CommandArgument.ExecutorType.BOTH,
-        new LabelData("/bba reload", "/bba reload", "&7Reload all game arenas\n&7&lThey will be stopped!\n"
-            + "&c&lNot recommended!\n&6Permission: &7buildbattle.admin.reload")) {
+        new LabelData("/bba reload", "/bba reload", "&7Reload all game arenas and configuration files\n&7&lThey will be stopped!\n&6Permission: &7buildbattle.admin.reload")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
         if (!confirmations.contains(sender)) {
@@ -56,7 +60,24 @@ public class ReloadArgument {
           return;
         }
         confirmations.remove(sender);
+
+        registry.getPlugin().reloadConfig();
+        LanguageManager.reloadConfig();
+
         for (BaseArena arena : ArenaRegistry.getArenas()) {
+          for (Player player : arena.getPlayers()) {
+            arena.doBarAction(BaseArena.BarAction.REMOVE, player);
+            arena.teleportToEndLocation(player);
+            if (registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+              InventorySerializer.loadInventory(registry.getPlugin(), player);
+            } else {
+              player.getInventory().clear();
+              player.getInventory().setArmorContents(null);
+              for (PotionEffect pe : player.getActivePotionEffects()) {
+                player.removePotionEffect(pe.getType());
+              }
+            }
+          }
           ArenaManager.stopGame(true, arena);
         }
         registry.getPlugin().getConfigPreferences().loadOptions();

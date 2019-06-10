@@ -16,6 +16,7 @@ it's set lower
 * Debug in config is no longer visible by default, no one need it
 * Removed hiding/showing players in-game and outside game thing, it was bugged and better to avoid problems with it
 * Fixed game ending message was never showed when using any of the locales (accessor was broken)
+* /bba reload command was undeprecated and it's usage is no longer discouraged
 
 ### 4.0.0 Beta Pre Releases 3-15 (03.10.2018 - 06.06.2019)
    > RC 2
