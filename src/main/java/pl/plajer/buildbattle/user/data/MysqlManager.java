@@ -100,7 +100,7 @@ public class MysqlManager implements UserDatabase {
           insertPlayer(user.getPlayer());
         }
 
-        try (ResultSet set = database.executeQuery("SELECT " + stat.getName() + " FROM `buildbattlestats` WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'")) {
+        try (ResultSet set = statement.executeQuery("SELECT " + stat.getName() + " FROM `buildbattlestats` WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'")) {
           if (!set.next()) {
             user.setStat(stat, 0);
             return;
