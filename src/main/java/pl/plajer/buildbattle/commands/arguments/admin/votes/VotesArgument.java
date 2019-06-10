@@ -30,7 +30,7 @@ import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
 import pl.plajer.buildbattle.commands.arguments.data.LabelData;
 import pl.plajer.buildbattle.commands.arguments.data.LabeledCommandArgument;
 import pl.plajer.buildbattle.user.User;
-import pl.plajer.buildbattle.utils.Utils;
+import pl.plajerlair.commonsbox.number.NumberUtils;
 
 /**
  * @author Plajer
@@ -65,7 +65,7 @@ public class VotesArgument {
           return;
         }
 
-        if (Utils.isInteger(args[2])) {
+        if (NumberUtils.isInteger(args[2])) {
           User user = registry.getPlugin().getUserManager().getUser(target);
 
           String successMessage;
