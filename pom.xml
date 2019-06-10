@@ -201,10 +201,6 @@
                                     <shadedPattern>pl.plajer.buildbattle.database.hikari</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>pl.plajerlair.services</pattern>
-                                    <shadedPattern>pl.plajer.buildbattle.plajerlair.services</shadedPattern>
-                                </relocation>
-                                <relocation>
                                     <pattern>pl.plajerlair.commonsbox</pattern>
                                     <shadedPattern>pl.plajer.buildbattle.plajerlair.commonsbox</shadedPattern>
                                 </relocation>

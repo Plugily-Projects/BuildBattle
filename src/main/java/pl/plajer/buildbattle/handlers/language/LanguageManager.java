@@ -33,10 +33,10 @@ import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.utils.Debugger;
 import pl.plajer.buildbattle.utils.MessageUtils;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.services.ServiceRegistry;
-import pl.plajerlair.services.locale.Locale;
-import pl.plajerlair.services.locale.LocaleRegistry;
-import pl.plajerlair.services.locale.LocaleService;
+import pl.plajer.buildbattle.utils.services.ServiceRegistry;
+import pl.plajer.buildbattle.utils.services.locale.Locale;
+import pl.plajer.buildbattle.utils.services.locale.LocaleRegistry;
+import pl.plajer.buildbattle.utils.services.locale.LocaleService;
 
 /**
  * @author Plajer
