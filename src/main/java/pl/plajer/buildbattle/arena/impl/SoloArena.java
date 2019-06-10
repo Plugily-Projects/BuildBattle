@@ -460,7 +460,7 @@ public class SoloArena extends BaseArena {
       }
       formattedSummary.add(message);
     }
-    getPlayers().forEach((player) -> formattedSummary.forEach((msg) -> MiscUtils.sendCenteredMessage(player, msg)));
+    getPlayers().forEach(player -> formattedSummary.forEach(msg -> MiscUtils.sendCenteredMessage(player, msg)));
     for (int rang : topList.keySet()) {
       if (topList.get(rang) != null) {
         for (Player p : topList.get(rang)) {

@@ -1,18 +1,20 @@
 ## BuildBattle 3 changelog
 
+### 4.0.0 Release (10.06.2019)
+* Fixed typo in message accessor for guess the build game mode message
+* Now players aren't saved async in onDisable method which led to exceptions in disable stage
+* Fixed bad logic of assigning players to teams in teams game mode
+* Teams game mode require now to have at least 3 minimum players to play, it will set it to 3 if
+it's set lower
+* Improved faster and more efficient scoreboard library (thanks to TigerHix)
+* Reload and arena delete commands now require confirmation to execute, you must type the command twice to confirm the action
+* Implemented faster Hikari database connection pool library instead of BoneCP, jar is now 3 times smaller
+* First time database creation is now made async not in main server thread
+* Apache Commons-io library is shaded into the jar now, 1.14 removed it
+* You cannot set non occluding blocks as a floor block
+* **CRITICAL** Players received packets that would break their chunks nearby them due to wrong arena plot reset check, now it's fixed
+
 ### 4.0.0 Beta Pre Releases 3-15 (03.10.2018 - 06.06.2019)
-   > RC 3
-   * Fixed typo in message accessor for guess the build game mode message
-   * Now players aren't saved async in onDisable method which led to exceptions in disable stage
-   * Fixed bad logic of assigning players to teams in teams game mode
-   * Teams game mode require now to have at least 3 minimum players to play, it will set it to 3 if
-   it's set lower
-   * Improved faster and more efficient scoreboard library (thanks to TigerHix)
-   * Reload and arena delete commands now require confirmation to execute, you must type the command twice to confirm the action
-   * Implemented faster Hikari database connection pool library instead of BoneCP, jar is now 3 times smaller
-   * First time database creation is now made async not in main server thread
-   * Apache Commons-io library is shaded into the jar now, 1.14 removed it
-   * You cannot set non occluding blocks as a floor block  
    > RC 2
    * Fixed plugin couldn't start if Cloudflare was blocked in your country (or services were offline)
    * Removed locale suggester, it will no longer spam console when English (default) locale is used

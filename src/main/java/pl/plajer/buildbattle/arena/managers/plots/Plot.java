@@ -173,6 +173,9 @@ public class Plot {
     try {
       for (Chunk chunk : getCuboid().chunkList()) {
         for (Player p : Bukkit.getOnlinePlayers()) {
+          if (!p.getWorld().equals(chunk.getWorld())) {
+            continue;
+          }
           Utils.sendPacket(p, Utils.getNMSClass("PacketPlayOutMapChunk").getConstructor(Utils.getNMSClass("Chunk"), int.class)
               .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535));
         }

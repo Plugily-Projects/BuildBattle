@@ -76,6 +76,14 @@
             </goals>
             <configuration>
               <relocations>
+                  <relocation>
+                      <pattern>org.apache.commons.io</pattern>
+                      <shadedPattern>pl.plajer.buildbattle.utils.commons.io</shadedPattern>
+                  </relocation>
+                  <relocation>
+                      <pattern>com.zaxxer.hikari</pattern>
+                      <shadedPattern>pl.plajer.buildbattle.database.hikari</shadedPattern>
+                  </relocation>
                 <relocation>
                     <pattern>pl.plajerlair.services</pattern>
                     <shadedPattern>pl.plajer.buildbattle.plajerlair.services</shadedPattern>
@@ -236,23 +244,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-      <dependency>
-          <groupId>me.tigerhix.lib</groupId>
-          <artifactId>scoreboard</artifactId>
-          <version>1.0.1-SNAPSHOT</version>
-          <scope>system</scope>
-          <systemPath>${project.basedir}/lib/ScoreboardLib.jar</systemPath>
-          <exclusions>
-              <exclusion>
-                  <artifactId>spigotmc.api</artifactId>
-                  <groupId>org</groupId>
-              </exclusion>
-              <exclusion>
-                  <artifactId>spigotmc</artifactId>
-                  <groupId>org</groupId>
-              </exclusion>
-          </exclusions>
-      </dependency>
   </dependencies>
   <distributionManagement>
     <repository>
