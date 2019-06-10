@@ -22,6 +22,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -29,7 +30,6 @@ import org.bukkit.entity.Player;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.user.User;
-import pl.plajer.buildbattle.utils.MessageUtils;
 import pl.plajerlair.commonsbox.database.MysqlDatabase;
 
 /**
@@ -46,8 +46,8 @@ public class MysqlManager implements UserDatabase {
     this.plugin = plugin;
     database = plugin.getMysqlDatabase();
     Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-      try (Connection connection = database.getConnection()) {
-        Statement statement = connection.createStatement();
+      try (Connection connection = database.getConnection();
+           Statement statement = connection.createStatement()) {
         statement.executeUpdate(
             "CREATE TABLE IF NOT EXISTS `buildbattlestats` (\n"
                 + "  `UUID` text NOT NULL,\n"
@@ -94,24 +94,22 @@ public class MysqlManager implements UserDatabase {
   @Override
   public void loadStatistic(User user, StatsStorage.StatisticType stat) {
     Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-      try (Connection connection = database.getConnection()) {
-        Statement statement = connection.createStatement();
+      try (Connection connection = database.getConnection();
+           Statement statement = connection.createStatement()) {
         if (!statement.executeQuery("SELECT UUID from buildbattlestats WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'").next()) {
           insertPlayer(user.getPlayer());
         }
 
-        ResultSet set = database.executeQuery("SELECT " + stat.getName() + " FROM `buildbattlestats` WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'");
-        if (!set.next()) {
-          user.setStat(stat, 0);
-          return;
+        try (ResultSet set = database.executeQuery("SELECT " + stat.getName() + " FROM `buildbattlestats` WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'")) {
+          if (!set.next()) {
+            user.setStat(stat, 0);
+            return;
+          }
+          user.setStat(stat, set.getInt(1));
         }
-        user.setStat(stat, set.getInt(1));
       } catch (SQLException e) {
+        plugin.getLogger().log(Level.WARNING, "Could not connect to MySQL database! Cause: {0} ({1})", new Object[] {e.getSQLState(), e.getErrorCode()});
         user.setStat(stat, 0);
-        e.printStackTrace();
-        MessageUtils.errorOccurred();
-        Bukkit.getConsoleSender().sendMessage("Cannot get contents from MySQL database!");
-        Bukkit.getConsoleSender().sendMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
       }
     });
   }

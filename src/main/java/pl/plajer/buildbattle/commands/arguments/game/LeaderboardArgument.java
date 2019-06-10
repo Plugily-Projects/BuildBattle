@@ -18,8 +18,10 @@
 
 package pl.plajer.buildbattle.commands.arguments.game;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 
@@ -76,8 +78,9 @@ public class LeaderboardArgument {
             } catch (NullPointerException ex) {
               UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
               if (registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-                ResultSet set = registry.getPlugin().getMysqlDatabase().executeQuery("SELECT name FROM buildbattlestats WHERE UUID='" + current.toString() + "'");
-                try {
+                try (Connection connection = registry.getPlugin().getMysqlDatabase().getConnection();
+                     Statement statement = connection.createStatement();
+                     ResultSet set = statement.executeQuery("SELECT name FROM buildbattlestats WHERE UUID='" + current.toString() + "'")) {
                   if (set.next()) {
                     String message = registry.getPlugin().getChatManager().colorMessage("Commands.Statistics.Format");
                     message = StringUtils.replace(message, "%position%", String.valueOf(i + 1));
@@ -88,6 +91,7 @@ public class LeaderboardArgument {
                     continue;
                   }
                 } catch (SQLException ignored) {
+                  //fail silently
                 }
               }
               String message = registry.getPlugin().getChatManager().colorMessage("Commands.Statistics.Format");

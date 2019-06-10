@@ -18,8 +18,11 @@
 
 package pl.plajer.buildbattle.api;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -54,21 +57,22 @@ public class StatsStorage {
    * @return Map of UUID keys and Integer values sorted in ascending order of requested statistic type
    */
   public static Map<UUID, Integer> getStats(StatisticType stat) {
-    Debugger.debug(Debugger.Level.INFO, "BuildBattle API getStats(" + stat.getName() + ") run");
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      ResultSet set = plugin.getMysqlDatabase().executeQuery("SELECT UUID, " + stat.getName() + " FROM buildbattlestats ORDER BY " + stat.getName() + " ASC;");
-      Map<java.util.UUID, java.lang.Integer> column = new LinkedHashMap<>();
-      try {
+      try (Connection connection = plugin.getMysqlDatabase().getConnection();
+           Statement statement = connection.createStatement();
+           ResultSet set = statement.executeQuery("SELECT UUID, " + stat.getName() + " FROM buildbattlestats ORDER BY " + stat.getName() + " ASC;")) {
+        Map<java.util.UUID, java.lang.Integer> column = new LinkedHashMap<>();
         while (set.next()) {
           column.put(java.util.UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));
         }
+        return column;
       } catch (SQLException e) {
         e.printStackTrace();
         MessageUtils.errorOccurred();
         Bukkit.getConsoleSender().sendMessage("Cannot get contents from MySQL database!");
         Bukkit.getConsoleSender().sendMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
+        return Collections.emptyMap();
       }
-      return column;
     } else {
       FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
       Map<UUID, Integer> stats = new TreeMap<>();
