@@ -3,7 +3,6 @@
 #
 #     Some messages support their own placeholders
 #               like %player% etc.
-#todo validate new messages and insert them to locales at poeditor
 
 Commands:
   Did-You-Mean: "&6Did you mean &e/%command%&6?"
@@ -13,6 +12,7 @@ Commands:
   No-Arena-Like-That: "&cNo arena with that ID!"
   Arena-Is-Full: "&cThis arena is full, sorry!"
   Arena-Started: "&cThis arena already started, sorry!"
+  No-Playing: "&cYou're not playing!"
   Wait-For-Start: "&cYou must wait for arena start!"
   Added-Plot: "&aAdded plot for arena &7%ARENA%"
   Plugin-Reloaded: "&aPlugin and configuration reloaded!"
@@ -102,7 +102,6 @@ Scoreboard:
         - "&7%2%&e: %2_PTS%"
         - "&7%3%&e: %3_PTS%"
         - ""
-        #todo format
         - "%CURRENT_TIMER%"
         - ""
         - "&fTheme:"
@@ -117,7 +116,6 @@ Scoreboard:
       - "&fStarting In: &e%TIMER%"
       - ""
       - "&ewww.plajer.xyz"
-      #todo locale
     Ending-States:
       Classic:
         - "&e&lGAME ENDED"
@@ -163,8 +161,6 @@ In-Game:
   Join-Cancelled-Via-API: "&cYou can't join this game!"
   Nobody: "&eNobody"
   No-Theme-Yet: "&cVoting"
-  #todo locale
-  # todo reorganize
   Guess-The-Build:
     Current-Builder: "&eBuilder: &7%BUILDER%"
     Current-Round: "&eRound: &7%ROUND%/%MAXPLAYERS%"
@@ -313,4 +309,4 @@ Signs:
     - "&5[%playersize%/%maxplayers%]"
 
 # Do not modify!
-File-Version-Do-Not-Edit: 9
+File-Version-Do-Not-Edit: 10

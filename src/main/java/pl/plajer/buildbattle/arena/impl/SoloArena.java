@@ -205,7 +205,7 @@ public class SoloArena extends BaseArena {
             break;
           }
         }
-        if (getPlayers().size() <= 2 && !enoughPlayersToContinue()) {
+        if (!enoughPlayersToContinue()) {
           String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Game-End-Messages.Only-You-Playing");
           getPlugin().getChatManager().broadcast(this, message);
           setArenaState(ArenaState.ENDING);
@@ -526,7 +526,7 @@ public class SoloArena extends BaseArena {
   }
 
   public boolean enoughPlayersToContinue() {
-    return getPlayers().size() > 1;
+    return getPlayers().size() >= 2;
   }
 
   @Override

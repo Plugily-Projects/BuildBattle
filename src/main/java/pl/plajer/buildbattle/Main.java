@@ -21,6 +21,8 @@ package pl.plajer.buildbattle;
 import java.util.Arrays;
 import java.util.List;
 
+import me.tigerhix.lib.scoreboard.ScoreboardLib;
+
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -64,10 +66,10 @@ import pl.plajer.buildbattle.utils.ExceptionLogHandler;
 import pl.plajer.buildbattle.utils.LegacyDataFixer;
 import pl.plajer.buildbattle.utils.MessageUtils;
 import pl.plajer.buildbattle.utils.UpdateChecker;
+import pl.plajer.buildbattle.utils.services.ServiceRegistry;
 import pl.plajerlair.commonsbox.database.MysqlDatabase;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
-import pl.plajer.buildbattle.utils.services.ServiceRegistry;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -194,6 +196,7 @@ public class Main extends JavaPlugin {
   }
 
   private void initializeClasses() {
+    ScoreboardLib.setPluginInstance(this);
     PermissionManager.init();
     new SetupInventoryEvents(this);
     new ArgumentsRegistry(this);

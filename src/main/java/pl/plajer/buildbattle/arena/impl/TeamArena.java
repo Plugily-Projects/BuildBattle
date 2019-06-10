@@ -102,7 +102,6 @@ public class TeamArena extends SoloArena {
 
   @Override
   public boolean enoughPlayersToContinue() {
-    //todo test
     return getPlayers().size() >= 2 && !getPlotManager().getPlot(getPlayers().get(0)).getOwners().contains(getPlayers().get(1));
   }
 

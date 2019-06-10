@@ -76,6 +76,10 @@
             </goals>
             <configuration>
               <relocations>
+                  <relocation>
+                      <pattern>me.tigerhix.lib.scoreboard</pattern>
+                      <shadedPattern>pl.plajer.buildbattle.utils.scoreboard</shadedPattern>
+                  </relocation>
                 <relocation>
                   <pattern>org.apache.commons.io</pattern>
                   <shadedPattern>pl.plajer.buildbattle.utils.commons.io</shadedPattern>

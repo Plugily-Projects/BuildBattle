@@ -44,7 +44,7 @@ public class LeaveArgument {
           Player p = (Player) sender;
           BaseArena arena = ArenaRegistry.getArena(p);
           if (arena == null) {
-            p.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Not-Playing"));
+            p.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Playing"));
             return;
           }
           p.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Teleported-To-The-Lobby"));

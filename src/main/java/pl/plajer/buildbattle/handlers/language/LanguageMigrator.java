@@ -39,7 +39,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int LANGUAGE_FILE_VERSION = 9;
+  public static final int LANGUAGE_FILE_VERSION = 10;
   public static final int CONFIG_FILE_VERSION = 6;
   private List<String> migratable = Arrays.asList("bungee", "config", "language", "MySQL");
   private Main plugin;
@@ -251,6 +251,7 @@ public class LanguageMigrator {
           MigratorUtils.insertAfterLine(file, "Super-Vote-Used:", "  Guess-The-Build-Theme-Selector:\r\n    Inventory-Name: \"Select a theme to build!\"\r\n" +
               "    Theme-Item-Name: \"&b%theme%\"\r\n    Theme-Item-Lore: \"%difficulty%;;&b+%points% &7points if player's guess it correctly;;&eClick to select!\"\r\n" +
               "    Difficulties:\r\n      Easy: \"&aEASY\"\r\n      Medium: \"&eMEDIUM\"\r\n      Hard: \"&cHARD\"");
+          break;
         case 8:
           MigratorUtils.insertAfterLine(file, "Option-Menu:", "    Items:\r\n" +
               "      Particle:\r\n" +
@@ -315,6 +316,9 @@ public class LanguageMigrator {
               "      Guessed-The-Theme: \"&7%player% &ecorrectly guessed the theme!\"\r\n" +
               "      Cant-Talk-When-Guessed: \"&cYou can't talk if you already guessed!\"\r\n" +
               "      Cant-Talk-When-Building: \"&cYou can't talk when you're building!\"");
+          break;
+        case 9:
+          MigratorUtils.insertAfterLine(file, "Commands:", "  No-Playing: \"&cYou're not playing!\"");
       }
       version++;
     }
