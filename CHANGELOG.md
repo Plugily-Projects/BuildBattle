@@ -1,4 +1,4 @@
-## BuildBattle 3 changelog
+## BuildBattle changelog
 
 ### 4.0.0 Release (10.06.2019)
 * Fixed typo in message accessor for guess the build game mode message
