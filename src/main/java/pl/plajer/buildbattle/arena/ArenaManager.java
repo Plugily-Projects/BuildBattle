@@ -108,18 +108,8 @@ public class ArenaManager {
     player.setFoodLevel(20);
     player.getInventory().setArmorContents(new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
     player.getInventory().clear();
-    ArenaUtils.showPlayers(arena);
     plugin.getChatManager().broadcastAction(arena, player, ChatManager.ActionType.JOIN);
     player.updateInventory();
-    for (Player p : arena.getPlayers()) {
-      ArenaUtils.showPlayer(arena, p);
-    }
-    for (Player p : plugin.getServer().getOnlinePlayers()) {
-      if (!arena.getPlayers().contains(player)) {
-        player.hidePlayer(p);
-        p.hidePlayer(player);
-      }
-    }
     SpecialItem leaveItem = plugin.getSpecialItemsRegistry().getSpecialItem("Leave");
     player.getInventory().setItem(leaveItem.getSlot(), leaveItem.getItemStack());
   }

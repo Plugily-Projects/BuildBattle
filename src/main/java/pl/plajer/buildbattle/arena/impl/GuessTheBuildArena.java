@@ -41,7 +41,6 @@ import pl.plajer.buildbattle.api.event.game.BBGameEndEvent;
 import pl.plajer.buildbattle.api.event.game.BBGameStartEvent;
 import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaState;
-import pl.plajer.buildbattle.arena.ArenaUtils;
 import pl.plajer.buildbattle.arena.managers.GuessTheBuildScoreboardManager;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.arena.options.ArenaOption;
@@ -99,7 +98,6 @@ public class GuessTheBuildArena extends BaseArena {
           setArenaState(ArenaState.STARTING);
           Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
           setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
-          ArenaUtils.showPlayers(this);
         }
         setTimer(getTimer() - 1);
         break;
@@ -132,7 +130,6 @@ public class GuessTheBuildArena extends BaseArena {
             player.setGameMode(GameMode.CREATIVE);
             player.setAllowFlight(true);
             player.setFlying(true);
-            ArenaUtils.hidePlayersOutsideTheGame(this, player);
             player.getInventory().setItem(8, getPlugin().getOptionsRegistry().getMenuItem());
             //to prevent Multiverse chaning gamemode bug
             Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setGameMode(GameMode.CREATIVE), 20);
@@ -305,7 +302,6 @@ public class GuessTheBuildArena extends BaseArena {
         }
         for (Player player : getPlayers()) {
           MiscUtils.spawnRandomFirework(player.getLocation());
-          ArenaUtils.showPlayers(this);
         }
         if (getTimer() <= 0) {
           teleportAllToEndLocation();

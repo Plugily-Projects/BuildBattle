@@ -14,6 +14,7 @@ it's set lower
 * You cannot set non occluding blocks as a floor block
 * **CRITICAL** Players received packets that would break their chunks nearby them due to wrong arena plot reset check, now it's fixed
 * Debug in config is no longer visible by default, no one need it
+* Removed hiding/showing players in-game and outside game thing, it was bugged and better to avoid problems with it
 
 ### 4.0.0 Beta Pre Releases 3-15 (03.10.2018 - 06.06.2019)
    > RC 2
