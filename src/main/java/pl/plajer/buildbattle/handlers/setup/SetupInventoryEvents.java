@@ -149,7 +149,7 @@ public class SetupInventoryEvents implements Listener {
       case ADD_SIGN:
         Location location = player.getTargetBlock(null, 10).getLocation();
         if (!(location.getBlock().getState() instanceof Sign)) {
-          player.sendMessage(plugin.getChatManager().colorMessage("Commands.Look-Sign"));
+          player.sendMessage(plugin.getChatManager().colorRawMessage("&cPlease look at sign to add it!"));
           break;
         }
         plugin.getSignManager().getLoadedSigns().put((Sign) location.getBlock().getState(), arena);

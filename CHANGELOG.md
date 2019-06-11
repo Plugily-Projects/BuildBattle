@@ -2,6 +2,7 @@
 
 ### 4.0.1 Release (11.06.2019)
 * Fixed game wouldn't start if there were 2 players or more, sorry
+* Fixed error occurred when you didn't look at sign while adding sign via setup GUI
 
 ### 4.0.0 Release (10.06.2019)
 * Fixed typo in message accessor for guess the build game mode message
