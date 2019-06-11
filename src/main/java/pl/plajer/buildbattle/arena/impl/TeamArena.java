@@ -18,6 +18,8 @@
 
 package pl.plajer.buildbattle.arena.impl;
 
+import com.google.common.collect.Lists;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +30,6 @@ import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.arena.options.ArenaOption;
 import pl.plajer.buildbattle.utils.Debugger;
-import pl.plajer.buildbattle.utils.Partition;
 
 /**
  * @author Plajer
@@ -53,7 +54,7 @@ public class TeamArena extends SoloArena {
 
   @Override
   public void distributePlots() {
-    List<List<Player>> pairs = Partition.ofSize(new ArrayList<>(getPlayers()), 2);
+    List<List<Player>> pairs = Lists.partition(new ArrayList<>(getPlayers()), 2);
     int i = 0;
     for (Plot plot : getPlotManager().getPlots()) {
       if (pairs.size() <= i) {
@@ -102,7 +103,13 @@ public class TeamArena extends SoloArena {
 
   @Override
   public boolean enoughPlayersToContinue() {
-    return getPlayers().size() >= 2 && !getPlotManager().getPlot(getPlayers().get(0)).getOwners().contains(getPlayers().get(1));
+    if (getPlayers().size() >= 2) {
+      return true;
+    } else if (getPlayers().size() == 2) {
+      return !getPlotManager().getPlot(getPlayers().get(0)).getOwners().contains(getPlayers().get(1));
+    } else {
+      return false;
+    }
   }
 
 }
