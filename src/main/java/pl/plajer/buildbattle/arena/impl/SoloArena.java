@@ -351,14 +351,15 @@ public class SoloArena extends BaseArena {
       if (players.isEmpty()) {
         break;
       }
-      if (plot.getOwners() != null && getPlayers().size() == 2) {
-        if (plot.getOwners().size() == 0) {
-          plot.addOwner(players.get(0));
-          getPlugin().getUserManager().getUser(players.get(0)).setCurrentPlot(plot);
-
-          players.remove(0);
-        }
+      //owned already
+      if (plot.getOwners().size() > 0) {
+        continue;
       }
+      plot.addOwner(players.get(0));
+      getPlugin().getUserManager().getUser(players.get(0)).setCurrentPlot(plot);
+
+      players.remove(0);
+
     }
     if (!players.isEmpty()) {
       MessageUtils.errorOccurred();
