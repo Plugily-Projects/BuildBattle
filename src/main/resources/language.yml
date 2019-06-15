@@ -155,7 +155,7 @@ In-Game:
   Max-Particles-Limit-Reached: "&cYou can't spawn more particles!"
   No-Permission-For-Particle: "&cYou don't have permission for this particle!"
   Particle-Added: "&aParticle successfully added!"
-  Join-No-Permission: "&cYou don't have permission to join this arena!"
+  Join-No-Permission: "&cYou don't have &6%permission% &cpermission to join this arena!"
   Arena-Not-Configured: "&cArena is not configured yet! Contact staff!"
   # Join cancelled via external plugin that uses BuildBattle API.
   Join-Cancelled-Via-API: "&cYou can't join this game!"

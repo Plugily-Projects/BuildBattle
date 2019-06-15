@@ -1,5 +1,8 @@
 ## BuildBattle changelog
 
+### 4.0.2 Release (15.06.2019)
+* Join permission message outputs required permission node now
+
 ### 4.0.1 Release (11.06.2019)
 * Fixed game wouldn't start if there were 2 players or more, sorry
 * Fixed error occurred when you didn't look at sign while adding sign via setup GUI
