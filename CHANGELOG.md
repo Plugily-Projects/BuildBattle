@@ -1,7 +1,8 @@
 ## BuildBattle changelog
 
-### 4.0.2 Release (15.06.2019)
+### 4.0.2 Release (15/26.06.2019)
 * Join permission message outputs required permission node now
+* Null safe biome set menu
 
 ### 4.0.1 Release (11.06.2019)
 * Fixed game wouldn't start if there were 2 players or more, sorry

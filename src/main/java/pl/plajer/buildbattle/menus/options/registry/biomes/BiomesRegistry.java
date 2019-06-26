@@ -22,8 +22,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
-
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.Inventory;
@@ -93,14 +91,13 @@ public class BiomesRegistry {
     this.inventory = inventory;
   }
 
-  @Nullable
   public BiomeItem getByItem(ItemStack stack) {
     for (BiomeItem item : biomes) {
       if (item.getItemStack().isSimilar(stack)) {
         return item;
       }
     }
-    return null;
+    return BiomeItem.INVALID_BIOME;
   }
 
   public Set<BiomeItem> getBiomes() {
