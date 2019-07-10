@@ -64,7 +64,7 @@ public class VoteMenu {
   }
 
   public void resetPoll() {
-    List<String> themesTotal = plugin.getConfigPreferences().getThemes(arena.getArenaType().getPrefix());
+    List<String> themesTotal = new ArrayList<>(plugin.getConfigPreferences().getThemes(arena.getArenaType().getPrefix()));
     //random themes order
     Collections.shuffle(themesTotal);
     List<String> randomThemes = new ArrayList<>();

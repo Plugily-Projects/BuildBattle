@@ -19,7 +19,6 @@
 package pl.plajer.buildbattle;
 
 import java.util.Arrays;
-import java.util.List;
 
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
 
@@ -80,7 +79,6 @@ public class Main extends JavaPlugin {
   private ExceptionLogHandler exceptionLogHandler;
   private ChatManager chatManager;
   private ConfigPreferences configPreferences;
-  private boolean forceDisable = false;
   private MysqlDatabase database;
   private UserManager userManager;
   private BungeeManager bungeeManager;
@@ -90,7 +88,7 @@ public class Main extends JavaPlugin {
   private OptionsRegistry optionsRegistry;
   private SpecialItemsRegistry specialItemsRegistry;
   private String version;
-  private List<String> filesToGenerate = Arrays.asList("arenas", "particles", "lobbyitems", "stats", "voteItems", "mysql", "biomes");
+  private boolean forceDisable = false;
 
   public CuboidSelector getCuboidSelector() {
     return cuboidSelector;
@@ -130,31 +128,16 @@ public class Main extends JavaPlugin {
 
   @Override
   public void onEnable() {
+    if (!validateIfPluginShouldStart()) {
+      return;
+    }
+
     ServiceRegistry.registerService(this);
     exceptionLogHandler = new ExceptionLogHandler();
-    version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
-    try {
-      Class.forName("org.spigotmc.SpigotConfig");
-    } catch (Exception e) {
-      MessageUtils.thisVersionIsNotSupported();
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server software is not supported by Build Battle!");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "We support only Spigot and Spigot forks only! Shutting off...");
-      forceDisable = true;
-      getServer().getPluginManager().disablePlugin(this);
-      return;
-    }
-    if (version.contains("v1_10") || version.contains("v1_9") || version.contains("v1_8") || version.contains("v1_7") || version.contains("v1_6")) {
-      MessageUtils.thisVersionIsNotSupported();
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by BuildBattle!");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider updating your server version?");
-      forceDisable = true;
-      getServer().getPluginManager().disablePlugin(this);
-      return;
-    }
     Debugger.setEnabled(getConfig().getBoolean("Debug", false));
     Debugger.debug(Debugger.Level.INFO, "Main setup started");
     saveDefaultConfig();
-    for (String s : filesToGenerate) {
+    for (String s : Arrays.asList("arenas", "particles", "lobbyitems", "stats", "voteItems", "mysql", "biomes")) {
       ConfigUtils.getConfig(this, s);
     }
     LanguageManager.init(this);
@@ -195,6 +178,30 @@ public class Main extends JavaPlugin {
     });
   }
 
+  private boolean validateIfPluginShouldStart() {
+    version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+    try {
+      Class.forName("org.spigotmc.SpigotConfig");
+    } catch (Exception e) {
+      MessageUtils.thisVersionIsNotSupported();
+      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server software is not supported by Build Battle!");
+      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "We support only Spigot and Spigot forks only! Shutting off...");
+      forceDisable = true;
+      getServer().getPluginManager().disablePlugin(this);
+      return false;
+    }
+    if (version.contains("v1_10") || version.contains("v1_9") || version.contains("v1_8") || version.contains("v1_7") || version.contains("v1_6")) {
+      MessageUtils.thisVersionIsNotSupported();
+      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by BuildBattle!");
+      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider updating your server version?");
+      forceDisable = true;
+      getServer().getPluginManager().disablePlugin(this);
+      return false;
+    }
+    return true;
+  }
+
+  //order matters
   private void initializeClasses() {
     ScoreboardLib.setPluginInstance(this);
     PermissionManager.init();

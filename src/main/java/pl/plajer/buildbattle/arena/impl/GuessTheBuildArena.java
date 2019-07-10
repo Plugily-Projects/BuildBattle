@@ -300,8 +300,10 @@ public class GuessTheBuildArena extends BaseArena {
         if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           getPlugin().getServer().setWhitelist(false);
         }
-        for (Player player : getPlayers()) {
-          MiscUtils.spawnRandomFirework(player.getLocation());
+        if (getPlugin().getConfig().getBoolean("Firework-When-Game-Ends", true)) {
+          for (Player player : getPlayers()) {
+            MiscUtils.spawnRandomFirework(player.getLocation());
+          }
         }
         if (getTimer() <= 0) {
           teleportAllToEndLocation();

@@ -19,6 +19,8 @@
 package pl.plajer.buildbattle;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +41,7 @@ public class ConfigPreferences {
   private List<String> endGameCommands = new ArrayList<>();
   private List<String> whitelistedCommands = new ArrayList<>();
   private List<Material> itemBlacklist = new ArrayList<>();
-  private Map<Option, Boolean> options = new HashMap<>();
+  private Map<Option, Boolean> options = new EnumMap<>(Option.class);
 
   public ConfigPreferences(Main plugin) {
     this.plugin = plugin;
@@ -77,7 +79,7 @@ public class ConfigPreferences {
   }
 
   public List<String> getThemes(String accessor) {
-    return gameThemes.get(accessor);
+    return Collections.unmodifiableList(gameThemes.get(accessor));
   }
 
   public boolean isThemeBlacklisted(String theme) {
@@ -94,11 +96,11 @@ public class ConfigPreferences {
   }
 
   public List<String> getEndGameCommands() {
-    return endGameCommands;
+    return Collections.unmodifiableList(endGameCommands);
   }
 
   public List<Material> getItemBlacklist() {
-    return itemBlacklist;
+    return Collections.unmodifiableList(itemBlacklist);
   }
 
   private void loadBlackList() {
@@ -112,7 +114,7 @@ public class ConfigPreferences {
   }
 
   public List<String> getWhitelistedCommands() {
-    return whitelistedCommands;
+    return Collections.unmodifiableList(whitelistedCommands);
   }
 
   public int getTimer(TimerType type, BaseArena arena) {

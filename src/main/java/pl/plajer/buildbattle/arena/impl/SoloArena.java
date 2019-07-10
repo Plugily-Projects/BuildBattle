@@ -273,8 +273,10 @@ public class SoloArena extends BaseArena {
         }
         setVoting(false);
         setThemeTimerSet(false);
-        for (Player player : getPlayers()) {
-          MiscUtils.spawnRandomFirework(player.getLocation());
+        if (getPlugin().getConfig().getBoolean("Firework-When-Game-Ends", true)) {
+          for (Player player : getPlayers()) {
+            MiscUtils.spawnRandomFirework(player.getLocation());
+          }
         }
         if (getTimer() <= 0) {
           teleportAllToEndLocation();
@@ -347,23 +349,29 @@ public class SoloArena extends BaseArena {
   @Override
   public void distributePlots() {
     List<Player> players = new ArrayList<>(getPlayers());
+    Bukkit.getConsoleSender().sendMessage("[DEBUG BB] " + getPlayers().size() + " players, plots " + getPlotManager().getPlots().size());
+    int i = 0;
     for (Plot plot : getPlotManager().getPlots()) {
       if (players.isEmpty()) {
+        Bukkit.getConsoleSender().sendMessage("Players list is empty");
         break;
       }
       //owned already
-      if (plot.getOwners().size() > 0) {
+      if (!plot.getOwners().isEmpty()) {
+        Bukkit.getConsoleSender().sendMessage("[DEBUG BB] Plot owned by " + plot.getOwners().get(0).getName());
         continue;
       }
       plot.addOwner(players.get(0));
       getPlugin().getUserManager().getUser(players.get(0)).setCurrentPlot(plot);
 
+      Bukkit.getConsoleSender().sendMessage("[DEBUG BB] Iteration" + i + ", current " + players.size());
       players.remove(0);
-
+      Bukkit.getConsoleSender().sendMessage("[DEBUG BB] Iteration " + i + ", after " + players.size());
+      i++;
     }
     if (!players.isEmpty()) {
       MessageUtils.errorOccurred();
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] [PLOT WARNING] Not enough plots in arena " + getID() + "!");
+      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] [PLOT WARNING] Not enough plots in arena " + getID() + "! Lacks " + players.size() + " plots");
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[PLOT WARNING] Required " + getPlayers().size() + " but have " + getPlotManager().getPlots().size());
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[PLOT WARNING] Instance was stopped!");
       ArenaManager.stopGame(false, this);
