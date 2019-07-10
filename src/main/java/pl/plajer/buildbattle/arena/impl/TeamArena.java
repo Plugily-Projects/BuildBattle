@@ -54,6 +54,10 @@ public class TeamArena extends SoloArena {
 
   @Override
   public void distributePlots() {
+    //clear plots before distribution to avoid problems
+    for (Plot plot : getPlotManager().getPlots()) {
+      plot.getOwners().clear();
+    }
     List<List<Player>> pairs = Lists.partition(new ArrayList<>(getPlayers()), 2);
     int i = 0;
     for (Plot plot : getPlotManager().getPlots()) {

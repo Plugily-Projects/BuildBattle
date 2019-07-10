@@ -1,9 +1,10 @@
 ## BuildBattle changelog
 
-### 4.0.2 Release (15/26.06.2019)
+### 4.0.2 Release (15.06.2019 - 10.07.2019)
 * Join permission message outputs required permission node now
 * Null safe biome set menu
 * Fixed firework spawn after the game if they were disabled in config
+* Fixed odd game behaviour when game couldn't start because there were some lacking plots
 
 ### 4.0.1 Release (11.06.2019)
 * Fixed game wouldn't start if there were 2 players or more, sorry

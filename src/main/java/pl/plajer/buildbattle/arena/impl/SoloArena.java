@@ -348,26 +348,19 @@ public class SoloArena extends BaseArena {
 
   @Override
   public void distributePlots() {
+    //clear plots before distribution to avoid problems
+    for (Plot plot : getPlotManager().getPlots()) {
+      plot.getOwners().clear();
+    }
     List<Player> players = new ArrayList<>(getPlayers());
-    Bukkit.getConsoleSender().sendMessage("[DEBUG BB] " + getPlayers().size() + " players, plots " + getPlotManager().getPlots().size());
-    int i = 0;
     for (Plot plot : getPlotManager().getPlots()) {
       if (players.isEmpty()) {
-        Bukkit.getConsoleSender().sendMessage("Players list is empty");
         break;
-      }
-      //owned already
-      if (!plot.getOwners().isEmpty()) {
-        Bukkit.getConsoleSender().sendMessage("[DEBUG BB] Plot owned by " + plot.getOwners().get(0).getName());
-        continue;
       }
       plot.addOwner(players.get(0));
       getPlugin().getUserManager().getUser(players.get(0)).setCurrentPlot(plot);
 
-      Bukkit.getConsoleSender().sendMessage("[DEBUG BB] Iteration" + i + ", current " + players.size());
       players.remove(0);
-      Bukkit.getConsoleSender().sendMessage("[DEBUG BB] Iteration " + i + ", after " + players.size());
-      i++;
     }
     if (!players.isEmpty()) {
       MessageUtils.errorOccurred();

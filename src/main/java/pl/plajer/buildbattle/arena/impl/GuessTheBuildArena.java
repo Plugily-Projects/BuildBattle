@@ -366,6 +366,10 @@ public class GuessTheBuildArena extends BaseArena {
 
   @Override
   public void distributePlots() {
+    //clear plots before distribution to avoid problems
+    for (Plot plot : getPlotManager().getPlots()) {
+      plot.getOwners().clear();
+    }
     List<Player> players = new ArrayList<>(getPlayers());
     for (Plot plot : getPlotManager().getPlots()) {
       if (players.isEmpty()) {
