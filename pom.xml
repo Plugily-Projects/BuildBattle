@@ -253,6 +253,17 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- External beta versions discord deployer plugin -->
+            <plugin>
+                <groupId>pl.plajer</groupId>
+                <artifactId>betty-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <configuration>
+                    <changelogFile>${project.basedir}/CHANGELOG.md</changelogFile>
+                </configuration>
+            </plugin>
+            <!-- External beta versions discord deployer plugin -->
         </plugins>
         <extensions>
             <extension>
