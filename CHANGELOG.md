@@ -9,12 +9,14 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
-### 4.0.2 Release (15.06.2019 - 10.07.2019)
+### 4.0.2 Release (15.06.2019 - 13.07.2019)
 * Join permission message outputs required permission node now
 * Biome menu won't throw errors when using it now
 * Fixed firework spawn after the game if they were disabled in config
 * Fixed odd game behaviour when game couldn't start because there were some lacking plots
 when player left game before he was removed from the plot
+* Locales with special characters like Russian or Korean will now work properly and won't be seen as `?` characters
+* Fixed locales might not work in fresh install of plugin
 
 ### 4.0.1 Release (11.06.2019)
 * Fixed game wouldn't start if there were 2 players or more, sorry
