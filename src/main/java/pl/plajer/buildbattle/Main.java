@@ -48,10 +48,10 @@ import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.HolidayManager;
 import pl.plajer.buildbattle.handlers.PermissionManager;
 import pl.plajer.buildbattle.handlers.PlaceholderManager;
-import pl.plajer.buildbattle.handlers.SignManager;
 import pl.plajer.buildbattle.handlers.items.SpecialItemsRegistry;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
 import pl.plajer.buildbattle.handlers.setup.SetupInventoryEvents;
+import pl.plajer.buildbattle.handlers.sign.SignManager;
 import pl.plajer.buildbattle.menus.options.OptionsMenuHandler;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
 import pl.plajer.buildbattle.menus.options.registry.particles.ParticleRefreshScheduler;
@@ -73,6 +73,9 @@ import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 /**
  * Created by Tom on 17/08/2015.
  */
+//todo setup handler recode
+//todo arenas handler recode
+//todo new debugger
 //todo inventoryframework
 public class Main extends JavaPlugin {
 
@@ -124,6 +127,10 @@ public class Main extends JavaPlugin {
 
   public boolean is1_12_R1() {
     return version.equalsIgnoreCase("v1_12_R1");
+  }
+
+  public boolean is1_14_R1() {
+    return version.equalsIgnoreCase("v1_14_R1");
   }
 
   @Override

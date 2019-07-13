@@ -43,6 +43,7 @@ import pl.plajer.buildbattle.arena.impl.SoloArena;
 import pl.plajer.buildbattle.arena.impl.TeamArena;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.handlers.PermissionManager;
+import pl.plajer.buildbattle.handlers.sign.ArenaSign;
 import pl.plajer.buildbattle.utils.Utils;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
@@ -152,7 +153,7 @@ public class SetupInventoryEvents implements Listener {
           player.sendMessage(plugin.getChatManager().colorRawMessage("&cPlease look at sign to add it!"));
           break;
         }
-        plugin.getSignManager().getLoadedSigns().put((Sign) location.getBlock().getState(), arena);
+        plugin.getSignManager().getArenaSigns().add(new ArenaSign((Sign) location.getBlock().getState(), arena));
         player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Sign-Created"));
         String loc = location.getBlock().getWorld().getName() + "," + location.getBlock().getX() + "," + location.getBlock().getY() + "," + location.getBlock().getZ() + ",0.0,0.0";
         List<String> locs = config.getStringList("instances." + arena.getID() + ".signs");
@@ -224,11 +225,10 @@ public class SetupInventoryEvents implements Listener {
         ConfigUtils.saveConfig(plugin, config, "arenas");
         List<Sign> signsToUpdate = new ArrayList<>();
         ArenaRegistry.unregisterArena(arena);
-        if (plugin.getSignManager().getLoadedSigns().containsValue(arena)) {
-          for (Sign s : plugin.getSignManager().getLoadedSigns().keySet()) {
-            if (plugin.getSignManager().getLoadedSigns().get(s).equals(arena)) {
-              signsToUpdate.add(s);
-            }
+
+        for (ArenaSign arenaSign : plugin.getSignManager().getArenaSigns()) {
+          if (arenaSign.getArena().equals(arena)) {
+            signsToUpdate.add(arenaSign.getSign());
           }
         }
         if (!config.contains("instances." + arena.getID() + ".gametype")) {
@@ -267,7 +267,7 @@ public class SetupInventoryEvents implements Listener {
         ArenaRegistry.registerArena(arena);
         arena.start();
         for (Sign s : signsToUpdate) {
-          plugin.getSignManager().getLoadedSigns().put(s, arena);
+          plugin.getSignManager().getArenaSigns().add(new ArenaSign(s, arena));
         }
         break;
       case EXTRAS_AD:

@@ -16,8 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.buildbattle.handlers;
+package pl.plajer.buildbattle.handlers.sign;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.jetbrains.annotations.Nullable;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.ArenaManager;
@@ -56,7 +58,7 @@ import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 public class SignManager implements Listener {
 
   private Main plugin;
-  private Map<Sign, BaseArena> loadedSigns = new HashMap<>();
+  private List<ArenaSign> arenaSigns = new ArrayList<>();
   private Map<ArenaState, String> gameStateToString = new HashMap<>();
   private List<String> signLines;
 
@@ -92,7 +94,7 @@ public class SignManager implements Listener {
       for (int i = 0; i < signLines.size(); i++) {
         e.setLine(i, formatSign(signLines.get(i), arena));
       }
-      loadedSigns.put((Sign) e.getBlock().getState(), arena);
+      arenaSigns.add(new ArenaSign((Sign) e.getBlock().getState(), arena));
       e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Sign-Created"));
       String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + "," + e.getBlock().getY() + "," + e.getBlock().getZ() + ",0.0,0.0";
       FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
@@ -121,13 +123,11 @@ public class SignManager implements Listener {
 
   @EventHandler
   public void onSignDestroy(BlockBreakEvent e) {
-    if (!e.getPlayer().hasPermission("buildbattle.admin.sign.break")) {
+    ArenaSign arenaSign = getArenaSignByBlock(e.getBlock());
+    if (!e.getPlayer().hasPermission("buildbattle.admin.sign.break") || arenaSign == null) {
       return;
     }
-    if (loadedSigns.get(e.getBlock().getState()) == null) {
-      return;
-    }
-    loadedSigns.remove(e.getBlock().getState());
+    arenaSigns.remove(arenaSign);
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
     String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + ".0," + e.getBlock().getY() + ".0," + e.getBlock().getZ() + ".0," + "0.0,0.0";
     for (String arena : config.getConfigurationSection("instances").getKeys(false)) {
@@ -151,20 +151,35 @@ public class SignManager implements Listener {
     if (e.getHand() == EquipmentSlot.OFF_HAND) {
       return;
     }
-    if (e.getAction() == Action.RIGHT_CLICK_BLOCK &&
-        e.getClickedBlock().getState() instanceof Sign && loadedSigns.containsKey(e.getClickedBlock().getState())) {
-      ArenaManager.joinAttempt(e.getPlayer(), loadedSigns.get(e.getClickedBlock().getState()));
+    ArenaSign arenaSign = getArenaSignByBlock(e.getClickedBlock());
+    if (e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getClickedBlock().getState() instanceof Sign && arenaSign != null) {
+      ArenaManager.joinAttempt(e.getPlayer(), arenaSign.getArena());
     }
   }
 
+  @Nullable
+  private ArenaSign getArenaSignByBlock(Block block) {
+    if (block == null) {
+      return null;
+    }
+    ArenaSign arenaSign = null;
+    for (ArenaSign sign : arenaSigns) {
+      if (sign.getSign().getLocation().equals(block.getLocation())) {
+        arenaSign = sign;
+        break;
+      }
+    }
+    return arenaSign;
+  }
+
   public void loadSigns() {
-    loadedSigns.clear();
+    arenaSigns.clear();
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
     for (String path : config.getConfigurationSection("instances").getKeys(false)) {
       for (String sign : config.getStringList("instances." + path + ".signs")) {
         Location loc = LocationSerializer.getLocation(sign);
         if (loc.getBlock().getState() instanceof Sign) {
-          loadedSigns.put((Sign) loc.getBlock().getState(), ArenaRegistry.getArena(path));
+          arenaSigns.add(new ArenaSign((Sign) loc.getBlock().getState(), ArenaRegistry.getArena(path)));
         } else {
           Debugger.debug(Debugger.Level.WARN, "Block at loc " + loc + " for arena " + path + " not a sign");
         }
@@ -174,15 +189,14 @@ public class SignManager implements Listener {
 
   private void updateSignScheduler() {
     Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-      for (Map.Entry<Sign, BaseArena> entry : loadedSigns.entrySet()) {
-        Sign sign = entry.getKey();
+      for (ArenaSign arenaSign : arenaSigns) {
+        Sign sign = arenaSign.getSign();
         for (int i = 0; i < signLines.size(); i++) {
-          //todo entries
-          sign.setLine(i, formatSign(signLines.get(i), entry.getValue()));
+          sign.setLine(i, formatSign(signLines.get(i), arenaSign.getArena()));
         }
-        if (plugin.getConfig().getBoolean("Signs-Block-States-Enabled", true)) {
-          Block behind = sign.getBlock().getRelative(((org.bukkit.material.Sign) sign.getData()).getAttachedFace());
-          switch (entry.getValue().getArenaState()) {
+        if (plugin.getConfig().getBoolean("Signs-Block-States-Enabled", true) && arenaSign.getBehind() != null) {
+          Block behind = arenaSign.getBehind();
+          switch (arenaSign.getArena().getArenaState()) {
             case WAITING_FOR_PLAYERS:
               behind.setType(XMaterial.WHITE_STAINED_GLASS.parseMaterial());
               if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
@@ -220,7 +234,7 @@ public class SignManager implements Listener {
     }, 10, 10);
   }
 
-  public Map<Sign, BaseArena> getLoadedSigns() {
-    return loadedSigns;
+  public List<ArenaSign> getArenaSigns() {
+    return arenaSigns;
   }
 }
