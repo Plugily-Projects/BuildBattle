@@ -9,6 +9,10 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+### 4.0.3 Release (13.07.2019)
+* Added Chinese (Traditional) locale (zh_tw prefix)
+* Changed Chinese (Simplified) locale prefix from zh to cn
+
 ### 4.0.2 Release (15.06.2019 - 13.07.2019)
 * Join permission message outputs required permission node now
 * Biome menu won't throw errors when using it now

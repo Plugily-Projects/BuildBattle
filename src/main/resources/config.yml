@@ -17,7 +17,7 @@
 #   cs - Český jazyk               ro - Limba română
 #   ja - 日本語                     it - Lingua italiana
 #   lt - Lietuvių kalba            sl - Slovenščina
-#   pt_BR - Português (Brasil)
+#   pt_BR - Português (Brasil)     zh_tw - 中文(繁體)
 locale: default
 
 # Enable boss bar for the game?
