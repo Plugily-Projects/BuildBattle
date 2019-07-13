@@ -66,12 +66,12 @@ public class SetupInventoryEvents implements Listener {
     if (!(e.getWhoClicked() instanceof Player || e.getWhoClicked().hasPermission(PermissionManager.getEditGames()))) {
       return;
     }
-    if (e.getInventory() == null || !e.getInventory().getName().contains("Game type:") || !Utils.isNamed(e.getCurrentItem())) {
+    if (!e.getView().getTitle().contains("Game type:") || !Utils.isNamed(e.getCurrentItem())) {
       return;
     }
     Player player = (Player) e.getWhoClicked();
     String name = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
-    BaseArena arena = ArenaRegistry.getArena(e.getInventory().getName().replace("Game type: ", ""));
+    BaseArena arena = ArenaRegistry.getArena(e.getView().getTitle().replace("Game type: ", ""));
     if (arena == null) {
       return;
     }
@@ -95,7 +95,7 @@ public class SetupInventoryEvents implements Listener {
       return;
     }
     Player player = (Player) e.getWhoClicked();
-    if (!(player.hasPermission("buildbattle.admin.create") && e.getInventory().getName().contains("BB Arena:") && Utils.isNamed(e.getCurrentItem()))) {
+    if (!(player.hasPermission("buildbattle.admin.create") && e.getView().getTitle().contains("BB Arena:") && Utils.isNamed(e.getCurrentItem()))) {
       return;
     }
 
@@ -109,7 +109,7 @@ public class SetupInventoryEvents implements Listener {
       e.setCancelled(true);
     }
 
-    BaseArena arena = ArenaRegistry.getArena(e.getInventory().getName().replace("BB Arena: ", ""));
+    BaseArena arena = ArenaRegistry.getArena(e.getView().getTitle().replace("BB Arena: ", ""));
     if (arena == null) {
       return;
     }

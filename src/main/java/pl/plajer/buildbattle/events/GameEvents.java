@@ -249,14 +249,14 @@ public class GameEvents implements Listener {
   //only a temporary code
   @EventHandler
   public void onPlayerHeadsClick(InventoryClickEvent e) {
-    if (e.getInventory() == null || !Utils.isNamed(e.getCurrentItem()) || !(e.getWhoClicked() instanceof Player)) {
+    if (!Utils.isNamed(e.getCurrentItem()) || !(e.getWhoClicked() instanceof Player)) {
       return;
     }
     BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
-    if (e.getInventory().getName() == null || arena == null) {
+    if (arena == null) {
       return;
     }
-    if (plugin.getOptionsRegistry().getPlayerHeadsRegistry().getMenuNames().contains(e.getInventory().getName())) {
+    if (plugin.getOptionsRegistry().getPlayerHeadsRegistry().isHeadsMenu(e.getInventory())) {
       if (e.getCurrentItem().getType() != Utils.PLAYER_HEAD_ITEM.getType()) {
         return;
       }

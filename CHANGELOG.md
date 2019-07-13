@@ -68,7 +68,7 @@ it's set lower
    * Fixed [#592 /bba addplot command exception](https://www.plajer.xyz/errorservice/viewer.php?id=592) when no arena name
    was typed
    * Fixed [#589 options menu click exceptions](https://plajer.xyz/errorservice/viewer.php?id=589) when click was on
-   air or outside inventory slots
+   air or outside inventoryView slots
    * Fixed Signs weren't updating if Signs-Block-States-Enabled option was false
    * Abandoned the direct try-catch exception handling in most of methods and event listeners in favour of
    logger listening, code looks better now
@@ -94,7 +94,7 @@ it's set lower
    * Now you can properly execute all /bb and /bba commands in-game while being non op player
    * Somehow plugin was lacking lobby events and you could lose food and health in lobby
    * Added chat events so in-game chat is no separated from server chat (I thought it's obvious)
-   * Now after selection of head in heads inventory won't be closed, user will close it when he wants
+   * Now after selection of head in heads inventoryView won't be closed, user will close it when he wants
    * Now language manager will use cached language.yml file so plugin will perform bit better
    * Theme vote GUI is now properly listening for click events, you don't need to click few times to make it vote
    * Added useSSL=false argument in mysql.yml address to avoid mysql warnings in console (not harmful)
@@ -202,7 +202,7 @@ could be seen in scoreboard for a second
 
 ### 3.3.0 Release (24.07.2018)
 * Now while teleporting to the plot you won't fall down
-* Fixed xp was given wrong using inventory manager
+* Fixed xp was given wrong using inventoryView manager
 * Removed unnecessary listeners from spectator code
 * Use-Name-Instead-Of-UUID-In-Database option was removed, it's no longer supported
 * Removed Particle-Offset option, was useless, default offset should stay same for every server
@@ -228,7 +228,7 @@ we will keep that for a while as an temporary workaround)
 * Added video tutorial link while creating new arena
 * Added new game mode: TEAM
 * Fixed error on disabling caused by disabled boss bar feature
-* Item rewards at the end of the game now will be properly given after clearing in-game inventory of players
+* Item rewards at the end of the game now will be properly given after clearing in-game inventoryView of players
 * Vote items now look like Hypixel ones
 * Worst vote will now count as 1 point not 0 (so every other vote is +1 point now)
 * Implemented theme voting feature like hypixel, before game starts players will vote for theme

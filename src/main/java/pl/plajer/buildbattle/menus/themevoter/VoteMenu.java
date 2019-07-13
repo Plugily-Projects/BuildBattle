@@ -84,7 +84,7 @@ public class VoteMenu {
     }
     this.inventory = Bukkit.createInventory(null, 9 * (randomThemes.size() > 5 ? 5 : randomThemes.size()), plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"));
     for (int i = 0; i < randomThemes.size(); i++) {
-      setItem(new ItemBuilder(Material.SIGN)
+      setItem(new ItemBuilder(XMaterial.SIGN.parseItem())
           .name(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Theme-Item-Name").replace("%theme%", randomThemes.get(i)))
           .lore(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Theme-Item-Lore").replace("%theme%", randomThemes.get(i))
               .replace("%percent%", "0.0").replace("%time-left%", String.valueOf(arena.getTimer())).split(";"))
@@ -120,7 +120,7 @@ public class VoteMenu {
       } else {
         percent = ((double) votePoll.getVotedThemes().get(theme) / (double) totalVotes) * 100;
       }
-      ItemStack stack = new ItemBuilder(new ItemStack(Material.SIGN))
+      ItemStack stack = new ItemBuilder(new ItemStack(XMaterial.SIGN.parseItem()))
           .name(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Theme-Item-Name").replace("%theme%", theme))
           .lore(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Theme-Item-Lore").replace("%theme%", theme)
               .replace("%percent%", String.valueOf(NumberUtils.round(percent, 2))).replace("%time-left%", String.valueOf(arena.getTimer())).split(";"))

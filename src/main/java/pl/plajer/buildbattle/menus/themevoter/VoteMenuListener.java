@@ -39,6 +39,7 @@ import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.impl.GuessTheBuildArena;
 import pl.plajer.buildbattle.arena.impl.SoloArena;
 import pl.plajer.buildbattle.user.User;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 
 /**
  * @author Plajer
@@ -57,13 +58,10 @@ public class VoteMenuListener implements Listener {
   @EventHandler
   public void onInventoryClose(InventoryCloseEvent e) {
     BaseArena arena = ArenaRegistry.getArena((Player) e.getPlayer());
-    if (e.getInventory() == null || e.getInventory().getName() == null || arena == null) {
-      return;
-    }
     if (!(arena instanceof SoloArena)) {
       return;
     }
-    if (e.getInventory().getName().equals(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"))) {
+    if (e.getView().getTitle().equals(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"))) {
       if (!((SoloArena) arena).isThemeVoteTime() || arena.getArenaState() != ArenaState.IN_GAME) {
         return;
       }
@@ -73,9 +71,6 @@ public class VoteMenuListener implements Listener {
 
   @EventHandler
   public void onInventoryClick(InventoryClickEvent e) {
-    if (e.getInventory() == null || e.getInventory().getName() == null) {
-      return;
-    }
     if (e.getCurrentItem() == null) {
       return;
     }
@@ -83,9 +78,9 @@ public class VoteMenuListener implements Listener {
     if (!(arena instanceof SoloArena)) {
       return;
     }
-    if (e.getInventory().getName().equals(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"))) {
+    if (e.getView().getTitle().equals(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"))) {
       e.setCancelled(true);
-      if (e.getCurrentItem().getType() == Material.SIGN || /*1.13*/ ((plugin.is1_11_R1() || plugin.is1_12_R1()) &&
+      if (e.getCurrentItem().getType() == XMaterial.SIGN.parseMaterial() || /*1.13*/ ((plugin.is1_11_R1() || plugin.is1_12_R1()) &&
           e.getCurrentItem().getType() == Material.valueOf("SIGN_POST"))) {
         String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
         displayName = ChatColor.stripColor(displayName);
@@ -124,7 +119,7 @@ public class VoteMenuListener implements Listener {
     if (!(arena instanceof GuessTheBuildArena)) {
       return;
     }
-    if (!e.getInventory().getName().equals(plugin.getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Inventory-Name"))) {
+    if (!e.getView().getTitle().equals(plugin.getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Inventory-Name"))) {
       return;
     }
     if (!((GuessTheBuildArena) arena).isThemeSet()) {
@@ -134,9 +129,6 @@ public class VoteMenuListener implements Listener {
 
   @EventHandler
   public void onInventoryClickOnGuessTheBuild(InventoryClickEvent e) {
-    if (e.getInventory() == null || e.getInventory().getName() == null) {
-      return;
-    }
     if (e.getCurrentItem() == null) {
       return;
     }
@@ -145,7 +137,7 @@ public class VoteMenuListener implements Listener {
       return;
     }
     //todo once you close you cant choose rip
-    if (e.getInventory().getName().equals(plugin.getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Inventory-Name"))) {
+    if (e.getView().getTitle().equals(plugin.getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Inventory-Name"))) {
       e.setCancelled(true);
       if (e.getCurrentItem().getType() == Material.PAPER) {
         GTBTheme theme;

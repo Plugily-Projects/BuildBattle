@@ -33,7 +33,7 @@ public class HeadsCategory {
   private String categoryID;
   private ItemStack itemStack;
   private String permission;
-  private Inventory inventory;
+  private Inventory inventoryView;
 
   public HeadsCategory(String categoryID) {
     this.categoryID = categoryID;
@@ -60,10 +60,10 @@ public class HeadsCategory {
   }
 
   public Inventory getInventory() {
-    return inventory;
+    return inventoryView;
   }
 
-  public void setInventory(Inventory inventory) {
-    this.inventory = inventory;
+  public void setInventory(Inventory inventoryView) {
+    this.inventoryView = inventoryView;
   }
 }

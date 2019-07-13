@@ -48,7 +48,7 @@ public class OptionsMenuHandler implements Listener {
       if (!(e.getWhoClicked() instanceof Player) || e.getInventory() == null || e.getCurrentItem() == null) {
         return;
       }
-      if (!Utils.isNamed(e.getCurrentItem()) || !e.getInventory().getName().equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name"))) {
+    if (!Utils.isNamed(e.getCurrentItem()) || !e.getView().getTitle().equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name"))) {
         return;
       }
       BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
@@ -67,17 +67,15 @@ public class OptionsMenuHandler implements Listener {
 
   @EventHandler
   public void onRegisteredMenuOptionsClick(InventoryClickEvent e) {
-      if (!(e.getWhoClicked() instanceof Player) || e.getInventory() == null || e.getInventory().getName() == null) {
-        return;
-      }
-      if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta() || !e.getCurrentItem().getItemMeta().hasDisplayName()) {
+    if (!(e.getWhoClicked() instanceof Player) || e.getCurrentItem() == null
+        || !e.getCurrentItem().hasItemMeta() || !e.getCurrentItem().getItemMeta().hasDisplayName()) {
         return;
       }
       for (MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
         if (!option.isInventoryEnabled()) {
           continue;
         }
-        if (option.getInventoryName().equals(e.getInventory().getName())) {
+        if (option.getInventoryName().equals(e.getView().getTitle())) {
           e.setCancelled(true);
           option.onTargetClick(e);
           return;

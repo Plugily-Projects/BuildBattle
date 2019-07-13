@@ -57,8 +57,11 @@ public class FloorChangeOption {
           return;
         }
         //todo blacklist
-        if (e.getCursor().getType() == null || e.getCursor().getType() == Material.IRON_TRAPDOOR || e.getCursor().getType() == Material.ACACIA_DOOR || e.getCursor().getType() == Material.BIRCH_DOOR || e.getCursor().getType() == Material.JUNGLE_DOOR || e.getCursor().getType() == Material.SPRUCE_DOOR || e.getCursor().getType() == Material.IRON_DOOR || e.getCursor().getType() == Material.CHEST || e.getCursor().getType() == Material.TRAPPED_CHEST || e.getCursor().getType() == Material.LADDER || e.getCursor().getType() == Material.JUNGLE_FENCE_GATE || e.getCursor().getType() == Material.SIGN || e.getCursor().getType() == Material.WALL_SIGN || e.getCursor().getType() == Material.CACTUS || e.getCursor().getType() == Material.ENDER_CHEST
-            || e.getCursor().getType() == Material.TNT || e.getCursor().getType() == Material.AIR) {
+        if (e.getCursor().getType() == Material.IRON_TRAPDOOR || e.getCursor().getType() == Material.ACACIA_DOOR || e.getCursor().getType() == Material.BIRCH_DOOR
+            || e.getCursor().getType() == Material.JUNGLE_DOOR || e.getCursor().getType() == Material.SPRUCE_DOOR || e.getCursor().getType() == Material.IRON_DOOR
+            || e.getCursor().getType() == Material.CHEST || e.getCursor().getType() == Material.TRAPPED_CHEST || e.getCursor().getType() == Material.LADDER
+            || e.getCursor().getType() == Material.JUNGLE_FENCE_GATE || e.getCursor().getType() == XMaterial.SIGN.parseMaterial() || e.getCursor().getType() == XMaterial.WALL_SIGN.parseMaterial()
+            || e.getCursor().getType() == Material.CACTUS || e.getCursor().getType() == Material.ENDER_CHEST || e.getCursor().getType() == Material.TNT || e.getCursor().getType() == Material.AIR) {
           e.setCancelled(true);
           return;
         }

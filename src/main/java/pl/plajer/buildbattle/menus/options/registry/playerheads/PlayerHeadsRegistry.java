@@ -89,8 +89,13 @@ public class PlayerHeadsRegistry {
     }
   }
 
-  public Set<String> getMenuNames() {
-    return categories.keySet().stream().map((category) -> category.getInventory().getName()).collect(Collectors.toSet());
+  public boolean isHeadsMenu(Inventory inventory) {
+    for (Inventory inv : categories.values()) {
+      if (inventory.equals(inv)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public Map<HeadsCategory, Inventory> getCategories() {
