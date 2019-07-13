@@ -15,6 +15,9 @@
 #   tr - Türk dili                 id - Bhasa Indonesia
 #   et - Eesti keel                ru - Русский язык
 #   cs - Český jazyk               ro - Limba română
+#   ja - 日本語                     it - Lingua italiana
+#   lt - Lietuvių kalba            sl - Slovenščina
+#   pt_BR - Português (Brasil)
 locale: default
 
 # Enable boss bar for the game?

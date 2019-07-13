@@ -17,6 +17,8 @@ That's all, matcher will stop when detects next line started with `###` match
 when player left game before he was removed from the plot
 * Locales with special characters like Russian or Korean will now work properly and won't be seen as `?` characters
 * Fixed locales might not work in fresh install of plugin
+* Added 6 new locales: Portuguese (BR), Slovenian, Dutch, Lithuanian, Japanese and Italian (thanks a lot to our POEditor contributors!)
+* Fixed Russian locale didn't work
 
 ### 4.0.1 Release (11.06.2019)
 * Fixed game wouldn't start if there were 2 players or more, sorry
