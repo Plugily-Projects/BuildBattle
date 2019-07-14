@@ -48,33 +48,34 @@ public class VoteEvents implements Listener {
   }
 
   @EventHandler
-  public void onVote(PlayerInteractEvent event) {
-      if (event.getHand() == EquipmentSlot.OFF_HAND || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+  public void onVote(PlayerInteractEvent e) {
+    if (e.getHand() == EquipmentSlot.OFF_HAND || e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
         return;
       }
-      if (!Utils.isNamed(event.getItem())) {
+    if (!Utils.isNamed(e.getItem())) {
         return;
       }
-      BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
+    BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
       if(arena instanceof GuessTheBuildArena) {
         return;
       }
       if (arena == null || arena.getArenaState() != ArenaState.IN_GAME || !((SoloArena) arena).isVoting()) {
         return;
       }
-      if (plugin.getVoteItems().getReportItem().equals(event.getItem())) {
+    if (plugin.getVoteItems().getReportItem().equals(e.getItem())) {
         //todo attempt report
-        event.setCancelled(true);
+      e.setCancelled(true);
         return;
       }
-      if (((SoloArena) arena).getVotingPlot().getOwners().contains(event.getPlayer())) {
-        event.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Cant-Vote-Own-Plot"));
-        event.setCancelled(true);
+    if (((SoloArena) arena).getVotingPlot().getOwners().contains(e.getPlayer())) {
+      e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Cant-Vote-Own-Plot"));
+      e.setCancelled(true);
         return;
       }
-      plugin.getUserManager().getUser(event.getPlayer()).setStat(StatsStorage.StatisticType.LOCAL_POINTS, plugin.getVoteItems().getPoints(event.getItem()));
-      event.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Vote-Successful"));
-      event.setCancelled(true);
+    plugin.getUserManager().getUser(e.getPlayer()).setStat(StatsStorage.StatisticType.LOCAL_POINTS, plugin.getVoteItems().getPoints(e.getItem()));
+    plugin.getVoteItems().playVoteSound(e.getPlayer(), e.getItem());
+    e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Vote-Successful"));
+    e.setCancelled(true);
   }
 
 }

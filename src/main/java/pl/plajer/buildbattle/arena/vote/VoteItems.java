@@ -22,10 +22,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.utils.Debugger;
@@ -59,7 +61,12 @@ public class VoteItems {
         reportItem = stack;
         continue;
       }
-      voteItems.add(new VoteItem(stack, Integer.parseInt(key), Integer.parseInt(key) + 1));
+      Sound sound = null;
+      try {
+        sound = Sound.valueOf(config.getString(key + ".sound", ""));
+      } catch (Exception ignored) {
+      }
+      voteItems.add(new VoteItem(stack, Integer.parseInt(key), Integer.parseInt(key) + 1, sound));
     }
   }
 
@@ -84,6 +91,17 @@ public class VoteItems {
     player.updateInventory();
   }
 
+  public void playVoteSound(Player player, ItemStack itemStack) {
+    for (VoteItem item : voteItems) {
+      if (item.getItemStack().isSimilar(itemStack)) {
+        if (item.getSound() == null) {
+          return;
+        }
+        player.playSound(player.getLocation(), item.getSound(), 1, 1);
+      }
+    }
+  }
+
   /**
    * Get points value of target vote item stack
    *
@@ -106,16 +124,18 @@ public class VoteItems {
     return reportItem;
   }
 
-  public class VoteItem {
+  public static class VoteItem {
 
     private ItemStack itemStack;
     private int slot;
     private int points;
+    private Sound sound;
 
-    public VoteItem(ItemStack itemStack, int slot, int points) {
+    public VoteItem(ItemStack itemStack, int slot, int points, Sound sound) {
       this.itemStack = itemStack;
       this.slot = slot;
       this.points = points;
+      this.sound = sound;
     }
 
     public ItemStack getItemStack() {
@@ -128,6 +148,11 @@ public class VoteItems {
 
     public int getPoints() {
       return points;
+    }
+
+    @Nullable
+    public Sound getSound() {
+      return sound;
     }
   }
 

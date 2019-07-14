@@ -9,10 +9,11 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
-### 4.1.0 Beta pre 1 (13.07.2019)
+### 4.1.0-pre-1 Beta pre 1 (13/14.07.2019)
 * Added Chinese (Traditional) locale (zh_tw prefix)
 * Changed Chinese (Simplified) locale prefix from zh to cn
 * Added pre 1.14 support
+* Added sounds when using vote items (reset voteItems.yml to see changes)
 
 ### 4.0.2 Release (15.06.2019 - 13.07.2019)
 * Join permission message outputs required permission node now
