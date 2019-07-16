@@ -134,8 +134,8 @@ public class BannerMenu {
     gui.addPane(bannerPane);
 
     bannerPane.addItem(new GuiItem(new ItemBuilder(banner.buildBanner())
-        .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Banner-Creator.Item-Name"))
-        .lore(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Banner-Creator.Item-Lore"))
+        .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Banner-Creator.Create-Banner-Item.Name"))
+        .lore(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Banner-Creator.Create-Banner-Item.Lore"))
         .build(), e -> {
       e.setCancelled(true);
       e.getWhoClicked().closeInventory();
