@@ -31,6 +31,7 @@ import pl.plajer.buildbattle.menus.options.registry.FloorChangeOption;
 import pl.plajer.buildbattle.menus.options.registry.PlotResetOption;
 import pl.plajer.buildbattle.menus.options.registry.TimeChangeOption;
 import pl.plajer.buildbattle.menus.options.registry.WeatherChangeOption;
+import pl.plajer.buildbattle.menus.options.registry.banner.BannerCreatorOption;
 import pl.plajer.buildbattle.menus.options.registry.biomes.BiomeChangeOption;
 import pl.plajer.buildbattle.menus.options.registry.biomes.BiomesRegistry;
 import pl.plajer.buildbattle.menus.options.registry.particles.ParticleRegistry;
@@ -75,6 +76,7 @@ public class OptionsRegistry {
     new PlotResetOption(this);
     new TimeChangeOption(this);
     new WeatherChangeOption(this);
+    new BannerCreatorOption(this);
   }
 
   /**

@@ -39,7 +39,7 @@ public class ParticlesOption {
 
 
   public ParticlesOption(OptionsRegistry registry) {
-    registry.registerOption(new MenuOption(13, "PARTICLES", new ItemBuilder(XMaterial.DANDELION.parseItem())
+    registry.registerOption(new MenuOption(12, "PARTICLES", new ItemBuilder(XMaterial.DANDELION.parseItem())
         .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.Item-Name"))
         .lore(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.Item-Lore"))
         .build(), registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.Inventory-Name")) {

@@ -99,7 +99,7 @@
         <dependency>
             <groupId>com.github.stefvanschie.inventoryframework</groupId>
             <artifactId>IF</artifactId>
-            <version>0.3.2</version>
+            <version>0.5.9</version>
         </dependency>
         <dependency>
             <groupId>net.citizensnpcs</groupId>

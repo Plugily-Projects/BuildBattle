@@ -54,6 +54,7 @@ import pl.plajer.buildbattle.handlers.setup.SetupInventoryEvents;
 import pl.plajer.buildbattle.handlers.sign.SignManager;
 import pl.plajer.buildbattle.menus.options.OptionsMenuHandler;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
+import pl.plajer.buildbattle.menus.options.registry.banner.BannerMenu;
 import pl.plajer.buildbattle.menus.options.registry.particles.ParticleRefreshScheduler;
 import pl.plajer.buildbattle.menus.themevoter.VoteMenuListener;
 import pl.plajer.buildbattle.user.User;
@@ -254,6 +255,7 @@ public class Main extends JavaPlugin {
     new GameEvents(this);
     new VoteMenuListener(this);
     new HolidayManager(this);
+    BannerMenu.init(this);
   }
 
   @Override

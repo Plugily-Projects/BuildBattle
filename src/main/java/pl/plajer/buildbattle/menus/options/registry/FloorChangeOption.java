@@ -40,7 +40,7 @@ public class FloorChangeOption {
 
   public FloorChangeOption(OptionsRegistry registry) {
     //todo material change
-    registry.registerOption(new MenuOption(15, "FLOOR", new ItemBuilder(XMaterial.OAK_LOG.parseItem())
+    registry.registerOption(new MenuOption(14, "FLOOR", new ItemBuilder(XMaterial.OAK_LOG.parseItem())
         .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Floor.Item-Name"))
         .lore(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Floor.Item-Lore"))
         .build()) {

@@ -263,6 +263,18 @@ Menus:
           Downfall: "&eDownfall"
           Clear: "&eClear"
         Weather-Set: "&eWeather has been changed"
+      #>>> todo migrator
+      Banner-Creator:
+        Inventories:
+          Color-Choose: "&aSelect color"
+          Add-Layer: "&aAdd layer"
+          Add-Layer-Color: "&aAdd layer color"
+        Item-Name: "&aBanner creator"
+        Item-Lore: "&7Right click to open menu"
+        Create-Banner-Item:
+          Name: "&aCreate final banner"
+          Lore: "&7Right click to create this banner"
+      #<<< todo migrator
       Reset:
         Item-Name: "&cReset plot"
         Item-Lore: "&7Fully reset plot, &c&lcan't be undone!"
