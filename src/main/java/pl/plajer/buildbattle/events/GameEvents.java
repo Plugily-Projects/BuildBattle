@@ -516,7 +516,7 @@ public class GameEvents implements Listener {
     }
     Player player = (Player) e.getEntity();
     BaseArena arena = ArenaRegistry.getArena(player);
-    if (arena != null && ((SoloArena) arena).isVoting()) {
+    if (arena instanceof SoloArena && ((SoloArena) arena).isVoting()) {
       return;
     }
     e.setCancelled(true);
