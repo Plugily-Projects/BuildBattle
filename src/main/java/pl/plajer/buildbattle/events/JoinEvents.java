@@ -47,15 +47,9 @@ public class JoinEvents implements Listener {
   @Deprecated
   @EventHandler
   public void onJoin(PlayerJoinEvent e) {
+    //not needed anymore but still exist for later bungee stuff
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       return;
-    }
-    for (Player player : plugin.getServer().getOnlinePlayers()) {
-      if (ArenaRegistry.getArena(player) == null) {
-        continue;
-      }
-      player.hidePlayer(e.getPlayer());
-      e.getPlayer().hidePlayer(player);
     }
   }
 
