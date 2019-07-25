@@ -43,7 +43,7 @@ public class JoinEvents implements Listener {
     this.plugin = plugin;
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
-  
+
   @EventHandler
   public void onJoinCheckVersion(PlayerJoinEvent e) {
     //we want to be the first :)
