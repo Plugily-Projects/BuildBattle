@@ -18,6 +18,9 @@
 
 package pl.plajer.buildbattle.utils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -28,9 +31,6 @@ import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Plajer

@@ -18,6 +18,11 @@
 
 package pl.plajer.buildbattle.arena;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -35,11 +40,6 @@ import pl.plajer.buildbattle.utils.Debugger;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
-
-import javax.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Tom on 27/07/2014.
@@ -91,12 +91,12 @@ public class ArenaRegistry {
   /**
    * Returns arena based by ID
    *
-   * @param ID name of arena
+   * @param id name of arena
    * @return Arena or null if not found
    */
-  public static BaseArena getArena(String ID) {
+  public static BaseArena getArena(String id) {
     for (BaseArena arena : arenas) {
-      if (arena.getID().equalsIgnoreCase(ID)) {
+      if (arena.getID().equalsIgnoreCase(id)) {
         return arena;
       }
     }

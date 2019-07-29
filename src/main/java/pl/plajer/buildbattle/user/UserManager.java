@@ -18,6 +18,9 @@
 
 package pl.plajer.buildbattle.user;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -29,9 +32,6 @@ import pl.plajer.buildbattle.user.data.FileStats;
 import pl.plajer.buildbattle.user.data.MysqlManager;
 import pl.plajer.buildbattle.user.data.UserDatabase;
 import pl.plajer.buildbattle.utils.Debugger;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Tom on 27/07/2014.

@@ -18,6 +18,13 @@
 
 package pl.plajer.buildbattle.commands.arguments.game;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.LinkedHashMap;
+import java.util.UUID;
+
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -26,13 +33,6 @@ import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
 import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.LinkedHashMap;
-import java.util.UUID;
 
 /**
  * @author Plajer

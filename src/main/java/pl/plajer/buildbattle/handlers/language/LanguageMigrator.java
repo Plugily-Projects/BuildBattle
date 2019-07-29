@@ -18,6 +18,10 @@
 
 package pl.plajer.buildbattle.handlers.language;
 
+import java.io.File;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -27,10 +31,6 @@ import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.utils.MessageUtils;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
-
-import java.io.File;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author Plajer

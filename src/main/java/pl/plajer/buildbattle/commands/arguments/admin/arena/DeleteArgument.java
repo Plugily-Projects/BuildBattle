@@ -18,6 +18,9 @@
 
 package pl.plajer.buildbattle.commands.arguments.admin.arena;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -30,9 +33,6 @@ import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
 import pl.plajer.buildbattle.commands.arguments.data.LabelData;
 import pl.plajer.buildbattle.commands.arguments.data.LabeledCommandArgument;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Plajer

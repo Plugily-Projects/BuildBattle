@@ -20,6 +20,9 @@ package pl.plajer.buildbattle.arena.impl;
 
 import com.google.common.collect.Lists;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle.Main;
@@ -27,9 +30,6 @@ import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.arena.options.ArenaOption;
 import pl.plajer.buildbattle.utils.Debugger;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Plajer

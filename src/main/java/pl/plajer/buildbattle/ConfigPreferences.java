@@ -18,18 +18,18 @@
 
 package pl.plajer.buildbattle;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-
-import pl.plajer.buildbattle.arena.impl.BaseArena;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 
 /**
  * Created by Tom on 17/08/2015.

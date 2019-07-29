@@ -20,6 +20,8 @@ package pl.plajer.buildbattle;
 
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
 
+import java.util.Arrays;
+
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -68,8 +70,6 @@ import pl.plajer.buildbattle.utils.services.ServiceRegistry;
 import pl.plajerlair.commonsbox.database.MysqlDatabase;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
-
-import java.util.Arrays;
 
 /**
  * Created by Tom on 17/08/2015.

@@ -18,9 +18,9 @@
 
 package pl.plajer.buildbattle.handlers;
 
-import pl.plajer.buildbattle.Main;
-
 import java.time.LocalDateTime;
+
+import pl.plajer.buildbattle.Main;
 
 /**
  * @author Plajer

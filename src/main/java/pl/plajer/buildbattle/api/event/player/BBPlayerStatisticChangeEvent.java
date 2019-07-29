@@ -18,14 +18,14 @@
 
 package pl.plajer.buildbattle.api.event.player;
 
+import javax.annotation.Nullable;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.api.event.BBEvent;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
-
-import javax.annotation.Nullable;
 
 /**
  * @author Plajer

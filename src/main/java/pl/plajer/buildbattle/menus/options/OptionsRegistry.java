@@ -18,6 +18,9 @@
 
 package pl.plajer.buildbattle.menus.options;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
@@ -36,9 +39,6 @@ import pl.plajer.buildbattle.menus.options.registry.particles.ParticlesOption;
 import pl.plajer.buildbattle.menus.options.registry.playerheads.PlayerHeadsOption;
 import pl.plajer.buildbattle.menus.options.registry.playerheads.PlayerHeadsRegistry;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Plajer

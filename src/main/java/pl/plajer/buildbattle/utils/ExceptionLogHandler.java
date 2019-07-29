@@ -18,16 +18,16 @@
 
 package pl.plajer.buildbattle.utils;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
+
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.utils.services.exception.ReportedException;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
 
 /**
  * @author Plajer

@@ -18,10 +18,10 @@
 
 package pl.plajer.buildbattle.commands.arguments.data;
 
-import org.bukkit.command.CommandSender;
-
 import java.util.Collections;
 import java.util.List;
+
+import org.bukkit.command.CommandSender;
 
 /**
  * @author Plajer

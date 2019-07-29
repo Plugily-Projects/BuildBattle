@@ -18,6 +18,13 @@
 
 package pl.plajer.buildbattle.handlers.language;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -30,13 +37,6 @@ import pl.plajer.buildbattle.utils.services.locale.Locale;
 import pl.plajer.buildbattle.utils.services.locale.LocaleRegistry;
 import pl.plajer.buildbattle.utils.services.locale.LocaleService;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
 
 /**
  * @author Plajer

@@ -23,6 +23,12 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -55,12 +61,6 @@ import pl.plajer.buildbattle.commands.arguments.game.LeaveArgument;
 import pl.plajer.buildbattle.commands.arguments.game.StatsArgument;
 import pl.plajer.buildbattle.handlers.setup.SetupInventory;
 import pl.plajerlair.commonsbox.string.StringMatcher;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author Plajer

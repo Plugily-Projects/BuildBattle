@@ -18,6 +18,9 @@
 
 package pl.plajer.buildbattle.handlers.setup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -46,9 +49,6 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Tom on 15/06/2015.

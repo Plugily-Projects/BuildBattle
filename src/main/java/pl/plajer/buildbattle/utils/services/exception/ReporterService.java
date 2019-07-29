@@ -18,14 +18,14 @@
 
 package pl.plajer.buildbattle.utils.services.exception;
 
-import org.bukkit.Bukkit;
-
-import javax.net.ssl.HttpsURLConnection;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+
+import javax.net.ssl.HttpsURLConnection;
+
+import org.bukkit.Bukkit;
 
 /**
  * Reporter service for reporting exceptions directly to website reporter panel
