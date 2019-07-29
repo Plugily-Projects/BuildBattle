@@ -84,7 +84,14 @@ public class VoteMenu {
     }
     this.inventory = Bukkit.createInventory(null, 9 * (randomThemes.size() > 5 ? 5 : randomThemes.size()), plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"));
     for (int i = 0; i < randomThemes.size(); i++) {
-      setItem(new ItemBuilder(XMaterial.SIGN.parseItem())
+      ItemStack item;
+      //todo strict legacy materials class
+      if (plugin.is1_14_R1()) {
+        item = new ItemStack(Material.valueOf("LEGACY_SIGN"));
+      } else {
+        item = XMaterial.SIGN.parseItem();
+      }
+      setItem(new ItemBuilder(item)
           .name(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Theme-Item-Name").replace("%theme%", randomThemes.get(i)))
           .lore(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Theme-Item-Lore").replace("%theme%", randomThemes.get(i))
               .replace("%percent%", "0.0").replace("%time-left%", String.valueOf(arena.getTimer())).split(";"))

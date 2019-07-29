@@ -145,8 +145,7 @@ public class Plot {
 
   public void resetPlot() {
     for (Block block : cuboid.blockList()) {
-        //for 1.14 compatibility as api version 1.13 don't recognize 1.14 blocks
-      if (block.getType() != Material.AIR || plugin.is1_14_R1()) {
+      if (block.getType() != Material.AIR) {
         block.setType(Material.AIR);
       }
     }

@@ -170,6 +170,12 @@ public class ArenaManager {
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.loadInventory(plugin, player);
     }
+    for (Player players : plugin.getServer().getOnlinePlayers()) {
+      if (ArenaRegistry.getArena(players) == null) {
+        players.showPlayer(player);
+      }
+      player.showPlayer(players);
+    }
   }
 
   /**

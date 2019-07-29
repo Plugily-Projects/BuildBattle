@@ -19,7 +19,6 @@
 package pl.plajer.buildbattle.events;
 
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.EntityType;
@@ -39,7 +38,6 @@ import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -507,20 +505,6 @@ public class GameEvents implements Listener {
       arena.getPlotManager().getPlot(e.getPlayer()).changeFloor(material, e.getPlayer().getInventory().getItemInMainHand().getData().getData());
       e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Floor.Floor-Changed"));
     }
-  }
-
-  @EventHandler
-  public void onVotingDamage(EntityDamageEvent e) {
-    if (e.getEntity().getType() != EntityType.PLAYER) {
-      return;
-    }
-    Player player = (Player) e.getEntity();
-    BaseArena arena = ArenaRegistry.getArena(player);
-    if (arena instanceof SoloArena && ((SoloArena) arena).isVoting()) {
-      return;
-    }
-    e.setCancelled(true);
-    player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
   }
 
 }
