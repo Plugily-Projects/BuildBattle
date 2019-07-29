@@ -18,10 +18,6 @@
 
 package pl.plajer.buildbattle.arena.managers;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.tigerhix.lib.scoreboard.common.EntryBuilder;
 import me.tigerhix.lib.scoreboard.type.Entry;
@@ -35,6 +31,10 @@ import pl.plajer.buildbattle.arena.impl.GuessTheBuildArena;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
 import pl.plajer.buildbattle.user.User;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Plajer

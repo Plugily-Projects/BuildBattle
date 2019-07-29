@@ -18,8 +18,6 @@
 
 package pl.plajer.buildbattle.events;
 
-import java.util.ArrayList;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,6 +28,8 @@ import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.impl.GuessTheBuildArena;
+
+import java.util.ArrayList;
 
 /**
  * @author Plajer
@@ -47,45 +47,45 @@ public class ChatEvents implements Listener {
 
   @EventHandler
   public void onChatIngame(AsyncPlayerChatEvent event) {
-      BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
-      if (arena == null) {
-        for (BaseArena loopArena : ArenaRegistry.getArenas()) {
-          for (Player player : loopArena.getPlayers()) {
-            event.getRecipients().remove(player);
-          }
+    BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
+    if (arena == null) {
+      for (BaseArena loopArena : ArenaRegistry.getArenas()) {
+        for (Player player : loopArena.getPlayers()) {
+          event.getRecipients().remove(player);
         }
-        return;
       }
-      event.getRecipients().clear();
-      event.getRecipients().addAll(new ArrayList<>(arena.getPlayers()));
+      return;
+    }
+    event.getRecipients().clear();
+    event.getRecipients().addAll(new ArrayList<>(arena.getPlayers()));
 
-      if (!(arena instanceof GuessTheBuildArena)) {
-        return;
-      }
-      GuessTheBuildArena gameArena = (GuessTheBuildArena) arena;
-      if (gameArena.getWhoGuessed().contains(event.getPlayer())) {
-        event.setCancelled(true);
-        event.getPlayer().sendMessage(plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Chat.Cant-Talk-When-Guessed"));
-        return;
-      }
-      if (gameArena.getCurrentBuilder() != null && gameArena.getCurrentBuilder().equals(event.getPlayer())) {
-        event.setCancelled(true);
-        event.getPlayer().sendMessage(plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Chat.Cant-Talk-When-Building"));
-        return;
-      }
-      if (gameArena.getCurrentTheme() == null || !gameArena.getCurrentTheme().getTheme().equalsIgnoreCase(event.getMessage())) {
-        return;
-      }
+    if (!(arena instanceof GuessTheBuildArena)) {
+      return;
+    }
+    GuessTheBuildArena gameArena = (GuessTheBuildArena) arena;
+    if (gameArena.getWhoGuessed().contains(event.getPlayer())) {
       event.setCancelled(true);
-      plugin.getChatManager().broadcast(arena, plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Chat.Guessed-The-Theme").replace("%player%", event.getPlayer().getName()));
-      //todo how this works
-      event.getPlayer().sendMessage(plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Plus-Points")
-          .replace("%pts%", String.valueOf(gameArena.getCurrentTheme().getDifficulty().getPointsReward())));
-      plugin.getUserManager().getUser(gameArena.getCurrentBuilder())
-          .addStat(StatsStorage.StatisticType.LOCAL_GUESS_THE_BUILD_POINTS, gameArena.getCurrentTheme().getDifficulty().getPointsReward());
-      gameArena.addWhoGuessed(event.getPlayer());
+      event.getPlayer().sendMessage(plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Chat.Cant-Talk-When-Guessed"));
+      return;
+    }
+    if (gameArena.getCurrentBuilder() != null && gameArena.getCurrentBuilder().equals(event.getPlayer())) {
+      event.setCancelled(true);
+      event.getPlayer().sendMessage(plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Chat.Cant-Talk-When-Building"));
+      return;
+    }
+    if (gameArena.getCurrentTheme() == null || !gameArena.getCurrentTheme().getTheme().equalsIgnoreCase(event.getMessage())) {
+      return;
+    }
+    event.setCancelled(true);
+    plugin.getChatManager().broadcast(arena, plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Chat.Guessed-The-Theme").replace("%player%", event.getPlayer().getName()));
+    //todo how this works
+    event.getPlayer().sendMessage(plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Plus-Points")
+        .replace("%pts%", String.valueOf(gameArena.getCurrentTheme().getDifficulty().getPointsReward())));
+    plugin.getUserManager().getUser(gameArena.getCurrentBuilder())
+        .addStat(StatsStorage.StatisticType.LOCAL_GUESS_THE_BUILD_POINTS, gameArena.getCurrentTheme().getDifficulty().getPointsReward());
+    gameArena.addWhoGuessed(event.getPlayer());
 
-      //todo add api event for successful guess
+    //todo add api event for successful guess
   }
 
 }

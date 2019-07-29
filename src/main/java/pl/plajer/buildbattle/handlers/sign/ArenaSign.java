@@ -18,8 +18,6 @@
 
 package pl.plajer.buildbattle.handlers.sign;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -28,6 +26,8 @@ import org.jetbrains.annotations.Nullable;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
+
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Created for 1.14 compatibility purposes, it will cache block behind sign that will be

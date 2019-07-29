@@ -18,9 +18,6 @@
 
 package pl.plajer.buildbattle.user;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -31,6 +28,9 @@ import pl.plajer.buildbattle.api.event.player.BBPlayerStatisticChangeEvent;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Tom on 27/07/2014.

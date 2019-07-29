@@ -18,12 +18,6 @@
 
 package pl.plajer.buildbattle.menus.options.registry.playerheads;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.Inventory;
@@ -35,6 +29,12 @@ import pl.plajer.buildbattle.menus.options.OptionsRegistry;
 import pl.plajer.buildbattle.utils.Utils;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Plajer

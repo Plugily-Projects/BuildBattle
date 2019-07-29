@@ -18,9 +18,6 @@
 
 package pl.plajer.buildbattle.arena.managers.plots;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -28,6 +25,9 @@ import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle.api.event.plot.BBPlayerPlotReceiveEvent;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Tom on 17/08/2015.

@@ -27,8 +27,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
-import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import pl.plajer.buildbattle.utils.services.exception.ReportedException;
+import pl.plajerlair.commonsbox.string.StringFormatUtils;
 
 /**
  * Created by Tom on 27/07/2014.

@@ -18,11 +18,6 @@
 
 package pl.plajer.buildbattle.arena.managers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
 import me.tigerhix.lib.scoreboard.common.EntryBuilder;
@@ -41,6 +36,11 @@ import pl.plajer.buildbattle.arena.impl.SoloArena;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
 import pl.plajer.buildbattle.user.User;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Plajer

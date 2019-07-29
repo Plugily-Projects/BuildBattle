@@ -45,42 +45,42 @@ public class OptionsMenuHandler implements Listener {
 
   @EventHandler
   public void onOptionsMenuClick(InventoryClickEvent e) {
-      if (!(e.getWhoClicked() instanceof Player) || e.getInventory() == null || e.getCurrentItem() == null) {
-        return;
-      }
+    if (!(e.getWhoClicked() instanceof Player) || e.getInventory() == null || e.getCurrentItem() == null) {
+      return;
+    }
     if (!Utils.isNamed(e.getCurrentItem()) || !e.getView().getTitle().equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name"))) {
-        return;
+      return;
+    }
+    BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+      return;
+    }
+    for (MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
+      if (!option.getItemStack().isSimilar(e.getCurrentItem())) {
+        continue;
       }
-      BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
-      if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
-        return;
-      }
-      for (MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
-        if (!option.getItemStack().isSimilar(e.getCurrentItem())) {
-          continue;
-        }
-        e.setCancelled(true);
-        option.onClick(e);
-        return;
-      }
+      e.setCancelled(true);
+      option.onClick(e);
+      return;
+    }
   }
 
   @EventHandler
   public void onRegisteredMenuOptionsClick(InventoryClickEvent e) {
     if (!(e.getWhoClicked() instanceof Player) || e.getCurrentItem() == null
         || !e.getCurrentItem().hasItemMeta() || !e.getCurrentItem().getItemMeta().hasDisplayName()) {
+      return;
+    }
+    for (MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
+      if (!option.isInventoryEnabled()) {
+        continue;
+      }
+      if (option.getInventoryName().equals(e.getView().getTitle())) {
+        e.setCancelled(true);
+        option.onTargetClick(e);
         return;
       }
-      for (MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
-        if (!option.isInventoryEnabled()) {
-          continue;
-        }
-        if (option.getInventoryName().equals(e.getView().getTitle())) {
-          e.setCancelled(true);
-          option.onTargetClick(e);
-          return;
-        }
-      }
+    }
   }
 
 }

@@ -49,7 +49,7 @@ public class SetThemeArgument {
           sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Playing"));
           return;
         }
-        if(!(arena instanceof SoloArena)) {
+        if (!(arena instanceof SoloArena)) {
           //todo translatable
           sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorRawMessage("&cCan't set theme on this arena type!"));
           return;
@@ -64,7 +64,7 @@ public class SetThemeArgument {
             sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Admin-Commands.Theme-Blacklisted"));
             return;
           }
-          ((SoloArena) arena).setTheme(args[1]);
+          arena.setTheme(args[1]);
           registry.getPlugin().getChatManager().broadcast(arena, registry.getPlugin().getChatManager().colorMessage("In-Game.Messages.Admin-Messages.Changed-Theme").replace("%THEME%", args[1]));
         } else {
           if (arena.getArenaState() == ArenaState.STARTING) {

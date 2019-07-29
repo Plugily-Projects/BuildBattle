@@ -18,11 +18,6 @@
 
 package pl.plajer.buildbattle.arena;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -40,6 +35,11 @@ import pl.plajer.buildbattle.utils.Debugger;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
+
+import javax.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Tom on 27/07/2014.

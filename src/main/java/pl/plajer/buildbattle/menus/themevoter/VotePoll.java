@@ -18,15 +18,15 @@
 
 package pl.plajer.buildbattle.menus.themevoter;
 
+import org.bukkit.entity.Player;
+
+import pl.plajer.buildbattle.arena.impl.SoloArena;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import org.bukkit.entity.Player;
-
-import pl.plajer.buildbattle.arena.impl.SoloArena;
 
 /**
  * @author Plajer

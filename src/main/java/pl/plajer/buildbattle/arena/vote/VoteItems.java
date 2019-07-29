@@ -18,9 +18,6 @@
 
 package pl.plajer.buildbattle.arena.vote;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -34,6 +31,9 @@ import pl.plajer.buildbattle.utils.Debugger;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Tom on 17/08/2015.

@@ -18,8 +18,6 @@
 
 package pl.plajer.buildbattle.commands.arguments.game;
 
-import java.util.ArrayList;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -36,6 +34,8 @@ import pl.plajer.buildbattle.commands.arguments.data.LabeledCommandArgument;
 import pl.plajer.buildbattle.handlers.setup.SetupInventory;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
+
+import java.util.ArrayList;
 
 /**
  * @author Plajer

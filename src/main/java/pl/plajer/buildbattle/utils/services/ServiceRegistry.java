@@ -18,16 +18,16 @@
 
 package pl.plajer.buildbattle.utils.services;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.logging.Level;
-
-import javax.net.ssl.HttpsURLConnection;
-
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.utils.services.locale.LocaleService;
 import pl.plajer.buildbattle.utils.services.metrics.MetricsService;
+
+import javax.net.ssl.HttpsURLConnection;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.logging.Level;
 
 /**
  * Class for registering new services

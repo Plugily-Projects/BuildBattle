@@ -49,30 +49,30 @@ public class LobbyEvents implements Listener {
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onFoodLose(FoodLevelChangeEvent e) {
     if (e.getEntity().getType() != EntityType.PLAYER) {
-        return;
-      }
+      return;
+    }
     Player player = (Player) e.getEntity();
-      BaseArena arena = ArenaRegistry.getArena(player);
-      if (arena == null) {
-        return;
-      }
-      if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
-        e.setCancelled(true);
-      }
+    BaseArena arena = ArenaRegistry.getArena(player);
+    if (arena == null) {
+      return;
+    }
+    if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+      e.setCancelled(true);
+    }
   }
 
   @EventHandler
   public void onLobbyDamage(EntityDamageEvent e) {
     if (e.getEntity().getType() != EntityType.PLAYER) {
-        return;
-      }
+      return;
+    }
     Player player = (Player) e.getEntity();
-      BaseArena arena = ArenaRegistry.getArena(player);
-      if (arena == null || arena.getArenaState() == ArenaState.IN_GAME) {
-        return;
-      }
+    BaseArena arena = ArenaRegistry.getArena(player);
+    if (arena == null || arena.getArenaState() == ArenaState.IN_GAME) {
+      return;
+    }
     e.setCancelled(true);
-      player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
+    player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
   }
 
 }

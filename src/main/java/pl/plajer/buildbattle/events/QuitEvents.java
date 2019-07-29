@@ -58,10 +58,10 @@ public class QuitEvents implements Listener {
   @EventHandler
   public void onQuitSaveStats(PlayerQuitEvent e) {
     User user = plugin.getUserManager().getUser(e.getPlayer());
-      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-        plugin.getUserManager().saveStatistic(user, stat);
-      }
-      plugin.getUserManager().removeUser(user);
+    for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+      plugin.getUserManager().saveStatistic(user, stat);
+    }
+    plugin.getUserManager().removeUser(user);
   }
 
 }

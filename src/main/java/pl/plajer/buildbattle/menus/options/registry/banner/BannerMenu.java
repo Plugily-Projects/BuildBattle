@@ -23,9 +23,6 @@ import com.github.stefvanschie.inventoryframework.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 
-import java.util.EnumMap;
-import java.util.Map;
-
 import org.bukkit.DyeColor;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
@@ -36,6 +33,9 @@ import org.bukkit.inventory.meta.BannerMeta;
 import pl.plajer.buildbattle.Main;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 /**
  * @author Plajer

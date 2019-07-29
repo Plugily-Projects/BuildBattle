@@ -18,11 +18,6 @@
 
 package pl.plajer.buildbattle.arena.managers.plots;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import net.citizensnpcs.api.CitizensAPI;
 
 import org.bukkit.Bukkit;
@@ -45,6 +40,11 @@ import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.utils.Utils;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Tom on 17/08/2015.

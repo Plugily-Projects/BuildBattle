@@ -18,9 +18,6 @@
 
 package pl.plajer.buildbattle.commands.arguments.admin;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -37,6 +34,9 @@ import pl.plajer.buildbattle.commands.arguments.data.LabelData;
 import pl.plajer.buildbattle.commands.arguments.data.LabeledCommandArgument;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Plajer
