@@ -166,9 +166,8 @@ public class ArenaRegistry {
       }
       if (config.contains(s + "gametype")) {
         arena.setArenaType(BaseArena.ArenaType.valueOf(config.getString(s + "gametype").toUpperCase()));
-      }
-      //assuming that arena is from 3.1.x releases we set arena type to SOLO by default
-      else {
+      } else {
+        //assuming that arena is from 3.1.x releases we set arena type to SOLO by default
         arena.setArenaType(BaseArena.ArenaType.SOLO);
       }
       if (config.contains(s + "plots")) {

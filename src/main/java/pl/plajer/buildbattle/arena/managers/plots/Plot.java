@@ -18,12 +18,12 @@
 
 package pl.plajer.buildbattle.arena.managers.plots;
 
-import net.citizensnpcs.api.CitizensAPI;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import net.citizensnpcs.api.CitizensAPI;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;

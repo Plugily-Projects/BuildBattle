@@ -164,12 +164,12 @@ Holiday-Themes:
 
 # Theme names that are blacklisted.
 Blacklisted-Themes:
-- Fuck
+  - Fuck
 
 # Blacklisted item names, you can't use them while building.
 Blacklisted-Item-Names:
-- tnt
-- diamond_block
+  - tnt
+  - diamond_block
 
 # Commands executed when player wins
 # Use %PLAYER% placeholder to replace it with winner's name
@@ -183,12 +183,12 @@ Win-Commands:
 
 # Commands executed for every player after the game ends
 End-Game-Commands:
-- say %PLAYER% has played a game!
+  - say %PLAYER% has played a game!
 
 # Commands which can be executed while being in game
 Whitelisted-Commands:
-- me
-- help
+  - me
+  - help
 
 # Should blocks behind game signs change their color based on game state?
 # They will change color to:
