@@ -9,16 +9,14 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
-### Development
-* Added entity damage canceler when arena isvoting
-* Removed all player.showPlayer/hidePlayer methods
-
 ### 4.1.0-pre-1 Beta pre 1 (13/16.07.2019)
 * Added Chinese (Traditional) locale (zh_tw prefix)
 * Changed Chinese (Simplified) locale prefix from zh to cn
 * Added pre 1.14 support
 * Added sounds when using vote items (reset voteItems.yml to see changes)
 * Added banner builder in GUI (todo migrator)
+* Entities can't be damaged anymore in voting stage
+* Players hiding feature is now fully removed, it was buggy
 
 ### 4.0.2 Release (15.06.2019 - 13.07.2019)
 * Join permission message outputs required permission node now

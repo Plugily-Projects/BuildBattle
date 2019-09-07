@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.logging.Level;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -250,7 +251,21 @@ public class SoloArena extends BaseArena {
               }
             }
             calculateResults();
-            Plot winnerPlot = getPlotManager().getPlot(topList.get(1).get(0));
+            Plot winnerPlot = null;
+            for(Map.Entry<Integer, List<Player>> potentialWinners : topList.entrySet()) {
+              if(potentialWinners.getValue().isEmpty()) {
+                continue;
+              }
+              winnerPlot = getPlotManager().getPlot(potentialWinners.getValue().get(0));
+              break;
+            }
+            if(winnerPlot == null) {
+              getPlugin().getLogger().log(Level.SEVERE, "Fatal error in getting winner plot in game! No plot contain any online player!");
+              this.setArenaState(ArenaState.ENDING);
+              Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
+              setTimer(10);
+              break;
+            }
             announceResults();
 
             for (Player player : getPlayers()) {
