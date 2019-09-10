@@ -23,11 +23,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 
 import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
+import pl.plajer.buildbattle.handlers.PermissionManager;
 import pl.plajer.buildbattle.utils.UpdateChecker;
 
 /**
@@ -41,6 +43,16 @@ public class JoinEvents implements Listener {
   public JoinEvents(Main plugin) {
     this.plugin = plugin;
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
+  }
+  @EventHandler
+  public void onLogin(PlayerLoginEvent e) {
+    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && !plugin.getServer().hasWhitelist()
+        || e.getResult() != PlayerLoginEvent.Result.KICK_WHITELIST) {
+      return;
+    }
+    if (e.getPlayer().hasPermission(PermissionManager.getJoinFullGames())) {
+      e.setResult(PlayerLoginEvent.Result.ALLOWED);
+    }
   }
 
   @EventHandler

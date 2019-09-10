@@ -40,7 +40,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
 public class LanguageMigrator {
 
   public static final int LANGUAGE_FILE_VERSION = 10;
-  public static final int CONFIG_FILE_VERSION = 6;
+  public static final int CONFIG_FILE_VERSION = 7;
   private List<String> migratable = Arrays.asList("bungee", "config", "language", "MySQL");
   private Main plugin;
 
@@ -149,6 +149,8 @@ public class LanguageMigrator {
               "    - Presents\r\n" +
               "    - Snowman\r\n" +
               "    - Stocking\r\n\r\n");
+        case 6:
+          //todo
       }
       version++;
     }

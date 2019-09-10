@@ -18,6 +18,8 @@
 
 package pl.plajer.buildbattle.commands.arguments.game;
 
+import java.util.Random;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -36,6 +38,8 @@ import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
  */
 public class JoinArguments {
 
+  private Random random = new Random();
+
   public JoinArguments(ArgumentsRegistry registry) {
     //join argument
     registry.mapArgument("buildbattle", new CommandArgument("join", "", CommandArgument.ExecutorType.PLAYER) {
@@ -51,13 +55,7 @@ public class JoinArguments {
         }
         for (BaseArena arena : ArenaRegistry.getArenas()) {
           if (args[1].equalsIgnoreCase(arena.getID())) {
-            if (arena.getPlayers().size() >= arena.getMaximumPlayers()) {
-              sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Arena-Is-Full"));
-            } else if (arena.getArenaState() == ArenaState.IN_GAME) {
-              sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Arena-Started"));
-            } else {
               ArenaManager.joinAttempt((Player) sender, arena);
-            }
             return;
           }
         }
@@ -83,9 +81,22 @@ public class JoinArguments {
             case "solo":
             case "team":
               BaseArena.ArenaType type = BaseArena.ArenaType.valueOf(args[1].toUpperCase());
+              //first random get method
+              for (int i = 0; i < ArenaRegistry.getArenas().size(); i++) {
+                BaseArena arena = getRandomArena();
+                if (arena.getArenaType() == type) {
+                  if ((arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING)
+                      && arena.getPlayers().size() < arena.getMaximumPlayers()) {
+                    ArenaManager.joinAttempt((Player) sender, arena);
+                    return;
+                  }
+                }
+              }
+              //fallback safe method
               for (BaseArena arena : ArenaRegistry.getArenas()) {
                 if (arena.getArenaType() == type) {
-                  if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+                  if ((arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING)
+                      && arena.getPlayers().size() < arena.getMaximumPlayers()) {
                     ArenaManager.joinAttempt((Player) sender, arena);
                     return;
                   }
@@ -101,4 +112,7 @@ public class JoinArguments {
     }
   }
 
+  private BaseArena getRandomArena() {
+    return ArenaRegistry.getArenas().get(random.nextInt(ArenaRegistry.getArenas().size()));
+  }
 }

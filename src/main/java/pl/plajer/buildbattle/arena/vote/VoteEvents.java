@@ -49,7 +49,7 @@ public class VoteEvents implements Listener {
 
   @EventHandler
   public void onVote(PlayerInteractEvent e) {
-    if (e.getHand() == EquipmentSlot.OFF_HAND || e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
+    if (e.getHand() == EquipmentSlot.OFF_HAND || e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK || e.getAction() == Action.PHYSICAL) {
       return;
     }
     if (!Utils.isNamed(e.getItem())) {

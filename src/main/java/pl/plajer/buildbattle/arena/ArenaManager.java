@@ -75,6 +75,10 @@ public class ArenaManager {
       player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Join-Cancelled-Via-API"));
       return;
     }
+    if (ArenaRegistry.getArena(player) != null) {
+      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Messages.Already-Playing"));
+      return;
+    }
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       if (!(player.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", "*")) || player.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", arena.getID())))) {
         player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Join-No-Permission")
@@ -82,17 +86,30 @@ public class ArenaManager {
         return;
       }
     }
-    if (ArenaRegistry.getArena(player) != null) {
-      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Messages.Already-Playing"));
-      return;
-    }
     if ((arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING)) {
       player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Arena-Started"));
       return;
     }
-    if (arena.getPlayers().size() == arena.getMaximumPlayers()) {
-      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Arena-Is-Full"));
-      return;
+    if (arena.getPlayers().size() >= arena.getMaximumPlayers() && arena.getArenaState() == ArenaState.STARTING) {
+      if(!player.hasPermission(PermissionManager.getJoinFullGames())) {
+        player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Full-Game-No-Permission"));
+        return;
+      }
+      boolean foundSlot = false;
+      for (Player loopPlayer : arena.getPlayers()) {
+        if (loopPlayer.hasPermission(PermissionManager.getJoinFullGames())) {
+          continue;
+        }
+        ArenaManager.leaveAttempt(loopPlayer, arena);
+        loopPlayer.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.You-Were-Kicked-For-Premium-Slot"));
+        plugin.getChatManager().broadcast(arena, plugin.getChatManager().formatMessage(arena, plugin.getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Kicked-For-Premium-Slot"), loopPlayer));
+        foundSlot = true;
+        break;
+      }
+      if (!foundSlot) {
+        player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.No-Slots-For-Premium"));
+        return;
+      }
     }
     Debugger.debug(Debugger.Level.INFO, "Final join attempt, " + player.getName());
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {

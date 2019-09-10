@@ -29,11 +29,20 @@ import pl.plajer.buildbattle.utils.Debugger;
 public class PermissionManager {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static String joinFullPerm = "buildbattle.fullgames";
   private static String joinPerm = "buildbattle.join.<arena>";
   private static String editGames = "buildbattle.editgames";
 
   public static void init() {
     setupPermissions();
+  }
+
+  public static String getJoinFullGames() {
+    return joinFullPerm;
+  }
+
+  private static void setJoinFullGames(String joinFullGames) {
+    PermissionManager.joinFullPerm = joinFullGames;
   }
 
   public static String getJoinPerm() {
@@ -53,6 +62,7 @@ public class PermissionManager {
   }
 
   private static void setupPermissions() {
+    setJoinFullGames(plugin.getConfig().getString("Basic-Permissions.Full-Games-Permission", "buildbattle.fullgames"));
     setEditGames(plugin.getConfig().getString("Basic-Permissions.Arena-Edit-Permission"));
     setJoinPerm(plugin.getConfig().getString("Basic-Permissions.Join-Permission"));
     Debugger.debug(Debugger.Level.INFO, "Basic permissions registered");

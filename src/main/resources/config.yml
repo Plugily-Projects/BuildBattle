@@ -35,6 +35,7 @@ InventoryManager: true
 
 # Basic permissions for game, permissions explained here: https://wiki.plajer.xyz/minecraft/buildbattle/cmds_and_perms.php#basic-permissions
 Basic-Permissions:
+  Full-Games-Permission: "buildbattle.fullgames"
   # Permissions to edit/create arenas
   Arena-Edit-Permission: "buildbattle.editgames"
   # <arena> represents arena name (NOT MAP NAME!), for example: 'buildbattle.join.Build1'
@@ -211,6 +212,6 @@ Update-Notifier:
 DatabaseActivated: false
 
 # Don't modify.
-Version: 6
+Version: 7
 
 # No way! You've reached the end! But... where's the dragon!?
