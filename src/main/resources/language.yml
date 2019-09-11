@@ -156,6 +156,10 @@ In-Game:
   No-Permission-For-Particle: "&cYou don't have permission for this particle!"
   Particle-Added: "&aParticle successfully added!"
   Join-No-Permission: "&cYou don't have &6%permission% &cpermission to join this arena!"
+  #>>> todo migrator
+  Full-Game-No-Permission: "&cYou don't have the permission to join full games!"
+  No-Slots-For-Premium: "&cThis game is already full of premium players! Sorry"
+  #<<< todo migrator
   Arena-Not-Configured: "&cArena is not configured yet! Contact staff!"
   # Join cancelled via external plugin that uses BuildBattle API.
   Join-Cancelled-Via-API: "&cYou can't join this game!"
@@ -192,6 +196,10 @@ In-Game:
       Waiting-For-Players: "&7Waiting for players... We need at least &b%MINPLAYERS%&7 players to start."
       Enough-Players-To-Start: "&7We now have enough players. The game is starting soon!"
       Game-Started: "&7The game has started! Build best you can!"
+      #>>> todo migrator
+      Kicked-For-Premium-Slot: "&c%PLAYER% got removed from the game to make a place for premium players!"
+      You-Were-Kicked-For-Premium-Slot: "&cYou got kicked out of the game to make a place for a premium player!"
+      #<<< todo migrator
     Voting-Messages:
       Plot-Owner-Title: "&aPlot owner: &7%player%"
       Voting-For-Player-Plot: "&7Now voting for &e&l%PLAYER%'s &7plot!"

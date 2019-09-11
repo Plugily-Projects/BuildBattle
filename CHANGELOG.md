@@ -9,11 +9,11 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
-### 4.1.1 (10/XX.09.2019)
+### 4.1.1 (10/XX.09.2019) (by Tigerpanzer)
 * Added new permission to join full games "buildbattle.fullgames"
 * Added the option to join when a game is full (you will kick a player without perm)
-* Fixed issue that you could join full games before they started (in game you join as spectator)
-now proper full game permission check will occur and do the thing to allow or disallow you to join
+* Fixed issue that you could join full games before they started now proper full game
+permission check will occur and do the thing to allow or disallow you to join
 * /bb randomjoin will now really join random arena not first one it find good to join
 
 ### 4.1.0-pre-1 Beta pre 1 (13/16.07.2019)
