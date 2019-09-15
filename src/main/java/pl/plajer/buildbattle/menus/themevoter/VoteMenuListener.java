@@ -80,7 +80,7 @@ public class VoteMenuListener implements Listener {
     }
     if (e.getView().getTitle().equals(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"))) {
       e.setCancelled(true);
-      if (e.getCurrentItem().getType() == XMaterial.SIGN.parseMaterial() || /*1.13*/ ((plugin.is1_11_R1() || plugin.is1_12_R1()) &&
+      if (e.getCurrentItem().getType() == Material.SIGN || /*1.13*/ ((plugin.is1_11_R1() || plugin.is1_12_R1()) &&
           e.getCurrentItem().getType() == Material.valueOf("SIGN_POST"))) {
         String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
         displayName = ChatColor.stripColor(displayName);

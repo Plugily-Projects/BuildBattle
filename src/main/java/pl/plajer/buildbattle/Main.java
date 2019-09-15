@@ -51,6 +51,7 @@ import pl.plajer.buildbattle.handlers.PlaceholderManager;
 import pl.plajer.buildbattle.handlers.items.SpecialItemsRegistry;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
 import pl.plajer.buildbattle.handlers.setup.SetupInventoryEvents;
+import pl.plajer.buildbattle.handlers.sign.ArenaSign;
 import pl.plajer.buildbattle.handlers.sign.SignManager;
 import pl.plajer.buildbattle.menus.options.OptionsMenuHandler;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
@@ -146,7 +147,7 @@ public class Main extends JavaPlugin {
     Debugger.setEnabled(getConfig().getBoolean("Debug", false));
     Debugger.debug(Debugger.Level.INFO, "Main setup started");
     saveDefaultConfig();
-    for (String s : Arrays.asList("arenas", "particles", "lobbyitems", "stats", "voteItems", "mysql", "biomes")) {
+    for (String s : Arrays.asList("arenas", "particles", "lobbyitems", "stats", "voteItems", "mysql", "biomes", "bungee")) {
       ConfigUtils.getConfig(this, s);
     }
     LanguageManager.init(this);
@@ -216,6 +217,7 @@ public class Main extends JavaPlugin {
     PermissionManager.init();
     new SetupInventoryEvents(this);
     new ArgumentsRegistry(this);
+    ArenaSign.init(this);
     ArenaRegistry.registerArenas();
     //load signs after arenas
     signManager = new SignManager(this);

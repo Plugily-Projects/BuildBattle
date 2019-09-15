@@ -41,7 +41,7 @@ public class LanguageMigrator {
 
   public static final int LANGUAGE_FILE_VERSION = 10;
   public static final int CONFIG_FILE_VERSION = 7;
-  private List<String> migratable = Arrays.asList("bungee", "config", "language", "MySQL");
+  private List<String> migratable = Arrays.asList("bungee", "config", "language", "mysql");
   private Main plugin;
 
   public LanguageMigrator(Main plugin) {

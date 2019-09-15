@@ -89,7 +89,7 @@ public class VoteMenu {
       if (plugin.is1_14_R1()) {
         item = new ItemStack(Material.valueOf("LEGACY_SIGN"));
       } else {
-        item = XMaterial.SIGN.parseItem();
+        item = new ItemStack(Material.SIGN);
       }
       setItem(new ItemBuilder(item)
           .name(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Theme-Item-Name").replace("%theme%", randomThemes.get(i)))
@@ -127,7 +127,7 @@ public class VoteMenu {
       } else {
         percent = ((double) votePoll.getVotedThemes().get(theme) / (double) totalVotes) * 100;
       }
-      ItemStack stack = new ItemBuilder(new ItemStack(XMaterial.SIGN.parseItem()))
+      ItemStack stack = new ItemBuilder(new ItemStack(Material.SIGN))
           .name(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Theme-Item-Name").replace("%theme%", theme))
           .lore(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Theme-Item-Lore").replace("%theme%", theme)
               .replace("%percent%", String.valueOf(NumberUtils.round(percent, 2))).replace("%time-left%", String.valueOf(arena.getTimer())).split(";"))

@@ -91,7 +91,7 @@ public class SetupInventory {
         .build());
 
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-      inventory.setItem(ClickPosition.ADD_SIGN.getPosition(), new ItemBuilder(XMaterial.SIGN.parseItem())
+      inventory.setItem(ClickPosition.ADD_SIGN.getPosition(), new ItemBuilder(Material.SIGN)
           .name(ChatColor.GOLD + "► Add game" + ChatColor.AQUA + " sign")
           .lore(ChatColor.GRAY + "Target a sign and click this.")
           .lore(ChatColor.DARK_GRAY + "(this will set target sign as game sign)")
