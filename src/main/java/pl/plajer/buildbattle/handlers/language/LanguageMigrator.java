@@ -40,7 +40,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
 public class LanguageMigrator {
 
   public static final int LANGUAGE_FILE_VERSION = 10;
-  public static final int CONFIG_FILE_VERSION = 7;
+  public static final int CONFIG_FILE_VERSION = 8;
   private List<String> migratable = Arrays.asList("bungee", "config", "language", "mysql");
   private Main plugin;
 
@@ -151,6 +151,8 @@ public class LanguageMigrator {
               "    - Stocking\r\n\r\n");
         case 6:
           //todo
+          MigratorUtils.addNewLines(file, "# Should we block every not Murder Mystery associated commands in game?\r\n" +
+              "Block-Commands-In-Game: true");
       }
       version++;
     }

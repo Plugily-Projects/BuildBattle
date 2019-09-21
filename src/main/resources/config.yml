@@ -186,6 +186,9 @@ Win-Commands:
 End-Game-Commands:
   - say %PLAYER% has played a game!
 
+# Should we block every not Murder Mystery associated commands in game?
+Block-Commands-In-Game: true
+
 # Commands which can be executed while being in game
 Whitelisted-Commands:
   - me
@@ -212,6 +215,6 @@ Update-Notifier:
 DatabaseActivated: false
 
 # Don't modify.
-Version: 7
+Version: 8
 
 # No way! You've reached the end! But... where's the dragon!?

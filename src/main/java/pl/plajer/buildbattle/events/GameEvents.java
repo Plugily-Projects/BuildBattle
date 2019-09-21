@@ -287,6 +287,9 @@ public class GameEvents implements Listener {
     if (ArenaRegistry.getArena(event.getPlayer()) == null) {
       return;
     }
+    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BLOCK_COMMANDS_IN_GAME)) {
+      return;
+    }
     for (String string : plugin.getConfigPreferences().getWhitelistedCommands()) {
       if (event.getMessage().contains(string)) {
         return;
