@@ -18,7 +18,10 @@
 
 package pl.plajer.buildbattle.commands.arguments.game;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
+import java.util.stream.Stream;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -55,7 +58,7 @@ public class JoinArguments {
         }
         for (BaseArena arena : ArenaRegistry.getArenas()) {
           if (args[1].equalsIgnoreCase(arena.getID())) {
-              ArenaManager.joinAttempt((Player) sender, arena);
+            ArenaManager.joinAttempt((Player) sender, arena);
             return;
           }
         }
@@ -82,16 +85,21 @@ public class JoinArguments {
             case "team":
               BaseArena.ArenaType type = BaseArena.ArenaType.valueOf(args[1].toUpperCase());
               //first random get method
-              for (int i = 0; i < ArenaRegistry.getArenas().size(); i++) {
-                BaseArena arena = getRandomArena();
-                if (arena.getArenaType() == type) {
-                  if ((arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING)
-                      && arena.getPlayers().size() < arena.getMaximumPlayers()) {
-                    ArenaManager.joinAttempt((Player) sender, arena);
-                    return;
-                  }
+              Map<BaseArena, Integer> arenas = new HashMap<>();
+              for (BaseArena arena : ArenaRegistry.getArenas()) {
+                if (arena.getArenaState() == ArenaState.STARTING && arena.getPlayers().size() < arena.getMaximumPlayers()) {
+                  arenas.put(arena, arena.getPlayers().size());
                 }
               }
+              if (arenas.size() > 0) {
+                Stream<Map.Entry<BaseArena, Integer>> sorted = arenas.entrySet().stream().sorted(Map.Entry.comparingByValue());
+                BaseArena arena = sorted.findFirst().get().getKey();
+                if (arena != null) {
+                  ArenaManager.joinAttempt((Player) sender, arena);
+                  return;
+                }
+              }
+
               //fallback safe method
               for (BaseArena arena : ArenaRegistry.getArenas()) {
                 if (arena.getArenaType() == type) {
@@ -110,9 +118,5 @@ public class JoinArguments {
         }
       });
     }
-  }
-
-  private BaseArena getRandomArena() {
-    return ArenaRegistry.getArenas().get(random.nextInt(ArenaRegistry.getArenas().size()));
   }
 }
