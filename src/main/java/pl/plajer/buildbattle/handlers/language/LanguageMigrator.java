@@ -151,7 +151,7 @@ public class LanguageMigrator {
               "    - Stocking\r\n\r\n");
         case 6:
           //todo
-          MigratorUtils.addNewLines(file, "# Should we block every not Murder Mystery associated commands in game?\r\n" +
+          MigratorUtils.addNewLines(file, "# Should we block every not Build Battle associated commands in game?\r\n" +
               "Block-Commands-In-Game: true");
       }
       version++;

@@ -186,7 +186,7 @@ Win-Commands:
 End-Game-Commands:
   - say %PLAYER% has played a game!
 
-# Should we block every not Murder Mystery associated commands in game?
+# Should we block every not Build Battle associated commands in game?
 Block-Commands-In-Game: true
 
 # Commands which can be executed while being in game
