@@ -48,11 +48,9 @@ public class ForceStartArguments {
           sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Not-Playing"));
           return;
         }
-        if (args.length == 2) {
-          if (!sender.hasPermission("buildbattle.admin.forcestart.theme")) {
-            sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Permission"));
-            return;
-          }
+        if (args.length == 2 && !sender.hasPermission("buildbattle.admin.forcestart.theme")) {
+          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Permission"));
+          return;
         }
         if (arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) {
           arena.setArenaState(ArenaState.STARTING);

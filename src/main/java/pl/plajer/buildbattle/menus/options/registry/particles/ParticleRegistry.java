@@ -85,7 +85,7 @@ public class ParticleRegistry {
           .getString(particle.toString() + ".material-name").toUpperCase()).parseItem())
           .name(plugin.getChatManager().colorRawMessage(config.getString(particle.toString() + ".displayname")))
           .lore(config.getStringList(particle.toString() + ".lore")
-              .stream().map((lore) -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()))
+              .stream().map(lore -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()))
           .build());
       particleItem.setPermission(config.getString(particle.toString() + ".permission"));
       particleItem.setEffect(particle);

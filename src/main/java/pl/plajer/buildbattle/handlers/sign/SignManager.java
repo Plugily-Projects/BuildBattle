@@ -19,6 +19,7 @@
 package pl.plajer.buildbattle.handlers.sign;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +60,7 @@ public class SignManager implements Listener {
 
   private Main plugin;
   private List<ArenaSign> arenaSigns = new ArrayList<>();
-  private Map<ArenaState, String> gameStateToString = new HashMap<>();
+  private Map<ArenaState, String> gameStateToString = new EnumMap<>(ArenaState.class);
   private List<String> signLines;
 
   public SignManager(Main plugin) {

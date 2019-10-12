@@ -50,6 +50,9 @@ public class LanguageManager {
   private static Properties properties = new Properties();
   private static FileConfiguration languageConfig;
 
+  private LanguageManager() {
+  }
+
   public static void init(Main plugin) {
     LanguageManager.plugin = plugin;
     if (!new File(plugin.getDataFolder() + File.separator + "language.yml").exists()) {

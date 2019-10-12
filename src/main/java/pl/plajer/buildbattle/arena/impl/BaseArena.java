@@ -19,6 +19,7 @@
 package pl.plajer.buildbattle.arena.impl;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,9 +64,9 @@ public class BaseArena extends BukkitRunnable {
   private boolean forceStart = false;
   private List<Player> players = new ArrayList<>();
   //instead of 2 (lobby, end) location fields we use map with GameLocation enum
-  private Map<GameLocation, Location> gameLocations = new HashMap<>();
+  private Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
   //all arena values that are integers, contains constant and floating values
-  private Map<ArenaOption, Integer> arenaOptions = new HashMap<>();
+  private Map<ArenaOption, Integer> arenaOptions = new EnumMap<>(ArenaOption.class);
   private boolean ready = true;
 
   public BaseArena(String id, Main plugin) {

@@ -54,6 +54,9 @@ public class ArenaManager {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
 
+  private ArenaManager() {
+  }
+
   /**
    * Attempts player to join arena.
    * Calls BBGameJoinEvent.
@@ -179,7 +182,7 @@ public class ArenaManager {
       player.removePotionEffect(effect.getType());
     }
     player.setFireTicks(0);
-    if (arena.getPlayers().size() == 0 && arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS) {
+    if (arena.getPlayers().isEmpty() && arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS) {
       arena.setArenaState(ArenaState.RESTARTING);
       arena.setTimer(0);
     }

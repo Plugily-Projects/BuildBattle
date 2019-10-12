@@ -105,7 +105,7 @@ public class SoloArena extends BaseArena {
   @Override
   public void run() {
     //idle task
-    if (getPlayers().size() == 0 && getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+    if (getPlayers().isEmpty() && getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
       return;
     }
     if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
@@ -172,11 +172,7 @@ public class SoloArena extends BaseArena {
         break;
       case IN_GAME:
         if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-          if (getMaximumPlayers() <= getPlayers().size()) {
-            getPlugin().getServer().setWhitelist(true);
-          } else {
-            getPlugin().getServer().setWhitelist(false);
-          }
+          getPlugin().getServer().setWhitelist(getMaximumPlayers() <= getPlayers().size());
         }
         if (isThemeVoteTime()) {
           if (!isThemeTimerSet()) {
@@ -252,14 +248,14 @@ public class SoloArena extends BaseArena {
             }
             calculateResults();
             Plot winnerPlot = null;
-            for(Map.Entry<Integer, List<Player>> potentialWinners : topList.entrySet()) {
-              if(potentialWinners.getValue().isEmpty()) {
+            for (Map.Entry<Integer, List<Player>> potentialWinners : topList.entrySet()) {
+              if (potentialWinners.getValue().isEmpty()) {
                 continue;
               }
               winnerPlot = getPlotManager().getPlot(potentialWinners.getValue().get(0));
               break;
             }
-            if(winnerPlot == null) {
+            if (winnerPlot == null) {
               getPlugin().getLogger().log(Level.SEVERE, "Fatal error in getting winner plot in game! No plot contain any online player!");
               this.setArenaState(ArenaState.ENDING);
               Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
@@ -537,7 +533,7 @@ public class SoloArena extends BaseArena {
   private void moveScore(int pos, List<Player> owners) {
     List<Player> after = topList.get(pos);
     topList.put(pos, owners);
-    if (!(pos > getPlayers().size()) && after != null) {
+    if (pos <= getPlayers().size() && after != null) {
       moveScore(pos + 1, after);
     }
   }

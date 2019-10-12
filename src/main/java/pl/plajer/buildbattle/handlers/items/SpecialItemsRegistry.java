@@ -90,7 +90,7 @@ public class SpecialItemsRegistry {
       addItem(new SpecialItem(key, new ItemBuilder(XMaterial
           .fromString(config.getString(key + ".material-name", "BEDROCK").toUpperCase()).parseItem())
           .name(plugin.getChatManager().colorRawMessage(config.getString(key + ".displayname")))
-          .lore(config.getStringList(key + ".lore").stream().map((lore) -> lore = plugin.getChatManager().colorRawMessage(lore))
+          .lore(config.getStringList(key + ".lore").stream().map(lore -> lore = plugin.getChatManager().colorRawMessage(lore))
               .collect(Collectors.toList()))
           .build(), config.getInt(key + ".slot")));
     }

@@ -49,6 +49,9 @@ public class Utils {
   public static final ItemStack PLAYER_HEAD_ITEM = (plugin.is1_12_R1() || plugin.is1_11_R1())
       ? new ItemStack(Material.SKULL_ITEM, 1, (short) 3) : XMaterial.PLAYER_HEAD.parseItem();
 
+  private Utils() {
+  }
+
   /**
    * Checks whether itemstack is named (not null, has meta and display name)
    *

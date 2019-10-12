@@ -33,6 +33,9 @@ public class PermissionManager {
   private static String joinPerm = "buildbattle.join.<arena>";
   private static String editGames = "buildbattle.editgames";
 
+  private PermissionManager() {
+  }
+
   public static void init() {
     setupPermissions();
   }

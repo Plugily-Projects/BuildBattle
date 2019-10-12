@@ -66,7 +66,7 @@ public class BiomesRegistry {
           .getString(biome + ".material-name").toUpperCase()).parseItem())
           .name(plugin.getChatManager().colorRawMessage(config.getString(biome + ".displayname")))
           .lore(config.getStringList(biome + ".lore")
-              .stream().map((lore) -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()))
+              .stream().map(lore -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()))
           .build(), config.getString(biome + ".permission"), XBiome.fromString(biome));
       biomes.add(biomeItem);
       i++;

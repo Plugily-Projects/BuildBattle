@@ -52,7 +52,7 @@ public class PlayerHeadsRegistry {
   }
 
   private void registerCategories() {
-    FileConfiguration config = ConfigUtils.getConfig(Main.getPlugin(Main.class), "heads/mainmenu");
+    FileConfiguration config = ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "heads/mainmenu");
     for (String str : config.getKeys(false)) {
       if (!config.getBoolean(str + ".enabled", true)) {
         continue;
@@ -62,7 +62,7 @@ public class PlayerHeadsRegistry {
       category.setItemStack(new ItemBuilder(Utils.getSkull(config.getString(str + ".texture")))
           .name(plugin.getChatManager().colorRawMessage(config.getString(str + ".displayname")))
           .lore(config.getStringList(str + ".lore").stream()
-              .map((lore) -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()))
+              .map(lore -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()))
           .build());
       category.setPermission(config.getString(str + ".permission"));
 
@@ -76,7 +76,7 @@ public class PlayerHeadsRegistry {
         ItemStack stack = Utils.getSkull(categoryConfig.getString(path + ".texture"));
         Utils.setItemNameAndLore(stack, plugin.getChatManager().colorRawMessage(categoryConfig.getString(path + ".displayname")),
             categoryConfig.getStringList(path + ".lore").stream()
-                .map((lore) -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()));
+                .map(lore -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()));
         playerHeads.add(stack);
       }
       Inventory inv = Bukkit.createInventory(null, Utils.serializeInt(playerHeads.size()),

@@ -59,6 +59,7 @@ public class CommandArgument {
   }
 
   public void execute(CommandSender sender, String[] args) {
+    throw new UnsupportedOperationException("Method must be overridden to be used");
   }
 
   public enum ExecutorType {

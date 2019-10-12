@@ -39,10 +39,7 @@ import pl.plajer.buildbattle.arena.impl.BaseArena;
  */
 public class LobbyEvents implements Listener {
 
-  private Main plugin;
-
   public LobbyEvents(Main plugin) {
-    this.plugin = plugin;
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
