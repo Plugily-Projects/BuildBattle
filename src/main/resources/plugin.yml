@@ -2,7 +2,7 @@ main: pl.plajer.buildbattle.Main
 version: ${project.version}
 name: BuildBattle
 softdepend: [Vault, PlaceholderAPI, Citizens]
-authors: [Plajer, Tigerpanzer, TomTheDeveloper]
+authors: [Tigerpanzer, Plajer, TomTheDeveloper]
 api-version: 1.13
 
 commands:

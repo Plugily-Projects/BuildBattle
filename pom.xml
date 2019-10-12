@@ -116,7 +116,7 @@
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
-            <version>2.10.1</version>
+            <version>2.10.4</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -195,7 +195,6 @@
                                     <pattern>me.tigerhix.lib.scoreboard</pattern>
                                     <shadedPattern>pl.plajer.buildbattle.utils.scoreboard</shadedPattern>
                                 </relocation>
-                                <!-- todo tigerhix's scoreboardlib relocation -->
                                 <relocation>
                                     <pattern>org.apache.commons.io</pattern>
                                     <shadedPattern>pl.plajer.buildbattle.utils.commons.io</shadedPattern>
@@ -220,11 +219,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>3.7.1</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -277,11 +271,11 @@
     <distributionManagement>
         <repository>
             <id>plajer-lair-repo</id>
-            <url>ftp://54.38.159.68</url>
+            <url>ftp://185.238.72.89</url>
         </repository>
         <site>
             <id>plajer-lair-java-docs</id>
-            <url>ftp://54.38.159.68</url>
+            <url>ftp://185.238.72.89</url>
         </site>
     </distributionManagement>
 
