@@ -24,7 +24,7 @@
 
     <groupId>pl.plajer</groupId>
     <artifactId>buildbattle</artifactId>
-    <version>4.1.0-pre-2</version>
+    <version>4.1.0-pre-3</version>
     <name>BuildBattle</name>
 
     <properties>
@@ -99,7 +99,7 @@
         <dependency>
             <groupId>com.github.stefvanschie.inventoryframework</groupId>
             <artifactId>IF</artifactId>
-            <version>0.5.9</version>
+            <version>0.5.12</version>
         </dependency>
         <dependency>
             <groupId>net.citizensnpcs</groupId>

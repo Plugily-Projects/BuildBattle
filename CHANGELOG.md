@@ -20,6 +20,7 @@ permission check will occur and do the thing to allow or disallow you to join
 * Fixed VoteMenu not working
 * /bb randomjoin will now really join random arena not first one it find good to join
 * Added a new option to block commands ingame
+* Fixed base banners
 
 ### 4.1.0-pre-1 Beta pre 1 (13/16.07.2019)
 * Added Chinese (Traditional) locale (zh_tw prefix)

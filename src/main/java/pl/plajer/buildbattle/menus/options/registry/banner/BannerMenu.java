@@ -69,10 +69,16 @@ public class BannerMenu {
     Gui gui = new Gui(plugin, 6, plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Banner-Creator.Inventories.Color-Choose"));
     OutlinePane pane = new OutlinePane(1, 1, 7, 3);
     for (DyeColor color : DyeColor.values()) {
-      ItemStack item = XMaterial.WHITE_BANNER.parseItem();
-      BannerMeta meta = (BannerMeta) item.getItemMeta();
-      meta.setBaseColor(color);
-      item.setItemMeta(meta);
+      ItemStack item;
+      if (plugin.is1_12_R1() || plugin.is1_11_R1()) {
+        item = XMaterial.WHITE_BANNER.parseItem();
+        BannerMeta meta = (BannerMeta) item.getItemMeta();
+        meta.setBaseColor(color);
+        item.setItemMeta(meta);
+      } else {
+        String banner = color.toString().toUpperCase() + "_BANNER";
+        item = XMaterial.fromString(banner).parseItem();
+      }
       pane.addItem(new GuiItem(item, e -> {
         e.setCancelled(true);
         banner.setBaseColor(color);
