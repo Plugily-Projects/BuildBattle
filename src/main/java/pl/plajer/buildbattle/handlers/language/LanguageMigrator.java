@@ -39,7 +39,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int LANGUAGE_FILE_VERSION = 10;
+  public static final int LANGUAGE_FILE_VERSION = 11;
   public static final int CONFIG_FILE_VERSION = 8;
   private List<String> migratable = Arrays.asList("bungee", "config", "language", "mysql");
   private Main plugin;
@@ -323,6 +323,22 @@ public class LanguageMigrator {
           break;
         case 9:
           MigratorUtils.insertAfterLine(file, "Commands:", "  No-Playing: \"&cYou're not playing!\"");
+          break;
+        case 10:
+          MigratorUtils.insertAfterLine(file, "Items:", "      Banner-Creator:\r\n"
+              + "        Inventories:\r\n"
+              + "          Color-Choose: \"&aSelect color\"\r\n"
+              + "          Add-Layer: \"&aAdd layer\"\r\n"
+              + "          Add-Layer-Color: \"&aAdd layer color\"\r\n"
+              + "        Item-Name: \"&aBanner creator\"\r\n"
+              + "        Item-Lore: \"&7Right click to open menu\"\r\n"
+              + "        Create-Banner-Item:\r\n"
+              + "          Name: \"&aCreate final banner\"\r\n"
+              + "          Lore: \"&7Right click to create this banner\"");
+          MigratorUtils.insertAfterLine(file, "Lobby-Messages:", "      Kicked-For-Premium-Slot: \"&c%PLAYER% got removed from the game to make a place for premium players!\"\r\n"
+              + "      You-Were-Kicked-For-Premium-Slot: \"&cYou got kicked out of the game to make a place for a premium player!\"");
+          MigratorUtils.insertAfterLine(file, "Join-No-Permission:", "  Full-Game-No-Permission: \"&cYou don't have the permission to join full games!\"\r\n"
+              + "  No-Slots-For-Premium: \"&cThis game is already full of premium players! Sorry\"");
       }
       version++;
     }
