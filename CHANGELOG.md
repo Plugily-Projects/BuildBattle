@@ -9,26 +9,20 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
-### 4.1.1 (10/XX.09.2019) (by Tigerpanzer)
+### 4.1.0 Release (13.07.2019 - 18.10.2019) (by Tigerpanzer and Plajer)
 * Added new permission to join full games "buildbattle.fullgames"
 * Added the option to join when a game is full (you will kick a player without perm)
 * Fixed issue that you could join full games before they started now proper full game
 permission check will occur and do the thing to allow or disallow you to join
-* Fixed the edit menu, now it will open
-* Fixed the arena signs
 * Fixed file creating for bungee.yml
-* Fixed VoteMenu not working
 * /bb randomjoin will now really join random arena not first one it find good to join
 * Added a new option to block commands ingame
-* Fixed base banners
 * Fixed the NoSuchMethodException on arena sign load when the sign isn´t a wallsign  
-
-### 4.1.0-pre-1 Beta pre 1 (13/16.07.2019)
 * Added Chinese (Traditional) locale (zh_tw prefix)
 * Changed Chinese (Simplified) locale prefix from zh to cn
-* Added pre 1.14 support
+* Added 1.14 support
 * Added sounds when using vote items (reset voteItems.yml to see changes)
-* Added banner builder in GUI (todo migrator)
+* Added banner builder in GUI
 * Entities can't be damaged anymore in voting stage
 * Players hiding feature is now fully removed, it was buggy
 
