@@ -1,5 +1,10 @@
-## Issue name
-### Sort description of issue
+---
+name: Bug report
+about: Report an issue or bug you encountered.
+
+---
+
+### Short description of the issue
 
 ## Error code
 ```
