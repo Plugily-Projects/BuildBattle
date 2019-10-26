@@ -143,7 +143,7 @@ public class Main extends JavaPlugin {
     }
 
     ServiceRegistry.registerService(this);
-    exceptionLogHandler = new ExceptionLogHandler();
+    exceptionLogHandler = new ExceptionLogHandler(this);
     Debugger.setEnabled(getConfig().getBoolean("Debug", false));
     Debugger.debug(Debugger.Level.INFO, "Main setup started");
     saveDefaultConfig();

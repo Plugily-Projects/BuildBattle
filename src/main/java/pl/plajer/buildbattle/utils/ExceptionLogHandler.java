@@ -40,8 +40,10 @@ public class ExceptionLogHandler extends Handler {
   //to the Error Service
   private List<String> blacklistedClasses = Arrays.asList("pl.plajer.buildbattle.user.data.MysqlManager", "pl.plajer.buildbattle.plajerlair.commonsbox.database.MysqlDatabase",
       "pl.plajer.buildbattle.arena.impl.GuessTheBuildArena" /* GTB mode is in beta, disabled for reporting */);
+  private Main plugin;
 
-  public ExceptionLogHandler() {
+  public ExceptionLogHandler(Main plugin) {
+    this.plugin = plugin;
     Bukkit.getLogger().addHandler(this);
   }
 
@@ -62,13 +64,16 @@ public class ExceptionLogHandler extends Handler {
       return;
     }
     if (throwable.getStackTrace().length == 0
-        || !throwable.getStackTrace()[0].getClassName().contains("pl.plajer.buildbattle")) {
+            || throwable.getCause() != null ? !throwable.getCause().getStackTrace()[0].getClassName().contains("pl.plajer.buildbattle")
+            : !throwable.getStackTrace()[0].getClassName().contains("pl.plajer.buildbattle")) {
       return;
     }
     if (containsBlacklistedClass(throwable)) {
       return;
     }
-    new ReportedException(JavaPlugin.getPlugin(Main.class), (Exception) throwable);
+    new ReportedException(plugin, (Exception) throwable);
+    record.setThrown(null);
+    record.setMessage("[BuildBattle] We have found a bug in the code. Contact us at our official discord server (Invite link: https://discordapp.com/invite/UXzUdTP) with the following error given above!");
   }
 
   private boolean containsBlacklistedClass(Throwable throwable) {
