@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ BuildBattle - Ultimate building competition minigame
-  ~ Copyright (C) 2019  Plajer's Lair - maintained by Plajer and contributors
+  ~ Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -24,11 +24,12 @@
 
     <groupId>pl.plajer</groupId>
     <artifactId>buildbattle</artifactId>
-    <version>4.1.0-pre-3</version>
+    <version>4.1.0</version>
     <name>BuildBattle</name>
 
     <properties>
         <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <repositories>

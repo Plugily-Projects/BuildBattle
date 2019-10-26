@@ -1,6 +1,6 @@
 /*
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and contributors
+ * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -200,9 +200,10 @@ public class Main extends JavaPlugin {
       getServer().getPluginManager().disablePlugin(this);
       return false;
     }
-    if (version.contains("v1_10") || version.contains("v1_9") || version.contains("v1_8") || version.contains("v1_7") || version.contains("v1_6")) {
+    if (!(version.equalsIgnoreCase("v1_11_R1") || version.equalsIgnoreCase("v1_12_R1") || version.equalsIgnoreCase("v1_13_R1")
+        || version.equalsIgnoreCase("v1_13_R2") || version.equalsIgnoreCase("v1_14_R1"))) {
       MessageUtils.thisVersionIsNotSupported();
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by BuildBattle!");
+      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by Build Battle!");
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider updating your server version?");
       forceDisable = true;
       getServer().getPluginManager().disablePlugin(this);

@@ -1,6 +1,6 @@
 /*
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and contributors
+ * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -145,9 +145,9 @@ public class Plot {
 
   public void resetPlot() {
     for (Block block : cuboid.blockList()) {
-      if (block.getType() != Material.AIR) {
-        block.setType(Material.AIR);
-      }
+      //to ensure 1.14 blocks support (that will be seen as air in api-version 1.13)
+      //we set all blocks to air so 1.14 ones will update too
+      block.setType(Material.AIR);
     }
     getParticles().clear();
     for (Player p : owners) {

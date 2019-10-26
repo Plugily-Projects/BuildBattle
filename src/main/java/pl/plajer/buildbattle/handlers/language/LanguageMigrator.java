@@ -1,6 +1,6 @@
 /*
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and contributors
+ * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -116,6 +116,7 @@ public class LanguageMigrator {
               "      - Horse\r\n      - Fountain\r\n      - Sumo\r\n      - Bicycle\r\n    Hard:\r\n      - Soccer\r\n      - Birthday Cake\r\n      - Typewriter\r\n      - Solar System\r\n\r\n");
           MigratorUtils.addNewLines(file, "# Commands executed when player wins\r\n# Use %PLAYER% placeholder to replace it with winner's name\r\nWin-Commands:\r\n" +
               "  First:\r\n    - say %PLAYER% won the game!\r\n  Second:\r\n    - say %PLAYER% become second\r\n  Third:\r\n    - say %PLAYER% became third\r\n\r\n");
+          break;
         case 5:
           MigratorUtils.addNewLines(file, "\r\n" +
               "# Should holiday events for Build Battle be enabled?\r\n" +
@@ -149,6 +150,7 @@ public class LanguageMigrator {
               "    - Presents\r\n" +
               "    - Snowman\r\n" +
               "    - Stocking\r\n\r\n");
+          break;
         case 6:
           //todo
           MigratorUtils.addNewLines(file, "# Should we block every not Build Battle associated commands in game?\r\n" +
