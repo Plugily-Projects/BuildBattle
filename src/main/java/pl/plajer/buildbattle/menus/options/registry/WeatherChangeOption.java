@@ -30,6 +30,7 @@ import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.menus.options.MenuOption;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
+import pl.plajer.buildbattle.utils.Utils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
 /**
@@ -52,6 +53,7 @@ public class WeatherChangeOption {
         Inventory weatherInv = Bukkit.createInventory(null, 9, registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Inventory-Name"));
         weatherInv.addItem(new ItemBuilder(Material.BUCKET).name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Clear")).build());
         weatherInv.addItem(new ItemBuilder(Material.BUCKET).name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Downfall")).build());
+        weatherInv.addItem(Utils.getGoBackItem());
         e.getWhoClicked().openInventory(weatherInv);
       }
 

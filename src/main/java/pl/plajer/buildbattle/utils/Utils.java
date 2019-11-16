@@ -39,6 +39,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
 /**
  * Created by Tom on 29/07/2014.
@@ -80,6 +81,12 @@ public class Utils {
     } else {
       return (int) ((Math.ceil(i / 9) * 9) + 9);
     }
+  }
+
+  public static ItemStack getGoBackItem() {
+    return new ItemBuilder(XMaterial.STONE_BUTTON.parseItem())
+        .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Go-Back-Button.Item-Name"))
+        .lore(plugin.getChatManager().colorMessage("Menus.Option-Menu.Go-Back-Button.Item-Lore")).build();
   }
 
   public static ItemStack getSkull(String url) {

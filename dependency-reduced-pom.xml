@@ -4,7 +4,7 @@
   <groupId>pl.plajer</groupId>
   <artifactId>buildbattle</artifactId>
   <name>BuildBattle</name>
-  <version>4.1.0</version>
+  <version>4.1.0-b</version>
   <build>
     <extensions>
       <extension>
@@ -273,5 +273,6 @@
   </distributionManagement>
   <properties>
     <java.version>1.8</java.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>

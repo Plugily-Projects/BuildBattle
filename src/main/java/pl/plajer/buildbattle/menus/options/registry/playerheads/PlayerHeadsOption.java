@@ -45,11 +45,12 @@ public class PlayerHeadsOption {
         e.getWhoClicked().closeInventory();
 
         Inventory inventory = Bukkit.getServer().createInventory(null,
-            Utils.serializeInt(registry.getPlayerHeadsRegistry().getCategories().size()),
+            Utils.serializeInt(registry.getPlayerHeadsRegistry().getCategories().size() + 1),
             registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Players-Heads.Inventory-Name"));
         for (HeadsCategory categoryItem : registry.getPlayerHeadsRegistry().getCategories().keySet()) {
           inventory.addItem(categoryItem.getItemStack());
         }
+        inventory.addItem(Utils.getGoBackItem());
         e.getWhoClicked().openInventory(inventory);
       }
 

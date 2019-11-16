@@ -38,6 +38,7 @@ import pl.plajer.buildbattle.menus.options.registry.particles.ParticleRegistry;
 import pl.plajer.buildbattle.menus.options.registry.particles.ParticlesOption;
 import pl.plajer.buildbattle.menus.options.registry.playerheads.PlayerHeadsOption;
 import pl.plajer.buildbattle.menus.options.registry.playerheads.PlayerHeadsRegistry;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
 /**

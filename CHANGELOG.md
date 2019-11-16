@@ -9,6 +9,11 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+### 4.1.1 Release (16.11.2019) (by Tigerpanzer)
+* Fixed arena deletion
+* Added a item to go to main options page
+* Fixed Holiday themes
+
 ### 4.1.0 Release (13.07.2019 - 18.10.2019) (by Tigerpanzer and Plajer)
 * Added new permission to join full games "buildbattle.fullgames"
 * Added the option to join when a game is full (you will kick a player without perm)

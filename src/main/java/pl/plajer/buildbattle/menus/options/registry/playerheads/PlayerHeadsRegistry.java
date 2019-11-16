@@ -79,11 +79,12 @@ public class PlayerHeadsRegistry {
                 .map(lore -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()));
         playerHeads.add(stack);
       }
-      Inventory inv = Bukkit.createInventory(null, Utils.serializeInt(playerHeads.size()),
+      Inventory inv = Bukkit.createInventory(null, Utils.serializeInt(playerHeads.size() + 1),
           plugin.getChatManager().colorRawMessage(config.getString(str + ".menuname")));
       for (ItemStack item : playerHeads) {
         inv.addItem(item);
       }
+      inv.addItem(Utils.getGoBackItem());
       category.setInventory(inv);
       categories.put(category, inv);
     }

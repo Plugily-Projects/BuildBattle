@@ -21,6 +21,7 @@ package pl.plajer.buildbattle.handlers;
 import java.time.LocalDateTime;
 
 import pl.plajer.buildbattle.Main;
+import pl.plajer.buildbattle.utils.Debugger;
 
 /**
  * @author Plajer
@@ -29,13 +30,15 @@ import pl.plajer.buildbattle.Main;
  */
 public class HolidayManager {
 
-  private HolidayType currentHoliday = HolidayType.NONE;
+  private static HolidayType currentHoliday = HolidayType.NONE;
 
   public HolidayManager(Main plugin) {
     if (!plugin.getConfig().getBoolean("Holidays-Enabled", true)) {
       return;
     }
     LocalDateTime time = LocalDateTime.now();
+
+    Debugger.debug(Debugger.Level.INFO, "[HolidayManager] Time of server " + time);
 
     int day = time.getDayOfMonth();
     int month = time.getMonthValue();
@@ -45,6 +48,7 @@ public class HolidayManager {
         if (day >= 10 && day <= 18) {
           currentHoliday = HolidayType.VALENTINES_DAY;
           //replace themes
+          plugin.getConfigPreferences().getGameThemes().clear();
           plugin.getConfigPreferences().getGameThemes().put("Classic", plugin.getConfig().getStringList("Holiday-Themes.Valentines-Day"));
           plugin.getConfigPreferences().getGameThemes().put("Team", plugin.getConfig().getStringList("Holiday-Themes.Valentines-Day"));
         }
@@ -53,6 +57,7 @@ public class HolidayManager {
         //4 days before april fools
         if (day >= 28) {
           currentHoliday = HolidayType.APRIL_FOOLS;
+          plugin.getConfigPreferences().getGameThemes().clear();
           plugin.getConfigPreferences().getGameThemes().put("Classic", plugin.getConfig().getStringList("Holiday-Themes.April-Fools"));
           plugin.getConfigPreferences().getGameThemes().put("Team", plugin.getConfig().getStringList("Holiday-Themes.April-Fools"));
         }
@@ -61,6 +66,7 @@ public class HolidayManager {
         //4 days after april fools
         if (day <= 5) {
           currentHoliday = HolidayType.APRIL_FOOLS;
+          plugin.getConfigPreferences().getGameThemes().clear();
           plugin.getConfigPreferences().getGameThemes().put("Classic", plugin.getConfig().getStringList("Holiday-Themes.April-Fools"));
           plugin.getConfigPreferences().getGameThemes().put("Team", plugin.getConfig().getStringList("Holiday-Themes.April-Fools"));
         }
@@ -69,6 +75,7 @@ public class HolidayManager {
         //4 days before halloween
         if (day >= 27) {
           currentHoliday = HolidayType.HALLOWEEN;
+          plugin.getConfigPreferences().getGameThemes().clear();
           plugin.getConfigPreferences().getGameThemes().put("Classic", plugin.getConfig().getStringList("Holiday-Themes.Halloween"));
           plugin.getConfigPreferences().getGameThemes().put("Team", plugin.getConfig().getStringList("Holiday-Themes.Halloween"));
         }
@@ -77,6 +84,7 @@ public class HolidayManager {
         //4 days after halloween
         if (day <= 4) {
           currentHoliday = HolidayType.HALLOWEEN;
+          plugin.getConfigPreferences().getGameThemes().clear();
           plugin.getConfigPreferences().getGameThemes().put("Classic", plugin.getConfig().getStringList("Holiday-Themes.Halloween"));
           plugin.getConfigPreferences().getGameThemes().put("Team", plugin.getConfig().getStringList("Holiday-Themes.Halloween"));
         }
@@ -84,15 +92,18 @@ public class HolidayManager {
       case 12:
         if (day >= 21 && day <= 29) {
           currentHoliday = HolidayType.CHRISTMAS;
+          plugin.getConfigPreferences().getGameThemes().clear();
           plugin.getConfigPreferences().getGameThemes().put("Classic", plugin.getConfig().getStringList("Holiday-Themes.Christmas"));
           plugin.getConfigPreferences().getGameThemes().put("Team", plugin.getConfig().getStringList("Holiday-Themes.Christmas"));
         }
       default:
         break;
     }
+    Debugger.debug(Debugger.Level.INFO, "[HolidayManager] CurrentHoliday: " + getCurrentHoliday().name());
+    Debugger.debug(Debugger.Level.INFO, "[HolidayManager] New Themes: " + plugin.getConfigPreferences().getGameThemes());
   }
 
-  public HolidayType getCurrentHoliday() {
+  public static HolidayType getCurrentHoliday() {
     return currentHoliday;
   }
 

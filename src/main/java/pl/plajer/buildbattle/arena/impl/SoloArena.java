@@ -41,6 +41,7 @@ import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.arena.options.ArenaOption;
+import pl.plajer.buildbattle.handlers.HolidayManager;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
 import pl.plajer.buildbattle.menus.themevoter.VoteMenu;
 import pl.plajer.buildbattle.menus.themevoter.VotePoll;
@@ -126,6 +127,9 @@ public class SoloArena extends BaseArena {
         } else {
           getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
           setArenaState(ArenaState.STARTING);
+          if (HolidayManager.getCurrentHoliday() != HolidayManager.HolidayType.NONE) {
+            this.initPoll();
+          }
           Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
           setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
         }

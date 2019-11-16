@@ -55,13 +55,7 @@ public class BiomeChangeOption {
       @Override
       public void onClick(InventoryClickEvent e) {
         e.getWhoClicked().closeInventory();
-
-        Inventory biomeInv = Bukkit.createInventory(null, Utils.serializeInt(registry.getBiomesRegistry().getBiomes().size()),
-            plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Biome.Inventory-Name"));
-        for (BiomeItem biome : registry.getBiomesRegistry().getBiomes()) {
-          biomeInv.addItem(biome.getItemStack());
-        }
-        e.getWhoClicked().openInventory(biomeInv);
+        e.getWhoClicked().openInventory(registry.getBiomesRegistry().getInventory());
       }
 
       @Override

@@ -75,6 +75,10 @@ public class OptionsMenuHandler implements Listener {
       if (!option.isInventoryEnabled()) {
         continue;
       }
+      if (Utils.getGoBackItem().getItemMeta().getDisplayName().equalsIgnoreCase(e.getCurrentItem().getItemMeta().getDisplayName())) {
+        e.getWhoClicked().openInventory(plugin.getOptionsRegistry().formatInventory());
+        return;
+      }
       if (option.getInventoryName().equals(e.getView().getTitle())) {
         e.setCancelled(true);
         option.onTargetClick(e);

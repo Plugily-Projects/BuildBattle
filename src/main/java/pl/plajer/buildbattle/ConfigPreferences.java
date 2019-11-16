@@ -30,6 +30,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 import pl.plajer.buildbattle.arena.impl.BaseArena;
+import pl.plajer.buildbattle.utils.Debugger;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -72,6 +73,7 @@ public class ConfigPreferences {
     gameThemes.put(BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_EASY", plugin.getConfig().getStringList("Themes.Guess-The-Build.Easy"));
     gameThemes.put(BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_MEDIUM", plugin.getConfig().getStringList("Themes.Guess-The-Build.Medium"));
     gameThemes.put(BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_HARD", plugin.getConfig().getStringList("Themes.Guess-The-Build.Hard"));
+    Debugger.debug(Debugger.Level.INFO, "Themes loaded: " + gameThemes);
   }
 
   public Map<String, List<String>> getGameThemes() {

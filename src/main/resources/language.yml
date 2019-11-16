@@ -226,6 +226,9 @@ Menus:
     Inventory-Name: "&aOptions menu"
     Option-Item: "&aOptions"
     Option-Item-Lore: "&7Right click to open menu"
+    Go-Back-Button:
+      Item-Name: "&aGo to Options Page"
+      Item-Lore: "&7Click to go to main options page"
     Items:
       Particle:
         Inventory-Name: "&aParticles menu"
