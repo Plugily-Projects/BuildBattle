@@ -24,7 +24,6 @@ import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.utils.services.exception.ReportedException;
@@ -64,8 +63,8 @@ public class ExceptionLogHandler extends Handler {
       return;
     }
     if (throwable.getStackTrace().length == 0
-            || throwable.getCause() != null ? !throwable.getCause().getStackTrace()[0].getClassName().contains("pl.plajer.buildbattle")
-            : !throwable.getStackTrace()[0].getClassName().contains("pl.plajer.buildbattle")) {
+        || throwable.getCause() != null ? !throwable.getCause().getStackTrace()[0].getClassName().contains("pl.plajer.buildbattle")
+        : !throwable.getStackTrace()[0].getClassName().contains("pl.plajer.buildbattle")) {
       return;
     }
     if (containsBlacklistedClass(throwable)) {
