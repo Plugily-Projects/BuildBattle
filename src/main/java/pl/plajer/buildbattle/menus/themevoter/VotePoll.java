@@ -27,6 +27,7 @@ import java.util.Map;
 import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle.arena.impl.SoloArena;
+import pl.plajer.buildbattle.utils.Utils;
 
 /**
  * @author Plajer
@@ -44,17 +45,6 @@ public class VotePoll {
     for (String theme : votedThemes) {
       this.votedThemes.put(theme, 0);
     }
-  }
-
-  private static Map sortByValue(Map unsortMap) {
-    List list = new LinkedList(unsortMap.entrySet());
-    list.sort((o1, o2) -> ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue()));
-    Map sortedMap = new LinkedHashMap();
-    for (Object aList : list) {
-      Map.Entry entry = (Map.Entry) aList;
-      sortedMap.put(entry.getKey(), entry.getValue());
-    }
-    return sortedMap;
   }
 
   public SoloArena getArena() {
@@ -82,7 +72,7 @@ public class VotePoll {
   }
 
   public String getVotedTheme() {
-    LinkedHashMap<String, Integer> bestTheme = (LinkedHashMap<String, Integer>) sortByValue(votedThemes);
+    LinkedHashMap<String, Integer> bestTheme = (LinkedHashMap<String, Integer>) Utils.sortByValue(votedThemes);
     return (String) bestTheme.keySet().toArray()[bestTheme.keySet().toArray().length - 1];
   }
 

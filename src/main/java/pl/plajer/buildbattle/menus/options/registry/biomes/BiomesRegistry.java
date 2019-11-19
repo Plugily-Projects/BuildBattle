@@ -18,7 +18,6 @@
 
 package pl.plajer.buildbattle.menus.options.registry.biomes;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;

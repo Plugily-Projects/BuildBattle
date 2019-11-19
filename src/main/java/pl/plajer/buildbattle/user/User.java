@@ -19,7 +19,6 @@
 package pl.plajer.buildbattle.user;
 
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
