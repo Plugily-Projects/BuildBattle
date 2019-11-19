@@ -13,6 +13,8 @@ That's all, matcher will stop when detects next line started with `###` match
 * Fixed arena deletion
 * Added a item to go to main options page
 * Fixed Holiday themes
+* Added a new MOTD Manager in the bungee.yml (Now you can define the message on your self) 
+* Now the values in bungee.yml will work
 
 ### 4.1.0 Release (13.07.2019 - 18.10.2019) (by Tigerpanzer and Plajer)
 * Added new permission to join full games "buildbattle.fullgames"
