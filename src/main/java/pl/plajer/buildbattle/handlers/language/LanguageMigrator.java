@@ -357,6 +357,9 @@ public class LanguageMigrator {
               + "  No-Slots-For-Premium: \"&cThis game is already full of premium players! Sorry\"");
         case 11:
           MigratorUtils.insertAfterLine(file, "In-Game:", "  No-Permission-For-Biome: \"&cYou don't have permission for this biome!\"");
+          MigratorUtils.insertAfterLine(file, "Option-Menu:", "    Go-Back-Button:\r\n" +
+              "      Item-Name: \"&aGo to Options Page\"\r\n" +
+              "      Item-Lore: \"&7Click to go to main options page\"");
       }
       version++;
     }
