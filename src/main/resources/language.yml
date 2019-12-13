@@ -154,6 +154,7 @@ In-Game:
   Max-Entities-Limit-Reached: "&cYou can't spawn more entities!"
   Max-Particles-Limit-Reached: "&cYou can't spawn more particles!"
   No-Permission-For-Particle: "&cYou don't have permission for this particle!"
+  No-Permission-For-Biome: "&cYou don't have permission for this biome!"
   Particle-Added: "&aParticle successfully added!"
   Join-No-Permission: "&cYou don't have &6%permission% &cpermission to join this arena!"
   Full-Game-No-Permission: "&cYou don't have the permission to join full games!"
@@ -326,4 +327,4 @@ Signs:
     - "&5[%playersize%/%maxplayers%]"
 
 # Do not modify!
-File-Version-Do-Not-Edit: 11
+File-Version-Do-Not-Edit: 12

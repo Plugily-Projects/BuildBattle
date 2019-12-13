@@ -68,6 +68,10 @@ public class BiomeChangeOption {
         if (item == BiomeItem.INVALID_BIOME) {
           return;
         }
+        if (!e.getWhoClicked().hasPermission(item.getPermission())) {
+          e.getWhoClicked().sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.No-Permission-For-Biome"));
+          return;
+        }
         Biome biome = item.getBiome().parseBiome();
         for (Block block : plot.getCuboid().blockList()) {
           block.setBiome(biome);

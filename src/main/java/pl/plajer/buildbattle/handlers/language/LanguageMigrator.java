@@ -39,8 +39,8 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int LANGUAGE_FILE_VERSION = 11;
-  public static final int CONFIG_FILE_VERSION = 8;
+  public static final int LANGUAGE_FILE_VERSION = 12;
+  public static final int CONFIG_FILE_VERSION = 9;
   private List<String> migratable = Arrays.asList("bungee", "config", "language", "mysql");
   private Main plugin;
 
@@ -79,15 +79,13 @@ public class LanguageMigrator {
     }
     Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[BuildBattle] System notify >> Your config file is outdated! Updating...");
     File file = new File(plugin.getDataFolder() + "/config.yml");
+    File bungeefile = new File(plugin.getDataFolder() + "/bungee.yml");
 
-    int version = 0;
-    if (NumberUtils.isNumber(plugin.getConfig().getString("Version"))) {
-      version = Integer.valueOf(plugin.getConfig().getString("Version"));
-    }
+    int version = plugin.getConfig().getInt("Version", CONFIG_FILE_VERSION - 1);
     updateConfigVersionControl(version);
 
-    for (int i = 0; i < CONFIG_FILE_VERSION; i++) {
-      switch (version) {
+    for (int i = version; i < CONFIG_FILE_VERSION; i++) {
+      switch (i) {
         case 0:
           MigratorUtils.addNewLines(file, "\r\n# Should blocks behind game signs change their color based on game state?\r\n# They will change color to:\r\n" +
               "# - white (waiting for players) stained glass\r\n# - yellow (starting) stained glass\r\n# - orange (in game) stained glass\r\n# - gray (ending) stained glass\r\n" +
@@ -155,8 +153,24 @@ public class LanguageMigrator {
           //todo
           MigratorUtils.addNewLines(file, "# Should we block every not Build Battle associated commands in game?\r\n" +
               "Block-Commands-In-Game: true");
+        case 7:
+          MigratorUtils.removeLineFromFile(bungeefile, "# This is useful for bungee game systems.");
+          MigratorUtils.removeLineFromFile(bungeefile, "# Game state will be visible at MOTD.");
+          MigratorUtils.removeLineFromFile(bungeefile, "MOTD-manager: false");
+          MigratorUtils.removeLineFromFile(bungeefile, "MOTD-manager: true");
+          MigratorUtils.addNewLines(bungeefile, "\r\n# This is useful for bungee game systems.\r\n" +
+              "# %state% - Game state will be visible at MOTD.\r\n" +
+              "MOTD:\r\n" +
+              "  Manager: false\r\n" +
+              "  Message: \"The actual game state of bb is %state%\"\r\n" +
+              "  Game-States:\r\n" +
+              "    Inactive: \"&lInactive...\"\r\n" +
+              "    In-Game: \"&lIn-game\"\r\n" +
+              "    Starting: \"&e&lStarting\"\r\n" +
+              "    Full-Game: \"&4&lFULL\"\r\n" +
+              "    Ending: \"&lEnding\"\r\n" +
+              "    Restarting: \"&c&lRestarting\"\r\n");
       }
-      version++;
     }
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] [System notify] Config updated, no comments were removed :)");
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] [System notify] You're using latest config file version! Nice!");
@@ -341,6 +355,8 @@ public class LanguageMigrator {
               + "      You-Were-Kicked-For-Premium-Slot: \"&cYou got kicked out of the game to make a place for a premium player!\"");
           MigratorUtils.insertAfterLine(file, "Join-No-Permission:", "  Full-Game-No-Permission: \"&cYou don't have the permission to join full games!\"\r\n"
               + "  No-Slots-For-Premium: \"&cThis game is already full of premium players! Sorry\"");
+        case 11:
+          MigratorUtils.insertAfterLine(file, "In-Game:", "  No-Permission-For-Biome: \"&cYou don't have permission for this biome!\"");
       }
       version++;
     }

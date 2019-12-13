@@ -9,12 +9,15 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
-### 4.1.1 Release (16.11.2019) (by Tigerpanzer)
+### 4.2.0 Release (16.11.2019 - 13.12.2019) (by Tigerpanzer)
 * Fixed arena deletion
 * Added a item to go to main options page
 * Fixed Holiday themes
 * Added a new MOTD Manager in the bungee.yml (Now you can define the message on your self) 
 * Now the values in bungee.yml will work
+* Now the biomes permissions will work
+* Added new check for setup validation (now registered plots amount will be checked)
+* Added 1.15 compatibility
 
 ### 4.1.0 Release (13.07.2019 - 18.10.2019) (by Tigerpanzer and Plajer)
 * Added new permission to join full games "buildbattle.fullgames"
