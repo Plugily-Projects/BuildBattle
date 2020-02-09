@@ -23,6 +23,8 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle.api.StatsStorage;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
+import pl.plajer.buildbattle.arena.impl.BaseArena;
 
 /**
  * @author Plajer
@@ -58,7 +60,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
     if (player == null) {
       return null;
     }
-    switch (id) {
+    switch (id.toLowerCase()) {
       case "blocks_broken":
         return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.BLOCKS_BROKEN));
       case "blocks_placed":
@@ -73,7 +75,38 @@ public class PlaceholderManager extends PlaceholderExpansion {
         return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.HIGHEST_WIN));
       case "particles_used":
         return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.PARTICLES_USED));
+      default:
+        return handleArenaPlaceholderRequest(id);
     }
-    return null;
   }
+
+  private String handleArenaPlaceholderRequest(String id) {
+    if (!id.contains(":")) {
+      return null;
+    }
+    String[] data = id.split(":");
+    BaseArena arena = ArenaRegistry.getArena(data[0]);
+    if(arena == null) {
+      return null;
+    }
+    switch (data[1].toLowerCase()) {
+      case "players":
+        return String.valueOf(arena.getPlayers().size());
+      case "max_players":
+        return String.valueOf(arena.getMaximumPlayers());
+      case "state":
+        return String.valueOf(arena.getArenaState());
+      case "state_pretty":
+        return arena.getArenaState().getFormattedName();
+      case "mapname":
+        return arena.getMapName();
+      case "arenatype":
+        return String.valueOf(arena.getArenaType());
+      case "arenatype_pretty":
+        return arena.getArenaType().getPrefix();
+      default:
+        return null;
+    }
+  }
+
 }

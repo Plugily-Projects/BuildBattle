@@ -9,6 +9,18 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+### 4.2.1 Release (09.02.2020)
+* PlaceholderAPI placeholders are no longer case sensitive
+* Added arena state placeholders for PlaceholderAPI:
+   * %buildbattle_{arena id}:{data}% where data types are:
+      * players - amount of players in arena
+      * max_players - max players in arena
+      * state - current state raw enum name eg. STARTING
+      * state_pretty - prettified name of enum eg. Waiting (instead WAITING_FOR_PLAYERS)
+      * mapname - name of arena map
+      * arenatype - raw enum name of arena (SOLO, TEAM etc)
+      * arenatype_pretty - prettified name of enum eg. Classic (instead SOLO)
+
 ### 4.2.0 Release (16.11.2019 - 13.12.2019) (by Tigerpanzer)
 * Fixed arena deletion
 * Added a item to go to main options page
