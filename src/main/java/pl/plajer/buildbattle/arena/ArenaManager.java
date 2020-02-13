@@ -90,13 +90,16 @@ public class ArenaManager {
       if (party.getLeader().equals(player)) {
         if (arena.getMaximumPlayers() - arena.getPlayers().size() >= party.getPlayers().size()) {
           for (Player partyPlayer : party.getPlayers()) {
+            if (partyPlayer == player) {
+              continue;
+            }
             if (ArenaRegistry.getArena(partyPlayer) != null) {
               if (ArenaRegistry.getArena(partyPlayer).getArenaState() == ArenaState.IN_GAME) {
                 continue;
               }
               leaveAttempt(partyPlayer, ArenaRegistry.getArena(partyPlayer));
             }
-            partyPlayer.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().formatMessage(arena,  plugin.getChatManager().colorMessage("In-Game.Messages.Join-As-Party-Member"), partyPlayer));
+            partyPlayer.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().formatMessage(arena,  plugin.getChatManager().colorMessage("In-Game.Join-As-Party-Member"), partyPlayer));
             joinAttempt(partyPlayer, arena);
           }
         } else {
