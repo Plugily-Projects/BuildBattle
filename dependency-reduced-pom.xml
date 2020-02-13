@@ -148,6 +148,14 @@
       <id>bstats-repo</id>
       <url>https://repo.codemc.org/repository/maven-public</url>
     </repository>
+    <repository>
+      <id>codemc-repo</id>
+      <url>https://repo.codemc.org/repository/maven-public/</url>
+    </repository>
+    <repository>
+      <id>simonsators-repo</id>
+      <url>http://simonsator.de/repo/</url>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
@@ -259,6 +267,13 @@
           <groupId>com.google.code.gson</groupId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>de.simonsator</groupId>
+      <artifactId>partyandfriends</artifactId>
+      <version>1.0.52</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/lib/PAFSpigot.jar</systemPath>
     </dependency>
   </dependencies>
   <distributionManagement>

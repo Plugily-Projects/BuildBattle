@@ -50,6 +50,8 @@ import pl.plajer.buildbattle.handlers.PermissionManager;
 import pl.plajer.buildbattle.handlers.PlaceholderManager;
 import pl.plajer.buildbattle.handlers.items.SpecialItemsRegistry;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
+import pl.plajer.buildbattle.handlers.party.PartyHandler;
+import pl.plajer.buildbattle.handlers.party.PartySupportInitializer;
 import pl.plajer.buildbattle.handlers.setup.SetupInventoryEvents;
 import pl.plajer.buildbattle.handlers.sign.ArenaSign;
 import pl.plajer.buildbattle.handlers.sign.SignManager;
@@ -95,6 +97,7 @@ public class Main extends JavaPlugin {
   private SpecialItemsRegistry specialItemsRegistry;
   private String version;
   private boolean forceDisable = false;
+  private PartyHandler partyHandler;
 
   public CuboidSelector getCuboidSelector() {
     return cuboidSelector;
@@ -159,14 +162,6 @@ public class Main extends JavaPlugin {
     configPreferences = new ConfigPreferences(this);
     new LegacyDataFixer(this);
     initializeClasses();
-    if (getConfig().getBoolean("BungeeActivated")) {
-      bungeeManager = new BungeeManager(this);
-    }
-    if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
-      database = new MysqlDatabase(config.getString("user"), config.getString("password"), config.getString("address"));
-    }
-    userManager = new UserManager(this);
   }
 
   private void checkUpdate() {
@@ -219,9 +214,17 @@ public class Main extends JavaPlugin {
   //order matters
   private void initializeClasses() {
     ScoreboardLib.setPluginInstance(this);
+    if (getConfig().getBoolean("BungeeActivated")) {
+      bungeeManager = new BungeeManager(this);
+    }
+    if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+      FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
+      database = new MysqlDatabase(config.getString("user"), config.getString("password"), config.getString("address"));
+    }
+    new ArgumentsRegistry(this);
+    userManager = new UserManager(this);
     PermissionManager.init();
     new SetupInventoryEvents(this);
-    new ArgumentsRegistry(this);
     ArenaSign.init(this);
     ArenaRegistry.registerArenas();
     //load signs after arenas
@@ -264,6 +267,7 @@ public class Main extends JavaPlugin {
     new VoteMenuListener(this);
     new HolidayManager(this);
     BannerMenu.init(this);
+    partyHandler = new PartySupportInitializer().initialize();
   }
 
   @Override
@@ -330,4 +334,7 @@ public class Main extends JavaPlugin {
     return userManager;
   }
 
+  public PartyHandler getPartyHandler() {
+    return partyHandler;
+  }
 }

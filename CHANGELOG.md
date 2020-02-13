@@ -20,6 +20,8 @@ That's all, matcher will stop when detects next line started with `###` match
       * mapname - name of arena map
       * arenatype - raw enum name of arena (SOLO, TEAM etc)
       * arenatype_pretty - prettified name of enum eg. Classic (instead SOLO)
+ * Fixed VoteMenu NullPointerException
+ * Added Parties support for PAF and Parties
 
 ### 4.2.0 Release (16.11.2019 - 13.12.2019) (by Tigerpanzer)
 * Fixed arena deletion

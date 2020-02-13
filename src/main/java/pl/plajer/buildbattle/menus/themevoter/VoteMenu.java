@@ -119,6 +119,9 @@ public class VoteMenu {
   public void updateInventory(Player player) {
     int totalVotes = votePoll.getPlayerVote().size();
     int i = 0;
+    if (player == null) {
+      return;
+    }
     User user = plugin.getUserManager().getUser(player);
     for (String theme : votePoll.getVotedThemes().keySet()) {
       double percent;
