@@ -25,7 +25,7 @@ import java.sql.Statement;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
