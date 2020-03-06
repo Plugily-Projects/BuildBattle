@@ -93,7 +93,7 @@ public class TeamArena extends SoloArena {
     if (getVotingPlot() != null) {
       for (Player player : getPlayers()) {
         getVotingPlot().setPoints(getVotingPlot().getPoints() + getPlugin().getUserManager().getUser(player).getStat(StatsStorage.StatisticType.LOCAL_POINTS));
-        getPlugin().getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
+        getPlugin().getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 3);
       }
     }
     for (Plot p : getPlotManager().getPlots()) {
