@@ -95,7 +95,7 @@ public class StatsStorage {
    * @see StatisticType
    */
   public static int getUserStats(Player player, StatisticType statisticType) {
-    Debugger.debug(Debugger.Level.INFO, "BuildBattle API getUserStats(" + player.getName() + ", " + statisticType.getName() + ") run");
+    //Debugger.debug(Debugger.Level.INFO, "BuildBattle API getUserStats(" + player.getName() + ", " + statisticType.getName() + ") run");
     return plugin.getUserManager().getUser(player).getStat(statisticType);
   }
 
