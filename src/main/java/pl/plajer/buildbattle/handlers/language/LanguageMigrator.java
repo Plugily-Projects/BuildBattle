@@ -39,7 +39,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int LANGUAGE_FILE_VERSION = 12;
+  public static final int LANGUAGE_FILE_VERSION = 13;
   public static final int CONFIG_FILE_VERSION = 9;
   private List<String> migratable = Arrays.asList("bungee", "config", "language", "mysql");
   private Main plugin;
@@ -355,11 +355,17 @@ public class LanguageMigrator {
               + "      You-Were-Kicked-For-Premium-Slot: \"&cYou got kicked out of the game to make a place for a premium player!\"");
           MigratorUtils.insertAfterLine(file, "Join-No-Permission:", "  Full-Game-No-Permission: \"&cYou don't have the permission to join full games!\"\r\n"
               + "  No-Slots-For-Premium: \"&cThis game is already full of premium players! Sorry\"");
+          break;
         case 11:
           MigratorUtils.insertAfterLine(file, "In-Game:", "  No-Permission-For-Biome: \"&cYou don't have permission for this biome!\"");
           MigratorUtils.insertAfterLine(file, "Option-Menu:", "    Go-Back-Button:\r\n" +
               "      Item-Name: \"&aGo to Options Page\"\r\n" +
               "      Item-Lore: \"&7Click to go to main options page\"");
+          break;
+        case 12:
+          MigratorUtils.insertAfterLine(file, "Lobby-Messages:", "Not-Enough-Space-For-Party: \"&cYour party is bigger than free places on the arena %ARENANAME%\"");
+          MigratorUtils.insertAfterLine(file, "In-Game:", "Join-As-Party-Member: \"&cYou joined %ARENANAME% because the party leader joined it!\"");
+          break;
       }
       version++;
     }
