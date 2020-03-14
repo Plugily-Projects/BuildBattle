@@ -236,6 +236,7 @@ public class SoloArena extends BaseArena {
           for (Player player : getPlayers()) {
             player.getInventory().clear();
             getPlugin().getVoteItems().giveVoteItems(player);
+            getPlugin().getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 3);
           }
           receivedVoteItems = true;
         }
