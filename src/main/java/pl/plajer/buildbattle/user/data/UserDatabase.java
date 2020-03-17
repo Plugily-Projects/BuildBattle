@@ -42,6 +42,6 @@ public interface UserDatabase {
    * @param user user to load statistic for
    * @param stat type of stat to load from storage
    */
-  void loadStatistic(User user, StatsStorage.StatisticType stat);
+  void loadStatistics(User user);
 
 }

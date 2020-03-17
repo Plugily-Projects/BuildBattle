@@ -88,9 +88,7 @@ public class JoinEvents implements Listener {
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && !ArenaRegistry.getArenas().isEmpty()) {
       ArenaRegistry.getArenas().get(0).teleportToLobby(e.getPlayer());
     }
-    for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-      plugin.getUserManager().loadStatistic(plugin.getUserManager().getUser(e.getPlayer()), stat);
-    }
+    plugin.getUserManager().loadStatistics(plugin.getUserManager().getUser(e.getPlayer()));
   }
 
 }

@@ -26,6 +26,8 @@ That's all, matcher will stop when detects next line started with `###` match
 * FIXED 1.15.X Head issues
 * Added Connect-To-Hub boolean to bungee.yml
 * Added End-Location-Hub boolean to bungee.yml
+* Fixed mysql database - Create a new one and your stats should be saved correctly
+
 
 ### 4.2.0 Release (16.11.2019 - 13.12.2019) (by Tigerpanzer)
 * Fixed arena deletion
