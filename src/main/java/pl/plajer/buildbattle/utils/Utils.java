@@ -21,8 +21,8 @@ package pl.plajer.buildbattle.utils;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,6 +39,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
 /**
  * Created by Tom on 29/07/2014.
@@ -82,6 +83,12 @@ public class Utils {
     }
   }
 
+  public static ItemStack getGoBackItem() {
+    return new ItemBuilder(XMaterial.STONE_BUTTON.parseItem())
+        .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Go-Back-Button.Item-Name"))
+        .lore(plugin.getChatManager().colorMessage("Menus.Option-Menu.Go-Back-Button.Item-Lore")).build();
+  }
+
   public static ItemStack getSkull(String url) {
     ItemStack head = PLAYER_HEAD_ITEM.clone();
     if (url.isEmpty()) {
@@ -91,13 +98,11 @@ public class Utils {
     SkullMeta headMeta = (SkullMeta) head.getItemMeta();
     GameProfile profile = new GameProfile(UUID.randomUUID(), null);
     profile.getProperties().put("textures", new Property("textures", url));
-    Field profileField;
     try {
-      profileField = headMeta.getClass().getDeclaredField("profile");
-      profileField.setAccessible(true);
-      profileField.set(headMeta, profile);
-
-    } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException ignored) {
+      Method mtd = headMeta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
+      mtd.setAccessible(true);
+      mtd.invoke(headMeta, profile);
+    } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException ignored) {
     }
 
     head.setItemMeta(headMeta);

@@ -28,6 +28,7 @@ import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.menus.options.MenuOption;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
+import pl.plajer.buildbattle.utils.Utils;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
@@ -59,6 +60,7 @@ public class TimeChangeOption {
             .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Time.Time-Type.Night")).build());
         timeInv.setItem(4, new ItemBuilder(XMaterial.CLOCK.parseItem())
             .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Time.Time-Type.Sunrise")).build());
+        timeInv.addItem(Utils.getGoBackItem());
         e.getWhoClicked().openInventory(timeInv);
       }
 

@@ -58,9 +58,7 @@ public class UserManager {
         ArenaRegistry.getArenas().get(0).teleportToLobby(player);
       }
       User user = getUser(player);
-      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-        loadStatistic(user, stat);
-      }
+      loadStatistics(user);
     }
   }
 
@@ -83,11 +81,8 @@ public class UserManager {
     database.saveStatistic(user, stat);
   }
 
-  public void loadStatistic(User user, StatsStorage.StatisticType stat) {
-    if (!stat.isPersistent()) {
-      return;
-    }
-    database.loadStatistic(user, stat);
+  public void loadStatistics(User user) {
+    database.loadStatistics(user);
   }
 
   public void removeUser(User user) {

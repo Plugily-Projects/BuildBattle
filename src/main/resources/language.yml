@@ -154,6 +154,7 @@ In-Game:
   Max-Entities-Limit-Reached: "&cYou can't spawn more entities!"
   Max-Particles-Limit-Reached: "&cYou can't spawn more particles!"
   No-Permission-For-Particle: "&cYou don't have permission for this particle!"
+  No-Permission-For-Biome: "&cYou don't have permission for this biome!"
   Particle-Added: "&aParticle successfully added!"
   Join-No-Permission: "&cYou don't have &6%permission% &cpermission to join this arena!"
   Full-Game-No-Permission: "&cYou don't have the permission to join full games!"
@@ -161,6 +162,7 @@ In-Game:
   Arena-Not-Configured: "&cArena is not configured yet! Contact staff!"
   # Join cancelled via external plugin that uses BuildBattle API.
   Join-Cancelled-Via-API: "&cYou can't join this game!"
+  Join-As-Party-Member: "&cYou joined %ARENANAME% because the party leader joined it!"
   Nobody: "&eNobody"
   No-Theme-Yet: "&cVoting"
   Guess-The-Build:
@@ -193,6 +195,7 @@ In-Game:
     Lobby-Messages:
       Waiting-For-Players: "&7Waiting for players... We need at least &b%MINPLAYERS%&7 players to start."
       Enough-Players-To-Start: "&7We now have enough players. The game is starting soon!"
+      Not-Enough-Space-For-Party: "&cYour party is bigger than free places on the arena %ARENANAME%"
       Game-Started: "&7The game has started! Build best you can!"
       Kicked-For-Premium-Slot: "&c%PLAYER% got removed from the game to make a place for premium players!"
       You-Were-Kicked-For-Premium-Slot: "&cYou got kicked out of the game to make a place for a premium player!"
@@ -226,6 +229,9 @@ Menus:
     Inventory-Name: "&aOptions menu"
     Option-Item: "&aOptions"
     Option-Item-Lore: "&7Right click to open menu"
+    Go-Back-Button:
+      Item-Name: "&aGo to Options Page"
+      Item-Lore: "&7Click to go to main options page"
     Items:
       Particle:
         Inventory-Name: "&aParticles menu"
@@ -323,4 +329,4 @@ Signs:
     - "&5[%playersize%/%maxplayers%]"
 
 # Do not modify!
-File-Version-Do-Not-Edit: 11
+File-Version-Do-Not-Edit: 13

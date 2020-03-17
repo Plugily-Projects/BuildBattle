@@ -24,7 +24,7 @@
 
     <groupId>pl.plajer</groupId>
     <artifactId>buildbattle</artifactId>
-    <version>4.1.0</version>
+    <version>4.3.0</version>
     <name>BuildBattle</name>
 
     <properties>
@@ -56,6 +56,14 @@
         <repository>
             <id>bstats-repo</id>
             <url>https://repo.codemc.org/repository/maven-public</url>
+        </repository>
+        <repository>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.org/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>simonsators-repo</id>
+            <url>http://simonsator.de/repo/</url>
         </repository>
     </repositories>
 
@@ -137,6 +145,28 @@
             <artifactId>authlib</artifactId>
             <version>1.5.21</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.alessiodp.parties</groupId>
+            <artifactId>parties-api</artifactId>
+            <version>2.6.14</version>
+        </dependency>
+        <dependency>
+            <groupId>de.simonsator</groupId>
+            <artifactId>Party-and-Friends-MySQL-Edition-Spigot-API</artifactId>
+            <version>1.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>de.simonsator</groupId>
+            <artifactId>Spigot-Party-API-For-RedisBungee</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>de.simonsator</groupId>
+            <artifactId>partyandfriends</artifactId>
+            <version>1.0.52</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/PAFSpigot.jar</systemPath>
         </dependency>
     </dependencies>
 

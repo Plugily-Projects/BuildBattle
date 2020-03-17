@@ -208,6 +208,11 @@ public class SetupInventoryEvents implements Listener {
           e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure plots properly");
           return;
         }
+        if (arena.getArenaType() == BaseArena.ArenaType.SOLO && config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false).size() < config.getInt("instances." + arena.getID() + ".minimumplayers")) {
+          e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! You need same value of plots as minimumplayers");
+        } else if (arena.getArenaType() == BaseArena.ArenaType.TEAM && (config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false).size() / 2) < config.getInt("instances." + arena.getID() + ".minimumplayers")) {
+          e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! You need half value of plots as minimumplayers");
+        }
         for (String plotName : config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false)) {
           if (!config.isSet("instances." + arena.getID() + ".plots." + plotName + ".maxpoint") ||
               !config.isSet("instances." + arena.getID() + ".plots." + plotName + ".minpoint")) {

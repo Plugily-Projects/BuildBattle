@@ -20,7 +20,6 @@ package pl.plajer.buildbattle.handlers.sign;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -138,7 +137,7 @@ public class SignManager implements Listener {
         }
         List<String> signs = config.getStringList("instances." + arena + ".signs");
         signs.remove(location);
-        config.set(arena + ".signs", signs);
+        config.set("instances." + arena + ".signs", signs);
         ConfigUtils.saveConfig(plugin, config, "arenas");
         e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Sign-Removed"));
         return;

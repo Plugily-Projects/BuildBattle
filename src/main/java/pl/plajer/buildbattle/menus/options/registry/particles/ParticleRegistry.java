@@ -115,7 +115,7 @@ public class ParticleRegistry {
   }
 
   private void registerInventory() {
-    Inventory inv = Bukkit.createInventory(null, Utils.serializeInt(registeredParticles.size()),
+    Inventory inv = Bukkit.createInventory(null, Utils.serializeInt(registeredParticles.size() + 1),
         plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.Inventory-Name"));
     for (ParticleItem item : registeredParticles) {
       inv.addItem(item.getItemStack());
@@ -124,6 +124,7 @@ public class ParticleRegistry {
         .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))
         .lore(Collections.singletonList(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Lore")))
         .build());
+    inv.addItem(Utils.getGoBackItem());
     inventory = inv;
   }
 

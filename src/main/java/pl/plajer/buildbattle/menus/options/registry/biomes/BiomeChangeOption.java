@@ -24,7 +24,6 @@ import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
@@ -55,13 +54,7 @@ public class BiomeChangeOption {
       @Override
       public void onClick(InventoryClickEvent e) {
         e.getWhoClicked().closeInventory();
-
-        Inventory biomeInv = Bukkit.createInventory(null, Utils.serializeInt(registry.getBiomesRegistry().getBiomes().size()),
-            plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Biome.Inventory-Name"));
-        for (BiomeItem biome : registry.getBiomesRegistry().getBiomes()) {
-          biomeInv.addItem(biome.getItemStack());
-        }
-        e.getWhoClicked().openInventory(biomeInv);
+        e.getWhoClicked().openInventory(registry.getBiomesRegistry().getInventory());
       }
 
       @Override
@@ -73,6 +66,10 @@ public class BiomeChangeOption {
         Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());
         BiomeItem item = registry.getBiomesRegistry().getByItem(e.getCurrentItem());
         if (item == BiomeItem.INVALID_BIOME) {
+          return;
+        }
+        if (!e.getWhoClicked().hasPermission(item.getPermission())) {
+          e.getWhoClicked().sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.No-Permission-For-Biome"));
           return;
         }
         Biome biome = item.getBiome().parseBiome();

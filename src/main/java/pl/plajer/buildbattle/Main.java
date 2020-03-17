@@ -50,6 +50,8 @@ import pl.plajer.buildbattle.handlers.PermissionManager;
 import pl.plajer.buildbattle.handlers.PlaceholderManager;
 import pl.plajer.buildbattle.handlers.items.SpecialItemsRegistry;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
+import pl.plajer.buildbattle.handlers.party.PartyHandler;
+import pl.plajer.buildbattle.handlers.party.PartySupportInitializer;
 import pl.plajer.buildbattle.handlers.setup.SetupInventoryEvents;
 import pl.plajer.buildbattle.handlers.sign.ArenaSign;
 import pl.plajer.buildbattle.handlers.sign.SignManager;
@@ -95,6 +97,7 @@ public class Main extends JavaPlugin {
   private SpecialItemsRegistry specialItemsRegistry;
   private String version;
   private boolean forceDisable = false;
+  private PartyHandler partyHandler;
 
   public CuboidSelector getCuboidSelector() {
     return cuboidSelector;
@@ -136,6 +139,10 @@ public class Main extends JavaPlugin {
     return version.equalsIgnoreCase("v1_14_R1");
   }
 
+  public boolean is1_15_R1() {
+    return version.equalsIgnoreCase("v1_15_R1");
+  }
+
   @Override
   public void onEnable() {
     if (!validateIfPluginShouldStart()) {
@@ -143,8 +150,12 @@ public class Main extends JavaPlugin {
     }
 
     ServiceRegistry.registerService(this);
-    exceptionLogHandler = new ExceptionLogHandler();
-    Debugger.setEnabled(getConfig().getBoolean("Debug", false));
+    exceptionLogHandler = new ExceptionLogHandler(this);
+    if (getDescription().getVersion().contains("b")){
+      Debugger.setEnabled(true);
+    } else {
+      Debugger.setEnabled(getConfig().getBoolean("Debug", false));
+    }
     Debugger.debug(Debugger.Level.INFO, "Main setup started");
     saveDefaultConfig();
     for (String s : Arrays.asList("arenas", "particles", "lobbyitems", "stats", "voteItems", "mysql", "biomes", "bungee")) {
@@ -155,14 +166,6 @@ public class Main extends JavaPlugin {
     configPreferences = new ConfigPreferences(this);
     new LegacyDataFixer(this);
     initializeClasses();
-    if (getConfig().getBoolean("BungeeActivated")) {
-      bungeeManager = new BungeeManager(this);
-    }
-    if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
-      database = new MysqlDatabase(config.getString("user"), config.getString("password"), config.getString("address"));
-    }
-    userManager = new UserManager(this);
   }
 
   private void checkUpdate() {
@@ -201,7 +204,7 @@ public class Main extends JavaPlugin {
       return false;
     }
     if (!(version.equalsIgnoreCase("v1_11_R1") || version.equalsIgnoreCase("v1_12_R1") || version.equalsIgnoreCase("v1_13_R1")
-        || version.equalsIgnoreCase("v1_13_R2") || version.equalsIgnoreCase("v1_14_R1"))) {
+        || version.equalsIgnoreCase("v1_13_R2") || version.equalsIgnoreCase("v1_14_R1") || version.equalsIgnoreCase("v1_15_R1"))) {
       MessageUtils.thisVersionIsNotSupported();
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by Build Battle!");
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider updating your server version?");
@@ -215,9 +218,17 @@ public class Main extends JavaPlugin {
   //order matters
   private void initializeClasses() {
     ScoreboardLib.setPluginInstance(this);
+    if (getConfig().getBoolean("BungeeActivated")) {
+      bungeeManager = new BungeeManager(this);
+    }
+    if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+      FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
+      database = new MysqlDatabase(config.getString("user"), config.getString("password"), config.getString("address"));
+    }
+    new ArgumentsRegistry(this);
+    userManager = new UserManager(this);
     PermissionManager.init();
     new SetupInventoryEvents(this);
-    new ArgumentsRegistry(this);
     ArenaSign.init(this);
     ArenaRegistry.registerArenas();
     //load signs after arenas
@@ -260,6 +271,7 @@ public class Main extends JavaPlugin {
     new VoteMenuListener(this);
     new HolidayManager(this);
     BannerMenu.init(this);
+    partyHandler = new PartySupportInitializer().initialize();
   }
 
   @Override
@@ -326,4 +338,7 @@ public class Main extends JavaPlugin {
     return userManager;
   }
 
+  public PartyHandler getPartyHandler() {
+    return partyHandler;
+  }
 }

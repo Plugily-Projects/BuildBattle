@@ -41,6 +41,7 @@ import pl.plajer.buildbattle.arena.ArenaManager;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.arena.options.ArenaOption;
+import pl.plajer.buildbattle.handlers.HolidayManager;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
 import pl.plajer.buildbattle.menus.themevoter.VoteMenu;
 import pl.plajer.buildbattle.menus.themevoter.VotePoll;
@@ -126,6 +127,9 @@ public class SoloArena extends BaseArena {
         } else {
           getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
           setArenaState(ArenaState.STARTING);
+          if (HolidayManager.getCurrentHoliday() != HolidayManager.HolidayType.NONE) {
+            this.initPoll();
+          }
           Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
           setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
         }
@@ -232,6 +236,7 @@ public class SoloArena extends BaseArena {
           for (Player player : getPlayers()) {
             player.getInventory().clear();
             getPlugin().getVoteItems().giveVoteItems(player);
+            getPlugin().getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 3);
           }
           receivedVoteItems = true;
         }
@@ -417,7 +422,7 @@ public class SoloArena extends BaseArena {
     if (getVotingPlot() != null) {
       for (Player player : getPlayers()) {
         getVotingPlot().setPoints(getVotingPlot().getPoints() + getPlugin().getUserManager().getUser(player).getStat(StatsStorage.StatisticType.LOCAL_POINTS));
-        getPlugin().getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
+        getPlugin().getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 3);
       }
     }
     voteRoutine();

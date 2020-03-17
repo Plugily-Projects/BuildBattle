@@ -1,7 +1,7 @@
 main: pl.plajer.buildbattle.Main
 version: ${project.version}
 name: BuildBattle
-softdepend: [Vault, PlaceholderAPI, Citizens]
+softdepend: [Vault, PlaceholderAPI, Citizens, Parties, Spigot-Party-API-PAF, PartyAndFriends]
 authors: [Tigerpanzer, Plajer, TomTheDeveloper]
 api-version: 1.13
 

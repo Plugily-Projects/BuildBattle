@@ -18,50 +18,57 @@
 
 package pl.plajer.buildbattle.utils.services.exception;
 
+import org.bukkit.plugin.java.JavaPlugin;
+import pl.plajer.buildbattle.utils.Debugger;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.logging.Level;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import org.bukkit.Bukkit;
 
 /**
  * Reporter service for reporting exceptions directly to website reporter panel
  */
 public class ReporterService {
 
-  private String plugin;
-  private String pluginVersion;
-  private String serverVersion;
-  private String error;
+    private JavaPlugin plugin;
+    private String pluginName;
+    private String pluginVersion;
+    private String serverVersion;
+    private String error;
 
-  //don't create it outside core
-  ReporterService(String plugin, String pluginVersion, String serverVersion, String error) {
-    this.plugin = plugin;
-    this.pluginVersion = pluginVersion;
-    this.serverVersion = serverVersion;
-    this.error = error;
-  }
+    //don't create it outside core
+    ReporterService(JavaPlugin plugin, String pluginName, String pluginVersion, String serverVersion, String error) {
+        this.plugin = plugin;
+        this.pluginName = pluginName;
+        this.pluginVersion = pluginVersion;
+        this.serverVersion = serverVersion;
+        this.error = error;
+    }
 
-  public void reportException() {
-    try {
-      //todo /v2/
-      URL url = new URL("https://api.plajer.xyz/error/report.php");
-      HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-      conn.setRequestMethod("POST");
-      conn.setRequestProperty("User-Agent", "PLService/1.0");
-      conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-      conn.setDoOutput(true);
+    public void reportException() {
+        try {
+            //todo /v2/
+            URL url = new URL("https://api.plajer.xyz/error/report.php");
+            HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("User-Agent", "PLService/1.0");
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            conn.setDoOutput(true);
 
-      OutputStream os = conn.getOutputStream();
-      os.write(("pass=servicereporter&type=" + plugin + "&pluginversion=" + pluginVersion + "&serverversion=" + serverVersion + "&error=" + error).getBytes(StandardCharsets.UTF_8));
-      os.flush();
-      os.close();
+            OutputStream os = conn.getOutputStream();
+            os.write(("pass=servicereporter&type=" + pluginName + "&pluginversion=" + pluginVersion + "&serverversion=" + serverVersion + "&error=" + error).getBytes(StandardCharsets.UTF_8));
+            os.flush();
+            os.close();
 
-      Bukkit.getConsoleSender().sendMessage("[Reporter service] Error reported! Code: " + conn.getResponseCode() + " (" + conn.getResponseMessage() + ")");
-    } catch (IOException ignored) {/*cannot connect or there is a problem*/}
-  }
+            plugin.getLogger().log(Level.WARNING, "[Reporter service] Error reported!");
+            Debugger.debug(Debugger.Level.INFO, "[Reporter service] Code: " + conn.getResponseCode() + " (" + conn.getResponseMessage() + ")");
+        } catch (IOException ignored) {/*cannot connect or there is a problem*/
+        }
+    }
 
 }

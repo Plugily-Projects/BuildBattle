@@ -60,7 +60,7 @@ public class StatsStorage {
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       try (Connection connection = plugin.getMysqlDatabase().getConnection();
            Statement statement = connection.createStatement();
-           ResultSet set = statement.executeQuery("SELECT UUID, " + stat.getName() + " FROM buildbattlestats ORDER BY " + stat.getName() + " ASC;")) {
+           ResultSet set = statement.executeQuery("SELECT UUID, " + stat.getName() + " FROM buildbattlestats ORDER BY " + stat.getName())) {
         Map<java.util.UUID, java.lang.Integer> column = new LinkedHashMap<>();
         while (set.next()) {
           column.put(java.util.UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));
@@ -95,7 +95,7 @@ public class StatsStorage {
    * @see StatisticType
    */
   public static int getUserStats(Player player, StatisticType statisticType) {
-    Debugger.debug(Debugger.Level.INFO, "BuildBattle API getUserStats(" + player.getName() + ", " + statisticType.getName() + ") run");
+    //Debugger.debug(Debugger.Level.INFO, "BuildBattle API getUserStats(" + player.getName() + ", " + statisticType.getName() + ") run");
     return plugin.getUserManager().getUser(player).getStat(statisticType);
   }
 

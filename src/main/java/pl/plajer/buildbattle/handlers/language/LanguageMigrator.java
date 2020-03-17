@@ -39,8 +39,8 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int LANGUAGE_FILE_VERSION = 11;
-  public static final int CONFIG_FILE_VERSION = 8;
+  public static final int LANGUAGE_FILE_VERSION = 13;
+  public static final int CONFIG_FILE_VERSION = 9;
   private List<String> migratable = Arrays.asList("bungee", "config", "language", "mysql");
   private Main plugin;
 
@@ -79,15 +79,13 @@ public class LanguageMigrator {
     }
     Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[BuildBattle] System notify >> Your config file is outdated! Updating...");
     File file = new File(plugin.getDataFolder() + "/config.yml");
+    File bungeefile = new File(plugin.getDataFolder() + "/bungee.yml");
 
-    int version = 0;
-    if (NumberUtils.isNumber(plugin.getConfig().getString("Version"))) {
-      version = Integer.valueOf(plugin.getConfig().getString("Version"));
-    }
+    int version = plugin.getConfig().getInt("Version", CONFIG_FILE_VERSION - 1);
     updateConfigVersionControl(version);
 
-    for (int i = 0; i < CONFIG_FILE_VERSION; i++) {
-      switch (version) {
+    for (int i = version; i < CONFIG_FILE_VERSION; i++) {
+      switch (i) {
         case 0:
           MigratorUtils.addNewLines(file, "\r\n# Should blocks behind game signs change their color based on game state?\r\n# They will change color to:\r\n" +
               "# - white (waiting for players) stained glass\r\n# - yellow (starting) stained glass\r\n# - orange (in game) stained glass\r\n# - gray (ending) stained glass\r\n" +
@@ -116,6 +114,7 @@ public class LanguageMigrator {
               "      - Horse\r\n      - Fountain\r\n      - Sumo\r\n      - Bicycle\r\n    Hard:\r\n      - Soccer\r\n      - Birthday Cake\r\n      - Typewriter\r\n      - Solar System\r\n\r\n");
           MigratorUtils.addNewLines(file, "# Commands executed when player wins\r\n# Use %PLAYER% placeholder to replace it with winner's name\r\nWin-Commands:\r\n" +
               "  First:\r\n    - say %PLAYER% won the game!\r\n  Second:\r\n    - say %PLAYER% become second\r\n  Third:\r\n    - say %PLAYER% became third\r\n\r\n");
+          break;
         case 5:
           MigratorUtils.addNewLines(file, "\r\n" +
               "# Should holiday events for Build Battle be enabled?\r\n" +
@@ -149,12 +148,29 @@ public class LanguageMigrator {
               "    - Presents\r\n" +
               "    - Snowman\r\n" +
               "    - Stocking\r\n\r\n");
+          break;
         case 6:
           //todo
           MigratorUtils.addNewLines(file, "# Should we block every not Build Battle associated commands in game?\r\n" +
               "Block-Commands-In-Game: true");
+        case 7:
+          MigratorUtils.removeLineFromFile(bungeefile, "# This is useful for bungee game systems.");
+          MigratorUtils.removeLineFromFile(bungeefile, "# Game state will be visible at MOTD.");
+          MigratorUtils.removeLineFromFile(bungeefile, "MOTD-manager: false");
+          MigratorUtils.removeLineFromFile(bungeefile, "MOTD-manager: true");
+          MigratorUtils.addNewLines(bungeefile, "\r\n# This is useful for bungee game systems.\r\n" +
+              "# %state% - Game state will be visible at MOTD.\r\n" +
+              "MOTD:\r\n" +
+              "  Manager: false\r\n" +
+              "  Message: \"The actual game state of bb is %state%\"\r\n" +
+              "  Game-States:\r\n" +
+              "    Inactive: \"&lInactive...\"\r\n" +
+              "    In-Game: \"&lIn-game\"\r\n" +
+              "    Starting: \"&e&lStarting\"\r\n" +
+              "    Full-Game: \"&4&lFULL\"\r\n" +
+              "    Ending: \"&lEnding\"\r\n" +
+              "    Restarting: \"&c&lRestarting\"\r\n");
       }
-      version++;
     }
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] [System notify] Config updated, no comments were removed :)");
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] [System notify] You're using latest config file version! Nice!");
@@ -339,6 +355,17 @@ public class LanguageMigrator {
               + "      You-Were-Kicked-For-Premium-Slot: \"&cYou got kicked out of the game to make a place for a premium player!\"");
           MigratorUtils.insertAfterLine(file, "Join-No-Permission:", "  Full-Game-No-Permission: \"&cYou don't have the permission to join full games!\"\r\n"
               + "  No-Slots-For-Premium: \"&cThis game is already full of premium players! Sorry\"");
+          break;
+        case 11:
+          MigratorUtils.insertAfterLine(file, "In-Game:", "  No-Permission-For-Biome: \"&cYou don't have permission for this biome!\"");
+          MigratorUtils.insertAfterLine(file, "Option-Menu:", "    Go-Back-Button:\r\n" +
+              "      Item-Name: \"&aGo to Options Page\"\r\n" +
+              "      Item-Lore: \"&7Click to go to main options page\"");
+          break;
+        case 12:
+          MigratorUtils.insertAfterLine(file, "Lobby-Messages:", "Not-Enough-Space-For-Party: \"&cYour party is bigger than free places on the arena %ARENANAME%\"");
+          MigratorUtils.insertAfterLine(file, "In-Game:", "Join-As-Party-Member: \"&cYou joined %ARENANAME% because the party leader joined it!\"");
+          break;
       }
       version++;
     }

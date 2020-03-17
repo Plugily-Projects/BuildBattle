@@ -86,7 +86,7 @@ public class VoteMenu {
     for (int i = 0; i < randomThemes.size(); i++) {
       ItemStack item;
       //todo strict legacy materials class
-      if (plugin.is1_14_R1()) {
+      if (plugin.is1_14_R1() || plugin.is1_15_R1()) {
         item = new ItemStack(Material.valueOf("LEGACY_SIGN"));
       } else {
         item = new ItemStack(Material.SIGN);
@@ -119,6 +119,9 @@ public class VoteMenu {
   public void updateInventory(Player player) {
     int totalVotes = votePoll.getPlayerVote().size();
     int i = 0;
+    if (player == null) {
+      return;
+    }
     User user = plugin.getUserManager().getUser(player);
     for (String theme : votePoll.getVotedThemes().keySet()) {
       double percent;

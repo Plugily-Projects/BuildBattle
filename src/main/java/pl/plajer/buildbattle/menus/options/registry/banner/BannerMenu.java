@@ -34,6 +34,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 
 import pl.plajer.buildbattle.Main;
+import pl.plajer.buildbattle.utils.Utils;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
@@ -87,6 +88,7 @@ public class BannerMenu {
     }
     gui.addPane(pane);
     addCreatorItem(gui);
+    addGoBackItem(gui);
     guiStages.put(PatternStage.BASE, gui);
   }
 
@@ -112,6 +114,7 @@ public class BannerMenu {
       }));
     }
     addCreatorItem(gui);
+    addGoBackItem(gui);
     guiStages.put(PatternStage.LAYER, gui);
   }
 
@@ -132,6 +135,7 @@ public class BannerMenu {
       }));
     }
     addCreatorItem(gui);
+    addGoBackItem(gui);
     guiStages.put(PatternStage.LAYER_COLOR, gui);
   }
 
@@ -146,6 +150,17 @@ public class BannerMenu {
       e.setCancelled(true);
       e.getWhoClicked().closeInventory();
       player.getInventory().addItem(banner.buildBanner());
+    }), 0, 0);
+  }
+
+  private void addGoBackItem(Gui gui) {
+    StaticPane bannerPane = new StaticPane(2, 5, 2, 1);
+    gui.addPane(bannerPane);
+
+    bannerPane.addItem(new GuiItem(Utils.getGoBackItem(), e -> {
+      e.setCancelled(true);
+      e.getWhoClicked().closeInventory();
+      player.openInventory(plugin.getOptionsRegistry().formatInventory());
     }), 0, 0);
   }
 

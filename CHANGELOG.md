@@ -9,6 +9,36 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+### 4.3.0 Release (17.03.2020)
+* PlaceholderAPI placeholders are no longer case sensitive
+* Added arena state placeholders for PlaceholderAPI:
+   * %buildbattle_{arena id}:{data}% where data types are:
+      * players - amount of players in arena
+      * max_players - max players in arena
+      * state - current state raw enum name eg. STARTING
+      * state_pretty - prettified name of enum eg. Waiting (instead WAITING_FOR_PLAYERS)
+      * mapname - name of arena map
+      * arenatype - raw enum name of arena (SOLO, TEAM etc)
+      * arenatype_pretty - prettified name of enum eg. Classic (instead SOLO)
+* Fixed VoteMenu NullPointerException
+* Added Parties support for PAF and Parties
+* Now if user don´t vote the plot will get 3 points of this player to prevent unfair game behaviors
+* FIXED 1.15.X Head issues
+* Added Connect-To-Hub boolean to bungee.yml
+* Added End-Location-Hub boolean to bungee.yml
+* Fixed mysql database - Create a new one and your stats should be saved correctly
+
+
+### 4.2.0 Release (16.11.2019 - 13.12.2019) (by Tigerpanzer)
+* Fixed arena deletion
+* Added a item to go to main options page
+* Fixed Holiday themes
+* Added a new MOTD Manager in the bungee.yml (Now you can define the message on your self) 
+* Now the values in bungee.yml will work
+* Now the biomes permissions will work
+* Added new check for setup validation (now registered plots amount will be checked)
+* Added 1.15 compatibility
+
 ### 4.1.0 Release (13.07.2019 - 18.10.2019) (by Tigerpanzer and Plajer)
 * Added new permission to join full games "buildbattle.fullgames"
 * Added the option to join when a game is full (you will kick a player without perm)
