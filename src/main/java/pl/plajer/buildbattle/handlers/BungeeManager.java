@@ -61,7 +61,7 @@ public class BungeeManager implements Listener {
   }
 
   public void connectToHub(Player player) {
-    if (!ConfigUtils.getConfig(plugin, "bungee").getBoolean("Shutdown-When-Game-Ends", true)) {
+    if (!ConfigUtils.getConfig(plugin, "bungee").getBoolean("Connect-To-Hub", true)) {
       return;
     }
     ByteArrayDataOutput out = ByteStreams.newDataOutput();

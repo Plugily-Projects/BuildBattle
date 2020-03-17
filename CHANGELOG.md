@@ -9,7 +9,7 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
-### 4.2.1 Release (09.02.2020)
+### 4.3.0 Release (17.03.2020)
 * PlaceholderAPI placeholders are no longer case sensitive
 * Added arena state placeholders for PlaceholderAPI:
    * %buildbattle_{arena id}:{data}% where data types are:
@@ -24,6 +24,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Added Parties support for PAF and Parties
 * Now if user don´t vote the plot will get 3 points of this player to prevent unfair game behaviors
 * FIXED 1.15.X Head issues
+* Added Connect-To-Hub boolean to bungee.yml
 
 ### 4.2.0 Release (16.11.2019 - 13.12.2019) (by Tigerpanzer)
 * Fixed arena deletion
