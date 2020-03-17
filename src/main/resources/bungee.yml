@@ -10,6 +10,9 @@ Shutdown-When-Game-Ends: true
 # Should the player connect to hub (e.g. Leave-Item)
 Connect-To-Hub: true
 
+# Should the End Location be the hub? (Players will be connected to hub at the End)
+End-Location-Hub: true
+
 # This is useful for bungee game systems.
 # %state% - Game state will be visible at MOTD.
 MOTD:

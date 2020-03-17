@@ -25,6 +25,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Now if user don´t vote the plot will get 3 points of this player to prevent unfair game behaviors
 * FIXED 1.15.X Head issues
 * Added Connect-To-Hub boolean to bungee.yml
+* Added End-Location-Hub boolean to bungee.yml
 
 ### 4.2.0 Release (16.11.2019 - 13.12.2019) (by Tigerpanzer)
 * Fixed arena deletion
