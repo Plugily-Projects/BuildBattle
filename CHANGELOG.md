@@ -9,6 +9,9 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+### 4.3.1 Release 
+* Fixed Heads in lower version than 1.15.X
+
 ### 4.3.0 Release (17.03.2020)
 * PlaceholderAPI placeholders are no longer case sensitive
 * Added arena state placeholders for PlaceholderAPI:
