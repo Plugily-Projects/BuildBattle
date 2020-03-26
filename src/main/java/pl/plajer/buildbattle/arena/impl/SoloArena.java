@@ -324,6 +324,12 @@ public class SoloArena extends BaseArena {
         setTimer(14);
         setVoting(false);
         receivedVoteItems = false;
+        setOptionValue(ArenaOption.IN_PLOT_CHECKER, 0);
+        setArenaState(ArenaState.WAITING_FOR_PLAYERS);
+        topList.clear();
+        setThemeTimerSet(false);
+        setThemeVoteTime(true);
+        voteMenu.resetPoll();
         if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           if (ConfigUtils.getConfig(getPlugin(), "bungee").getBoolean("Shutdown-When-Game-Ends", false)) {
             getPlugin().getServer().shutdown();
@@ -332,12 +338,6 @@ public class SoloArena extends BaseArena {
             ArenaManager.joinAttempt(player, this);
           }
         }
-        setOptionValue(ArenaOption.IN_PLOT_CHECKER, 0);
-        setArenaState(ArenaState.WAITING_FOR_PLAYERS);
-        topList.clear();
-        setThemeTimerSet(false);
-        setThemeVoteTime(true);
-        voteMenu.resetPoll();
     }
   }
 
