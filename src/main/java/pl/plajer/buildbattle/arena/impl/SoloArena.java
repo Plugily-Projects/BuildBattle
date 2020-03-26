@@ -47,6 +47,7 @@ import pl.plajer.buildbattle.menus.themevoter.VoteMenu;
 import pl.plajer.buildbattle.menus.themevoter.VotePoll;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.utils.MessageUtils;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 
@@ -316,11 +317,6 @@ public class SoloArena extends BaseArena {
           giveRewards();
           clearPlayers();
           setArenaState(ArenaState.RESTARTING);
-          if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-            for (Player player : getPlugin().getServer().getOnlinePlayers()) {
-              this.addPlayer(player);
-            }
-          }
         }
         setTimer(getTimer() - 1);
         break;
@@ -328,8 +324,13 @@ public class SoloArena extends BaseArena {
         setTimer(14);
         setVoting(false);
         receivedVoteItems = false;
-        if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && getPlugin().getConfig().getBoolean("Bungee-Shutdown-On-End", false)) {
-          getPlugin().getServer().shutdown();
+        if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+          if (ConfigUtils.getConfig(getPlugin(), "bungee").getBoolean("Shutdown-When-Game-Ends", false)) {
+            getPlugin().getServer().shutdown();
+          }
+          for (Player player : Bukkit.getOnlinePlayers()) {
+            ArenaManager.joinAttempt(player, this);
+          }
         }
         setOptionValue(ArenaOption.IN_PLOT_CHECKER, 0);
         setArenaState(ArenaState.WAITING_FOR_PLAYERS);
