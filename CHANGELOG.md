@@ -13,6 +13,8 @@ That's all, matcher will stop when detects next line started with `###` match
 * Fixed Heads in lower version than 1.15.X
 * Fixed bungee value Shutdown-When-Game-Ends
 * Fixed automatic bungee arena restart (Now scoreboard and Bossbar applies)
+* Tried to fix parties compatibility 
+* Fixed broken language migrator
 
 ### 4.3.0 Release (17.03.2020)
 * PlaceholderAPI placeholders are no longer case sensitive

@@ -145,14 +145,7 @@ public class ScoreboardManager {
     } else {
       returnString = StringUtils.replace(returnString, "%THEME%", arena.getTheme());
     }
-    returnString = StringUtils.replace(returnString, "%MIN_PLAYERS%", Integer.toString(arena.getMinimumPlayers()));
-    returnString = StringUtils.replace(returnString, "%MAX_PLAYERS%", Integer.toString(arena.getMaximumPlayers()));
-    returnString = StringUtils.replace(returnString, "%TIMER%", Integer.toString(arena.getTimer()));
-    //todo its the same
-    returnString = StringUtils.replace(returnString, "%TIME_LEFT%", Long.toString(arena.getTimer()));
-    returnString = StringUtils.replace(returnString, "%FORMATTED_TIME_LEFT%", StringFormatUtils.formatIntoMMSS(arena.getTimer()));
-    returnString = StringUtils.replace(returnString, "%ARENA_ID%", arena.getID());
-    returnString = StringUtils.replace(returnString, "%MAPNAME%", arena.getMapName());
+    replaceValues(returnString);
     if (!((SoloArena) arena).isThemeVoteTime()) {
       if (arena.getArenaType() == BaseArena.ArenaType.TEAM && arena.getPlotManager().getPlot(player) != null) {
         if (arena.getPlotManager().getPlot(player).getOwners().size() == 2) {
@@ -172,6 +165,18 @@ public class ScoreboardManager {
       returnString = PlaceholderAPI.setPlaceholders(player, returnString);
     }
     returnString = plugin.getChatManager().colorRawMessage(returnString);
+    return returnString;
+  }
+
+  public String replaceValues(String string){
+    String returnString = string;
+    returnString = StringUtils.replace(returnString, "%MIN_PLAYERS%", Integer.toString(arena.getMinimumPlayers()));
+    returnString = StringUtils.replace(returnString, "%MAX_PLAYERS%", Integer.toString(arena.getMaximumPlayers()));
+    returnString = StringUtils.replace(returnString, "%TIMER%", Integer.toString(arena.getTimer()));
+    returnString = StringUtils.replace(returnString, "%TIME_LEFT%", Long.toString(arena.getTimer()));
+    returnString = StringUtils.replace(returnString, "%FORMATTED_TIME_LEFT%", StringFormatUtils.formatIntoMMSS(arena.getTimer()));
+    returnString = StringUtils.replace(returnString, "%ARENA_ID%", arena.getID());
+    returnString = StringUtils.replace(returnString, "%MAPNAME%", arena.getMapName());
     return returnString;
   }
 

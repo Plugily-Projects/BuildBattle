@@ -363,8 +363,8 @@ public class LanguageMigrator {
               "      Item-Lore: \"&7Click to go to main options page\"");
           break;
         case 12:
-          MigratorUtils.insertAfterLine(file, "Lobby-Messages:", "Not-Enough-Space-For-Party: \"&cYour party is bigger than free places on the arena %ARENANAME%\"");
-          MigratorUtils.insertAfterLine(file, "In-Game:", "Join-As-Party-Member: \"&cYou joined %ARENANAME% because the party leader joined it!\"");
+          MigratorUtils.insertAfterLine(file, "Lobby-Messages:", "      Not-Enough-Space-For-Party: \"&cYour party is bigger than free places on the arena %ARENANAME%\"");
+          MigratorUtils.insertAfterLine(file, "In-Game:", "  Join-As-Party-Member: \"&cYou joined %ARENANAME% because the party leader joined it!\"");
           break;
       }
       version++;
