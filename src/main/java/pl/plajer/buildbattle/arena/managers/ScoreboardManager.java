@@ -145,7 +145,7 @@ public class ScoreboardManager {
     } else {
       returnString = StringUtils.replace(returnString, "%THEME%", arena.getTheme());
     }
-    replaceValues(returnString);
+    returnString = replaceValues(returnString);
     if (!((SoloArena) arena).isThemeVoteTime()) {
       if (arena.getArenaType() == BaseArena.ArenaType.TEAM && arena.getPlotManager().getPlot(player) != null) {
         if (arena.getPlotManager().getPlot(player).getOwners().size() == 2) {

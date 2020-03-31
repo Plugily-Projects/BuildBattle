@@ -115,7 +115,7 @@ public class GuessTheBuildScoreboardManager extends ScoreboardManager {
         //ignore for test purposes
       }
     }
-    replaceValues(returnString);
+    returnString = replaceValues(returnString);
     if (getPlugin().getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       PlaceholderAPI.setPlaceholders(player, returnString);
     }
