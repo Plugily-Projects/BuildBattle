@@ -9,7 +9,10 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
-### 4.3.1 Release 
+### 4.3.2 Release
+* Fixed Already-Playing message on randomjoin command
+
+### 4.3.1 Release (31.03.2020)
 * Fixed Heads in lower version than 1.15.X
 * Fixed bungee value Shutdown-When-Game-Ends
 * Fixed automatic bungee arena restart (Now scoreboard and Bossbar applies)

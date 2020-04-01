@@ -53,7 +53,7 @@ public class JoinArguments {
           return;
         }
         if (ArenaRegistry.getArena(((Player) sender)) != null) {
-          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.Already-Playing"));
+          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.Messages.Already-Playing"));
           return;
         }
         for (BaseArena arena : ArenaRegistry.getArenas()) {
@@ -72,7 +72,7 @@ public class JoinArguments {
         @Override
         public void execute(CommandSender sender, String[] args) {
           if (ArenaRegistry.getArena(((Player) sender)) != null) {
-            sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.Already-Playing"));
+            sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.Messages.Already-Playing"));
             return;
           }
           if (args.length == 1) {
