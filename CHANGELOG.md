@@ -11,6 +11,7 @@ That's all, matcher will stop when detects next line started with `###` match
 
 ### 4.3.2 Release
 * Fixed Already-Playing message on randomjoin command
+* Fixed Type-Arena-Name language
 
 ### 4.3.1 Release (31.03.2020)
 * Fixed Heads in lower version than 1.15.X

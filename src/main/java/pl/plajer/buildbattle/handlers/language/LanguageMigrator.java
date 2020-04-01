@@ -39,7 +39,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int LANGUAGE_FILE_VERSION = 13;
+  public static final int LANGUAGE_FILE_VERSION = 14;
   public static final int CONFIG_FILE_VERSION = 9;
   private List<String> migratable = Arrays.asList("bungee", "config", "language", "mysql");
   private Main plugin;
@@ -365,6 +365,9 @@ public class LanguageMigrator {
         case 12:
           MigratorUtils.insertAfterLine(file, "Lobby-Messages:", "      Not-Enough-Space-For-Party: \"&cYour party is bigger than free places on the arena %ARENANAME%\"");
           MigratorUtils.insertAfterLine(file, "In-Game:", "  Join-As-Party-Member: \"&cYou joined %ARENANAME% because the party leader joined it!\"");
+          break;
+        case 13:
+          MigratorUtils.insertAfterLine(file, "Commands:", "  Type-Arena-Name: \"&cPlease type arena ID!\"");
           break;
       }
       version++;
