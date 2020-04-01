@@ -77,6 +77,9 @@ public class ParticleRegistry {
           break;
         }
       }
+      if (config.getBoolean(particle.toString() + ".disabled", false)){
+        blacklisted = true;
+      }
       if (blacklisted) {
         continue;
       }

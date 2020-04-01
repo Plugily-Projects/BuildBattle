@@ -10,6 +10,7 @@ deploy webhooks to print changelog successfully
 That's all, matcher will stop when detects next line started with `###` match
 
 ### 4.3.2 Release
+* Added per particle disabler
 * Fixed Already-Playing message on randomjoin command
 * Fixed Type-Arena-Name language
 
