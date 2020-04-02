@@ -9,6 +9,18 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+### 4.3.2 Release
+* Added per particle disabler
+* Fixed Already-Playing message on randomjoin command
+* Fixed Type-Arena-Name language
+
+### 4.3.1 Release (31.03.2020)
+* Fixed Heads in lower version than 1.15.X
+* Fixed bungee value Shutdown-When-Game-Ends
+* Fixed automatic bungee arena restart (Now scoreboard and Bossbar applies)
+* Tried to fix parties compatibility 
+* Fixed broken language migrator
+
 ### 4.3.0 Release (17.03.2020)
 * PlaceholderAPI placeholders are no longer case sensitive
 * Added arena state placeholders for PlaceholderAPI:

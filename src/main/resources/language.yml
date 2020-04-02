@@ -10,6 +10,7 @@ Commands:
   Teleported-To-The-Lobby: "&aYou've been teleported to the lobby!"
   No-Permission: "&cYou don't have permission to use this command!"
   No-Arena-Like-That: "&cNo arena with that ID!"
+  Type-Arena-Name: "&cPlease type arena ID!"
   Arena-Is-Full: "&cThis arena is full, sorry!"
   Arena-Started: "&cThis arena already started, sorry!"
   No-Playing: "&cYou're not playing!"
@@ -329,4 +330,4 @@ Signs:
     - "&5[%playersize%/%maxplayers%]"
 
 # Do not modify!
-File-Version-Do-Not-Edit: 13
+File-Version-Do-Not-Edit: 14

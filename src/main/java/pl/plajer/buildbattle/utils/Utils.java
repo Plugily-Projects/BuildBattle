@@ -21,6 +21,7 @@ package pl.plajer.buildbattle.utils;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
@@ -31,6 +32,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -46,106 +48,116 @@ import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
  */
 public class Utils {
 
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
-  public static final ItemStack PLAYER_HEAD_ITEM = (plugin.is1_12_R1() || plugin.is1_11_R1())
-      ? new ItemStack(Material.SKULL_ITEM, 1, (short) 3) : XMaterial.PLAYER_HEAD.parseItem();
+    private static Main plugin = JavaPlugin.getPlugin(Main.class);
+    public static final ItemStack PLAYER_HEAD_ITEM = (plugin.is1_12_R1() || plugin.is1_11_R1())
+            ? new ItemStack(Material.SKULL_ITEM, 1, (short) 3) : XMaterial.PLAYER_HEAD.parseItem();
 
-  private Utils() {
-  }
-
-  /**
-   * Checks whether itemstack is named (not null, has meta and display name)
-   *
-   * @param stack item stack to check
-   * @return true if named, false otherwise
-   */
-  public static boolean isNamed(ItemStack stack) {
-    if (stack == null) {
-      return false;
-    }
-    return stack.hasItemMeta() && stack.getItemMeta().hasDisplayName();
-  }
-
-  /**
-   * Serialize int to use it in Inventories size
-   * ex. you have 38 kits and it will serialize it to 45 (9*5)
-   * because it is valid inventory size
-   * next ex. you have 55 items and it will serialize it to 63 (9*7) not 54 because it's too less
-   *
-   * @param i integer to serialize
-   * @return serialized number
-   */
-  public static int serializeInt(Integer i) {
-    if ((i % 9) == 0) {
-      return i;
-    } else {
-      return (int) ((Math.ceil(i / 9) * 9) + 9);
-    }
-  }
-
-  public static ItemStack getGoBackItem() {
-    return new ItemBuilder(XMaterial.STONE_BUTTON.parseItem())
-        .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Go-Back-Button.Item-Name"))
-        .lore(plugin.getChatManager().colorMessage("Menus.Option-Menu.Go-Back-Button.Item-Lore")).build();
-  }
-
-  public static ItemStack getSkull(String url) {
-    ItemStack head = PLAYER_HEAD_ITEM.clone();
-    if (url.isEmpty()) {
-      return head;
+    private Utils() {
     }
 
-    SkullMeta headMeta = (SkullMeta) head.getItemMeta();
-    GameProfile profile = new GameProfile(UUID.randomUUID(), null);
-    profile.getProperties().put("textures", new Property("textures", url));
-    try {
-      Method mtd = headMeta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
-      mtd.setAccessible(true);
-      mtd.invoke(headMeta, profile);
-    } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException ignored) {
+    /**
+     * Checks whether itemstack is named (not null, has meta and display name)
+     *
+     * @param stack item stack to check
+     * @return true if named, false otherwise
+     */
+    public static boolean isNamed(ItemStack stack) {
+        if (stack == null) {
+            return false;
+        }
+        return stack.hasItemMeta() && stack.getItemMeta().hasDisplayName();
     }
 
-    head.setItemMeta(headMeta);
-    return head;
-  }
-
-  public static ItemStack setItemNameAndLore(ItemStack item, String name, List<String> lore) {
-    ItemMeta im = item.getItemMeta();
-    im.setDisplayName(name);
-    im.setLore(lore);
-    item.setItemMeta(im);
-    return item;
-  }
-
-  public static Map sortByValue(Map unsortMap) {
-    List list = new LinkedList(unsortMap.entrySet());
-    list.sort((o1, o2) -> ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue()));
-    Map sortedMap = new LinkedHashMap();
-    for (Object aList : list) {
-      Map.Entry entry = (Map.Entry) aList;
-      sortedMap.put(entry.getKey(), entry.getValue());
+    /**
+     * Serialize int to use it in Inventories size
+     * ex. you have 38 kits and it will serialize it to 45 (9*5)
+     * because it is valid inventory size
+     * next ex. you have 55 items and it will serialize it to 63 (9*7) not 54 because it's too less
+     *
+     * @param i integer to serialize
+     * @return serialized number
+     */
+    public static int serializeInt(Integer i) {
+        if ((i % 9) == 0) {
+            return i;
+        } else {
+            return (int) ((Math.ceil(i / 9) * 9) + 9);
+        }
     }
-    return sortedMap;
-  }
 
-  public static void sendPacket(Player player, Object packet) {
-    try {
-      Object handle = player.getClass().getMethod("getHandle").invoke(player);
-      Object playerConnection = handle.getClass().getField("playerConnection").get(handle);
-      playerConnection.getClass().getMethod("sendPacket", getNMSClass("Packet")).invoke(playerConnection, packet);
-    } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException | NoSuchFieldException ex) {
-      ex.printStackTrace();
+    public static ItemStack getGoBackItem() {
+        return new ItemBuilder(XMaterial.STONE_BUTTON.parseItem())
+                .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Go-Back-Button.Item-Name"))
+                .lore(plugin.getChatManager().colorMessage("Menus.Option-Menu.Go-Back-Button.Item-Lore")).build();
     }
-  }
 
-  public static Class<?> getNMSClass(String nmsClassName) {
-    try {
-      return Class.forName("net.minecraft.server." + Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + "." + nmsClassName);
-    } catch (ClassNotFoundException ex) {
-      ex.printStackTrace();
-      Bukkit.getConsoleSender().sendMessage("Reflection failed for " + nmsClassName);
-      return null;
+    public static ItemStack getSkull(String url) {
+        ItemStack head = PLAYER_HEAD_ITEM.clone();
+        if (url.isEmpty()) {
+            return head;
+        }
+
+        SkullMeta headMeta = (SkullMeta) head.getItemMeta();
+        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+        profile.getProperties().put("textures", new Property("textures", url));
+        if (plugin.is1_15_R1()) {
+            try {
+                Method mtd = headMeta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
+                mtd.setAccessible(true);
+                mtd.invoke(headMeta, profile);
+            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException ignored) {
+            }
+        } else {
+            try {
+                Field profileField = headMeta.getClass().getDeclaredField("profile");
+                profileField.setAccessible(true);
+                profileField.set(headMeta, profile);
+
+            } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException ignored) {
+
+            }
+        }
+        head.setItemMeta(headMeta);
+        return head;
     }
-  }
+
+    public static ItemStack setItemNameAndLore(ItemStack item, String name, List<String> lore) {
+        ItemMeta im = item.getItemMeta();
+        im.setDisplayName(name);
+        im.setLore(lore);
+        item.setItemMeta(im);
+        return item;
+    }
+
+    public static Map sortByValue(Map unsortMap) {
+        List list = new LinkedList(unsortMap.entrySet());
+        list.sort((o1, o2) -> ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue()));
+        Map sortedMap = new LinkedHashMap();
+        for (Object aList : list) {
+            Map.Entry entry = (Map.Entry) aList;
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+        return sortedMap;
+    }
+
+    public static void sendPacket(Player player, Object packet) {
+        try {
+            Object handle = player.getClass().getMethod("getHandle").invoke(player);
+            Object playerConnection = handle.getClass().getField("playerConnection").get(handle);
+            playerConnection.getClass().getMethod("sendPacket", getNMSClass("Packet")).invoke(playerConnection, packet);
+        } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException | NoSuchFieldException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static Class<?> getNMSClass(String nmsClassName) {
+        try {
+            return Class.forName("net.minecraft.server." + Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + "." + nmsClassName);
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+            Bukkit.getConsoleSender().sendMessage("Reflection failed for " + nmsClassName);
+            return null;
+        }
+    }
 
 }
