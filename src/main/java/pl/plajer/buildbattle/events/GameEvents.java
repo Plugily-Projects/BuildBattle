@@ -18,6 +18,7 @@
 
 package pl.plajer.buildbattle.events;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -78,7 +79,7 @@ public class GameEvents implements Listener {
 
   @EventHandler(priority = EventPriority.LOWEST)
   public void onLeave(PlayerInteractEvent e) {
-    if (e.getHand() == EquipmentSlot.OFF_HAND || e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK|| e.getAction() == Action.PHYSICAL) {
+    if (e.getHand() == EquipmentSlot.OFF_HAND || e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK || e.getAction() == Action.PHYSICAL) {
       return;
     }
     BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
@@ -106,7 +107,7 @@ public class GameEvents implements Listener {
 
   @EventHandler
   public void onOpenOptionMenu(PlayerInteractEvent e) {
-    if (e.getHand() == EquipmentSlot.OFF_HAND || e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK|| e.getAction() == Action.PHYSICAL) {
+    if (e.getHand() == EquipmentSlot.OFF_HAND || e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK || e.getAction() == Action.PHYSICAL) {
       return;
     }
     ItemStack itemStack = e.getItem();
@@ -477,6 +478,9 @@ public class GameEvents implements Listener {
       return;
     }
     if (arena instanceof SoloArena && !((SoloArena) arena).isVoting()) {
+      return;
+    }
+    if (arena instanceof GuessTheBuildArena && e.getWhoClicked().equals(((GuessTheBuildArena) arena).getCurrentBuilder())) {
       return;
     }
     e.setCancelled(true);

@@ -81,9 +81,12 @@ public class ChatEvents implements Listener {
     //todo how this works
     event.getPlayer().sendMessage(plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Plus-Points")
         .replace("%pts%", String.valueOf(gameArena.getCurrentTheme().getDifficulty().getPointsReward())));
+    gameArena.getPlayersPoints().put(event.getPlayer(), gameArena.getPlayersPoints().getOrDefault(event.getPlayer(), 0)
+        + gameArena.getCurrentTheme().getDifficulty().getPointsReward());
     plugin.getUserManager().getUser(gameArena.getCurrentBuilder())
         .addStat(StatsStorage.StatisticType.LOCAL_GUESS_THE_BUILD_POINTS, gameArena.getCurrentTheme().getDifficulty().getPointsReward());
     gameArena.addWhoGuessed(event.getPlayer());
+    gameArena.recalculateLeaderboard();
 
     //todo add api event for successful guess
   }
