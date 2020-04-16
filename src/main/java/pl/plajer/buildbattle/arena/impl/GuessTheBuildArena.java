@@ -62,6 +62,8 @@ import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 //playerPoints are not ordered by value after guess properly
 public class GuessTheBuildArena extends BaseArena {
 
+  private static int delayBetweenRounds = 5;
+  private static int themeSelectionTime = 15;
   private int round = 1;
   private GTBTheme currentTheme;
   private boolean themeSet;
@@ -131,7 +133,7 @@ public class GuessTheBuildArena extends BaseArena {
           }
           distributePlots();
           getPlotManager().teleportToPlots();
-          setTimer(10);
+          setTimer(delayBetweenRounds);
           for (Player player : getPlayers()) {
             player.getInventory().clear();
             player.setAllowFlight(true);
@@ -140,13 +142,13 @@ public class GuessTheBuildArena extends BaseArena {
             //to prevent Multiverse chaning gamemode bug
             Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setGameMode(GameMode.SPECTATOR), 20);
           }
-          currentBuilder = getPlayers().get(round - 1);
           Plot plot = getPlotManager().getPlot(getPlayers().get(round - 1));
           for (Player p : getPlayers()) {
             p.teleport(plot.getTeleportLocation());
           }
+          nextRoundCooldown = true;
+          Bukkit.getScheduler().runTaskLater(getPlugin(), () -> nextRoundCooldown = false, 20 * delayBetweenRounds);
           Bukkit.getScheduler().runTaskLater(getPlugin(), () -> plot.getOwners().get(0).setGameMode(GameMode.CREATIVE), 20);
-          Bukkit.getScheduler().runTaskLater(getPlugin(), this::openThemeSelectionInventoryToCurrentBuilder, 20);
           break;
         }
         setTimer(getTimer() - 1);
@@ -162,10 +164,10 @@ public class GuessTheBuildArena extends BaseArena {
         if (currentBuilder == null && !nextRoundCooldown) {
           currentBuilder = getPlayers().get(round - 1);
           openThemeSelectionInventoryToCurrentBuilder();
+          setTimer(themeSelectionTime);
           break;
         } else {
-          if (!isThemeSet() && getTimer() <= 0) {
-            Bukkit.broadcastMessage("RANDOM THEME ROLL TASK");
+          if (!isThemeSet() && getTimer() <= 0 && currentBuilder != null) {
             Random r = new Random();
             String type = "EASY";
             switch (r.nextInt(2 + 1)) {
@@ -193,7 +195,7 @@ public class GuessTheBuildArena extends BaseArena {
               p.sendTitle(getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Start-Guessing-Title"), null, 5, 25, 5);
               p.sendMessage(roundMessage);
             }
-            setTimer(15);
+            setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, this));
             break;
           }
         }
@@ -205,7 +207,6 @@ public class GuessTheBuildArena extends BaseArena {
           //todo add action bar word display
         }
         if (getTimer() <= 0 && isThemeSet()) {
-          Bukkit.broadcastMessage("THEME NOT GUESSED END TASK");
           getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Was-Name").replace("%THEME%", getCurrentTheme().getTheme()));
           for (Player p : getPlayers()) {
             p.sendTitle(getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Was-Title"), getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Was-Subtitle")
@@ -218,17 +219,14 @@ public class GuessTheBuildArena extends BaseArena {
           whoGuessed.clear();
           round++;
           if (round > getPlayers().size()) {
-            Bukkit.broadcastMessage("GAME END TASK");
             setTimer(15);
             setArenaState(ArenaState.ENDING);
             Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
             break;
           }
-          Bukkit.broadcastMessage("NEXT BUILDER ROLL TASK");
 
-          setTimer(10);
+          setTimer(delayBetweenRounds);
           nextRoundCooldown = true;
-          Bukkit.broadcastMessage("DELAYED TASK PREPARED");
           Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
             nextRoundCooldown = false;
             currentBuilder = getPlayers().get(round - 1);
@@ -241,11 +239,9 @@ public class GuessTheBuildArena extends BaseArena {
               p.setGameMode(GameMode.SPECTATOR);
             }
             plot.getOwners().get(0).setGameMode(GameMode.CREATIVE);
-            Bukkit.broadcastMessage("DELAYED TASK STARTED");
             //probably not hardcoded
             setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, this));
             if (getArenaState() != ArenaState.IN_GAME || isThemeSet()) {
-              Bukkit.broadcastMessage("NOT IN GAME/THEME ALREADY SET");
               return;
             }
             for (Player player : getPlayers()) {
@@ -368,7 +364,7 @@ public class GuessTheBuildArena extends BaseArena {
   public void recalculateLeaderboard() {
     playersPoints = playersPoints.entrySet()
         .stream()
-        .sorted(Map.Entry.comparingByValue())
+        .sorted((Map.Entry.<Player, Integer>comparingByValue().reversed()))
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
   }
 
