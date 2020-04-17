@@ -264,6 +264,10 @@ public class GuessTheBuildArena extends BaseArena {
         if (isThemeSet() && (getTimer() == (4 * 60) || getTimer() == (3 * 60) || getTimer() == 5 * 60 || getTimer() == 30 || getTimer() == 2 * 60 || getTimer() == 60 || getTimer() == 15)) {
           sendBuildLeftTimeMessage();
         }
+        //if player leaves during round force next round
+        if (!currentBuilder.isOnline()) {
+          setTimer(1);
+        }
         if (getTimer() != 0 && currentBuilder != null) {
           if (getOption(ArenaOption.IN_PLOT_CHECKER) == 1) {
             setOptionValue(ArenaOption.IN_PLOT_CHECKER, 0);
