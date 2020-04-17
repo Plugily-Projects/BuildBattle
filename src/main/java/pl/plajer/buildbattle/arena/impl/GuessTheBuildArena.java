@@ -434,8 +434,9 @@ public class GuessTheBuildArena extends BaseArena {
     if (getTimer() >= 15) {
       setTimer(getTimer() - 10);
     }
-    if (whoGuessed.size() == getPlayers().size()) {
-      setTimer(1);
+    //-1 because builder can´t guess
+    if (whoGuessed.size() >= getPlayers().size() - 1) {
+      setTimer(5);
     }
   }
 
