@@ -49,6 +49,7 @@ import pl.plajer.buildbattle.arena.options.ArenaOption;
 import pl.plajer.buildbattle.menus.themevoter.GTBTheme;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.utils.MessageUtils;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
@@ -330,6 +331,14 @@ public class GuessTheBuildArena extends BaseArena {
         currentBuilder = null;
         setThemeSet(false);
         setCurrentTheme(null);
+        if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+          if (ConfigUtils.getConfig(getPlugin(), "bungee").getBoolean("Shutdown-When-Game-Ends", false)) {
+            getPlugin().getServer().shutdown();
+          }
+          for (Player player : Bukkit.getOnlinePlayers()) {
+            ArenaManager.joinAttempt(player, this);
+          }
+        }
         break;
     }
   }
