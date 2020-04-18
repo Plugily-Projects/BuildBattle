@@ -18,6 +18,8 @@
 
 package pl.plajer.buildbattle.handlers;
 
+import pl.plajer.buildbattle.handlers.reward.Reward;
+
 /**
  * @author Plajer
  * <p>
@@ -25,4 +27,6 @@ package pl.plajer.buildbattle.handlers;
  */
 public class ReportManager {
   //todo
+    //FOR REWARD ADD THIS xD
+    //plugin.getRewardsHandler().performReward(player, Reward.RewardType.REPORT, 0);
 }

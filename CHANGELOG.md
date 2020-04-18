@@ -9,6 +9,14 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+
+### 4.4.0 Release
+* GuessTheBuild release
+* Tried to fix Server crash on 1.15 
+* Reworked whole Rewards
+* New file rewards.yml
+* Migrator for new config file as there are some more changes
+
 ### 4.3.2 Release
 * Added per particle disabler
 * Fixed Already-Playing message on randomjoin command

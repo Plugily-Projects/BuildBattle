@@ -43,6 +43,7 @@ import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.arena.options.ArenaOption;
 import pl.plajer.buildbattle.handlers.HolidayManager;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
+import pl.plajer.buildbattle.handlers.reward.Reward;
 import pl.plajer.buildbattle.menus.themevoter.VoteMenu;
 import pl.plajer.buildbattle.menus.themevoter.VotePoll;
 import pl.plajer.buildbattle.user.User;
@@ -555,49 +556,15 @@ public class SoloArena extends BaseArena {
 
   @Override
   public void giveRewards() {
-    if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.WIN_COMMANDS_ENABLED)) {
-      if (topList.get(1) != null) {
-        for (String string : getPlugin().getConfigPreferences().getWinCommands(ConfigPreferences.Position.FIRST)) {
-          for (Player p : topList.get(1)) {
-            getPlugin().getServer().dispatchCommand(getPlugin().getServer().getConsoleSender(), string.replace("%PLAYER%", p.getName()));
-          }
-        }
+    for(int i = 1; i <= topList.size(); i++) {
+      if(topList.get(i).isEmpty()) {
+        continue;
+      }
+      for(Player player : topList.get(i)){
+        getPlugin().getRewardsHandler().performReward(player, Reward.RewardType.PLACE, i);
       }
     }
-    if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.SECOND_PLACE_COMMANDS_ENABLED)) {
-      if (topList.get(2) != null) {
-        for (String string : getPlugin().getConfigPreferences().getWinCommands(ConfigPreferences.Position.SECOND)) {
-          for (Player p : topList.get(2)) {
-            getPlugin().getServer().dispatchCommand(getPlugin().getServer().getConsoleSender(), string.replace("%PLAYER%", p.getName()));
-          }
-        }
-      }
-    }
-    if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.THIRD_PLACE_COMMANDS_ENABLED)) {
-      if (topList.get(3) != null) {
-        for (String string : getPlugin().getConfigPreferences().getWinCommands(ConfigPreferences.Position.THIRD)) {
-          for (Player p : topList.get(3)) {
-            getPlugin().getServer().dispatchCommand(getPlugin().getServer().getConsoleSender(), string.replace("%PLAYER%", p.getName()));
-          }
-        }
-      }
-    }
-    if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.END_GAME_COMMANDS_ENABLED)) {
-      for (String string : getPlugin().getConfigPreferences().getEndGameCommands()) {
-        for (Player player : getPlayers()) {
-          getPlugin().getServer().dispatchCommand(getPlugin().getServer().getConsoleSender(), string.replace("%PLAYER%", player.getName()).replace("%RANG%", Integer.toString(getRang(player))));
-        }
-      }
-    }
-  }
-
-  public Integer getRang(Player player) {
-    for (int i : topList.keySet()) {
-      if (topList.get(i).contains(player)) {
-        return i;
-      }
-    }
-    return 0;
+    getPlugin().getRewardsHandler().performReward(this, Reward.RewardType.END_GAME);
   }
 
   public boolean isThemeVoteTime() {

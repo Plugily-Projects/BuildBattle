@@ -26,7 +26,10 @@ import java.util.Map;
 
 import org.bukkit.entity.Player;
 
+import org.bukkit.plugin.java.JavaPlugin;
+import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.impl.SoloArena;
+import pl.plajer.buildbattle.handlers.reward.Reward;
 import pl.plajer.buildbattle.utils.Utils;
 
 /**
@@ -39,6 +42,7 @@ public class VotePoll {
   private SoloArena arena;
   private Map<String, Integer> votedThemes = new LinkedHashMap<>();
   private Map<Player, String> playerVote = new HashMap<>();
+  private static Main plugin = JavaPlugin.getPlugin(Main.class);
 
   public VotePoll(SoloArena arena, List<String> votedThemes) {
     this.arena = arena;
@@ -61,6 +65,8 @@ public class VotePoll {
         return false;
       }
       votedThemes.put(playerVote.get(player), votedThemes.get(playerVote.get(player)) - 1);
+    } else {
+      plugin.getRewardsHandler().performReward(player, Reward.RewardType.VOTE, 0);
     }
     votedThemes.put(theme, votedThemes.get(theme) + 1);
     playerVote.put(player, theme);

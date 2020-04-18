@@ -45,20 +45,43 @@ Basic-Permissions:
 # Should /bb leave command be disabled?
 Disable-Leave-Command: false
 
-# Total build times of game modes
-Build-Time:
-  Classic: 480
-  Teams: 540
-  Guess-The-Build: 120
+# Configure the time of the phases
+Time-Manager:
+  Guess-The-Build:
+    # Total time of theme selection
+    Theme-Selection-Time-In-Seconds: 15
+    # Total time of delay between rounds
+    Delay-Between-Rounds-In-Seconds: 5
+    # After guessing the time will be shortened by
+    Time-Shortener-In-Seconds: 10
+    # Total time of waiting before Delay-Between-Rounds-In-Seconds will come
+    # Will be triggered after all players guessed the theme
+    All-Guessed-In-Seconds: 5
+    # Total build time
+    Build-Time: 120
+    # Time in lobby to wait before start
+    Lobby-Starting-Time: 60
+  Classic:
+    # Total time of voting per player plot
+    Voting-Time-In-Seconds: 20
+    # Total time of voting for themes before starting
+    Theme-Voting-Time-In-Seconds: 25
+    # Total build time
+    Build-Time: 480
+    # Time in lobby to wait before start
+    Lobby-Starting-Time: 60
+  Teams:
+    # Total time of voting per player plot
+    Voting-Time-In-Seconds: 20
+    # Total time of voting for themes before starting
+    Theme-Voting-Time-In-Seconds: 25
+    # Total build time
+    Build-Time: 540
+    # Time in lobby to wait before start
+    Lobby-Starting-Time: 60
 
 # Should we fire some cool fireworks at location of every player after the game ends?
 Firework-When-Game-Ends: true
-
-# Total time of voting per player plot
-Voting-Time-In-Seconds: 20
-
-# Total time of voting for themes before starting
-Theme-Voting-Time-In-Seconds: 25
 
 # Default floor material name
 Default-Floor-Material-Name: log
@@ -75,26 +98,8 @@ Max-Amount-Particles: 25
 # Time of refreshing particles
 Particle-Refresh-Per-Tick: 10
 
-# Should server be disabled after the game ends?
-Bungee-Shutdown-On-End: false
-
-# Should win commands be activated?
-Win-Commands-Activated: false
-
-# Should end game commands be activated?
-End-Game-Commands-Activated: false
-
-# Should second place commands be activated?
-Second-Place-Commands-Activated: false
-
-# Should third place commands be activated?
-Third-Place-Commands-Activated: false
-
 # Max amount of mobs to spawn per plot
 Mobs-Max-Amount-Per-Plot: 20
-
-# Time in lobby to wait before start
-Lobby-Starting-Time: 60
 
 # All game themes players will build.
 Themes:
@@ -172,20 +177,6 @@ Blacklisted-Item-Names:
   - tnt
   - diamond_block
 
-# Commands executed when player wins
-# Use %PLAYER% placeholder to replace it with winner's name
-Win-Commands:
-  First:
-    - say %PLAYER% won the game!
-  Second:
-    - say %PLAYER% become second
-  Third:
-    - say %PLAYER% became third
-
-# Commands executed for every player after the game ends
-End-Game-Commands:
-  - say %PLAYER% has played a game!
-
 # Should we block every not Build Battle associated commands in game?
 Block-Commands-In-Game: true
 
@@ -214,7 +205,10 @@ Update-Notifier:
 # Disable or enable MySQL database here, see mysql.yml for more
 DatabaseActivated: false
 
+# Enable in game rewards? See rewards.yml for more...
+Rewards-Enabled: false
+
 # Don't modify.
-Version: 9
+Version: 10
 
 # No way! You've reached the end! But... where's the dragon!?

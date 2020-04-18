@@ -39,8 +39,8 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int LANGUAGE_FILE_VERSION = 14;
-  public static final int CONFIG_FILE_VERSION = 9;
+  public static final int LANGUAGE_FILE_VERSION = 15;
+  public static final int CONFIG_FILE_VERSION = 10;
   private List<String> migratable = Arrays.asList("bungee", "config", "language", "mysql");
   private Main plugin;
 
@@ -150,7 +150,6 @@ public class LanguageMigrator {
               "    - Stocking\r\n\r\n");
           break;
         case 6:
-          //todo
           MigratorUtils.addNewLines(file, "# Should we block every not Build Battle associated commands in game?\r\n" +
               "Block-Commands-In-Game: true");
         case 7:
@@ -170,6 +169,14 @@ public class LanguageMigrator {
               "    Full-Game: \"&4&lFULL\"\r\n" +
               "    Ending: \"&lEnding\"\r\n" +
               "    Restarting: \"&c&lRestarting\"\r\n");
+          break;
+        case 9:
+          MessageUtils.gonnaMigrate();
+          Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Build Battle is migrating config.yml to the new file format...");
+          Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Don't worry! Old config.yml will be renamed not overridden!");
+          file.renameTo(new File(plugin.getDataFolder(), "bbold_" + file + ".yml"));
+          Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Renamed file " + file + ".yml");
+          break;
       }
     }
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] [System notify] Config updated, no comments were removed :)");
@@ -185,7 +192,7 @@ public class LanguageMigrator {
 
     int version = 0;
     if (NumberUtils.isNumber(config.getString("File-Version-Do-Not-Edit"))) {
-      version = Integer.valueOf(config.getString("File-Version-Do-Not-Edit"));
+      version = Integer.parseInt(config.getString("File-Version-Do-Not-Edit"));
     }
     updateLanguageVersionControl(version);
 
@@ -368,6 +375,9 @@ public class LanguageMigrator {
           break;
         case 13:
           MigratorUtils.insertAfterLine(file, "Commands:", "  Type-Arena-Name: \"&cPlease type arena ID!\"");
+          break;
+        case 14:
+          MigratorUtils.insertAfterLine(file, "Guess-The-Build:", "    Theme-Guessed: \"&eAll players guessed the theme!\"");
           break;
       }
       version++;

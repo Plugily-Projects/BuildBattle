@@ -46,6 +46,7 @@ import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.managers.GuessTheBuildScoreboardManager;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.arena.options.ArenaOption;
+import pl.plajer.buildbattle.handlers.reward.Reward;
 import pl.plajer.buildbattle.menus.themevoter.GTBTheme;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.utils.MessageUtils;
@@ -63,8 +64,6 @@ import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 //playerPoints are not ordered by value after guess properly
 public class GuessTheBuildArena extends BaseArena {
 
-  private static int delayBetweenRounds = 5;
-  private static int themeSelectionTime = 15;
   private int round = 1;
   private GTBTheme currentTheme;
   private boolean themeSet;
@@ -134,7 +133,7 @@ public class GuessTheBuildArena extends BaseArena {
           }
           distributePlots();
           getPlotManager().teleportToPlots();
-          setTimer(delayBetweenRounds);
+          setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.DELAYED_TASK, this));
           for (Player player : getPlayers()) {
             player.getInventory().clear();
             player.setAllowFlight(true);
@@ -148,7 +147,7 @@ public class GuessTheBuildArena extends BaseArena {
             p.teleport(plot.getTeleportLocation());
           }
           nextRoundCooldown = true;
-          Bukkit.getScheduler().runTaskLater(getPlugin(), () -> nextRoundCooldown = false, 20 * delayBetweenRounds);
+          Bukkit.getScheduler().runTaskLater(getPlugin(), () -> nextRoundCooldown = false, 20 * getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.DELAYED_TASK, this));
           Bukkit.getScheduler().runTaskLater(getPlugin(), () -> plot.getOwners().get(0).setGameMode(GameMode.CREATIVE), 20);
           break;
         }
@@ -165,7 +164,7 @@ public class GuessTheBuildArena extends BaseArena {
         if (currentBuilder == null && !nextRoundCooldown) {
           currentBuilder = getPlayers().get(round - 1);
           openThemeSelectionInventoryToCurrentBuilder();
-          setTimer(themeSelectionTime);
+          setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.THEME_SELECTION, this));
           break;
         } else {
           if (!isThemeSet() && getTimer() <= 0 && currentBuilder != null) {
@@ -226,7 +225,7 @@ public class GuessTheBuildArena extends BaseArena {
             break;
           }
 
-          setTimer(delayBetweenRounds);
+          setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.DELAYED_TASK, this));
           nextRoundCooldown = true;
           Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
             nextRoundCooldown = false;
@@ -383,7 +382,15 @@ public class GuessTheBuildArena extends BaseArena {
 
   @Override
   public void giveRewards() {
-    //todo
+    List<Map.Entry<Player, Integer>> list = new ArrayList<>(getPlayersPoints().entrySet());
+    for(int i = 0; i <= list.size(); i++) {
+      if(list.size() - 1 < i) {
+        continue;
+      }
+      Map.Entry<Player, Integer> entry = list.get(i);
+      getPlugin().getRewardsHandler().performReward(entry.getKey(), Reward.RewardType.PLACE, i +1);
+    }
+    getPlugin().getRewardsHandler().performReward(this, Reward.RewardType.END_GAME);
   }
 
   @Override
@@ -442,14 +449,18 @@ public class GuessTheBuildArena extends BaseArena {
 
   public void addWhoGuessed(Player player) {
     whoGuessed.add(player);
-
+    getPlugin().getRewardsHandler().performReward(player, Reward.RewardType.GTB_GUESS, 0);
     //decrease game time by guessed theme
     if (getTimer() >= 15) {
-      setTimer(getTimer() - 10);
+      setTimer(getTimer() - getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.TIME_SHORTENER, this));
     }
     //-1 because builder can´t guess
     if (whoGuessed.size() >= getPlayers().size() - 1) {
-      setTimer(5);
+      setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.ALL_GUESSED, this));
+      for(Player players : getPlayers()){
+        players.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Guessed"));
+        getPlugin().getRewardsHandler().performReward(players, Reward.RewardType.GTB_ALL_GUESSED, 0);
+      }
     }
   }
 

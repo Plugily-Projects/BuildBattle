@@ -120,15 +120,24 @@ public class ConfigPreferences {
   }
 
   public int getTimer(TimerType type, BaseArena arena) {
+    String prefix = "Time-Manger." +arena.getArenaType().getPrefix() + ".";
     switch (type) {
       case BUILD:
-        return plugin.getConfig().getInt("Build-Time." + arena.getArenaType().getPrefix(), 100);
+        return plugin.getConfig().getInt(prefix + "Build-Time", 200);
       case LOBBY:
-        return plugin.getConfig().getInt("Lobby-Starting-Time", 60);
+        return plugin.getConfig().getInt(prefix + "Lobby-Starting-Time", 60);
       case PLOT_VOTE:
-        return plugin.getConfig().getInt("Voting-Time-In-Seconds", 20);
+        return plugin.getConfig().getInt(prefix + "Voting-Time-In-Seconds", 20);
       case THEME_VOTE:
-        return plugin.getConfig().getInt("Theme-Voting-Time-In-Seconds", 25);
+        return plugin.getConfig().getInt(prefix + "Theme-Voting-Time-In-Seconds", 25);
+      case DELAYED_TASK:
+        return plugin.getConfig().getInt(prefix + "Delay-Between-Rounds-In-Seconds", 5);
+      case TIME_SHORTENER:
+        return plugin.getConfig().getInt(prefix + "Time-Shortener-In-Seconds", 10);
+      case THEME_SELECTION:
+        return plugin.getConfig().getInt(prefix + "Theme-Selection-Time-In-Seconds", 15);
+      case ALL_GUESSED:
+        return plugin.getConfig().getInt(prefix + "All-Guessed-In-Seconds", 5);
       default:
         return 0;
     }
@@ -145,7 +154,7 @@ public class ConfigPreferences {
   }
 
   public enum TimerType {
-    BUILD, LOBBY, PLOT_VOTE, THEME_VOTE
+    BUILD, LOBBY, PLOT_VOTE, THEME_VOTE, DELAYED_TASK, TIME_SHORTENER, THEME_SELECTION, ALL_GUESSED
   }
 
   public enum Option {
