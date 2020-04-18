@@ -159,9 +159,7 @@ public class ConfigPreferences {
 
   public enum Option {
     BOSSBAR_ENABLED("Boss-Bar-Enabled", true), BUNGEE_ENABLED("BungeeActivated", false), DATABASE_ENABLED("DatabaseActivated", false),
-    INVENTORY_MANAGER_ENABLED("InventoryManager", true), WIN_COMMANDS_ENABLED("Win-Commands-Activated", false),
-    SECOND_PLACE_COMMANDS_ENABLED("Second-Place-Commands-Activated", false), THIRD_PLACE_COMMANDS_ENABLED("Third-Place-Commands-Activated", false),
-    END_GAME_COMMANDS_ENABLED("End-Game-Commands-Activated", false), BLOCK_COMMANDS_IN_GAME("Block-Commands-In-Game", true);
+    INVENTORY_MANAGER_ENABLED("InventoryManager", true), BLOCK_COMMANDS_IN_GAME("Block-Commands-In-Game", true), REWARDS("Rewards-Enabled", false), HEADS_COMMAND("Command-Instead-Of-Head-Menu.Enabled",false);
 
     private String path;
     private boolean def;

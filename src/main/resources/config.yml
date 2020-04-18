@@ -208,6 +208,12 @@ DatabaseActivated: false
 # Enable in game rewards? See rewards.yml for more...
 Rewards-Enabled: false
 
+# Enable another Head menu instead of our
+Command-Instead-Of-Head-Menu:
+  Enabled: false
+  # The command that should be executed
+  Command: heads
+
 # Don't modify.
 Version: 10
 

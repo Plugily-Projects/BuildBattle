@@ -8,6 +8,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
@@ -31,7 +32,7 @@ public class RewardsFactory {
   private boolean enabled;
 
   public RewardsFactory(Main plugin) {
-    enabled = plugin.getConfig().getBoolean("Rewards-Enabled");
+    enabled = plugin.getConfigPreferences().getOption(ConfigPreferences.Option.REWARDS);
     config = ConfigUtils.getConfig(plugin, "rewards");
     registerRewards();
   }

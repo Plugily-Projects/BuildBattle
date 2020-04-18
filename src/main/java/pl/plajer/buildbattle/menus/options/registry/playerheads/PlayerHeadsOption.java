@@ -19,9 +19,13 @@
 package pl.plajer.buildbattle.menus.options.registry.playerheads;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
+import org.bukkit.plugin.java.JavaPlugin;
+import pl.plajer.buildbattle.ConfigPreferences;
+import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.menus.options.MenuOption;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
 import pl.plajer.buildbattle.utils.Utils;
@@ -33,7 +37,7 @@ import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
  * Created at 23.12.2018
  */
 public class PlayerHeadsOption {
-
+  private static Main plugin = JavaPlugin.getPlugin(Main.class);
   public PlayerHeadsOption(OptionsRegistry registry) {
     registry.registerOption(new MenuOption(10, "PLAYER_HEADS", new ItemBuilder(Utils.PLAYER_HEAD_ITEM.clone())
         .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Players-Heads.Item-Name"))
@@ -57,6 +61,12 @@ public class PlayerHeadsOption {
       @Override
       public void onTargetClick(InventoryClickEvent e) {
         e.getWhoClicked().closeInventory();
+        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.HEADS_COMMAND)){
+          if (e.getWhoClicked() instanceof Player){
+            ((Player) e.getWhoClicked()).performCommand(plugin.getConfig().getString("Command-Instead-Of-Head-Menu.Command", "heads"));
+          }
+          return;
+        }
         for (HeadsCategory category : registry.getPlayerHeadsRegistry().getCategories().keySet()) {
           if (!category.getItemStack().isSimilar(e.getCurrentItem())) {
             continue;
