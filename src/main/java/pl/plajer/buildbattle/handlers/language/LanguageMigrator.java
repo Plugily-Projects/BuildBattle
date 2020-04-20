@@ -174,7 +174,7 @@ public class LanguageMigrator {
           MessageUtils.gonnaMigrate();
           Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Build Battle is migrating config.yml to the new file format...");
           Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Don't worry! Old config.yml will be renamed not overridden!");
-          file.renameTo(new File(plugin.getDataFolder(), "bbold_" + file + ".yml"));
+          file.renameTo(new File(plugin.getDataFolder() + "/bbold_" + file + ".yml"));
           Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Renamed file " + file + ".yml");
           break;
       }
@@ -377,7 +377,7 @@ public class LanguageMigrator {
           MigratorUtils.insertAfterLine(file, "Commands:", "  Type-Arena-Name: \"&cPlease type arena ID!\"");
           break;
         case 14:
-          MigratorUtils.insertAfterLine(file, "Guess-The-Build:", "    Theme-Guessed: \"&eAll players guessed the theme!\"");
+          MigratorUtils.insertAfterLine(file, "Theme-Was-Subtitle:", "    Theme-Guessed: \"&eAll players guessed the theme!\"");
           break;
       }
       version++;
