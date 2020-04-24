@@ -49,7 +49,7 @@ public class VotesArgument {
           sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Invalid-Args"));
           return;
         }
-        if (args.length == 2 || (!args[1].equalsIgnoreCase("add") && args[1].equalsIgnoreCase("set"))) {
+        if (args.length == 2 || !(args[1].equalsIgnoreCase("add") && args[1].equalsIgnoreCase("set"))) {
           sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + ChatColor.RED + "Please type amount of super votes to add or set!");
           return;
         }
