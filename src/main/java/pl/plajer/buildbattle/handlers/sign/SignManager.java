@@ -191,13 +191,8 @@ public class SignManager implements Listener {
     Bukkit.getScheduler().runTaskTimer(plugin, () -> {
       for (ArenaSign arenaSign : arenaSigns) {
         Sign sign = arenaSign.getSign();
-        boolean updated = false;
         for (int i = 0; i < signLines.size(); i++) {
-          String format = formatSign(signLines.get(i), arenaSign.getArena());
-          if(!sign.getLine(i).equals(format)) {
-            sign.setLine(i, format);
-            updated = true;
-          }
+          sign.setLine(i, formatSign(signLines.get(i), arenaSign.getArena()));
         }
         if (plugin.getConfig().getBoolean("Signs-Block-States-Enabled", true) && arenaSign.getBehind() != null) {
           Block behind = arenaSign.getBehind();
@@ -234,9 +229,7 @@ public class SignManager implements Listener {
               break;
           }
         }
-        if(updated) {
-          sign.update();
-        }
+        sign.update();
       }
     }, 10, 10);
   }
