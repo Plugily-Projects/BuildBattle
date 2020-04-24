@@ -68,7 +68,7 @@ public class PlayerHeadsOption {
           return;
         }
         for (HeadsCategory category : registry.getPlayerHeadsRegistry().getCategories().keySet()) {
-          if (!category.getItemStack().isSimilar(e.getCurrentItem())) {
+          if (!category.getItemStack().getItemMeta().getDisplayName().equals(e.getCurrentItem().getItemMeta().getDisplayName())) {
             continue;
           }
           if (e.getWhoClicked().hasPermission(category.getPermission())) {

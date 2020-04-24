@@ -40,7 +40,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
 public class LanguageMigrator {
 
   public static final int LANGUAGE_FILE_VERSION = 15;
-  public static final int CONFIG_FILE_VERSION = 10;
+  public static final int CONFIG_FILE_VERSION = 9;
   private List<String> migratable = Arrays.asList("bungee", "config", "language", "mysql");
   private Main plugin;
 
@@ -52,6 +52,19 @@ public class LanguageMigrator {
     //check if using 2.0.0 releases
     if (lang.isSet("PREFIX") && lang.isSet("Unlocks-at-level")) {
       migrateToNewFormat();
+    }
+
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "config");
+    if(config.isSet("Build-Time")){
+      MessageUtils.gonnaMigrate();
+      Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Build Battle is migrating config.yml to the new file format...");
+      Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Don't worry! Old config.yml will be renamed not overridden!");
+      File file = new File(plugin.getDataFolder() + File.separator + "config.yml");
+      if (file.exists()) {
+        boolean rename = file.renameTo(new File(plugin.getDataFolder() + File.separator + "oldbb_config.yml"));
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Renamed file " + file);
+      }
+      plugin.saveDefaultConfig();
     }
 
     //initializes migrator to update files with latest values
@@ -78,11 +91,12 @@ public class LanguageMigrator {
       return;
     }
     Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[BuildBattle] System notify >> Your config file is outdated! Updating...");
-    File file = new File(plugin.getDataFolder() + "/config.yml");
-    File bungeefile = new File(plugin.getDataFolder() + "/bungee.yml");
 
     int version = plugin.getConfig().getInt("Version", CONFIG_FILE_VERSION - 1);
     updateConfigVersionControl(version);
+
+    File file = new File(plugin.getDataFolder() + "/config.yml");
+    File bungeefile = new File(plugin.getDataFolder() + "/bungee.yml");
 
     for (int i = version; i < CONFIG_FILE_VERSION; i++) {
       switch (i) {
@@ -169,13 +183,6 @@ public class LanguageMigrator {
               "    Full-Game: \"&4&lFULL\"\r\n" +
               "    Ending: \"&lEnding\"\r\n" +
               "    Restarting: \"&c&lRestarting\"\r\n");
-          break;
-        case 9:
-          MessageUtils.gonnaMigrate();
-          Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Build Battle is migrating config.yml to the new file format...");
-          Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Don't worry! Old config.yml will be renamed not overridden!");
-          file.renameTo(new File(plugin.getDataFolder() + "/bbold_" + file + ".yml"));
-          Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Renamed file " + file + ".yml");
           break;
       }
     }
