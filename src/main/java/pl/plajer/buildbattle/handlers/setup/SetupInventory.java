@@ -173,7 +173,7 @@ public class SetupInventory {
         p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7You can use PlaceholderAPI placeholders from our plugin! Check: https://wiki.plajer.xyz/minecraft/buildbattle/papi_placeholders.php"));
         break;
       case 4:
-        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Suggest new ideas for the plugin or vote on current ones! https://uservoice.plajer.xyz/index.php?id=BuildBattle"));
+        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Suggest new ideas for the plugin or vote on current ones! https://app.feedbacky.net/b/BuildBattle"));
         break;
       case 5:
         p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Console can execute /bba votes <add/set> [amount] (player) command! Add super votes via console!"));
