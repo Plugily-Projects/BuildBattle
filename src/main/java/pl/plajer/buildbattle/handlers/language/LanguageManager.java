@@ -68,6 +68,7 @@ public class LanguageManager {
   }
 
   private static void registerLocales() {
+    LocaleRegistry.registerLocale(new Locale("Basque", "Euskara", "eu", "POEditor contributors", Arrays.asList("basque", "euskara", "eu")));
     LocaleRegistry.registerLocale(new Locale("Chinese (Simplified)", "简体中文", "zh_CN", "POEditor contributors", Arrays.asList("简体中文", "中文", "chinese", "chinese_simplified", "cn")));
     LocaleRegistry.registerLocale(new Locale("Chinese (Traditional)", "简体中文", "zh_HK", "POEditor contributors", Arrays.asList("中文(傳統)", "中國傳統", "chinese_traditional", "zh_hk")));
     LocaleRegistry.registerLocale(new Locale("Czech", "Český", "cs_CZ", "POEditor contributors", Arrays.asList("czech", "cesky", "český", "cs")));
