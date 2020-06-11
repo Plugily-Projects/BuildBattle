@@ -16,6 +16,9 @@ That's all, matcher will stop when detects next line started with `###` match
 * Reworked whole Rewards
 * New file rewards.yml
 * Migrator for new config file as there are some more changes
+* Update setup tips Feedback page link
+* Randomjoin command will now longer send proper message when no arena is available
+* Fixed force start command when setting forced theme didn't set build time properly
 
 ### 4.3.2 Release
 * Added per particle disabler

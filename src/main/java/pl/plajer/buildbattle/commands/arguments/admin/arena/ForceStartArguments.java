@@ -21,6 +21,7 @@ package pl.plajer.buildbattle.commands.arguments.admin.arena;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
@@ -58,6 +59,7 @@ public class ForceStartArguments {
           arena.setTimer(0);
           if (args.length == 2 && arena instanceof SoloArena) {
             ((SoloArena) arena).setThemeVoteTime(false);
+            arena.setTimer(registry.getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, arena));
             arena.setTheme(args[1]);
           }
           registry.getPlugin().getChatManager().broadcast(arena, registry.getPlugin().getChatManager().colorMessage("In-Game.Messages.Admin-Messages.Set-Starting-In-To-0"));
