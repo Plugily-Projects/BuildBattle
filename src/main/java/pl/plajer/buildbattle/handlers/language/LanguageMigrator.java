@@ -25,6 +25,7 @@ import java.util.List;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import pl.plajer.buildbattle.Main;
@@ -55,7 +56,7 @@ public class LanguageMigrator {
     }
 
     FileConfiguration config = ConfigUtils.getConfig(plugin, "config");
-    if(config.isSet("Build-Time")){
+    if(config.isSet("Build-Time")) {
       MessageUtils.gonnaMigrate();
       Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Build Battle is migrating config.yml to the new file format...");
       Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Don't worry! Old config.yml will be renamed not overridden!");
@@ -65,6 +66,7 @@ public class LanguageMigrator {
         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Renamed file " + file);
       }
       plugin.saveDefaultConfig();
+      plugin.reloadConfig();
     }
 
     //initializes migrator to update files with latest values

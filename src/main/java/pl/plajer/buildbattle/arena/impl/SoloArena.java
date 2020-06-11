@@ -139,7 +139,7 @@ public class SoloArena extends BaseArena {
         break;
       case STARTING:
         for (Player player : getPlayers()) {
-          player.setExp((float) (getTimer() / getPlugin().getConfig().getDouble("Lobby-Starting-Time", 60)));
+          player.setExp((float) (getTimer() / getPlugin().getConfig().getDouble("Time-Manger." + getArenaType().getPrefix() + ".Lobby-Starting-Time", 60)));
           player.setLevel(getTimer());
         }
         if (getPlayers().size() < getMinimumPlayers() && !isForceStart()) {

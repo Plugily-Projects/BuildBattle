@@ -141,7 +141,7 @@ public class VoteMenu {
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         stack.setItemMeta(meta);
       }
-      setItem(stack, i * 9);
+      setItem(stack, (i * 9)-1);
       for (int j = 0; j < 6; j++) {
         setItem(new ItemBuilder(XMaterial.RED_STAINED_GLASS_PANE.parseItem()).build(), (i * 9) + 1 + j + 1);
       }

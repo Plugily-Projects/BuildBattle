@@ -39,6 +39,7 @@ import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.impl.GuessTheBuildArena;
 import pl.plajer.buildbattle.arena.impl.SoloArena;
 import pl.plajer.buildbattle.user.User;
+import pl.plajer.buildbattle.utils.Debugger;
 
 /**
  * @author Plajer
