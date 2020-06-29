@@ -23,6 +23,8 @@ That's all, matcher will stop when detects next line started with `###` match
 * Randomjoin command will now longer send proper message when no arena is available
 * Fixed force start command when setting forced theme didn't set build time properly
 * Added 1.16.x compatibility 
+* Fixed bungeemanager enable null text error
+* Added bungeemode Arena shuffler
 
 ### 4.3.2 Release
 * Added per particle disabler

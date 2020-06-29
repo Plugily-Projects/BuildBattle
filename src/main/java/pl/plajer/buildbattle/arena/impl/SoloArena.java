@@ -38,6 +38,7 @@ import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.api.event.game.BBGameEndEvent;
 import pl.plajer.buildbattle.api.event.game.BBGameStartEvent;
 import pl.plajer.buildbattle.arena.ArenaManager;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.arena.options.ArenaOption;
@@ -340,8 +341,9 @@ public class SoloArena extends BaseArena {
           if (ConfigUtils.getConfig(getPlugin(), "bungee").getBoolean("Shutdown-When-Game-Ends", false)) {
             getPlugin().getServer().shutdown();
           }
+          ArenaRegistry.shuffleBungeeArena();
           for (Player player : Bukkit.getOnlinePlayers()) {
-            ArenaManager.joinAttempt(player, this);
+            ArenaManager.joinAttempt(player, ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()));
           }
         }
     }

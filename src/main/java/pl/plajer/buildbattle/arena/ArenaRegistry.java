@@ -20,6 +20,7 @@ package pl.plajer.buildbattle.arena;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.Nullable;
 
@@ -48,6 +49,8 @@ public class ArenaRegistry {
 
   private static List<BaseArena> arenas = new ArrayList<>();
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
+
+  private static int bungeeArena = -999;
 
   public static List<BaseArena> getArenas() {
     return arenas;
@@ -204,4 +207,14 @@ public class ArenaRegistry {
     Debugger.debug(Debugger.Level.INFO, "Arenas registration completed");
   }
 
+  public static void shuffleBungeeArena() {
+    bungeeArena = new Random().nextInt(arenas.size());
+  }
+
+  public static int getBungeeArena() {
+    if (bungeeArena == -999) {
+      bungeeArena = new Random().nextInt(arenas.size());
+    }
+    return bungeeArena;
+  }
 }
