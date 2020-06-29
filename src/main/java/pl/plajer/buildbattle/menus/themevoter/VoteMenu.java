@@ -86,7 +86,7 @@ public class VoteMenu {
     for (int i = 0; i < randomThemes.size(); i++) {
       ItemStack item;
       //todo strict legacy materials class
-      if (plugin.is1_14_R1() || plugin.is1_15_R1()) {
+      if (plugin.is1_14_R1() || plugin.is1_15_R1() || plugin.is1_16_R1()) {
         item = new ItemStack(Material.valueOf("LEGACY_SIGN"));
       } else {
         item = new ItemStack(Material.SIGN);

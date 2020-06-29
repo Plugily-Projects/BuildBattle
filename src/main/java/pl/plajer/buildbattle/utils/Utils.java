@@ -100,7 +100,7 @@ public class Utils {
         SkullMeta headMeta = (SkullMeta) head.getItemMeta();
         GameProfile profile = new GameProfile(UUID.randomUUID(), null);
         profile.getProperties().put("textures", new Property("textures", url));
-        if (plugin.is1_15_R1()) {
+        if (plugin.is1_15_R1() || plugin.is1_16_R1()) {
             try {
                 Method mtd = headMeta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
                 mtd.setAccessible(true);
