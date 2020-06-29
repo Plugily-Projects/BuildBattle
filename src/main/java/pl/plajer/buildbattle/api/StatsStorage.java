@@ -35,6 +35,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
+import pl.plajer.buildbattle.user.data.MysqlManager;
 import pl.plajer.buildbattle.utils.Debugger;
 import pl.plajer.buildbattle.utils.MessageUtils;
 import pl.plajer.buildbattle.utils.Utils;
@@ -60,7 +61,7 @@ public class StatsStorage {
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       try (Connection connection = plugin.getMysqlDatabase().getConnection();
            Statement statement = connection.createStatement();
-           ResultSet set = statement.executeQuery("SELECT UUID, " + stat.getName() + " FROM buildbattlestats ORDER BY " + stat.getName())) {
+           ResultSet set = statement.executeQuery("SELECT UUID, " + stat.getName() + " FROM " + ((MysqlManager) plugin.getUserManager().getDatabase()).getTableName() + " ORDER BY " + stat.getName())) {
         Map<java.util.UUID, java.lang.Integer> column = new LinkedHashMap<>();
         while (set.next()) {
           column.put(java.util.UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));

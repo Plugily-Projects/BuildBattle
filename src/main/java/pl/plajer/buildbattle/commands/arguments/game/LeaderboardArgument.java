@@ -33,6 +33,7 @@ import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.commands.arguments.ArgumentsRegistry;
 import pl.plajer.buildbattle.commands.arguments.data.CommandArgument;
+import pl.plajer.buildbattle.user.data.MysqlManager;
 
 /**
  * @author Plajer
@@ -80,7 +81,7 @@ public class LeaderboardArgument {
               if (registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
                 try (Connection connection = registry.getPlugin().getMysqlDatabase().getConnection();
                      Statement statement = connection.createStatement();
-                     ResultSet set = statement.executeQuery("SELECT name FROM buildbattlestats WHERE UUID='" + current.toString() + "'")) {
+                     ResultSet set = statement.executeQuery("SELECT name FROM " + ((MysqlManager) registry.getPlugin().getUserManager().getDatabase()).getTableName() + " WHERE UUID='" + current.toString() + "'")) {
                   if (set.next()) {
                     String message = registry.getPlugin().getChatManager().colorMessage("Commands.Statistics.Format");
                     message = StringUtils.replace(message, "%position%", String.valueOf(i + 1));

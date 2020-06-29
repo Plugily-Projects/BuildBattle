@@ -13,6 +13,8 @@ That's all, matcher will stop when detects next line started with `###` match
 ### 4.4.0 Release
 * GuessTheBuild release
 * Added short commands such as start and leave
+* Added option to disable separate chat
+* Added possibility to change table name of mysql database
 * Tried to fix Server crash on 1.15 
 * Reworked whole Rewards
 * New file rewards.yml
