@@ -193,6 +193,10 @@ public class LanguageMigrator {
           MigratorUtils.addNewLines(file, "\r\n" +
                   "# Should we enable short commands such as /start and /leave\r\n" +
                   "Enable-Short-Commands: false\r\n");
+          MigratorUtils.addNewLines(file, "\r\n" +
+                  "# Should we disable all chat related stuff?\r\n" +
+                  "# It will disable the separated chat, for example\r\n" +
+                  "Disable-Separate-Chat: false\r\n");
           break;
       }
     }
