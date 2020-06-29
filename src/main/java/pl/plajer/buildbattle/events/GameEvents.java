@@ -308,6 +308,22 @@ public class GameEvents implements Listener {
   }
 
   @EventHandler
+  public void playerCommandExecution(PlayerCommandPreprocessEvent e) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.ENABLE_SHORT_COMMANDS)) {
+      Player player = e.getPlayer();
+      if (e.getMessage().equalsIgnoreCase("/start")) {
+        player.performCommand("bba forcestart");
+        e.setCancelled(true);
+        return;
+      }
+      if (e.getMessage().equalsIgnoreCase("/leave")) {
+        player.performCommand("bb leave");
+        e.setCancelled(true);
+      }
+    }
+  }
+
+  @EventHandler
   public void onBucketEmpty(PlayerBucketEmptyEvent e) {
     BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
     if (arena == null) {

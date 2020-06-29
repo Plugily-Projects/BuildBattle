@@ -185,6 +185,9 @@ Whitelisted-Commands:
   - me
   - help
 
+# Should we enable short commands such as /start and /leave
+Enable-Short-Commands: false
+
 # Should blocks behind game signs change their color based on game state?
 # They will change color to:
 # - white (waiting for players) stained glass
@@ -215,6 +218,6 @@ Command-Instead-Of-Head-Menu:
   Command: heads
 
 # Don't modify.
-Version: 9
+Version: 10
 
 # No way! You've reached the end! But... where's the dragon!?
