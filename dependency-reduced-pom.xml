@@ -4,7 +4,7 @@
   <groupId>pl.plajer</groupId>
   <artifactId>buildbattle</artifactId>
   <name>BuildBattle</name>
-  <version>4.4.0-b2</version>
+  <version>4.4.0-b3</version>
   <build>
     <extensions>
       <extension>
