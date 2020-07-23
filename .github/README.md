@@ -6,6 +6,9 @@ BuildBattle is a Minecraft minigame designed for small and big servers. This min
 The goal is to build the best you can! You must compete with other players in this building game. Who will be the best?
 Have fun using it! Leave a good rating if you really like it.
 
+## Want to contribute in this project?
+[**💣 Issues Reporting (Discord)**](https://discordapp.com/invite/UXzUdTP)        [**❤ Make Donation**](https://www.paypal.me/plugilyprojects)
+
 # Credits
 ## Open Source Libraries
 | Library                                                     | Author                                          | License                                                                    |
