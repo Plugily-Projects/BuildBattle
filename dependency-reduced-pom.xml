@@ -4,13 +4,13 @@
   <groupId>pl.plajer</groupId>
   <artifactId>buildbattle</artifactId>
   <name>BuildBattle</name>
-  <version>4.4.0-b3</version>
+  <version>4.4.0</version>
   <build>
     <extensions>
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
-        <artifactId>wagon-ftp</artifactId>
-        <version>3.0.0</version>
+        <artifactId>wagon-ssh</artifactId>
+        <version>3.4.1</version>
       </extension>
     </extensions>
     <resources>
@@ -39,6 +39,16 @@
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>3.0.1</version>
+        <executions>
+          <execution>
+            <id>attach-javadoc</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>jar</goal>
+              <goal>javadoc</goal>
+            </goals>
+          </execution>
+        </executions>
         <configuration>
           <windowtitle>Build Battle API docs for v${project.version}</windowtitle>
           <description>Minecraft building minigame.
@@ -276,6 +286,30 @@
     </dependency>
     <dependency>
       <groupId>de.simonsator</groupId>
+      <artifactId>Party-and-Friends-MySQL-Edition-Spigot-API</artifactId>
+      <version>1.3.2</version>
+      <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>MVdWPlaceholderAPI</artifactId>
+          <groupId>be.maximvdw</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>de.simonsator</groupId>
+      <artifactId>Spigot-Party-API-For-RedisBungee</artifactId>
+      <version>1.0-SNAPSHOT</version>
+      <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>jedis</artifactId>
+          <groupId>redis.clients</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>de.simonsator</groupId>
       <artifactId>partyandfriends</artifactId>
       <version>1.0.52</version>
       <scope>system</scope>
@@ -284,12 +318,13 @@
   </dependencies>
   <distributionManagement>
     <repository>
-      <id>plajer-lair-repo</id>
-      <url>ftp://185.238.72.89</url>
+      <id>plugily-projects-repo</id>
+      <url>sftp://167.86.90.57/home/maven-repo-mc/maven</url>
     </repository>
     <site>
-      <id>plajer-lair-java-docs</id>
-      <url>ftp://185.238.72.89</url>
+      <id>plugily-projects-java-docs</id>
+      <name>BuildBattle</name>
+      <url>sftp://167.86.90.57/home/maven-javadocs-mc/jd</url>
     </site>
   </distributionManagement>
   <properties>

@@ -81,6 +81,10 @@ public class UserManager {
     database.saveStatistic(user, stat);
   }
 
+  public void saveAllStatistic(User user) {
+    database.saveAllStatistic(user);
+  }
+
   public void loadStatistics(User user) {
     database.loadStatistics(user);
   }

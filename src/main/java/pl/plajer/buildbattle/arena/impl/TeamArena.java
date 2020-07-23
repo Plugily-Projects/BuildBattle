@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
+import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
@@ -99,6 +100,15 @@ public class TeamArena extends SoloArena {
         }
         getVotingPlot().setPoints(getVotingPlot().getPoints() + points);
         getPlugin().getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
+      }
+      if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER)){
+        String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voted-For-Player-Plot").replace("%PLAYER%", getVotingPlot().getOwners().get(0).getName());
+        for (Player p : getPlayers()) {
+          String owner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
+          owner = formatWinners(getVotingPlot(), owner);
+          p.sendTitle(owner, null, 5, 40, 5);
+          p.sendMessage(getPlugin().getChatManager().getPrefix() + message);
+        }
       }
     }
     for (Plot p : getPlotManager().getPlots()) {

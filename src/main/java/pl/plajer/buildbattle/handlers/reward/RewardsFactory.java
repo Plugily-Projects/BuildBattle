@@ -42,7 +42,7 @@ public class RewardsFactory {
       return;
     }
     for (Player p : arena.getPlayers()) {
-      performReward(p, type, 0);
+      performReward(p, type, -1);
     }
   }
 
@@ -61,6 +61,11 @@ public class RewardsFactory {
     engine.setValue("arena", arena);
     for (Reward reward : rewards) {
       if (reward.getType() == type) {
+        if (reward.getPlace() != -1){
+          if (reward.getPlace() != place){
+            continue;
+          }
+        }
         //cannot execute if chance wasn't met
         if (reward.getChance() != -1 && ThreadLocalRandom.current().nextInt(0, 100) > reward.getChance()) {
           continue;

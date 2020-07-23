@@ -9,7 +9,6 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
-
 ### 4.4.0 Release
 * GuessTheBuild release
 * Added short commands such as start and leave
@@ -25,6 +24,24 @@ That's all, matcher will stop when detects next line started with `###` match
 * Added 1.16.x compatibility 
 * Fixed bungeemanager enable null text error
 * Added bungeemode Arena shuffler
+* Fixed biomes on 1.16 (nosuchmethoderror)
+* Changed mysql updates to do only one instead of more than 10 (should improve performance)
+* Added option to announce plot owner after voting
+* Fixed last plot on teammode can get double points
+* Fixed rewards are ignoring the place
+* Fixed HandlerList Error
+* Added an option to disable party features
+* Added missing 1.14 & 1.15 & 1.16 Materials/Biomes
+* Added adjustable floor blacklist
+* Fixed water and lava as floor material
+* Optimized floor change to get all materials
+* Fixed team member leave plot reset
+* Added players will get kicked on bungeemode when arena is full and has no rights
+* Added an event to cancel fire spread on the plot
+* Fixed water/lava flow and piston outside of plot in worst cases
+* Changed increased npc finder to radius of 5 to the plot
+* Added the new particles from 1.13 and up 
+* Updated particles.yml (Thanks Fabian Adrian #6234)
 
 ### 4.3.2 Release
 * Added per particle disabler

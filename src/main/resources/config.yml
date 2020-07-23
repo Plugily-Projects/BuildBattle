@@ -25,7 +25,7 @@ Boss-Bar-Enabled: false
 
 # Should we hook into bungee cord? (If you wanna use arena per server option)
 # You STILL need to use external addon for HUB server game signs
-# Check here for more info: https://wiki.plajer.xyz/minecraft/buildbattle/addons.php#bungee-signs-not-official
+# Check here for more info: https://wiki.plugily.xyz/minecraft/buildbattle/addons.php#bungee-signs-not-official
 BungeeActivated: false
 
 # Enable Inventory Manager for your games? (VERY USEFUL feature for MULTI ARENA)
@@ -33,7 +33,7 @@ BungeeActivated: false
 # Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions
 InventoryManager: true
 
-# Basic permissions for game, permissions explained here: https://wiki.plajer.xyz/minecraft/buildbattle/cmds_and_perms.php#basic-permissions
+# Basic permissions for game, permissions explained here: https://wiki.plugily.xyz/minecraft/buildbattle/cmds_and_perms.php#basic-permissions
 Basic-Permissions:
   Full-Games-Permission: "buildbattle.fullgames"
   # Permissions to edit/create arenas
@@ -175,7 +175,13 @@ Blacklisted-Themes:
 # Blacklisted item names, you can't use them while building.
 Blacklisted-Item-Names:
   - tnt
-  - diamond_block
+  - water
+
+# Blacklisted floor materials, you can't use them for the floor.
+Blacklisted-Floor-Materials:
+  - MOB_SPAWNER
+  - TNT
+  - AIR
 
 # Should we block every not Build Battle associated commands in game?
 Block-Commands-In-Game: true
@@ -221,7 +227,14 @@ Command-Instead-Of-Head-Menu:
   # The command that should be executed
   Command: heads
 
+#Disable Party features of external party plugins (such as PAF, Parties ...)
+Disable-Parties: true
+
+#Announce the plot owner after voting stage
+#default false - plot owner will be announced at the beginning
+Announce-PlotOwner-Later: false
+
 # Don't modify.
-Version: 10
+Version: 13
 
 # No way! You've reached the end! But... where's the dragon!?

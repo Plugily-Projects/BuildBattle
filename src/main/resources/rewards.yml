@@ -28,7 +28,7 @@
 #
 #                               All script provided objects:
 #            player - Player object (API methods https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/Player.html)
-#    arena - BuildBattle BaseArena (API methods https://jd.plajer.xyz/minecraft/buildbattle/pl/plajer/buildbattle/arena/impl/BaseArena.html)
+#    arena - BuildBattle BaseArena (API methods https://jd.plugily.xyz/minecraft/buildbattle/pl/plajer/buildbattle/arena/impl/BaseArena.html)
 #            server - Bukkit server object (API methods https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Server.html)
 #
 #                            Whole documentation of scripts soon!

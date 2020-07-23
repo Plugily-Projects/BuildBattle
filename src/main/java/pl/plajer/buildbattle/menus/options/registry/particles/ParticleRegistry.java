@@ -49,7 +49,8 @@ import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
  */
 public class ParticleRegistry {
 
-  private Inventory inventory;
+  private Inventory page1;
+  private Inventory page2;
   private List<String> blackListedParticles = Arrays.asList("BLOCK_CRACK", "ITEM_CRACK", "ITEM_TAKE", "BLOCK_DUST", "MOB_APPEARANCE", "FOOTSTEP", "REDSTONE");
   private Set<ParticleItem> registeredParticles = new HashSet<>();
   private Main plugin;
@@ -66,7 +67,7 @@ public class ParticleRegistry {
     Debugger.debug(Debugger.Level.TASK, "Registering particles!");
     int i = 0;
     for (Particle particle : Particle.values()) {
-      if (i >= 52) {
+      if (i >= 100) {
         Debugger.debug(Debugger.Level.WARN, "There are too many particles to register! Menu can't hold any more!");
         break;
       }
@@ -84,8 +85,8 @@ public class ParticleRegistry {
         continue;
       }
       ParticleItem particleItem = new ParticleItem();
-      particleItem.setItemStack(new ItemBuilder(XMaterial.fromString(config
-          .getString(particle.toString() + ".material-name").toUpperCase()).parseItem())
+      particleItem.setItemStack(new ItemBuilder(XMaterial.matchXMaterial(config
+          .getString(particle.toString() + ".material-name").toUpperCase()).get().parseItem())
           .name(plugin.getChatManager().colorRawMessage(config.getString(particle.toString() + ".displayname")))
           .lore(config.getStringList(particle.toString() + ".lore")
               .stream().map(lore -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()))
@@ -118,25 +119,52 @@ public class ParticleRegistry {
   }
 
   private void registerInventory() {
-    Inventory inv = Bukkit.createInventory(null, Utils.serializeInt(registeredParticles.size() + 1),
+    Inventory page1 = Bukkit.createInventory(null, Utils.serializeInt(54),
         plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.Inventory-Name"));
+    Inventory page2 = Bukkit.createInventory(null, Utils.serializeInt(54),
+            plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.Inventory-Name"));
+
+    int i = 0;
     for (ParticleItem item : registeredParticles) {
-      inv.addItem(item.getItemStack());
+      if (i > 50){
+        page2.addItem(item.getItemStack());
+      } else {
+        page1.addItem(item.getItemStack());
+      }
+
+      i++;
     }
-    inv.setItem(Utils.serializeInt(registeredParticles.size()) - 1, new ItemBuilder(new ItemStack(Material.REDSTONE_BLOCK))
+    page1.setItem(53, new ItemBuilder(new ItemStack(Material.REDSTONE_BLOCK))
         .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))
         .lore(Collections.singletonList(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Lore")))
         .build());
-    inv.addItem(Utils.getGoBackItem());
-    inventory = inv;
+    page2.setItem(53, new ItemBuilder(new ItemStack(Material.REDSTONE_BLOCK))
+            .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))
+            .lore(Collections.singletonList(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Lore")))
+            .build());
+    page1.setItem(52, Utils.getGoBackItem());
+    page2.setItem(52, Utils.getGoBackItem());
+    page1.setItem(51, new ItemBuilder(new ItemStack(Material.STONE_BUTTON))
+            .name("§7-->")
+            .build());
+    setPage1(page1);
+    setPage2(page2);
   }
 
-  public Inventory getInventory() {
-    return inventory;
+  public Inventory getPage1() {
+    return page1;
   }
 
-  public void setInventory(Inventory inventory) {
-    this.inventory = inventory;
+  public void setPage1(Inventory inventory) {
+    this.page1 = inventory;
+  }
+
+  public Inventory getPage2() {
+    return page2;
+  }
+
+  public void setPage2(Inventory inventory) {
+    this.page2 = inventory;
   }
 
   @Nullable

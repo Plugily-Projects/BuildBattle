@@ -451,7 +451,7 @@ public class GuessTheBuildArena extends BaseArena {
 
   public void addWhoGuessed(Player player) {
     whoGuessed.add(player);
-    getPlugin().getRewardsHandler().performReward(player, Reward.RewardType.GTB_GUESS, 0);
+    getPlugin().getRewardsHandler().performReward(player, Reward.RewardType.GTB_GUESS, -1);
     //decrease game time by guessed theme
     if (getTimer() >= 15) {
       setTimer(getTimer() - getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.TIME_SHORTENER, this));
@@ -461,7 +461,7 @@ public class GuessTheBuildArena extends BaseArena {
       setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.ALL_GUESSED, this));
       for(Player players : getPlayers()){
         players.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Guessed"));
-        getPlugin().getRewardsHandler().performReward(players, Reward.RewardType.GTB_ALL_GUESSED, 0);
+        getPlugin().getRewardsHandler().performReward(players, Reward.RewardType.GTB_ALL_GUESSED, -1);
       }
     }
   }

@@ -66,7 +66,7 @@ public class VotePoll {
       }
       votedThemes.put(playerVote.get(player), votedThemes.get(playerVote.get(player)) - 1);
     } else {
-      plugin.getRewardsHandler().performReward(player, Reward.RewardType.VOTE, 0);
+      plugin.getRewardsHandler().performReward(player, Reward.RewardType.VOTE, -1);
     }
     votedThemes.put(theme, votedThemes.getOrDefault(theme, 0) + 1);
     playerVote.put(player, theme);

@@ -24,6 +24,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
+import org.bukkit.inventory.ItemStack;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.menus.options.MenuOption;
@@ -47,33 +48,27 @@ public class FloorChangeOption {
       @Override
       public void onClick(InventoryClickEvent e) {
         BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+        ItemStack itemStack = e.getCursor();
         if (arena == null) {
           return;
         }
-        if (e.getCursor() == null) {
+        if (itemStack == null) {
           return;
         }
-        if (!((e.getCursor().getType().isBlock() && e.getCursor().getType().isSolid()) || e.getCursor().getType() == Material.WATER_BUCKET || e.getCursor().getType() == Material.LAVA_BUCKET)) {
+        Material material = itemStack.getType();
+        if (material != XMaterial.WATER_BUCKET.parseMaterial() && material != XMaterial.LAVA_BUCKET.parseMaterial()){
+            if (!(material.isBlock() && material.isSolid() && material.isOccluding())) {
+              return;
+            }
+        }
+        if (registry.getPlugin().getConfigPreferences().getFloorBlacklist().contains(material)) {
           return;
         }
-        //todo blacklist
-        if (e.getCursor().getType() == Material.IRON_TRAPDOOR || e.getCursor().getType() == Material.ACACIA_DOOR || e.getCursor().getType() == Material.BIRCH_DOOR
-            || e.getCursor().getType() == Material.JUNGLE_DOOR || e.getCursor().getType() == Material.SPRUCE_DOOR || e.getCursor().getType() == Material.IRON_DOOR
-            || e.getCursor().getType() == Material.CHEST || e.getCursor().getType() == Material.TRAPPED_CHEST || e.getCursor().getType() == Material.LADDER
-            || e.getCursor().getType() == Material.JUNGLE_FENCE_GATE || e.getCursor().getType() == Material.SIGN || e.getCursor().getType() == Material.WALL_SIGN
-            || e.getCursor().getType() == Material.CACTUS || e.getCursor().getType() == Material.ENDER_CHEST || e.getCursor().getType() == Material.TNT || e.getCursor().getType() == Material.AIR) {
-          e.setCancelled(true);
-          return;
-        }
-        if (!e.getCursor().getType().isBlock() || !e.getCursor().getType().isOccluding()) {
-          e.setCancelled(true);
-          return;
-        }
-
-        arena.getPlotManager().getPlot((Player) e.getWhoClicked()).changeFloor(e.getCursor().getType(), e.getCursor().getData().getData());
+        byte materialData = XMaterial.matchXMaterial(itemStack).getData();
+        arena.getPlotManager().getPlot((Player) e.getWhoClicked()).changeFloor(material, materialData);
         e.getWhoClicked().sendMessage(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Floor.Floor-Changed"));
-        e.getCursor().setAmount(0);
-        e.getCursor().setType(Material.AIR);
+        itemStack.setAmount(0);
+        itemStack.setType(Material.AIR);
         e.getCurrentItem().setType(Material.AIR);
         e.getWhoClicked().closeInventory();
         for (Entity entity : e.getWhoClicked().getNearbyEntities(5, 5, 5)) {

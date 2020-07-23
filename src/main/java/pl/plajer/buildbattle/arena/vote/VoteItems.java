@@ -54,7 +54,7 @@ public class VoteItems {
       if (!config.isSet(key + ".displayname")) {
         continue;
       }
-      ItemStack stack = new ItemBuilder(XMaterial.fromString(config.getString(key + ".material-name").toUpperCase()).parseItem())
+      ItemStack stack = new ItemBuilder(XMaterial.matchXMaterial(config.getString(key + ".material-name").toUpperCase()).get().parseItem())
           .name(JavaPlugin.getPlugin(Main.class).getChatManager().colorRawMessage(config.getString(key + ".displayname")))
           .build();
       if (config.getBoolean(key + ".report-item-function", false)) {

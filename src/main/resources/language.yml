@@ -80,7 +80,7 @@ Scoreboard:
         - ""
         - "&fArena: &e%ARENA_ID%"
         - ""
-        - "&ewww.plajer.xyz"
+        - "&ewww.plugily.xyz"
       Teams:
         - "&7Teams Mode"
         - "&fTime Left: &e%FORMATTED_TIME_LEFT%"
@@ -92,7 +92,7 @@ Scoreboard:
         - "&fTeammate:"
         - "&e%TEAMMATE%"
         - ""
-        - "&ewww.plajer.xyz"
+        - "&ewww.plugily.xyz"
       Guess-The-Build:
         - "&7Guess The Build Mode"
         - "&fBuilder:"
@@ -108,7 +108,7 @@ Scoreboard:
         - "&fTheme:"
         - "&c%THEME%"
         - ""
-        - "&ewww.plajer.xyz"
+        - "&ewww.plugily.xyz"
     Starting:
       - "&fPlayers: &e%PLAYERS%"
       - ""
@@ -116,17 +116,17 @@ Scoreboard:
       - ""
       - "&fStarting In: &e%TIMER%"
       - ""
-      - "&ewww.plajer.xyz"
+      - "&ewww.plugily.xyz"
     Ending-States:
       Classic:
         - "&e&lGAME ENDED"
         - ""
-        - "&ewww.plajer.xyz"
+        - "&ewww.plugily.xyz"
       Teams:
         - "&7Teams Mode"
         - "&e&lGAME ENDED"
         - ""
-        - "&ewww.plajer.xyz"
+        - "&ewww.plugily.xyz"
       Guess-The-Build:
         - "&7Guess The Build Mode"
         - ""
@@ -141,13 +141,13 @@ Scoreboard:
         - "&e9. &f%9%: &e%9_PTS%"
         - "&e10. &f%10%: &e%10_PTS%"
         - ""
-        - "&ewww.plajer.xyz"
+        - "&ewww.plugily.xyz"
     Waiting:
       - "&fPlayers: &e%PLAYERS%"
       - ""
       - "&fPlayers Needed: &e%MIN_PLAYERS%"
       - ""
-      - "&ewww.plajer.xyz"
+      - "&ewww.plugily.xyz"
 
 In-Game:
   Plugin-Prefix: "&6[&bBuildBattle&6] "
@@ -204,6 +204,8 @@ In-Game:
     Voting-Messages:
       Plot-Owner-Title: "&aPlot owner: &7%player%"
       Voting-For-Player-Plot: "&7Now voting for &e&l%PLAYER%'s &7plot!"
+      Voted-For-Player-Plot: "&7The plot owner was &e&l%PLAYER%&7!"
+      Vote-For-Next-Plot: "&7You can now vote for this plot!"
       Cant-Vote-Own-Plot: "&cYou can't vote for your plot!"
       Vote-Successful: "&aVoted successfully!"
       Winner-Title: "&eWINNER: &a%player%"
@@ -331,4 +333,4 @@ Signs:
     - "&5[%playersize%/%maxplayers%]"
 
 # Do not modify!
-File-Version-Do-Not-Edit: 15
+File-Version-Do-Not-Edit: 16

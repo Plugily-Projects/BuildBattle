@@ -18,7 +18,6 @@
 
 package pl.plajer.buildbattle.events;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -29,14 +28,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockDispenseEvent;
-import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.BlockSpreadEvent;
-import org.bukkit.event.block.LeavesDecayEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -64,6 +56,7 @@ import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.handlers.items.SpecialItem;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.utils.Utils;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -128,12 +121,12 @@ public class GameEvents implements Listener {
   }
 
   @EventHandler
-  public void onPistonExtendEvent(BlockPistonExtendEvent e) {
+  public void onPistonExtendEvent(BlockPistonExtendEvent event) {
     for (BaseArena arena : ArenaRegistry.getArenas()) {
       for (Plot buildPlot : arena.getPlotManager().getPlots()) {
-        for (Block block : e.getBlocks()) {
-          if (!buildPlot.getCuboid().isInWithMarge(block.getLocation(), -1) && buildPlot.getCuboid().isIn(e.getBlock().getLocation())) {
-            e.setCancelled(true);
+        for (Block block : event.getBlocks()) {
+          if (!buildPlot.getCuboid().isInWithMarge(block.getLocation(), -1) && buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
+            event.setCancelled(true);
           }
         }
       }
@@ -158,6 +151,9 @@ public class GameEvents implements Listener {
     for (BaseArena arena : ArenaRegistry.getArenas()) {
       for (Plot buildPlot : arena.getPlotManager().getPlots()) {
         if (!buildPlot.getCuboid().isIn(e.getToBlock().getLocation()) && buildPlot.getCuboid().isIn(e.getBlock().getLocation())) {
+          e.setCancelled(true);
+        }
+        if (!buildPlot.getCuboid().isInWithMarge(e.getToBlock().getLocation(), -1) && buildPlot.getCuboid().isIn(e.getToBlock().getLocation())) {
           e.setCancelled(true);
         }
       }
@@ -400,6 +396,29 @@ public class GameEvents implements Listener {
     }
   }
 
+  @EventHandler
+  public void onIgniteEvent(BlockIgniteEvent event) {
+    for (BaseArena arena : ArenaRegistry.getArenas()) {
+      for (Plot buildPlot : arena.getPlotManager().getPlots()) {
+        if (buildPlot.getCuboid().isInWithMarge(event.getBlock().getLocation(), 5)) {
+          event.setCancelled(true);
+        }
+      }
+    }
+  }
+
+  @EventHandler
+  public void onPistonRetractEvent(BlockPistonRetractEvent event) {
+    for (BaseArena arena : ArenaRegistry.getArenas()) {
+      for (Plot buildPlot : arena.getPlotManager().getPlots()) {
+        for (Block block : event.getBlocks()) {
+          if (!buildPlot.getCuboid().isInWithMarge(block.getLocation(), -1) && buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
+            event.setCancelled(true);
+          }
+        }
+      }
+    }
+  }
 
   @EventHandler
   public void onPlayerDropItem(PlayerDropItemEvent e) {
@@ -519,10 +538,12 @@ public class GameEvents implements Listener {
         return;
       }
       Material material = e.getPlayer().getInventory().getItemInMainHand().getType();
-      if (!material.isBlock() || !material.isOccluding()) {
-        return;
+      if (material != XMaterial.WATER_BUCKET.parseMaterial() && material != XMaterial.LAVA_BUCKET.parseMaterial()){
+        if (!(material.isBlock() && material.isSolid() && material.isOccluding())) {
+          return;
+        }
       }
-      if (plugin.getConfigPreferences().getItemBlacklist().contains(material)) {
+      if (plugin.getConfigPreferences().getFloorBlacklist().contains(material)) {
         return;
       }
       arena.getPlotManager().getPlot(e.getPlayer()).changeFloor(material, e.getPlayer().getInventory().getItemInMainHand().getData().getData());

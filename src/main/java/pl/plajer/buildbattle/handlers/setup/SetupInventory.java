@@ -42,7 +42,7 @@ import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
  */
 public class SetupInventory {
 
-  public static final String VIDEO_LINK = "https://tutorial.plajer.xyz";
+  public static final String VIDEO_LINK = "https://tutorial.plugily.xyz";
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
   private Inventory inventory;
 
@@ -164,13 +164,13 @@ public class SetupInventory {
         p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Plajer-Lair/BuildBattle"));
         break;
       case 1:
-        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Help us translating plugin to your language here: https://translate.plajer.xyz"));
+        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Help us translating plugin to your language here: https://translate.plugily.xyz"));
         break;
       case 2:
-        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Download some free maps! Get them here: https://wiki.plajer.xyz/minecraft/buildbattle/free_maps.php"));
+        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Download some free maps! Get them here: https://wiki.plugily.xyz/minecraft/buildbattle/free_maps.php"));
         break;
       case 3:
-        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7You can use PlaceholderAPI placeholders from our plugin! Check: https://wiki.plajer.xyz/minecraft/buildbattle/papi_placeholders.php"));
+        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7You can use PlaceholderAPI placeholders from our plugin! Check: https://wiki.plugily.xyz/minecraft/buildbattle/papi_placeholders.php"));
         break;
       case 4:
         p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Suggest new ideas for the plugin or vote on current ones! https://app.feedbacky.net/b/BuildBattle"));

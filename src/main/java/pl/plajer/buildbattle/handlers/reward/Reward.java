@@ -72,7 +72,7 @@ public class Reward {
     return chance;
   }
 
-  public int getPlaceExecute() {
+  public int getPlace() {
     return place;
   }
 

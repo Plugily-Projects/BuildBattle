@@ -20,6 +20,8 @@ package pl.plajer.buildbattle.handlers.party;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import pl.plajer.buildbattle.ConfigPreferences;
+import pl.plajer.buildbattle.Main;
 
 /**
  * @author Plajer
@@ -28,15 +30,17 @@ import org.bukkit.entity.Player;
  */
 public class PartySupportInitializer {
 
-  public PartyHandler initialize() {
+  public PartyHandler initialize(Main plugin) {
     PartyHandler partyHandler;
+    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_PARTIES)){
     if (Bukkit.getServer().getPluginManager().getPlugin("Parties") != null) {
       return new PartiesPartyHandlerImpl();
     } else if (Bukkit.getServer().getPluginManager().getPlugin("Spigot-Party-API-PAF") != null) {
       return new PAFBPartyHandlerImpl();
     } else if (Bukkit.getServer().getPluginManager().getPlugin("PartyAndFriends") != null) {
       return new PAFSPartyHandlerImpl();
-    } else {
+    }
+    }
       partyHandler = new PartyHandler() {
         @Override
         public boolean isPlayerInParty(Player player) {
@@ -58,7 +62,6 @@ public class PartySupportInitializer {
           return PartyPluginType.NONE;
         }
       };
-    }
     return partyHandler;
   }
 

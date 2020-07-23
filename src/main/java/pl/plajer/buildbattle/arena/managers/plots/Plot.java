@@ -156,7 +156,7 @@ public class Plot {
       p.resetPlayerTime();
     }
     for (Entity entity : cuboid.getCenter().getWorld().getEntities()) {
-      if (cuboid.isInWithMarge(entity.getLocation(), 3)) {
+      if (cuboid.isInWithMarge(entity.getLocation(), 5)) {
         if (plugin.getServer().getPluginManager().isPluginEnabled("Citizens") && CitizensAPI.getNPCRegistry().isNPC(entity)) {
           continue;
         }
@@ -174,12 +174,19 @@ public class Plot {
           if (!p.getWorld().equals(chunk.getWorld())) {
             continue;
           }
-          Utils.sendPacket(p, Utils.getNMSClass("PacketPlayOutMapChunk").getConstructor(Utils.getNMSClass("Chunk"), int.class)
-              .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535));
+          if (plugin.is1_16_R1()) {
+            Utils.sendPacket(p, Utils.getNMSClass("PacketPlayOutMapChunk").getConstructor(Utils.getNMSClass("Chunk"), int.class, boolean.class)
+                    .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535, false));
+          } else {
+            Utils.sendPacket(p, Utils.getNMSClass("PacketPlayOutMapChunk").getConstructor(Utils.getNMSClass("Chunk"), int.class)
+                    .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535));
+          }
         }
       }
-    } catch (ReflectiveOperationException ignored) {/*continue safely*/}
-    changeFloor(XMaterial.fromString(plugin.getConfig().getString("Default-Floor-Material-Name", "LOG").toUpperCase()).parseMaterial());
+    } catch (ReflectiveOperationException exception) {
+      exception.printStackTrace();
+    }
+    changeFloor(XMaterial.matchXMaterial(plugin.getConfig().getString("Default-Floor-Material-Name", "LOG").toUpperCase()).get().parseMaterial());
     cuboid.getCenter().getWorld().setBiome(cuboid.getMinPoint().getBlockX(), cuboid.getMaxPoint().getBlockZ(), plotDefaultBiome);
     BBPlotResetEvent event = new BBPlotResetEvent(arena, this);
     Bukkit.getServer().getPluginManager().callEvent(event);

@@ -37,6 +37,8 @@ import pl.plajer.buildbattle.api.event.game.BBGameLeaveEvent;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.impl.GuessTheBuildArena;
 import pl.plajer.buildbattle.arena.impl.SoloArena;
+import pl.plajer.buildbattle.arena.impl.TeamArena;
+import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.handlers.ChatManager;
 import pl.plajer.buildbattle.handlers.PermissionManager;
 import pl.plajer.buildbattle.handlers.items.SpecialItem;
@@ -117,7 +119,11 @@ public class ArenaManager {
       }
     }
     if ((arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING)) {
-      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Arena-Started"));
+      if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+        player.kickPlayer(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Arena-Started"));
+      } else {
+        player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Arena-Started"));
+      }
       return;
     }
     if (arena.getPlayers().size() >= arena.getMaximumPlayers() && arena.getArenaState() == ArenaState.STARTING) {
@@ -187,8 +193,15 @@ public class ArenaManager {
     arena.getScoreboardManager().removeScoreboard(user);
     arena.removePlayer(player);
     plugin.getChatManager().broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
-    if (arena.getPlotManager().getPlot(player) != null) {
-      arena.getPlotManager().getPlot(player).fullyResetPlot();
+    Plot plot = arena.getPlotManager().getPlot(player);
+    if (plot != null) {
+      if (arena instanceof TeamArena) {
+        plot.getOwners().remove(player);
+        if(plot.getOwners().size() > 1){
+          plot.fullyResetPlot();
+        }
+      } else
+      plot.fullyResetPlot();
     }
     if (arena instanceof GuessTheBuildArena) {
       ((GuessTheBuildArena) arena).getWhoGuessed().remove(player);
