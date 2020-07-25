@@ -227,6 +227,12 @@ Command-Instead-Of-Head-Menu:
   # The command that should be executed
   Command: heads
 
+# Enable an command on report item click
+Run-Command-On-Report:
+  Enabled: false
+  # The command that should be executed - Placeholder: %reported%, %reporter%
+  Command: kick %reported%
+
 #Disable Party features of external party plugins (such as PAF, Parties ...)
 Disable-Parties: true
 
@@ -235,6 +241,6 @@ Disable-Parties: true
 Announce-PlotOwner-Later: false
 
 # Don't modify.
-Version: 13
+Version: 14
 
 # No way! You've reached the end! But... where's the dragon!?

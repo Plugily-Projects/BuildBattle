@@ -82,7 +82,6 @@ import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 //todo arenas handler recode
 //todo new debugger
 //todo inventoryframework
-//todo strict legacy materials class
 public class Main extends JavaPlugin {
 
   private ExceptionLogHandler exceptionLogHandler;

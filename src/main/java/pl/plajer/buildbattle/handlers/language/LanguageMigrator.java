@@ -41,7 +41,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
 public class LanguageMigrator {
 
   public static final int LANGUAGE_FILE_VERSION = 16;
-  public static final int CONFIG_FILE_VERSION = 13;
+  public static final int CONFIG_FILE_VERSION = 14;
   private List<String> migratable = Arrays.asList("bungee", "config", "language", "mysql");
   private Main plugin;
 
@@ -215,6 +215,14 @@ public class LanguageMigrator {
                   "#Announce the plot owner after voting stage\r\n" +
                   "#default false - plot owner will be announced at the beginning\r\n" +
                   "Announce-PlotOwner-Later: false \r\n");
+          break;
+        case 13:
+          MigratorUtils.addNewLines(file, "\r\n" +
+                  "# Enable an command on report item click\r\n" +
+                  "Run-Command-On-Report: \r\n" +
+                  "  Enabled: false\r\n" +
+                  "  # The command that should be executed - Placeholder: %reported%, %reporter%\r\n" +
+                  "  Command: kick %reported% \r\n");
           break;
       }
     }

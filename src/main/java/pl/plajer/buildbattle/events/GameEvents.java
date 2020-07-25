@@ -33,7 +33,9 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -273,6 +275,22 @@ public class GameEvents implements Listener {
       return;
     }
     if (!e.getCurrentItem().getItemMeta().getDisplayName().equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item"))) {
+      return;
+    }
+    e.setResult(Event.Result.DENY);
+    e.setCancelled(true);
+  }
+
+  @EventHandler
+  public void onOptionItemClick(InventoryInteractEvent e) {
+    if (!(e.getWhoClicked() instanceof Player) || !Utils.isNamed(e.getWhoClicked().getItemOnCursor())) {
+      return;
+    }
+    BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+    if (e.getWhoClicked().getItemOnCursor().getType() != Material.NETHER_STAR || arena == null) {
+      return;
+    }
+    if (!e.getWhoClicked().getItemOnCursor().getItemMeta().getDisplayName().equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item"))) {
       return;
     }
     e.setResult(Event.Result.DENY);

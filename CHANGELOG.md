@@ -42,6 +42,8 @@ That's all, matcher will stop when detects next line started with `###` match
 * Changed increased npc finder to radius of 5 to the plot
 * Added the new particles from 1.13 and up 
 * Updated particles.yml (Thanks Fabian Adrian #6234)
+* Added possibility to run command for report item
+* Fixed nether star (options menu) duplication
 
 ### 4.3.2 Release
 * Added per particle disabler

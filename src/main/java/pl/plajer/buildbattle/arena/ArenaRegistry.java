@@ -130,10 +130,8 @@ public class ArenaRegistry {
             arena = new TeamArena(id, plugin);
             break;
           case GUESS_THE_BUILD:
-            /* Disabled for beta version as it will cause bugs!
             arena = new GuessTheBuildArena(id, plugin);
             break;
-             */
           case SOLO:
           default:
             arena = new SoloArena(id, plugin);

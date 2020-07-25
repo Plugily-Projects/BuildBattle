@@ -37,8 +37,7 @@ public class ExceptionLogHandler extends Handler {
 
     //these classes if found in stacktraces won't be reported
     //to the Error Service
-    private List<String> blacklistedClasses = Arrays.asList("pl.plajer.buildbattle.user.data.MysqlManager", "pl.plajer.buildbattle.plajerlair.commonsbox.database.MysqlDatabase",
-            "pl.plajer.buildbattle.arena.impl.GuessTheBuildArena" /* GTB mode is in beta, disabled for reporting */);
+    private List<String> blacklistedClasses = Arrays.asList("pl.plajer.buildbattle.user.data.MysqlManager", "pl.plajer.buildbattle.plajerlair.commonsbox.database.MysqlDatabase");
     private Main plugin;
 
     public ExceptionLogHandler(Main plugin) {
@@ -62,11 +61,6 @@ public class ExceptionLogHandler extends Handler {
         if (!(throwable instanceof Exception) || !throwable.getClass().getSimpleName().contains("Exception")) {
             return;
         }
-    /*if (throwable.getStackTrace().length == 0
-        || throwable.getCause() != null ? !throwable.getCause().getStackTrace()[0].getClassName().contains("pl.plajer.buildbattle")
-        : !throwable.getStackTrace()[0].getClassName().contains("pl.plajer.buildbattle")) {
-      return;
-    }*/
         if (throwable.getStackTrace().length <= 0) {
             return;
         }
