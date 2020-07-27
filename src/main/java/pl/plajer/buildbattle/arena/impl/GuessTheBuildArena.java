@@ -203,6 +203,9 @@ public class GuessTheBuildArena extends BaseArena {
                 .replace("%NUM%", String.valueOf(getCurrentTheme().getTheme().length())));
           }
           for (Player player : getPlayers()){
+            if (getCurrentBuilder() == player){
+              continue;
+            }
             if (getWhoGuessed().contains(player)) {
               Utils.sendActionBar(player, getCurrentTheme().getTheme());
             }
