@@ -282,7 +282,7 @@ public class GuessTheBuildArena extends BaseArena {
           sendBuildLeftTimeMessage();
         }
         //if player leaves during round force next round
-        if (!currentBuilder.isOnline()) {
+        if (currentBuilder != null && !currentBuilder.isOnline()) {
           setTimer(1);
         }
         if (getTimer() != 0 && currentBuilder != null) {
