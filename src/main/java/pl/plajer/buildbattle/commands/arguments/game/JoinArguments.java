@@ -83,6 +83,7 @@ public class JoinArguments {
           switch (args[1].toLowerCase()) {
             case "solo":
             case "team":
+            case "gtb":
               BaseArena.ArenaType type = BaseArena.ArenaType.valueOf(args[1].toUpperCase());
               //first random get method
               Map<BaseArena, Integer> arenas = new HashMap<>();

@@ -51,6 +51,7 @@ import pl.plajer.buildbattle.handlers.reward.Reward;
 import pl.plajer.buildbattle.menus.themevoter.GTBTheme;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.utils.MessageUtils;
+import pl.plajer.buildbattle.utils.Utils;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
@@ -140,7 +141,7 @@ public class GuessTheBuildArena extends BaseArena {
             player.setAllowFlight(true);
             player.setFlying(true);
             player.getInventory().setItem(8, getPlugin().getOptionsRegistry().getMenuItem());
-            //to prevent Multiverse chaning gamemode bug
+            //to prevent Multiverse changing gamemode bug
             Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setGameMode(GameMode.SPECTATOR), 20);
           }
           Plot plot = getPlotManager().getPlot(getPlayers().get(round - 1));
@@ -156,11 +157,7 @@ public class GuessTheBuildArena extends BaseArena {
         break;
       case IN_GAME:
         if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-          if (getMaximumPlayers() <= getPlayers().size()) {
-            getPlugin().getServer().setWhitelist(true);
-          } else {
-            getPlugin().getServer().setWhitelist(false);
-          }
+          getPlugin().getServer().setWhitelist(getMaximumPlayers() <= getPlayers().size());
         }
         if (currentBuilder == null && !nextRoundCooldown) {
           currentBuilder = getPlayers().get(round - 1);
@@ -200,12 +197,29 @@ public class GuessTheBuildArena extends BaseArena {
             break;
           }
         }
-        if (getTimer() <= 90) {
+        if (getTimer() <= 90 && getCurrentTheme() != null) {
           if (getTimer() == 90) {
             getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Is-Long")
                 .replace("%NUM%", String.valueOf(getCurrentTheme().getTheme().length())));
           }
-          //todo add action bar word display
+          for (Player player : getPlayers()){
+            if (getWhoGuessed().contains(player)) {
+              Utils.sendActionBar(player, getCurrentTheme().getTheme());
+            }
+            StringBuilder actionbar = new StringBuilder();
+            for (int i = 0; i < getCurrentTheme().getTheme().length(); i++) {
+              if (Character.isWhitespace(getCurrentTheme().getTheme().charAt(i))){
+                actionbar.append("  ");
+                continue;
+              }
+              if ((getTimer() <= 75 && i == 0) || (getTimer() <= 40 && i == getCurrentTheme().getTheme().length() - 1) || (getTimer() <= 20 && i == 2) || (getTimer() <= 10 && i == 5)) {
+                  actionbar.append(getCurrentTheme().getTheme().charAt(i)).append(" ");
+                  continue;
+              }
+              actionbar.append("_ ");
+            }
+            Utils.sendActionBar(player, actionbar.toString());
+          }
         }
         if (getTimer() <= 0 && isThemeSet()) {
           getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Was-Name").replace("%THEME%", getCurrentTheme().getTheme()));
