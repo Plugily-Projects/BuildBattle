@@ -59,7 +59,6 @@ public class VoteItems {
           .build();
       if (config.getBoolean(key + ".report-item-function", false)) {
         reportItem = stack;
-        continue;
       }
       Sound sound = null;
       try {

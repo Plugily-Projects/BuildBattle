@@ -265,6 +265,7 @@
                                     <pattern>com.github.stefvanschie.inventoryframework</pattern>
                                     <shadedPattern>pl.plajer.buildbattle.inventoryframework</shadedPattern>
                                 </relocation>
+                                <createDependencyReducedPom>false</createDependencyReducedPom>
                             </relocations>
                         </configuration>
                     </execution>
