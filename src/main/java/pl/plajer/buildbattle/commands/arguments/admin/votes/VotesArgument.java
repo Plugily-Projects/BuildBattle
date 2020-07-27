@@ -39,54 +39,59 @@ import pl.plajerlair.commonsbox.number.NumberUtils;
  */
 public class VotesArgument {
 
-  public VotesArgument(ArgumentsRegistry registry) {
-    registry.mapArgument("buildbattleadmin", new LabeledCommandArgument("votes", "buildbattle.admin.supervotes.manage",
-        CommandArgument.ExecutorType.BOTH, new LabelData("/bba votes &6<add/set> <amount> &c[player]", "/bba votes <action> <amount>",
-        "&7Set or add super votes to yourself or target player\n&7Can be used from console too\n&6Permission: &7buildbattle.admin.supervotes.manage")) {
-      @Override
-      public void execute(CommandSender sender, String[] args) {
-        if (args.length == 1) {
-          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Invalid-Args"));
-          return;
-        }
-        if (args.length == 2 || !(args[1].equalsIgnoreCase("add") && args[1].equalsIgnoreCase("set"))) {
-          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + ChatColor.RED + "Please type amount of super votes to add or set!");
-          return;
-        }
-        Player target;
-        if (args.length == 3) {
-          target = (Player) sender;
-        } else {
-          target = Bukkit.getPlayerExact(args[3]);
-        }
-
-        if (target == null) {
-          sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Player-Not-Found"));
-          return;
-        }
-
-        if (NumberUtils.isInteger(args[2])) {
-          User user = registry.getPlugin().getUserManager().getUser(target);
-
-          String successMessage;
-          if (args[1].equalsIgnoreCase("add")) {
-            user.addStat(StatsStorage.StatisticType.SUPER_VOTES, Integer.parseInt(args[2]));
-            successMessage = registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Arguments.Super-Votes-Added");
-            successMessage = StringUtils.replace(successMessage, "%amount%", args[2]);
-          } else {
-            user.setStat(StatsStorage.StatisticType.SUPER_VOTES, Integer.parseInt(args[2]));
-            successMessage = registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Arguments.Super-Votes-Set");
-            successMessage = StringUtils.replace(successMessage, "%amount%", args[2]);
-          }
-          //todo translatable?
-          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorRawMessage("&aSuper votes amount modified!"));
-          target.sendMessage(successMessage);
-        } else {
-          //todo translatable?
-          sender.sendMessage(registry.getPlugin().getChatManager().colorRawMessage("&cArgument isn't a number!"));
-        }
-      }
-    });
-  }
+    public VotesArgument(ArgumentsRegistry registry) {
+        registry.mapArgument("buildbattleadmin", new LabeledCommandArgument("votes", "buildbattle.admin.supervotes.manage",
+                CommandArgument.ExecutorType.BOTH, new LabelData("/bba votes &6<add/set> <amount> &c[player]", "/bba votes <action> <amount>",
+                "&7Set or add super votes to yourself or target player\n&7Can be used from console too\n&6Permission: &7buildbattle.admin.supervotes.manage")) {
+            @Override
+            public void execute(CommandSender sender, String[] args) {
+                if (args.length == 1) {
+                    sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Invalid-Args"));
+                    return;
+                }
+                if (args.length == 2) {
+                    sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + ChatColor.RED + "Please type amount of super votes to add or set!");
+                    return;
+                }
+                if (!(args[1].equalsIgnoreCase("add") && args[1].equalsIgnoreCase("set"))) {
+                    sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + ChatColor.RED + "Wrong command usage, please use /bba votes <add|set> <amount> [player]!");
+                    return;
+                }
+                Player target;
+                if (args.length == 3) {
+                    if (!(sender instanceof Player)) {
+                        sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + ChatColor.RED + "Console can't recieve supervotes.");
+                        return;
+                    }
+                    target = (Player) sender;
+                } else {
+                    target = Bukkit.getPlayerExact(args[3]);
+                }
+                if (target == null) {
+                    sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Player-Not-Found"));
+                    return;
+                }
+                if (NumberUtils.isInteger(args[2])) {
+                    User user = registry.getPlugin().getUserManager().getUser(target);
+                    String successMessage;
+                    if (args[1].equalsIgnoreCase("add")) {
+                        user.addStat(StatsStorage.StatisticType.SUPER_VOTES, Integer.parseInt(args[2]));
+                        successMessage = registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Arguments.Super-Votes-Added");
+                        successMessage = StringUtils.replace(successMessage, "%amount%", args[2]);
+                    } else {
+                        user.setStat(StatsStorage.StatisticType.SUPER_VOTES, Integer.parseInt(args[2]));
+                        successMessage = registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Arguments.Super-Votes-Set");
+                        successMessage = StringUtils.replace(successMessage, "%amount%", args[2]);
+                    }
+                    //todo translatable?
+                    sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorRawMessage("&aSuper votes amount modified!"));
+                    target.sendMessage(successMessage);
+                } else {
+                    //todo translatable?
+                    sender.sendMessage(registry.getPlugin().getChatManager().colorRawMessage("&cArgument isn't a number!"));
+                }
+            }
+        });
+    }
 
 }
