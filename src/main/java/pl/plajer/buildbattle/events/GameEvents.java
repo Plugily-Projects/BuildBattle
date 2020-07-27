@@ -305,16 +305,18 @@ public class GameEvents implements Listener {
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BLOCK_COMMANDS_IN_GAME)) {
       return;
     }
+    String command = event.getMessage().substring(1);
+    command = (command.indexOf(' ') >= 0 ? command.substring(0, command.indexOf(' ')) : command);
     for (String string : plugin.getConfigPreferences().getWhitelistedCommands()) {
-      if (event.getMessage().contains(string)) {
+      if (command.equalsIgnoreCase(string)) {
         return;
       }
     }
     if (event.getPlayer().isOp() || event.getPlayer().hasPermission("buildbattle.admin") || event.getPlayer().hasPermission("buildbattle.command.bypass")) {
       return;
     }
-    if (event.getMessage().startsWith("/bb") || event.getMessage().startsWith("/buildbattle") || event.getMessage().startsWith("/bba") ||
-        event.getMessage().startsWith("/buildbattleadmin")) {
+    if (command.equalsIgnoreCase("bb") || command.equalsIgnoreCase("buildbattle") || command.equalsIgnoreCase("bba") ||
+            command.equalsIgnoreCase("buildbattleadmin")) {
       return;
     }
     event.setCancelled(true);

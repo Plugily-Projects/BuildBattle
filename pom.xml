@@ -47,7 +47,7 @@
         </repository>
         <repository>
             <id>plajerlair-repo</id>
-            <url>https://maven.plajer.xyz/minecraft</url>
+            <url>https://maven.plugily.xyz/</url>
         </repository>
         <repository>
             <id>mojang-repo</id>

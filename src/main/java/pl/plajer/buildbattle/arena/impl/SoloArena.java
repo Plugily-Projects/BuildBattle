@@ -453,14 +453,14 @@ public class SoloArena extends BaseArena {
         getVotingPlot().setPoints(getVotingPlot().getPoints() + getPlugin().getUserManager().getUser(player).getStat(StatsStorage.StatisticType.LOCAL_POINTS));
         getPlugin().getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 3);
       }
-    }
-    if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER)){
-      String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voted-For-Player-Plot").replace("%PLAYER%", getVotingPlot().getOwners().get(0).getName());
-      for (Player p : getPlayers()) {
-        String owner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
-        owner = formatWinners(getVotingPlot(), owner);
-        p.sendTitle(owner, null, 5, 40, 5);
-        p.sendMessage(getPlugin().getChatManager().getPrefix() + message);
+      if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER)) {
+        String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voted-For-Player-Plot").replace("%PLAYER%", getVotingPlot().getOwners().get(0).getName());
+        for (Player p : getPlayers()) {
+          String owner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
+          owner = formatWinners(getVotingPlot(), owner);
+          p.sendTitle(owner, null, 5, 40, 5);
+          p.sendMessage(getPlugin().getChatManager().getPrefix() + message);
+        }
       }
     }
     voteRoutine();
