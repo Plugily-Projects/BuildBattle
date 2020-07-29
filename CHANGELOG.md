@@ -11,39 +11,39 @@ That's all, matcher will stop when detects next line started with `###` match
 
 ### 4.4.0 Release
 * GuessTheBuild release
+* Reworked whole Rewards
+* New file rewards.yml
 * Added short commands such as start and leave
 * Added option to disable separate chat
 * Added possibility to change table name of mysql database
-* Tried to fix Server crash on 1.15 
-* Reworked whole Rewards
-* New file rewards.yml
-* Migrator for new config file as there are some more changes
-* Update setup tips Feedback page link
-* Randomjoin command will now longer send proper message when no arena is available
-* Fixed force start command when setting forced theme didn't set build time properly
+* Added possibility to run command for report item
+* Added the new particles from 1.13 and up 
+* Added an option to disable party features
+* Added missing 1.14 & 1.15 & 1.16 Materials/Biomes
 * Added 1.16.x compatibility 
-* Fixed bungeemanager enable null text error
+* Added adjustable floor blacklist
 * Added bungeemode Arena shuffler
-* Fixed biomes on 1.16 (nosuchmethoderror)
-* Changed mysql updates to do only one instead of more than 10 (should improve performance)
+* Added players will get kicked on bungeemode when arena is full and has no rights
+* Added an event to cancel fire spread on the plot
 * Added option to announce plot owner after voting
+* Fixed force start command when setting forced theme didn't set build time properly
+* Fixed bungeemanager enable null text error
+* Fixed biomes on 1.16 (nosuchmethoderror)
 * Fixed last plot on teammode can get double points
 * Fixed rewards are ignoring the place
 * Fixed HandlerList Error
-* Added an option to disable party features
-* Added missing 1.14 & 1.15 & 1.16 Materials/Biomes
-* Added adjustable floor blacklist
 * Fixed water and lava as floor material
-* Optimized floor change to get all materials
 * Fixed team member leave plot reset
-* Added players will get kicked on bungeemode when arena is full and has no rights
-* Added an event to cancel fire spread on the plot
 * Fixed water/lava flow and piston outside of plot in worst cases
-* Changed increased npc finder to radius of 5 to the plot
-* Added the new particles from 1.13 and up 
-* Updated particles.yml (Thanks Fabian Adrian #6234)
-* Added possibility to run command for report item
 * Fixed nether star (options menu) duplication
+* Tried to fix Server crash on 1.15 
+* Migrator for new config file as there are some more changes
+* Update setup tips Feedback page link
+* Randomjoin command will now longer send proper message when no arena is available
+* Changed mysql updates to do only one instead of more than 10 (should improve performance)
+* Updated particles.yml (Thanks Fabian Adrian #6234)
+* Changed increased npc finder to radius of 5 to the plot
+* Optimized floor change to get all materials
 
 ### 4.3.2 Release
 * Added per particle disabler

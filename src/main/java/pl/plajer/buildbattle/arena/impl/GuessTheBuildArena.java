@@ -1,6 +1,6 @@
 /*
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
+ * Copyright (C) 2020 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -62,8 +62,6 @@ import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
  * <p>
  * Created at 11.01.2019
  */
-//fixme bugs
-//playerPoints are not ordered by value after guess properly
 public class GuessTheBuildArena extends BaseArena {
 
   private int round = 1;
@@ -111,7 +109,7 @@ public class GuessTheBuildArena extends BaseArena {
         break;
       case STARTING:
         for (Player player : getPlayers()) {
-          player.setExp((float) (getTimer() / getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this)));
+          player.setExp((float) (getTimer() / (double) getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this)));
           player.setLevel(getTimer());
         }
         if (getPlayers().size() < getMinimumPlayers()) {
@@ -257,8 +255,7 @@ public class GuessTheBuildArena extends BaseArena {
               p.setGameMode(GameMode.SPECTATOR);
             }
             plot.getOwners().get(0).setGameMode(GameMode.CREATIVE);
-            //probably not hardcoded
-            setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, this));
+            setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.THEME_SELECTION, this));
             if (getArenaState() != ArenaState.IN_GAME || isThemeSet()) {
               return;
             }
@@ -268,7 +265,7 @@ public class GuessTheBuildArena extends BaseArena {
               }
               player.sendTitle(null, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Being-Selected"), 5, 25, 5);
             }
-          }, 20 * 10);
+          }, 20 * getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.DELAYED_TASK, this));
           //todo next round info and game state?
           break;
         }
@@ -412,14 +409,45 @@ public class GuessTheBuildArena extends BaseArena {
     getPlugin().getRewardsHandler().performReward(this, Reward.RewardType.END_GAME);
   }
 
+  /**
+   * Executes boss bar action for arena
+   *
+   * @param action add or remove a player from boss bar
+   * @param p      player
+   */
   @Override
   public void doBarAction(BarAction action, Player p) {
-    //todo
+    if (!getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+      return;
+    }
+    switch (action) {
+      case ADD:
+        getGameBar().addPlayer(p);
+        break;
+      case REMOVE:
+        getGameBar().removePlayer(p);
+        break;
+      default:
+        break;
+    }
   }
 
   @Override
   public void updateBossBar() {
-    //todo
+    if (!getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+      return;
+    }
+    switch (getArenaState()) {
+      case WAITING_FOR_PLAYERS:
+        getGameBar().setTitle(getPlugin().getChatManager().colorMessage("Bossbar.Waiting-For-Players"));
+        break;
+      case STARTING:
+        getGameBar().setTitle(getPlugin().getChatManager().colorMessage("Bossbar.Starting-In").replace("%time%", String.valueOf(getTimer())));
+        break;
+      case IN_GAME:
+        getGameBar().setTitle(getPlugin().getChatManager().colorMessage("Bossbar.Time-Left").replace("%time%", String.valueOf(getTimer())));
+        break;
+    }
   }
 
   @Override
