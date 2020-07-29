@@ -20,9 +20,11 @@ package pl.plajer.buildbattle.arena.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -40,14 +42,17 @@ import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.api.event.game.BBGameEndEvent;
 import pl.plajer.buildbattle.api.event.game.BBGameStartEvent;
 import pl.plajer.buildbattle.arena.ArenaManager;
+import pl.plajer.buildbattle.arena.ArenaRegistry;
 import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.managers.GuessTheBuildScoreboardManager;
 import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.arena.options.ArenaOption;
+import pl.plajer.buildbattle.handlers.reward.Reward;
 import pl.plajer.buildbattle.menus.themevoter.GTBTheme;
 import pl.plajer.buildbattle.user.User;
 import pl.plajer.buildbattle.utils.MessageUtils;
 import pl.plajer.buildbattle.utils.Utils;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
@@ -57,11 +62,14 @@ import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
  * <p>
  * Created at 11.01.2019
  */
+//fixme bugs
+//playerPoints are not ordered by value after guess properly
 public class GuessTheBuildArena extends BaseArena {
 
   private int round = 1;
   private GTBTheme currentTheme;
   private boolean themeSet;
+  private boolean nextRoundCooldown = false;
   private Player currentBuilder;
   private List<Player> whoGuessed = new ArrayList<>();
   private Map<Player, Integer> playersPoints = new HashMap<>();
@@ -75,7 +83,7 @@ public class GuessTheBuildArena extends BaseArena {
   @Override
   public void run() {
     //idle task
-    if (getPlayers().size() == 0 && getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+    if (getPlayers().isEmpty() && getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
       return;
     }
     if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
@@ -103,7 +111,7 @@ public class GuessTheBuildArena extends BaseArena {
         break;
       case STARTING:
         for (Player player : getPlayers()) {
-          player.setExp((float) (getTimer() / getPlugin().getConfig().getDouble("Lobby-Starting-Time", 60)));
+          player.setExp((float) (getTimer() / getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this)));
           player.setLevel(getTimer());
         }
         if (getPlayers().size() < getMinimumPlayers()) {
@@ -122,68 +130,42 @@ public class GuessTheBuildArena extends BaseArena {
             getPlotManager().resetQueuedPlots();
           }
           setArenaState(ArenaState.IN_GAME);
+          for (Player player : getPlayers()) {
+            playersPoints.put(player, 0);
+          }
           distributePlots();
           getPlotManager().teleportToPlots();
-          setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.THEME_VOTE, this));
+          setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.DELAYED_TASK, this));
           for (Player player : getPlayers()) {
             player.getInventory().clear();
-            player.setGameMode(GameMode.CREATIVE);
             player.setAllowFlight(true);
             player.setFlying(true);
             player.getInventory().setItem(8, getPlugin().getOptionsRegistry().getMenuItem());
-            //to prevent Multiverse chaning gamemode bug
-            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setGameMode(GameMode.CREATIVE), 20);
+            //to prevent Multiverse changing gamemode bug
+            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setGameMode(GameMode.SPECTATOR), 20);
           }
+          Plot plot = getPlotManager().getPlot(getPlayers().get(round - 1));
+          for (Player p : getPlayers()) {
+            p.teleport(plot.getTeleportLocation());
+          }
+          nextRoundCooldown = true;
+          Bukkit.getScheduler().runTaskLater(getPlugin(), () -> nextRoundCooldown = false, 20 * getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.DELAYED_TASK, this));
+          Bukkit.getScheduler().runTaskLater(getPlugin(), () -> plot.getOwners().get(0).setGameMode(GameMode.CREATIVE), 20);
           break;
         }
         setTimer(getTimer() - 1);
         break;
       case IN_GAME:
-        for (Player p : getPlayers()) {
-          if (!playersPoints.containsKey(p)) {
-            playersPoints.put(p, 0);
-          }
-          //todo ineffective?
-          playersPoints = Utils.sortByValue(playersPoints);
-        }
         if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-          if (getMaximumPlayers() <= getPlayers().size()) {
-            getPlugin().getServer().setWhitelist(true);
-          } else {
-            getPlugin().getServer().setWhitelist(false);
-          }
+          getPlugin().getServer().setWhitelist(getMaximumPlayers() <= getPlayers().size());
         }
-        //todo deprecate the themes selector
-        if (currentBuilder == null) {
-          //todo out of bounds check!
+        if (currentBuilder == null && !nextRoundCooldown) {
           currentBuilder = getPlayers().get(round - 1);
-          Random r = new Random();
-
-          Inventory inv = Bukkit.createInventory(null, 27, getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Inventory-Name"));
-          inv.setItem(11, new ItemBuilder(Material.PAPER).name(getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Name")
-              .replace("%theme%", getPlugin().getConfigPreferences().getThemes("Guess-The-Build_EASY")
-                  .get(r.nextInt(getPlugin().getConfigPreferences().getThemes("Guess-The-Build_EASY").size()))))
-              .lore(getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Lore")
-                  .replace("%difficulty%", getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Difficulties.Easy"))
-                  .replace("%points%", String.valueOf(1)).split(";")).build());
-
-          inv.setItem(13, new ItemBuilder(Material.PAPER).name(getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Name")
-              .replace("%theme%", getPlugin().getConfigPreferences().getThemes("Guess-The-Build_MEDIUM")
-                  .get(r.nextInt(getPlugin().getConfigPreferences().getThemes("Guess-The-Build_MEDIUM").size()))))
-              .lore(getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Lore")
-                  .replace("%difficulty%", getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Difficulties.Medium"))
-                  .replace("%points%", String.valueOf(2)).split(";")).build());
-
-          inv.setItem(15, new ItemBuilder(Material.PAPER).name(getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Name")
-              .replace("%theme%", getPlugin().getConfigPreferences().getThemes("Guess-The-Build_HARD")
-                  .get(r.nextInt(getPlugin().getConfigPreferences().getThemes("Guess-The-Build_HARD").size()))))
-              .lore(getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Lore")
-                  .replace("%difficulty%", getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Difficulties.Hard"))
-                  .replace("%points%", String.valueOf(3)).split(";")).build());
-          currentBuilder.openInventory(inv);
+          openThemeSelectionInventoryToCurrentBuilder();
+          setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.THEME_SELECTION, this));
           break;
         } else {
-          if (!isThemeSet() && getTimer() <= 0) {
+          if (!isThemeSet() && getTimer() <= 0 && currentBuilder != null) {
             Random r = new Random();
             String type = "EASY";
             switch (r.nextInt(2 + 1)) {
@@ -202,6 +184,7 @@ public class GuessTheBuildArena extends BaseArena {
             setThemeSet(true);
             currentBuilder.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Is-Name")
                 .replace("%THEME%", theme.getTheme())));
+            currentBuilder.closeInventory();
 
             String roundMessage = getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Current-Round")
                 .replace("%ROUND%", String.valueOf(round))
@@ -210,16 +193,36 @@ public class GuessTheBuildArena extends BaseArena {
               p.sendTitle(getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Start-Guessing-Title"), null, 5, 25, 5);
               p.sendMessage(roundMessage);
             }
-            setTimer(getTimer() - 1);
+            setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, this));
             break;
           }
         }
-        if (getTimer() <= 90) {
+        if (getTimer() <= 90 && getCurrentTheme() != null) {
           if (getTimer() == 90) {
             getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Is-Long")
                 .replace("%NUM%", String.valueOf(getCurrentTheme().getTheme().length())));
           }
-          //todo add action bar word display
+          for (Player player : getPlayers()){
+            if (getCurrentBuilder() == player){
+              continue;
+            }
+            if (getWhoGuessed().contains(player)) {
+              Utils.sendActionBar(player, getCurrentTheme().getTheme());
+            }
+            StringBuilder actionbar = new StringBuilder();
+            for (int i = 0; i < getCurrentTheme().getTheme().length(); i++) {
+              if (Character.isWhitespace(getCurrentTheme().getTheme().charAt(i))){
+                actionbar.append("  ");
+                continue;
+              }
+              if ((getTimer() <= 75 && i == 0) || (getTimer() <= 40 && i == getCurrentTheme().getTheme().length() - 1) || (getTimer() <= 20 && i == 2) || (getTimer() <= 10 && i == 5)) {
+                  actionbar.append(getCurrentTheme().getTheme().charAt(i)).append(" ");
+                  continue;
+              }
+              actionbar.append("_ ");
+            }
+            Utils.sendActionBar(player, actionbar.toString());
+          }
         }
         if (getTimer() <= 0 && isThemeSet()) {
           getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Was-Name").replace("%THEME%", getCurrentTheme().getTheme()));
@@ -234,39 +237,38 @@ public class GuessTheBuildArena extends BaseArena {
           whoGuessed.clear();
           round++;
           if (round > getPlayers().size()) {
-            setTimer(5);
+            setTimer(15);
             setArenaState(ArenaState.ENDING);
             Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
             break;
           }
-          Plot plot = getPlotManager().getPlot(getPlayers().get(0));
-          //todo weather and others can be applied in-game but wont affect viewers!
-          for (Player p : getPlayers()) {
-            p.teleport(plot.getTeleportLocation());
-            p.setPlayerWeather(plot.getWeatherType());
-            p.setPlayerTime(Plot.Time.format(plot.getTime(), p.getWorld().getTime()), false);
-          }
 
-          setTimer(5);
-          //todo make variable for isNextRound not this thingy
+          setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.DELAYED_TASK, this));
+          nextRoundCooldown = true;
           Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
+            nextRoundCooldown = false;
+            currentBuilder = getPlayers().get(round - 1);
+            openThemeSelectionInventoryToCurrentBuilder();
+            Plot plot = getPlotManager().getPlot(getPlayers().get(round - 1));
+            for (Player p : getPlayers()) {
+              p.teleport(plot.getTeleportLocation());
+              p.setPlayerWeather(plot.getWeatherType());
+              p.setPlayerTime(Plot.Time.format(plot.getTime(), p.getWorld().getTime()), false);
+              p.setGameMode(GameMode.SPECTATOR);
+            }
+            plot.getOwners().get(0).setGameMode(GameMode.CREATIVE);
             //probably not hardcoded
-            setTimer(15);
+            setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, this));
             if (getArenaState() != ArenaState.IN_GAME || isThemeSet()) {
               return;
             }
-            for (Player p : getPlayers()) {
-              if (currentBuilder == p) {
+            for (Player player : getPlayers()) {
+              if (currentBuilder.equals(player)) {
                 continue;
               }
-              p.sendTitle(null, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Being-Selected"), 5, 25, 5);
+              player.sendTitle(null, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Being-Selected"), 5, 25, 5);
             }
-            for (Player p : getPlayers()) {
-              p.sendMessage(getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Current-Round")
-                  .replace("%ROUND%", String.valueOf(round))
-                  .replace("%MAXPLAYERS%", String.valueOf(getPlayers().size())));
-            }
-          }, 20 * 5);
+          }, 20 * 10);
           //todo next round info and game state?
           break;
         }
@@ -274,17 +276,21 @@ public class GuessTheBuildArena extends BaseArena {
           getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Messages.Game-End-Messages.Only-You-Playing"));
           setArenaState(ArenaState.ENDING);
           Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
-          setTimer(10);
+          setTimer(15);
         }
         if (isThemeSet() && (getTimer() == (4 * 60) || getTimer() == (3 * 60) || getTimer() == 5 * 60 || getTimer() == 30 || getTimer() == 2 * 60 || getTimer() == 60 || getTimer() == 15)) {
           sendBuildLeftTimeMessage();
         }
-        if (getTimer() != 0) {
+        //if player leaves during round force next round
+        if (currentBuilder != null && !currentBuilder.isOnline()) {
+          setTimer(1);
+        }
+        if (getTimer() != 0 && currentBuilder != null) {
           if (getOption(ArenaOption.IN_PLOT_CHECKER) == 1) {
             setOptionValue(ArenaOption.IN_PLOT_CHECKER, 0);
             for (Player player : getPlayers()) {
-              User user = getPlugin().getUserManager().getUser(player);
-              Plot buildPlot = user.getCurrentPlot();
+              User builderUser = getPlugin().getUserManager().getUser(currentBuilder);
+              Plot buildPlot = builderUser.getCurrentPlot();
               if (buildPlot != null && !buildPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
                 player.teleport(buildPlot.getTeleportLocation());
                 player.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("In-Game.Messages.Cant-Fly-Outside-Plot"));
@@ -296,7 +302,6 @@ public class GuessTheBuildArena extends BaseArena {
         setTimer(getTimer() - 1);
         break;
       case ENDING:
-        scoreboardManager.stopAllScoreboards();
         if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           getPlugin().getServer().setWhitelist(false);
         }
@@ -306,6 +311,7 @@ public class GuessTheBuildArena extends BaseArena {
           }
         }
         if (getTimer() <= 0) {
+          scoreboardManager.stopAllScoreboards();
           teleportAllToEndLocation();
           for (Player player : getPlayers()) {
             if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
@@ -325,7 +331,6 @@ public class GuessTheBuildArena extends BaseArena {
           }
           giveRewards();
           clearPlayers();
-          //todo check if called
           setArenaState(ArenaState.RESTARTING);
           if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
             for (Player player : getPlugin().getServer().getOnlinePlayers()) {
@@ -338,20 +343,73 @@ public class GuessTheBuildArena extends BaseArena {
       case RESTARTING:
         setOptionValue(ArenaOption.IN_PLOT_CHECKER, 0);
         whoGuessed.clear();
-        //todo doesnt work!?!??
+        playersPoints.clear();
+        round = 1;
         clearPlayers();
+        nextRoundCooldown = false;
         setTimer(14);
         setArenaState(ArenaState.WAITING_FOR_PLAYERS);
         currentBuilder = null;
         setThemeSet(false);
         setCurrentTheme(null);
+        if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+          if (ConfigUtils.getConfig(getPlugin(), "bungee").getBoolean("Shutdown-When-Game-Ends", false)) {
+            getPlugin().getServer().shutdown();
+          }
+          ArenaRegistry.shuffleBungeeArena();
+          for (Player player : Bukkit.getOnlinePlayers()) {
+            ArenaManager.joinAttempt(player, ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()));
+          }
+        }
         break;
     }
   }
 
+  private void openThemeSelectionInventoryToCurrentBuilder() {
+    Random r = new Random();
+
+    Inventory inv = Bukkit.createInventory(null, 27, getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Inventory-Name"));
+    inv.setItem(11, new ItemBuilder(Material.PAPER).name(getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Name")
+        .replace("%theme%", getPlugin().getConfigPreferences().getThemes("Guess-The-Build_EASY")
+            .get(r.nextInt(getPlugin().getConfigPreferences().getThemes("Guess-The-Build_EASY").size()))))
+        .lore(getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Lore")
+            .replace("%difficulty%", getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Difficulties.Easy"))
+            .replace("%points%", String.valueOf(1)).split(";")).build());
+
+    inv.setItem(13, new ItemBuilder(Material.PAPER).name(getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Name")
+        .replace("%theme%", getPlugin().getConfigPreferences().getThemes("Guess-The-Build_MEDIUM")
+            .get(r.nextInt(getPlugin().getConfigPreferences().getThemes("Guess-The-Build_MEDIUM").size()))))
+        .lore(getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Lore")
+            .replace("%difficulty%", getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Difficulties.Medium"))
+            .replace("%points%", String.valueOf(2)).split(";")).build());
+
+    inv.setItem(15, new ItemBuilder(Material.PAPER).name(getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Name")
+        .replace("%theme%", getPlugin().getConfigPreferences().getThemes("Guess-The-Build_HARD")
+            .get(r.nextInt(getPlugin().getConfigPreferences().getThemes("Guess-The-Build_HARD").size()))))
+        .lore(getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Lore")
+            .replace("%difficulty%", getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Difficulties.Hard"))
+            .replace("%points%", String.valueOf(3)).split(";")).build());
+    currentBuilder.openInventory(inv);
+  }
+
+  public void recalculateLeaderboard() {
+    playersPoints = playersPoints.entrySet()
+        .stream()
+        .sorted((Map.Entry.<Player, Integer>comparingByValue().reversed()))
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+  }
+
   @Override
   public void giveRewards() {
-    //todo
+    List<Map.Entry<Player, Integer>> list = new ArrayList<>(getPlayersPoints().entrySet());
+    for(int i = 0; i <= list.size(); i++) {
+      if(list.size() - 1 < i) {
+        continue;
+      }
+      Map.Entry<Player, Integer> entry = list.get(i);
+      getPlugin().getRewardsHandler().performReward(entry.getKey(), Reward.RewardType.PLACE, i +1);
+    }
+    getPlugin().getRewardsHandler().performReward(this, Reward.RewardType.END_GAME);
   }
 
   @Override
@@ -375,16 +433,9 @@ public class GuessTheBuildArena extends BaseArena {
       if (players.isEmpty()) {
         break;
       }
-      if (plot.getOwners() != null) {
-        if (getPlayers().size() == 2) {
-          if (plot.getOwners().size() == 0) {
-            plot.addOwner(players.get(0));
-            getPlugin().getUserManager().getUser(players.get(0)).setCurrentPlot(plot);
-
-            players.remove(0);
-          }
-        }
-      }
+      plot.addOwner(players.get(0));
+      getPlugin().getUserManager().getUser(players.get(0)).setCurrentPlot(plot);
+      players.remove(0);
     }
     if (!players.isEmpty()) {
       MessageUtils.errorOccurred();
@@ -417,14 +468,24 @@ public class GuessTheBuildArena extends BaseArena {
 
   public void addWhoGuessed(Player player) {
     whoGuessed.add(player);
-
+    getPlugin().getRewardsHandler().performReward(player, Reward.RewardType.GTB_GUESS, -1);
     //decrease game time by guessed theme
     if (getTimer() >= 15) {
-      setTimer(getTimer() - 10);
+      setTimer(getTimer() - getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.TIME_SHORTENER, this));
     }
-    if (whoGuessed.size() == getPlayers().size()) {
-      setTimer(1);
+    //-1 because builder can´t guess
+    if (whoGuessed.size() >= getPlayers().size() - 1) {
+      setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.ALL_GUESSED, this));
+      for(Player players : getPlayers()){
+        players.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Guessed"));
+        getPlugin().getRewardsHandler().performReward(players, Reward.RewardType.GTB_ALL_GUESSED, -1);
+      }
     }
+  }
+
+  @Override
+  public GuessTheBuildScoreboardManager getScoreboardManager() {
+    return scoreboardManager;
   }
 
   public boolean isThemeSet() {

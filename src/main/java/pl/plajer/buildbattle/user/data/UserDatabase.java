@@ -37,10 +37,16 @@ public interface UserDatabase {
   void saveStatistic(User user, StatsStorage.StatisticType stat);
 
   /**
+   * Saves player statistic into yaml or MySQL storage based on user choice
+   *
+   * @param user user to retrieve statistic from
+   */
+  void saveAllStatistic(User user);
+
+  /**
    * Loads player statistic from yaml or MySQL storage based on user choice
    *
    * @param user user to load statistic for
-   * @param stat type of stat to load from storage
    */
   void loadStatistics(User user);
 

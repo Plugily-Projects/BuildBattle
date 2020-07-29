@@ -25,6 +25,7 @@ import java.util.List;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import pl.plajer.buildbattle.Main;
@@ -39,8 +40,8 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int LANGUAGE_FILE_VERSION = 14;
-  public static final int CONFIG_FILE_VERSION = 9;
+  public static final int LANGUAGE_FILE_VERSION = 16;
+  public static final int CONFIG_FILE_VERSION = 14;
   private List<String> migratable = Arrays.asList("bungee", "config", "language", "mysql");
   private Main plugin;
 
@@ -52,6 +53,20 @@ public class LanguageMigrator {
     //check if using 2.0.0 releases
     if (lang.isSet("PREFIX") && lang.isSet("Unlocks-at-level")) {
       migrateToNewFormat();
+    }
+
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "config");
+    if(config.isSet("Build-Time")) {
+      MessageUtils.gonnaMigrate();
+      Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Build Battle is migrating config.yml to the new file format...");
+      Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Don't worry! Old config.yml will be renamed not overridden!");
+      File file = new File(plugin.getDataFolder() + File.separator + "config.yml");
+      if (file.exists()) {
+        boolean rename = file.renameTo(new File(plugin.getDataFolder() + File.separator + "oldbb_config.yml"));
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Renamed file " + file);
+      }
+      plugin.saveDefaultConfig();
+      plugin.reloadConfig();
     }
 
     //initializes migrator to update files with latest values
@@ -78,11 +93,12 @@ public class LanguageMigrator {
       return;
     }
     Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[BuildBattle] System notify >> Your config file is outdated! Updating...");
-    File file = new File(plugin.getDataFolder() + "/config.yml");
-    File bungeefile = new File(plugin.getDataFolder() + "/bungee.yml");
 
     int version = plugin.getConfig().getInt("Version", CONFIG_FILE_VERSION - 1);
     updateConfigVersionControl(version);
+
+    File file = new File(plugin.getDataFolder() + "/config.yml");
+    File bungeefile = new File(plugin.getDataFolder() + "/bungee.yml");
 
     for (int i = version; i < CONFIG_FILE_VERSION; i++) {
       switch (i) {
@@ -150,7 +166,6 @@ public class LanguageMigrator {
               "    - Stocking\r\n\r\n");
           break;
         case 6:
-          //todo
           MigratorUtils.addNewLines(file, "# Should we block every not Build Battle associated commands in game?\r\n" +
               "Block-Commands-In-Game: true");
         case 7:
@@ -170,6 +185,45 @@ public class LanguageMigrator {
               "    Full-Game: \"&4&lFULL\"\r\n" +
               "    Ending: \"&lEnding\"\r\n" +
               "    Restarting: \"&c&lRestarting\"\r\n");
+          break;
+        case 8:
+          //Updating to new config file for gtb
+          break;
+        case 9:
+          MigratorUtils.addNewLines(file, "\r\n" +
+                  "# Should we enable short commands such as /start and /leave\r\n" +
+                  "Enable-Short-Commands: false\r\n");
+          MigratorUtils.addNewLines(file, "\r\n" +
+                  "# Should we disable all chat related stuff?\r\n" +
+                  "# It will disable the separated chat, for example\r\n" +
+                  "Disable-Separate-Chat: false\r\n");
+          break;
+        case 10:
+          MigratorUtils.addNewLines(file, "\r\n# Blacklisted floor materials, you can't use them for the floor.\r\n" +
+                  "Blacklisted-Floor-Materials:\r\n" +
+                  "  - MOB_SPAWNER\r\n" +
+                  "  - TNT\r\n" +
+                  "  - AIR\r\n");
+          break;
+        case 11:
+          MigratorUtils.addNewLines(file, "\r\n" +
+                  "#Disable Party features of external party plugins (such as PAF, Parties ...)\r\n" +
+                  "Disable-Parties: true\r\n");
+          break;
+        case 12:
+          MigratorUtils.addNewLines(file, "\r\n" +
+                  "#Announce the plot owner after voting stage\r\n" +
+                  "#default false - plot owner will be announced at the beginning\r\n" +
+                  "Announce-PlotOwner-Later: false \r\n");
+          break;
+        case 13:
+          MigratorUtils.addNewLines(file, "\r\n" +
+                  "# Enable an command on report item click\r\n" +
+                  "Run-Command-On-Report: \r\n" +
+                  "  Enabled: false\r\n" +
+                  "  # The command that should be executed - Placeholder: %reported%, %reporter%\r\n" +
+                  "  Command: kick %reported% \r\n");
+          break;
       }
     }
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] [System notify] Config updated, no comments were removed :)");
@@ -185,7 +239,7 @@ public class LanguageMigrator {
 
     int version = 0;
     if (NumberUtils.isNumber(config.getString("File-Version-Do-Not-Edit"))) {
-      version = Integer.valueOf(config.getString("File-Version-Do-Not-Edit"));
+      version = Integer.parseInt(config.getString("File-Version-Do-Not-Edit"));
     }
     updateLanguageVersionControl(version);
 
@@ -253,16 +307,16 @@ public class LanguageMigrator {
               "    Build-Time: \"&fTime: &e%FORMATTED_TIME_LEFT%\"\r\n    Starts-In: \"&fStarts In: &e%FORMATTED_TIME_LEFT%\"");
           MigratorUtils.insertAfterLine(file, "Content:", "    Playing-States:\r\n      Classic:\r\n        - \"&fTime Left: &e%FORMATTED_TIME_LEFT%\"\r\n        - \"\"\r\n" +
               "        - \"&fPlayers: &e%PLAYERS%/%MAX_PLAYERS%\"\r\n        - \"\"\r\n        - \"&fTheme: &e%THEME%\"\r\n        - \"\"\r\n        - \"&fArena: &e%ARENA_ID%\"\r\n" +
-              "        - \"\"\r\n        - \"&ewww.plajer.xyz\"\r\n      Teams:\r\n        - \"&7Teams Mode\"\r\n        - \"&fTime Left: &e%FORMATTED_TIME_LEFT%\"\r\n        - \"\"\r\n" +
+              "        - \"\"\r\n        - \"&ewww.plugily.xyz\"\r\n      Teams:\r\n        - \"&7Teams Mode\"\r\n        - \"&fTime Left: &e%FORMATTED_TIME_LEFT%\"\r\n        - \"\"\r\n" +
               "        - \"&fTheme: &e%THEME%\"\r\n        - \"\"\r\n        - \"&fArena: &e%ARENA_ID%\"\r\n        - \"\"\r\n        - \"&fTeammate:\"\r\n        - \"&e%TEAMMATE%\"\r\n" +
-              "        - \"\"\r\n        - \"&ewww.plajer.xyz\"\r\n      Guess-The-Build:\r\n        - \"&7Guess The Build Mode\"\r\n        - \"&fBuilder:\"\r\n        - \"&7%BUILDER%\"\r\n" +
+              "        - \"\"\r\n        - \"&ewww.plugily.xyz\"\r\n      Guess-The-Build:\r\n        - \"&7Guess The Build Mode\"\r\n        - \"&fBuilder:\"\r\n        - \"&7%BUILDER%\"\r\n" +
               "        - \"\"\r\n        - \"&e&lLeaders:\"\r\n        - \"&6%1%&e: %1_PTS%\"\r\n        - \"&7%2%&e: %2_PTS%\"\r\n        - \"&7%3%&e: %3_PTS%\"\r\n        - \"\"\r\n" +
-              "        - \"%CURRENT_TIMER%\"\r\n        - \"\"\r\n        - \"&fTheme:\"\r\n        - \"&c%THEME%\"\r\n        - \"\"\r\n        - \"&ewww.plajer.xyz\"");
-          MigratorUtils.insertAfterLine(file, "Content:", "    Ending-States:\r\n      Classic:\r\n        - \"&e&lGAME ENDED\"\r\n        - \"\"\r\n        - \"&ewww.plajer.xyz\"\r\n" +
-              "      Teams:\r\n        - \"&7Teams Mode\"\r\n        - \"&e&lGAME ENDED\"\r\n        - \"\"\r\n        - \"&ewww.plajer.xyz\"\r\n      Guess-The-Build:\r\n" +
+              "        - \"%CURRENT_TIMER%\"\r\n        - \"\"\r\n        - \"&fTheme:\"\r\n        - \"&c%THEME%\"\r\n        - \"\"\r\n        - \"&ewww.plugily.xyz\"");
+          MigratorUtils.insertAfterLine(file, "Content:", "    Ending-States:\r\n      Classic:\r\n        - \"&e&lGAME ENDED\"\r\n        - \"\"\r\n        - \"&ewww.plugily.xyz\"\r\n" +
+              "      Teams:\r\n        - \"&7Teams Mode\"\r\n        - \"&e&lGAME ENDED\"\r\n        - \"\"\r\n        - \"&ewww.plugily.xyz\"\r\n      Guess-The-Build:\r\n" +
               "        - \"&7Guess The Build Mode\"\r\n        - \"\"\r\n        - \"&e1. &f%1%: &e%1_PTS%\"\r\n        - \"&e2. &f%2%: &e%2_PTS%\"\r\n        - \"&e3. &f%3%: &e%3_PTS%\"\r\n" +
               "        - \"&e4. &f%4%: &e%4_PTS%\"\r\n        - \"&e5. &f%5%: &e%5_PTS%\"\r\n        - \"&e6. &f%6%: &e%6_PTS%\"\r\n        - \"&e7. &f%7%: &e%7_PTS%\"\r\n" +
-              "        - \"&e8. &f%8%: &e%8_PTS%\"\r\n        - \"&e9. &f%9%: &e%9_PTS%\"\r\n        - \"&e10. &f%10%: &e%10_PTS%\"\r\n        - \"\"\r\n        - \"&ewww.plajer.xyz\"");
+              "        - \"&e8. &f%8%: &e%8_PTS%\"\r\n        - \"&e9. &f%9%: &e%9_PTS%\"\r\n        - \"&e10. &f%10%: &e%10_PTS%\"\r\n        - \"\"\r\n        - \"&ewww.plugily.xyz\"");
           MigratorUtils.insertAfterLine(file, "No-Theme-Yet", "  Guess-The-Build:\r\n    Current-Builder: \"&eBuilder: &7%BUILDER%\"\r\n" +
               "    Current-Round: \"&eRound: &7%ROUND%/%MAXPLAYERS%\"\r\n    Theme-Is-Long: \"&eThe theme is &7%NUM% &echaracters long\"\r\n    Theme-Is-Name: \"&eThe theme is a &e%THEME%\"");
           MigratorUtils.insertAfterLine(file, "Winner-Title:", "      Summary:\r\n" +
@@ -368,6 +422,13 @@ public class LanguageMigrator {
           break;
         case 13:
           MigratorUtils.insertAfterLine(file, "Commands:", "  Type-Arena-Name: \"&cPlease type arena ID!\"");
+          break;
+        case 14:
+          MigratorUtils.insertAfterLine(file, "Theme-Was-Subtitle:", "    Theme-Guessed: \"&eAll players guessed the theme!\"");
+          break;
+        case 15:
+          MigratorUtils.insertAfterLine(file, "Voting-Messages:", "      Voted-For-Player-Plot: \"&7The plot owner was &e&l%PLAYER%&7!\"");
+          MigratorUtils.insertAfterLine(file, "Voting-Messages:", "      Vote-For-Next-Plot: \"&7You can now vote for this plot!\"");
           break;
       }
       version++;

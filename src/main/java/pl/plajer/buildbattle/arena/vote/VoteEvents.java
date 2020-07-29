@@ -18,12 +18,14 @@
 
 package pl.plajer.buildbattle.arena.vote;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
+import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
@@ -31,6 +33,7 @@ import pl.plajer.buildbattle.arena.ArenaState;
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.impl.GuessTheBuildArena;
 import pl.plajer.buildbattle.arena.impl.SoloArena;
+import pl.plajer.buildbattle.handlers.reward.Reward;
 import pl.plajer.buildbattle.utils.Utils;
 
 /**
@@ -63,7 +66,10 @@ public class VoteEvents implements Listener {
       return;
     }
     if (plugin.getVoteItems().getReportItem().equals(e.getItem())) {
-      //todo attempt report
+      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.RUN_COMMAND_ON_REPORT)){
+        ((SoloArena) arena).getVotingPlot().getOwners().forEach(player -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), plugin.getConfig().getString("Run-Command-On-Report.Command", "kick %reported%").replace("%reported%", player.getName()).replace("%reporter%", e.getPlayer().getName())));
+        plugin.getRewardsHandler().performReward(e.getPlayer(), Reward.RewardType.REPORT, -1);
+      }
       e.setCancelled(true);
       return;
     }

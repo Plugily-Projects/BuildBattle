@@ -83,6 +83,11 @@ public class JoinArguments {
           switch (args[1].toLowerCase()) {
             case "solo":
             case "team":
+            case "gtb":
+            case "guess_the_build":
+              if (args[1].equalsIgnoreCase("gtb")){
+                args[1] = "GUESS_THE_BUILD";
+              }
               BaseArena.ArenaType type = BaseArena.ArenaType.valueOf(args[1].toUpperCase());
               //first random get method
               Map<BaseArena, Integer> arenas = new HashMap<>();
@@ -110,7 +115,7 @@ public class JoinArguments {
                   }
                 }
               }
-              sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Arena-Is-Full"));
+              sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Free-Arenas"));
               return;
             default:
               sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Invalid-Args"));

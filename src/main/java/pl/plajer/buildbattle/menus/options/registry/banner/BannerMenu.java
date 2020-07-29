@@ -78,7 +78,7 @@ public class BannerMenu {
         item.setItemMeta(meta);
       } else {
         String banner = color.toString().toUpperCase() + "_BANNER";
-        item = XMaterial.fromString(banner).parseItem();
+        item = XMaterial.matchXMaterial(banner).get().parseItem();
       }
       pane.addItem(new GuiItem(item, e -> {
         e.setCancelled(true);

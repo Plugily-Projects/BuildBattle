@@ -22,11 +22,13 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import me.tigerhix.lib.scoreboard.common.EntryBuilder;
 import me.tigerhix.lib.scoreboard.type.Entry;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle.arena.ArenaState;
@@ -97,22 +99,22 @@ public class GuessTheBuildScoreboardManager extends ScoreboardManager {
         returnString = StringUtils.replace(returnString, "%THEME%", getPlugin().getChatManager().colorMessage("Scoreboard.Theme-Unknown"));
       }
       returnString = StringUtils.replace(returnString, "%BUILDER%", arena.getCurrentBuilder().getName());
+    } else {
+      returnString = StringUtils.replace(returnString, "%THEME%", getPlugin().getChatManager().colorMessage("Scoreboard.Theme-Unknown"));
+      returnString = StringUtils.replace(returnString, "%BUILDER%", getPlugin().getChatManager().colorMessage("Scoreboard.Theme-Unknown"));
     }
-    //todo ineffective
-    if (arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
-      try {
-        for (int i = 1; i < 11; i++) {
-          if (arena.getArenaState() != ArenaState.ENDING && i > 3) {
-            break;
-          }
-          //todo may be errors?
-          returnString = StringUtils.replace(returnString, "%" + i + "%",
-              ((Player) arena.getPlayersPoints().keySet().toArray()[i]).getName());
-          returnString = StringUtils.replace(returnString, "%" + i + "_PTS%",
-              String.valueOf(arena.getPlayersPoints().get(arena.getPlayersPoints().keySet().toArray()[i])));
+    if(arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
+      int max = arena.getArenaState() == ArenaState.IN_GAME ? 3 : 10;
+      List<Map.Entry<Player, Integer>> list = new ArrayList<>(arena.getPlayersPoints().entrySet());
+      for(int i = 0; i <= max; i++) {
+        if(list.size() - 1 < i) {
+          returnString = StringUtils.replace(returnString, "%" + (i + 1) + "%", "None");
+          returnString = StringUtils.replace(returnString, "%" + (i + 1) + "_PTS%", "0");
+          continue;
         }
-      } catch (Exception ignored) {
-        //ignore for test purposes
+        Map.Entry<Player, Integer> entry = list.get(i);
+        returnString = StringUtils.replace(returnString, "%" + (i + 1) + "%", entry.getKey().getName());
+        returnString = StringUtils.replace(returnString, "%" + (i + 1) + "_PTS%", String.valueOf(entry.getValue()));
       }
     }
     returnString = replaceValues(returnString);

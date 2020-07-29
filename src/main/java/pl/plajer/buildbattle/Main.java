@@ -52,6 +52,7 @@ import pl.plajer.buildbattle.handlers.items.SpecialItemsRegistry;
 import pl.plajer.buildbattle.handlers.language.LanguageManager;
 import pl.plajer.buildbattle.handlers.party.PartyHandler;
 import pl.plajer.buildbattle.handlers.party.PartySupportInitializer;
+import pl.plajer.buildbattle.handlers.reward.RewardsFactory;
 import pl.plajer.buildbattle.handlers.setup.SetupInventoryEvents;
 import pl.plajer.buildbattle.handlers.sign.ArenaSign;
 import pl.plajer.buildbattle.handlers.sign.SignManager;
@@ -81,7 +82,6 @@ import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 //todo arenas handler recode
 //todo new debugger
 //todo inventoryframework
-//todo strict legacy materials class
 public class Main extends JavaPlugin {
 
   private ExceptionLogHandler exceptionLogHandler;
@@ -98,6 +98,7 @@ public class Main extends JavaPlugin {
   private String version;
   private boolean forceDisable = false;
   private PartyHandler partyHandler;
+  private RewardsFactory rewardsHandler;
 
   public CuboidSelector getCuboidSelector() {
     return cuboidSelector;
@@ -143,6 +144,10 @@ public class Main extends JavaPlugin {
     return version.equalsIgnoreCase("v1_15_R1");
   }
 
+  public boolean is1_16_R1() {
+    return version.equalsIgnoreCase("v1_16_R1");
+  }
+
   @Override
   public void onEnable() {
     if (!validateIfPluginShouldStart()) {
@@ -158,7 +163,7 @@ public class Main extends JavaPlugin {
     }
     Debugger.debug(Debugger.Level.INFO, "Main setup started");
     saveDefaultConfig();
-    for (String s : Arrays.asList("arenas", "particles", "lobbyitems", "stats", "voteItems", "mysql", "biomes", "bungee")) {
+    for (String s : Arrays.asList("arenas", "particles", "lobbyitems", "stats", "voteItems", "mysql", "biomes", "bungee", "rewards")) {
       ConfigUtils.getConfig(this, s);
     }
     LanguageManager.init(this);
@@ -204,7 +209,8 @@ public class Main extends JavaPlugin {
       return false;
     }
     if (!(version.equalsIgnoreCase("v1_11_R1") || version.equalsIgnoreCase("v1_12_R1") || version.equalsIgnoreCase("v1_13_R1")
-        || version.equalsIgnoreCase("v1_13_R2") || version.equalsIgnoreCase("v1_14_R1") || version.equalsIgnoreCase("v1_15_R1"))) {
+        || version.equalsIgnoreCase("v1_13_R2") || version.equalsIgnoreCase("v1_14_R1") || version.equalsIgnoreCase("v1_15_R1")
+            || version.equalsIgnoreCase("v1_16_R1"))) {
       MessageUtils.thisVersionIsNotSupported();
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by Build Battle!");
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider updating your server version?");
@@ -271,7 +277,8 @@ public class Main extends JavaPlugin {
     new VoteMenuListener(this);
     new HolidayManager(this);
     BannerMenu.init(this);
-    partyHandler = new PartySupportInitializer().initialize();
+    partyHandler = new PartySupportInitializer().initialize(this);
+    rewardsHandler = new RewardsFactory(this);
   }
 
   @Override
@@ -311,18 +318,23 @@ public class Main extends JavaPlugin {
   private void saveAllUserStatistics() {
     for (Player player : getServer().getOnlinePlayers()) {
       User user = userManager.getUser(player);
-
-      //copy of userManager#saveStatistic but without async database call that's not allowed in onDisable method.
+      StringBuilder update = new StringBuilder(" SET ");
       for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
         if (!stat.isPersistent()) {
           continue;
         }
-        if (userManager.getDatabase() instanceof MysqlManager) {
-          ((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE buildbattlestats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
-          continue;
+        if (update.toString().equalsIgnoreCase(" SET ")){
+          update.append(stat.getName()).append("=").append(user.getStat(stat));
         }
-        userManager.getDatabase().saveStatistic(user, stat);
+        update.append(", ").append(stat.getName()).append("=").append(user.getStat(stat));
       }
+      String finalUpdate = update.toString();
+      //copy of userManager#saveStatistic but without async database call that's not allowed in onDisable method.
+      if (userManager.getDatabase() instanceof MysqlManager) {
+        ((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE "+((MysqlManager) getUserManager().getDatabase()).getTableName()+ finalUpdate + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+        continue;
+      }
+      userManager.getDatabase().saveAllStatistic(user);
     }
   }
 
@@ -341,4 +353,9 @@ public class Main extends JavaPlugin {
   public PartyHandler getPartyHandler() {
     return partyHandler;
   }
+
+  public RewardsFactory getRewardsHandler() {
+    return rewardsHandler;
+  }
+
 }

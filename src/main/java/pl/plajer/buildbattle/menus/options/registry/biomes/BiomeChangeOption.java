@@ -32,6 +32,7 @@ import pl.plajer.buildbattle.arena.managers.plots.Plot;
 import pl.plajer.buildbattle.menus.options.MenuOption;
 import pl.plajer.buildbattle.menus.options.OptionsRegistry;
 import pl.plajer.buildbattle.utils.Utils;
+import pl.plajerlair.commonsbox.minecraft.compat.XBiome;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
@@ -82,11 +83,18 @@ public class BiomeChangeOption {
               if (!p.getWorld().equals(chunk.getWorld())) {
                 continue;
               }
+              if (plugin.is1_16_R1()) {
+                Utils.sendPacket(p, Utils.getNMSClass("PacketPlayOutMapChunk").getConstructor(Utils.getNMSClass("Chunk"), int.class, boolean.class)
+                        .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535, false));
+              } else {
               Utils.sendPacket(p, Utils.getNMSClass("PacketPlayOutMapChunk").getConstructor(Utils.getNMSClass("Chunk"), int.class)
                   .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535));
+              }
             }
           }
-        } catch (ReflectiveOperationException ignored) {/*fail silently*/}
+        } catch (ReflectiveOperationException exception) {
+          exception.printStackTrace();
+        }
         for (Player p : plot.getOwners()) {
           p.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Biome.Biome-Set"));
         }

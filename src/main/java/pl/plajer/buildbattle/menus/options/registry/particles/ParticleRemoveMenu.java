@@ -80,7 +80,7 @@ public class ParticleRemoveMenu {
         .lore(plugin.getChatManager().colorMessage("Menus.Buttons.Back-Button.Lore"))
         .build(), event -> {
       event.getWhoClicked().closeInventory();
-      event.getWhoClicked().openInventory(plugin.getOptionsRegistry().getParticleRegistry().getInventory());
+      event.getWhoClicked().openInventory(plugin.getOptionsRegistry().getParticleRegistry().getPage1());
     }), 4, 5);
     gui.addPane(pane);
     gui.show(player);

@@ -62,12 +62,12 @@ public class BiomesRegistry {
         Debugger.debug(Debugger.Level.WARN, "There are too many biomes to register! Menu can't hold any more!");
         break;
       }
-      BiomeItem biomeItem = new BiomeItem(new ItemBuilder(XMaterial.fromString(config
-          .getString(biome + ".material-name").toUpperCase()).parseItem())
+      BiomeItem biomeItem = new BiomeItem(new ItemBuilder(XMaterial.matchXMaterial(config
+          .getString(biome + ".material-name").toUpperCase()).get().parseItem())
           .name(plugin.getChatManager().colorRawMessage(config.getString(biome + ".displayname")))
           .lore(config.getStringList(biome + ".lore")
               .stream().map(lore -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()))
-          .build(), config.getString(biome + ".permission"), XBiome.fromString(biome));
+          .build(), config.getString(biome + ".permission"), XBiome.matchXBiome(biome).get());
       biomes.add(biomeItem);
       i++;
     }

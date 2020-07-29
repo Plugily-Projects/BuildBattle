@@ -1,0 +1,77 @@
+#
+#                    BuildBattle rewards configuration
+#
+#                          Placeholders list:
+#                   %PLAYER% - Current player name
+#                       %MAPNAME% - Name of map
+#                    %ARENA-ID% - Arena Identifier
+#                    %PLACE% - Player Place (Working on category place)
+#             %PLAYERAMOUNT% - Number of players in game
+#
+#        Commands are executed by default BY CONSOLE, use "p:" to preform command by player
+#  You can use chance to execute command adding "chance(NUMBER):" (ex chance(10):) at the beginning of command
+#
+#  Commands examples:
+#    - p:say Hello everyone in %MAPNAME%!     # Player will say "Hello everyone in <map name here>"
+#    - broadcast Game %ARENA-ID% has ended!   # Will broadcast "Game <arena name here> has ended" message
+#    - chance(1):p:say I was very lucky!              # Player has 1% chance to say "I was very lucky!"
+#    - p:chance(99):spawn                             # Player has 99% chance to teleport to spawn
+#       ^ YOU CAN EVEN SWAP CHANCE WITH PLAYER!
+#    - chance(50):eco give %PLAYER% 10                # Console has 10% chance to give player 10$
+#
+#   You can unlock full potential of rewards using our script engine! (since 4.0.0)
+#    Just add example reward:
+#    - script:player.sendMessage("oh, hi %PLAYER%");      # It will send "oh, hi <player name>" to player! 100% plain java!
+#    - script:server.broadcastMessage("hello everyone");  # Broadcasts "hello everyone" to whole server
+#    - script:player.getInventory().addItem(new org.bukkit.inventory.ItemStack(org.bukkit.Material.DIRT));
+#         ^ Gives player dirt item (you must always use direct package names for not provided objects)
+#
+#                               All script provided objects:
+#            player - Player object (API methods https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/Player.html)
+#    arena - BuildBattle BaseArena (API methods https://jd.plugily.xyz/minecraft/buildbattle/pl/plajer/buildbattle/arena/impl/BaseArena.html)
+#            server - Bukkit server object (API methods https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Server.html)
+#
+#                            Whole documentation of scripts soon!
+
+# Rewards must be enabled via config.yml first!
+rewards:
+  # Commands performed when game is finished
+  endgame:
+    - say %MAPNAME% has ended
+    - say Ooh and there were playing %PLAYERAMOUNT% players
+  # Commands performed when all themes are guessed in GTB
+  # Delete everything if you don't want to use this section
+  guess:
+    - eco give %PLAYER% 2
+  allguessed:
+    - eco give %PLAYER% 2
+  # Commands executed when someone vote
+  vote:
+    - eco give %PLAYER% 2
+    - chance(10):eco give %PLAYER% 8
+  # Commands executed when someone report a building
+  report:
+    - eco give %PLAYER% 2
+    - script:player.sendMessage("You reported the building");
+  # Commands executed on place X
+  place:
+    1:
+      - eco give %PLAYER% 10
+    2:
+      - eco give %PLAYER% 9
+    3:
+      - eco give %PLAYER% 8
+    4:
+      - eco give %PLAYER% 7
+    5:
+      - eco give %PLAYER% 6
+    6:
+      - eco give %PLAYER% 5
+    7:
+      - eco give %PLAYER% 4
+    8:
+      - eco give %PLAYER% 3
+    9:
+      - eco give %PLAYER% 2
+    10:
+      - eco give %PLAYER% 1

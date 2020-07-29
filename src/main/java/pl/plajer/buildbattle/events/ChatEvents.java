@@ -25,6 +25,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import pl.plajer.buildbattle.ConfigPreferences;
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.arena.ArenaRegistry;
@@ -47,18 +48,20 @@ public class ChatEvents implements Listener {
 
   @EventHandler
   public void onChatIngame(AsyncPlayerChatEvent event) {
-    BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
-    if (arena == null) {
-      for (BaseArena loopArena : ArenaRegistry.getArenas()) {
-        for (Player player : loopArena.getPlayers()) {
-          event.getRecipients().remove(player);
-        }
-      }
-      return;
-    }
-    event.getRecipients().clear();
-    event.getRecipients().addAll(new ArrayList<>(arena.getPlayers()));
 
+    BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
+    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SEPARATE_CHAT)) {
+      if (arena == null) {
+        for (BaseArena loopArena : ArenaRegistry.getArenas()) {
+          for (Player player : loopArena.getPlayers()) {
+            event.getRecipients().remove(player);
+          }
+        }
+        return;
+      }
+      event.getRecipients().clear();
+      event.getRecipients().addAll(new ArrayList<>(arena.getPlayers()));
+    }
     if (!(arena instanceof GuessTheBuildArena)) {
       return;
     }
@@ -81,9 +84,12 @@ public class ChatEvents implements Listener {
     //todo how this works
     event.getPlayer().sendMessage(plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Plus-Points")
         .replace("%pts%", String.valueOf(gameArena.getCurrentTheme().getDifficulty().getPointsReward())));
+    gameArena.getPlayersPoints().put(event.getPlayer(), gameArena.getPlayersPoints().getOrDefault(event.getPlayer(), 0)
+        + gameArena.getCurrentTheme().getDifficulty().getPointsReward());
     plugin.getUserManager().getUser(gameArena.getCurrentBuilder())
         .addStat(StatsStorage.StatisticType.LOCAL_GUESS_THE_BUILD_POINTS, gameArena.getCurrentTheme().getDifficulty().getPointsReward());
     gameArena.addWhoGuessed(event.getPlayer());
+    gameArena.recalculateLeaderboard();
 
     //todo add api event for successful guess
   }

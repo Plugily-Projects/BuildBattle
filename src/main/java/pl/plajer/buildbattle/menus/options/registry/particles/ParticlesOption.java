@@ -51,7 +51,7 @@ public class ParticlesOption {
         if (arena == null) {
           return;
         }
-        e.getWhoClicked().openInventory(registry.getParticleRegistry().getInventory());
+        e.getWhoClicked().openInventory(registry.getParticleRegistry().getPage1());
       }
 
       @Override
@@ -63,7 +63,13 @@ public class ParticlesOption {
         if (e.getCurrentItem() == null) {
           return;
         }
-
+        if (e.getCurrentItem().getItemMeta().getDisplayName()
+                .contains("§7-->")) {
+          e.setCancelled(false);
+          e.getWhoClicked().closeInventory();
+          e.getWhoClicked().openInventory(registry.getParticleRegistry().getPage2());
+          return;
+        }
         if (e.getCurrentItem().getItemMeta().getDisplayName()
             .contains(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))) {
           e.setCancelled(false);

@@ -25,12 +25,14 @@ import java.sql.Statement;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import pl.plajer.buildbattle.Main;
 import pl.plajer.buildbattle.api.StatsStorage;
 import pl.plajer.buildbattle.user.User;
 import pl.plajerlair.commonsbox.database.MysqlDatabase;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 
 /**
  * @author Plajer
@@ -49,7 +51,7 @@ public class MysqlManager implements UserDatabase {
       try (Connection connection = database.getConnection();
            Statement statement = connection.createStatement()) {
         statement.executeUpdate(
-            "CREATE TABLE IF NOT EXISTS `buildbattlestats` (\n"
+            "CREATE TABLE IF NOT EXISTS `"+getTableName()+"` (\n"
                 + "  `UUID` char(36) NOT NULL PRIMARY KEY,\n"
                 + "  `name` varchar(32) NOT NULL,\n"
                 + "  `loses` int(11) NOT NULL DEFAULT '0',\n"
@@ -63,14 +65,14 @@ public class MysqlManager implements UserDatabase {
 
         //temporary workaround
         try {
-          statement.executeUpdate("ALTER TABLE buildbattlestats ADD supervotes int(11) NOT NULL DEFAULT '0'");
+          statement.executeUpdate("ALTER TABLE "+getTableName()+" ADD supervotes int(11) NOT NULL DEFAULT '0'");
         } catch (SQLException e) {
           if (!e.getMessage().contains("Duplicate column name")) {
             e.printStackTrace();
           }
         }
         try {
-          statement.executeUpdate("ALTER TABLE buildbattlestats ADD name text NOT NULL");
+          statement.executeUpdate("ALTER TABLE "+getTableName()+" ADD name text NOT NULL");
         } catch (SQLException e) {
           if (!e.getMessage().contains("Duplicate column name")) {
             e.printStackTrace();
@@ -88,7 +90,25 @@ public class MysqlManager implements UserDatabase {
 
   @Override
   public void saveStatistic(User user, StatsStorage.StatisticType stat) {
-    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate("UPDATE buildbattlestats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';"));
+    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate("UPDATE "+getTableName()+" SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';"));
+  }
+
+  @Override
+  public void saveAllStatistic(User user) {
+    StringBuilder update = new StringBuilder(" SET ");
+    for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+      if (!stat.isPersistent()) {
+        continue;
+      }
+      if (update.toString().equalsIgnoreCase(" SET ")){
+        update.append(stat.getName()).append("=").append(user.getStat(stat));
+      }
+      update.append(", ").append(stat.getName()).append("=").append(user.getStat(stat));
+    }
+    String finalUpdate = update.toString();
+
+    Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
+            database.executeUpdate("UPDATE "+getTableName()+ finalUpdate + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';"));
   }
 
   @Override
@@ -97,7 +117,7 @@ public class MysqlManager implements UserDatabase {
       String uuid = user.getPlayer().getUniqueId().toString();
       try (Connection connection = database.getConnection();
            Statement statement = connection.createStatement()) {
-        ResultSet rs = statement.executeQuery("SELECT * from buildbattlestats WHERE UUID='" + uuid + "'");
+        ResultSet rs = statement.executeQuery("SELECT * from "+getTableName()+" WHERE UUID='" + uuid + "'");
         if (rs.next()) {
           //player already exists - get the stats
           for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
@@ -107,7 +127,7 @@ public class MysqlManager implements UserDatabase {
           }
         } else {
           //player doesn't exist - make a new record
-          statement.executeUpdate("INSERT INTO buildbattlestats (UUID,name) VALUES ('" + uuid + "','" + user.getPlayer().getName() + "')");
+          statement.executeUpdate("INSERT INTO "+getTableName()+" (UUID,name) VALUES ('" + uuid + "','" + user.getPlayer().getName() + "')");
           for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
             if (!stat.isPersistent()) continue;;
             user.setStat(stat, 0);
@@ -118,4 +138,10 @@ public class MysqlManager implements UserDatabase {
       }
     });
   }
+
+  public String getTableName() {
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "mysql");
+    return config.getString("table", "buildbattlestats");
+  }
+
 }

@@ -55,7 +55,7 @@ public class UserManager {
   private void loadStatsForPlayersOnline() {
     for (Player player : Bukkit.getServer().getOnlinePlayers()) {
       if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-        ArenaRegistry.getArenas().get(0).teleportToLobby(player);
+        ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()).teleportToLobby(player);
       }
       User user = getUser(player);
       loadStatistics(user);
@@ -79,6 +79,10 @@ public class UserManager {
       return;
     }
     database.saveStatistic(user, stat);
+  }
+
+  public void saveAllStatistic(User user) {
+    database.saveAllStatistic(user);
   }
 
   public void loadStatistics(User user) {

@@ -21,6 +21,7 @@ package pl.plajer.buildbattle.utils;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -30,6 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -100,7 +103,7 @@ public class Utils {
         SkullMeta headMeta = (SkullMeta) head.getItemMeta();
         GameProfile profile = new GameProfile(UUID.randomUUID(), null);
         profile.getProperties().put("textures", new Property("textures", url));
-        if (plugin.is1_15_R1()) {
+        if (plugin.is1_15_R1() || plugin.is1_16_R1()) {
             try {
                 Method mtd = headMeta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
                 mtd.setAccessible(true);
@@ -157,6 +160,26 @@ public class Utils {
             ex.printStackTrace();
             Bukkit.getConsoleSender().sendMessage("Reflection failed for " + nmsClassName);
             return null;
+        }
+    }
+
+    public static void sendActionBar(Player player, String message) {
+        String version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+        if(version.contains("v1_7") || version.contains("v1_8")) {
+            try {
+                Constructor<?> constructor = getNMSClass("PacketPlayOutChat").getConstructor(getNMSClass("IChatBaseComponent"), byte.class);
+
+                Object icbc = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class).invoke(null, "{\"text\":\"" + message + "\"}");
+                Object packet = constructor.newInstance(icbc, (byte) 2);
+                Object entityPlayer = player.getClass().getMethod("getHandle").invoke(player);
+                Object playerConnection = entityPlayer.getClass().getField("playerConnection").get(entityPlayer);
+
+                playerConnection.getClass().getMethod("sendPacket", getNMSClass("Packet")).invoke(playerConnection, packet);
+            } catch(NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchFieldException | InstantiationException e) {
+                e.printStackTrace();
+            }
+        } else {
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new ComponentBuilder(message).create());
         }
     }
 

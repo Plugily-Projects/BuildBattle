@@ -31,6 +31,7 @@ import org.bukkit.Material;
 
 import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.utils.Debugger;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -42,6 +43,7 @@ public class ConfigPreferences {
   private List<String> endGameCommands = new ArrayList<>();
   private List<String> whitelistedCommands = new ArrayList<>();
   private List<Material> itemBlacklist = new ArrayList<>();
+  private List<Material> floorBlacklist = new ArrayList<>();
   private Map<Option, Boolean> options = new EnumMap<>(Option.class);
 
   public ConfigPreferences(Main plugin) {
@@ -105,12 +107,23 @@ public class ConfigPreferences {
     return Collections.unmodifiableList(itemBlacklist);
   }
 
+  public List<Material> getFloorBlacklist() {
+    return Collections.unmodifiableList(floorBlacklist);
+  }
+
   private void loadBlackList() {
     for (String item : plugin.getConfig().getStringList("Blacklisted-Item-Names")) {
       try {
-        itemBlacklist.add((Material.matchMaterial(item)));
+        itemBlacklist.add((XMaterial.matchXMaterial(item).get().parseMaterial()));
       } catch (IllegalArgumentException ex) {
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Invalid black listed item! " + item + " doesn't exist, are you sure it's properly named?");
+      }
+    }
+    for (String item : plugin.getConfig().getStringList("Blacklisted-Floor-Materials")) {
+      try {
+        floorBlacklist.add((XMaterial.matchXMaterial(item).get().parseMaterial()));
+      } catch (IllegalArgumentException ex) {
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Invalid black listed material! " + item + " doesn't exist, are you sure it's properly named?");
       }
     }
   }
@@ -120,15 +133,24 @@ public class ConfigPreferences {
   }
 
   public int getTimer(TimerType type, BaseArena arena) {
+    String prefix = "Time-Manager." +arena.getArenaType().getPrefix() + ".";
     switch (type) {
       case BUILD:
-        return plugin.getConfig().getInt("Build-Time." + arena.getArenaType().getPrefix(), 100);
+        return plugin.getConfig().getInt(prefix + "Build-Time", 200);
       case LOBBY:
-        return plugin.getConfig().getInt("Lobby-Starting-Time", 60);
+        return plugin.getConfig().getInt(prefix + "Lobby-Starting-Time", 60);
       case PLOT_VOTE:
-        return plugin.getConfig().getInt("Voting-Time-In-Seconds", 20);
+        return plugin.getConfig().getInt(prefix + "Voting-Time-In-Seconds", 20);
       case THEME_VOTE:
-        return plugin.getConfig().getInt("Theme-Voting-Time-In-Seconds", 25);
+        return plugin.getConfig().getInt(prefix + "Theme-Voting-Time-In-Seconds", 25);
+      case DELAYED_TASK:
+        return plugin.getConfig().getInt(prefix + "Delay-Between-Rounds-In-Seconds", 5);
+      case TIME_SHORTENER:
+        return plugin.getConfig().getInt(prefix + "Time-Shortener-In-Seconds", 10);
+      case THEME_SELECTION:
+        return plugin.getConfig().getInt(prefix + "Theme-Selection-Time-In-Seconds", 15);
+      case ALL_GUESSED:
+        return plugin.getConfig().getInt(prefix + "All-Guessed-In-Seconds", 5);
       default:
         return 0;
     }
@@ -145,14 +167,15 @@ public class ConfigPreferences {
   }
 
   public enum TimerType {
-    BUILD, LOBBY, PLOT_VOTE, THEME_VOTE
+    BUILD, LOBBY, PLOT_VOTE, THEME_VOTE, DELAYED_TASK, TIME_SHORTENER, THEME_SELECTION, ALL_GUESSED
   }
 
   public enum Option {
     BOSSBAR_ENABLED("Boss-Bar-Enabled", true), BUNGEE_ENABLED("BungeeActivated", false), DATABASE_ENABLED("DatabaseActivated", false),
-    INVENTORY_MANAGER_ENABLED("InventoryManager", true), WIN_COMMANDS_ENABLED("Win-Commands-Activated", false),
-    SECOND_PLACE_COMMANDS_ENABLED("Second-Place-Commands-Activated", false), THIRD_PLACE_COMMANDS_ENABLED("Third-Place-Commands-Activated", false),
-    END_GAME_COMMANDS_ENABLED("End-Game-Commands-Activated", false), BLOCK_COMMANDS_IN_GAME("Block-Commands-In-Game", true);
+    INVENTORY_MANAGER_ENABLED("InventoryManager", true), BLOCK_COMMANDS_IN_GAME("Block-Commands-In-Game", true), REWARDS("Rewards-Enabled", false),
+    HEADS_COMMAND("Command-Instead-Of-Head-Menu.Enabled",false), ENABLE_SHORT_COMMANDS("Enable-Short-Commands", false),
+    DISABLE_SEPARATE_CHAT("Disable-Separate-Chat", false), DISABLE_PARTIES("Disable-Parties", true), ANNOUNCE_PLOTOWNER_LATER("Announce-PlotOwner-Later", false),
+    RUN_COMMAND_ON_REPORT("Run-Command-On-Report.Enabled", false);
 
     private String path;
     private boolean def;

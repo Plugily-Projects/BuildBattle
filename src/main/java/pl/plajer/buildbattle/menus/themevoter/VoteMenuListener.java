@@ -39,6 +39,7 @@ import pl.plajer.buildbattle.arena.impl.BaseArena;
 import pl.plajer.buildbattle.arena.impl.GuessTheBuildArena;
 import pl.plajer.buildbattle.arena.impl.SoloArena;
 import pl.plajer.buildbattle.user.User;
+import pl.plajer.buildbattle.utils.Debugger;
 
 /**
  * @author Plajer
@@ -135,7 +136,6 @@ public class VoteMenuListener implements Listener {
     if (!(arena instanceof GuessTheBuildArena)) {
       return;
     }
-    //todo once you close you cant choose rip
     if (e.getView().getTitle().equals(plugin.getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Inventory-Name"))) {
       e.setCancelled(true);
       if (e.getCurrentItem().getType() == Material.PAPER) {
@@ -157,6 +157,7 @@ public class VoteMenuListener implements Listener {
         }
         ((GuessTheBuildArena) arena).setCurrentTheme(theme);
         ((GuessTheBuildArena) arena).setThemeSet(true);
+        arena.setTimer(plugin.getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, arena));
         ((Player) e.getWhoClicked()).spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Is-Name")
             .replace("%THEME%", theme.getTheme())));
         e.getWhoClicked().closeInventory();

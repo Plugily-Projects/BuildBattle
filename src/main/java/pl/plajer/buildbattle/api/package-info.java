@@ -17,7 +17,7 @@
  */
 
 /**
- * Package with all API events and methods to hook with Village Defense.
+ * Package with all API events and methods to hook with BuildBattle.
  */
 
 package pl.plajer.buildbattle.api;

@@ -86,7 +86,7 @@ public class JoinEvents implements Listener {
   @EventHandler
   public void onJoinLoadStats(PlayerJoinEvent e) {
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && !ArenaRegistry.getArenas().isEmpty()) {
-      ArenaRegistry.getArenas().get(0).teleportToLobby(e.getPlayer());
+      ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()).teleportToLobby(e.getPlayer());
     }
     plugin.getUserManager().loadStatistics(plugin.getUserManager().getUser(e.getPlayer()));
   }
