@@ -1,6 +1,6 @@
 /*
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
+ * Copyright (C) 2020 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -140,7 +140,7 @@ public class SoloArena extends BaseArena {
         break;
       case STARTING:
         for (Player player : getPlayers()) {
-          player.setExp((float) (getTimer() / getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this)));
+          player.setExp((float) (getTimer() / (double) getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this)));
           player.setLevel(getTimer());
         }
         if (getPlayers().size() < getMinimumPlayers() && !isForceStart()) {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ BuildBattle - Ultimate building competition minigame
-  ~ Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
+  ~ Copyright (C) 2020 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -64,6 +64,10 @@
         <repository>
             <id>simonsators-repo</id>
             <url>http://simonsator.de/repo/</url>
+        </repository>
+        <repository>
+            <id>placeholderapi</id>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
     </repositories>
 
@@ -150,6 +154,7 @@
             <groupId>com.alessiodp.parties</groupId>
             <artifactId>parties-api</artifactId>
             <version>2.6.14</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>de.simonsator</groupId>
