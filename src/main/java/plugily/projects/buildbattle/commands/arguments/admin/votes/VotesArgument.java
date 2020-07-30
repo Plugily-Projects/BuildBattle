@@ -53,7 +53,7 @@ public class VotesArgument {
                     sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + ChatColor.RED + "Please type amount of super votes to add or set!");
                     return;
                 }
-                if (!(args[1].equalsIgnoreCase("add") && args[1].equalsIgnoreCase("set"))) {
+                if (!args[1].equalsIgnoreCase("add") && !args[1].equalsIgnoreCase("set")) {
                     sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + ChatColor.RED + "Wrong command usage, please use /bba votes <add|set> <amount> [player]!");
                     return;
                 }
