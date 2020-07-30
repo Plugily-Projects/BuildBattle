@@ -9,7 +9,11 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
-### 4.4.0 Release
+### 4.4.1 Release (30.07.2020)
+* Added GTB to the SetUp inventory
+* (Developer Alert - Class rename)
+
+### 4.4.0 Release (01.07.2020 - 29.07.2020)
 * GuessTheBuild release
 * Reworked whole Rewards
 * New file rewards.yml

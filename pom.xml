@@ -22,9 +22,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>pl.plajer</groupId>
+    <groupId>plugily.projects</groupId>
     <artifactId>buildbattle</artifactId>
-    <version>4.4.0</version>
+    <version>4.4.1</version>
     <name>BuildBattle</name>
 
     <properties>
@@ -248,27 +248,27 @@
                             <relocations>
                                 <relocation>
                                     <pattern>me.tigerhix.lib.scoreboard</pattern>
-                                    <shadedPattern>pl.plajer.buildbattle.utils.scoreboard</shadedPattern>
+                                    <shadedPattern>plugily.projects.buildbattle.utils.scoreboard</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.apache.commons.io</pattern>
-                                    <shadedPattern>pl.plajer.buildbattle.utils.commons.io</shadedPattern>
+                                    <shadedPattern>plugily.projects.buildbattle.utils.commons.io</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>com.zaxxer.hikari</pattern>
-                                    <shadedPattern>pl.plajer.buildbattle.database.hikari</shadedPattern>
+                                    <shadedPattern>plugily.projects.buildbattle.database.hikari</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>pl.plajerlair.commonsbox</pattern>
-                                    <shadedPattern>pl.plajer.buildbattle.plajerlair.commonsbox</shadedPattern>
+                                    <shadedPattern>plugily.projects.buildbattle.plajerlair.commonsbox</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.bstats</pattern>
-                                    <shadedPattern>pl.plajer.buildbattle.utils</shadedPattern>
+                                    <shadedPattern>plugily.projects.buildbattle.utils</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>com.github.stefvanschie.inventoryframework</pattern>
-                                    <shadedPattern>pl.plajer.buildbattle.inventoryframework</shadedPattern>
+                                    <shadedPattern>plugily.projects.buildbattle.inventoryframework</shadedPattern>
                                 </relocation>
                             </relocations>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
