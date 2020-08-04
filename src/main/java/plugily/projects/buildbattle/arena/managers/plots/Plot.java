@@ -144,32 +144,46 @@ public class Plot {
   }
 
   public void resetPlot() {
+    if (cuboid == null) {
+      return;
+    }
+
     for (Block block : cuboid.blockList()) {
       //to ensure 1.14 blocks support (that will be seen as air in api-version 1.13)
       //we set all blocks to air so 1.14 ones will update too
       block.setType(Material.AIR);
     }
+
     getParticles().clear();
-    for (Player p : owners) {
-      p.resetPlayerWeather();
-      setWeatherType(p.getPlayerWeather());
-      p.resetPlayerTime();
+
+    if (owners != null) {
+      for (Player p : owners) {
+        p.resetPlayerWeather();
+        setWeatherType(p.getPlayerWeather());
+        p.resetPlayerTime();
+      }
     }
-    for (Entity entity : cuboid.getCenter().getWorld().getEntities()) {
-      if (cuboid.isInWithMarge(entity.getLocation(), 5)) {
-        if (plugin.getServer().getPluginManager().isPluginEnabled("Citizens") && CitizensAPI.getNPCRegistry().isNPC(entity)) {
-          continue;
-        }
-        if (entity.getType() != EntityType.PLAYER) {
-          entity.remove();
+
+    if (cuboid.getCenter().getWorld() != null) {
+      for (Entity entity : cuboid.getCenter().getWorld().getEntities()) {
+        if (cuboid.isInWithMarge(entity.getLocation(), 5)) {
+          if (plugin.getServer().getPluginManager().isPluginEnabled("Citizens") && CitizensAPI.getNPCRegistry().isNPC(entity)) {
+            continue;
+          }
+
+          if (entity.getType() != EntityType.PLAYER) {
+            entity.remove();
+          }
         }
       }
     }
-    for (Block block : getCuboid().blockList()) {
+
+    for (Block block : cuboid.blockList()) {
       block.setBiome(plotDefaultBiome);
     }
+
     try {
-      for (Chunk chunk : getCuboid().chunkList()) {
+      for (Chunk chunk : cuboid.chunkList()) {
         for (Player p : Bukkit.getOnlinePlayers()) {
           if (!p.getWorld().equals(chunk.getWorld())) {
             continue;
@@ -186,9 +200,12 @@ public class Plot {
     } catch (ReflectiveOperationException exception) {
       exception.printStackTrace();
     }
+
     XMaterial.matchXMaterial(plugin.getConfig().getString("Default-Floor-Material-Name", "LOG")
         .toUpperCase()).ifPresent(m -> changeFloor(m.parseMaterial()));
+
     cuboid.getCenter().getWorld().setBiome(cuboid.getMinPoint().getBlockX(), cuboid.getMaxPoint().getBlockZ(), plotDefaultBiome);
+
     BBPlotResetEvent event = new BBPlotResetEvent(arena, this);
     Bukkit.getServer().getPluginManager().callEvent(event);
   }

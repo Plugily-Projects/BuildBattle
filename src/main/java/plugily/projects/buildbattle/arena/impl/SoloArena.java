@@ -589,11 +589,11 @@ public class SoloArena extends BaseArena {
 
   @Override
   public void giveRewards() {
-    for(int i = 1; i <= topList.size(); i++) {
-      if(topList.get(i).isEmpty()) {
+    for (int i = 1; i <= topList.size(); i++) {
+      if (topList.get(i) == null || topList.get(i).isEmpty()) {
         continue;
       }
-      for(Player player : topList.get(i)){
+      for (Player player : topList.get(i)) {
         getPlugin().getRewardsHandler().performReward(player, Reward.RewardType.PLACE, i);
       }
     }
