@@ -123,8 +123,8 @@ public class Utils {
         return item;
     }
 
-    public static Map sortByValue(Map unsortMap) {
-        List list = new LinkedList(unsortMap.entrySet());
+    public static Map sortByValue(Map unsortedMap) {
+        List list = new LinkedList(unsortedMap.entrySet());
         list.sort((o1, o2) -> ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue()));
         Map sortedMap = new LinkedHashMap();
         for (Object aList : list) {
