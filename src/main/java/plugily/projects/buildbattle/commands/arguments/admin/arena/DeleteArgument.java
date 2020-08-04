@@ -25,6 +25,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.buildbattle.arena.ArenaManager;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
@@ -32,7 +33,6 @@ import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
 import plugily.projects.buildbattle.commands.arguments.data.CommandArgument;
 import plugily.projects.buildbattle.commands.arguments.data.LabelData;
 import plugily.projects.buildbattle.commands.arguments.data.LabeledCommandArgument;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 
 /**
  * @author Plajer
@@ -41,7 +41,7 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
  */
 public class DeleteArgument {
 
-  private Set<CommandSender> confirmations = new HashSet<>();
+  private final Set<CommandSender> confirmations = new HashSet<>();
 
   public DeleteArgument(ArgumentsRegistry registry) {
     registry.mapArgument("buildbattleadmin", new LabeledCommandArgument("delete", "buildbattle.admin.delete", CommandArgument.ExecutorType.PLAYER,

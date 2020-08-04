@@ -25,9 +25,10 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
+import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
@@ -45,8 +46,6 @@ import plugily.projects.buildbattle.handlers.items.SpecialItem;
 import plugily.projects.buildbattle.handlers.party.GameParty;
 import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.utils.Debugger;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
-import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 
 /**
  * @author Plajer
@@ -70,7 +69,7 @@ public class ArenaManager {
    * @see BBGameJoinEvent
    */
   public static void joinAttempt(Player player, BaseArena arena) {
-    Debugger.debug(Debugger.Level.INFO, "Initial join attempt, " + player.getName());
+    Debugger.debug("Initial join attempt, " + player.getName());
     BBGameJoinEvent bbGameJoinEvent = new BBGameJoinEvent(player, arena);
     Bukkit.getPluginManager().callEvent(bbGameJoinEvent);
     if (!arena.isReady()) {
@@ -147,7 +146,7 @@ public class ArenaManager {
         return;
       }
     }
-    Debugger.debug(Debugger.Level.INFO, "Final join attempt, " + player.getName());
+    Debugger.debug("Final join attempt, " + player.getName());
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.saveInventoryToFile(plugin, player);
     }
@@ -177,7 +176,7 @@ public class ArenaManager {
    * @see BBGameLeaveEvent
    */
   public static void leaveAttempt(Player player, BaseArena arena) {
-    Debugger.debug(Debugger.Level.INFO, "Initial leave attempt, " + player.getName());
+    Debugger.debug("Initial leave attempt, " + player.getName());
     BBGameLeaveEvent bbGameLeaveEvent = new BBGameLeaveEvent(player, arena);
     Bukkit.getPluginManager().callEvent(bbGameLeaveEvent);
     if (arena instanceof SoloArena) {
@@ -218,9 +217,7 @@ public class ArenaManager {
     arena.doBarAction(BaseArena.BarAction.REMOVE, player);
     player.getInventory().setArmorContents(null);
     player.getInventory().clear();
-    for (PotionEffect effect : player.getActivePotionEffects()) {
-      player.removePotionEffect(effect.getType());
-    }
+    player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
     player.setFireTicks(0);
     if (arena.getPlayers().isEmpty() && arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS) {
       arena.setArenaState(ArenaState.RESTARTING);
@@ -246,7 +243,7 @@ public class ArenaManager {
    * @see BBGameEndEvent
    */
   public static void stopGame(boolean quickStop, BaseArena arena) {
-    Debugger.debug(Debugger.Level.INFO, "Game stop event initiate, arena " + arena.getID());
+    Debugger.debug("Game stop event initiate, arena " + arena.getID());
     BBGameEndEvent gameEndEvent = new BBGameEndEvent(arena);
     Bukkit.getPluginManager().callEvent(gameEndEvent);
     for (Player player : arena.getPlayers()) {
@@ -260,7 +257,7 @@ public class ArenaManager {
     if (arena instanceof SoloArena) {
       ((SoloArena) arena).setVoting(false);
     }
-    Debugger.debug(Debugger.Level.INFO, "Game stop event finish, arena " + arena.getID());
+    Debugger.debug("Game stop event finish, arena " + arena.getID());
   }
 
   private static void spawnFireworks(BaseArena arena, Player player) {
@@ -270,6 +267,7 @@ public class ArenaManager {
     new BukkitRunnable() {
       int i = 0;
 
+      @Override
       public void run() {
         if (i == 4 || !arena.getPlayers().contains(player)) {
           this.cancel();

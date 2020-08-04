@@ -59,10 +59,7 @@ public class VoteEvents implements Listener {
       return;
     }
     BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
-    if (arena instanceof GuessTheBuildArena) {
-      return;
-    }
-    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME || !((SoloArena) arena).isVoting()) {
+    if (arena instanceof GuessTheBuildArena || arena.getArenaState() != ArenaState.IN_GAME || !((SoloArena) arena).isVoting()) {
       return;
     }
     if (plugin.getVoteItems().getReportItem().equals(e.getItem())) {

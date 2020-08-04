@@ -39,7 +39,7 @@ public class User {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
   private Player player;
-  private Map<StatsStorage.StatisticType, Integer> stats = new EnumMap<>(StatsStorage.StatisticType.class);
+  private final Map<StatsStorage.StatisticType, Integer> stats = new EnumMap<>(StatsStorage.StatisticType.class);
   private Plot currentPlot;
 
   public User(Player player) {

@@ -20,7 +20,6 @@ package plugily.projects.buildbattle.commands.arguments.game;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.stream.Stream;
 
 import org.bukkit.command.CommandSender;
@@ -40,8 +39,6 @@ import plugily.projects.buildbattle.commands.arguments.data.CommandArgument;
  * Created at 03.12.2018
  */
 public class JoinArguments {
-
-  private Random random = new Random();
 
   public JoinArguments(ArgumentsRegistry registry) {
     //join argument

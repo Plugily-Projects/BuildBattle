@@ -34,13 +34,13 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaState;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.impl.SoloArena;
 import plugily.projects.buildbattle.handlers.language.LanguageManager;
 import plugily.projects.buildbattle.user.User;
-import pl.plajerlair.commonsbox.string.StringFormatUtils;
 
 /**
  * @author Plajer
@@ -50,8 +50,8 @@ import pl.plajerlair.commonsbox.string.StringFormatUtils;
 public class ScoreboardManager {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
-  private Map<String, List<String>> scoreboardContents = new HashMap<>();
-  private List<Scoreboard> scoreboards = new ArrayList<>();
+  private final Map<String, List<String>> scoreboardContents = new HashMap<>();
+  private final List<Scoreboard> scoreboards = new ArrayList<>();
   private String boardTitle = plugin.getChatManager().colorMessage("Scoreboard.Title");
   private BaseArena arena;
 
@@ -117,9 +117,7 @@ public class ScoreboardManager {
    * Forces all scoreboards to deactivate.
    */
   public void stopAllScoreboards() {
-    for (Scoreboard board : scoreboards) {
-      board.deactivate();
-    }
+    scoreboards.forEach(Scoreboard::deactivate);
     scoreboards.clear();
   }
 

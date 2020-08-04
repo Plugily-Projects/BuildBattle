@@ -25,12 +25,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import org.bukkit.inventory.ItemStack;
+
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.menus.options.MenuOption;
 import plugily.projects.buildbattle.menus.options.OptionsRegistry;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
 /**
  * @author Plajer
@@ -49,10 +50,7 @@ public class FloorChangeOption {
       public void onClick(InventoryClickEvent e) {
         BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
         ItemStack itemStack = e.getCursor();
-        if (arena == null) {
-          return;
-        }
-        if (itemStack == null) {
+        if (arena == null || itemStack == null) {
           return;
         }
         Material material = itemStack.getType();

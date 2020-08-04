@@ -33,12 +33,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.user.data.MysqlManager;
 import plugily.projects.buildbattle.utils.MessageUtils;
 import plugily.projects.buildbattle.utils.Utils;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 
 /**
  * @author Plajer, TomTheDeveloper
@@ -73,17 +73,16 @@ public class StatsStorage {
         Bukkit.getConsoleSender().sendMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
         return Collections.emptyMap();
       }
-    } else {
-      FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
-      Map<UUID, Integer> stats = new TreeMap<>();
-      for (String string : config.getKeys(false)) {
-        if (string.equals("data-version")) {
-          continue;
-        }
-        stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));
-      }
-      return Utils.sortByValue(stats);
     }
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
+    Map<UUID, Integer> stats = new TreeMap<>();
+    for (String string : config.getKeys(false)) {
+      if (string.equals("data-version")) {
+        continue;
+      }
+      stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));
+    }
+    return Utils.sortByValue(stats);
   }
 
   /**

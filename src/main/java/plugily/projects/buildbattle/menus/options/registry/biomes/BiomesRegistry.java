@@ -27,14 +27,14 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import plugily.projects.buildbattle.Main;
-import plugily.projects.buildbattle.menus.options.OptionsRegistry;
-import plugily.projects.buildbattle.utils.Debugger;
-import plugily.projects.buildbattle.utils.Utils;
 import pl.plajerlair.commonsbox.minecraft.compat.XBiome;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import plugily.projects.buildbattle.Main;
+import plugily.projects.buildbattle.menus.options.OptionsRegistry;
+import plugily.projects.buildbattle.utils.Debugger;
+import plugily.projects.buildbattle.utils.Utils;
 
 /**
  * @author Plajer
@@ -44,7 +44,7 @@ import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 public class BiomesRegistry {
 
   private Inventory inventory;
-  private Set<BiomeItem> biomes = new HashSet<>();
+  private final Set<BiomeItem> biomes = new HashSet<>();
   private Main plugin;
 
   public BiomesRegistry(OptionsRegistry registry) {
@@ -71,7 +71,7 @@ public class BiomesRegistry {
       biomes.add(biomeItem);
       i++;
     }
-    Debugger.debug(Debugger.Level.INFO, "Registered in total " + i + " biomes!");
+    Debugger.debug("Registered in total " + i + " biomes!");
   }
 
   private void registerInventory() {

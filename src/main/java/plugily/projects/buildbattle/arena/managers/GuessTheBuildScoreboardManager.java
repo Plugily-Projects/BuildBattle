@@ -21,6 +21,11 @@ package plugily.projects.buildbattle.arena.managers;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.tigerhix.lib.scoreboard.common.EntryBuilder;
 import me.tigerhix.lib.scoreboard.type.Entry;
+import plugily.projects.buildbattle.arena.ArenaState;
+import plugily.projects.buildbattle.arena.impl.BaseArena;
+import plugily.projects.buildbattle.arena.impl.GuessTheBuildArena;
+import plugily.projects.buildbattle.handlers.language.LanguageManager;
+import plugily.projects.buildbattle.user.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,12 +35,6 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 
-import plugily.projects.buildbattle.arena.ArenaState;
-import plugily.projects.buildbattle.arena.impl.BaseArena;
-import plugily.projects.buildbattle.arena.impl.GuessTheBuildArena;
-import plugily.projects.buildbattle.handlers.language.LanguageManager;
-import plugily.projects.buildbattle.user.User;
-
 /**
  * @author Plajer
  * <p>
@@ -44,7 +43,7 @@ import plugily.projects.buildbattle.user.User;
 public class GuessTheBuildScoreboardManager extends ScoreboardManager {
 
   private GuessTheBuildArena arena;
-  private Map<String, List<String>> scoreboardContents = new HashMap<>();
+  private final Map<String, List<String>> scoreboardContents = new HashMap<>();
 
   public GuessTheBuildScoreboardManager(BaseArena arena) {
     super(arena);

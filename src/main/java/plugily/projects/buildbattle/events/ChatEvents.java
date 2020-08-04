@@ -48,7 +48,6 @@ public class ChatEvents implements Listener {
 
   @EventHandler
   public void onChatIngame(AsyncPlayerChatEvent event) {
-
     BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SEPARATE_CHAT)) {
       if (arena == null) {

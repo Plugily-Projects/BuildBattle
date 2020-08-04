@@ -25,9 +25,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -36,6 +36,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
+import pl.plajerlair.commonsbox.string.StringMatcher;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
@@ -60,7 +61,6 @@ import plugily.projects.buildbattle.commands.arguments.game.LeaderboardArgument;
 import plugily.projects.buildbattle.commands.arguments.game.LeaveArgument;
 import plugily.projects.buildbattle.commands.arguments.game.StatsArgument;
 import plugily.projects.buildbattle.handlers.setup.SetupInventory;
-import pl.plajerlair.commonsbox.string.StringMatcher;
 
 /**
  * @author Plajer
@@ -70,7 +70,7 @@ import pl.plajerlair.commonsbox.string.StringMatcher;
 public class ArgumentsRegistry implements CommandExecutor {
 
   private Main plugin;
-  private Map<String, List<CommandArgument>> mappedArguments = new HashMap<>();
+  private final Map<String, List<CommandArgument>> mappedArguments = new HashMap<>();
 
   public ArgumentsRegistry(Main plugin) {
     this.plugin = plugin;
@@ -160,7 +160,7 @@ public class ArgumentsRegistry implements CommandExecutor {
               component = new TextComponent(labelData.getText() + " - " + labelData.getDescription().split("\n")[0]);
             }
             component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, labelData.getCommand()));
-            component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(labelData.getDescription()).create()));
+            component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(labelData.getDescription())));
             sender.spigot().sendMessage(component);
           }
           return true;
@@ -169,7 +169,7 @@ public class ArgumentsRegistry implements CommandExecutor {
           if (argument.getArgumentName().equalsIgnoreCase(args[0])) {
             boolean hasPerm = false;
             for (String perm : argument.getPermissions()) {
-              if (perm.equals("") || sender.hasPermission(perm)) {
+              if (perm.isEmpty() || sender.hasPermission(perm)) {
                 hasPerm = true;
                 break;
               }

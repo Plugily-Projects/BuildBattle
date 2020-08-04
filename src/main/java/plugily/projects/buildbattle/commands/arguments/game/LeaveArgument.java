@@ -50,11 +50,11 @@ public class LeaveArgument {
           p.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Teleported-To-The-Lobby"));
           if (registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
             registry.getPlugin().getBungeeManager().connectToHub(p);
-            Debugger.debug(Debugger.Level.INFO, p.getName() + " was teleported to the Hub server");
+            Debugger.debug(p.getName() + " was teleported to the Hub server");
           } else {
             arena.teleportToEndLocation(p);
             ArenaManager.leaveAttempt(p, arena);
-            Debugger.debug(Debugger.Level.INFO, p.getName() + " has left the arena! He is teleported to the end location.");
+            Debugger.debug(p.getName() + " has left the arena! He is teleported to the end location.");
           }
         }
       }

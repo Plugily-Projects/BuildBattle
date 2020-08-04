@@ -34,6 +34,8 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.event.game.BBGameChangeStateEvent;
@@ -41,8 +43,6 @@ import plugily.projects.buildbattle.arena.ArenaState;
 import plugily.projects.buildbattle.arena.managers.ScoreboardManager;
 import plugily.projects.buildbattle.arena.managers.plots.PlotManager;
 import plugily.projects.buildbattle.arena.options.ArenaOption;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.string.StringFormatUtils;
 
 /**
  * @author Plajer
@@ -62,11 +62,11 @@ public class BaseArena extends BukkitRunnable {
   private BossBar gameBar;
   private ArenaType arenaType;
   private boolean forceStart = false;
-  private List<Player> players = new ArrayList<>();
+  private final List<Player> players = new ArrayList<>();
   //instead of 2 (lobby, end) location fields we use map with GameLocation enum
-  private Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
+  private final Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
   //all arena values that are integers, contains constant and floating values
-  private Map<ArenaOption, Integer> arenaOptions = new EnumMap<>(ArenaOption.class);
+  private final Map<ArenaOption, Integer> arenaOptions = new EnumMap<>(ArenaOption.class);
   private boolean ready = true;
 
   public BaseArena(String id, Main plugin) {
@@ -295,9 +295,7 @@ public class BaseArena extends BukkitRunnable {
 
   public void teleportAllToEndLocation() {
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)&& ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
-      for (Player player : getPlayers()) {
-        plugin.getBungeeManager().connectToHub(player);
-      }
+      getPlayers().forEach(plugin.getBungeeManager()::connectToHub);
       return;
     }
     Location location = getEndLocation();
@@ -320,7 +318,7 @@ public class BaseArena extends BukkitRunnable {
   }
 
   public void teleportToEndLocation(Player player) {
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)&& ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
       plugin.getBungeeManager().connectToHub(player);
       return;
     }

@@ -30,12 +30,15 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
+import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
@@ -50,12 +53,9 @@ import plugily.projects.buildbattle.arena.options.ArenaOption;
 import plugily.projects.buildbattle.handlers.reward.Reward;
 import plugily.projects.buildbattle.menus.themevoter.GTBTheme;
 import plugily.projects.buildbattle.user.User;
+import plugily.projects.buildbattle.utils.Debugger;
 import plugily.projects.buildbattle.utils.MessageUtils;
 import plugily.projects.buildbattle.utils.Utils;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
-import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 
 /**
  * @author Plajer
@@ -69,7 +69,7 @@ public class GuessTheBuildArena extends BaseArena {
   private boolean themeSet;
   private boolean nextRoundCooldown = false;
   private Player currentBuilder;
-  private List<Player> whoGuessed = new ArrayList<>();
+  private final List<Player> whoGuessed = new ArrayList<>();
   private Map<Player, Integer> playersPoints = new HashMap<>();
   private GuessTheBuildScoreboardManager scoreboardManager;
 
@@ -162,8 +162,8 @@ public class GuessTheBuildArena extends BaseArena {
           openThemeSelectionInventoryToCurrentBuilder();
           setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.THEME_SELECTION, this));
           break;
-        } else {
-          if (!isThemeSet() && getTimer() <= 0 && currentBuilder != null) {
+        }
+        if (!isThemeSet() && getTimer() <= 0 && currentBuilder != null) {
             Random r = new Random();
             String type = "EASY";
             switch (r.nextInt(2 + 1)) {
@@ -194,7 +194,6 @@ public class GuessTheBuildArena extends BaseArena {
             setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, this));
             break;
           }
-        }
         if (getTimer() <= 90 && getCurrentTheme() != null) {
           if (getTimer() == 90) {
             getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Is-Long")
@@ -330,9 +329,7 @@ public class GuessTheBuildArena extends BaseArena {
           clearPlayers();
           setArenaState(ArenaState.RESTARTING);
           if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-            for (Player player : getPlugin().getServer().getOnlinePlayers()) {
-              this.addPlayer(player);
-            }
+            getPlugin().getServer().getOnlinePlayers().forEach(this::addPlayer);
           }
         }
         setTimer(getTimer() - 1);
@@ -467,9 +464,9 @@ public class GuessTheBuildArena extends BaseArena {
     }
     if (!players.isEmpty()) {
       MessageUtils.errorOccurred();
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] [PLOT WARNING] Not enough plots in arena " + getID() + "!");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[PLOT WARNING] Required " + getPlayers().size() + " but have " + getPlotManager().getPlots().size());
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[PLOT WARNING] Instance was stopped!");
+      Debugger.sendConsoleMsg("&c[BuildBattle] [PLOT WARNING] Not enough plots in arena " + getID() + "!");
+      Debugger.sendConsoleMsg("&c[PLOT WARNING] Required " + getPlayers().size() + " but have " + getPlotManager().getPlots().size());
+      Debugger.sendConsoleMsg("&c[PLOT WARNING] Instance was stopped!");
       ArenaManager.stopGame(false, this);
     }
   }

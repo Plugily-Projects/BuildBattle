@@ -36,8 +36,8 @@ import javax.net.ssl.HttpsURLConnection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import plugily.projects.buildbattle.utils.services.ServiceRegistry;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.buildbattle.utils.services.ServiceRegistry;
 
 /**
  * Localization service used for fetching latest locales for minigames

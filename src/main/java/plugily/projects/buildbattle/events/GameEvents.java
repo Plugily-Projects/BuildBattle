@@ -44,6 +44,7 @@ import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
@@ -57,7 +58,6 @@ import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.items.SpecialItem;
 import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.utils.Utils;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -109,10 +109,7 @@ public class GameEvents implements Listener {
       return;
     }
     BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
-    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
-      return;
-    }
-    if (arena instanceof SoloArena && ((SoloArena) arena).isVoting()) {
+    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME || arena instanceof SoloArena && ((SoloArena) arena).isVoting()) {
       return;
     }
     if (!plugin.getOptionsRegistry().getMenuItem().getItemMeta().getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())) {
@@ -184,16 +181,8 @@ public class GameEvents implements Listener {
     }
     Player player = e.getPlayer();
     BaseArena arena = ArenaRegistry.getArena(player);
-    if (arena == null) {
-      return;
-    }
-    if (player.getInventory().getItemInMainHand() == null) {
-      return;
-    }
-    if (player.getInventory().getItemInMainHand().getType() != Material.FLINT_AND_STEEL) {
-      return;
-    }
-    if (e.getClickedBlock() == null) {
+    if (arena == null || player.getInventory().getItemInMainHand() == null || player.getInventory().getItemInMainHand().getType() != Material.FLINT_AND_STEEL
+        || e.getClickedBlock() == null) {
       return;
     }
     if (e.getClickedBlock().getType() == Material.TNT) {
@@ -208,10 +197,9 @@ public class GameEvents implements Listener {
     }
     Player player = (Player) e.getEntity();
     BaseArena arena = ArenaRegistry.getArena(player);
-    if (arena == null) {
-      return;
+    if (arena != null) {
+      e.setCancelled(true);
     }
-    e.setCancelled(true);
   }
 
   @EventHandler
@@ -345,10 +333,7 @@ public class GameEvents implements Listener {
       return;
     }
     Plot buildPlot = arena.getPlotManager().getPlot(e.getPlayer());
-    if (buildPlot == null) {
-      return;
-    }
-    if (!buildPlot.getCuboid().isIn(e.getBlockClicked().getRelative(e.getBlockFace()).getLocation())) {
+    if (buildPlot != null && !buildPlot.getCuboid().isIn(e.getBlockClicked().getRelative(e.getBlockFace()).getLocation())) {
       e.setCancelled(true);
     }
   }
@@ -394,11 +379,10 @@ public class GameEvents implements Listener {
             }
             e.setCancelled(true);
             return;
-          } else {
-            plot.addEntity();
-            e.setCancelled(false);
-            e.getEntity().setAI(false);
           }
+          plot.addEntity();
+          e.setCancelled(false);
+          e.getEntity().setAI(false);
         }
       }
     }

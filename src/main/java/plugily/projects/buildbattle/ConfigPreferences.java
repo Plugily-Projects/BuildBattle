@@ -25,13 +25,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.utils.Debugger;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -39,12 +37,11 @@ import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 public class ConfigPreferences {
 
   private Main plugin;
-  private Map<String, List<String>> gameThemes = new HashMap<>();
-  private List<String> endGameCommands = new ArrayList<>();
-  private List<String> whitelistedCommands = new ArrayList<>();
-  private List<Material> itemBlacklist = new ArrayList<>();
-  private List<Material> floorBlacklist = new ArrayList<>();
-  private Map<Option, Boolean> options = new EnumMap<>(Option.class);
+
+  private final Map<String, List<String>> gameThemes = new HashMap<>();
+  private final List<String> endGameCommands = new ArrayList<>(), whitelistedCommands = new ArrayList<>();
+  private final List<Material> itemBlacklist = new ArrayList<>(), floorBlacklist = new ArrayList<>();
+  private final Map<Option, Boolean> options = new EnumMap<>(Option.class);
 
   public ConfigPreferences(Main plugin) {
     this.plugin = plugin;
@@ -75,7 +72,7 @@ public class ConfigPreferences {
     gameThemes.put(BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_EASY", plugin.getConfig().getStringList("Themes.Guess-The-Build.Easy"));
     gameThemes.put(BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_MEDIUM", plugin.getConfig().getStringList("Themes.Guess-The-Build.Medium"));
     gameThemes.put(BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_HARD", plugin.getConfig().getStringList("Themes.Guess-The-Build.Hard"));
-    Debugger.debug(Debugger.Level.INFO, "Themes loaded: " + gameThemes);
+    Debugger.debug("Themes loaded: " + gameThemes);
   }
 
   public Map<String, List<String>> getGameThemes() {
@@ -114,16 +111,16 @@ public class ConfigPreferences {
   private void loadBlackList() {
     for (String item : plugin.getConfig().getStringList("Blacklisted-Item-Names")) {
       try {
-        itemBlacklist.add((XMaterial.matchXMaterial(item).get().parseMaterial()));
+        itemBlacklist.add(XMaterial.matchXMaterial(item).get().parseMaterial());
       } catch (IllegalArgumentException ex) {
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Invalid black listed item! " + item + " doesn't exist, are you sure it's properly named?");
+        Debugger.sendConsoleMsg("&c[BuildBattle] Invalid black listed item! " + item + " doesn't exist, are you sure it's properly named?");
       }
     }
     for (String item : plugin.getConfig().getStringList("Blacklisted-Floor-Materials")) {
       try {
-        floorBlacklist.add((XMaterial.matchXMaterial(item).get().parseMaterial()));
+        floorBlacklist.add(XMaterial.matchXMaterial(item).get().parseMaterial());
       } catch (IllegalArgumentException ex) {
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Invalid black listed material! " + item + " doesn't exist, are you sure it's properly named?");
+        Debugger.sendConsoleMsg("&c[BuildBattle] Invalid black listed material! " + item + " doesn't exist, are you sure it's properly named?");
       }
     }
   }
@@ -133,7 +130,7 @@ public class ConfigPreferences {
   }
 
   public int getTimer(TimerType type, BaseArena arena) {
-    String prefix = "Time-Manager." +arena.getArenaType().getPrefix() + ".";
+    String prefix = "Time-Manager." + arena.getArenaType().getPrefix() + ".";
     switch (type) {
       case BUILD:
         return plugin.getConfig().getInt(prefix + "Build-Time", 200);

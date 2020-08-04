@@ -38,13 +38,13 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.event.plot.BBPlotResetEvent;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.utils.Utils;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -56,7 +56,7 @@ public class Plot {
   private Cuboid cuboid;
   private int points;
   private List<Player> owners = new ArrayList<>();
-  private Map<Location, Particle> particles = new HashMap<>();
+  private final Map<Location, Particle> particles = new HashMap<>();
   private Time time = Time.WORLD_TIME;
   private Biome plotDefaultBiome;
   private WeatherType weatherType = WeatherType.CLEAR;
@@ -186,7 +186,8 @@ public class Plot {
     } catch (ReflectiveOperationException exception) {
       exception.printStackTrace();
     }
-    changeFloor(XMaterial.matchXMaterial(plugin.getConfig().getString("Default-Floor-Material-Name", "LOG").toUpperCase()).get().parseMaterial());
+    XMaterial.matchXMaterial(plugin.getConfig().getString("Default-Floor-Material-Name", "LOG")
+        .toUpperCase()).ifPresent(m -> changeFloor(m.parseMaterial()));
     cuboid.getCenter().getWorld().setBiome(cuboid.getMinPoint().getBlockX(), cuboid.getMaxPoint().getBlockZ(), plotDefaultBiome);
     BBPlotResetEvent event = new BBPlotResetEvent(arena, this);
     Bukkit.getServer().getPluginManager().callEvent(event);
@@ -237,7 +238,11 @@ public class Plot {
         Location tmpblock = new Location(cuboid.getMaxPoint().getWorld(), x, y, z);
         tmpblock.getBlock().setType(material);
         if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
-          tmpblock.getBlock().setData(data);
+          try {
+            Block.class.getMethod("setData", byte.class).invoke(tmpblock.getBlock(), data);
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
         }
       }
     }
@@ -281,10 +286,7 @@ public class Plot {
     }
 
     public static long format(Time time, long currTime) {
-      if (time == Time.WORLD_TIME) {
-        return currTime;
-      }
-      return time.getTicks();
+      return time == Time.WORLD_TIME ? currTime : time.getTicks();
     }
 
     public long getTicks() {

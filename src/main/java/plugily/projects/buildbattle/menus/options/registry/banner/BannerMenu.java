@@ -33,10 +33,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 
-import plugily.projects.buildbattle.Main;
-import plugily.projects.buildbattle.utils.Utils;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import plugily.projects.buildbattle.Main;
+import plugily.projects.buildbattle.utils.Utils;
 
 /**
  * @author Plajer
@@ -46,7 +46,7 @@ import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 public class BannerMenu {
 
   private static Main plugin;
-  private Map<PatternStage, Gui> guiStages = new EnumMap<>(PatternStage.class);
+  private final Map<PatternStage, Gui> guiStages = new EnumMap<>(PatternStage.class);
   private Banner banner;
   private Player player;
 
@@ -99,12 +99,7 @@ public class BannerMenu {
     for (PatternType pattern : PatternType.values()) {
       ItemStack item = banner.buildBanner();
       BannerMeta meta = (BannerMeta) item.getItemMeta();
-      DyeColor color;
-      if (banner.getColor() == DyeColor.BLACK) {
-        color = DyeColor.WHITE;
-      } else {
-        color = DyeColor.BLACK;
-      }
+      DyeColor color = banner.getColor() == DyeColor.BLACK ? DyeColor.WHITE : DyeColor.BLACK;
       meta.addPattern(new Pattern(color, pattern));
       item.setItemMeta(meta);
       pane.addItem(new GuiItem(item, e -> {

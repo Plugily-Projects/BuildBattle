@@ -43,10 +43,6 @@ public class SpecialItem {
     return slot;
   }
 
-  private void setSlot(int slot) {
-    this.slot = slot;
-  }
-
   public ItemStack getItemStack() {
     return itemStack;
   }

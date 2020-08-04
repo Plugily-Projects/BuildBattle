@@ -20,17 +20,17 @@ package plugily.projects.buildbattle.arena.impl;
 
 import com.google.common.collect.Lists;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.entity.Player;
-
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.arena.options.ArenaOption;
 import plugily.projects.buildbattle.utils.Debugger;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.entity.Player;
 
 /**
  * @author Plajer

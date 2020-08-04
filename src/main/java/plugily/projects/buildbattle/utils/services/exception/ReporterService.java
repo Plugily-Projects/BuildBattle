@@ -19,6 +19,7 @@
 package plugily.projects.buildbattle.utils.services.exception;
 
 import org.bukkit.plugin.java.JavaPlugin;
+
 import plugily.projects.buildbattle.utils.Debugger;
 
 import java.io.IOException;
@@ -66,7 +67,7 @@ public class ReporterService {
             os.close();
 
             plugin.getLogger().log(Level.WARNING, "[Reporter service] Error reported!");
-            Debugger.debug(Debugger.Level.INFO, "[Reporter service] Code: " + conn.getResponseCode() + " (" + conn.getResponseMessage() + ")");
+            Debugger.debug("[Reporter service] Code: " + conn.getResponseCode() + " (" + conn.getResponseMessage() + ")");
         } catch (IOException ignored) {/*cannot connect or there is a problem*/
         }
     }

@@ -26,6 +26,7 @@ import java.util.Map;
 import org.bukkit.entity.Player;
 
 import org.bukkit.plugin.java.JavaPlugin;
+
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.impl.SoloArena;
 import plugily.projects.buildbattle.handlers.reward.Reward;
@@ -39,8 +40,8 @@ import plugily.projects.buildbattle.utils.Utils;
 public class VotePoll {
 
   private SoloArena arena;
-  private Map<String, Integer> votedThemes = new LinkedHashMap<>();
-  private Map<Player, String> playerVote = new HashMap<>();
+  private final Map<String, Integer> votedThemes = new LinkedHashMap<>();
+  private final Map<Player, String> playerVote = new HashMap<>();
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
 
   public VotePoll(SoloArena arena, List<String> votedThemes) {

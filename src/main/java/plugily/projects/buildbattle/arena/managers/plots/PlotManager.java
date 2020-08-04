@@ -34,8 +34,8 @@ import plugily.projects.buildbattle.arena.impl.BaseArena;
  */
 public class PlotManager {
 
-  private List<Plot> plots = new ArrayList<>();
-  private List<Plot> plotsToClear = new ArrayList<>();
+  private final List<Plot> plots = new ArrayList<>();
+  private final List<Plot> plotsToClear = new ArrayList<>();
   private BaseArena arena;
 
   public PlotManager(BaseArena arena) {
@@ -58,9 +58,7 @@ public class PlotManager {
   }
 
   public void resetQueuedPlots() {
-    for (Plot buildPlot : plotsToClear) {
-      buildPlot.fullyResetPlot();
-    }
+    plotsToClear.forEach(Plot::fullyResetPlot);
     plotsToClear.clear();
   }
 

@@ -29,11 +29,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
-import plugily.projects.buildbattle.Main;
-import plugily.projects.buildbattle.utils.Debugger;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import plugily.projects.buildbattle.Main;
+import plugily.projects.buildbattle.utils.Debugger;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -71,10 +71,7 @@ public class VoteItems {
 
   private void updateVoteItemsConfig() {
     for (String key : config.getKeys(false)) {
-      if (!config.isSet(key + ".displayname")) {
-        continue;
-      }
-      if (config.isSet(key + ".material-name")) {
+      if (!config.isSet(key + ".displayname") || config.isSet(key + ".material-name")) {
         continue;
       }
       config.set(key + ".material-name", XMaterial.GREEN_TERRACOTTA.name());

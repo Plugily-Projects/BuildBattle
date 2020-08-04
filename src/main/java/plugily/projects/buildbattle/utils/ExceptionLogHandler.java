@@ -18,8 +18,6 @@
 
 package plugily.projects.buildbattle.utils;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
@@ -37,7 +35,7 @@ public class ExceptionLogHandler extends Handler {
 
     //these classes if found in stacktraces won't be reported
     //to the Error Service
-    private List<String> blacklistedClasses = Arrays.asList("plugily.projects.buildbattle.user.data.MysqlManager", "plugily.projects.buildbattle.plajerlair.commonsbox.database.MysqlDatabase");
+    private final String[] blacklistedClasses = { "plugily.projects.buildbattle.user.data.MysqlManager", "plugily.projects.buildbattle.plajerlair.commonsbox.database.MysqlDatabase" };
     private Main plugin;
 
     public ExceptionLogHandler(Main plugin) {
@@ -58,21 +56,14 @@ public class ExceptionLogHandler extends Handler {
     @Override
     public void publish(LogRecord record) {
         Throwable throwable = record.getThrown();
-        if (!(throwable instanceof Exception) || !throwable.getClass().getSimpleName().contains("Exception")) {
+        if (!(throwable instanceof Exception) || !throwable.getClass().getSimpleName().contains("Exception") || throwable.getStackTrace().length <= 0) {
             return;
         }
-        if (throwable.getStackTrace().length <= 0) {
+        if (throwable.getCause() != null && throwable.getCause().getStackTrace() != null
+            && !throwable.getCause().getStackTrace()[0].getClassName().contains("plugily.projects.buildbattle")) {
             return;
         }
-        if (throwable.getCause() != null && throwable.getCause().getStackTrace() != null) {
-            if (!throwable.getCause().getStackTrace()[0].getClassName().contains("plugily.projects.buildbattle")) {
-                return;
-            }
-        }
-        if (!throwable.getStackTrace()[0].getClassName().contains("plugily.projects.buildbattle")) {
-            return;
-        }
-        if (containsBlacklistedClass(throwable)) {
+        if (!throwable.getStackTrace()[0].getClassName().contains("plugily.projects.buildbattle") || containsBlacklistedClass(throwable)) {
             return;
         }
         new ReportedException(plugin, (Exception) throwable);

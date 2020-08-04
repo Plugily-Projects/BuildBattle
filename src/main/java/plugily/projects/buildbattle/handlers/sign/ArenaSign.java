@@ -18,10 +18,7 @@
 
 package plugily.projects.buildbattle.handlers.sign;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -29,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
+import plugily.projects.buildbattle.utils.MaterialUtil;
 
 /**
  * Created for 1.14 compatibility purposes, it will cache block behind sign that will be
@@ -53,13 +51,9 @@ public class ArenaSign {
 
   private void setBehindBlock() {
     this.behind = null;
-    if (sign.getBlock().getType() == Material.WALL_SIGN) {
-      if (plugin.is1_14_R1() || plugin.is1_15_R1() || plugin.is1_16_R1()) {
-        this.behind = getBlockBehind();
-      } else {
-        this.behind = getBlockBehindLegacy();
+    if (MaterialUtil.isWallSign(sign.getBlock().getType())) {
+        this.behind = (plugin.is1_14_R1() || plugin.is1_15_R1() || plugin.is1_16_R1()) ? getBlockBehind() : getBlockBehindLegacy();
       }
-    }
   }
 
   private Block getBlockBehind() {
@@ -71,7 +65,7 @@ public class ArenaSign {
       Location location = new Location(sign.getWorld(), loc.getBlockX() - face.getModX(), loc.getBlockY() - face.getModY(),
           loc.getBlockZ() - face.getModZ());
       return location.getBlock();
-    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+    } catch (Exception e) {
       e.printStackTrace();
       return null;
     }

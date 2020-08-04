@@ -29,13 +29,13 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import plugily.projects.buildbattle.ConfigPreferences;
-import plugily.projects.buildbattle.Main;
-import plugily.projects.buildbattle.arena.impl.BaseArena;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
+import plugily.projects.buildbattle.ConfigPreferences;
+import plugily.projects.buildbattle.Main;
+import plugily.projects.buildbattle.arena.impl.BaseArena;
 
 /**
  * Created by Tom on 15/06/2015.
@@ -91,7 +91,7 @@ public class SetupInventory {
         .build());
 
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-      inventory.setItem(ClickPosition.ADD_SIGN.getPosition(), new ItemBuilder(Material.SIGN)
+      inventory.setItem(ClickPosition.ADD_SIGN.getPosition(), new ItemBuilder(XMaterial.OAK_SIGN.parseMaterial())
           .name(ChatColor.GOLD + "► Add game" + ChatColor.AQUA + " sign")
           .lore(ChatColor.GRAY + "Target a sign and click this.")
           .lore(ChatColor.DARK_GRAY + "(this will set target sign as game sign)")
@@ -104,7 +104,7 @@ public class SetupInventory {
         .lore(ChatColor.GRAY + "Valid types: SOLO, TEAM")
         .lore(ChatColor.GRAY + "SOLO - 1 player per plot")
         .lore(ChatColor.GRAY + "TEAM - 2 players per plot")
-            .lore(ChatColor.GRAY + "Guess The Build - Guess the build of one player")
+        .lore(ChatColor.GRAY + "Guess The Build - Guess the build of one player")
         .lore(isOptionDone("instances." + arena.getID() + ".gametype"))
         .build());
     inventory.setItem(ClickPosition.SET_MAP_NAME.getPosition(), new ItemBuilder(Material.NAME_TAG)

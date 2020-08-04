@@ -30,6 +30,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
+import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
@@ -38,9 +41,6 @@ import plugily.projects.buildbattle.arena.impl.SoloArena;
 import plugily.projects.buildbattle.arena.impl.TeamArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.utils.Debugger;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
-import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 
 /**
  * Created by Tom on 27/07/2014.
@@ -64,10 +64,7 @@ public class ArenaRegistry {
    */
   @Nullable
   public static BaseArena getArena(Player p) {
-    if (p == null) {
-      return null;
-    }
-    if (!p.isOnline()) {
+    if (p == null || !p.isOnline()) {
       return null;
     }
 
@@ -82,12 +79,12 @@ public class ArenaRegistry {
   }
 
   public static void registerArena(BaseArena arena) {
-    Debugger.debug(Debugger.Level.INFO, "Registering new game instance, " + arena.getID());
+    Debugger.debug("Registering new game instance, " + arena.getID());
     arenas.add(arena);
   }
 
   public static void unregisterArena(BaseArena arena) {
-    Debugger.debug(Debugger.Level.INFO, "Unegistering game instance, " + arena.getID());
+    Debugger.debug("Unegistering game instance, " + arena.getID());
     arenas.remove(arena);
   }
 
@@ -107,7 +104,7 @@ public class ArenaRegistry {
   }
 
   public static void registerArenas() {
-    Debugger.debug(Debugger.Level.INFO, "Initial arenas registration");
+    Debugger.debug("Initial arenas registration");
     ArenaRegistry.getArenas().clear();
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
     ConfigurationSection section = config.getConfigurationSection("instances");
@@ -202,7 +199,7 @@ public class ArenaRegistry {
       ArenaRegistry.registerArena(arena);
       arena.start();
     }
-    Debugger.debug(Debugger.Level.INFO, "Arenas registration completed");
+    Debugger.debug("Arenas registration completed");
   }
 
   public static void shuffleBungeeArena() {

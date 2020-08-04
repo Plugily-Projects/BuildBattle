@@ -26,6 +26,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.menus.options.registry.FloorChangeOption;
 import plugily.projects.buildbattle.menus.options.registry.PlotResetOption;
@@ -38,7 +39,6 @@ import plugily.projects.buildbattle.menus.options.registry.particles.ParticleReg
 import plugily.projects.buildbattle.menus.options.registry.particles.ParticlesOption;
 import plugily.projects.buildbattle.menus.options.registry.playerheads.PlayerHeadsOption;
 import plugily.projects.buildbattle.menus.options.registry.playerheads.PlayerHeadsRegistry;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
 /**
  * @author Plajer
@@ -50,7 +50,7 @@ public class OptionsRegistry {
   private ParticleRegistry particleRegistry;
   private BiomesRegistry biomesRegistry;
   private PlayerHeadsRegistry playerHeadsRegistry;
-  private Set<MenuOption> registeredOptions = new HashSet<>();
+  private final Set<MenuOption> registeredOptions = new HashSet<>();
   private int inventorySize = 5 * 9;
   private Main plugin;
 

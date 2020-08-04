@@ -34,6 +34,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.jetbrains.annotations.Nullable;
 
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaManager;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
@@ -41,9 +44,6 @@ import plugily.projects.buildbattle.arena.ArenaState;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.handlers.language.LanguageManager;
 import plugily.projects.buildbattle.utils.Debugger;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -58,8 +58,8 @@ import java.util.Map;
 public class SignManager implements Listener {
 
   private Main plugin;
-  private List<ArenaSign> arenaSigns = new ArrayList<>();
-  private Map<ArenaState, String> gameStateToString = new EnumMap<>(ArenaState.class);
+  private final List<ArenaSign> arenaSigns = new ArrayList<>();
+  private final Map<ArenaState, String> gameStateToString = new EnumMap<>(ArenaState.class);
   private List<String> signLines;
 
   public SignManager(Main plugin) {
@@ -77,10 +77,7 @@ public class SignManager implements Listener {
 
   @EventHandler
   public void onSignChange(SignChangeEvent e) {
-    if (!e.getPlayer().hasPermission("buildbattle.admin.sign.create")) {
-      return;
-    }
-    if (!e.getLine(0).equalsIgnoreCase("[buildbattle]")) {
+    if (!e.getPlayer().hasPermission("buildbattle.admin.sign.create") || !e.getLine(0).equalsIgnoreCase("[buildbattle]")) {
       return;
     }
     if (e.getLine(1).isEmpty()) {
@@ -196,38 +193,43 @@ public class SignManager implements Listener {
         }
         if (plugin.getConfig().getBoolean("Signs-Block-States-Enabled", true) && arenaSign.getBehind() != null) {
           Block behind = arenaSign.getBehind();
-          switch (arenaSign.getArena().getArenaState()) {
-            case WAITING_FOR_PLAYERS:
-              behind.setType(XMaterial.WHITE_STAINED_GLASS.parseMaterial());
-              if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
-                behind.setData((byte) 0);
+          try {
+              switch (arenaSign.getArena().getArenaState()) {
+                case WAITING_FOR_PLAYERS:
+                  behind.setType(XMaterial.WHITE_STAINED_GLASS.parseMaterial());
+                  if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+                    Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 0);
+                  }
+                  break;
+                case STARTING:
+                  behind.setType(XMaterial.YELLOW_STAINED_GLASS.parseMaterial());
+                  if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+                    Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 4);
+                  }
+                  break;
+                case IN_GAME:
+                  behind.setType(XMaterial.ORANGE_STAINED_GLASS.parseMaterial());
+                  if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+                    Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 1);
+                  }
+                  break;
+                case ENDING:
+                  behind.setType(XMaterial.GRAY_STAINED_GLASS.parseMaterial());
+                  if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+                    Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 7);
+                  }
+                  break;
+                case RESTARTING:
+                  behind.setType(XMaterial.BLACK_STAINED_GLASS.parseMaterial());
+                  if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+                    Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 15);
+                  }
+                  break;
+                default:
+                  break;
               }
-              break;
-            case STARTING:
-              behind.setType(XMaterial.YELLOW_STAINED_GLASS.parseMaterial());
-              if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
-                behind.setData((byte) 4);
-              }
-              break;
-            case IN_GAME:
-              behind.setType(XMaterial.ORANGE_STAINED_GLASS.parseMaterial());
-              if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
-                behind.setData((byte) 1);
-              }
-              break;
-            case ENDING:
-              behind.setType(XMaterial.GRAY_STAINED_GLASS.parseMaterial());
-              if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
-                behind.setData((byte) 7);
-              }
-              break;
-            case RESTARTING:
-              behind.setType(XMaterial.BLACK_STAINED_GLASS.parseMaterial());
-              if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
-                behind.setData((byte) 15);
-              }
-              break;
-          }
+            } catch (Exception ignored) {
+            }
         }
         sign.update();
       }

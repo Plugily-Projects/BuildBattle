@@ -40,7 +40,7 @@ public class UserManager {
 
   private UserDatabase database;
   private Main plugin;
-  private List<User> users = new ArrayList<>();
+  private final List<User> users = new ArrayList<>();
 
   public UserManager(Main plugin) {
     this.plugin = plugin;
@@ -68,17 +68,16 @@ public class UserManager {
         return user;
       }
     }
-    Debugger.debug(Debugger.Level.INFO, "Registering new user with UUID: " + player.getUniqueId() + " (" + player.getName() + ")");
+    Debugger.debug("Registering new user with UUID: " + player.getUniqueId() + " (" + player.getName() + ")");
     User user = new User(player);
     users.add(user);
     return user;
   }
 
   public void saveStatistic(User user, StatsStorage.StatisticType stat) {
-    if (!stat.isPersistent()) {
-      return;
+    if (stat.isPersistent()) {
+      database.saveStatistic(user, stat);
     }
-    database.saveStatistic(user, stat);
   }
 
   public void saveAllStatistic(User user) {

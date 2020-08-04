@@ -21,10 +21,13 @@ package plugily.projects.buildbattle.handlers;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
+import pl.plajerlair.commonsbox.string.StringFormatUtils;
+import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.handlers.language.LanguageManager;
-import pl.plajerlair.commonsbox.string.StringFormatUtils;
+import plugily.projects.buildbattle.utils.Utils;
 
 /**
  * Created by Tom on 27/07/2014.
@@ -34,7 +37,7 @@ public class ChatManager {
   private String prefix;
 
   public ChatManager(String prefix) {
-    this.prefix = prefix;
+    this.prefix = colorRawMessage(prefix);
   }
 
   private static String formatPlaceholders(String message, BaseArena arena) {
@@ -62,10 +65,14 @@ public class ChatManager {
   }
 
   public String colorMessage(String message) {
-      return ChatColor.translateAlternateColorCodes('&', LanguageManager.getLanguageMessage(message));
+      return colorRawMessage(LanguageManager.getLanguageMessage(message));
   }
 
   public String colorRawMessage(String msg) {
+    if (msg.contains("#") && JavaPlugin.getPlugin(Main.class).is1_16_R1()) {
+      msg = Utils.matchColorRegex(msg);
+    }
+
     return ChatColor.translateAlternateColorCodes('&', msg);
   }
 

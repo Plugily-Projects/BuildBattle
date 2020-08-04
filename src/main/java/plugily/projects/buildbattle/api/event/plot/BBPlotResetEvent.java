@@ -44,6 +44,7 @@ public class BBPlotResetEvent extends BBEvent {
     return HANDLERS;
   }
 
+  @Override
   public HandlerList getHandlers() {
     return HANDLERS;
   }

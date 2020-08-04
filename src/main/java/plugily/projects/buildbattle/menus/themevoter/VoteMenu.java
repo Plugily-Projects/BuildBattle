@@ -33,13 +33,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.number.NumberUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.arena.impl.SoloArena;
 import plugily.projects.buildbattle.user.User;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-import pl.plajerlair.commonsbox.number.NumberUtils;
 
 /**
  * @author Plajer
@@ -84,13 +84,7 @@ public class VoteMenu {
     }
     this.inventory = Bukkit.createInventory(null, 9 * (randomThemes.size() > 5 ? 5 : randomThemes.size()), plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"));
     for (int i = 0; i < randomThemes.size(); i++) {
-      ItemStack item;
-      //todo strict legacy materials class
-      if (plugin.is1_14_R1() || plugin.is1_15_R1() || plugin.is1_16_R1()) {
-        item = new ItemStack(Material.valueOf("LEGACY_SIGN"));
-      } else {
-        item = new ItemStack(Material.SIGN);
-      }
+      ItemStack item = new ItemStack(XMaterial.OAK_SIGN.parseMaterial());
       setItem(new ItemBuilder(item)
           .name(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Theme-Item-Name").replace("%theme%", randomThemes.get(i)))
           .lore(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Theme-Item-Lore").replace("%theme%", randomThemes.get(i))
@@ -130,7 +124,7 @@ public class VoteMenu {
       } else {
         percent = ((double) votePoll.getVotedThemes().get(theme) / (double) totalVotes) * 100;
       }
-      ItemStack stack = new ItemBuilder(new ItemStack(Material.SIGN))
+      ItemStack stack = new ItemBuilder(new ItemStack(XMaterial.OAK_SIGN.parseMaterial()))
           .name(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Theme-Item-Name").replace("%theme%", theme))
           .lore(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Theme-Item-Lore").replace("%theme%", theme)
               .replace("%percent%", String.valueOf(NumberUtils.round(percent, 2))).replace("%time-left%", String.valueOf(arena.getTimer())).split(";"))

@@ -24,13 +24,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import pl.plajerlair.commonsbox.number.NumberUtils;
 import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
 import plugily.projects.buildbattle.commands.arguments.data.CommandArgument;
 import plugily.projects.buildbattle.commands.arguments.data.LabelData;
 import plugily.projects.buildbattle.commands.arguments.data.LabeledCommandArgument;
 import plugily.projects.buildbattle.user.User;
-import pl.plajerlair.commonsbox.number.NumberUtils;
 
 /**
  * @author Plajer
@@ -53,7 +53,7 @@ public class VotesArgument {
                     sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + ChatColor.RED + "Please type amount of super votes to add or set!");
                     return;
                 }
-                if (!args[1].equalsIgnoreCase("add") && !args[1].equalsIgnoreCase("set")) {
+                if (!(args[1].equalsIgnoreCase("add") && args[1].equalsIgnoreCase("set"))) {
                     sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + ChatColor.RED + "Wrong command usage, please use /bba votes <add|set> <amount> [player]!");
                     return;
                 }

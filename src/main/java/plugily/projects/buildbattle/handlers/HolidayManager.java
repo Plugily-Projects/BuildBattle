@@ -38,7 +38,7 @@ public class HolidayManager {
     }
     LocalDateTime time = LocalDateTime.now();
 
-    Debugger.debug(Debugger.Level.INFO, "[HolidayManager] Time of server " + time);
+    Debugger.debug("[HolidayManager] Time of server " + time);
 
     int day = time.getDayOfMonth();
     int month = time.getMonthValue();
@@ -99,8 +99,8 @@ public class HolidayManager {
       default:
         break;
     }
-    Debugger.debug(Debugger.Level.INFO, "[HolidayManager] CurrentHoliday: " + getCurrentHoliday().name());
-    Debugger.debug(Debugger.Level.INFO, "[HolidayManager] New Themes: " + plugin.getConfigPreferences().getGameThemes());
+    Debugger.debug("[HolidayManager] CurrentHoliday: " + getCurrentHoliday().name());
+    Debugger.debug("[HolidayManager] New Themes: " + plugin.getConfigPreferences().getGameThemes());
   }
 
   public static HolidayType getCurrentHoliday() {

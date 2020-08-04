@@ -32,12 +32,12 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerListPingEvent;
 
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaManager;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.ArenaState;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 
 /**
  * Created by Tom on 31/08/2014.
@@ -45,7 +45,7 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 public class BungeeManager implements Listener {
 
   private Main plugin;
-  private Map<ArenaState, String> gameStateToString = new EnumMap<>(ArenaState.class);
+  private final Map<ArenaState, String> gameStateToString = new EnumMap<>(ArenaState.class);
   private String MOTD;
 
   public BungeeManager(Main plugin) {
@@ -82,10 +82,7 @@ public class BungeeManager implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onServerListPing(ServerListPingEvent event) {
-    if (!ConfigUtils.getConfig(plugin, "bungee").getBoolean("MOTD.Manager", false)) {
-      return;
-    }
-    if (ArenaRegistry.getArenas().isEmpty()) {
+    if (!ConfigUtils.getConfig(plugin, "bungee").getBoolean("MOTD.Manager", false) || ArenaRegistry.getArenas().isEmpty()) {
       return;
     }
     event.setMaxPlayers(ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()).getMaximumPlayers());

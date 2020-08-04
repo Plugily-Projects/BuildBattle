@@ -30,11 +30,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.menus.options.OptionsRegistry;
 import plugily.projects.buildbattle.utils.Utils;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
 /**
  * @author Plajer
@@ -81,9 +81,7 @@ public class PlayerHeadsRegistry {
       }
       Inventory inv = Bukkit.createInventory(null, Utils.serializeInt(playerHeads.size() + 1),
           plugin.getChatManager().colorRawMessage(config.getString(str + ".menuname")));
-      for (ItemStack item : playerHeads) {
-        inv.addItem(item);
-      }
+      playerHeads.forEach(inv::addItem);
       inv.addItem(Utils.getGoBackItem());
       category.setInventory(inv);
       categories.put(category, inv);
@@ -91,12 +89,7 @@ public class PlayerHeadsRegistry {
   }
 
   public boolean isHeadsMenu(Inventory inventory) {
-    for (Inventory inv : categories.values()) {
-      if (inventory.equals(inv)) {
-        return true;
-      }
-    }
-    return false;
+    return categories.values().stream().filter(inv -> inventory.equals(inv)).findFirst().isPresent();
   }
 
   public Map<HeadsCategory, Inventory> getCategories() {

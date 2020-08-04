@@ -18,9 +18,6 @@
 
 package plugily.projects.buildbattle.utils;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-
 /**
  * @author Plajer
  * <p>
@@ -33,6 +30,10 @@ public class Debugger {
 
   public static void setEnabled(boolean enabled) {
     Debugger.enabled = enabled;
+  }
+
+  public static void debug(String thing) {
+    debug(Level.INFO, thing);
   }
 
   /**
@@ -49,24 +50,28 @@ public class Debugger {
         if (!enabled) {
           return;
         }
-        Bukkit.getConsoleSender().sendMessage(prefix + " " + thing);
+        Debugger.sendConsoleMsg(prefix + " " + thing);
         break;
       case WARN:
-        Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + prefix + " " + thing);
+        Debugger.sendConsoleMsg("&e" + prefix + " " + thing);
         break;
       case ERROR:
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + prefix + " " + thing);
+        Debugger.sendConsoleMsg("&e" + prefix + " " + thing);
         break;
       case WTF:
-        Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_RED + prefix + " [SEVERE]" + thing);
+        Debugger.sendConsoleMsg("&4" + prefix + " [SEVERE]" + thing);
         break;
       case TASK:
         if (!enabled) {
           return;
         }
-        Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + prefix + " Running task '" + thing + "'");
+        Debugger.sendConsoleMsg("&e" + prefix + " Running task '" + thing + "'");
         break;
     }
+  }
+
+  public static void sendConsoleMsg(String msg) {
+    Debugger.sendConsoleMsg(msg);
   }
 
   public enum Level {

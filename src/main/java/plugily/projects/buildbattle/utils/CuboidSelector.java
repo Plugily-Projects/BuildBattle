@@ -29,8 +29,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import plugily.projects.buildbattle.Main;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import plugily.projects.buildbattle.Main;
 
 /**
  * @author Plajer
@@ -40,7 +40,7 @@ import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 public class CuboidSelector implements Listener {
 
   private Main plugin;
-  private Map<Player, Selection> selections = new HashMap<>();
+  private final Map<Player, Selection> selections = new HashMap<>();
 
   public CuboidSelector(Main plugin) {
     this.plugin = plugin;

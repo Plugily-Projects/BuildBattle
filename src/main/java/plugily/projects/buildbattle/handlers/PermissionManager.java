@@ -68,7 +68,7 @@ public class PermissionManager {
     setJoinFullGames(plugin.getConfig().getString("Basic-Permissions.Full-Games-Permission", "buildbattle.fullgames"));
     setEditGames(plugin.getConfig().getString("Basic-Permissions.Arena-Edit-Permission"));
     setJoinPerm(plugin.getConfig().getString("Basic-Permissions.Join-Permission"));
-    Debugger.debug(Debugger.Level.INFO, "Basic permissions registered");
+    Debugger.debug("Basic permissions registered");
   }
 
 }

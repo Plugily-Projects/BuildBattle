@@ -20,6 +20,7 @@ package plugily.projects.buildbattle.handlers.party;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 

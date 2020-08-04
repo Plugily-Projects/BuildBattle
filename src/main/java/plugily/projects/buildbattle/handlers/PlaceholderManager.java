@@ -19,12 +19,11 @@
 package plugily.projects.buildbattle.handlers;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-
-import org.bukkit.entity.Player;
-
 import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
+
+import org.bukkit.entity.Player;
 
 /**
  * @author Plajer
@@ -38,14 +37,17 @@ public class PlaceholderManager extends PlaceholderExpansion {
     return true;
   }
 
+  @Override
   public String getIdentifier() {
     return "buildbattle";
   }
 
+  @Override
   public String getAuthor() {
     return "Plugily Projects";
   }
 
+  @Override
   public String getVersion() {
     return "1.0.1";
   }

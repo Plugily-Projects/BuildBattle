@@ -8,13 +8,13 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.engine.ScriptEngine;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.utils.Debugger;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.engine.ScriptEngine;
 
 import java.util.EnumMap;
 import java.util.HashSet;
@@ -61,10 +61,8 @@ public class RewardsFactory {
     engine.setValue("arena", arena);
     for (Reward reward : rewards) {
       if (reward.getType() == type) {
-        if (reward.getPlace() != -1){
-          if (reward.getPlace() != place){
-            continue;
-          }
+        if (reward.getPlace() != -1 && reward.getPlace() != place) {
+          continue;
         }
         //cannot execute if chance wasn't met
         if (reward.getChance() != -1 && ThreadLocalRandom.current().nextInt(0, 100) > reward.getChance()) {
@@ -103,7 +101,7 @@ public class RewardsFactory {
     if (!enabled) {
       return;
     }
-    Debugger.debug(Debugger.Level.INFO, "[RewardsFactory] Starting rewards registration");
+    Debugger.debug("[RewardsFactory] Starting rewards registration");
     long start = System.currentTimeMillis();
 
     Map<Reward.RewardType, Integer> registeredRewards = new EnumMap<>(Reward.RewardType.class);
@@ -111,7 +109,7 @@ public class RewardsFactory {
       if (rewardType == Reward.RewardType.PLACE) {
         ConfigurationSection section = config.getConfigurationSection("rewards." + rewardType.getPath());
         if (section == null) {
-          Debugger.debug(Debugger.Level.WARN, "Rewards section "+ rewardType.getPath() +" is missing! Was it manually removed?");
+          Debugger.debug(Debugger.Level.WARN, "Rewards section " + rewardType.getPath() + " is missing! Was it manually removed?");
           continue;
         }
         for (String key : section.getKeys(false)) {
@@ -128,9 +126,9 @@ public class RewardsFactory {
       }
     }
     for (Map.Entry<Reward.RewardType, Integer> entry : registeredRewards.entrySet()) {
-      Debugger.debug(Debugger.Level.INFO, "[RewardsFactory] Registered "+entry.getValue()+" "+entry.getKey().name()+" rewards!");
+      Debugger.debug("[RewardsFactory] Registered " + entry.getValue() + " " + entry.getKey().name() + " rewards!");
     }
-    Debugger.debug(Debugger.Level.INFO, "[RewardsFactory] Registered all rewards took " + (System.currentTimeMillis() - start) +"ms");
+    Debugger.debug("[RewardsFactory] Registered all rewards took " + (System.currentTimeMillis() - start) + "ms");
   }
 
 }

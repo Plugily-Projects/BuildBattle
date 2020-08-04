@@ -24,13 +24,14 @@ import java.util.Arrays;
 
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
 
+import pl.plajerlair.commonsbox.database.MysqlDatabase;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
@@ -71,9 +72,6 @@ import plugily.projects.buildbattle.utils.LegacyDataFixer;
 import plugily.projects.buildbattle.utils.MessageUtils;
 import plugily.projects.buildbattle.utils.UpdateChecker;
 import plugily.projects.buildbattle.utils.services.ServiceRegistry;
-import pl.plajerlair.commonsbox.database.MysqlDatabase;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -156,18 +154,14 @@ public class Main extends JavaPlugin {
 
     ServiceRegistry.registerService(this);
     exceptionLogHandler = new ExceptionLogHandler(this);
-    if (getDescription().getVersion().contains("b")){
-      Debugger.setEnabled(true);
-    } else {
-      Debugger.setEnabled(getConfig().getBoolean("Debug", false));
-    }
-    Debugger.debug(Debugger.Level.INFO, "Main setup started");
+    Debugger.setEnabled(getDescription().getVersion().contains("b") || getConfig().getBoolean("Debug", false));
+    Debugger.debug("Main setup started");
     saveDefaultConfig();
     for (String s : Arrays.asList("arenas", "particles", "lobbyitems", "stats", "voteItems", "mysql", "biomes", "bungee", "rewards")) {
       ConfigUtils.getConfig(this, s);
     }
     LanguageManager.init(this);
-    chatManager = new ChatManager(ChatColor.translateAlternateColorCodes('&', LanguageManager.getLanguageMessage("In-Game.Plugin-Prefix")));
+    chatManager = new ChatManager(LanguageManager.getLanguageMessage("In-Game.Plugin-Prefix"));
     configPreferences = new ConfigPreferences(this);
     new LegacyDataFixer(this);
     initializeClasses();
@@ -183,16 +177,16 @@ public class Main extends JavaPlugin {
       }
       if (result.getNewestVersion().contains("b")) {
         if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
-          Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
-          Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
+          Debugger.sendConsoleMsg("&c[BuildBattle] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
+          Debugger.sendConsoleMsg("&c[BuildBattle] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
               result.getNewestVersion()));
         }
         return;
       }
       MessageUtils.updateIsHere();
-      Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Your Build Battle plugin is outdated! Download it to keep with latest changes and fixes.");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Disable this option in config.yml if you wish.");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + getDescription().getVersion() + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + result.getNewestVersion());
+      Debugger.sendConsoleMsg("&aYour Build Battle plugin is outdated! Download it to keep with latest changes and fixes.");
+      Debugger.sendConsoleMsg("&aDisable this option in config.yml if you wish.");
+      Debugger.sendConsoleMsg("&eCurrent version: &c" + getDescription().getVersion() + " &eLatest version: &a" + result.getNewestVersion());
     });
   }
 
@@ -202,8 +196,8 @@ public class Main extends JavaPlugin {
       Class.forName("org.spigotmc.SpigotConfig");
     } catch (Exception e) {
       MessageUtils.thisVersionIsNotSupported();
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server software is not supported by Build Battle!");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "We support only Spigot and Spigot forks only! Shutting off...");
+      Debugger.sendConsoleMsg("&cYour server software is not supported by Build Battle!");
+      Debugger.sendConsoleMsg("&cWe support only Spigot and Spigot forks only! Shutting off...");
       forceDisable = true;
       getServer().getPluginManager().disablePlugin(this);
       return false;
@@ -212,8 +206,8 @@ public class Main extends JavaPlugin {
         || version.equalsIgnoreCase("v1_13_R2") || version.equalsIgnoreCase("v1_14_R1") || version.equalsIgnoreCase("v1_15_R1")
             || version.equalsIgnoreCase("v1_16_R1"))) {
       MessageUtils.thisVersionIsNotSupported();
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by Build Battle!");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider updating your server version?");
+      Debugger.sendConsoleMsg("&cYour server version is not supported by Build Battle!");
+      Debugger.sendConsoleMsg("&cSadly, we must shut off. Maybe you consider updating your server version?");
       forceDisable = true;
       getServer().getPluginManager().disablePlugin(this);
       return false;
@@ -249,21 +243,13 @@ public class Main extends JavaPlugin {
     new ParticleRefreshScheduler(this);
     Metrics metrics = new Metrics(this);
     metrics.addCustomChart(new Metrics.SimplePie("bungeecord_hooked", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.BUNGEE_ENABLED))));
-    metrics.addCustomChart(new Metrics.SimplePie("locale_used", () -> LanguageManager.getPluginLocale().getPrefix()));
+    metrics.addCustomChart(new Metrics.SimplePie("locale_used", LanguageManager.getPluginLocale()::getPrefix));
     metrics.addCustomChart(new Metrics.SimplePie("update_notifier", () -> {
       if (getConfig().getBoolean("Update-Notifier.Enabled", true)) {
-        if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
-          return "Enabled with beta notifier";
-        } else {
-          return "Enabled";
-        }
-      } else {
-        if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
-          return "Beta notifier only";
-        } else {
-          return "Disabled";
-        }
+        return getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true) ? "Enabled with beta notifier" : "Enabled";
       }
+
+      return getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true) ? "Beta notifier only" : "Disabled";
     }));
     new JoinEvents(this);
     new QuitEvents(this);
@@ -286,7 +272,7 @@ public class Main extends JavaPlugin {
     if (forceDisable) {
       return;
     }
-    Debugger.debug(Debugger.Level.INFO, "System disabling...");
+    Debugger.debug("System disabling...");
     Bukkit.getLogger().removeHandler(exceptionLogHandler);
     for (BaseArena arena : ArenaRegistry.getArenas()) {
       for (Player player : arena.getPlayers()) {
@@ -299,14 +285,10 @@ public class Main extends JavaPlugin {
           player.setGameMode(GameMode.SURVIVAL);
           player.getInventory().clear();
           player.getInventory().setArmorContents(null);
-          for (PotionEffect pe : player.getActivePotionEffects()) {
-            player.removePotionEffect(pe.getType());
-          }
+          player.getActivePotionEffects().forEach(pe -> player.removePotionEffect(pe.getType()));
         }
       }
-      for (Plot plot : arena.getPlotManager().getPlots()) {
-        plot.fullyResetPlot();
-      }
+      arena.getPlotManager().getPlots().forEach(Plot::fullyResetPlot);
       arena.teleportAllToEndLocation();
     }
     saveAllUserStatistics();
@@ -331,7 +313,8 @@ public class Main extends JavaPlugin {
       String finalUpdate = update.toString();
       //copy of userManager#saveStatistic but without async database call that's not allowed in onDisable method.
       if (userManager.getDatabase() instanceof MysqlManager) {
-        ((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE "+((MysqlManager) getUserManager().getDatabase()).getTableName()+ finalUpdate + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+        ((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE " + ((MysqlManager) getUserManager().getDatabase()).getTableName()
+            + finalUpdate + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
         continue;
       }
       userManager.getDatabase().saveAllStatistic(user);

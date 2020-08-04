@@ -25,8 +25,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
 
+import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.arena.ArenaManager;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
@@ -36,7 +36,6 @@ import plugily.projects.buildbattle.commands.arguments.data.CommandArgument;
 import plugily.projects.buildbattle.commands.arguments.data.LabelData;
 import plugily.projects.buildbattle.commands.arguments.data.LabeledCommandArgument;
 import plugily.projects.buildbattle.handlers.language.LanguageManager;
-import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 
 /**
  * @author Plajer
@@ -45,7 +44,7 @@ import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
  */
 public class ReloadArgument {
 
-  private Set<CommandSender> confirmations = new HashSet<>();
+  private final Set<CommandSender> confirmations = new HashSet<>();
 
   public ReloadArgument(ArgumentsRegistry registry) {
     registry.mapArgument("buildbattleadmin", new LabeledCommandArgument("reload", "buildbattle.admin.reload", CommandArgument.ExecutorType.BOTH,
@@ -73,9 +72,7 @@ public class ReloadArgument {
             } else {
               player.getInventory().clear();
               player.getInventory().setArmorContents(null);
-              for (PotionEffect pe : player.getActivePotionEffects()) {
-                player.removePotionEffect(pe.getType());
-              }
+              player.getActivePotionEffects().forEach(pe -> player.removePotionEffect(pe.getType()));
             }
           }
           ArenaManager.stopGame(true, arena);

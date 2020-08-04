@@ -23,14 +23,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang.math.NumberUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import plugily.projects.buildbattle.Main;
-import plugily.projects.buildbattle.utils.MessageUtils;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
+import plugily.projects.buildbattle.Main;
+import plugily.projects.buildbattle.utils.Debugger;
+import plugily.projects.buildbattle.utils.MessageUtils;
 
 /**
  * @author Plajer
@@ -41,7 +40,7 @@ public class LanguageMigrator {
 
   public static final int LANGUAGE_FILE_VERSION = 16;
   public static final int CONFIG_FILE_VERSION = 14;
-  private List<String> migratable = Arrays.asList("bungee", "config", "language", "mysql");
+  private final List<String> migratable = Arrays.asList("bungee", "config", "language", "mysql");
   private Main plugin;
 
   public LanguageMigrator(Main plugin) {
@@ -57,12 +56,11 @@ public class LanguageMigrator {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "config");
     if(config.isSet("Build-Time")) {
       MessageUtils.gonnaMigrate();
-      Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Build Battle is migrating config.yml to the new file format...");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Don't worry! Old config.yml will be renamed not overridden!");
+      Debugger.sendConsoleMsg("&aBuild Battle is migrating config.yml to the new file format...");
+      Debugger.sendConsoleMsg("&aDon't worry! Old config.yml will be renamed not overridden!");
       File file = new File(plugin.getDataFolder() + File.separator + "config.yml");
-      if (file.exists()) {
-        boolean rename = file.renameTo(new File(plugin.getDataFolder() + File.separator + "oldbb_config.yml"));
-        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Renamed file " + file);
+      if (file.exists() && file.renameTo(new File(plugin.getDataFolder() + File.separator + "oldbb_config.yml"))) {
+        Debugger.sendConsoleMsg("&aRenamed file " + file);
       }
       plugin.saveDefaultConfig();
       plugin.reloadConfig();
@@ -75,23 +73,23 @@ public class LanguageMigrator {
 
   private void migrateToNewFormat() {
     MessageUtils.gonnaMigrate();
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Build Battle is migrating all files to the new file format...");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Don't worry! Old files will be renamed not overridden!");
+    Debugger.sendConsoleMsg("&aBuild Battle is migrating all files to the new file format...");
+    Debugger.sendConsoleMsg("&aDon't worry! Old files will be renamed not overridden!");
     for (String fileName : migratable) {
       File file = new File(plugin.getDataFolder() + File.separator + fileName + ".yml");
       if (file.exists()) {
         file.renameTo(new File(plugin.getDataFolder(), "BB2_" + file + ".yml"));
-        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Renamed file " + file + ".yml");
+        Debugger.sendConsoleMsg("&aRenamed file " + file + ".yml");
       }
     }
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Done! Enabling BB2...");
+    Debugger.sendConsoleMsg("&aDone! Enabling BB2...");
   }
 
   private void configUpdate() {
     if (plugin.getConfig().getInt("Version") == CONFIG_FILE_VERSION) {
       return;
     }
-    Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[BuildBattle] System notify >> Your config file is outdated! Updating...");
+    Debugger.sendConsoleMsg("&e[BuildBattle] System notify >> Your config file is outdated! Updating...");
 
     int version = plugin.getConfig().getInt("Version", CONFIG_FILE_VERSION - 1);
     updateConfigVersionControl(version);
@@ -225,8 +223,8 @@ public class LanguageMigrator {
           break;
       }
     }
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] [System notify] Config updated, no comments were removed :)");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] [System notify] You're using latest config file version! Nice!");
+    Debugger.sendConsoleMsg("&a[BuildBattle] [System notify] Config updated, no comments were removed :)");
+    Debugger.sendConsoleMsg("&a[BuildBattle] [System notify] You're using latest config file version! Nice!");
   }
 
   private void languageFileUpdate() {
@@ -234,7 +232,7 @@ public class LanguageMigrator {
     if (config.getString("File-Version-Do-Not-Edit").equals(String.valueOf(LANGUAGE_FILE_VERSION))) {
       return;
     }
-    Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[BuildBattle] [System notify] Your language file is outdated! Updating...");
+    Debugger.sendConsoleMsg("&e[BuildBattle] [System notify] Your language file is outdated! Updating...");
 
     int version = 0;
     if (NumberUtils.isNumber(config.getString("File-Version-Do-Not-Edit"))) {
@@ -432,8 +430,8 @@ public class LanguageMigrator {
       }
       version++;
     }
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] [System notify] Language file updated! Nice!");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] [System notify] You're using latest language file version! Nice!");
+    Debugger.sendConsoleMsg("&a[BuildBattle] [System notify] Language file updated! Nice!");
+    Debugger.sendConsoleMsg("&a[BuildBattle] [System notify] You're using latest language file version! Nice!");
   }
 
   private void updateLanguageVersionControl(int oldVersion) {

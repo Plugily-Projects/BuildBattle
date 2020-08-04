@@ -28,10 +28,12 @@ import java.util.logging.Level;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
+import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
@@ -48,10 +50,8 @@ import plugily.projects.buildbattle.handlers.reward.Reward;
 import plugily.projects.buildbattle.menus.themevoter.VoteMenu;
 import plugily.projects.buildbattle.menus.themevoter.VotePoll;
 import plugily.projects.buildbattle.user.User;
+import plugily.projects.buildbattle.utils.Debugger;
 import plugily.projects.buildbattle.utils.MessageUtils;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
-import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 
 /**
  * @author Plajer
@@ -189,9 +189,9 @@ public class SoloArena extends BaseArena {
               p.openInventory(voteMenu.getInventory());
             }
           }
-          for (Player p : getPlayers()) {
-            voteMenu.updateInventory(p);
-          }
+
+          getPlayers().forEach(voteMenu::updateInventory);
+
           if (getTimer() == 0) {
             setThemeVoteTime(false);
             String votedTheme = voteMenu.getVotePoll().getVotedTheme();
@@ -405,9 +405,9 @@ public class SoloArena extends BaseArena {
     }
     if (!players.isEmpty()) {
       MessageUtils.errorOccurred();
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] [PLOT WARNING] Not enough plots in arena " + getID() + "! Lacks " + players.size() + " plots");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[PLOT WARNING] Required " + getPlayers().size() + " but have " + getPlotManager().getPlots().size());
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[PLOT WARNING] Instance was stopped!");
+      Debugger.sendConsoleMsg("&c[BuildBattle] [PLOT WARNING] Not enough plots in arena " + getID() + "! Lacks " + players.size() + " plots");
+      Debugger.sendConsoleMsg("&c[PLOT WARNING] Required " + getPlayers().size() + " but have " + getPlotManager().getPlots().size());
+      Debugger.sendConsoleMsg("&c[PLOT WARNING] Instance was stopped!");
       ArenaManager.stopGame(false, this);
     }
   }
@@ -539,13 +539,15 @@ public class SoloArena extends BaseArena {
     StringBuilder builder = new StringBuilder(players.get(0).getName());
     if (players.size() == 1) {
       return builder.toString();
-    } else {
-      players.remove(0);
-      for (Player p : players) {
-        builder.append(" & ").append(p.getName());
-      }
-      return builder.toString();
     }
+
+    players.remove(0);
+
+    for (Player p : players) {
+      builder.append(" & ").append(p.getName());
+    }
+
+    return builder.toString();
   }
 
   private void calculateResults() {

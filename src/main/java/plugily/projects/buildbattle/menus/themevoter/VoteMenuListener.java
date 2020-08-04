@@ -30,6 +30,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
@@ -79,16 +80,11 @@ public class VoteMenuListener implements Listener {
     }
     if (e.getView().getTitle().equals(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"))) {
       e.setCancelled(true);
-      if (e.getCurrentItem().getType() == Material.SIGN || /*1.13*/ ((plugin.is1_11_R1() || plugin.is1_12_R1()) &&
-          e.getCurrentItem().getType() == Material.valueOf("SIGN_POST"))) {
+      if (e.getCurrentItem().getType() == XMaterial.OAK_SIGN.parseMaterial()) {
         String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
         displayName = ChatColor.stripColor(displayName);
         boolean success = ((SoloArena) arena).getVotePoll().addVote((Player) e.getWhoClicked(), displayName);
-        if (!success) {
-          e.getWhoClicked().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Menus.Theme-Voting.Already-Voted"));
-        } else {
-          e.getWhoClicked().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Menus.Theme-Voting.Voted-Successfully"));
-        }
+        e.getWhoClicked().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Menus.Theme-Voting." + (!success ? "Already-Voted" : "Voted-Successfully")));
       }
       if (e.getCurrentItem().getType() == Material.PAPER) {
         User user = plugin.getUserManager().getUser((Player) e.getWhoClicked());

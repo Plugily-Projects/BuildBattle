@@ -23,27 +23,27 @@ import com.mojang.authlib.properties.Property;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import plugily.projects.buildbattle.Main;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import plugily.projects.buildbattle.Main;
 
 /**
  * Created by Tom on 29/07/2014.
@@ -52,7 +52,7 @@ public class Utils {
 
     private static Main plugin = JavaPlugin.getPlugin(Main.class);
     public static final ItemStack PLAYER_HEAD_ITEM = (plugin.is1_12_R1() || plugin.is1_11_R1())
-            ? new ItemStack(Material.SKULL_ITEM, 1, (short) 3) : XMaterial.PLAYER_HEAD.parseItem();
+            ? new ItemStack(XMaterial.PLAYER_HEAD.parseMaterial(), 1, (short) 3) : XMaterial.PLAYER_HEAD.parseItem();
 
     private Utils() {
     }
@@ -64,10 +64,7 @@ public class Utils {
      * @return true if named, false otherwise
      */
     public static boolean isNamed(ItemStack stack) {
-        if (stack == null) {
-            return false;
-        }
-        return stack.hasItemMeta() && stack.getItemMeta().hasDisplayName();
+        return stack != null && stack.hasItemMeta() && stack.getItemMeta().hasDisplayName();
     }
 
     /**
@@ -80,11 +77,8 @@ public class Utils {
      * @return serialized number
      */
     public static int serializeInt(Integer i) {
-        if ((i % 9) == 0) {
-            return i;
-        } else {
-            return (int) ((Math.ceil(i / 9) * 9) + 9);
-        }
+        if (i == 0) return 9; //The function bellow doesn't work if i == 0, so return 9 in case that happens.
+        return (i % 9) == 0 ? i : (i + 9 - 1) / 9 * 9;
     }
 
     public static ItemStack getGoBackItem() {
@@ -107,16 +101,14 @@ public class Utils {
                 Method mtd = headMeta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
                 mtd.setAccessible(true);
                 mtd.invoke(headMeta, profile);
-            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException ignored) {
+            } catch (Exception ignored) {
             }
         } else {
             try {
                 Field profileField = headMeta.getClass().getDeclaredField("profile");
                 profileField.setAccessible(true);
                 profileField.set(headMeta, profile);
-
-            } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException ignored) {
-
+            } catch (Exception ignored) {
             }
         }
         head.setItemMeta(headMeta);
@@ -142,12 +134,29 @@ public class Utils {
         return sortedMap;
     }
 
+    public static String matchColorRegex(String s) {
+        String regex = "&?#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})";
+        Matcher matcher = Pattern.compile(regex).matcher(s);
+        while (matcher.find()) {
+          String group = matcher.group(0);
+          String group2 = matcher.group(1);
+
+          try {
+            s = s.replace(group, net.md_5.bungee.api.ChatColor.of("#" + group2) + "");
+          } catch (Exception e) {
+            Debugger.debug("Bad hex color match: " + group);
+          }
+        }
+
+        return s;
+      }
+
     public static void sendPacket(Player player, Object packet) {
         try {
             Object handle = player.getClass().getMethod("getHandle").invoke(player);
             Object playerConnection = handle.getClass().getField("playerConnection").get(handle);
             playerConnection.getClass().getMethod("sendPacket", getNMSClass("Packet")).invoke(playerConnection, packet);
-        } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException | NoSuchFieldException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
@@ -157,7 +166,7 @@ public class Utils {
             return Class.forName("net.minecraft.server." + Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + "." + nmsClassName);
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace();
-            Bukkit.getConsoleSender().sendMessage("Reflection failed for " + nmsClassName);
+            Debugger.sendConsoleMsg("Reflection failed for " + nmsClassName);
             return null;
         }
     }
@@ -174,7 +183,7 @@ public class Utils {
                 Object playerConnection = entityPlayer.getClass().getField("playerConnection").get(entityPlayer);
 
                 playerConnection.getClass().getMethod("sendPacket", getNMSClass("Packet")).invoke(playerConnection, packet);
-            } catch(NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchFieldException | InstantiationException e) {
+            } catch(Exception e) {
                 e.printStackTrace();
             }
         } else {
