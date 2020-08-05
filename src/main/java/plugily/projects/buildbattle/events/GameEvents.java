@@ -357,10 +357,8 @@ public class GameEvents implements Listener {
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onCreatureSpawn(CreatureSpawnEvent e) {
     for (BaseArena arena : ArenaRegistry.getArenas()) {
-      if (arena.getPlotManager().getPlots() == null || arena.getPlotManager().getPlots().isEmpty()) {
-        continue;
-      }
-      if (arena.getPlotManager().getPlots().get(0) == null || !e.getEntity().getWorld().equals(arena.getPlotManager().getPlots().get(0).getCuboid().getCenter().getWorld())) {
+      if (arena.getPlotManager().getPlots().isEmpty() || arena.getPlotManager().getPlots().get(0) == null
+          || !e.getEntity().getWorld().equals(arena.getPlotManager().getPlots().get(0).getCuboid().getCenter().getWorld())) {
         continue;
       }
       if (e.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) {
@@ -444,15 +442,8 @@ public class GameEvents implements Listener {
     if (arena == null) {
       return;
     }
-    if (arena.getArenaState() != ArenaState.IN_GAME) {
-      e.setCancelled(true);
-      return;
-    }
-    if (arena instanceof SoloArena && ((SoloArena) arena).isVoting()) {
-      e.setCancelled(true);
-      return;
-    }
-    if (plugin.getConfigPreferences().getItemBlacklist().contains(e.getBlock().getType())) {
+    if (arena.getArenaState() != ArenaState.IN_GAME || arena instanceof SoloArena && ((SoloArena) arena).isVoting()
+        || plugin.getConfigPreferences().getItemBlacklist().contains(e.getBlock().getType())) {
       e.setCancelled(true);
       return;
     }
@@ -475,15 +466,8 @@ public class GameEvents implements Listener {
     if (arena == null) {
       return;
     }
-    if (arena.getArenaState() != ArenaState.IN_GAME) {
-      e.setCancelled(true);
-      return;
-    }
-    if (plugin.getConfigPreferences().getItemBlacklist().contains(e.getBlock().getType())) {
-      e.setCancelled(true);
-      return;
-    }
-    if (arena instanceof SoloArena && ((SoloArena) arena).isVoting()) {
+    if (arena.getArenaState() != ArenaState.IN_GAME || plugin.getConfigPreferences().getItemBlacklist().contains(e.getBlock().getType())
+        || (arena instanceof SoloArena && ((SoloArena) arena).isVoting())) {
       e.setCancelled(true);
       return;
     }
@@ -526,10 +510,7 @@ public class GameEvents implements Listener {
 
   @EventHandler
   public void onNPCClick(PlayerInteractEntityEvent e) {
-    if (e.getHand() == EquipmentSlot.OFF_HAND) {
-      return;
-    }
-    if (e.getPlayer().getInventory().getItemInMainHand() == null || e.getPlayer().getInventory().getItemInMainHand().getType() == Material.AIR) {
+    if (e.getHand() == EquipmentSlot.OFF_HAND || e.getPlayer().getInventory().getItemInMainHand().getType() == Material.AIR) {
       return;
     }
     if (e.getRightClicked() instanceof Villager && e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equalsIgnoreCase(plugin.getChatManager().colorMessage("In-Game.NPC.Floor-Change-NPC-Name"))) {
@@ -541,10 +522,9 @@ public class GameEvents implements Listener {
         return;
       }
       Material material = e.getPlayer().getInventory().getItemInMainHand().getType();
-      if (material != XMaterial.WATER_BUCKET.parseMaterial() && material != XMaterial.LAVA_BUCKET.parseMaterial()){
-        if (!(material.isBlock() && material.isSolid() && material.isOccluding())) {
+      if (material != XMaterial.WATER_BUCKET.parseMaterial() && material != XMaterial.LAVA_BUCKET.parseMaterial()
+          && !(material.isBlock() && material.isSolid() && material.isOccluding())) {
           return;
-        }
       }
       if (plugin.getConfigPreferences().getFloorBlacklist().contains(material)) {
         return;

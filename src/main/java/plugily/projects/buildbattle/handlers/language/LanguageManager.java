@@ -27,12 +27,11 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.buildbattle.Main;
+import plugily.projects.buildbattle.utils.Debugger;
 import plugily.projects.buildbattle.utils.services.ServiceRegistry;
 import plugily.projects.buildbattle.utils.services.locale.Locale;
 import plugily.projects.buildbattle.utils.services.locale.LocaleRegistry;
@@ -94,7 +93,7 @@ public class LanguageManager {
   private static void loadProperties() {
     LocaleService service = ServiceRegistry.getLocaleService(plugin);
     if (service == null) {
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Build Battle] Locales cannot be downloaded because API website is unreachable, locales will be disabled.");
+      Debugger.sendConsoleMsg("&c[Build Battle] Locales cannot be downloaded because API website is unreachable, locales will be disabled.");
       pluginLocale = LocaleRegistry.getByName("English");
       return;
     }
@@ -102,16 +101,16 @@ public class LanguageManager {
       LocaleService.DownloadStatus status = service.demandLocaleDownload(pluginLocale);
       if (status == LocaleService.DownloadStatus.FAIL) {
         pluginLocale = LocaleRegistry.getByName("English");
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Locale service couldn't download latest locale for plugin! English locale will be used instead!");
+        Debugger.sendConsoleMsg("&c[BuildBattle] Locale service couldn't download latest locale for plugin! English locale will be used instead!");
         return;
       } else if (status == LocaleService.DownloadStatus.SUCCESS) {
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Downloaded locale " + pluginLocale.getPrefix() + " properly!");
+        Debugger.sendConsoleMsg("&c[BuildBattle] Downloaded locale " + pluginLocale.getPrefix() + " properly!");
       } else if (status == LocaleService.DownloadStatus.LATEST) {
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Locale " + pluginLocale.getPrefix() + " is latest! Awesome!");
+        Debugger.sendConsoleMsg("&c[BuildBattle] Locale " + pluginLocale.getPrefix() + " is latest! Awesome!");
       }
     } else {
       pluginLocale = LocaleRegistry.getByName("English");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Your plugin version is too old to use latest locale! Please update plugin to access latest updates of locale!");
+      Debugger.sendConsoleMsg("&c[BuildBattle] Your plugin version is too old to use latest locale! Please update plugin to access latest updates of locale!");
       return;
     }
     try {
@@ -136,17 +135,17 @@ public class LanguageManager {
       }
     }
     if (pluginLocale == null) {
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Plugin locale is invalid! Using default one...");
+      Debugger.sendConsoleMsg("&c[BuildBattle] Plugin locale is invalid! Using default one...");
       pluginLocale = LocaleRegistry.getByName("English");
       return;
     }
     /* is beta release */
     if (plugin.getDescription().getVersion().contains("b") || plugin.getDescription().getVersion().contains("pre")) {
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Locales aren't supported in beta versions because they're lacking latest translations! Enabling English one...");
+      Debugger.sendConsoleMsg("&c[BuildBattle] Locales aren't supported in beta versions because they're lacking latest translations! Enabling English one...");
       pluginLocale = LocaleRegistry.getByName("English");
       return;
     }
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[BuildBattle] Loaded locale " + pluginLocale.getName() + " (" + pluginLocale.getOriginalName() + " ID: " +
+    Debugger.sendConsoleMsg("&a[BuildBattle] Loaded locale " + pluginLocale.getName() + " (" + pluginLocale.getOriginalName() + " ID: " +
         pluginLocale.getPrefix() + ") by " + pluginLocale.getAuthor());
     loadProperties();
   }
@@ -180,11 +179,11 @@ public class LanguageManager {
     //check normal language if nothing found in specific language
     if (!languageConfig.isSet(path)) {
       //send normal english message - User can change this translation on his own
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Game message not found in your locale! Added it to your language.yml");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Path: " + path + " | Language not found. Report it to the author on Discord!");
+      Debugger.sendConsoleMsg("&c[BuildBattle] Game message not found in your locale! Added it to your language.yml");
+      Debugger.sendConsoleMsg("&c[BuildBattle] Path: " + path + " | Language not found. Report it to the author on Discord!");
     }
     List<String> list = languageConfig.getStringList(path);
-    list = list.stream().map(string -> ChatColor.translateAlternateColorCodes('&', string)).collect(Collectors.toList());
+    list = list.stream().map(string -> plugin.getChatManager().colorRawMessage(string)).collect(Collectors.toList());
     return list;
   }
 
@@ -193,8 +192,8 @@ public class LanguageManager {
     //check normal language if nothing found in specific language
     if (!languageConfig.isSet(path)) {
       //send normal english message - User can change this translation on his own
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Game message not found in your locale! Added it to your language.yml");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] Path: " + path + " | Language not found. Report it to the author on Discord!");
+      Debugger.sendConsoleMsg("&c[BuildBattle] Game message not found in your locale! Added it to your language.yml");
+      Debugger.sendConsoleMsg("&c[BuildBattle] Path: " + path + " | Language not found. Report it to the author on Discord!");
     }
     return languageConfig.getString(path);
   }

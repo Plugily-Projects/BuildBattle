@@ -145,7 +145,7 @@ public class SignManager implements Listener {
 
   @EventHandler
   public void onJoinAttempt(PlayerInteractEvent e) {
-    if (e.getHand() == EquipmentSlot.OFF_HAND) {
+    if (e.getHand() == EquipmentSlot.OFF_HAND || e.getClickedBlock() == null) {
       return;
     }
     ArenaSign arenaSign = getArenaSignByBlock(e.getClickedBlock());

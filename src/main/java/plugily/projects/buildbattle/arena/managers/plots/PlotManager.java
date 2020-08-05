@@ -48,12 +48,11 @@ public class PlotManager {
 
   public Plot getPlot(Player player) {
     for (Plot buildPlot : plots) {
-      if (buildPlot.getOwners() != null && !buildPlot.getOwners().isEmpty()) {
-        if (buildPlot.getOwners().contains(player)) {
-          return buildPlot;
-        }
+      if (buildPlot.getOwners() != null && buildPlot.getOwners().contains(player)) {
+        return buildPlot;
       }
     }
+
     return null;
   }
 
@@ -67,7 +66,7 @@ public class PlotManager {
   }
 
   public void resetPlotsGradually() {
-    if (plotsToClear.isEmpty()) {
+    if (isPlotsCleared()) {
       return;
     }
 

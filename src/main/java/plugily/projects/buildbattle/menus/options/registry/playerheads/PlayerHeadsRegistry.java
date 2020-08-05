@@ -44,7 +44,7 @@ import plugily.projects.buildbattle.utils.Utils;
 public class PlayerHeadsRegistry {
 
   private Main plugin;
-  private Map<HeadsCategory, Inventory> categories = new HashMap<>();
+  private final Map<HeadsCategory, Inventory> categories = new HashMap<>();
 
   public PlayerHeadsRegistry(OptionsRegistry registry) {
     this.plugin = registry.getPlugin();
@@ -89,7 +89,7 @@ public class PlayerHeadsRegistry {
   }
 
   public boolean isHeadsMenu(Inventory inventory) {
-    return categories.values().stream().filter(inv -> inventory.equals(inv)).findFirst().isPresent();
+    return categories.values().stream().filter(inv -> inv.equals(inventory)).findFirst().isPresent();
   }
 
   public Map<HeadsCategory, Inventory> getCategories() {

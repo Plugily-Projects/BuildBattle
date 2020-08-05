@@ -54,10 +54,9 @@ public class FloorChangeOption {
           return;
         }
         Material material = itemStack.getType();
-        if (material != XMaterial.WATER_BUCKET.parseMaterial() && material != XMaterial.LAVA_BUCKET.parseMaterial()){
-            if (!(material.isBlock() && material.isSolid() && material.isOccluding())) {
-              return;
-            }
+        if (material != XMaterial.WATER_BUCKET.parseMaterial() && material != XMaterial.LAVA_BUCKET.parseMaterial()
+            && !(material.isBlock() && material.isSolid() && material.isOccluding())) {
+            return;
         }
         if (registry.getPlugin().getConfigPreferences().getFloorBlacklist().contains(material)) {
           return;
@@ -69,11 +68,8 @@ public class FloorChangeOption {
         itemStack.setType(Material.AIR);
         e.getCurrentItem().setType(Material.AIR);
         e.getWhoClicked().closeInventory();
-        for (Entity entity : e.getWhoClicked().getNearbyEntities(5, 5, 5)) {
-          if (entity.getType() == EntityType.DROPPED_ITEM) {
-            entity.remove();
-          }
-        }
+        e.getWhoClicked().getNearbyEntities(5, 5, 5).stream().filter(entity -> entity.getType() == EntityType.DROPPED_ITEM)
+          .forEach(Entity::remove);
       }
     });
   }

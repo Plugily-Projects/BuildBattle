@@ -92,13 +92,13 @@ public class PlaceholderManager extends PlaceholderExpansion {
       case "max_players":
         return String.valueOf(arena.getMaximumPlayers());
       case "state":
-        return String.valueOf(arena.getArenaState());
+        return arena.getArenaState().toString().toLowerCase();
       case "state_pretty":
         return arena.getArenaState().getFormattedName();
       case "mapname":
         return arena.getMapName();
       case "arenatype":
-        return String.valueOf(arena.getArenaType());
+        return arena.getArenaType().toString().toLowerCase();
       case "arenatype_pretty":
         return arena.getArenaType().getPrefix();
       default:

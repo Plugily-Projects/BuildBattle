@@ -203,7 +203,7 @@ public class SetupInventoryEvents implements Listener {
           e.getWhoClicked().sendMessage(ChatColor.GREEN + "This arena was already validated and is ready to use!");
           return;
         }
-        String[] locations = new String[] {"lobbylocation", "Endlocation"};
+        String[] locations = {"lobbylocation", "Endlocation"};
         for (String s : locations) {
           if (!config.isSet("instances." + arena.getID() + "." + s) || config.getString("instances." + arena.getID() + "." + s)
               .equals(LocationSerializer.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {

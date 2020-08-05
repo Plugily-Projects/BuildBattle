@@ -51,8 +51,8 @@ public class ParticleRegistry {
 
   private Inventory page1;
   private Inventory page2;
-  private List<String> blackListedParticles = Arrays.asList("BLOCK_CRACK", "ITEM_CRACK", "ITEM_TAKE", "BLOCK_DUST", "MOB_APPEARANCE", "FOOTSTEP", "REDSTONE");
-  private Set<ParticleItem> registeredParticles = new HashSet<>();
+  private final List<String> blackListedParticles = Arrays.asList("BLOCK_CRACK", "ITEM_CRACK", "ITEM_TAKE", "BLOCK_DUST", "MOB_APPEARANCE", "FOOTSTEP", "REDSTONE");
+  private final Set<ParticleItem> registeredParticles = new HashSet<>();
   private Main plugin;
 
   public ParticleRegistry(OptionsRegistry registry) {

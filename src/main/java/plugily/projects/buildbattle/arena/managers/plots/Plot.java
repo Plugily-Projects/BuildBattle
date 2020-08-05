@@ -136,8 +136,8 @@ public class Plot {
       for (Player p : owners) {
         User user = plugin.getUserManager().getUser(p);
         user.setCurrentPlot(null);
-        this.setOwners(new ArrayList<>());
-        this.setPoints(0);
+        setOwners(new ArrayList<>());
+        setPoints(0);
       }
     }
     getParticles().clear();
@@ -236,7 +236,7 @@ public class Plot {
   }
 
   public void changeFloor(Material material, byte data) {
-    if (material == Material.WATER_BUCKET) {
+    if (material == Material.WATER_BUCKET || material == Material.MILK_BUCKET) {
       material = Material.WATER;
     }
     if (material == Material.LAVA_BUCKET) {

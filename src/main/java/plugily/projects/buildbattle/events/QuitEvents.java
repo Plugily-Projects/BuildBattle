@@ -46,10 +46,7 @@ public class QuitEvents implements Listener {
   @EventHandler
   public void onQuit(PlayerQuitEvent e) {
     BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
-    if (arena == null) {
-      return;
-    }
-    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+    if (arena != null && !plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       ArenaManager.leaveAttempt(e.getPlayer(), arena);
     }
   }

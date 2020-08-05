@@ -57,7 +57,7 @@ public class ParticlesOption {
       @Override
       public void onTargetClick(InventoryClickEvent e) {
         BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
-        if (arena == null || e.getCurrentItem() == null) {
+        if (arena == null || e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {
           return;
         }
         if (e.getCurrentItem().getItemMeta().getDisplayName()

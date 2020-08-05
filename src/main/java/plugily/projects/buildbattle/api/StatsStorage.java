@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -37,6 +36,7 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.user.data.MysqlManager;
+import plugily.projects.buildbattle.utils.Debugger;
 import plugily.projects.buildbattle.utils.MessageUtils;
 import plugily.projects.buildbattle.utils.Utils;
 
@@ -61,16 +61,16 @@ public class StatsStorage {
       try (Connection connection = plugin.getMysqlDatabase().getConnection();
            Statement statement = connection.createStatement();
            ResultSet set = statement.executeQuery("SELECT UUID, " + stat.getName() + " FROM " + ((MysqlManager) plugin.getUserManager().getDatabase()).getTableName() + " ORDER BY " + stat.getName())) {
-        Map<java.util.UUID, java.lang.Integer> column = new LinkedHashMap<>();
+        Map<UUID, Integer> column = new LinkedHashMap<>();
         while (set.next()) {
-          column.put(java.util.UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));
+          column.put(UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));
         }
         return column;
       } catch (SQLException e) {
         e.printStackTrace();
         MessageUtils.errorOccurred();
-        Bukkit.getConsoleSender().sendMessage("Cannot get contents from MySQL database!");
-        Bukkit.getConsoleSender().sendMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
+        Debugger.sendConsoleMsg("Cannot get contents from MySQL database!");
+        Debugger.sendConsoleMsg("Check configuration of mysql.yml file or disable mysql option in config.yml");
         return Collections.emptyMap();
       }
     }
