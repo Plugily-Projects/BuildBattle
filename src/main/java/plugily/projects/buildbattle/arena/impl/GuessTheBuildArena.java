@@ -325,7 +325,10 @@ public class GuessTheBuildArena extends BaseArena {
             }
             getPlotManager().getPlot(player).fullyResetPlot();
           }
-          giveRewards();
+
+          // do it in the main thread to prevent async catch from bukkit
+          Bukkit.getScheduler().scheduleSyncDelayedTask(getPlugin(), this::giveRewards);
+
           clearPlayers();
           setArenaState(ArenaState.RESTARTING);
           if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
@@ -396,12 +399,12 @@ public class GuessTheBuildArena extends BaseArena {
   @Override
   public void giveRewards() {
     List<Map.Entry<Player, Integer>> list = new ArrayList<>(getPlayersPoints().entrySet());
-    for(int i = 0; i <= list.size(); i++) {
-      if(list.size() - 1 < i) {
+    for (int i = 0; i <= list.size(); i++) {
+      if (list.size() - 1 < i) {
         continue;
       }
       Map.Entry<Player, Integer> entry = list.get(i);
-      getPlugin().getRewardsHandler().performReward(entry.getKey(), Reward.RewardType.PLACE, i +1);
+      getPlugin().getRewardsHandler().performReward(entry.getKey(), Reward.RewardType.PLACE, i + 1);
     }
     getPlugin().getRewardsHandler().performReward(this, Reward.RewardType.END_GAME);
   }

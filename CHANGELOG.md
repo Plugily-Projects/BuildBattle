@@ -17,6 +17,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Fix for new 1.16 wall signs
 * Fix NPE regarding to giving rewards to players and resetting the plot areas
 * Fix when blacklisted items & floor material is not exists and throws errors
+* Fix async catch from bukkit when performing commands
 
 ### 4.4.0 Release (01.07.2020 - 29.07.2020)
 * GuessTheBuild release

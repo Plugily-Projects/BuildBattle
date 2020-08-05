@@ -1,5 +1,3 @@
-
-
 package plugily.projects.buildbattle.handlers.reward;
 
 import org.apache.commons.lang.StringUtils;
@@ -27,7 +25,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class RewardsFactory {
 
-  private Set<Reward> rewards = new HashSet<>();
+  private final Set<Reward> rewards = new HashSet<>();
   private FileConfiguration config;
   private boolean enabled;
 
