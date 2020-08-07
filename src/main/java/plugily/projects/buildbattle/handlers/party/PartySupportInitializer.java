@@ -34,35 +34,35 @@ public class PartySupportInitializer {
   public PartyHandler initialize(Main plugin) {
     PartyHandler partyHandler;
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_PARTIES)){
-    if (Bukkit.getServer().getPluginManager().getPlugin("Parties") != null) {
-      return new PartiesPartyHandlerImpl();
-    } else if (Bukkit.getServer().getPluginManager().getPlugin("Spigot-Party-API-PAF") != null) {
-      return new PAFBPartyHandlerImpl();
-    } else if (Bukkit.getServer().getPluginManager().getPlugin("PartyAndFriends") != null) {
-      return new PAFSPartyHandlerImpl();
+      if (Bukkit.getServer().getPluginManager().getPlugin("Parties") != null) {
+        return new PartiesPartyHandlerImpl();
+      } else if (Bukkit.getServer().getPluginManager().getPlugin("Spigot-Party-API-PAF") != null) {
+        return new PAFBPartyHandlerImpl();
+      } else if (Bukkit.getServer().getPluginManager().getPlugin("PartyAndFriends") != null) {
+        return new PAFSPartyHandlerImpl();
+      }
     }
-    }
-      partyHandler = new PartyHandler() {
-        @Override
-        public boolean isPlayerInParty(Player player) {
-          return false;
-        }
+    partyHandler = new PartyHandler() {
+      @Override
+      public boolean isPlayerInParty(Player player) {
+        return false;
+      }
 
-        @Override
-        public GameParty getParty(Player player) {
-          return null;
-        }
+      @Override
+      public GameParty getParty(Player player) {
+        return null;
+      }
 
-        @Override
-        public boolean partiesSupported() {
-          return false;
-        }
+      @Override
+      public boolean partiesSupported() {
+        return false;
+      }
 
-        @Override
-        public PartyPluginType getPartyPluginType() {
-          return PartyPluginType.NONE;
-        }
-      };
+      @Override
+      public PartyPluginType getPartyPluginType() {
+        return PartyPluginType.NONE;
+      }
+    };
     return partyHandler;
   }
 
