@@ -323,7 +323,9 @@ public class GuessTheBuildArena extends BaseArena {
             if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
               InventorySerializer.loadInventory(getPlugin(), player);
             }
-            getPlotManager().getPlot(player).fullyResetPlot();
+            //fast solution
+            if (getPlotManager().getPlot(player) != null)
+                getPlotManager().getPlot(player).fullyResetPlot();
           }
 
           // do it in the main thread to prevent async catch from bukkit
