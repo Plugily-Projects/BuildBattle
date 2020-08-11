@@ -37,10 +37,11 @@ import plugily.projects.buildbattle.arena.managers.plots.Plot;
  */
 public class User {
 
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
-  private Player player;
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+  private final Player player;
   private final Map<StatsStorage.StatisticType, Integer> stats = new EnumMap<>(StatsStorage.StatisticType.class);
   private Plot currentPlot;
+  private boolean spectator = false;
 
   public User(Player player) {
     this.player = player;
@@ -60,6 +61,14 @@ public class User {
 
   public BaseArena getArena() {
     return ArenaRegistry.getArena(player);
+  }
+
+  public void setSpectator(boolean b) {
+    spectator = b;
+  }
+
+  public boolean isSpectator() {
+    return spectator;
   }
 
   public int getStat(StatsStorage.StatisticType stat) {

@@ -313,6 +313,7 @@ public class BaseArena extends BukkitRunnable {
     Location location = getLobbyLocation();
     if (location == null) {
       System.out.print("LobbyLocation isn't intialized for arena " + getID());
+      return;
     }
     player.teleport(location);
   }
