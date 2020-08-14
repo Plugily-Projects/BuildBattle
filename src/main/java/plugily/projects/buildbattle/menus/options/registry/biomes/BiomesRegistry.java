@@ -77,9 +77,9 @@ public class BiomesRegistry {
   private void registerInventory() {
     Inventory inv = Bukkit.createInventory(null, Utils.serializeInt(biomes.size() + 1),
         plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Biome.Inventory-Name"));
-    for (BiomeItem item : biomes) {
-      inv.addItem(item.getItemStack());
-    }
+
+    biomes.stream().map(BiomeItem::getItemStack).forEach(inv::addItem);
+
     inv.addItem(Utils.getGoBackItem());
     inventory = inv;
   }

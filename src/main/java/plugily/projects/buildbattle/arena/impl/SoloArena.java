@@ -30,6 +30,7 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
@@ -60,9 +61,9 @@ import plugily.projects.buildbattle.utils.MessageUtils;
  */
 public class SoloArena extends BaseArena {
 
-  private Map<Integer, List<Player>> topList = new HashMap<>();
+  private final Map<Integer, List<Player>> topList = new HashMap<>();
   private boolean receivedVoteItems;
-  private Queue<Player> queue = new LinkedList<>();
+  private final Queue<Player> queue = new LinkedList<>();
   private Plot votingPlot = null;
   private boolean voteTime;
   private boolean themeVoteTime = true;
@@ -102,6 +103,7 @@ public class SoloArena extends BaseArena {
     voteTime = voting;
   }
 
+  @NotNull
   public Queue<Player> getQueue() {
     return queue;
   }

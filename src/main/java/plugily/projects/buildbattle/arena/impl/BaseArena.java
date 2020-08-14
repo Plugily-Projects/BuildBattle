@@ -33,6 +33,8 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
@@ -182,6 +184,7 @@ public class BaseArena extends BukkitRunnable {
    *
    * @return lobby loc of arena
    */
+  @Nullable
   public Location getLobbyLocation() {
     return gameLocations.get(BaseArena.GameLocation.LOBBY);
   }
@@ -209,12 +212,13 @@ public class BaseArena extends BukkitRunnable {
    *
    * @return map name String
    */
+  @NotNull
   public String getMapName() {
     return mapName;
   }
 
   public void setMapName(String mapname) {
-    this.mapName = mapname;
+    this.mapName = mapname == null ? "" : mapname;
   }
 
   public void addPlayer(Player player) {
@@ -261,6 +265,7 @@ public class BaseArena extends BukkitRunnable {
    * @return arena state
    * @see ArenaState
    */
+  @NotNull
   public ArenaState getArenaState() {
     return arenaState;
   }
@@ -272,11 +277,12 @@ public class BaseArena extends BukkitRunnable {
    * @param arenaState arena state to change
    * @see BBGameChangeStateEvent
    */
-  public void setArenaState(ArenaState arenaState) {
-    if (getArenaState() != null) {
-      BBGameChangeStateEvent gameChangeStateEvent = new BBGameChangeStateEvent(arenaState, this, getArenaState());
+  public void setArenaState(@NotNull ArenaState arenaState) {
+    if (this.arenaState != null) {
+      BBGameChangeStateEvent gameChangeStateEvent = new BBGameChangeStateEvent(arenaState, this, this.arenaState);
       plugin.getServer().getPluginManager().callEvent(gameChangeStateEvent);
     }
+
     this.arenaState = arenaState;
   }
 
@@ -285,6 +291,7 @@ public class BaseArena extends BukkitRunnable {
    *
    * @return List with players
    */
+  @NotNull
   public List<Player> getPlayers() {
     return players;
   }
@@ -298,14 +305,17 @@ public class BaseArena extends BukkitRunnable {
       getPlayers().forEach(plugin.getBungeeManager()::connectToHub);
       return;
     }
-    Location location = getEndLocation();
 
+    Location location = getEndLocation();
     if (location == null) {
       location = getLobbyLocation();
       System.out.print("EndLocation for arena " + getID() + " isn't intialized!");
     }
-    for (Player player : getPlayers()) {
-      player.teleport(location);
+
+    if (location != null) {
+      for (Player player : getPlayers()) {
+        player.teleport(location);
+      }
     }
   }
 
@@ -313,7 +323,9 @@ public class BaseArena extends BukkitRunnable {
     Location location = getLobbyLocation();
     if (location == null) {
       System.out.print("LobbyLocation isn't intialized for arena " + getID());
+      return;
     }
+
     player.teleport(location);
   }
 
@@ -322,13 +334,16 @@ public class BaseArena extends BukkitRunnable {
       plugin.getBungeeManager().connectToHub(player);
       return;
     }
+
     Location location = getEndLocation();
     if (location == null) {
       location = getLobbyLocation();
       System.out.print("EndLocation for arena " + getID() + " isn't intialized!");
     }
 
-    player.teleport(location);
+    if (location != null) {
+      player.teleport(location);
+    }
   }
 
   public void giveRewards() {
@@ -339,12 +354,13 @@ public class BaseArena extends BukkitRunnable {
    *
    * @return arena theme String
    */
+  @Nullable
   public String getTheme() {
     return theme;
   }
 
   public void setTheme(String theme) {
-    this.theme = theme;
+    this.theme = theme == null ? "Theme" : theme;
   }
 
   /**
@@ -352,6 +368,7 @@ public class BaseArena extends BukkitRunnable {
    *
    * @return end loc of arena
    */
+  @Nullable
   public Location getEndLocation() {
     return gameLocations.get(GameLocation.END);
   }

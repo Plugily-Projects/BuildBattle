@@ -21,6 +21,8 @@ That's all, matcher will stop when detects next line started with `###` match
 * Fixed IllegalPluginAccessException on plugin disable
 * Fixed NPE on Plotreset (GTB)
 * Fixed player being kicked when trying to join an in-game arena
+* Fix NPE when trying to teleport players to lobby location 
+* Fix for PlaceholderAPI placeholders not works on scoreboard in guessTheBuild mode
 
 ### 4.4.0 Release (01.07.2020 - 29.07.2020)
 * GuessTheBuild release

@@ -18,7 +18,6 @@
 
 package plugily.projects.buildbattle.commands;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,11 +55,7 @@ public class TabCompletion implements TabCompleter {
     }
     if (cmd.getName().equalsIgnoreCase("buildbattle")) {
       if (args.length == 2 && args[0].equalsIgnoreCase("join")) {
-        List<String> arenaIds = new ArrayList<>();
-        for (BaseArena arena : ArenaRegistry.getArenas()) {
-          arenaIds.add(arena.getID());
-        }
-        return arenaIds;
+        return ArenaRegistry.getArenas().stream().map(BaseArena::getID).collect(Collectors.toList());
       }
       if (args.length == 1) {
         return registry.getMappedArguments().get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName).collect(Collectors.toList());

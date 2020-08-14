@@ -34,6 +34,8 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
@@ -480,6 +482,7 @@ public class GuessTheBuildArena extends BaseArena {
     return round;
   }
 
+  @Nullable
   public Player getCurrentBuilder() {
     return currentBuilder;
   }
@@ -492,6 +495,7 @@ public class GuessTheBuildArena extends BaseArena {
     this.currentTheme = currentTheme;
   }
 
+  @NotNull
   public List<Player> getWhoGuessed() {
     return whoGuessed;
   }
