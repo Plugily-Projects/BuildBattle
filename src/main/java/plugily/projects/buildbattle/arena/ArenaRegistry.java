@@ -18,18 +18,11 @@
 
 package plugily.projects.buildbattle.arena;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import javax.annotation.Nullable;
-
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
@@ -42,13 +35,17 @@ import plugily.projects.buildbattle.arena.impl.TeamArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.utils.Debugger;
 
+import javax.annotation.Nullable;
+import java.util.*;
+
 /**
  * Created by Tom on 27/07/2014.
  */
 public class ArenaRegistry {
 
-  private static List<BaseArena> arenas = new ArrayList<>();
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final List<BaseArena> arenas = new ArrayList<>();
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final Map<UUID, String> playerArenaMap = new HashMap<>();
 
   private static int bungeeArena = -999;
 
@@ -68,14 +65,11 @@ public class ArenaRegistry {
       return null;
     }
 
-    for (BaseArena arena : arenas) {
-      for (Player player : arena.getPlayers()) {
-        if (player.equals(p)) {
-          return arena;
-        }
-      }
-    }
-    return null;
+    return getArena(playerArenaMap.get(p.getUniqueId()));
+  }
+
+  public static Map<UUID, String> getPlayerArenaMap() {
+    return playerArenaMap;
   }
 
   public static void registerArena(BaseArena arena) {

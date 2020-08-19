@@ -163,14 +163,17 @@ public class ArenaManager {
       InventorySerializer.saveInventoryToFile(plugin, player);
     }
 
-    arena.addPlayer(player);
     player.setExp(1);
     player.setFoodLevel(20);
     player.setHealth(20.0);
     player.setLevel(0);
 
+    //Set player as spectator as the game is already started
     SpecialItem leaveItem = plugin.getSpecialItemsRegistry().getSpecialItem("Leave");
     if ((arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING)) {
+
+      arena.addSpectator(player);
+
       player.teleport(arena.getPlotManager().getPlots().get(0).getTeleportLocation());
       player.sendMessage(chatManager.colorMessage("In-Game.You-Are-Spectator"));
       player.getInventory().clear();
@@ -182,7 +185,7 @@ public class ArenaManager {
       player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
       player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0));
 
-      //Hide player
+      //Hide player from other players
       arena.getPlayers().forEach(onlinePlayer -> onlinePlayer.hidePlayer(player));
 
       user.setSpectator(true);
@@ -200,6 +203,8 @@ public class ArenaManager {
       }
       return;
     }
+
+    arena.addPlayer(player);
 
     arena.doBarAction(BaseArena.BarAction.ADD, player);
     arena.teleportToLobby(player);
@@ -232,14 +237,17 @@ public class ArenaManager {
     }
     //todo maybe not
     user.setStat(StatsStorage.StatisticType.LOCAL_GUESS_THE_BUILD_POINTS, 0);
-    user.setSpectator(false);
     arena.teleportToEndLocation(player);
     arena.getScoreboardManager().removeScoreboard(user);
-    arena.removePlayer(player);
 
-    if (!user.isSpectator()) {
+    if (user.isSpectator()) {
+      arena.removeSpectator(player);
+      user.setSpectator(false);
+    } else {
+      arena.removePlayer(player);
       plugin.getChatManager().broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
     }
+
 
     Plot plot = arena.getPlotManager().getPlot(player);
     if (plot != null) {

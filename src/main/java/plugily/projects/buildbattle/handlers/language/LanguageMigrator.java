@@ -427,6 +427,9 @@ public class LanguageMigrator {
           MigratorUtils.insertAfterLine(file, "Voting-Messages:", "      Voted-For-Player-Plot: \"&7The plot owner was &e&l%PLAYER%&7!\"");
           MigratorUtils.insertAfterLine(file, "Voting-Messages:", "      Vote-For-Next-Plot: \"&7You can now vote for this plot!\"");
           break;
+        case 16:
+          MigratorUtils.insertAfterLine(file, "In-Game:", "  You-Are-Spectator: \"&eYou're now a spectator! You can fly now!\"");
+          MigratorUtils.insertAfterLine(file, "Commands:", "  Arena-Restarting: \"&cThis arena is currently restarting!\"");
       }
       version++;
     }

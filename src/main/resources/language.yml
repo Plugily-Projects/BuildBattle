@@ -12,7 +12,7 @@ Commands:
   No-Arena-Like-That: "&cNo arena with that ID!"
   Type-Arena-Name: "&cPlease type arena ID!"
   Arena-Is-Full: "&cThis arena is full, sorry!"
-  Arena-Started: "&cThis arena already started, sorry!"
+  Arena-Restarting: "&cThis arena is currently restarting!"
   No-Playing: "&cYou're not playing!"
   Wait-For-Start: "&cYou must wait for arena start!"
   Added-Plot: "&aAdded plot for arena &7%ARENA%"
@@ -166,6 +166,7 @@ In-Game:
   Join-As-Party-Member: "&cYou joined %ARENANAME% because the party leader joined it!"
   Nobody: "&eNobody"
   No-Theme-Yet: "&cVoting"
+  You-Are-Spectator: "&eYou're now a spectator! You can fly now!"
   Guess-The-Build:
     Current-Builder: "&eBuilder: &7%BUILDER%"
     Current-Round: "&eRound: &7%ROUND%/%MAXPLAYERS%"
@@ -333,4 +334,4 @@ Signs:
     - "&5[%playersize%/%maxplayers%]"
 
 # Do not modify!
-File-Version-Do-Not-Edit: 16
+File-Version-Do-Not-Edit: 17

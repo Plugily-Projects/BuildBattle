@@ -18,14 +18,8 @@
 
 package plugily.projects.buildbattle.arena.impl;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.boss.BarColor;
@@ -33,16 +27,21 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.event.game.BBGameChangeStateEvent;
+import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.ArenaState;
 import plugily.projects.buildbattle.arena.managers.ScoreboardManager;
 import plugily.projects.buildbattle.arena.managers.plots.PlotManager;
 import plugily.projects.buildbattle.arena.options.ArenaOption;
+
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Plajer
@@ -51,22 +50,23 @@ import plugily.projects.buildbattle.arena.options.ArenaOption;
  */
 public class BaseArena extends BukkitRunnable {
 
-  private Main plugin;
-  private String id;
-  private String mapName = "";
-  //todo move?
-  private String theme = "Theme";
-  private PlotManager plotManager;
-  private ScoreboardManager scoreboardManager;
-  private ArenaState arenaState;
-  private BossBar gameBar;
-  private ArenaType arenaType;
-  private boolean forceStart = false;
   private final List<Player> players = new ArrayList<>();
+  private final List<Player> spectators = new ArrayList<>();
   //instead of 2 (lobby, end) location fields we use map with GameLocation enum
   private final Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
   //all arena values that are integers, contains constant and floating values
   private final Map<ArenaOption, Integer> arenaOptions = new EnumMap<>(ArenaOption.class);
+  private final Main plugin;
+  private final String id;
+  private String mapName = "";
+  //todo move?
+  private String theme = "Theme";
+  private final PlotManager plotManager;
+  private final ScoreboardManager scoreboardManager;
+  private ArenaState arenaState;
+  private BossBar gameBar;
+  private ArenaType arenaType;
+  private boolean forceStart = false;
   private boolean ready = true;
 
   public BaseArena(String id, Main plugin) {
@@ -213,20 +213,32 @@ public class BaseArena extends BukkitRunnable {
     return mapName;
   }
 
-  public void setMapName(String mapname) {
-    this.mapName = mapname;
+  public void setMapName(String mapName) {
+    this.mapName = mapName;
   }
 
   public void addPlayer(Player player) {
     players.add(player);
+    ArenaRegistry.getPlayerArenaMap().put(player.getUniqueId(), id);
   }
 
   public void removePlayer(Player player) {
     players.remove(player);
+    ArenaRegistry.getPlayerArenaMap().remove(player.getUniqueId(), id);
   }
 
   public void clearPlayers() {
     players.clear();
+  }
+
+  public void addSpectator(Player player) {
+    spectators.add(player);
+    ArenaRegistry.getPlayerArenaMap().put(player.getUniqueId(), id);
+  }
+
+  public void removeSpectator(Player player) {
+    spectators.remove(player);
+    ArenaRegistry.getPlayerArenaMap().remove(player.getUniqueId(), id);
   }
 
   /**
@@ -289,12 +301,16 @@ public class BaseArena extends BukkitRunnable {
     return players;
   }
 
+  public List<Player> getSpectators() {
+    return spectators;
+  }
+
   public Main getPlugin() {
     return plugin;
   }
 
   public void teleportAllToEndLocation() {
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)&& ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
       getPlayers().forEach(plugin.getBungeeManager()::connectToHub);
       return;
     }
@@ -380,7 +396,7 @@ public class BaseArena extends BukkitRunnable {
   public enum ArenaType {
     SOLO("Classic"), TEAM("Teams"), GUESS_THE_BUILD("Guess-The-Build");
 
-    private String prefix;
+    private final String prefix;
 
     ArenaType(String prefix) {
       this.prefix = prefix;
