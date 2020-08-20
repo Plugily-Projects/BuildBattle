@@ -25,8 +25,11 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.buildbattle.ConfigPreferences;
@@ -54,7 +57,7 @@ import plugily.projects.buildbattle.utils.Debugger;
  */
 public class ArenaManager {
 
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
   private ArenaManager() {
   }
@@ -72,16 +75,19 @@ public class ArenaManager {
     Debugger.debug("Initial join attempt, " + player.getName());
     BBGameJoinEvent bbGameJoinEvent = new BBGameJoinEvent(player, arena);
     Bukkit.getPluginManager().callEvent(bbGameJoinEvent);
+
+    ChatManager chatManager = plugin.getChatManager();
+
     if (!arena.isReady()) {
-      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Arena-Not-Configured"));
+      player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Arena-Not-Configured"));
       return;
     }
     if (bbGameJoinEvent.isCancelled()) {
-      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Join-Cancelled-Via-API"));
+      player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Join-Cancelled-Via-API"));
       return;
     }
     if (ArenaRegistry.getArena(player) != null) {
-      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Messages.Already-Playing"));
+      player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Already-Playing"));
       return;
     }
 
@@ -100,34 +106,37 @@ public class ArenaManager {
               }
               leaveAttempt(partyPlayer, ArenaRegistry.getArena(partyPlayer));
             }
-            partyPlayer.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().formatMessage(arena,  plugin.getChatManager().colorMessage("In-Game.Join-As-Party-Member"), partyPlayer));
+            partyPlayer.sendMessage(chatManager.getPrefix() + chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Join-As-Party-Member"), partyPlayer));
             joinAttempt(partyPlayer, arena);
           }
         } else {
-          player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().formatMessage(arena,  plugin.getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Not-Enough-Space-For-Party"), player));
+          player.sendMessage(chatManager.getPrefix() + chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Not-Enough-Space-For-Party"), player));
           return;
         }
       }
     }
 
+    //Arena join permission when bungee false
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       if (!(player.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", "*")) || player.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", arena.getID())))) {
-        player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Join-No-Permission")
-            .replace("%permission%", PermissionManager.getJoinPerm().replace("<arena>", arena.getID())));
+        player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Join-No-Permission")
+                .replace("%permission%", PermissionManager.getJoinPerm().replace("<arena>", arena.getID())));
         return;
       }
     }
-    if ((arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING)) {
+
+    if (arena.getArenaState() == ArenaState.RESTARTING) {
       if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-        player.kickPlayer(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Arena-Started"));
+        player.kickPlayer(chatManager.getPrefix() + chatManager.colorMessage("Commands.Arena-Restarting"));
       } else {
-        player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Arena-Started"));
+        player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Arena-Restarting"));
       }
       return;
     }
+
     if (arena.getPlayers().size() >= arena.getMaximumPlayers() && arena.getArenaState() == ArenaState.STARTING) {
-      if(!player.hasPermission(PermissionManager.getJoinFullGames())) {
-        player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Full-Game-No-Permission"));
+      if (!player.hasPermission(PermissionManager.getJoinFullGames())) {
+        player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Full-Game-No-Permission"));
         return;
       }
       boolean foundSlot = false;
@@ -136,35 +145,76 @@ public class ArenaManager {
           continue;
         }
         ArenaManager.leaveAttempt(loopPlayer, arena);
-        loopPlayer.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.You-Were-Kicked-For-Premium-Slot"));
-        plugin.getChatManager().broadcast(arena, plugin.getChatManager().formatMessage(arena, plugin.getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Kicked-For-Premium-Slot"), loopPlayer));
+        loopPlayer.sendMessage(chatManager + chatManager.colorMessage("In-Game.Messages.Lobby-Messages.You-Were-Kicked-For-Premium-Slot"));
+        chatManager.broadcast(arena, chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Kicked-For-Premium-Slot"), loopPlayer));
         foundSlot = true;
         break;
       }
       if (!foundSlot) {
-        player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.No-Slots-For-Premium"));
+        player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.No-Slots-For-Premium"));
         return;
       }
     }
+
     Debugger.debug("Final join attempt, " + player.getName());
+    User user = plugin.getUserManager().getUser(player);
+    arena.getScoreboardManager().createScoreboard(user);
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.saveInventoryToFile(plugin, player);
     }
-    arena.doBarAction(BaseArena.BarAction.ADD, player);
-    arena.teleportToLobby(player);
-    arena.addPlayer(player);
-    User user = plugin.getUserManager().getUser(player);
-    arena.getScoreboardManager().createScoreboard(user);
+
     player.setExp(1);
-    player.setLevel(0);
-    player.setHealth(20.0);
     player.setFoodLevel(20);
-    player.getInventory().setArmorContents(new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
+    player.setHealth(20.0);
+    player.setLevel(0);
+
+    arena.doBarAction(BaseArena.BarAction.ADD, player);
     player.getInventory().clear();
-    plugin.getChatManager().broadcastAction(arena, player, ChatManager.ActionType.JOIN);
-    player.updateInventory();
+    player.getInventory().setArmorContents(new ItemStack[]{new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
+
+    //Set player as spectator as the game is already started
     SpecialItem leaveItem = plugin.getSpecialItemsRegistry().getSpecialItem("Leave");
+    if ((arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING)) {
+
+      arena.addSpectator(player);
+
+      player.teleport(arena.getPlotManager().getPlots().get(0).getTeleportLocation());
+      player.sendMessage(chatManager.colorMessage("In-Game.Spectator.You-Are-Spectator"));
+      player.getInventory().clear();
+
+      player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name")).build());
+      player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name")).build());
+      player.getInventory().setItem(8, leaveItem.getItemStack());
+
+      player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
+      player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0));
+
+      //Hide player from other players
+      arena.getPlayers().forEach(onlinePlayer -> onlinePlayer.hidePlayer(player));
+
+      user.setSpectator(true);
+      player.setCollidable(false);
+      player.setGameMode(GameMode.ADVENTURE);
+      player.setAllowFlight(true);
+      player.setFlying(true);
+
+      for (Player spectator : arena.getPlayers()) {
+        if (plugin.getUserManager().getUser(spectator).isSpectator()) {
+          player.hidePlayer(spectator);
+        } else {
+          player.showPlayer(spectator);
+        }
+      }
+      return;
+    }
+
+    arena.addPlayer(player);
+
+    arena.teleportToLobby(player);
     player.getInventory().setItem(leaveItem.getSlot(), leaveItem.getItemStack());
+    player.updateInventory();
+
+    chatManager.broadcastAction(arena, player, ChatManager.ActionType.JOIN);
   }
 
   /**
@@ -179,59 +229,77 @@ public class ArenaManager {
     Debugger.debug("Initial leave attempt, " + player.getName());
     BBGameLeaveEvent bbGameLeaveEvent = new BBGameLeaveEvent(player, arena);
     Bukkit.getPluginManager().callEvent(bbGameLeaveEvent);
+
+    arena.teleportToEndLocation(player);
+
+    arena.doBarAction(BaseArena.BarAction.REMOVE, player);
+    player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
+    player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
+    player.getInventory().clear();
+    player.getInventory().setArmorContents(null);
+    player.resetPlayerTime();
+    player.resetPlayerWeather();
+    player.setAllowFlight(false);
+    player.setExp(0);
+    player.setFireTicks(0);
+    player.setFlying(false);
+    player.setFoodLevel(20);
+    player.setLevel(0);
+    player.setGameMode(GameMode.SURVIVAL);
+
+    User user = plugin.getUserManager().getUser(player);
+    arena.getScoreboardManager().removeScoreboard(user);
+
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+      InventorySerializer.loadInventory(plugin, player);
+    }
+
+    for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
+      if (ArenaRegistry.getArena(onlinePlayer) == null) {
+        onlinePlayer.showPlayer(player);
+      }
+      player.showPlayer(onlinePlayer);
+    }
+
+    // Spectator
+    if (user.isSpectator()) {
+      arena.removeSpectator(player);
+      user.setSpectator(false);
+      return;
+    }
+
     if (arena instanceof SoloArena) {
       ((SoloArena) arena).getQueue().remove(player);
     }
-    User user = plugin.getUserManager().getUser(player);
+
+    arena.removePlayer(player);
+    plugin.getChatManager().broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
+
+    // Games played +1
     if (arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
       user.addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
     }
+
     //todo maybe not
     user.setStat(StatsStorage.StatisticType.LOCAL_GUESS_THE_BUILD_POINTS, 0);
-    arena.teleportToEndLocation(player);
-    arena.getScoreboardManager().removeScoreboard(user);
-    arena.removePlayer(player);
-    plugin.getChatManager().broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
+
     Plot plot = arena.getPlotManager().getPlot(player);
     if (plot != null) {
       if (arena instanceof TeamArena) {
         plot.getOwners().remove(player);
-        if(plot.getOwners().size() > 1){
+        if (plot.getOwners().size() > 1) {
           plot.fullyResetPlot();
         }
       } else
-      plot.fullyResetPlot();
+        plot.fullyResetPlot();
     }
     if (arena instanceof GuessTheBuildArena) {
       ((GuessTheBuildArena) arena).getWhoGuessed().remove(player);
     }
 
-    player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
-    player.setExp(0);
-    player.setLevel(0);
-    player.setFoodLevel(20);
-    player.setFlying(false);
-    player.setAllowFlight(false);
-    player.resetPlayerWeather();
-    player.resetPlayerTime();
-    arena.doBarAction(BaseArena.BarAction.REMOVE, player);
-    player.getInventory().setArmorContents(null);
-    player.getInventory().clear();
-    player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
-    player.setFireTicks(0);
     if (arena.getPlayers().isEmpty() && arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS) {
       arena.setArenaState(ArenaState.RESTARTING);
       arena.setTimer(0);
-    }
-    player.setGameMode(GameMode.SURVIVAL);
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-      InventorySerializer.loadInventory(plugin, player);
-    }
-    for (Player players : plugin.getServer().getOnlinePlayers()) {
-      if (ArenaRegistry.getArena(players) == null) {
-        players.showPlayer(player);
-      }
-      player.showPlayer(players);
     }
   }
 

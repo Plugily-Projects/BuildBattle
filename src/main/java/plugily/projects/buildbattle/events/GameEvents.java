@@ -513,6 +513,11 @@ public class GameEvents implements Listener {
     if (e.getHand() == EquipmentSlot.OFF_HAND || e.getPlayer().getInventory().getItemInMainHand().getType() == Material.AIR) {
       return;
     }
+
+    if (plugin.getUserManager().getUser(e.getPlayer()).isSpectator()) {
+      return;
+    }
+
     if (e.getRightClicked() instanceof Villager && e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equalsIgnoreCase(plugin.getChatManager().colorMessage("In-Game.NPC.Floor-Change-NPC-Name"))) {
       BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
       if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
