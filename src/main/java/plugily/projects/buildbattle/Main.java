@@ -44,7 +44,7 @@ import plugily.projects.buildbattle.events.GameEvents;
 import plugily.projects.buildbattle.events.JoinEvents;
 import plugily.projects.buildbattle.events.LobbyEvents;
 import plugily.projects.buildbattle.events.QuitEvents;
-import plugily.projects.buildbattle.events.spectator.SpectatorItemEvents;
+import plugily.projects.buildbattle.events.spectator.SpectatorEvents;
 import plugily.projects.buildbattle.handlers.BungeeManager;
 import plugily.projects.buildbattle.handlers.ChatManager;
 import plugily.projects.buildbattle.handlers.HolidayManager;
@@ -263,7 +263,7 @@ public class Main extends JavaPlugin {
     new GameEvents(this);
     new VoteMenuListener(this);
     new HolidayManager(this);
-    new SpectatorItemEvents(this);
+    new SpectatorEvents(this);
     BannerMenu.init(this);
     partyHandler = new PartySupportInitializer().initialize(this);
     rewardsHandler = new RewardsFactory(this);

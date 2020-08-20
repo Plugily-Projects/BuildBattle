@@ -181,8 +181,7 @@ public class GameEvents implements Listener {
     }
     Player player = e.getPlayer();
     BaseArena arena = ArenaRegistry.getArena(player);
-    if (arena == null || player.getInventory().getItemInMainHand() == null || player.getInventory().getItemInMainHand().getType() != Material.FLINT_AND_STEEL
-        || e.getClickedBlock() == null) {
+    if (arena == null || player.getInventory().getItemInMainHand().getType() != Material.FLINT_AND_STEEL || e.getClickedBlock() == null) {
       return;
     }
     if (e.getClickedBlock().getType() == Material.TNT) {
