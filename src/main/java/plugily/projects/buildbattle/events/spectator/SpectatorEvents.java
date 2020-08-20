@@ -135,10 +135,13 @@ public class SpectatorEvents implements Listener {
     if (!plugin.getUserManager().getUser(player).isSpectator() || ArenaRegistry.getArena(player) == null) {
       return;
     }
-    //TODO Where do we teleport players when they enter the void?
-    /*if (player.getLocation().getY() < 1) {
-      player.teleport(ArenaRegistry.getArena(player).getPlayerSpawnPoints().get(0));
-    }*/
+
+    if (player.getLocation().getY() < 1) {
+      BaseArena arena = ArenaRegistry.getArena(player);
+      if (arena != null) {
+        player.teleport(arena.getPlotManager().getPlots().get(0).getTeleportLocation());
+      }
+    }
     event.setCancelled(true);
   }
 
