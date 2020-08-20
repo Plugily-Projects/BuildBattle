@@ -18,6 +18,8 @@
 
 package plugily.projects.buildbattle.utils;
 
+import org.bukkit.Bukkit;
+
 /**
  * @author Plajer
  * <p>
@@ -26,7 +28,7 @@ package plugily.projects.buildbattle.utils;
 public class Debugger {
 
   private static boolean enabled = false;
-  private static String prefix = "[Build Battle Debugger]";
+  private static final String prefix = "[Build Battle Debugger]";
 
   public static void setEnabled(boolean enabled) {
     Debugger.enabled = enabled;
@@ -53,8 +55,6 @@ public class Debugger {
         Debugger.sendConsoleMsg(prefix + " " + thing);
         break;
       case WARN:
-        Debugger.sendConsoleMsg("&e" + prefix + " " + thing);
-        break;
       case ERROR:
         Debugger.sendConsoleMsg("&e" + prefix + " " + thing);
         break;
@@ -71,7 +71,7 @@ public class Debugger {
   }
 
   public static void sendConsoleMsg(String msg) {
-    Debugger.sendConsoleMsg(msg);
+    Bukkit.getConsoleSender().sendMessage(msg);
   }
 
   public enum Level {
