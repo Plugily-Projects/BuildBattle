@@ -322,11 +322,13 @@ public class BaseArena extends BukkitRunnable {
       System.out.print("EndLocation for arena " + getID() + " isn't intialized!");
     }
 
-    for (Player player : getPlayers()) {
-      player.teleport(location);
-    }
-    for (Player player : getSpectators()) {
-      player.teleport(location);
+    if (location != null) {
+      for (Player player : getPlayers()) {
+        player.teleport(location);
+      }
+      for (Player player : getSpectators()) {
+        player.teleport(location);
+      }
     }
   }
 

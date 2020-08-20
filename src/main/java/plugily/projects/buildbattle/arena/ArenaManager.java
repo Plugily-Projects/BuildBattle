@@ -126,7 +126,7 @@ public class ArenaManager {
     }
 
     if (arena.getArenaState() == ArenaState.RESTARTING) {
-      if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
         player.kickPlayer(chatManager.getPrefix() + chatManager.colorMessage("Commands.Arena-Restarting"));
       } else {
         player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Arena-Restarting"));
