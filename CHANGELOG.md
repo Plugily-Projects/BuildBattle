@@ -20,6 +20,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Fix async catch from bukkit when performing commands
 * Fixed IllegalPluginAccessException on plugin disable
 * Fixed NPE on Plotreset (GTB)
+* Added spectator mode
 
 ### 4.4.0 Release (01.07.2020 - 29.07.2020)
 * GuessTheBuild release

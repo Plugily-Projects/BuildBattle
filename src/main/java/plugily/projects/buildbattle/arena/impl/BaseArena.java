@@ -58,11 +58,11 @@ public class BaseArena extends BukkitRunnable {
   private final Map<ArenaOption, Integer> arenaOptions = new EnumMap<>(ArenaOption.class);
   private final Main plugin;
   private final String id;
+  private final PlotManager plotManager;
+  private final ScoreboardManager scoreboardManager;
   private String mapName = "";
   //todo move?
   private String theme = "Theme";
-  private final PlotManager plotManager;
-  private final ScoreboardManager scoreboardManager;
   private ArenaState arenaState;
   private BossBar gameBar;
   private ArenaType arenaType;
@@ -312,6 +312,7 @@ public class BaseArena extends BukkitRunnable {
   public void teleportAllToEndLocation() {
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
       getPlayers().forEach(plugin.getBungeeManager()::connectToHub);
+      getSpectators().forEach(plugin.getBungeeManager()::connectToHub);
       return;
     }
     Location location = getEndLocation();
@@ -320,7 +321,11 @@ public class BaseArena extends BukkitRunnable {
       location = getLobbyLocation();
       System.out.print("EndLocation for arena " + getID() + " isn't intialized!");
     }
+
     for (Player player : getPlayers()) {
+      player.teleport(location);
+    }
+    for (Player player : getSpectators()) {
       player.teleport(location);
     }
   }

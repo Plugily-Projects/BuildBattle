@@ -27,7 +27,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import plugily.projects.buildbattle.Main;
@@ -46,16 +45,21 @@ import java.util.List;
  */
 public class SpectatorItemEvents implements Listener {
 
+  private final ChatManager chatManager;
   private final Main plugin;
+  private final SpectatorSettingsMenu spectatorSettingsMenu;
   private final boolean usesPaperSpigot = Bukkit.getServer().getVersion().contains("Paper");
 
   public SpectatorItemEvents(Main plugin) {
     this.plugin = plugin;
+    chatManager = plugin.getChatManager();
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    spectatorSettingsMenu = new SpectatorSettingsMenu(plugin, chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Inventory-Name"),
+            chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Speed-Name"));
   }
 
   @EventHandler
-  public void onSpectatorItemClick(PlayerInteractEvent e) {
+  public void onSpectatorInteract(PlayerInteractEvent e) {
     if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() != Action.PHYSICAL) {
       BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
       if (arena == null) {
@@ -65,16 +69,21 @@ public class SpectatorItemEvents implements Listener {
       if (!stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {
         return;
       }
-      if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(plugin.getChatManager().colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
-        e.setCancelled(true);
+
+      e.setCancelled(true);
+
+      if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
         openSpectatorMenu(e.getPlayer().getWorld(), e.getPlayer(), arena);
+      } else if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name"))) {
+        spectatorSettingsMenu.openSpectatorSettingsMenu(e.getPlayer());
       }
+
     }
   }
 
   private void openSpectatorMenu(World world, Player p, BaseArena arena) {
     Inventory inventory = plugin.getServer().createInventory(null, Utils.serializeInt(arena.getPlayers().size()),
-            plugin.getChatManager().colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
+            chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
     List<Player> players = arena.getPlayers();
 
     UserManager userManager = plugin.getUserManager();
@@ -108,25 +117,32 @@ public class SpectatorItemEvents implements Listener {
     if (arena == null) {
       return;
     }
-    if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()
-            || !e.getCurrentItem().getItemMeta().hasDisplayName() || !e.getCurrentItem().getItemMeta().hasLore()) {
+
+    if (!plugin.getUserManager().getUser(p).isSpectator()) {
       return;
     }
-    ChatManager chatManager = plugin.getChatManager();
+
+    e.setCancelled(true);
+
+    if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta() || !e.getCurrentItem().getItemMeta().hasDisplayName()) {
+      return;
+    }
+
     if (!e.getView().getTitle().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
       return;
     }
-    e.setCancelled(true);
-    ItemMeta meta = e.getCurrentItem().getItemMeta();
-    for (Player player : arena.getPlayers()) {
-      if (player.getName().equalsIgnoreCase(meta.getDisplayName()) || ChatColor.stripColor(meta.getDisplayName()).contains(player.getName())) {
-        p.sendMessage(chatManager.formatMessage(arena, chatManager.colorMessage("Commands.Admin-Commands.Teleported-To-Player"), player));
-        p.teleport(player);
-        p.closeInventory();
-        return;
-      }
-    }
-    p.sendMessage(chatManager.colorMessage("Commands.Admin-Commands.Player-Not-Found"));
-  }
 
+    String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
+    Player target = Bukkit.getPlayer(displayName);
+    if (target == null) target = Bukkit.getPlayer(ChatColor.stripColor(displayName));
+
+    if (target == null) {
+      p.sendMessage(chatManager.colorMessage("Commands.Admin-Commands.Player-Not-Found"));
+      return;
+    }
+
+    p.sendMessage(chatManager.formatMessage(arena, chatManager.colorMessage("Commands.Admin-Commands.Teleported-To-Player"), target));
+    p.teleport(target);
+    p.closeInventory();
+  }
 }

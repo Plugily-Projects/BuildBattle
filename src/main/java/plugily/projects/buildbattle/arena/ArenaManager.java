@@ -168,6 +168,10 @@ public class ArenaManager {
     player.setHealth(20.0);
     player.setLevel(0);
 
+    arena.doBarAction(BaseArena.BarAction.ADD, player);
+    player.getInventory().clear();
+    player.getInventory().setArmorContents(new ItemStack[]{new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
+
     //Set player as spectator as the game is already started
     SpecialItem leaveItem = plugin.getSpecialItemsRegistry().getSpecialItem("Leave");
     if ((arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING)) {
@@ -175,7 +179,7 @@ public class ArenaManager {
       arena.addSpectator(player);
 
       player.teleport(arena.getPlotManager().getPlots().get(0).getTeleportLocation());
-      player.sendMessage(chatManager.colorMessage("In-Game.You-Are-Spectator"));
+      player.sendMessage(chatManager.colorMessage("In-Game.Spectator.You-Are-Spectator"));
       player.getInventory().clear();
 
       player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name")).build());
@@ -190,7 +194,7 @@ public class ArenaManager {
 
       user.setSpectator(true);
       player.setCollidable(false);
-      player.setGameMode(GameMode.SURVIVAL);
+      player.setGameMode(GameMode.ADVENTURE);
       player.setAllowFlight(true);
       player.setFlying(true);
 
@@ -206,10 +210,7 @@ public class ArenaManager {
 
     arena.addPlayer(player);
 
-    arena.doBarAction(BaseArena.BarAction.ADD, player);
     arena.teleportToLobby(player);
-    player.getInventory().clear();
-    player.getInventory().setArmorContents(new ItemStack[]{new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
     player.getInventory().setItem(leaveItem.getSlot(), leaveItem.getItemStack());
     player.updateInventory();
 
@@ -228,26 +229,59 @@ public class ArenaManager {
     Debugger.debug("Initial leave attempt, " + player.getName());
     BBGameLeaveEvent bbGameLeaveEvent = new BBGameLeaveEvent(player, arena);
     Bukkit.getPluginManager().callEvent(bbGameLeaveEvent);
-    if (arena instanceof SoloArena) {
-      ((SoloArena) arena).getQueue().remove(player);
-    }
-    User user = plugin.getUserManager().getUser(player);
-    if (arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
-      user.addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
-    }
-    //todo maybe not
-    user.setStat(StatsStorage.StatisticType.LOCAL_GUESS_THE_BUILD_POINTS, 0);
+
     arena.teleportToEndLocation(player);
+
+    arena.doBarAction(BaseArena.BarAction.REMOVE, player);
+    player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
+    player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
+    player.getInventory().clear();
+    player.getInventory().setArmorContents(null);
+    player.resetPlayerTime();
+    player.resetPlayerWeather();
+    player.setAllowFlight(false);
+    player.setExp(0);
+    player.setFireTicks(0);
+    player.setFlying(false);
+    player.setFoodLevel(20);
+    player.setLevel(0);
+    player.setGameMode(GameMode.SURVIVAL);
+
+    User user = plugin.getUserManager().getUser(player);
     arena.getScoreboardManager().removeScoreboard(user);
 
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+      InventorySerializer.loadInventory(plugin, player);
+    }
+
+    for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
+      if (ArenaRegistry.getArena(onlinePlayer) == null) {
+        onlinePlayer.showPlayer(player);
+      }
+      player.showPlayer(onlinePlayer);
+    }
+
+    // Spectator
     if (user.isSpectator()) {
       arena.removeSpectator(player);
       user.setSpectator(false);
-    } else {
-      arena.removePlayer(player);
-      plugin.getChatManager().broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
+      return;
     }
 
+    if (arena instanceof SoloArena) {
+      ((SoloArena) arena).getQueue().remove(player);
+    }
+
+    arena.removePlayer(player);
+    plugin.getChatManager().broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
+
+    // Games played +1
+    if (arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
+      user.addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
+    }
+
+    //todo maybe not
+    user.setStat(StatsStorage.StatisticType.LOCAL_GUESS_THE_BUILD_POINTS, 0);
 
     Plot plot = arena.getPlotManager().getPlot(player);
     if (plot != null) {
@@ -263,32 +297,9 @@ public class ArenaManager {
       ((GuessTheBuildArena) arena).getWhoGuessed().remove(player);
     }
 
-    arena.doBarAction(BaseArena.BarAction.REMOVE, player);
-    player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
-    player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
-    player.getInventory().clear();
-    player.getInventory().setArmorContents(null);
-    player.resetPlayerTime();
-    player.resetPlayerWeather();
-    player.setAllowFlight(false);
-    player.setExp(0);
-    player.setFireTicks(0);
-    player.setFlying(false);
-    player.setFoodLevel(20);
-    player.setLevel(0);
     if (arena.getPlayers().isEmpty() && arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS) {
       arena.setArenaState(ArenaState.RESTARTING);
       arena.setTimer(0);
-    }
-    player.setGameMode(GameMode.SURVIVAL);
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-      InventorySerializer.loadInventory(plugin, player);
-    }
-    for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
-      if (ArenaRegistry.getArena(onlinePlayer) == null) {
-        onlinePlayer.showPlayer(player);
-      }
-      player.showPlayer(onlinePlayer);
     }
   }
 

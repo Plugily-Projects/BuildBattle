@@ -425,23 +425,36 @@ public class SoloArena extends BaseArena {
       }
       if (queue.isEmpty() && getPlotManager().getPlot(player) == null) {
         setVotingPlot(null);
-      } else {
-        // getPlotManager().teleportAllToPlot(plotManager.getPlot(player.getUniqueId()));
-        setVotingPlot(getPlotManager().getPlot(player));
-        String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voting-For-Player-Plot").replace("%PLAYER%", player.getName());
-        for (Player p : getPlayers()) {
-          p.teleport(getVotingPlot().getTeleportLocation());
-          p.setPlayerWeather(getVotingPlot().getWeatherType());
-          p.setPlayerTime(Plot.Time.format(getVotingPlot().getTime(), p.getWorld().getTime()), false);
-          if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER)) {
-            p.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Vote-For-Next-Plot"));
-          } else {
-            String owner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
-            owner = formatWinners(getVotingPlot(), owner);
-            p.sendTitle(owner, null, 5, 40, 5);
-            p.sendMessage(getPlugin().getChatManager().getPrefix() + message);
-          }
+        return;
+      }
+
+      // getPlotManager().teleportAllToPlot(plotManager.getPlot(player.getUniqueId()));
+      setVotingPlot(getPlotManager().getPlot(player));
+      String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voting-For-Player-Plot").replace("%PLAYER%", player.getName());
+
+      for (Player p : getPlayers()) {
+        p.teleport(getVotingPlot().getTeleportLocation());
+        p.setPlayerWeather(getVotingPlot().getWeatherType());
+        p.setPlayerTime(Plot.Time.format(getVotingPlot().getTime(), p.getWorld().getTime()), false);
+        if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER)) {
+          p.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Vote-For-Next-Plot"));
+        } else {
+          String owner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
+          owner = formatWinners(getVotingPlot(), owner);
+          p.sendTitle(owner, null, 5, 40, 5);
+          p.sendMessage(getPlugin().getChatManager().getPrefix() + message);
         }
+      }
+
+      if (getSpectators().isEmpty()) return;
+      for (Player spectator : getSpectators()) {
+        spectator.teleport(getVotingPlot().getTeleportLocation());
+        spectator.setPlayerWeather(getVotingPlot().getWeatherType());
+        spectator.setPlayerTime(Plot.Time.format(getVotingPlot().getTime(), player.getWorld().getTime()), false);
+        String owner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
+        owner = formatWinners(getVotingPlot(), owner);
+        spectator.sendTitle(owner, null, 5, 40, 5);
+        spectator.sendMessage(getPlugin().getChatManager().getPrefix() + message);
       }
     }
   }

@@ -26,6 +26,8 @@ Commands:
     Header: "&8&m-------------------[&6 Top 10 &8&m]-------------------"
     Format: "&e#%position% %name% - %value% &7%statistic%"
   Admin-Commands:
+    Teleported-To-Player: "&aTeleported to player!"
+    Player-Not-Found: "&cPlayer not found!"
     List-Command:
       Header: "&bBuildBattle &7arenas:"
       Format: "&b%arena% &e%status% &7%players%/%maxplayers%"
@@ -166,7 +168,14 @@ In-Game:
   Join-As-Party-Member: "&cYou joined %ARENANAME% because the party leader joined it!"
   Nobody: "&eNobody"
   No-Theme-Yet: "&cVoting"
-  You-Are-Spectator: "&eYou're now a spectator! You can fly now!"
+  Spectator:
+    You-Are-Spectator: "&eYou're now a spectator! You can fly now!"
+    Spectator-Item-Name: "&7Players list"
+    Spectator-Menu-Name: "Players list"
+    Settings-Menu:
+      Item-Name: "&7Spectator settings"
+      Inventory-Name: "&7Spectator settings"
+      Speed-Name: "&aSpeed"
   Guess-The-Build:
     Current-Builder: "&eBuilder: &7%BUILDER%"
     Current-Round: "&eRound: &7%ROUND%/%MAXPLAYERS%"
