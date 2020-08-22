@@ -66,12 +66,7 @@ import plugily.projects.buildbattle.menus.themevoter.VoteMenuListener;
 import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.user.UserManager;
 import plugily.projects.buildbattle.user.data.MysqlManager;
-import plugily.projects.buildbattle.utils.CuboidSelector;
-import plugily.projects.buildbattle.utils.Debugger;
-import plugily.projects.buildbattle.utils.ExceptionLogHandler;
-import plugily.projects.buildbattle.utils.LegacyDataFixer;
-import plugily.projects.buildbattle.utils.MessageUtils;
-import plugily.projects.buildbattle.utils.UpdateChecker;
+import plugily.projects.buildbattle.utils.*;
 import plugily.projects.buildbattle.utils.services.ServiceRegistry;
 
 /**
@@ -94,7 +89,6 @@ public class Main extends JavaPlugin {
   private VoteItems voteItems;
   private OptionsRegistry optionsRegistry;
   private SpecialItemsRegistry specialItemsRegistry;
-  private String version;
   private boolean forceDisable = false;
   private PartyHandler partyHandler;
   private RewardsFactory rewardsHandler;
@@ -125,26 +119,6 @@ public class Main extends JavaPlugin {
 
   public SpecialItemsRegistry getSpecialItemsRegistry() {
     return specialItemsRegistry;
-  }
-
-  public boolean is1_11_R1() {
-    return version.equalsIgnoreCase("v1_11_R1");
-  }
-
-  public boolean is1_12_R1() {
-    return version.equalsIgnoreCase("v1_12_R1");
-  }
-
-  public boolean is1_14_R1() {
-    return version.equalsIgnoreCase("v1_14_R1");
-  }
-
-  public boolean is1_15_R1() {
-    return version.equalsIgnoreCase("v1_15_R1");
-  }
-
-  public boolean is1_16_R1() {
-    return version.equalsIgnoreCase("v1_16_R1");
   }
 
   @Override
@@ -192,7 +166,6 @@ public class Main extends JavaPlugin {
   }
 
   private boolean validateIfPluginShouldStart() {
-    version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
     try {
       Class.forName("org.spigotmc.SpigotConfig");
     } catch (Exception e) {
@@ -203,9 +176,7 @@ public class Main extends JavaPlugin {
       getServer().getPluginManager().disablePlugin(this);
       return false;
     }
-    if (!(version.equalsIgnoreCase("v1_11_R1") || version.equalsIgnoreCase("v1_12_R1") || version.equalsIgnoreCase("v1_13_R1")
-        || version.equalsIgnoreCase("v1_13_R2") || version.equalsIgnoreCase("v1_14_R1") || version.equalsIgnoreCase("v1_15_R1")
-            || version.equalsIgnoreCase("v1_16_R1"))) {
+    if (ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_11_R1)) {
       MessageUtils.thisVersionIsNotSupported();
       Debugger.sendConsoleMsg("&cYour server version is not supported by Build Battle!");
       Debugger.sendConsoleMsg("&cSadly, we must shut off. Maybe you consider updating your server version?");
@@ -230,7 +201,6 @@ public class Main extends JavaPlugin {
     userManager = new UserManager(this);
     PermissionManager.init();
     new SetupInventoryEvents(this);
-    ArenaSign.init(this);
     ArenaRegistry.registerArenas();
     //load signs after arenas
     signManager = new SignManager(this);
@@ -249,7 +219,6 @@ public class Main extends JavaPlugin {
       if (getConfig().getBoolean("Update-Notifier.Enabled", true)) {
         return getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true) ? "Enabled with beta notifier" : "Enabled";
       }
-
       return getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true) ? "Beta notifier only" : "Disabled";
     }));
     new JoinEvents(this);

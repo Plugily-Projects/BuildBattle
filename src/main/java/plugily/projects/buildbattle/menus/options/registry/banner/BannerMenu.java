@@ -36,6 +36,7 @@ import org.bukkit.inventory.meta.BannerMeta;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.Main;
+import plugily.projects.buildbattle.utils.ServerVersion;
 import plugily.projects.buildbattle.utils.Utils;
 
 /**
@@ -71,7 +72,7 @@ public class BannerMenu {
     OutlinePane pane = new OutlinePane(1, 1, 7, 3);
     for (DyeColor color : DyeColor.values()) {
       ItemStack item;
-      if (plugin.is1_12_R1() || plugin.is1_11_R1()) {
+      if (ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {
         item = XMaterial.WHITE_BANNER.parseItem();
         BannerMeta meta = (BannerMeta) item.getItemMeta();
         meta.setBaseColor(color);

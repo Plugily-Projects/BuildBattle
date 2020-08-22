@@ -51,8 +51,7 @@ import plugily.projects.buildbattle.Main;
 public class Utils {
 
     private static Main plugin = JavaPlugin.getPlugin(Main.class);
-    public static final ItemStack PLAYER_HEAD_ITEM = (plugin.is1_12_R1() || plugin.is1_11_R1())
-            ? new ItemStack(XMaterial.PLAYER_HEAD.parseMaterial(), 1, (short) 3) : XMaterial.PLAYER_HEAD.parseItem();
+    public static final ItemStack PLAYER_HEAD_ITEM = XMaterial.PLAYER_HEAD.parseItem();
 
     private Utils() {
     }
@@ -96,7 +95,7 @@ public class Utils {
         SkullMeta headMeta = (SkullMeta) head.getItemMeta();
         GameProfile profile = new GameProfile(UUID.randomUUID(), null);
         profile.getProperties().put("textures", new Property("textures", url));
-        if (plugin.is1_15_R1() || plugin.is1_16_R1()) {
+        if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_15_R1)) {
             try {
                 Method mtd = headMeta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
                 mtd.setAccessible(true);

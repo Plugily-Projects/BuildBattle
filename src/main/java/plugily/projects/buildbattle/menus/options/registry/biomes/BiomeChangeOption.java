@@ -33,6 +33,7 @@ import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.menus.options.MenuOption;
 import plugily.projects.buildbattle.menus.options.OptionsRegistry;
+import plugily.projects.buildbattle.utils.ServerVersion;
 import plugily.projects.buildbattle.utils.Utils;
 
 /**
@@ -82,7 +83,7 @@ public class BiomeChangeOption {
               if (!p.getWorld().equals(chunk.getWorld())) {
                 continue;
               }
-              if (plugin.is1_16_R1()) {
+              if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1)) {
                 Utils.sendPacket(p, Utils.getNMSClass("PacketPlayOutMapChunk").getConstructor(Utils.getNMSClass("Chunk"), int.class, boolean.class)
                         .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535, false));
               } else {

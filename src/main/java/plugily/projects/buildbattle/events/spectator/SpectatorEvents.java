@@ -112,13 +112,8 @@ public class SpectatorEvents implements Listener {
     for (Player player : world.getPlayers()) {
       if (!players.contains(player) || userManager.getUser(player).isSpectator()) continue;
 
-      ItemStack skull;
-      if (plugin.is1_12_R1()) {
-        skull = new ItemStack(Material.getMaterial("SKULL_ITEM"), 1, (short) 3);
-        skull.setDurability((short) SkullType.PLAYER.ordinal());
-      } else {
-        skull = XMaterial.PLAYER_HEAD.parseItem();
-      }
+      ItemStack skull = XMaterial.PLAYER_HEAD.parseItem();
+
       SkullMeta meta = (SkullMeta) skull.getItemMeta();
       if (usesPaperSpigot && player.getPlayerProfile().hasTextures()) {
         meta.setPlayerProfile(player.getPlayerProfile());

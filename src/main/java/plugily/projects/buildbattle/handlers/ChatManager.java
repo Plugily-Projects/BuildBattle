@@ -27,6 +27,7 @@ import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.handlers.language.LanguageManager;
+import plugily.projects.buildbattle.utils.ServerVersion;
 import plugily.projects.buildbattle.utils.Utils;
 
 /**
@@ -69,7 +70,7 @@ public class ChatManager {
   }
 
   public String colorRawMessage(String msg) {
-    if (msg.contains("#") && JavaPlugin.getPlugin(Main.class).is1_16_R1()) {
+    if (msg.contains("#") && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1)) {
       msg = Utils.matchColorRegex(msg);
     }
 

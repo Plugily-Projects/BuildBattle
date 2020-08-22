@@ -52,20 +52,20 @@ public class Debugger {
         if (!enabled) {
           return;
         }
-        Debugger.sendConsoleMsg(prefix + " " + thing);
+        sendConsoleMsg(prefix + " " + thing);
         break;
       case WARN:
       case ERROR:
-        Debugger.sendConsoleMsg("&e" + prefix + " " + thing);
+        sendConsoleMsg("&e" + prefix + " " + thing);
         break;
       case WTF:
-        Debugger.sendConsoleMsg("&4" + prefix + " [SEVERE]" + thing);
+        sendConsoleMsg("&4" + prefix + " [SEVERE]" + thing);
         break;
       case TASK:
         if (!enabled) {
           return;
         }
-        Debugger.sendConsoleMsg("&e" + prefix + " Running task '" + thing + "'");
+        sendConsoleMsg("&e" + prefix + " Running task '" + thing + "'");
         break;
     }
   }

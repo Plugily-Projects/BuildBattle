@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.utils.MaterialUtil;
+import plugily.projects.buildbattle.utils.ServerVersion;
 
 /**
  * Created for 1.14 compatibility purposes, it will cache block behind sign that will be
@@ -34,7 +35,6 @@ import plugily.projects.buildbattle.utils.MaterialUtil;
  */
 public class ArenaSign {
 
-  private static Main plugin;
   private Sign sign;
   private Block behind;
   private BaseArena arena;
@@ -45,14 +45,10 @@ public class ArenaSign {
     setBehindBlock();
   }
 
-  public static void init(Main plugin) {
-    ArenaSign.plugin = plugin;
-  }
-
   private void setBehindBlock() {
     this.behind = null;
     if (MaterialUtil.isWallSign(sign.getBlock().getType())) {
-        this.behind = (plugin.is1_14_R1() || plugin.is1_15_R1() || plugin.is1_16_R1()) ? getBlockBehind() : getBlockBehindLegacy();
+        this.behind = ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_14_R1) ? getBlockBehind() : getBlockBehindLegacy();
       }
   }
 

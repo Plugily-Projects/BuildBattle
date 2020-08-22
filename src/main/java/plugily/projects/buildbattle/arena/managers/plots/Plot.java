@@ -44,6 +44,7 @@ import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.event.plot.BBPlotResetEvent;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.user.User;
+import plugily.projects.buildbattle.utils.ServerVersion;
 import plugily.projects.buildbattle.utils.Utils;
 
 /**
@@ -188,7 +189,7 @@ public class Plot {
           if (!p.getWorld().equals(chunk.getWorld())) {
             continue;
           }
-          if (plugin.is1_16_R1()) {
+          if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1)) {
             Utils.sendPacket(p, Utils.getNMSClass("PacketPlayOutMapChunk").getConstructor(Utils.getNMSClass("Chunk"), int.class, boolean.class)
                     .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535, false));
           } else {
@@ -254,7 +255,7 @@ public class Plot {
       for (int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
         Location tmpblock = new Location(cuboid.getMaxPoint().getWorld(), x, y, z);
         tmpblock.getBlock().setType(material);
-        if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+        if (ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {
           try {
             Block.class.getMethod("setData", byte.class).invoke(tmpblock.getBlock(), data);
           } catch (Exception e) {
