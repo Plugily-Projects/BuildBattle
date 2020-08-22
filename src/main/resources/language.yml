@@ -342,5 +342,19 @@ Signs:
     - "%mapname%"
     - "&5[%playersize%/%maxplayers%]"
 
+Arena-Selector:
+  Inv-Title: "Arena selector"
+  Item:
+    Lore:
+      - "&bBuildBattle &f- &e%mapname%"
+      - " "
+      - " "
+      - "  &fOnline: %playersize%/%maxplayers%"
+      - "  &fState: %state%"
+      - "  &fType: %type%"
+      - " "
+      - " "
+      - "&eClick to join this arena"
+
 # Do not modify!
-File-Version-Do-Not-Edit: 17
+File-Version-Do-Not-Edit: 18

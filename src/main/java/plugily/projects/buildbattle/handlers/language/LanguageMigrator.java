@@ -38,7 +38,7 @@ import plugily.projects.buildbattle.utils.MessageUtils;
  */
 public class LanguageMigrator {
 
-  public static final int LANGUAGE_FILE_VERSION = 17;
+  public static final int LANGUAGE_FILE_VERSION = 18;
   public static final int CONFIG_FILE_VERSION = 14;
   private final List<String> migratable = Arrays.asList("bungee", "config", "language", "mysql");
   private final Main plugin;
@@ -439,6 +439,22 @@ public class LanguageMigrator {
           MigratorUtils.insertAfterLine(file, "Commands:", "  Arena-Restarting: \"&cThis arena is currently restarting!\"");
           MigratorUtils.insertAfterLine(file, "Admin-Commands:", "Player-Not-Found: \"&cPlayer not found!\"");
           MigratorUtils.insertAfterLine(file, "Admin-Commands:", "    Player-Not-Found: \"&cPlayer not found!\"");
+          break;
+        case 17:
+          MigratorUtils.addNewLines(file, "Arena-Selector:\r\n" +
+                  "  Inv-Title: \"Arena selector\"\r\n" +
+                  "  Item:\r\n" +
+                  "    Lore:\r\n" +
+                  "      - \"&bBuildbattle &f- &e%mapname%\"\r\n" +
+                  "      - \" \"\r\n" +
+                  "      - \" \"\r\n" +
+                  "      - \"  &fOnline: %playersize%/%maxplayers%\"\r\n" +
+                  "      - \"  &fState: %state%\"\r\n" +
+                  "      - \"  &fType: %type%\"\r\n" +
+                  "      - \" \"\r\n" +
+                  "      - \" \"\r\n" +
+                  "      - \"&eClick to join this arena\"\r\n");
+          break;
       }
       version++;
     }

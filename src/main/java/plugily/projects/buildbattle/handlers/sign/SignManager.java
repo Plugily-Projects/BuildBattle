@@ -239,4 +239,8 @@ public class SignManager implements Listener {
   public List<ArenaSign> getArenaSigns() {
     return arenaSigns;
   }
+
+  public Map<ArenaState, String> getGameStateToString() {
+    return gameStateToString;
+  }
 }
