@@ -169,13 +169,13 @@ public class ArgumentsRegistry implements CommandExecutor {
           if (argument.getArgumentName().equalsIgnoreCase(args[0])) {
             boolean hasPerm = false;
             for (String perm : argument.getPermissions()) {
-              if (perm.isEmpty() || sender.hasPermission(perm)) {
-                hasPerm = true;
+              if (perm.isEmpty()) break;
+              if (hasPermission(sender, perm)){
                 break;
+              } else {
+                //user has no permission to execute command
+                return true;
               }
-            }
-            if (!hasPerm) {
-              return true;
             }
             if (checkSenderIsExecutorType(sender, argument.getValidExecutors())) {
               argument.execute(sender, args);
