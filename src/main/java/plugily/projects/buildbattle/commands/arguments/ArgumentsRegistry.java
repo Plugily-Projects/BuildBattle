@@ -18,24 +18,16 @@
 
 package plugily.projects.buildbattle.commands.arguments;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-
 import pl.plajerlair.commonsbox.string.StringMatcher;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
@@ -43,11 +35,7 @@ import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.commands.TabCompletion;
 import plugily.projects.buildbattle.commands.arguments.admin.ListArenasArgument;
 import plugily.projects.buildbattle.commands.arguments.admin.ReloadArgument;
-import plugily.projects.buildbattle.commands.arguments.admin.arena.AddNpcArgument;
-import plugily.projects.buildbattle.commands.arguments.admin.arena.DeleteArgument;
-import plugily.projects.buildbattle.commands.arguments.admin.arena.ForceStartArguments;
-import plugily.projects.buildbattle.commands.arguments.admin.arena.SetThemeArgument;
-import plugily.projects.buildbattle.commands.arguments.admin.arena.StopArgument;
+import plugily.projects.buildbattle.commands.arguments.admin.arena.*;
 import plugily.projects.buildbattle.commands.arguments.admin.plot.AddPlotArgument;
 import plugily.projects.buildbattle.commands.arguments.admin.plot.PlotWandArgument;
 import plugily.projects.buildbattle.commands.arguments.admin.plot.RemovePlotArgument;
@@ -55,12 +43,15 @@ import plugily.projects.buildbattle.commands.arguments.admin.votes.VotesArgument
 import plugily.projects.buildbattle.commands.arguments.data.CommandArgument;
 import plugily.projects.buildbattle.commands.arguments.data.LabelData;
 import plugily.projects.buildbattle.commands.arguments.data.LabeledCommandArgument;
-import plugily.projects.buildbattle.commands.arguments.game.CreateArgument;
-import plugily.projects.buildbattle.commands.arguments.game.JoinArguments;
-import plugily.projects.buildbattle.commands.arguments.game.LeaderboardArgument;
-import plugily.projects.buildbattle.commands.arguments.game.LeaveArgument;
-import plugily.projects.buildbattle.commands.arguments.game.StatsArgument;
+import plugily.projects.buildbattle.commands.arguments.game.*;
 import plugily.projects.buildbattle.handlers.setup.SetupInventory;
+import plugily.projects.buildbattle.utils.ServerVersion;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Plajer
@@ -69,8 +60,8 @@ import plugily.projects.buildbattle.handlers.setup.SetupInventory;
  */
 public class ArgumentsRegistry implements CommandExecutor {
 
-  private Main plugin;
   private final Map<String, List<CommandArgument>> mappedArguments = new HashMap<>();
+  private final Main plugin;
 
   public ArgumentsRegistry(Main plugin) {
     this.plugin = plugin;
@@ -146,11 +137,11 @@ public class ArgumentsRegistry implements CommandExecutor {
             sender.sendMessage(ChatColor.GRAY + "Hover command to see more, click command to suggest it.");
           }
           List<LabelData> data = mappedArguments.get("buildbattleadmin").stream().filter(arg -> arg instanceof LabeledCommandArgument)
-              .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList());
+                  .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList());
           data.add(new LabelData("/bb &6<arena>&f edit", "/bb <arena> edit",
-              "&7Edit existing arena\n&6Permission: &7buildbattle.admin.edit"));
+                  "&7Edit existing arena\n&6Permission: &7buildbattle.admin.edit"));
           data.addAll(mappedArguments.get("buildbattle").stream().filter(arg -> arg instanceof LabeledCommandArgument)
-              .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList()));
+                  .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList()));
           for (LabelData labelData : data) {
             TextComponent component;
             if (sender instanceof Player) {
@@ -160,7 +151,14 @@ public class ArgumentsRegistry implements CommandExecutor {
               component = new TextComponent(labelData.getText() + " - " + labelData.getDescription().split("\n")[0]);
             }
             component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, labelData.getCommand()));
-            component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(labelData.getDescription())));
+
+            // Backwards compatibility
+            if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1)) {
+              component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(labelData.getDescription())));
+            } else {
+              component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(labelData.getDescription())));
+            }
+
             sender.spigot().sendMessage(component);
           }
           return true;
@@ -169,7 +167,7 @@ public class ArgumentsRegistry implements CommandExecutor {
           if (argument.getArgumentName().equalsIgnoreCase(args[0])) {
             for (String perm : argument.getPermissions()) {
               if (perm.isEmpty()) break;
-              if (hasPermission(sender, perm)){
+              if (hasPermission(sender, perm)) {
                 break;
               } else {
                 //user has no permission to execute command
