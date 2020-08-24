@@ -25,6 +25,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Biome;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
@@ -44,6 +45,7 @@ import plugily.projects.buildbattle.arena.impl.TeamArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.PermissionManager;
 import plugily.projects.buildbattle.handlers.sign.ArenaSign;
+import plugily.projects.buildbattle.utils.ServerVersion.Version;
 import plugily.projects.buildbattle.utils.Utils;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
@@ -227,7 +229,10 @@ public class SetupInventoryEvents implements Listener {
             return;
           }
           Location minPoint = LocationSerializer.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint"));
-          Plot buildPlot = new Plot(arena, minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ()));
+          Biome biome = Version.isCurrentHigher(Version.v1_15_R1) ?
+              minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
+              : minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
+          Plot buildPlot = new Plot(arena, biome);
           buildPlot.setCuboid(new Cuboid(minPoint, LocationSerializer.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint"))));
           buildPlot.fullyResetPlot();
           arena.getPlotManager().addBuildPlot(buildPlot);
@@ -268,7 +273,10 @@ public class SetupInventoryEvents implements Listener {
 
         for (String plotName : config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false)) {
           Location minPoint = LocationSerializer.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint"));
-          Plot buildPlot = new Plot(arena, minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ()));
+          Biome biome = Version.isCurrentHigher(Version.v1_15_R1) ?
+                  minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
+                  : minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
+          Plot buildPlot = new Plot(arena, biome);
           buildPlot.setCuboid(new Cuboid(minPoint, LocationSerializer.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint"))));
           buildPlot.fullyResetPlot();
           arena.getPlotManager().addBuildPlot(buildPlot);

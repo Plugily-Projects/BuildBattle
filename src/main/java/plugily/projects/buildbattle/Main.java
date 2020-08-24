@@ -56,7 +56,6 @@ import plugily.projects.buildbattle.handlers.party.PartyHandler;
 import plugily.projects.buildbattle.handlers.party.PartySupportInitializer;
 import plugily.projects.buildbattle.handlers.reward.RewardsFactory;
 import plugily.projects.buildbattle.handlers.setup.SetupInventoryEvents;
-import plugily.projects.buildbattle.handlers.sign.ArenaSign;
 import plugily.projects.buildbattle.handlers.sign.SignManager;
 import plugily.projects.buildbattle.menus.options.OptionsMenuHandler;
 import plugily.projects.buildbattle.menus.options.OptionsRegistry;

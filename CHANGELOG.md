@@ -26,6 +26,8 @@ That's all, matcher will stop when detects next line started with `###` match
 * Added spectator mode
 * Added arena selector
 * Reworked version checker
+* Updated PlaceholderAPI dependency
+* Fixed NPE during vote event
 
 ### 4.4.0 Release (01.07.2020 - 29.07.2020)
 * GuessTheBuild release

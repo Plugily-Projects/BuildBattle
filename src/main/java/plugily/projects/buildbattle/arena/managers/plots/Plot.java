@@ -46,6 +46,7 @@ import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.utils.ServerVersion;
 import plugily.projects.buildbattle.utils.Utils;
+import plugily.projects.buildbattle.utils.ServerVersion.Version;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -205,7 +206,18 @@ public class Plot {
     XMaterial.matchXMaterial(plugin.getConfig().getString("Default-Floor-Material-Name", "LOG")
         .toUpperCase()).ifPresent(m -> changeFloor(m.parseMaterial()));
 
-    cuboid.getCenter().getWorld().setBiome(cuboid.getMinPoint().getBlockX(), cuboid.getMaxPoint().getBlockZ(), plotDefaultBiome);
+    if (Version.isCurrentHigher(Version.v1_15_R1)) {
+      int y;
+      if (cuboid.getMinPoint().getBlockY() > cuboid.getMaxPoint().getBlockY()) {
+        y = cuboid.getMaxPoint().getBlockY();
+      } else {
+        y = cuboid.getMinPoint().getBlockY();
+      }
+
+      cuboid.getCenter().getWorld().setBiome(cuboid.getMinPoint().getBlockX(), y, cuboid.getMaxPoint().getBlockZ(), plotDefaultBiome);
+    } else {
+      cuboid.getCenter().getWorld().setBiome(cuboid.getMinPoint().getBlockX(), cuboid.getMaxPoint().getBlockZ(), plotDefaultBiome);
+    }
 
     BBPlotResetEvent event = new BBPlotResetEvent(arena, this);
     Bukkit.getServer().getPluginManager().callEvent(event);
