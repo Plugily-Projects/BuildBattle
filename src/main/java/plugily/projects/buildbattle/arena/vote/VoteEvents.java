@@ -55,26 +55,34 @@ public class VoteEvents implements Listener {
     if (e.getHand() == EquipmentSlot.OFF_HAND || e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK || e.getAction() == Action.PHYSICAL) {
       return;
     }
+
     if (!Utils.isNamed(e.getItem())) {
       return;
     }
+
     BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
-    if (arena instanceof GuessTheBuildArena || arena.getArenaState() != ArenaState.IN_GAME || !((SoloArena) arena).isVoting()) {
+    if (arena == null || arena instanceof GuessTheBuildArena || arena.getArenaState() != ArenaState.IN_GAME || !((SoloArena) arena).isVoting()) {
       return;
     }
+
     if (plugin.getVoteItems().getReportItem().equals(e.getItem())) {
-      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.RUN_COMMAND_ON_REPORT)){
-        ((SoloArena) arena).getVotingPlot().getOwners().forEach(player -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), plugin.getConfig().getString("Run-Command-On-Report.Command", "kick %reported%").replace("%reported%", player.getName()).replace("%reporter%", e.getPlayer().getName())));
+      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.RUN_COMMAND_ON_REPORT)) {
+        ((SoloArena) arena).getVotingPlot().getOwners().forEach(player -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+            plugin.getConfig().getString("Run-Command-On-Report.Command", "kick %reported%")
+            .replace("%reported%", player.getName()).replace("%reporter%", e.getPlayer().getName())));
         plugin.getRewardsHandler().performReward(e.getPlayer(), Reward.RewardType.REPORT, -1);
       }
+
       e.setCancelled(true);
       return;
     }
+
     if (((SoloArena) arena).getVotingPlot().getOwners().contains(e.getPlayer())) {
       e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Cant-Vote-Own-Plot"));
       e.setCancelled(true);
       return;
     }
+
     plugin.getUserManager().getUser(e.getPlayer()).setStat(StatsStorage.StatisticType.LOCAL_POINTS, plugin.getVoteItems().getPoints(e.getItem()));
     plugin.getVoteItems().playVoteSound(e.getPlayer(), e.getItem());
     e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Vote-Successful"));
