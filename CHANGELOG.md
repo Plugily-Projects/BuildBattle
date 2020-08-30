@@ -29,6 +29,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Updated PlaceholderAPI dependency
 * Fixed NPE during vote event
 * Fix NPE during giving rewards to players
+* Fix for NPE when teleporting players to plots
 
 ### 4.4.0 Release (01.07.2020 - 29.07.2020)
 * GuessTheBuild release

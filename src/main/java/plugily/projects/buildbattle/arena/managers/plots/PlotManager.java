@@ -26,6 +26,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import plugily.projects.buildbattle.api.event.plot.BBPlayerPlotReceiveEvent;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 
@@ -77,16 +78,25 @@ public class PlotManager {
   public void teleportToPlots() {
     for (Plot buildPlot : plots) {
       if (buildPlot.getOwners() != null && !buildPlot.getOwners().isEmpty()) {
-        Location tploc = buildPlot.getCuboid().getCenter();
+        Cuboid cuboid = buildPlot.getCuboid();
+        if (cuboid == null) {
+          continue;
+        }
+
+        Location tploc = cuboid.getCenter();
+        if (tploc == null) {
+          continue;
+        }
+
         while (tploc.getBlock().getType() != Material.AIR) {
           tploc = tploc.add(0, 1, 0);
           //teleporting 1 x and z block away from center cause Y is above plot limit
-          if (tploc.getY() >= buildPlot.getCuboid().getMaxPoint().getY()) {
-            tploc = buildPlot.getCuboid().getCenter().clone().add(1, 0, 1);
+          if (tploc.getY() >= cuboid.getMaxPoint().getY()) {
+            tploc = cuboid.getCenter().clone().add(1, 0, 1);
           }
         }
         for (Player p : buildPlot.getOwners()) {
-          p.teleport(buildPlot.getCuboid().getCenter());
+          p.teleport(cuboid.getCenter());
         }
       }
       BBPlayerPlotReceiveEvent event = new BBPlayerPlotReceiveEvent(arena, buildPlot);
