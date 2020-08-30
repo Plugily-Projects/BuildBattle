@@ -18,13 +18,17 @@
 
 package plugily.projects.buildbattle.menus.options.registry.particles;
 
+import java.util.Map.Entry;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
+import plugily.projects.buildbattle.utils.Utils;
 
 /**
  * Created by Tom on 23/08/2015.
@@ -35,12 +39,13 @@ public class ParticleRefreshScheduler {
     Bukkit.getScheduler().runTaskTimer(plugin, () -> {
       for (BaseArena arena : ArenaRegistry.getArenas()) {
         for (Plot buildPlot : arena.getPlotManager().getPlots()) {
-          for (Location location : buildPlot.getParticles().keySet()) {
+          for (Entry<Location, Particle> map : buildPlot.getParticles().entrySet()) {
             if (arena.getPlayers().isEmpty()) {
               continue;
             }
-            location.getWorld().spawnParticle(buildPlot.getParticles().get(location), location,
-                plugin.getConfig().getInt("Amount-One-Particle-Effect-Contains", 20), 1, 1, 1, 1);
+
+            Utils.spawnParticle(map.getValue(), map.getKey(), plugin.getConfig().getInt("Amount-One-Particle-Effect-Contains", 20),
+                    1, 1, 1, 1);
           }
         }
       }

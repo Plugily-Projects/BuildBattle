@@ -35,6 +35,10 @@ import java.util.regex.Pattern;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.Particle.DustOptions;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -188,6 +192,21 @@ public class Utils {
         } else {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new ComponentBuilder(message).create());
         }
+    }
+
+    // https://www.spigotmc.org/threads/comprehensive-particle-spawning-guide-1-13.343001/
+    public static void spawnParticle(Particle particle, Location loc, int count, double offsetX, double offsetY, double offsetZ, double extra) {
+      if (particle == Particle.REDSTONE) {
+        DustOptions dustOptions = new DustOptions(Color.RED, 2);
+        loc.getWorld().spawnParticle(particle, loc, count, offsetX, offsetY, offsetZ, extra, dustOptions);
+      } else if (particle == Particle.ITEM_CRACK) {
+        ItemStack itemCrackData = new ItemStack(loc.getBlock().getType());
+        loc.getWorld().spawnParticle(particle, loc, count, offsetX, offsetY, offsetZ, extra, itemCrackData);
+      } else if (particle == Particle.BLOCK_CRACK || particle == Particle.BLOCK_DUST || particle == Particle.FALLING_DUST) {
+        loc.getWorld().spawnParticle(particle, loc, count, offsetX, offsetY, offsetZ, extra, loc.getBlock().getType().createBlockData());
+      } else {
+        loc.getWorld().spawnParticle(particle, loc, count, offsetX, offsetY, offsetZ, extra);
+      }
     }
 
 }
