@@ -31,6 +31,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Fix NPE during giving rewards to players
 * Fix for NPE when teleporting players to plots
 * Fix IllegalArgumentException when some particles have "custom class data"
+* Fix for voting plot owners is empty
 
 ### 4.4.0 Release (01.07.2020 - 29.07.2020)
 * GuessTheBuild release
