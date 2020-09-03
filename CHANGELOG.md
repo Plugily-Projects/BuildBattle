@@ -9,6 +9,16 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+### 4.4.1-b4 Beta
+* Fix for NPE when teleporting players to plots
+* Fix IllegalArgumentException when some particles have "custom class data"
+* Fix for voting plot owners is empty
+
+### 4.4.1-b3 Beta 
+* Fix NPE during giving rewards to players
+* Fix LanguageMigrator breaking language.yml
+* Fix NoClassDefFoundError on pre 1.16 servers
+
 ### 4.4.1-b Beta 
 * Added GTB to the SetUp inventory
 * (Developer Alert - Class rename)
@@ -28,10 +38,6 @@ That's all, matcher will stop when detects next line started with `###` match
 * Reworked version checker
 * Updated PlaceholderAPI dependency
 * Fixed NPE during vote event
-* Fix NPE during giving rewards to players
-* Fix for NPE when teleporting players to plots
-* Fix IllegalArgumentException when some particles have "custom class data"
-* Fix for voting plot owners is empty
 
 ### 4.4.0 Release (01.07.2020 - 29.07.2020)
 * GuessTheBuild release
