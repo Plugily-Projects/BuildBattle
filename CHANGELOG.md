@@ -9,6 +9,9 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+### 4.4.1-b5 Beta
+* Fix NoSuchMethodException for player chunk map
+
 ### 4.4.1-b4 Beta
 * Fix for NPE when teleporting players to plots
 * Fix IllegalArgumentException when some particles have "custom class data"
