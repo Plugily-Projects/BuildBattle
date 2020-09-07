@@ -22,6 +22,10 @@ That's all, matcher will stop when detects next line started with `###` match
 * Fix LanguageMigrator breaking language.yml
 * Fix NoClassDefFoundError on pre 1.16 servers
 
+### 4.4.1-b2 Beta
+* Updated PlaceholderAPI dependency
+* Fixed NPE during vote event
+
 ### 4.4.1-b Beta 
 * Added GTB to the SetUp inventory
 * (Developer Alert - Class rename)
@@ -39,8 +43,6 @@ That's all, matcher will stop when detects next line started with `###` match
 * Added spectator mode
 * Added arena selector
 * Reworked version checker
-* Updated PlaceholderAPI dependency
-* Fixed NPE during vote event
 
 ### 4.4.0 Release (01.07.2020 - 29.07.2020)
 * GuessTheBuild release
