@@ -40,7 +40,6 @@ public class TabCompletion implements TabCompleter {
         return StringUtil.copyPartialMatches(token, collection, new ArrayList<>());
     }
 
-    public
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (!(sender instanceof Player)) {
