@@ -96,10 +96,8 @@ public class TabCompletion implements TabCompleter {
                     }
                 }
             case 4:
-                if (completesListMap.get("bba").contains(args[0].toLowerCase())) {
-                    if (args[0].equalsIgnoreCase("votes")) {
-                        return getPartial(args[1], completesListMap.get("player"));
-                    }
+                if (completesListMap.get("bba").contains(args[0].toLowerCase()) && args[0].equalsIgnoreCase("votes")) {
+                   return getPartial(args[1], completesListMap.get("player"));
                 }
             default: return ImmutableList.of();
         }
