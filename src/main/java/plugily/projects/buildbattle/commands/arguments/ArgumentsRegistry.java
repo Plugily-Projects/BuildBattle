@@ -65,7 +65,7 @@ public class ArgumentsRegistry implements CommandExecutor {
 
   public ArgumentsRegistry(Main plugin) {
     this.plugin = plugin;
-    TabCompletion completion = new TabCompletion(this);
+    TabCompletion completion = new TabCompletion();
     plugin.getCommand("buildbattle").setExecutor(this);
     plugin.getCommand("buildbattle").setTabCompleter(completion);
     plugin.getCommand("buildbattleadmin").setExecutor(this);

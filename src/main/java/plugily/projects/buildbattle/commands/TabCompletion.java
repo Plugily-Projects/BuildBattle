@@ -1,66 +1,107 @@
-/*
- * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2020 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package plugily.projects.buildbattle.commands;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableList;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.util.StringUtil;
+import org.jetbrains.annotations.NotNull;
 
-import plugily.projects.buildbattle.arena.ArenaRegistry;
-import plugily.projects.buildbattle.arena.impl.BaseArena;
-import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
-import plugily.projects.buildbattle.commands.arguments.data.CommandArgument;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-/**
- * @author Plajer
- * <p>
- * Created at 27.05.2018
- */
 public class TabCompletion implements TabCompleter {
+    private final HashMultimap<String, String> completesListMap;
 
-  private ArgumentsRegistry registry;
+    public TabCompletion() {
+        completesListMap = HashMultimap.create();
+        add("bb", "join", "randomjoin", "stats", "leave", "top", "create");
+        add("bba", "list", "stop", "forcestart", "reload", "delete", "addplot", "removeplot", "addnpc", "settheme", "votes", "plotwand");
+        add("arena", "[arena]");
+        add("soloteam", "[solo/team]");
+        add("onlineplayer", "(online player)");
+        add("statistic", "[statistic]");
+        add("theme", "(theme)");
+        add("plotID", "[plot ID]");
+        add("addset", "[add/set]");
+        add("amount", "[amount]");
+        add("player", "(player)");
+    }
 
-  public TabCompletion(ArgumentsRegistry registry) {
-    this.registry = registry;
-  }
+    private void add(String key, String... args) {
+        completesListMap.putAll(key, Arrays.asList(args));
+    }
 
-  @Override
-  public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-    if (!(sender instanceof Player)) {
-      return Collections.emptyList();
+    private List<String> getPartial(String token, Iterable<String> collection) {
+        return StringUtil.copyPartialMatches(token, collection, new ArrayList<>());
     }
-    if (cmd.getName().equalsIgnoreCase("buildbattleadmin") && args.length == 1) {
-      return registry.getMappedArguments().get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName).collect(Collectors.toList());
+
+    public
+    @Override List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
+        if (!(sender instanceof Player)) {
+            return Collections.emptyList();
+        }
+        switch (args.length) {
+            case 1:
+                if (label.equalsIgnoreCase("bb") || label.equalsIgnoreCase("buildbattle")) {
+                    return getPartial(args[0], completesListMap.get("bb"));
+                }
+                if (label.equalsIgnoreCase("bba") || label.equalsIgnoreCase("buildbattleadmin")) {
+                    return getPartial(args[0], completesListMap.get("bba"));
+                }
+            case 2:
+                if (completesListMap.get("bb").contains(args[0].toLowerCase())) {
+                    if (args[0].equalsIgnoreCase("join") || args[0].equalsIgnoreCase("create")) {
+                        return getPartial(args[1], completesListMap.get("arena"));
+                    }
+                    if (args[0].equalsIgnoreCase("randomjoin")) {
+                        return getPartial(args[1], completesListMap.get("soloteam"));
+                    }
+                    if (args[0].equalsIgnoreCase("stats")) {
+                        return getPartial(args[1], completesListMap.get("onlineplayer"));
+                    }
+                    if (args[0].equalsIgnoreCase("top")) {
+                        return getPartial(args[1], completesListMap.get("statistic"));
+                    }
+
+                }
+                if (completesListMap.get("bba").contains(args[0].toLowerCase())) {
+                    if (args[0].equalsIgnoreCase("forcestart")) {
+                        return getPartial(args[1], completesListMap.get("theme"));
+                    }
+                    if (args[0].equalsIgnoreCase("delete")) {
+                        return getPartial(args[1], completesListMap.get("arena"));
+                    }
+                    if (args[0].equalsIgnoreCase("removeplot")) {
+                        return getPartial(args[1], completesListMap.get("arena"));
+                    }
+                    if (args[0].equalsIgnoreCase("settheme")) {
+                        return getPartial(args[1], completesListMap.get("theme"));
+                    }
+                    if (args[0].equalsIgnoreCase("votes")) {
+                        return getPartial(args[1], completesListMap.get("addset"));
+                    }
+                }
+            case 3:
+                if (completesListMap.get("bba").contains(args[0].toLowerCase())) {
+                    if (args[0].equalsIgnoreCase("removeplot")) {
+                        return getPartial(args[1], completesListMap.get("plotID"));
+                    }
+                    if (args[0].equalsIgnoreCase("votes")) {
+                        return getPartial(args[1], completesListMap.get("amount"));
+                    }
+                }
+            case 4:
+                if (completesListMap.get("bba").contains(args[0].toLowerCase())) {
+                    if (args[0].equalsIgnoreCase("votes")) {
+                        return getPartial(args[1], completesListMap.get("player"));
+                    }
+                }
+            default: return ImmutableList.of();
+        }
     }
-    if (cmd.getName().equalsIgnoreCase("buildbattle")) {
-      if (args.length == 2 && args[0].equalsIgnoreCase("join")) {
-        return ArenaRegistry.getArenas().stream().map(BaseArena::getID).collect(Collectors.toList());
-      }
-      if (args.length == 1) {
-        return registry.getMappedArguments().get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName).collect(Collectors.toList());
-      }
-    }
-    return Collections.emptyList();
-  }
 }
