@@ -22,10 +22,10 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.handlers.language.LanguageManager;
-import plugily.projects.buildbattle.utils.ServerVersion;
 import plugily.projects.buildbattle.utils.Utils;
 
 /**

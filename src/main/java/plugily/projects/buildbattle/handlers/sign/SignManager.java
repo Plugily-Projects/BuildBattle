@@ -34,6 +34,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.jetbrains.annotations.Nullable;
 
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
@@ -44,7 +45,6 @@ import plugily.projects.buildbattle.arena.ArenaState;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.handlers.language.LanguageManager;
 import plugily.projects.buildbattle.utils.Debugger;
-import plugily.projects.buildbattle.utils.ServerVersion;
 
 import java.util.ArrayList;
 import java.util.EnumMap;

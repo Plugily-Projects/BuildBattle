@@ -38,15 +38,14 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.event.plot.BBPlotResetEvent;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.user.User;
-import plugily.projects.buildbattle.utils.ServerVersion;
 import plugily.projects.buildbattle.utils.Utils;
-import plugily.projects.buildbattle.utils.ServerVersion.Version;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -209,7 +208,7 @@ public class Plot {
     XMaterial.matchXMaterial(plugin.getConfig().getString("Default-Floor-Material-Name", "LOG")
         .toUpperCase()).ifPresent(m -> changeFloor(m.parseMaterial()));
 
-    if (Version.isCurrentHigher(Version.v1_15_R1)) {
+    if (ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_15_R1)) {
       int y;
       if (cuboid.getMinPoint().getBlockY() > cuboid.getMaxPoint().getBlockY()) {
         y = cuboid.getMaxPoint().getBlockY();

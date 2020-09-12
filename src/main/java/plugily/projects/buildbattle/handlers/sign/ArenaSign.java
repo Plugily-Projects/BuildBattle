@@ -24,10 +24,9 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.jetbrains.annotations.Nullable;
 
-import plugily.projects.buildbattle.Main;
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.utils.MaterialUtil;
-import plugily.projects.buildbattle.utils.ServerVersion;
 
 /**
  * Created for 1.14 compatibility purposes, it will cache block behind sign that will be

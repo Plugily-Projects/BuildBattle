@@ -24,6 +24,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
@@ -35,7 +37,6 @@ import plugily.projects.buildbattle.arena.impl.SoloArena;
 import plugily.projects.buildbattle.arena.impl.TeamArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.utils.Debugger;
-import plugily.projects.buildbattle.utils.ServerVersion.Version;
 
 import javax.annotation.Nullable;
 import java.util.*;

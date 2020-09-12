@@ -25,6 +25,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.Main;
@@ -33,7 +34,6 @@ import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.menus.options.MenuOption;
 import plugily.projects.buildbattle.menus.options.OptionsRegistry;
-import plugily.projects.buildbattle.utils.ServerVersion;
 import plugily.projects.buildbattle.utils.Utils;
 
 /**

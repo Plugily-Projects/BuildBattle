@@ -33,10 +33,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.Main;
-import plugily.projects.buildbattle.utils.ServerVersion;
 import plugily.projects.buildbattle.utils.Utils;
 
 /**

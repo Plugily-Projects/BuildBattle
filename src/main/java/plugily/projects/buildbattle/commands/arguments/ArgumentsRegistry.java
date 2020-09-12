@@ -28,6 +28,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.string.StringMatcher;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
@@ -45,7 +47,6 @@ import plugily.projects.buildbattle.commands.arguments.data.LabelData;
 import plugily.projects.buildbattle.commands.arguments.data.LabeledCommandArgument;
 import plugily.projects.buildbattle.commands.arguments.game.*;
 import plugily.projects.buildbattle.handlers.setup.SetupInventory;
-import plugily.projects.buildbattle.utils.ServerVersion;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -169,10 +170,10 @@ public class ArgumentsRegistry implements CommandExecutor {
               if (perm.isEmpty()) break;
               if (hasPermission(sender, perm)) {
                 break;
-              } else {
-                //user has no permission to execute command
-                return true;
               }
+
+              //user has no permission to execute command
+              return true;
             }
             if (checkSenderIsExecutorType(sender, argument.getValidExecutors())) {
               argument.execute(sender, args);
