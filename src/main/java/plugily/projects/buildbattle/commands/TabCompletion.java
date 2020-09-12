@@ -41,7 +41,8 @@ public class TabCompletion implements TabCompleter {
     }
 
     public
-    @Override List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (!(sender instanceof Player)) {
             return Collections.emptyList();
         }
