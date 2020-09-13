@@ -9,41 +9,33 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
-### 4.4.1-b5 Beta
-* Fix NoSuchMethodException for player chunk map
-* Improved tab complete handling
-
-### 4.4.1-b4 Beta
-* Fix for NPE when teleporting players to plots
-* Fix IllegalArgumentException when some particles have "custom class data"
-* Fix for voting plot owners is empty
-
-### 4.4.1-b3 Beta 
-* Fix NPE during giving rewards to players
-* Fix LanguageMigrator breaking language.yml
-* Fix NoClassDefFoundError on pre 1.16 servers
-
-### 4.4.1-b2 Beta
-* Updated PlaceholderAPI dependency
-* Fixed NPE during vote event
-
-### 4.4.1-b Beta 
-* Added GTB to the SetUp inventory
+### 4.4.1 Release (15.08.2020 - 13.09.2020)
 * (Developer Alert - Class rename)
-* Fixed votes command
+* Added spectator mode
+* Added GTB to the SetUp inventory
+* Added arena selector
 * Added support for 1.16 hex colors
-* Fix for new 1.16 wall signs
-* Fix NPE regarding giving rewards to players and resetting the plot areas
-* Fix when blacklisted items & floor material is not exists and throws errors
-* Fix async catch from bukkit when performing commands
+* Fixed NPE when teleporting players to plots
+* Fixed IllegalArgumentException when some particles have "custom class data"
+* Fixed voting plot owners is empty
+* Fixed NoSuchMethodException for player chunk map
+* Fixed NPE during giving rewards to players
+* Fixed LanguageMigrator breaking language.yml
+* Fixed NoClassDefFoundError on pre 1.16 servers
+* Fixed NPE during vote event
+* Fixed votes command
+* Fixed for new 1.16 wall signs
+* Fixed NPE regarding giving rewards to players and resetting the plot areas
+* Fixed when blacklisted items & floor material is not exists and throws errors
+* Fixed async catch from bukkit when performing commands
 * Fixed IllegalPluginAccessException on plugin disable
 * Fixed NPE on Plotreset (GTB)
 * Fixed player being kicked when trying to join an in-game arena
-* Fix NPE when trying to teleport players to lobby location 
-* Fix for PlaceholderAPI placeholders not works on scoreboard in guessTheBuild mode
-* Added spectator mode
-* Added arena selector
+* Fixed NPE when trying to teleport players to lobby location 
+* Fixed PlaceholderAPI placeholders not works on scoreboard in guessTheBuild mode
 * Reworked version checker
+* Improved the tab complete handling
+* Updated PlaceholderAPI dependency
 
 ### 4.4.0 Release (01.07.2020 - 29.07.2020)
 * GuessTheBuild release
