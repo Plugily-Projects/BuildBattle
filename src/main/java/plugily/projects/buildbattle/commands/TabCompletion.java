@@ -70,7 +70,6 @@ public class TabCompletion implements TabCompleter {
         } else if (args[0].equalsIgnoreCase("votes")) {
           Arrays.asList("add", "set").forEach(cmds::add);
         }
-
         partOfCommand = args[1];
       } else if (args.length == 3 && args[0].equalsIgnoreCase("removeplot")) {
         FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
@@ -82,20 +81,17 @@ public class TabCompletion implements TabCompleter {
     }
 
     if (cmd.getName().equalsIgnoreCase("buildbattle")) {
-      if (args.length >= 2 && (args[0].equalsIgnoreCase("join") || args[0].equalsIgnoreCase("randomjoin"))) {
-        if (args.length == 3 && args[0].equalsIgnoreCase("randomjoin")) {
+      if (args.length == 2 && (args[0].equalsIgnoreCase("join") || args[0].equalsIgnoreCase("randomjoin"))) {
+        if (args[0].equalsIgnoreCase("randomjoin")) {
           Arrays.asList("solo", "team", "gtb", "guess_the_build").forEach(cmds::add);
-          partOfCommand = args[2];
         } else {
           cmds.addAll(ArenaRegistry.getArenas().stream().map(BaseArena::getID).collect(Collectors.toList()));
-          partOfCommand = args[1];
         }
+        partOfCommand = args[1];
       } else if (args.length == 1) {
         cmds.addAll(registry.getMappedArguments().get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName)
             .collect(Collectors.toList()));
         partOfCommand = args[0];
-      } else if (args.length == 2 && args[0].equalsIgnoreCase("votes")) {
-        Arrays.asList("add", "set").forEach(cmds::add);
       }
     }
 
