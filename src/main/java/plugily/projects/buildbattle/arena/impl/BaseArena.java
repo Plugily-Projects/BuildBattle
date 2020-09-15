@@ -29,13 +29,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.event.game.BBGameChangeStateEvent;
-import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.ArenaState;
 import plugily.projects.buildbattle.arena.managers.ScoreboardManager;
 import plugily.projects.buildbattle.arena.managers.plots.PlotManager;
@@ -224,12 +222,10 @@ public class BaseArena extends BukkitRunnable {
 
   public void addPlayer(Player player) {
     players.add(player);
-    ArenaRegistry.getPlayerArenaMap().put(player.getUniqueId(), id);
   }
 
   public void removePlayer(Player player) {
     players.remove(player);
-    ArenaRegistry.getPlayerArenaMap().remove(player.getUniqueId(), id);
   }
 
   public void clearPlayers() {
@@ -238,12 +234,10 @@ public class BaseArena extends BukkitRunnable {
 
   public void addSpectator(Player player) {
     spectators.add(player);
-    ArenaRegistry.getPlayerArenaMap().put(player.getUniqueId(), id);
   }
 
   public void removeSpectator(Player player) {
     spectators.remove(player);
-    ArenaRegistry.getPlayerArenaMap().remove(player.getUniqueId(), id);
   }
 
   /**
