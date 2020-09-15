@@ -234,6 +234,9 @@ public class BaseArena extends BukkitRunnable {
 
   public void clearPlayers() {
     players.clear();
+    for(Player player: players){
+      ArenaRegistry.getPlayerArenaMap().remove(player.getUniqueId(), id);
+    }
   }
 
   public void addSpectator(Player player) {
