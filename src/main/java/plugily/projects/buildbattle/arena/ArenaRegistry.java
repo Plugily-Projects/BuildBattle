@@ -48,6 +48,8 @@ public class ArenaRegistry {
 
   private static final List<BaseArena> arenas = new ArrayList<>();
   private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+  //PlayerArenaMap??? This is redudant information? I don't get what you're trying to achieve here?
+  //TODO: remove playerArenaMap
   private static final Map<UUID, String> playerArenaMap = new HashMap<>();
 
   private static int bungeeArena = -999;
@@ -68,12 +70,23 @@ public class ArenaRegistry {
       return null;
     }
 
-    return getArena(playerArenaMap.get(p.getUniqueId()));
+    for (BaseArena arena : arenas) {
+      for (Player player : arena.getPlayers()) {
+        if (player.equals(p)) {
+          return arena;
+        }
+      }
+    }
+    return null;
+    //playerArenaMap??
+    //return getArena(playerArenaMap.get(p.getUniqueId()));
   }
 
   public static Map<UUID, String> getPlayerArenaMap() {
     return playerArenaMap;
   }
+  
+
 
   public static void registerArena(BaseArena arena) {
     Debugger.debug("Registering new game instance, " + arena.getID());
