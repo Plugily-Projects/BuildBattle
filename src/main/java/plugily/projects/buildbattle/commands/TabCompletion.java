@@ -30,6 +30,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.util.StringUtil;
 
+import org.jetbrains.annotations.NotNull;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
@@ -50,7 +51,7 @@ public class TabCompletion implements TabCompleter {
   }
 
   @Override
-  public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+  public List<String> onTabComplete(@NotNull CommandSender sender, Command cmd, @NotNull String label, String[] args) {
     List<String> completionList = new ArrayList<>(), cmds = new ArrayList<>();
     String partOfCommand = null;
 
@@ -68,14 +69,14 @@ public class TabCompletion implements TabCompleter {
             cmds.addAll(l);
           }
         } else if (args[0].equalsIgnoreCase("votes")) {
-          Arrays.asList("add", "set").forEach(cmds::add);
+          cmds.addAll(Arrays.asList("add", "set"));
         }
         partOfCommand = args[1];
       } else if (args.length == 3 && args[0].equalsIgnoreCase("removeplot")) {
         FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
         String path = "instances." + ArenaRegistry.getArena(args[1]).getID() + ".plots";
-        cmds.addAll(config.isConfigurationSection(path) ? config.getConfigurationSection(path)
-            .getKeys(false).stream().collect(Collectors.toList()) : Collections.emptyList());
+        cmds.addAll(config.isConfigurationSection(path) ? new ArrayList<>(config.getConfigurationSection(path)
+                .getKeys(false)) : Collections.emptyList());
         partOfCommand = args[2];
       }
     }
@@ -83,7 +84,7 @@ public class TabCompletion implements TabCompleter {
     if (cmd.getName().equalsIgnoreCase("buildbattle")) {
       if (args.length == 2 && (args[0].equalsIgnoreCase("join") || args[0].equalsIgnoreCase("randomjoin"))) {
         if (args[0].equalsIgnoreCase("randomjoin")) {
-          Arrays.asList("solo", "team", "gtb", "guess_the_build").forEach(cmds::add);
+          cmds.addAll(Arrays.asList("solo", "team", "gtb", "guess_the_build"));
         } else {
           cmds.addAll(ArenaRegistry.getArenas().stream().map(BaseArena::getID).collect(Collectors.toList()));
         }
