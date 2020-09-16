@@ -189,7 +189,7 @@ public class Plot {
           if (!p.getWorld().equals(chunk.getWorld())) {
             continue;
           }
-          if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1)) {
+          if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R2)) {
             Utils.sendPacket(p, Utils.getNMSClass("PacketPlayOutMapChunk").getConstructor(Utils.getNMSClass("Chunk"), int.class)
                     .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535));
           } else if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_15_R1)) {
