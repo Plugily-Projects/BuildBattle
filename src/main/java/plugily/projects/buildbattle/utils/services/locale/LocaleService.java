@@ -86,8 +86,7 @@ public class LocaleService {
 
   private InputStream requestLocaleFetch(Locale locale) {
     try {
-      //todo /v2/
-      URL url = new URL("https://api.plajer.xyz/locale/fetch.php");
+      URL url = new URL("https://api.plugily.xyz/locale/v2/fetch.php");
       HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
       conn.setRequestMethod("POST");
       conn.setRequestProperty("User-Agent", "PLLocale/1.0");
