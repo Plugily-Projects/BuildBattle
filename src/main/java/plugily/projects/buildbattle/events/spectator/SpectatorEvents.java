@@ -154,7 +154,7 @@ public class SpectatorEvents implements Listener {
     if (target == null) target = Bukkit.getPlayer(ChatColor.stripColor(displayName));
 
     if (target == null) {
-      p.sendMessage(chatManager.colorMessage("Commands.Admin-Commands.Player-Not-Found"));
+      p.sendMessage(chatManager.colorMessage("Commands.Player-Not-Found"));
       return;
     }
 

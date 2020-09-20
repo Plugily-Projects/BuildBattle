@@ -9,7 +9,7 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
-### 4.4.1 Release (15.08.2020 - 13.09.2020)
+### 4.4.1 Release (15.08.2020 - 20.09.2020)
 * (Developer Alert - Class rename)
 * Added spectator mode
 * Added GTB to the SetUp inventory
@@ -36,6 +36,8 @@ That's all, matcher will stop when detects next line started with `###` match
 * Reworked version checker
 * Improved the tab complete handling
 * Updated PlaceholderAPI dependency
+* Updated locales to latest version
+* Added the possibility to change messages of locales on language.yml 
 
 ### 4.4.0 Release (01.07.2020 - 29.07.2020)
 * GuessTheBuild release

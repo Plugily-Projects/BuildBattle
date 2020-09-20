@@ -1,8 +1,10 @@
-#     You can translate Build Battle messages here.
-#             Color codes (&) supported.
+# Leave this file as it is!
 #
-#     Some messages support their own placeholders
-#               like %player% etc.
+### !!!Do not change anything here!!!
+#
+### THIS FILE AUTOMATICALLY REGENERATES ON SERVER RESTART
+#
+# Needed as it can be possible that the api is not working
 
 Commands:
   Did-You-Mean: "&6Did you mean &e/%command%&6?"

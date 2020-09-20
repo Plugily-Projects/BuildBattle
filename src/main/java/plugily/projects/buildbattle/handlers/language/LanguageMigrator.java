@@ -437,7 +437,6 @@ public class LanguageMigrator {
           MigratorUtils.insertAfterLine(file, "Settings-Menu:", "      Inventory-Name: \"&7Spectator settings\"");
           MigratorUtils.insertAfterLine(file, "Settings-Menu:", "      Speed-Name: \"&aSpeed\"");
           MigratorUtils.insertAfterLine(file, "Commands:", "  Arena-Restarting: \"&cThis arena is currently restarting!\"");
-          MigratorUtils.insertAfterLine(file, "Admin-Commands:", "    Player-Not-Found: \"&cPlayer not found!\"");
           break;
         case 17:
           MigratorUtils.addNewLines(file, "Arena-Selector:\r\n" +

@@ -28,7 +28,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
@@ -52,7 +51,7 @@ public class PlayerHeadsRegistry {
   }
 
   private void registerCategories() {
-    FileConfiguration config = ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "heads/mainmenu");
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "heads/mainmenu");
     for (String str : config.getKeys(false)) {
       if (!config.getBoolean(str + ".enabled", true)) {
         continue;
@@ -67,7 +66,7 @@ public class PlayerHeadsRegistry {
       category.setPermission(config.getString(str + ".permission"));
 
       Set<ItemStack> playerHeads = new HashSet<>();
-      FileConfiguration categoryConfig = ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "heads/menus/" +
+      FileConfiguration categoryConfig = ConfigUtils.getConfig(plugin, "heads/menus/" +
           config.getString(str + ".config"));
       for (String path : categoryConfig.getKeys(false)) {
         if (!categoryConfig.getBoolean(path + ".enabled", true)) {

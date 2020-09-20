@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
@@ -48,6 +49,7 @@ public class LanguageManager {
   private static Locale pluginLocale;
   private static Properties properties = new Properties();
   private static FileConfiguration languageConfig;
+  private static FileConfiguration defaultLanguageConfig;
 
   private LanguageManager() {
   }
@@ -57,11 +59,15 @@ public class LanguageManager {
     if (!new File(plugin.getDataFolder() + File.separator + "language.yml").exists()) {
       plugin.saveResource("language.yml", false);
     }
+    //auto update
+    plugin.saveResource("locales/language_default.yml", true);
+
     registerLocales();
     setupLocale();
     new LanguageMigrator(plugin);
     //get file after all migrations are done
     languageConfig = ConfigUtils.getConfig(plugin, "language");
+    defaultLanguageConfig = ConfigUtils.getConfig(plugin, "locales/language_default");
   }
 
   private static void registerLocales() {
@@ -159,7 +165,13 @@ public class LanguageManager {
       return getString(path);
     }
     String prop = properties.getProperty(path);
-    return prop == null ? getString(path) : prop;
+    if (prop == null){
+      return getString(path);
+    }
+    if (getString(path).equalsIgnoreCase(defaultLanguageConfig.getString(path, "not found"))){
+      return prop;
+    }
+    return getString(path);
   }
 
   public static List<String> getLanguageList(String path) {
@@ -168,19 +180,21 @@ public class LanguageManager {
     }
     String prop = properties.getProperty(path);
     if (prop == null) {
-      //check normal language if nothing found in specific language
       return getStrings(path);
     }
-    return Arrays.asList(plugin.getChatManager().colorMessage(path).split(";"));
+    if (getString(path).equalsIgnoreCase(defaultLanguageConfig.getString(path, "not found"))){
+      return Arrays.asList(plugin.getChatManager().colorRawMessage(prop).split(";"));
+    }
+    return getStrings(path);
   }
 
 
   private static List<String> getStrings(String path) {
-    //check normal language if nothing found in specific language
     if (!languageConfig.isSet(path)) {
-      //send normal english message - User can change this translation on his own
-      Debugger.sendConsoleMsg("&c[BuildBattle] Game message not found in your locale! Added it to your language.yml");
-      Debugger.sendConsoleMsg("&c[BuildBattle] Path: " + path + " | Language not found. Report it to the author on Discord!");
+      Debugger.sendConsoleMsg("&c[BuildBattle] Game message not found in your locale!");
+      Debugger.sendConsoleMsg("&c[BuildBattle] Please regenerate your language.yml file! If error still occurs report it to the developer on discord!");
+      Debugger.sendConsoleMsg("&c[BuildBattle] Path: " + path);
+      return Collections.singletonList("ERR_MESSAGE_" + path + "_NOT_FOUND");
     }
     List<String> list = languageConfig.getStringList(path);
     list = list.stream().map(string -> plugin.getChatManager().colorRawMessage(string)).collect(Collectors.toList());
@@ -189,13 +203,13 @@ public class LanguageManager {
 
 
   private static String getString(String path) {
-    //check normal language if nothing found in specific language
     if (!languageConfig.isSet(path)) {
-      //send normal english message - User can change this translation on his own
-      Debugger.sendConsoleMsg("&c[BuildBattle] Game message not found in your locale! Added it to your language.yml");
-      Debugger.sendConsoleMsg("&c[BuildBattle] Path: " + path + " | Language not found. Report it to the author on Discord!");
+      Debugger.sendConsoleMsg("&c[BuildBattle] Game message not found in your locale!");
+      Debugger.sendConsoleMsg("&c[BuildBattle] Please regenerate your language.yml file! If error still occurs report it to the developer on discord!");
+      Debugger.sendConsoleMsg("&c[BuildBattle] Path: " + path);
+      return "ERR_MESSAGE_" + path + "_NOT_FOUND";
     }
-    return languageConfig.getString(path);
+    return languageConfig.getString(path, "not found");
   }
 
   public static Locale getPluginLocale() {
