@@ -64,10 +64,14 @@ public class ChatManager {
   }
 
   public String colorMessage(String message) {
-      return colorRawMessage(LanguageManager.getLanguageMessage(message));
+      return message == null ? "" : colorRawMessage(LanguageManager.getLanguageMessage(message));
   }
 
   public String colorRawMessage(String msg) {
+    if (msg == null) {
+      return "";
+    }
+
     if (msg.contains("#") && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1)) {
       msg = Utils.matchColorRegex(msg);
     }
