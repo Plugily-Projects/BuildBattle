@@ -71,7 +71,9 @@ public class LanguageManager {
   }
 
   private static void registerLocales() {
-    Stream.of(new Locale("Chinese (Simplified)", "简体中文", "zh_CN", "POEditor contributors", Arrays.asList("简体中文", "中文", "chinese", "chinese_simplified", "cn")),
+    Stream.of(new Locale("Basque", "Basque", "eu_EU", "POEditor contributors", Arrays.asList("basque", "eu")),
+      new Locale("Belarusian", "Belarus", "be_BY", "POEditor contributors", Arrays.asList("belarusian", "belarus", "by", "be")),
+      new Locale("Chinese (Simplified)", "简体中文", "zh_CN", "POEditor contributors", Arrays.asList("简体中文", "中文", "chinese", "chinese_simplified", "cn")),
       new Locale("Chinese (Traditional)", "简体中文", "zh_HK", "POEditor contributors", Arrays.asList("中文(傳統)", "中國傳統", "chinese_traditional", "zh_hk")),
       new Locale("Czech", "Český", "cs_CZ", "POEditor contributors", Arrays.asList("czech", "cesky", "český", "cs")),
       new Locale("Dutch", "Nederlands", "nl_NL", "POEditor contributors", Arrays.asList("dutch", "nederlands", "nl")),
@@ -92,6 +94,7 @@ public class LanguageManager {
       new Locale("Slovenian", "Slovenščina", "sl_SL", "POEditor contributors", Arrays.asList("slovenian", "slovenščina", "slovenscina", "sl")),
       new Locale("Spanish", "Español", "es_ES", "POEditor contributors", Arrays.asList("spanish", "espanol", "español", "es")),
       new Locale("Turkish", "Türk", "tr_TR", "POEditor contributors", Arrays.asList("turkish", "turk", "türk", "tr")),
+      new Locale("Ukrainian", "Ukraine", "uk_UA", "POEditor contributors", Arrays.asList("ukraine", "ua", "uk")),
       new Locale("Vietnamese", "Việt", "vn_VN", "POEditor contributors", Arrays.asList("vietnamese", "viet", "việt", "vn")))
     .forEach(LocaleRegistry::registerLocale);
   }
