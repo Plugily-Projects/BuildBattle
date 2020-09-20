@@ -518,7 +518,7 @@ public class SoloArena extends BaseArena {
             break;
         }
         if (message.contains("%place_" + access.toLowerCase() + "%")) {
-          if (topList.containsKey(i) && topList.get(i) != null && !topList.get(i).isEmpty()) {
+          if (topList.containsKey(i) && !topList.get(i).isEmpty()) {
             message = StringUtils.replace(message, "%place_" + access.toLowerCase() + "%", getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Place-" + access)
                     .replace("%player%", formatWinners(topList.get(i)))
                     .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(i).get(0)).getPoints())));
@@ -533,7 +533,7 @@ public class SoloArena extends BaseArena {
     }
     getPlayers().forEach(player -> formattedSummary.forEach(msg -> MiscUtils.sendCenteredMessage(player, msg)));
     for (int rang : topList.keySet()) {
-      if (topList.get(rang) != null) {
+      if (topList.containsKey(rang)) {
         for (Player p : topList.get(rang)) {
           if (rang > 3) {
             p.sendMessage(getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Summary-Other-Place").replace("%number%", String.valueOf(rang)));
@@ -576,7 +576,7 @@ public class SoloArena extends BaseArena {
     for (Plot buildPlot : getPlotManager().getPlots()) {
       long i = buildPlot.getPoints();
       for (int rang : topList.keySet()) {
-        if (topList.get(rang) == null || topList.get(rang).isEmpty() || topList.get(rang).get(0) == null || getPlotManager().getPlot(topList.get(rang).get(0)) == null) {
+        if (!topList.containsKey(rang) || topList.get(rang).isEmpty() || topList.get(rang).get(0) == null || getPlotManager().getPlot(topList.get(rang).get(0)) == null) {
           topList.put(rang, buildPlot.getOwners());
           break;
         }
@@ -585,7 +585,7 @@ public class SoloArena extends BaseArena {
           break;
         }
         if (i == getPlotManager().getPlot(topList.get(rang).get(0)).getPoints()) {
-          List<Player> winners = topList.get(rang);
+          List<Player> winners = topList.getOrDefault(rang, new ArrayList<>());
           winners.addAll(buildPlot.getOwners());
           topList.put(rang, winners);
           break;
@@ -595,9 +595,9 @@ public class SoloArena extends BaseArena {
   }
 
   private void moveScore(int pos, List<Player> owners) {
-    List<Player> after = topList.get(pos);
+    List<Player> after = topList.getOrDefault(pos, new ArrayList<>());
     topList.put(pos, owners);
-    if (pos <= getPlayers().size() && after != null) {
+    if (pos <= getPlayers().size() && !after.isEmpty()) {
       moveScore(pos + 1, after);
     }
   }
@@ -609,7 +609,7 @@ public class SoloArena extends BaseArena {
   @Override
   public void giveRewards() {
     for (int i = 1; i <= topList.size(); i++) {
-      if (topList.get(i) == null || topList.get(i).isEmpty()) {
+      if (!topList.containsKey(i) || topList.get(i).isEmpty()) {
         continue;
       }
       for (Player player : topList.get(i)) {
