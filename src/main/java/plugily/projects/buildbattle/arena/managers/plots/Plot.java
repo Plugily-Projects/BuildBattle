@@ -242,8 +242,8 @@ public class Plot {
     }
     Location min = cuboid.getMinPoint();
     Location max = cuboid.getMaxPoint();
-    for (int x = min.getBlockX(); x <= max.getBlockX(); x = x + 1) {
-      for (int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
+    for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
+      for (int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
         Location tmpblock = new Location(cuboid.getMaxPoint().getWorld(), x, y, z);
         tmpblock.getBlock().setType(material);
       }
@@ -265,8 +265,8 @@ public class Plot {
     }
     Location min = cuboid.getMinPoint();
     Location max = cuboid.getMaxPoint();
-    for (int x = min.getBlockX(); x <= max.getBlockX(); x = x + 1) {
-      for (int z = min.getBlockZ(); z <= max.getBlockZ(); z = z + 1) {
+    for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
+      for (int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
         Location tmpblock = new Location(cuboid.getMaxPoint().getWorld(), x, y, z);
         tmpblock.getBlock().setType(material);
         if (ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {

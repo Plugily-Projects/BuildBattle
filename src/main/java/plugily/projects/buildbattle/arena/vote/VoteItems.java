@@ -41,7 +41,7 @@ import plugily.projects.buildbattle.utils.Debugger;
  */
 public class VoteItems {
 
-  private static Set<VoteItem> voteItems = new HashSet<>();
+  private static final Set<VoteItem> VOTEITEMS = new HashSet<>();
   private static ItemStack reportItem = new ItemStack(Material.BEDROCK, 32);
   private static FileConfiguration config = ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "voteItems");
 
@@ -63,7 +63,7 @@ public class VoteItems {
             .name(JavaPlugin.getPlugin(Main.class).getChatManager().colorRawMessage(config.getString(key + ".displayname")))
             .build();
       } else {
-        stack = new ItemBuilder(XMaterial.BEDROCK.parseItem()).build();
+        stack = XMaterial.BEDROCK.parseItem();
       }
 
       if (config.getBoolean(key + ".report-item-function", false)) {
@@ -74,7 +74,7 @@ public class VoteItems {
         sound = Sound.valueOf(config.getString(key + ".sound", ""));
       } catch (Exception ignored) {
       }
-      voteItems.add(new VoteItem(stack, Integer.parseInt(key), Integer.parseInt(key) + 1, sound));
+      VOTEITEMS.add(new VoteItem(stack, Integer.parseInt(key), Integer.parseInt(key) + 1, sound));
     }
   }
 
@@ -90,14 +90,14 @@ public class VoteItems {
   }
 
   public void giveVoteItems(Player player) {
-    for (VoteItem voteItem : voteItems) {
+    for (VoteItem voteItem : VOTEITEMS) {
       player.getInventory().setItem(voteItem.getSlot(), voteItem.getItemStack());
     }
     player.updateInventory();
   }
 
   public void playVoteSound(Player player, ItemStack itemStack) {
-    for (VoteItem item : voteItems) {
+    for (VoteItem item : VOTEITEMS) {
       if (item.getItemStack().isSimilar(itemStack)) {
         if (item.getSound() == null) {
           return;
@@ -114,7 +114,7 @@ public class VoteItems {
    * @return points
    */
   public int getPoints(ItemStack itemStack) {
-    for (VoteItem item : voteItems) {
+    for (VoteItem item : VOTEITEMS) {
       if (item.getItemStack().isSimilar(itemStack)) {
         return item.getPoints();
       }

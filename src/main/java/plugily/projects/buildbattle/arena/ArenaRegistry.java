@@ -47,13 +47,13 @@ import java.util.Random;
  */
 public class ArenaRegistry {
 
-  private static final List<BaseArena> arenas = new ArrayList<>();
+  private static final List<BaseArena> ARENAS = new ArrayList<>();
   private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
   private static int bungeeArena = -999;
 
   public static List<BaseArena> getArenas() {
-    return arenas;
+    return ARENAS;
   }
 
   /**
@@ -68,7 +68,7 @@ public class ArenaRegistry {
       return null;
     }
 
-    for (BaseArena arena : arenas) {
+    for (BaseArena arena : ARENAS) {
       for (Player player : arena.getPlayers()) {
         if (player.equals(p)) return arena;
       }
@@ -81,12 +81,12 @@ public class ArenaRegistry {
 
   public static void registerArena(BaseArena arena) {
     Debugger.debug("Registering new game instance, " + arena.getID());
-    arenas.add(arena);
+    ARENAS.add(arena);
   }
 
   public static void unregisterArena(BaseArena arena) {
     Debugger.debug("Unegistering game instance, " + arena.getID());
-    arenas.remove(arena);
+    ARENAS.remove(arena);
   }
 
   /**
@@ -96,7 +96,7 @@ public class ArenaRegistry {
    * @return Arena or null if not found
    */
   public static BaseArena getArena(String id) {
-    for (BaseArena arena : arenas) {
+    for (BaseArena arena : ARENAS) {
       if (arena.getID().equalsIgnoreCase(id)) {
         return arena;
       }
@@ -207,12 +207,12 @@ public class ArenaRegistry {
   }
 
   public static void shuffleBungeeArena() {
-    bungeeArena = new Random().nextInt(arenas.size());
+    bungeeArena = new Random().nextInt(ARENAS.size());
   }
 
   public static int getBungeeArena() {
     if (bungeeArena == -999) {
-      bungeeArena = new Random().nextInt(arenas.size());
+      bungeeArena = new Random().nextInt(ARENAS.size());
     }
     return bungeeArena;
   }

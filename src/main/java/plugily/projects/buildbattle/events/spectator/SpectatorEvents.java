@@ -50,7 +50,6 @@ public class SpectatorEvents implements Listener {
   private final ChatManager chatManager;
   private final Main plugin;
   private final SpectatorSettingsMenu spectatorSettingsMenu;
-  private final boolean usesPaperSpigot = Bukkit.getServer().getVersion().contains("Paper");
 
   public SpectatorEvents(Main plugin) {
     this.plugin = plugin;
@@ -115,11 +114,7 @@ public class SpectatorEvents implements Listener {
       ItemStack skull = XMaterial.PLAYER_HEAD.parseItem();
 
       SkullMeta meta = (SkullMeta) skull.getItemMeta();
-      if (usesPaperSpigot && player.getPlayerProfile().hasTextures()) {
-        meta.setPlayerProfile(player.getPlayerProfile());
-      } else {
-        meta.setOwningPlayer(player);
-      }
+      meta = Utils.setPlayerHead(player, meta);
       meta.setDisplayName(player.getName());
       skull.setItemMeta(meta);
       inventory.addItem(skull);

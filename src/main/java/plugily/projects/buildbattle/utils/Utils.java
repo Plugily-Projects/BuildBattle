@@ -29,6 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -153,6 +154,22 @@ public class Utils {
         }
 
         return s;
+    }
+
+    public static SkullMeta setPlayerHead(Player player, SkullMeta meta) {
+        if (Bukkit.getServer().getVersion().contains("Paper") && player.getPlayerProfile().hasTextures()) {
+          return CompletableFuture.supplyAsync(() -> {
+            meta.setPlayerProfile(player.getPlayerProfile());
+            return meta;
+          }).exceptionally(e -> {
+            Debugger.debug(plugily.projects.buildbattle.utils.Debugger.Level.WARN,
+                "Retrieving player profile of " + player.getName() + " failed!");
+            return meta;
+          }).join();
+        }
+
+        meta.setOwningPlayer(player);
+        return meta;
       }
 
     public static void sendPacket(Player player, Object packet) {
