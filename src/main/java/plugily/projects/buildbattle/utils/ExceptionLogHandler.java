@@ -59,8 +59,8 @@ public class ExceptionLogHandler extends Handler {
         if (!(throwable instanceof Exception) || !throwable.getClass().getSimpleName().contains("Exception") || throwable.getStackTrace().length <= 0) {
             return;
         }
-        if (throwable.getCause() != null && throwable.getCause().getStackTrace() != null
-            && !throwable.getCause().getStackTrace()[0].getClassName().contains("plugily.projects.buildbattle")) {
+        if (throwable.getStackTrace().length <= 0 || (throwable.getCause() != null &&
+              !throwable.getCause().getStackTrace()[0].getClassName().contains("plugily.projects.buildbattle"))) {
             return;
         }
         if (!throwable.getStackTrace()[0].getClassName().contains("plugily.projects.buildbattle") || containsBlacklistedClass(throwable)) {
