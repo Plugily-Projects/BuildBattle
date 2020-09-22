@@ -33,6 +33,7 @@ import plugily.projects.buildbattle.arena.ArenaState;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.impl.GuessTheBuildArena;
 import plugily.projects.buildbattle.arena.impl.SoloArena;
+import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.reward.Reward;
 import plugily.projects.buildbattle.utils.Utils;
 
@@ -65,9 +66,12 @@ public class VoteEvents implements Listener {
       return;
     }
 
+    SoloArena sArena = ((SoloArena) arena);
+    Plot plot = sArena.getVotingPlot();
     if (plugin.getVoteItems().getReportItem().equals(e.getItem())) {
-      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.RUN_COMMAND_ON_REPORT)) {
-        ((SoloArena) arena).getVotingPlot().getOwners().forEach(player -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.RUN_COMMAND_ON_REPORT) &&
+          plot != null && plot.getOwners() != null) {
+          plot.getOwners().forEach(player -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
             plugin.getConfig().getString("Run-Command-On-Report.Command", "kick %reported%")
             .replace("%reported%", player.getName()).replace("%reporter%", e.getPlayer().getName())));
         plugin.getRewardsHandler().performReward(e.getPlayer(), Reward.RewardType.REPORT, -1);
@@ -77,7 +81,7 @@ public class VoteEvents implements Listener {
       return;
     }
 
-    if (((SoloArena) arena).getVotingPlot().getOwners().contains(e.getPlayer())) {
+    if (plot != null && plot.getOwners() != null && plot.getOwners().contains(e.getPlayer())) {
       e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Cant-Vote-Own-Plot"));
       e.setCancelled(true);
       return;

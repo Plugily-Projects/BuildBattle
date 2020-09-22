@@ -91,6 +91,10 @@ public class RewardsFactory {
   }
 
   private String formatCommandPlaceholders(String command, BaseArena arena, int place) {
+    if (arena == null) {
+      return command;
+    }
+
     String formatted = command;
     formatted = StringUtils.replace(formatted, "%ARENA-ID%", arena.getID());
     formatted = StringUtils.replace(formatted, "%MAPNAME%", arena.getMapName());

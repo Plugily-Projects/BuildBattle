@@ -427,12 +427,12 @@ public class SoloArena extends BaseArena {
         player = queue.poll();
       }
       if (queue.isEmpty() && getPlotManager().getPlot(player) == null) {
-        setVotingPlot(null);
+        votingPlot = null;
         return;
       }
 
       // getPlotManager().teleportAllToPlot(plotManager.getPlot(player.getUniqueId()));
-      setVotingPlot(getPlotManager().getPlot(player));
+      votingPlot = getPlotManager().getPlot(player);
       String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voting-For-Player-Plot").replace("%PLAYER%", player.getName());
 
       for (Player p : getPlayers()) {
@@ -492,10 +492,6 @@ public class SoloArena extends BaseArena {
    */
   public Plot getVotingPlot() {
     return votingPlot;
-  }
-
-  private void setVotingPlot(Plot buildPlot) {
-    votingPlot = buildPlot;
   }
 
   private void announceResults() {
