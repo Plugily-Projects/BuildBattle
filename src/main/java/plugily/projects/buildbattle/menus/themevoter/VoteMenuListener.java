@@ -134,18 +134,18 @@ public class VoteMenuListener implements Listener {
     if (e.getView().getTitle().equals(plugin.getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Inventory-Name"))) {
       e.setCancelled(true);
       if (e.getCurrentItem().getType() == Material.PAPER) {
-        GTBTheme theme;
+        BBTheme theme;
         String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
         displayName = ChatColor.stripColor(displayName);
         switch (e.getSlot()) {
           case 11:
-            theme = new GTBTheme(displayName, GTBTheme.Difficulty.EASY);
+            theme = new BBTheme(displayName, BBTheme.Difficulty.EASY);
             break;
           case 13:
-            theme = new GTBTheme(displayName, GTBTheme.Difficulty.MEDIUM);
+            theme = new BBTheme(displayName, BBTheme.Difficulty.MEDIUM);
             break;
           case 15:
-            theme = new GTBTheme(displayName, GTBTheme.Difficulty.HARD);
+            theme = new BBTheme(displayName, BBTheme.Difficulty.HARD);
             break;
           default:
             return;

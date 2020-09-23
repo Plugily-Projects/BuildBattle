@@ -18,20 +18,13 @@
 
 package plugily.projects.buildbattle.menus.themevoter;
 
-/**
- * @author Plajer
- * <p>
- * Created at 15.09.2018
- * @deprecated Use {@link BBTheme}
- */
-@Deprecated
-public class GTBTheme {
+public class BBTheme {
 
   private String theme;
   private Difficulty difficulty;
 
-  public GTBTheme(String theme, Difficulty difficulty) {
-    this.theme = theme;
+  public BBTheme(String theme, Difficulty difficulty) {
+    this.theme = theme == null ? "" : theme;
     this.difficulty = difficulty;
   }
 

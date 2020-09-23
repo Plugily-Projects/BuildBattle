@@ -200,7 +200,10 @@ public class SoloArena extends BaseArena {
             String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Game-Started");
             for (Player p : getPlayers()) {
               p.closeInventory();
-              p.teleport(getPlotManager().getPlot(p).getTeleportLocation());
+              if (getPlotManager().getPlot(p) != null) {
+                p.teleport(getPlotManager().getPlot(p).getTeleportLocation());
+              }
+
               p.sendMessage(getPlugin().getChatManager().getPrefix() + message);
             }
           } else {
@@ -517,7 +520,8 @@ public class SoloArena extends BaseArena {
           if (topList.containsKey(i) && !topList.get(i).isEmpty()) {
             message = StringUtils.replace(message, "%place_" + access.toLowerCase() + "%", getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Place-" + access)
                     .replace("%player%", formatWinners(topList.get(i)))
-                    .replace("%number%", String.valueOf(getPlotManager().getPlot(topList.get(i).get(0)).getPoints())));
+                    .replace("%number%", getPlotManager().getPlot(topList.get(i).get(0)) == null ? ""
+                        : String.valueOf(getPlotManager().getPlot(topList.get(i).get(0)).getPoints())));
           } else {
             message = StringUtils.replace(message, "%place_" + access.toLowerCase() + "%", getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Place-" + access)
                     .replace("%player%", "None")
@@ -541,7 +545,7 @@ public class SoloArena extends BaseArena {
           }
           Plot plot = getPlotManager().getPlot(p);
           user.addStat(StatsStorage.StatisticType.WINS, 1);
-          if (plot.getPoints() > user.getStat(StatsStorage.StatisticType.HIGHEST_WIN)) {
+          if (plot != null && plot.getPoints() > user.getStat(StatsStorage.StatisticType.HIGHEST_WIN)) {
             user.setStat(StatsStorage.StatisticType.HIGHEST_WIN, plot.getPoints());
           }
         }
@@ -576,11 +580,12 @@ public class SoloArena extends BaseArena {
           topList.put(rang, buildPlot.getOwners());
           break;
         }
-        if (i > getPlotManager().getPlot(topList.get(rang).get(0)).getPoints()) {
+        Plot plot = getPlotManager().getPlot(topList.get(rang).get(0));
+        if (plot != null && i > plot.getPoints()) {
           moveScore(rang, buildPlot.getOwners());
           break;
         }
-        if (i == getPlotManager().getPlot(topList.get(rang).get(0)).getPoints()) {
+        if (plot != null && i == plot.getPoints()) {
           List<Player> winners = topList.getOrDefault(rang, new ArrayList<>());
           winners.addAll(buildPlot.getOwners());
           topList.put(rang, winners);

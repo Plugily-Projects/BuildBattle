@@ -44,7 +44,7 @@ import plugily.projects.buildbattle.arena.managers.GuessTheBuildScoreboardManage
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.arena.options.ArenaOption;
 import plugily.projects.buildbattle.handlers.reward.Reward;
-import plugily.projects.buildbattle.menus.themevoter.GTBTheme;
+import plugily.projects.buildbattle.menus.themevoter.BBTheme;
 import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.utils.Debugger;
 import plugily.projects.buildbattle.utils.MessageUtils;
@@ -62,7 +62,7 @@ public class GuessTheBuildArena extends BaseArena {
 
   private final List<Player> whoGuessed = new ArrayList<>();
   private int round = 1;
-  private GTBTheme currentTheme;
+  private BBTheme currentTheme;
   private boolean themeSet;
   private boolean nextRoundCooldown = false;
   private Player currentBuilder;
@@ -172,8 +172,8 @@ public class GuessTheBuildArena extends BaseArena {
               type = "HARD";
               break;
           }
-          GTBTheme theme = new GTBTheme(getPlugin().getConfigPreferences().getThemes("Guess-The-Build_" + type)
-                  .get(r.nextInt(getPlugin().getConfigPreferences().getThemes("Guess-The-Build_" + type).size())), GTBTheme.Difficulty.valueOf(type));
+          BBTheme theme = new BBTheme(getPlugin().getConfigPreferences().getThemes("Guess-The-Build_" + type)
+                  .get(r.nextInt(getPlugin().getConfigPreferences().getThemes("Guess-The-Build_" + type).size())), BBTheme.Difficulty.valueOf(type));
           setCurrentTheme(theme);
           setThemeSet(true);
           currentBuilder.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Is-Name")
@@ -481,11 +481,11 @@ public class GuessTheBuildArena extends BaseArena {
     return currentBuilder;
   }
 
-  public GTBTheme getCurrentTheme() {
+  public BBTheme getCurrentTheme() {
     return currentTheme;
   }
 
-  public void setCurrentTheme(GTBTheme currentTheme) {
+  public void setCurrentTheme(BBTheme currentTheme) {
     this.currentTheme = currentTheme;
   }
 

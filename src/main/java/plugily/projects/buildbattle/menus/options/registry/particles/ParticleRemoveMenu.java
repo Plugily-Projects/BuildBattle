@@ -36,7 +36,6 @@ import plugily.projects.buildbattle.arena.managers.plots.Plot;
 /**
  * Created by Tom on 24/08/2015.
  */
-@Deprecated //should be moved
 public class ParticleRemoveMenu {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);

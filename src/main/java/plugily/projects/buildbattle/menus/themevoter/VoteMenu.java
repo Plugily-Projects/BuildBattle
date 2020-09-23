@@ -46,7 +46,6 @@ import plugily.projects.buildbattle.user.User;
  * <p>
  * Created at 07.07.2018
  */
-@Deprecated //not per player inventory, can get bugged
 public class VoteMenu {
 
   private Main plugin = JavaPlugin.getPlugin(Main.class);
