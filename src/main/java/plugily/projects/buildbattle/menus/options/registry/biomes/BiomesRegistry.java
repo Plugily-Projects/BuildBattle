@@ -63,11 +63,11 @@ public class BiomesRegistry {
         break;
       }
       BiomeItem biomeItem = new BiomeItem(new ItemBuilder(XMaterial.matchXMaterial(config
-          .getString(biome + ".material-name").toUpperCase()).get().parseItem())
+          .getString(biome + ".material-name", "bedrock").toUpperCase()).orElse(XMaterial.BEDROCK).parseItem())
           .name(plugin.getChatManager().colorRawMessage(config.getString(biome + ".displayname")))
           .lore(config.getStringList(biome + ".lore")
               .stream().map(lore -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()))
-          .build(), config.getString(biome + ".permission"), XBiome.matchXBiome(biome).get());
+          .build(), config.getString(biome + ".permission"), XBiome.matchXBiome(biome).orElse(XBiome.BADLANDS));
       biomes.add(biomeItem);
       i++;
     }

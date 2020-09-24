@@ -59,6 +59,9 @@ public class WeatherChangeOption {
 
       @Override
       public void onTargetClick(InventoryClickEvent e) {
+        if (e.getCurrentItem() == null)
+          return;
+
         BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
         if (arena == null) {
           return;

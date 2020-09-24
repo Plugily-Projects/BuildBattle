@@ -205,8 +205,8 @@ public class Plot {
       exception.printStackTrace();
     }
 
-    XMaterial.matchXMaterial(plugin.getConfig().getString("Default-Floor-Material-Name", "LOG")
-        .toUpperCase()).ifPresent(m -> changeFloor(m.parseMaterial()));
+    changeFloor(XMaterial.matchXMaterial(plugin.getConfig().getString("Default-Floor-Material-Name", "LOG")
+        .toUpperCase()).orElse(XMaterial.OAK_LOG).parseMaterial());
 
     if (ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_15_R1)) {
       int y;

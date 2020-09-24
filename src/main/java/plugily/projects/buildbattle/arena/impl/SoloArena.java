@@ -452,7 +452,6 @@ public class SoloArena extends BaseArena {
         }
       }
 
-      if (getSpectators().isEmpty()) return;
       for (Player spectator : getSpectators()) {
         spectator.teleport(getVotingPlot().getTeleportLocation());
         spectator.setPlayerWeather(getVotingPlot().getWeatherType());

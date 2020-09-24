@@ -361,6 +361,9 @@ public class GuessTheBuildArena extends BaseArena {
   }
 
   private void openThemeSelectionInventoryToCurrentBuilder() {
+    if (currentBuilder == null)
+      return;
+
     Random r = new Random();
 
     Inventory inv = Bukkit.createInventory(null, 27, getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Inventory-Name"));

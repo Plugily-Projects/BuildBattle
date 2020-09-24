@@ -87,13 +87,12 @@ public class SpecialItemsRegistry {
   private void registerItems() {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "lobbyitems");
     for (String key : config.getKeys(false)) {
-      XMaterial.matchXMaterial(config.getString(key + ".material-name", "BEDROCK").toUpperCase()).ifPresent(mat -> {
-        addItem(new SpecialItem(key, new ItemBuilder(mat.parseItem())
-            .name(plugin.getChatManager().colorRawMessage(config.getString(key + ".displayname")))
-            .lore(config.getStringList(key + ".lore").stream().map(lore -> lore = plugin.getChatManager().colorRawMessage(lore))
-                .collect(Collectors.toList()))
-            .build(), config.getInt(key + ".slot")));
-      });
+      addItem(new SpecialItem(key, new ItemBuilder(XMaterial.matchXMaterial(config.getString(key + ".material-name", "BEDROCK")
+          .toUpperCase()).orElse(XMaterial.BEDROCK).parseItem())
+          .name(plugin.getChatManager().colorRawMessage(config.getString(key + ".displayname")))
+          .lore(config.getStringList(key + ".lore").stream().map(lore -> lore = plugin.getChatManager().colorRawMessage(lore))
+              .collect(Collectors.toList()))
+          .build(), config.getInt(key + ".slot")));
     }
   }
 }

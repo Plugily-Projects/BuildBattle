@@ -19,7 +19,6 @@
 package plugily.projects.buildbattle.arena.vote;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 import org.bukkit.Material;
@@ -56,15 +55,10 @@ public class VoteItems {
         continue;
       }
 
-      ItemStack stack;
-      Optional<XMaterial> s = XMaterial.matchXMaterial(config.getString(key + ".material-name", "BEDROCK").toUpperCase());
-      if (s.isPresent()) {
-        stack = new ItemBuilder(s.get().parseItem())
-            .name(JavaPlugin.getPlugin(Main.class).getChatManager().colorRawMessage(config.getString(key + ".displayname")))
-            .build();
-      } else {
-        stack = XMaterial.BEDROCK.parseItem();
-      }
+      ItemStack stack = new ItemBuilder(XMaterial.matchXMaterial(config.getString(key + ".material-name", "BEDROCK")
+          .toUpperCase()).orElse(XMaterial.BEDROCK).parseItem())
+          .name(JavaPlugin.getPlugin(Main.class).getChatManager().colorRawMessage(config.getString(key + ".displayname")))
+          .build();
 
       if (config.getBoolean(key + ".report-item-function", false)) {
         reportItem = stack;

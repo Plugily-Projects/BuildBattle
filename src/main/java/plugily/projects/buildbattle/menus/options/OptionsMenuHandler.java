@@ -45,7 +45,7 @@ public class OptionsMenuHandler implements Listener {
 
   @EventHandler
   public void onOptionsMenuClick(InventoryClickEvent e) {
-    if (!(e.getWhoClicked() instanceof Player) || e.getInventory() == null || e.getCurrentItem() == null) {
+    if (!(e.getWhoClicked() instanceof Player) || e.getCurrentItem() == null) {
       return;
     }
     if (!Utils.isNamed(e.getCurrentItem()) || !e.getView().getTitle().equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name"))) {
