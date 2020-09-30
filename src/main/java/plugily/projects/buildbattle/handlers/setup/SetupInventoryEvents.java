@@ -87,7 +87,7 @@ public class SetupInventoryEvents implements Listener {
     } else if (name.contains("Team")) {
       arena.setArenaType(BaseArena.ArenaType.TEAM);
       config.set("instances." + arena.getID() + ".gametype", "TEAM");
-    } else if (name.contains("Guess_The_Build")) {
+    } else if (name.contains("Guess The Build")) {
       arena.setArenaType(BaseArena.ArenaType.GUESS_THE_BUILD);
       config.set("instances." + arena.getID() + ".gametype", "GUESS_THE_BUILD");
     }
@@ -177,7 +177,7 @@ public class SetupInventoryEvents implements Listener {
             .lore(ChatColor.GRAY + "2 players per plot")
             .build());
         inv.addItem(new ItemBuilder(Material.NAME_TAG)
-                .name(ChatColor.GREEN + "Guess the build game mode")
+                .name(ChatColor.GREEN + "Guess The Build game mode")
                 .lore(ChatColor.GRAY + "1 player builds and others try to guess it")
                 .build());
         player.openInventory(inv);
