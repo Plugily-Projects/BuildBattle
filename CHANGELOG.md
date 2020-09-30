@@ -33,6 +33,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Fixed player being kicked when trying to join an in-game arena
 * Fixed NPE when trying to teleport players to lobby location 
 * Fixed PlaceholderAPI placeholders not works on scoreboard in guessTheBuild mode
+* Fixed problems with materials 
 * Reworked version checker
 * Improved the tab complete handling
 * Updated PlaceholderAPI dependency
