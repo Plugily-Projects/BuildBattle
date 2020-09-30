@@ -18,7 +18,9 @@
 
 package plugily.projects.buildbattle.events.spectator;
 
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -56,7 +58,7 @@ public class SpectatorEvents implements Listener {
     chatManager = plugin.getChatManager();
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
     spectatorSettingsMenu = new SpectatorSettingsMenu(plugin, chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Inventory-Name"),
-            chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Speed-Name"));
+        chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Speed-Name"));
   }
 
   @EventHandler(priority = EventPriority.HIGH)
@@ -82,10 +84,16 @@ public class SpectatorEvents implements Listener {
   @EventHandler
   public void onSpectatorInteract(PlayerInteractEvent e) {
     if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() != Action.PHYSICAL) {
+
+      if (!plugin.getUserManager().getUser(e.getPlayer()).isSpectator()) {
+        return;
+      }
+
       BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
       if (arena == null) {
         return;
       }
+
       ItemStack stack = e.getPlayer().getInventory().getItemInMainHand();
       if (!stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {
         return;
@@ -104,7 +112,7 @@ public class SpectatorEvents implements Listener {
 
   private void openSpectatorMenu(World world, Player p, BaseArena arena) {
     Inventory inventory = plugin.getServer().createInventory(null, Utils.serializeInt(arena.getPlayers().size()),
-            chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
+        chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
     List<Player> players = arena.getPlayers();
 
     UserManager userManager = plugin.getUserManager();
