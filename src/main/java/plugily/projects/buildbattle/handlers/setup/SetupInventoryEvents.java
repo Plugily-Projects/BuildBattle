@@ -97,7 +97,7 @@ public class SetupInventoryEvents implements Listener {
 
   @EventHandler
   public void onClick(InventoryClickEvent e) {
-    if (e.getWhoClicked().getType() != EntityType.PLAYER) {
+    if (e.getCurrentItem() == null || e.getWhoClicked().getType() != EntityType.PLAYER) {
       return;
     }
     Player player = (Player) e.getWhoClicked();
