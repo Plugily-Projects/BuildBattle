@@ -1,8 +1,8 @@
-main: pl.plajer.buildbattle.Main
+main: plugily.projects.buildbattle.Main
 version: ${project.version}
 name: BuildBattle
 softdepend: [Vault, PlaceholderAPI, Citizens, Parties, Spigot-Party-API-PAF, PartyAndFriends]
-authors: [Tigerpanzer, Plajer, TomTheDeveloper]
+authors: [Tigerpanzer, 2Wild4You, Plajer, TomTheDeveloper]
 api-version: 1.13
 
 commands:

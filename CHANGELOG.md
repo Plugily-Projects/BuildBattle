@@ -9,7 +9,38 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
-### 4.4.0 Release
+### 4.4.1 Release (15.08.2020 - 20.09.2020)
+* (Developer Alert - Class rename)
+* Added spectator mode
+* Added GTB to the SetUp inventory
+* Added arena selector
+* Added support for 1.16 hex colors
+* Fixed NPE when teleporting players to plots
+* Fixed IllegalArgumentException when some particles have "custom class data"
+* Fixed voting plot owners is empty
+* Fixed NoSuchMethodException for player chunk map
+* Fixed NPE during giving rewards to players
+* Fixed LanguageMigrator breaking language.yml
+* Fixed NoClassDefFoundError on pre 1.16 servers
+* Fixed NPE during vote event
+* Fixed votes command
+* Fixed for new 1.16 wall signs
+* Fixed NPE regarding giving rewards to players and resetting the plot areas
+* Fixed when blacklisted items & floor material is not exists and throws errors
+* Fixed async catch from bukkit when performing commands
+* Fixed IllegalPluginAccessException on plugin disable
+* Fixed NPE on Plotreset (GTB)
+* Fixed player being kicked when trying to join an in-game arena
+* Fixed NPE when trying to teleport players to lobby location 
+* Fixed PlaceholderAPI placeholders not works on scoreboard in guessTheBuild mode
+* Fixed problems with materials 
+* Reworked version checker
+* Improved the tab complete handling
+* Updated PlaceholderAPI dependency
+* Updated locales to latest version
+* Added the possibility to change messages of locales on language.yml 
+
+### 4.4.0 Release (01.07.2020 - 29.07.2020)
 * GuessTheBuild release
 * Reworked whole Rewards
 * New file rewards.yml
