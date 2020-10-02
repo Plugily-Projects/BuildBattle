@@ -73,7 +73,7 @@ public class BaseArena extends BukkitRunnable {
   public BaseArena(String id, Main plugin) {
     arenaState = ArenaState.WAITING_FOR_PLAYERS;
     this.plugin = plugin;
-    this.id = id;
+    this.id = id == null ? "" : id;
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
       gameBar = Bukkit.createBossBar(plugin.getChatManager().colorMessage("Bossbar.Waiting-For-Players"), BarColor.BLUE, BarStyle.SOLID);
     }
@@ -174,6 +174,7 @@ public class BaseArena extends BukkitRunnable {
    *
    * @return arena ID
    */
+  @NotNull
   public String getID() {
     return id;
   }
