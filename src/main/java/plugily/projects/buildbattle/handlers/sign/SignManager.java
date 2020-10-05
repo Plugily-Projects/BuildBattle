@@ -172,7 +172,12 @@ public class SignManager implements Listener {
 
   public void loadSigns() {
     arenaSigns.clear();
+
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+    if (config == null || !config.isConfigurationSection("instances")) {
+      return;
+    }
+
     for (String path : config.getConfigurationSection("instances").getKeys(false)) {
       for (String sign : config.getStringList("instances." + path + ".signs")) {
         Location loc = LocationSerializer.getLocation(sign);
