@@ -139,8 +139,10 @@ public class GuessTheBuildArena extends BaseArena {
             Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setGameMode(GameMode.SPECTATOR), 20);
           }
           Plot plot = getPlotManager().getPlot(getPlayers().get(round - 1));
-          for (Player p : getPlayers()) {
-            p.teleport(plot.getTeleportLocation());
+          if (plot.getTeleportLocation() != null) {
+            for (Player p : getPlayers()) {
+              p.teleport(plot.getTeleportLocation());
+            }
           }
           nextRoundCooldown = true;
           Bukkit.getScheduler().runTaskLater(getPlugin(), () -> nextRoundCooldown = false, 20 * getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.DELAYED_TASK, this));
@@ -244,7 +246,9 @@ public class GuessTheBuildArena extends BaseArena {
             openThemeSelectionInventoryToCurrentBuilder();
             Plot plot = getPlotManager().getPlot(getPlayers().get(round - 1));
             for (Player p : getPlayers()) {
-              p.teleport(plot.getTeleportLocation());
+              if (plot.getTeleportLocation() != null) {
+                p.teleport(plot.getTeleportLocation());
+              }
               p.setPlayerWeather(plot.getWeatherType());
               p.setPlayerTime(Plot.Time.format(plot.getTime(), p.getWorld().getTime()), false);
               p.setGameMode(GameMode.SPECTATOR);
@@ -283,7 +287,7 @@ public class GuessTheBuildArena extends BaseArena {
             for (Player player : getPlayers()) {
               User builderUser = getPlugin().getUserManager().getUser(currentBuilder);
               Plot buildPlot = builderUser.getCurrentPlot();
-              if (buildPlot != null && !buildPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
+              if (buildPlot != null && !buildPlot.getCuboid().isInWithMarge(player.getLocation(), 5) && buildPlot.getTeleportLocation() != null) {
                 player.teleport(buildPlot.getTeleportLocation());
                 player.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("In-Game.Messages.Cant-Fly-Outside-Plot"));
               }
