@@ -123,8 +123,8 @@ public class BaseArena extends BukkitRunnable {
    * @param action add or remove a player from boss bar
    * @param p      player
    */
-  public void doBarAction(BarAction action, Player p) {
-    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+  public void doBarAction(@NotNull BarAction action, Player p) {
+    if (p == null || gameBar == null || !plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
       return;
     }
     switch (action) {

@@ -165,13 +165,13 @@ public class GuessTheBuildArena extends BaseArena {
           Random r = new Random();
           String type = "EASY";
           switch (r.nextInt(2 + 1)) {
-            case 0:
-              break;
             case 1:
               type = "MEDIUM";
               break;
             case 2:
               type = "HARD";
+              break;
+            default:
               break;
           }
           BBTheme theme = new BBTheme(getPlugin().getConfigPreferences().getThemes("Guess-The-Build_" + type)
@@ -211,7 +211,7 @@ public class GuessTheBuildArena extends BaseArena {
                 continue;
               }
               if ((getTimer() <= 75 && i == 0) || (getTimer() <= 40 && i == getCurrentTheme().getTheme().length() - 1) || (getTimer() <= 20 && i == 2) || (getTimer() <= 10 && i == 5)) {
-                actionbar.append(getCurrentTheme().getTheme().charAt(i)).append(" ");
+                actionbar.append(getCurrentTheme().getTheme().charAt(i)).append(' ');
                 continue;
               }
               actionbar.append("_ ");
@@ -414,29 +414,6 @@ public class GuessTheBuildArena extends BaseArena {
     getPlugin().getRewardsHandler().performReward(this, Reward.RewardType.END_GAME);
   }
 
-  /**
-   * Executes boss bar action for arena
-   *
-   * @param action add or remove a player from boss bar
-   * @param p      player
-   */
-  @Override
-  public void doBarAction(BarAction action, Player p) {
-    if (!getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-      return;
-    }
-    switch (action) {
-      case ADD:
-        getGameBar().addPlayer(p);
-        break;
-      case REMOVE:
-        getGameBar().removePlayer(p);
-        break;
-      default:
-        break;
-    }
-  }
-
   @Override
   public void updateBossBar() {
     if (!getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
@@ -451,6 +428,8 @@ public class GuessTheBuildArena extends BaseArena {
         break;
       case IN_GAME:
         getGameBar().setTitle(getPlugin().getChatManager().colorMessage("Bossbar.Time-Left").replace("%time%", String.valueOf(getTimer())));
+        break;
+      default:
         break;
     }
   }

@@ -94,6 +94,8 @@ public class ChatManager {
       case LEAVE:
         broadcast(arena, formatMessage(arena, colorMessage("In-Game.Messages.Leave"), p));
         break;
+      default:
+        break;
     }
   }
 
