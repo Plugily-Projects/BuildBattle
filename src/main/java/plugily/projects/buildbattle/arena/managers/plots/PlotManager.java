@@ -18,17 +18,16 @@
 
 package plugily.projects.buildbattle.arena.managers.plots;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import plugily.projects.buildbattle.api.event.plot.BBPlayerPlotReceiveEvent;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -37,7 +36,7 @@ public class PlotManager {
 
   private final List<Plot> plots = new ArrayList<>();
   private final List<Plot> plotsToClear = new ArrayList<>();
-  private BaseArena arena;
+  private final BaseArena arena;
 
   public PlotManager(BaseArena arena) {
     this.arena = arena;

@@ -21,7 +21,6 @@ package plugily.projects.buildbattle.events;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
-
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaManager;
@@ -36,7 +35,7 @@ import plugily.projects.buildbattle.user.User;
  */
 public class QuitEvents implements Listener {
 
-  private Main plugin;
+  private final Main plugin;
 
   public QuitEvents(Main plugin) {
     this.plugin = plugin;

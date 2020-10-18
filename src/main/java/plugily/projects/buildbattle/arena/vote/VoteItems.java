@@ -18,9 +18,6 @@
 
 package plugily.projects.buildbattle.arena.vote;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -28,12 +25,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
-
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.utils.Debugger;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -42,7 +41,7 @@ public class VoteItems {
 
   private static final Set<VoteItem> VOTEITEMS = new HashSet<>();
   private static ItemStack reportItem = new ItemStack(Material.BEDROCK, 32);
-  private static FileConfiguration config = ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "voteItems");
+  private static final FileConfiguration config = ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "voteItems");
 
   public VoteItems() {
     updateVoteItemsConfig();
@@ -125,10 +124,10 @@ public class VoteItems {
 
   public static class VoteItem {
 
-    private ItemStack itemStack;
-    private int slot;
-    private int points;
-    private Sound sound;
+    private final ItemStack itemStack;
+    private final int slot;
+    private final int points;
+    private final Sound sound;
 
     public VoteItem(ItemStack itemStack, int slot, int points, Sound sound) {
       this.itemStack = itemStack;

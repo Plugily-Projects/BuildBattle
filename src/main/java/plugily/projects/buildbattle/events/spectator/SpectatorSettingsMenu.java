@@ -42,7 +42,7 @@ public class SpectatorSettingsMenu implements Listener {
   private final Main plugin;
   private final String inventoryName;
   private final String speedOptionName;
-  private Inventory inv;
+  private final Inventory inv;
 
   public SpectatorSettingsMenu(Main plugin, String inventoryName, String speedOptionName) {
     this.plugin = plugin;
@@ -102,15 +102,15 @@ public class SpectatorSettingsMenu implements Listener {
     ChatManager cm = plugin.getChatManager();
     Inventory inv = Bukkit.createInventory(null, 9 * 3, inventoryName);
     inv.setItem(11, new ItemBuilder(Material.LEATHER_BOOTS)
-            .name(cm.colorRawMessage(speedOptionName + " I")).build());
+        .name(cm.colorRawMessage(speedOptionName + " I")).build());
     inv.setItem(12, new ItemBuilder(Material.CHAINMAIL_BOOTS)
-            .name(cm.colorRawMessage(speedOptionName + " II")).build());
+        .name(cm.colorRawMessage(speedOptionName + " II")).build());
     inv.setItem(13, new ItemBuilder(Material.IRON_BOOTS)
-            .name(cm.colorRawMessage(speedOptionName + " III")).build());
+        .name(cm.colorRawMessage(speedOptionName + " III")).build());
     inv.setItem(14, new ItemBuilder(XMaterial.GOLDEN_BOOTS.parseItem())
-            .name(cm.colorRawMessage(speedOptionName + " IV")).build());
+        .name(cm.colorRawMessage(speedOptionName + " IV")).build());
     inv.setItem(15, new ItemBuilder(Material.DIAMOND_BOOTS)
-            .name(cm.colorRawMessage(speedOptionName + " V")).build());
+        .name(cm.colorRawMessage(speedOptionName + " V")).build());
     return inv;
   }
 

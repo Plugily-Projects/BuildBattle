@@ -177,8 +177,8 @@ public class ArenaRegistry {
             if (config.isSet(s + "plots." + plotName + ".maxpoint") && config.isSet(s + "plots." + plotName + ".minpoint")) {
               Location minPoint = LocationSerializer.getLocation(config.getString(s + "plots." + plotName + ".minpoint"));
               Biome biome = Version.isCurrentHigher(Version.v1_15_R1) ?
-                      minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
-                      : minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
+                  minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
+                  : minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
               Plot buildPlot = new Plot(arena, biome);
               buildPlot.setCuboid(new Cuboid(minPoint, LocationSerializer.getLocation(config.getString(s + "plots." + plotName + ".maxpoint"))));
               buildPlot.fullyResetPlot();

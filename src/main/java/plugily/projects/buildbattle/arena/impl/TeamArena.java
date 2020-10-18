@@ -19,7 +19,7 @@
 package plugily.projects.buildbattle.arena.impl;
 
 import com.google.common.collect.Lists;
-
+import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
@@ -29,8 +29,6 @@ import plugily.projects.buildbattle.utils.Debugger;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.bukkit.entity.Player;
 
 /**
  * @author Plajer
@@ -95,13 +93,13 @@ public class TeamArena extends SoloArena {
       for (Player player : getPlayers()) {
         int points = getPlugin().getUserManager().getUser(player).getStat(StatsStorage.StatisticType.LOCAL_POINTS);
         //no vote made, in this case make it a good vote
-        if(points == 0) {
+        if (points == 0) {
           points = 3;
         }
         getVotingPlot().setPoints(getVotingPlot().getPoints() + points);
         getPlugin().getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
       }
-      if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER)){
+      if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER)) {
         String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voted-For-Player-Plot").replace("%PLAYER%", getVotingPlot().getOwners().get(0).getName());
         for (Player p : getPlayers()) {
           String owner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");

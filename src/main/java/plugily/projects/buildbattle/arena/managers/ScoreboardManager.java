@@ -24,16 +24,9 @@ import me.tigerhix.lib.scoreboard.common.EntryBuilder;
 import me.tigerhix.lib.scoreboard.type.Entry;
 import me.tigerhix.lib.scoreboard.type.Scoreboard;
 import me.tigerhix.lib.scoreboard.type.ScoreboardHandler;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaState;
@@ -42,6 +35,11 @@ import plugily.projects.buildbattle.arena.impl.SoloArena;
 import plugily.projects.buildbattle.handlers.language.LanguageManager;
 import plugily.projects.buildbattle.user.User;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author Plajer
  * <p>
@@ -49,11 +47,11 @@ import plugily.projects.buildbattle.user.User;
  */
 public class ScoreboardManager {
 
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
   private final Map<String, List<String>> scoreboardContents = new HashMap<>();
   private final List<Scoreboard> scoreboards = new ArrayList<>();
-  private String boardTitle = plugin.getChatManager().colorMessage("Scoreboard.Title");
-  private BaseArena arena;
+  private final String boardTitle = plugin.getChatManager().colorMessage("Scoreboard.Title");
+  private final BaseArena arena;
 
   public ScoreboardManager(BaseArena arena) {
     this.arena = arena;
@@ -166,7 +164,7 @@ public class ScoreboardManager {
     return returnString;
   }
 
-  public String replaceValues(String string){
+  public String replaceValues(String string) {
     String returnString = string;
     returnString = StringUtils.replace(returnString, "%MIN_PLAYERS%", Integer.toString(arena.getMinimumPlayers()));
     returnString = StringUtils.replace(returnString, "%MAX_PLAYERS%", Integer.toString(arena.getMaximumPlayers()));

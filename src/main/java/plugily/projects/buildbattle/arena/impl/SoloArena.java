@@ -23,7 +23,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
@@ -518,13 +517,13 @@ public class SoloArena extends BaseArena {
         if (message.contains("%place_" + access.toLowerCase() + "%")) {
           if (topList.containsKey(i) && !topList.get(i).isEmpty()) {
             message = StringUtils.replace(message, "%place_" + access.toLowerCase() + "%", getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Place-" + access)
-                    .replace("%player%", formatWinners(topList.get(i)))
-                    .replace("%number%", getPlotManager().getPlot(topList.get(i).get(0)) == null ? ""
-                        : String.valueOf(getPlotManager().getPlot(topList.get(i).get(0)).getPoints())));
+                .replace("%player%", formatWinners(topList.get(i)))
+                .replace("%number%", getPlotManager().getPlot(topList.get(i).get(0)) == null ? ""
+                    : String.valueOf(getPlotManager().getPlot(topList.get(i).get(0)).getPoints())));
           } else {
             message = StringUtils.replace(message, "%place_" + access.toLowerCase() + "%", getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Place-" + access)
-                    .replace("%player%", "None")
-                    .replace("%number%", "none"));
+                .replace("%player%", "None")
+                .replace("%number%", "none"));
           }
         }
       }
