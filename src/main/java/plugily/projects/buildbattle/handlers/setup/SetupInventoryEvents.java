@@ -123,6 +123,10 @@ public class SetupInventoryEvents implements Listener {
     String locationString = player.getLocation().getWorld().getName() + "," + player.getLocation().getX() + "," + player.getLocation().getY() + "," +
         player.getLocation().getZ() + "," + player.getLocation().getYaw() + ",0.0";
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+    if (config == null) {
+      return;
+    }
+
     switch (slot) {
       case SET_ENDING:
         config.set("instances." + arena.getID() + ".Endlocation", locationString);

@@ -110,6 +110,8 @@ public class ConfigPreferences {
 
   private void loadBlackList() {
     for (String item : plugin.getConfig().getStringList("Blacklisted-Item-Names")) {
+      item = item.toUpperCase();
+
       if (!XMaterial.matchXMaterial(item).isPresent()) {
         Debugger.sendConsoleMsg("&c[BuildBattle] Invalid black listed item! " + item + " doesn't exist, are you sure it's properly named?");
         continue;
@@ -119,12 +121,14 @@ public class ConfigPreferences {
     }
 
     for (String item : plugin.getConfig().getStringList("Blacklisted-Floor-Materials")) {
+      item = item.toUpperCase();
+
       if (!XMaterial.matchXMaterial(item).isPresent()) {
           Debugger.sendConsoleMsg("&c[BuildBattle] Invalid black listed item! " + item + " doesn't exist, are you sure it's properly named?");
           continue;
         }
 
-        XMaterial.matchXMaterial(item).ifPresent(mat -> floorBlacklist.add(mat.parseMaterial()));
+        floorBlacklist.add(XMaterial.matchXMaterial(item).get().parseMaterial());
     }
   }
 

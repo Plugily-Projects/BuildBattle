@@ -436,7 +436,7 @@ public class GameEvents implements Listener {
     if (arena == null) {
       return;
     }
-    if (arena.getArenaState() != ArenaState.IN_GAME || arena instanceof SoloArena && ((SoloArena) arena).isVoting()
+    if (arena.getArenaState() != ArenaState.IN_GAME || (arena instanceof SoloArena && ((SoloArena) arena).isVoting())
         || plugin.getConfigPreferences().getItemBlacklist().contains(e.getBlock().getType())) {
       e.setCancelled(true);
       return;
@@ -465,8 +465,7 @@ public class GameEvents implements Listener {
       e.setCancelled(true);
       return;
     }
-    if (arena instanceof GuessTheBuildArena && ((GuessTheBuildArena) arena).getCurrentBuilder() != null
-        && !((GuessTheBuildArena) arena).getCurrentBuilder().equals(e.getPlayer())) {
+    if (arena instanceof GuessTheBuildArena && !e.getPlayer().equals(((GuessTheBuildArena) arena).getCurrentBuilder())) {
       e.setCancelled(true);
       return;
     }

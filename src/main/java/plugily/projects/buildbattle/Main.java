@@ -74,7 +74,6 @@ import plugily.projects.buildbattle.utils.services.ServiceRegistry;
  */
 //todo setup handler recode
 //todo arenas handler recode
-//todo new debugger
 //todo inventoryframework
 public class Main extends JavaPlugin {
 
@@ -275,9 +274,9 @@ public class Main extends JavaPlugin {
         for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
           if (!stat.isPersistent()) continue;
           if (update.toString().equalsIgnoreCase(" SET ")) {
-            update.append(stat.getName()).append("=").append(user.getStat(stat));
+            update.append(stat.getName()).append('=').append(user.getStat(stat));
           }
-          update.append(", ").append(stat.getName()).append("=").append(user.getStat(stat));
+          update.append(", ").append(stat.getName()).append('=').append(user.getStat(stat));
         }
         String finalUpdate = update.toString();
         //copy of userManager#saveStatistic but without async database call that's not allowed in onDisable method.
