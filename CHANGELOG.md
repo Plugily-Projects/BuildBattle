@@ -11,6 +11,8 @@ That's all, matcher will stop when detects next line started with `###` match
 
 ### 4.4.2 Release
 * Fixed spectators are able to damage entities
+* Fix NPE related to arenas config not loaded correctly
+* Now you can disable spectators from joining into game
 
 ### 4.4.1 Release (15.08.2020 - 20.09.2020)
 * (Developer Alert - Class rename)

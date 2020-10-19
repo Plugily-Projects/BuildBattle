@@ -314,8 +314,8 @@ public class BaseArena extends BukkitRunnable {
 
   public void teleportAllToEndLocation() {
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
-      getPlayers().forEach(plugin.getBungeeManager()::connectToHub);
-      getSpectators().forEach(plugin.getBungeeManager()::connectToHub);
+      players.forEach(plugin.getBungeeManager()::connectToHub);
+      spectators.forEach(plugin.getBungeeManager()::connectToHub);
       return;
     }
 
@@ -326,10 +326,10 @@ public class BaseArena extends BukkitRunnable {
     }
 
     if (location != null) {
-      for (Player player : getPlayers()) {
+      for (Player player : players) {
         player.teleport(location);
       }
-      for (Player player : getSpectators()) {
+      for (Player player : spectators) {
         player.teleport(location);
       }
     }

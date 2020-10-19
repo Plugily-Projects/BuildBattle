@@ -89,11 +89,9 @@ public class SpectatorEvents implements Listener {
     if (!(event.getDamager() instanceof Player)) return;
 
     Player player = (Player) event.getDamager();
-    if (!plugin.getUserManager().getUser(player).isSpectator()) {
-      return;
+    if (plugin.getUserManager().getUser(player).isSpectator()) {
+      event.setCancelled(true);
     }
-
-    event.setCancelled(true);
   }
 
   @EventHandler
@@ -121,7 +119,6 @@ public class SpectatorEvents implements Listener {
       } else if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name"))) {
         spectatorSettingsMenu.openSpectatorSettingsMenu(e.getPlayer());
       }
-
     }
   }
 
@@ -193,10 +190,12 @@ public class SpectatorEvents implements Listener {
       return;
     }
 
-    if ((arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.STARTING)
-        && (!pl.getAllowFlight() || !pl.isFlying())) {
-      pl.setAllowFlight(true);
-      pl.setFlying(true);
-    }
+    Bukkit.getScheduler().runTaskLater(plugin, () -> {
+      if (arena.getArenaState() == ArenaState.IN_GAME) {
+        pl.setAllowFlight(true);
+      } else {
+        pl.setFlying(false);
+      }
+    }, 5L);
   }
 }

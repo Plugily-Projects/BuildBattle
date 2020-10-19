@@ -125,6 +125,11 @@ public class ArenaManager {
       }
     }
 
+    if ((arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING)
+        && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SPECTATORS)) {
+      return;
+    }
+
     if (arena.getArenaState() == ArenaState.RESTARTING) {
       if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
         player.kickPlayer(chatManager.getPrefix() + chatManager.colorMessage("Commands.Arena-Restarting"));
@@ -174,7 +179,10 @@ public class ArenaManager {
 
     //Set player as spectator as the game is already started
     SpecialItem leaveItem = plugin.getSpecialItemsRegistry().getSpecialItem("Leave");
-    if ((arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING)) {
+    if (arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
+      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SPECTATORS)) {
+        return;
+      }
 
       arena.addSpectator(player);
 
