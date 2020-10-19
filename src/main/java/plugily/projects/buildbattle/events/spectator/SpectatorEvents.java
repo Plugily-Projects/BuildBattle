@@ -28,6 +28,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -35,6 +36,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
+import plugily.projects.buildbattle.arena.ArenaState;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.handlers.ChatManager;
 import plugily.projects.buildbattle.user.UserManager;
@@ -164,5 +166,24 @@ public class SpectatorEvents implements Listener {
     p.sendMessage(chatManager.formatMessage(arena, chatManager.colorMessage("Commands.Admin-Commands.Teleported-To-Player"), target));
     p.teleport(target);
     p.closeInventory();
+  }
+
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void playerChangedWorld(PlayerChangedWorldEvent event) {
+    Player pl = event.getPlayer();
+    if (!plugin.getUserManager().getUser(pl).isSpectator()) {
+      return;
+    }
+
+    BaseArena arena = ArenaRegistry.getArena(pl);
+    if (arena == null) {
+      return;
+    }
+
+    if ((arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.STARTING)
+        && (!pl.getAllowFlight() || !pl.isFlying())) {
+      pl.setAllowFlight(true);
+      pl.setFlying(true);
+    }
   }
 }

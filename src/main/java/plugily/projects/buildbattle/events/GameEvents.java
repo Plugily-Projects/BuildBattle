@@ -93,7 +93,6 @@ public class GameEvents implements Listener {
     }
   }
 
-
   @EventHandler
   public void onOpenOptionMenu(PlayerInteractEvent e) {
     if (e.getHand() == EquipmentSlot.OFF_HAND || e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK || e.getAction() == Action.PHYSICAL) {

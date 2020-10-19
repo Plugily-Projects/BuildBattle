@@ -18,8 +18,10 @@
 
 package plugily.projects.buildbattle.events;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
@@ -44,15 +46,21 @@ public class QuitEvents implements Listener {
 
   @EventHandler
   public void onQuit(PlayerQuitEvent e) {
-    BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
-    if (arena != null && !plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-      ArenaManager.leaveAttempt(e.getPlayer(), arena);
-    }
+    onQuit(e.getPlayer());
   }
 
   @EventHandler
-  public void onQuitSaveStats(PlayerQuitEvent e) {
-    User user = plugin.getUserManager().getUser(e.getPlayer());
+  public void onKick(PlayerKickEvent e) {
+    onQuit(e.getPlayer());
+  }
+
+  private void onQuit(Player player) {
+    BaseArena arena = ArenaRegistry.getArena(player);
+    if (arena != null && !plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+      ArenaManager.leaveAttempt(player, arena);
+    }
+
+    User user = plugin.getUserManager().getUser(player);
     plugin.getUserManager().saveAllStatistic(user);
     plugin.getUserManager().removeUser(user);
   }
