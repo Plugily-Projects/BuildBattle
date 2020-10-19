@@ -179,7 +179,7 @@ public class ConfigPreferences {
     INVENTORY_MANAGER_ENABLED("InventoryManager", true), BLOCK_COMMANDS_IN_GAME("Block-Commands-In-Game", true), REWARDS("Rewards-Enabled", false),
     HEADS_COMMAND("Command-Instead-Of-Head-Menu.Enabled",false), ENABLE_SHORT_COMMANDS("Enable-Short-Commands", false),
     DISABLE_SEPARATE_CHAT("Disable-Separate-Chat", false), DISABLE_PARTIES("Disable-Parties", true), ANNOUNCE_PLOTOWNER_LATER("Announce-PlotOwner-Later", false),
-    RUN_COMMAND_ON_REPORT("Run-Command-On-Report.Enabled", false), DISABLE_SPECTATORS("DisableSpectators", false);
+    RUN_COMMAND_ON_REPORT("Run-Command-On-Report.Enabled", false), DISABLE_SPECTATORS("Disable-Spectators", false);
 
     private String path;
     private boolean def;

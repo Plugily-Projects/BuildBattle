@@ -210,7 +210,7 @@ Signs-Block-States-Enabled: true
 Disable-Separate-Chat: false
 
 # With this true, players couldn't join to the game and can't switch to spectator.
-DisableSpectators: false
+Disable-Spectators: false
 
 Update-Notifier:
   # Should we check for updates on plugin start/after admin join?
