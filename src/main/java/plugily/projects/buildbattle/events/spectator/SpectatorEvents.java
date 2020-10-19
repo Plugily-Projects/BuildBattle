@@ -190,6 +190,7 @@ public class SpectatorEvents implements Listener {
       return;
     }
 
+    // Multiverse flight bug workaround
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
       if (arena.getArenaState() == ArenaState.IN_GAME) {
         pl.setAllowFlight(true);
