@@ -26,6 +26,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
@@ -69,7 +70,7 @@ public class SpectatorEvents implements Listener {
       return;
     }
     Player player = (Player) event.getEntity();
-    if (!plugin.getUserManager().getUser(player).isSpectator() || ArenaRegistry.getArena(player) == null) {
+    if (!plugin.getUserManager().getUser(player).isSpectator()) {
       return;
     }
 
@@ -81,6 +82,18 @@ public class SpectatorEvents implements Listener {
         player.teleport(arena.getPlotManager().getPlots().get(0).getTeleportLocation());
       }
     }
+  }
+
+  @EventHandler
+  public void onEntityDamage(EntityDamageByEntityEvent event) {
+    if (!(event.getDamager() instanceof Player)) return;
+
+    Player player = (Player) event.getDamager();
+    if (!plugin.getUserManager().getUser(player).isSpectator()) {
+      return;
+    }
+
+    event.setCancelled(true);
   }
 
   @EventHandler

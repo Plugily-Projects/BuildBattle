@@ -9,6 +9,9 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+### 4.4.2 Release
+* Fixed spectators are able to damage entities
+
 ### 4.4.1 Release (15.08.2020 - 20.09.2020)
 * (Developer Alert - Class rename)
 * Added spectator mode
