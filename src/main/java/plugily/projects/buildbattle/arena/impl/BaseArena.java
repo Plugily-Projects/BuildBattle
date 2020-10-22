@@ -291,6 +291,8 @@ public class BaseArena extends BukkitRunnable {
       plugin.getServer().getPluginManager().callEvent(gameChangeStateEvent);
     }
 
+    plugin.getSignManager().updateSigns();
+
     this.arenaState = arenaState;
   }
 
