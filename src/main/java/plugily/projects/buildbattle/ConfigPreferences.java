@@ -177,7 +177,7 @@ public class ConfigPreferences {
   public enum Option {
     BOSSBAR_ENABLED("Boss-Bar-Enabled", true), BUNGEE_ENABLED("BungeeActivated", false), DATABASE_ENABLED("DatabaseActivated", false),
     INVENTORY_MANAGER_ENABLED("InventoryManager", true), BLOCK_COMMANDS_IN_GAME("Block-Commands-In-Game", true), REWARDS("Rewards-Enabled", false),
-    HEADS_COMMAND("Command-Instead-Of-Head-Menu.Enabled",false), ENABLE_SHORT_COMMANDS("Enable-Short-Commands", false),
+    HEADS_COMMAND("Command-Instead-Of-Head-Menu.Enabled", false), ENABLE_SHORT_COMMANDS("Enable-Short-Commands", false),
     DISABLE_SEPARATE_CHAT("Disable-Separate-Chat", false), DISABLE_PARTIES("Disable-Parties", true), ANNOUNCE_PLOTOWNER_LATER("Announce-PlotOwner-Later", false),
     RUN_COMMAND_ON_REPORT("Run-Command-On-Report.Enabled", false), DISABLE_SPECTATORS("Disable-Spectators", false);
 

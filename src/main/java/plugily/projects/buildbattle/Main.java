@@ -128,7 +128,7 @@ public class Main extends JavaPlugin {
 
     ServiceRegistry.registerService(this);
     exceptionLogHandler = new ExceptionLogHandler(this);
-    Debugger.setEnabled(getDescription().getVersion().contains("b") || getConfig().getBoolean("Debug", false));
+    Debugger.setEnabled(getDescription().getVersion().contains("b") || getConfig().getBoolean("Debug"));
     Debugger.debug("Main setup started");
     saveDefaultConfig();
     for (String s : Arrays.asList("arenas", "particles", "lobbyitems", "stats", "voteItems", "mysql", "biomes", "bungee", "rewards")) {

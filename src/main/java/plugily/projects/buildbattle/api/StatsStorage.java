@@ -77,7 +77,7 @@ public class StatsStorage {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
     Map<UUID, Integer> stats = new TreeMap<>();
     for (String string : config.getKeys(false)) {
-      if (string.equals("data-version")) {
+      if ("data-version".equals(string)) {
         continue;
       }
       stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));

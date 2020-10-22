@@ -35,6 +35,7 @@ import org.bukkit.inventory.meta.BannerMeta;
 
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.utils.Utils;
@@ -67,6 +68,7 @@ public class BannerMenu {
     BannerMenu.plugin = plugin;
   }
 
+  @SuppressWarnings("deprecation")
   private void prepareBaseStageGui() {
     Gui gui = new Gui(plugin, 6, plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Banner-Creator.Inventories.Color-Choose"));
     OutlinePane pane = new OutlinePane(1, 1, 7, 3);
@@ -75,7 +77,11 @@ public class BannerMenu {
       if (ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {
         item = XMaterial.WHITE_BANNER.parseItem();
         BannerMeta meta = (BannerMeta) item.getItemMeta();
-        meta.setBaseColor(color);
+        if (Version.isCurrentEqualOrLower(Version.v1_12_R1)) {
+            meta.setBaseColor(color);
+        } else {
+          ((org.bukkit.block.Banner) item).setBaseColor(color);
+        }
         item.setItemMeta(meta);
       } else {
         String banner = color.toString().toUpperCase() + "_BANNER";
