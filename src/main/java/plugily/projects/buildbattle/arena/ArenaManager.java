@@ -149,7 +149,7 @@ public class ArenaManager {
         if (loopPlayer.hasPermission(PermissionManager.getJoinFullGames())) {
           continue;
         }
-        ArenaManager.leaveAttempt(loopPlayer, arena);
+        leaveAttempt(loopPlayer, arena);
         loopPlayer.sendMessage(chatManager + chatManager.colorMessage("In-Game.Messages.Lobby-Messages.You-Were-Kicked-For-Premium-Slot"));
         chatManager.broadcast(arena, chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Kicked-For-Premium-Slot"), loopPlayer));
         foundSlot = true;
@@ -223,6 +223,7 @@ public class ArenaManager {
     player.updateInventory();
 
     chatManager.broadcastAction(arena, player, ChatManager.ActionType.JOIN);
+    plugin.getSignManager().updateSigns();
   }
 
   /**
@@ -309,6 +310,8 @@ public class ArenaManager {
       arena.setArenaState(ArenaState.RESTARTING);
       arena.setTimer(0);
     }
+
+    plugin.getSignManager().updateSigns();
   }
 
   /**
