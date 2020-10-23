@@ -200,9 +200,10 @@ public class Main extends JavaPlugin {
     userManager = new UserManager(this);
     PermissionManager.init();
     new SetupInventoryEvents(this);
-    ArenaRegistry.registerArenas();
-    //load signs after arenas
     signManager = new SignManager(this);
+    ArenaRegistry.registerArenas();
+    signManager.loadSigns();
+    signManager.updateSigns();
     specialItemsRegistry = new SpecialItemsRegistry(this);
     voteItems = new VoteItems();
     new VoteEvents(this);

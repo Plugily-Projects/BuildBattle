@@ -72,8 +72,6 @@ public class SignManager implements Listener {
     gameStateToString.put(ArenaState.RESTARTING, plugin.getChatManager().colorMessage("Signs.Game-States.Restarting"));
     signLines = LanguageManager.getLanguageList("Signs.Lines");
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    loadSigns();
-    updateSigns();
   }
 
   @EventHandler

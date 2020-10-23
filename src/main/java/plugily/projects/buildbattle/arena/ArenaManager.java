@@ -49,6 +49,7 @@ import plugily.projects.buildbattle.handlers.items.SpecialItem;
 import plugily.projects.buildbattle.handlers.party.GameParty;
 import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.utils.Debugger;
+import plugily.projects.buildbattle.utils.NMS;
 
 /**
  * @author Plajer
@@ -198,7 +199,7 @@ public class ArenaManager {
       player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0));
 
       //Hide player from other players
-      arena.getPlayers().forEach(onlinePlayer -> onlinePlayer.hidePlayer(player));
+      arena.getPlayers().forEach(onlinePlayer -> NMS.hidePlayer(onlinePlayer, player));
 
       user.setSpectator(true);
       player.setCollidable(false);
@@ -208,9 +209,9 @@ public class ArenaManager {
 
       for (Player spectator : arena.getPlayers()) {
         if (plugin.getUserManager().getUser(spectator).isSpectator()) {
-          player.hidePlayer(spectator);
+          NMS.hidePlayer(player, spectator);
         } else {
-          player.showPlayer(spectator);
+          NMS.showPlayer(player, spectator);
         }
       }
       return;
@@ -265,9 +266,9 @@ public class ArenaManager {
 
     for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
       if (ArenaRegistry.getArena(onlinePlayer) == null) {
-        onlinePlayer.showPlayer(player);
+        NMS.showPlayer(onlinePlayer, player);
       }
-      player.showPlayer(onlinePlayer);
+      NMS.showPlayer(player, onlinePlayer);
     }
 
     // Spectator
