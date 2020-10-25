@@ -177,26 +177,4 @@ public class SpectatorEvents implements Listener {
     p.teleport(target);
     p.closeInventory();
   }
-
-  @EventHandler(priority = EventPriority.HIGHEST)
-  public void playerChangedWorld(PlayerChangedWorldEvent event) {
-    Player pl = event.getPlayer();
-    if (!plugin.getUserManager().getUser(pl).isSpectator()) {
-      return;
-    }
-
-    BaseArena arena = ArenaRegistry.getArena(pl);
-    if (arena == null) {
-      return;
-    }
-
-    // Multiverse flight bug workaround
-    Bukkit.getScheduler().runTaskLater(plugin, () -> {
-      if (arena.getArenaState() == ArenaState.IN_GAME) {
-        pl.setAllowFlight(true);
-      } else {
-        pl.setFlying(false);
-      }
-    }, 5L);
-  }
 }
