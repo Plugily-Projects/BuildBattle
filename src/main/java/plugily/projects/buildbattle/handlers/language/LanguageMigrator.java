@@ -40,7 +40,7 @@ import plugily.projects.buildbattle.utils.MessageUtils;
 public class LanguageMigrator {
 
   public static final int LANGUAGE_FILE_VERSION = 18;
-  public static final int CONFIG_FILE_VERSION = 15;
+  public static final int CONFIG_FILE_VERSION = 16;
   private final List<String> migratable = Arrays.asList("bungee", "config", "language", "mysql");
   private final Main plugin;
 

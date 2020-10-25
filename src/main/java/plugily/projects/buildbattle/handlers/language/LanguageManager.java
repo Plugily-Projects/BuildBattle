@@ -192,26 +192,34 @@ public class LanguageManager {
 
 
   private static List<String> getStrings(String path) {
-    if (!languageConfig.isSet(path)) {
-      Debugger.sendConsoleMsg("&c[BuildBattle] Game message not found in your locale!");
-      Debugger.sendConsoleMsg("&c[BuildBattle] Please regenerate your language.yml file! If error still occurs report it to the developer on discord!");
-      Debugger.sendConsoleMsg("&c[BuildBattle] Path: " + path);
-      return Collections.singletonList("ERR_MESSAGE_" + path + "_NOT_FOUND");
+    FileConfiguration language = languageConfig;
+    if (!language.isSet(path)) {
+      language = defaultLanguageConfig;
+      if (!language.isSet(path)){
+          Debugger.sendConsoleMsg("&c[BuildBattle] Game message not found in your locale!");
+          Debugger.sendConsoleMsg("&c[BuildBattle] Please regenerate your language.yml file! If error still occurs report it to the developer on discord!");
+          Debugger.sendConsoleMsg("&c[BuildBattle] Path: " + path);
+          return Collections.singletonList("ERR_MESSAGE_" + path + "_NOT_FOUND");
+      }
     }
-    List<String> list = languageConfig.getStringList(path);
+    List<String> list = language.getStringList(path);
     list = list.stream().map(string -> plugin.getChatManager().colorRawMessage(string)).collect(Collectors.toList());
     return list;
   }
 
 
   private static String getString(String path) {
-    if (!languageConfig.isSet(path)) {
-      Debugger.sendConsoleMsg("&c[BuildBattle] Game message not found in your locale!");
-      Debugger.sendConsoleMsg("&c[BuildBattle] Please regenerate your language.yml file! If error still occurs report it to the developer on discord!");
-      Debugger.sendConsoleMsg("&c[BuildBattle] Path: " + path);
-      return "ERR_MESSAGE_" + path + "_NOT_FOUND";
-    }
-    return languageConfig.getString(path, "not found");
+      FileConfiguration language = languageConfig;
+      if (!language.isSet(path)) {
+          language = defaultLanguageConfig;
+          if (!language.isSet(path)){
+            Debugger.sendConsoleMsg("&c[BuildBattle] Game message not found in your locale!");
+            Debugger.sendConsoleMsg("&c[BuildBattle] Please regenerate your language.yml file! If error still occurs report it to the developer on discord!");
+            Debugger.sendConsoleMsg("&c[BuildBattle] Path: " + path);
+            return "ERR_MESSAGE_" + path + "_NOT_FOUND";
+        }
+      }
+    return language.getString(path, "not found");
   }
 
   public static Locale getPluginLocale() {
