@@ -358,7 +358,7 @@ public class SoloArena extends BaseArena {
         setThemeVoteTime(true);
         voteMenu.resetPoll();
         if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-          if (ConfigUtils.getConfig(getPlugin(), "bungee").getBoolean("Shutdown-When-Game-Ends", false)) {
+          if (ConfigUtils.getConfig(getPlugin(), "bungee").getBoolean("Shutdown-When-Game-Ends")) {
             getPlugin().getServer().shutdown();
           }
           ArenaRegistry.shuffleBungeeArena();
@@ -608,7 +608,7 @@ public class SoloArena extends BaseArena {
   @Override
   public void giveRewards() {
     for (int i = 1; i <= topList.size(); i++) {
-      if (!topList.containsKey(i) || topList.get(i).isEmpty()) {
+      if (!topList.containsKey(i)) {
         continue;
       }
       for (Player player : topList.get(i)) {

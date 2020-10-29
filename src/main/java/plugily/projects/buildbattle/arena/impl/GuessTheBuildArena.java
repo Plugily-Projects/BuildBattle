@@ -351,7 +351,7 @@ public class GuessTheBuildArena extends BaseArena {
         setThemeSet(false);
         setCurrentTheme(null);
         if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-          if (ConfigUtils.getConfig(getPlugin(), "bungee").getBoolean("Shutdown-When-Game-Ends", false)) {
+          if (ConfigUtils.getConfig(getPlugin(), "bungee").getBoolean("Shutdown-When-Game-Ends")) {
             getPlugin().getServer().shutdown();
           }
           ArenaRegistry.shuffleBungeeArena();
@@ -402,7 +402,7 @@ public class GuessTheBuildArena extends BaseArena {
 
   @Override
   public void giveRewards() {
-    List<Map.Entry<Player, Integer>> list = new ArrayList<>(getPlayersPoints().entrySet());
+    List<Map.Entry<Player, Integer>> list = new ArrayList<>(playersPoints.entrySet());
     for (int i = 0; i <= list.size(); i++) {
       if (list.size() - 1 < i) {
         continue;

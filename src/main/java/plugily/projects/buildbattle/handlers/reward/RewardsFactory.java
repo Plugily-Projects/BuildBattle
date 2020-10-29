@@ -57,10 +57,6 @@ public class RewardsFactory {
       return;
     }
 
-    ScriptEngine engine = new ScriptEngine();
-    engine.setValue("player", player);
-    engine.setValue("server", Bukkit.getServer());
-    engine.setValue("arena", arena);
     for (Reward reward : rewards) {
       if (reward.getType() == type) {
         if (reward.getPlace() != -1 && reward.getPlace() != place) {
@@ -81,6 +77,10 @@ public class RewardsFactory {
             player.performCommand(command);
             break;
           case SCRIPT:
+            ScriptEngine engine = new ScriptEngine();
+            engine.setValue("player", player);
+            engine.setValue("server", Bukkit.getServer());
+            engine.setValue("arena", arena);
             engine.execute(command);
             break;
           default:
