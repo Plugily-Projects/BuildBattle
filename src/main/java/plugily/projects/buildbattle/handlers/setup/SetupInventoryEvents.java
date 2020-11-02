@@ -163,6 +163,7 @@ public class SetupInventoryEvents implements Listener {
           break;
         }
         plugin.getSignManager().getArenaSigns().add(new ArenaSign((Sign) location.getBlock().getState(), arena));
+        plugin.getSignManager().updateSigns();
         player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Sign-Created"));
         String loc = location.getBlock().getWorld().getName() + "," + location.getBlock().getX() + "," + location.getBlock().getY() + "," + location.getBlock().getZ() + ",0.0,0.0";
         List<String> locs = config.getStringList("instances." + arena.getID() + ".signs");
@@ -290,9 +291,11 @@ public class SetupInventoryEvents implements Listener {
         }
         ArenaRegistry.registerArena(arena);
         arena.start();
+        plugin.getSignManager().getArenaSigns().clear();
         for (Sign s : signsToUpdate) {
           plugin.getSignManager().getArenaSigns().add(new ArenaSign(s, arena));
         }
+        plugin.getSignManager().updateSigns();
         break;
       case EXTRAS_AD:
         player.sendMessage(plugin.getChatManager().getPrefix()
