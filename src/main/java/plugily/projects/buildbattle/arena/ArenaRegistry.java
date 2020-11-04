@@ -120,21 +120,17 @@ public class ArenaRegistry {
         continue;
       }
 
-      if (!config.contains(s + "gametype")) {
-        arena = new SoloArena(id, plugin);
-      } else {
-        switch (BaseArena.ArenaType.valueOf(config.getString(s + "gametype").toUpperCase())) {
-          case TEAM:
-            arena = new TeamArena(id, plugin);
-            break;
-          case GUESS_THE_BUILD:
-            arena = new GuessTheBuildArena(id, plugin);
-            break;
-          case SOLO:
-          default:
-            arena = new SoloArena(id, plugin);
-            break;
-        }
+      switch (BaseArena.ArenaType.valueOf(config.getString(s + "gametype", "solo").toUpperCase())) {
+        case TEAM:
+          arena = new TeamArena(id, plugin);
+          break;
+        case GUESS_THE_BUILD:
+          arena = new GuessTheBuildArena(id, plugin);
+          break;
+        case SOLO:
+        default:
+          arena = new SoloArena(id, plugin);
+          break;
       }
 
       if (config.contains(s + "minimumplayers")) {

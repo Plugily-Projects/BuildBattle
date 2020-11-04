@@ -70,10 +70,9 @@ public class Plot {
   }
 
   public void removeEntity() {
-    if (entities == 0) {
-      return;
+    if (entities > 0) {
+      entities--;
     }
-    entities--;
   }
 
   public Map<Location, Particle> getParticles() {

@@ -118,12 +118,12 @@ public class ArenaManager {
     }
 
     //Arena join permission when bungee false
-    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-      if (!(player.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", "*")) || player.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", arena.getID())))) {
-        player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Join-No-Permission")
-            .replace("%permission%", PermissionManager.getJoinPerm().replace("<arena>", arena.getID())));
-        return;
-      }
+    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) &&
+          (!(player.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", "*"))
+          || player.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", arena.getID()))))) {
+      player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Join-No-Permission")
+          .replace("%permission%", PermissionManager.getJoinPerm().replace("<arena>", arena.getID())));
+      return;
     }
 
     if ((arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING)

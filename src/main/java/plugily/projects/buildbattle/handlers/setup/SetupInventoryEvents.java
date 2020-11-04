@@ -253,20 +253,17 @@ public class SetupInventoryEvents implements Listener {
             signsToUpdate.add(arenaSign.getSign());
           }
         }
-        if (!config.contains("instances." + arena.getID() + ".gametype")) {
-          arena = new SoloArena(arena.getID(), plugin);
-        } else {
-          switch (BaseArena.ArenaType.valueOf(config.getString("instances." + arena.getID() + ".gametype").toUpperCase())) {
-            case SOLO:
-              arena = new SoloArena(arena.getID(), plugin);
-              break;
-            case TEAM:
-              arena = new TeamArena(arena.getID(), plugin);
-              break;
-            case GUESS_THE_BUILD:
-              arena = new GuessTheBuildArena(arena.getID(), plugin);
-              break;
-          }
+        switch (BaseArena.ArenaType.valueOf(config.getString("instances." + arena.getID() + ".gametype", "solo").toUpperCase())) {
+          case TEAM:
+            arena = new TeamArena(arena.getID(), plugin);
+            break;
+          case GUESS_THE_BUILD:
+            arena = new GuessTheBuildArena(arena.getID(), plugin);
+            break;
+          case SOLO:
+          default:
+            arena = new SoloArena(arena.getID(), plugin);
+            break;
         }
         arena.setReady(true);
         arena.setMinimumPlayers(config.getInt("instances." + arena.getID() + ".minimumplayers"));

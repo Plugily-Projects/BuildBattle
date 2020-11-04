@@ -83,7 +83,7 @@ public class GameEvents implements Listener {
     if (item == null) {
       return;
     }
-    if (item.getName().equalsIgnoreCase("Leave")) {
+    if ("Leave".equalsIgnoreCase(item.getName())) {
       e.setCancelled(true);
       if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
         plugin.getBungeeManager().connectToHub(e.getPlayer());

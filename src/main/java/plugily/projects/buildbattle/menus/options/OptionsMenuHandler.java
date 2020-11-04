@@ -67,8 +67,7 @@ public class OptionsMenuHandler implements Listener {
 
   @EventHandler
   public void onRegisteredMenuOptionsClick(InventoryClickEvent e) {
-    if (!(e.getWhoClicked() instanceof Player) || e.getCurrentItem() == null
-        || !e.getCurrentItem().hasItemMeta() || !e.getCurrentItem().getItemMeta().hasDisplayName()) {
+    if (!(e.getWhoClicked() instanceof Player) || !Utils.isNamed(e.getCurrentItem())) {
       return;
     }
     for (MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {

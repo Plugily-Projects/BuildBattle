@@ -106,7 +106,7 @@ public class SpectatorEvents implements Listener {
       }
 
       ItemStack stack = e.getPlayer().getInventory().getItemInMainHand();
-      if (!stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {
+      if (!Utils.isNamed(stack)) {
         return;
       }
 
@@ -154,11 +154,7 @@ public class SpectatorEvents implements Listener {
 
     e.setCancelled(true);
 
-    if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta() || !e.getCurrentItem().getItemMeta().hasDisplayName()) {
-      return;
-    }
-
-    if (!e.getView().getTitle().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
+    if (!Utils.isNamed(e.getCurrentItem()) || !e.getView().getTitle().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
       return;
     }
 
