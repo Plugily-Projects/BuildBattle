@@ -318,7 +318,7 @@
         <extensions>
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ssh</artifactId>
+                <artifactId>wagon-ftp</artifactId>
                 <version>3.4.1</version>
             </extension>
         </extensions>
@@ -327,12 +327,12 @@
     <distributionManagement>
         <repository>
             <id>plugily-projects-repo</id>
-            <url>sftp://167.86.90.57/home/maven-repo-mc/maven</url>
+            <url>ftp://plugily.xyz</url>
         </repository>
         <site>
             <id>plugily-projects-java-docs</id>
-            <name>BuildBattle</name>
-            <url>sftp://167.86.90.57/home/maven-javadocs-mc/jd</url>
+            <name>BuildBatlle</name>
+            <url>ftp://plugily.xyz</url>
         </site>
     </distributionManagement>
 
