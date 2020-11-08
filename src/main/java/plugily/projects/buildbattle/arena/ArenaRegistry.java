@@ -114,11 +114,11 @@ public class ArenaRegistry {
       return;
     }
     for (String id : section.getKeys(false)) {
-      BaseArena arena;
-      String s = "instances." + id + ".";
-      if (s.contains("default")) {
+      if (id.equalsIgnoreCase("default")) {
         continue;
       }
+      BaseArena arena;
+      String s = "instances." + id + ".";
 
       switch (BaseArena.ArenaType.valueOf(config.getString(s + "gametype", "solo").toUpperCase())) {
         case TEAM:

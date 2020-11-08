@@ -173,6 +173,8 @@ public class ArenaManager {
     player.setFoodLevel(20);
     player.setHealth(20.0);
     player.setLevel(0);
+    player.setWalkSpeed(0.2f);
+    player.setFlySpeed(0.1f);
 
     arena.doBarAction(BaseArena.BarAction.ADD, player);
     player.getInventory().clear();
@@ -256,6 +258,7 @@ public class ArenaManager {
     player.setFoodLevel(20);
     player.setLevel(0);
     player.setGameMode(GameMode.SURVIVAL);
+    player.setWalkSpeed(0.2f);
 
     User user = plugin.getUserManager().getUser(player);
     arena.getScoreboardManager().removeScoreboard(user);

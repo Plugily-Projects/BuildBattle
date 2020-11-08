@@ -9,6 +9,9 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+### 4.4.2-Beta (08.11.2020 - )
+* Now walk and fly speed will reset on join and leave
+
 ### 4.4.2 Release (02.10.2020 - 02.11.2020)
 * Fixed spectators are able to damage entities
 * Fix NPE related to arenas config not loaded correctly
