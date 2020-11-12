@@ -22,6 +22,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Fixed particle remover does not auto update
 * Fixed particle remover locations are multiply times listed
 * Fixed debug messages to console are not colored
+* Fixed NPE related to vote menu updating
 
 ### 4.4.1 Release (15.08.2020 - 20.09.2020)
 * (Developer Alert - Class rename)
