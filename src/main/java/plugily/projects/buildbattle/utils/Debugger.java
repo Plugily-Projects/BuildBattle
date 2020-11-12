@@ -19,6 +19,8 @@
 package plugily.projects.buildbattle.utils;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 
 /**
  * @author Plajer
@@ -71,7 +73,11 @@ public class Debugger {
   }
 
   public static void sendConsoleMsg(String msg) {
-    Bukkit.getConsoleSender().sendMessage(msg);
+    if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1) && msg.contains("#")) {
+      msg = Utils.matchColorRegex(msg);
+    }
+
+    Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
   }
 
   public enum Level {

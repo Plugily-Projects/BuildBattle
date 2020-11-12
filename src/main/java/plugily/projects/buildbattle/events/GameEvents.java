@@ -28,31 +28,17 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockDispenseEvent;
-import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.block.BlockIgniteEvent;
-import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPistonRetractEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.BlockSpreadEvent;
-import org.bukkit.event.block.LeavesDecayEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryInteractEvent;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
@@ -73,7 +59,7 @@ import plugily.projects.buildbattle.utils.Utils;
  */
 public class GameEvents implements Listener {
 
-  private Main plugin;
+  private final Main plugin;
 
   public GameEvents(Main plugin) {
     this.plugin = plugin;
@@ -97,7 +83,7 @@ public class GameEvents implements Listener {
     if (item == null) {
       return;
     }
-    if (item.getName().equalsIgnoreCase("Leave")) {
+    if ("Leave".equalsIgnoreCase(item.getName())) {
       e.setCancelled(true);
       if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
         plugin.getBungeeManager().connectToHub(e.getPlayer());
@@ -106,7 +92,6 @@ public class GameEvents implements Listener {
       }
     }
   }
-
 
   @EventHandler
   public void onOpenOptionMenu(PlayerInteractEvent e) {
@@ -311,7 +296,7 @@ public class GameEvents implements Listener {
       return;
     }
     if (command.equalsIgnoreCase("bb") || command.equalsIgnoreCase("buildbattle") || command.equalsIgnoreCase("bba") ||
-            command.equalsIgnoreCase("buildbattleadmin")) {
+        command.equalsIgnoreCase("buildbattleadmin")) {
       return;
     }
     event.setCancelled(true);
@@ -450,7 +435,7 @@ public class GameEvents implements Listener {
     if (arena == null) {
       return;
     }
-    if (arena.getArenaState() != ArenaState.IN_GAME || arena instanceof SoloArena && ((SoloArena) arena).isVoting()
+    if (arena.getArenaState() != ArenaState.IN_GAME || (arena instanceof SoloArena && ((SoloArena) arena).isVoting())
         || plugin.getConfigPreferences().getItemBlacklist().contains(e.getBlock().getType())) {
       e.setCancelled(true);
       return;
@@ -479,8 +464,7 @@ public class GameEvents implements Listener {
       e.setCancelled(true);
       return;
     }
-    if (arena instanceof GuessTheBuildArena && ((GuessTheBuildArena) arena).getCurrentBuilder() != null
-        && !((GuessTheBuildArena) arena).getCurrentBuilder().equals(e.getPlayer())) {
+    if (arena instanceof GuessTheBuildArena && !e.getPlayer().equals(((GuessTheBuildArena) arena).getCurrentBuilder())) {
       e.setCancelled(true);
       return;
     }
@@ -537,7 +521,7 @@ public class GameEvents implements Listener {
       Material material = e.getPlayer().getInventory().getItemInMainHand().getType();
       if (material != XMaterial.WATER_BUCKET.parseMaterial() && material != XMaterial.LAVA_BUCKET.parseMaterial()
           && !(material.isBlock() && material.isSolid() && material.isOccluding())) {
-          return;
+        return;
       }
       if (plugin.getConfigPreferences().getFloorBlacklist().contains(material)) {
         return;

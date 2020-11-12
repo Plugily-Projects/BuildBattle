@@ -52,6 +52,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -67,10 +68,14 @@ public class ArgumentsRegistry implements CommandExecutor {
   public ArgumentsRegistry(Main plugin) {
     this.plugin = plugin;
     TabCompletion completion = new TabCompletion(this);
-    plugin.getCommand("buildbattle").setExecutor(this);
-    plugin.getCommand("buildbattle").setTabCompleter(completion);
-    plugin.getCommand("buildbattleadmin").setExecutor(this);
-    plugin.getCommand("buildbattleadmin").setTabCompleter(completion);
+    Optional.ofNullable(plugin.getCommand("buildbattle")).ifPresent(bb -> {
+      bb.setExecutor(this);
+      bb.setTabCompleter(completion);
+    });
+    Optional.ofNullable(plugin.getCommand("buildbattleadmin")).ifPresent(bba -> {
+      bba.setExecutor(this);
+      bba.setTabCompleter(completion);
+    });
 
     //register Build Battle basic arguments
     new CreateArgument(this);
@@ -167,8 +172,7 @@ public class ArgumentsRegistry implements CommandExecutor {
         for (CommandArgument argument : mappedArguments.get(mainCommand)) {
           if (argument.getArgumentName().equalsIgnoreCase(args[0])) {
             for (String perm : argument.getPermissions()) {
-              if (perm.isEmpty()) break;
-              if (hasPermission(sender, perm)) {
+              if (perm.isEmpty() || hasPermission(sender, perm)) {
                 break;
               }
 

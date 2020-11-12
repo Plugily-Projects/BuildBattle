@@ -114,27 +114,23 @@ public class ArenaRegistry {
       return;
     }
     for (String id : section.getKeys(false)) {
-      BaseArena arena;
-      String s = "instances." + id + ".";
-      if (s.contains("default")) {
+      if (id.equalsIgnoreCase("default")) {
         continue;
       }
+      BaseArena arena;
+      String s = "instances." + id + ".";
 
-      if (!config.contains(s + "gametype")) {
-        arena = new SoloArena(id, plugin);
-      } else {
-        switch (BaseArena.ArenaType.valueOf(config.getString(s + "gametype").toUpperCase())) {
-          case TEAM:
-            arena = new TeamArena(id, plugin);
-            break;
-          case GUESS_THE_BUILD:
-            arena = new GuessTheBuildArena(id, plugin);
-            break;
-          case SOLO:
-          default:
-            arena = new SoloArena(id, plugin);
-            break;
-        }
+      switch (BaseArena.ArenaType.valueOf(config.getString(s + "gametype", "solo").toUpperCase())) {
+        case TEAM:
+          arena = new TeamArena(id, plugin);
+          break;
+        case GUESS_THE_BUILD:
+          arena = new GuessTheBuildArena(id, plugin);
+          break;
+        case SOLO:
+        default:
+          arena = new SoloArena(id, plugin);
+          break;
       }
 
       if (config.contains(s + "minimumplayers")) {
@@ -177,8 +173,8 @@ public class ArenaRegistry {
             if (config.isSet(s + "plots." + plotName + ".maxpoint") && config.isSet(s + "plots." + plotName + ".minpoint")) {
               Location minPoint = LocationSerializer.getLocation(config.getString(s + "plots." + plotName + ".minpoint"));
               Biome biome = Version.isCurrentHigher(Version.v1_15_R1) ?
-                      minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
-                      : minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
+                  minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
+                  : minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
               Plot buildPlot = new Plot(arena, biome);
               buildPlot.setCuboid(new Cuboid(minPoint, LocationSerializer.getLocation(config.getString(s + "plots." + plotName + ".maxpoint"))));
               buildPlot.fullyResetPlot();

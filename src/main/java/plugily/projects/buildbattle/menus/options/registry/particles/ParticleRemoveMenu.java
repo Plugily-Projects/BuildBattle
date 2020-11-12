@@ -22,9 +22,12 @@ import com.github.stefvanschie.inventoryframework.Gui;
 import com.github.stefvanschie.inventoryframework.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 
+import java.util.Map.Entry;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -50,10 +53,14 @@ public class ParticleRemoveMenu {
 
     int x = 0;
     int y = 0;
-    for (Location location : buildPlot.getParticles().keySet()) {
-      ParticleItem particleItem = plugin.getOptionsRegistry().getParticleRegistry().getItemByEffect(buildPlot.getParticles().get(location));
+    for (Entry<Location, Particle> map : new java.util.HashMap<>(buildPlot.getParticles()).entrySet()) {
+      Location location = map.getKey();
+      ParticleItem particleItem = plugin.getOptionsRegistry().getParticleRegistry().getItemByEffect(map.getValue());
+      if (particleItem == null) {
+        continue;
+      }
 
-      ItemStack itemStack = new ItemBuilder(particleItem.getItemStack()).lore(plugin.getChatManager().colorMessage("Menus.Location-Message"),
+      ItemStack itemStack = new ItemBuilder(particleItem.getItemStack().clone()).lore(plugin.getChatManager().colorMessage("Menus.Location-Message"),
           ChatColor.GRAY + "  x: " + Math.round(location.getX()),
           ChatColor.GRAY + "  y: " + Math.round(location.getY()),
           ChatColor.GRAY + "  z: " + Math.round(location.getZ())).build();
@@ -66,6 +73,8 @@ public class ParticleRemoveMenu {
           }
         });
         gui.update();
+        event.getWhoClicked().closeInventory();
+        openMenu(player, buildPlot);
       }), x, y);
       x++;
       if (x == 9) {

@@ -36,10 +36,11 @@ import plugily.projects.buildbattle.utils.MessageUtils;
  * <p>
  * Created at 31.05.2018
  */
+@SuppressWarnings("deprecation")
 public class LanguageMigrator {
 
   public static final int LANGUAGE_FILE_VERSION = 18;
-  public static final int CONFIG_FILE_VERSION = 14;
+  public static final int CONFIG_FILE_VERSION = 16;
   private final List<String> migratable = Arrays.asList("bungee", "config", "language", "mysql");
   private final Main plugin;
 
@@ -54,7 +55,7 @@ public class LanguageMigrator {
     }
 
     FileConfiguration config = ConfigUtils.getConfig(plugin, "config");
-    if(config.isSet("Build-Time")) {
+    if (config.isSet("Build-Time")) {
       MessageUtils.gonnaMigrate();
       Debugger.sendConsoleMsg("&aBuild Battle is migrating config.yml to the new file format...");
       Debugger.sendConsoleMsg("&aDon't worry! Old config.yml will be renamed not overridden!");
@@ -165,6 +166,7 @@ public class LanguageMigrator {
         case 6:
           MigratorUtils.addNewLines(file, "# Should we block every not Build Battle associated commands in game?\r\n" +
               "Block-Commands-In-Game: true");
+          break;
         case 7:
           MigratorUtils.removeLineFromFile(bungeefile, "# This is useful for bungee game systems.");
           MigratorUtils.removeLineFromFile(bungeefile, "# Game state will be visible at MOTD.");
@@ -221,6 +223,11 @@ public class LanguageMigrator {
                   "  # The command that should be executed - Placeholder: %reported%, %reporter%\r\n" +
                   "  Command: kick %reported% \r\n");
           break;
+        case 15:
+          MigratorUtils.addNewLines(file, "\r\n" +
+                  "# With this true, players couldn't join to the game and can't switch to spectator.\r\n" +
+                  "Disable-Spectators: false\r\n");
+          break;
       }
     }
     Debugger.sendConsoleMsg("&a[BuildBattle] [System notify] Config updated, no comments were removed :)");
@@ -229,7 +236,7 @@ public class LanguageMigrator {
 
   private void languageFileUpdate() {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "language");
-    if (config.getString("File-Version-Do-Not-Edit").equals(String.valueOf(LANGUAGE_FILE_VERSION))) {
+    if (config.getString("File-Version-Do-Not-Edit", "").equals(String.valueOf(LANGUAGE_FILE_VERSION))) {
       return;
     }
     Debugger.sendConsoleMsg("&e[BuildBattle] [System notify] Your language file is outdated! Updating...");

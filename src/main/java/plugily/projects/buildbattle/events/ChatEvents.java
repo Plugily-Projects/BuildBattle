@@ -18,19 +18,18 @@
 
 package plugily.projects.buildbattle.events;
 
-import java.util.ArrayList;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.impl.GuessTheBuildArena;
+
+import java.util.ArrayList;
 
 /**
  * @author Plajer
@@ -39,7 +38,7 @@ import plugily.projects.buildbattle.arena.impl.GuessTheBuildArena;
  */
 public class ChatEvents implements Listener {
 
-  private Main plugin;
+  private final Main plugin;
 
   public ChatEvents(Main plugin) {
     this.plugin = plugin;

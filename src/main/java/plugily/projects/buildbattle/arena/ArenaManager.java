@@ -49,6 +49,7 @@ import plugily.projects.buildbattle.handlers.items.SpecialItem;
 import plugily.projects.buildbattle.handlers.party.GameParty;
 import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.utils.Debugger;
+import plugily.projects.buildbattle.utils.NMS;
 
 /**
  * @author Plajer
@@ -117,12 +118,17 @@ public class ArenaManager {
     }
 
     //Arena join permission when bungee false
-    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-      if (!(player.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", "*")) || player.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", arena.getID())))) {
-        player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Join-No-Permission")
-                .replace("%permission%", PermissionManager.getJoinPerm().replace("<arena>", arena.getID())));
-        return;
-      }
+    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) &&
+          (!(player.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", "*"))
+          || player.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", arena.getID()))))) {
+      player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Join-No-Permission")
+          .replace("%permission%", PermissionManager.getJoinPerm().replace("<arena>", arena.getID())));
+      return;
+    }
+
+    if ((arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING)
+        && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SPECTATORS)) {
+      return;
     }
 
     if (arena.getArenaState() == ArenaState.RESTARTING) {
@@ -144,7 +150,7 @@ public class ArenaManager {
         if (loopPlayer.hasPermission(PermissionManager.getJoinFullGames())) {
           continue;
         }
-        ArenaManager.leaveAttempt(loopPlayer, arena);
+        leaveAttempt(loopPlayer, arena);
         loopPlayer.sendMessage(chatManager + chatManager.colorMessage("In-Game.Messages.Lobby-Messages.You-Were-Kicked-For-Premium-Slot"));
         chatManager.broadcast(arena, chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Kicked-For-Premium-Slot"), loopPlayer));
         foundSlot = true;
@@ -167,6 +173,8 @@ public class ArenaManager {
     player.setFoodLevel(20);
     player.setHealth(20.0);
     player.setLevel(0);
+    player.setWalkSpeed(0.2f);
+    player.setFlySpeed(0.1f);
 
     arena.doBarAction(BaseArena.BarAction.ADD, player);
     player.getInventory().clear();
@@ -174,7 +182,10 @@ public class ArenaManager {
 
     //Set player as spectator as the game is already started
     SpecialItem leaveItem = plugin.getSpecialItemsRegistry().getSpecialItem("Leave");
-    if ((arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING)) {
+    if (arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
+      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SPECTATORS)) {
+        return;
+      }
 
       arena.addSpectator(player);
 
@@ -190,7 +201,7 @@ public class ArenaManager {
       player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0));
 
       //Hide player from other players
-      arena.getPlayers().forEach(onlinePlayer -> onlinePlayer.hidePlayer(player));
+      arena.getPlayers().forEach(onlinePlayer -> NMS.hidePlayer(onlinePlayer, player));
 
       user.setSpectator(true);
       player.setCollidable(false);
@@ -200,9 +211,9 @@ public class ArenaManager {
 
       for (Player spectator : arena.getPlayers()) {
         if (plugin.getUserManager().getUser(spectator).isSpectator()) {
-          player.hidePlayer(spectator);
+          NMS.hidePlayer(player, spectator);
         } else {
-          player.showPlayer(spectator);
+          NMS.showPlayer(player, spectator);
         }
       }
       return;
@@ -215,6 +226,7 @@ public class ArenaManager {
     player.updateInventory();
 
     chatManager.broadcastAction(arena, player, ChatManager.ActionType.JOIN);
+    plugin.getSignManager().updateSigns();
   }
 
   /**
@@ -246,6 +258,7 @@ public class ArenaManager {
     player.setFoodLevel(20);
     player.setLevel(0);
     player.setGameMode(GameMode.SURVIVAL);
+    player.setWalkSpeed(0.2f);
 
     User user = plugin.getUserManager().getUser(player);
     arena.getScoreboardManager().removeScoreboard(user);
@@ -256,9 +269,9 @@ public class ArenaManager {
 
     for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
       if (ArenaRegistry.getArena(onlinePlayer) == null) {
-        onlinePlayer.showPlayer(player);
+        NMS.showPlayer(onlinePlayer, player);
       }
-      player.showPlayer(onlinePlayer);
+      NMS.showPlayer(player, onlinePlayer);
     }
 
     // Spectator
@@ -301,6 +314,8 @@ public class ArenaManager {
       arena.setArenaState(ArenaState.RESTARTING);
       arena.setTimer(0);
     }
+
+    plugin.getSignManager().updateSigns();
   }
 
   /**

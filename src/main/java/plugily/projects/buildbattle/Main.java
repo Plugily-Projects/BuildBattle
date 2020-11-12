@@ -74,7 +74,6 @@ import plugily.projects.buildbattle.utils.services.ServiceRegistry;
  */
 //todo setup handler recode
 //todo arenas handler recode
-//todo new debugger
 //todo inventoryframework
 public class Main extends JavaPlugin {
 
@@ -129,7 +128,7 @@ public class Main extends JavaPlugin {
 
     ServiceRegistry.registerService(this);
     exceptionLogHandler = new ExceptionLogHandler(this);
-    Debugger.setEnabled(getDescription().getVersion().contains("b") || getConfig().getBoolean("Debug", false));
+    Debugger.setEnabled(getDescription().getVersion().contains("b") || getConfig().getBoolean("Debug"));
     Debugger.debug("Main setup started");
     saveDefaultConfig();
     for (String s : Arrays.asList("arenas", "particles", "lobbyitems", "stats", "voteItems", "mysql", "biomes", "bungee", "rewards")) {
@@ -201,9 +200,10 @@ public class Main extends JavaPlugin {
     userManager = new UserManager(this);
     PermissionManager.init();
     new SetupInventoryEvents(this);
-    ArenaRegistry.registerArenas();
-    //load signs after arenas
     signManager = new SignManager(this);
+    ArenaRegistry.registerArenas();
+    signManager.loadSigns();
+    signManager.updateSigns();
     specialItemsRegistry = new SpecialItemsRegistry(this);
     voteItems = new VoteItems();
     new VoteEvents(this);
@@ -275,9 +275,9 @@ public class Main extends JavaPlugin {
         for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
           if (!stat.isPersistent()) continue;
           if (update.toString().equalsIgnoreCase(" SET ")) {
-            update.append(stat.getName()).append("=").append(user.getStat(stat));
+            update.append(stat.getName()).append('=').append(user.getStat(stat));
           }
-          update.append(", ").append(stat.getName()).append("=").append(user.getStat(stat));
+          update.append(", ").append(stat.getName()).append('=').append(user.getStat(stat));
         }
         String finalUpdate = update.toString();
         //copy of userManager#saveStatistic but without async database call that's not allowed in onDisable method.

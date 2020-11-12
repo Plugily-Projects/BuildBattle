@@ -18,17 +18,17 @@
 
 package plugily.projects.buildbattle.arena.managers.plots;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import plugily.projects.buildbattle.api.event.plot.BBPlayerPlotReceiveEvent;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -37,7 +37,7 @@ public class PlotManager {
 
   private final List<Plot> plots = new ArrayList<>();
   private final List<Plot> plotsToClear = new ArrayList<>();
-  private BaseArena arena;
+  private final BaseArena arena;
 
   public PlotManager(BaseArena arena) {
     this.arena = arena;
@@ -83,21 +83,28 @@ public class PlotManager {
           continue;
         }
 
-        Location tploc = cuboid.getCenter();
+        final Location tploc = cuboid.getCenter();
         if (tploc == null) {
           continue;
         }
 
-        while (tploc.getBlock().getType() != Material.AIR) {
-          tploc = tploc.add(0, 1, 0);
-          //teleporting 1 x and z block away from center cause Y is above plot limit
-          if (tploc.getY() >= cuboid.getMaxPoint().getY()) {
-            tploc = cuboid.getCenter().clone().add(1, 0, 1);
+        // Should do this in async thread to do not cause for the main thread dead
+        CompletableFuture.supplyAsync(() -> {
+          Location loc = tploc;
+          while (loc.getBlock().getType() != Material.AIR) {
+            loc = loc.add(0, 1, 0);
+            //teleporting 1 x and z block away from center cause Y is above plot limit
+            if (loc.getY() >= cuboid.getMaxPoint().getY()) {
+              loc = cuboid.getCenter().clone().add(1, 0, 1);
+            }
           }
-        }
-        for (Player p : buildPlot.getOwners()) {
-          p.teleport(cuboid.getCenter());
-        }
+
+          return loc;
+        }).thenAccept(loc -> {
+          for (Player p : buildPlot.getOwners()) {
+            p.teleport(cuboid.getCenter());
+          }
+        });
       }
       BBPlayerPlotReceiveEvent event = new BBPlayerPlotReceiveEvent(arena, buildPlot);
       Bukkit.getPluginManager().callEvent(event);

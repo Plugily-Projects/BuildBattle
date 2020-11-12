@@ -100,9 +100,9 @@ public class MysqlManager implements UserDatabase {
         continue;
       }
       if (update.toString().equalsIgnoreCase(" SET ")){
-        update.append(stat.getName()).append("=").append(user.getStat(stat));
+        update.append(stat.getName()).append('=').append(user.getStat(stat));
       }
-      update.append(", ").append(stat.getName()).append("=").append(user.getStat(stat));
+      update.append(", ").append(stat.getName()).append('=').append(user.getStat(stat));
     }
     String finalUpdate = update.toString();
 

@@ -48,6 +48,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.Main;
 
@@ -156,6 +157,7 @@ public class Utils {
         return s;
     }
 
+    @SuppressWarnings("deprecation")
     public static SkullMeta setPlayerHead(Player player, SkullMeta meta) {
         if (Bukkit.getServer().getVersion().contains("Paper") && player.getPlayerProfile().hasTextures()) {
           return CompletableFuture.supplyAsync(() -> {
@@ -168,7 +170,11 @@ public class Utils {
           }).join();
         }
 
-        meta.setOwningPlayer(player);
+        if (Version.isCurrentHigher(Version.v1_12_R1)) {
+          meta.setOwningPlayer(player);
+        } else {
+          meta.setOwner(player.getName());
+        }
         return meta;
       }
 
@@ -184,7 +190,7 @@ public class Utils {
 
     public static Class<?> getNMSClass(String nmsClassName) {
         try {
-            return Class.forName("net.minecraft.server." + Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + "." + nmsClassName);
+            return Class.forName("net.minecraft.server." + Bukkit.getServer().getClass().getPackage().getName().replace('.', ',').split(",")[3] + "." + nmsClassName);
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace();
             Debugger.sendConsoleMsg("Reflection failed for " + nmsClassName);
@@ -193,7 +199,7 @@ public class Utils {
     }
 
     public static void sendActionBar(Player player, String message) {
-        String version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+        String version = Bukkit.getServer().getClass().getPackage().getName().replace('.', ',').split(",")[3];
         if(version.contains("v1_7") || version.contains("v1_8")) {
             try {
                 Constructor<?> constructor = getNMSClass("PacketPlayOutChat").getConstructor(getNMSClass("IChatBaseComponent"), byte.class);

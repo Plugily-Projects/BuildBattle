@@ -24,7 +24,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
-
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
@@ -44,7 +43,7 @@ import plugily.projects.buildbattle.utils.Utils;
  */
 public class VoteEvents implements Listener {
 
-  private Main plugin;
+  private final Main plugin;
 
   public VoteEvents(Main plugin) {
     this.plugin = plugin;
@@ -71,9 +70,9 @@ public class VoteEvents implements Listener {
     if (plugin.getVoteItems().getReportItem().equals(e.getItem())) {
       if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.RUN_COMMAND_ON_REPORT) &&
           plot != null && plot.getOwners() != null) {
-          plot.getOwners().forEach(player -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+        plot.getOwners().forEach(player -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
             plugin.getConfig().getString("Run-Command-On-Report.Command", "kick %reported%")
-            .replace("%reported%", player.getName()).replace("%reporter%", e.getPlayer().getName())));
+                .replace("%reported%", player.getName()).replace("%reporter%", e.getPlayer().getName())));
         plugin.getRewardsHandler().performReward(e.getPlayer(), Reward.RewardType.REPORT, -1);
       }
 

@@ -37,7 +37,7 @@ public class ReportedException {
       Exception exception = e.getCause() != null ? (Exception) e.getCause() : e;
       StringBuilder stacktrace = new StringBuilder(exception.getClass().getSimpleName());
       if (exception.getMessage() != null) {
-          stacktrace.append(" (").append(exception.getMessage()).append(")");
+          stacktrace.append(" (").append(exception.getMessage()).append(')');
       }
       stacktrace.append("\n");
       for (StackTraceElement str : exception.getStackTrace()) {

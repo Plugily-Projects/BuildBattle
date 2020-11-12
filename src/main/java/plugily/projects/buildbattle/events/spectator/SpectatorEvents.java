@@ -26,6 +26,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -67,7 +68,7 @@ public class SpectatorEvents implements Listener {
       return;
     }
     Player player = (Player) event.getEntity();
-    if (!plugin.getUserManager().getUser(player).isSpectator() || ArenaRegistry.getArena(player) == null) {
+    if (!plugin.getUserManager().getUser(player).isSpectator()) {
       return;
     }
 
@@ -78,6 +79,16 @@ public class SpectatorEvents implements Listener {
       if (arena != null) {
         player.teleport(arena.getPlotManager().getPlots().get(0).getTeleportLocation());
       }
+    }
+  }
+
+  @EventHandler
+  public void onEntityDamage(EntityDamageByEntityEvent event) {
+    if (!(event.getDamager() instanceof Player)) return;
+
+    Player player = (Player) event.getDamager();
+    if (plugin.getUserManager().getUser(player).isSpectator()) {
+      event.setCancelled(true);
     }
   }
 
@@ -95,7 +106,7 @@ public class SpectatorEvents implements Listener {
       }
 
       ItemStack stack = e.getPlayer().getInventory().getItemInMainHand();
-      if (!stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {
+      if (!Utils.isNamed(stack)) {
         return;
       }
 
@@ -106,7 +117,6 @@ public class SpectatorEvents implements Listener {
       } else if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name"))) {
         spectatorSettingsMenu.openSpectatorSettingsMenu(e.getPlayer());
       }
-
     }
   }
 
@@ -144,11 +154,7 @@ public class SpectatorEvents implements Listener {
 
     e.setCancelled(true);
 
-    if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta() || !e.getCurrentItem().getItemMeta().hasDisplayName()) {
-      return;
-    }
-
-    if (!e.getView().getTitle().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
+    if (!Utils.isNamed(e.getCurrentItem()) || !e.getView().getTitle().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
       return;
     }
 

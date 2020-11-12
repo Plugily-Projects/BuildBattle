@@ -9,6 +9,21 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+### 4.4.2 Release (02.10.2020 - 12.11.2020)
+* Fixed spectators are able to damage entities
+* Fix NPE related to arenas config not loaded correctly
+* Fix for 1.11 player heads
+* Fixed particles can't activate again after they got removed
+* Fixed spectators can't fly after changing world
+* Signs performance improvement
+* Fixed (some related) script NPE on rewards.yml
+* Now you can disable spectators from joining into game
+* Now walk and fly speed will reset on join and leave
+* Fixed particle remover does not auto update
+* Fixed particle remover locations are multiply times listed
+* Fixed debug messages to console are not colored
+* Fixed NPE related to vote menu updating
+
 ### 4.4.1 Release (15.08.2020 - 20.09.2020)
 * (Developer Alert - Class rename)
 * Added spectator mode

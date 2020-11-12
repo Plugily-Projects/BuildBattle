@@ -97,7 +97,7 @@ public class SetupInventoryEvents implements Listener {
 
   @EventHandler
   public void onClick(InventoryClickEvent e) {
-    if (e.getWhoClicked().getType() != EntityType.PLAYER) {
+    if (e.getCurrentItem() == null || e.getWhoClicked().getType() != EntityType.PLAYER) {
       return;
     }
     Player player = (Player) e.getWhoClicked();
@@ -123,6 +123,10 @@ public class SetupInventoryEvents implements Listener {
     String locationString = player.getLocation().getWorld().getName() + "," + player.getLocation().getX() + "," + player.getLocation().getY() + "," +
         player.getLocation().getZ() + "," + player.getLocation().getYaw() + ",0.0";
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+    if (config == null) {
+      return;
+    }
+
     switch (slot) {
       case SET_ENDING:
         config.set("instances." + arena.getID() + ".Endlocation", locationString);
@@ -159,6 +163,7 @@ public class SetupInventoryEvents implements Listener {
           break;
         }
         plugin.getSignManager().getArenaSigns().add(new ArenaSign((Sign) location.getBlock().getState(), arena));
+        plugin.getSignManager().updateSigns();
         player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Sign-Created"));
         String loc = location.getBlock().getWorld().getName() + "," + location.getBlock().getX() + "," + location.getBlock().getY() + "," + location.getBlock().getZ() + ",0.0,0.0";
         List<String> locs = config.getStringList("instances." + arena.getID() + ".signs");
@@ -248,20 +253,17 @@ public class SetupInventoryEvents implements Listener {
             signsToUpdate.add(arenaSign.getSign());
           }
         }
-        if (!config.contains("instances." + arena.getID() + ".gametype")) {
-          arena = new SoloArena(arena.getID(), plugin);
-        } else {
-          switch (BaseArena.ArenaType.valueOf(config.getString("instances." + arena.getID() + ".gametype").toUpperCase())) {
-            case SOLO:
-              arena = new SoloArena(arena.getID(), plugin);
-              break;
-            case TEAM:
-              arena = new TeamArena(arena.getID(), plugin);
-              break;
-            case GUESS_THE_BUILD:
-              arena = new GuessTheBuildArena(arena.getID(), plugin);
-              break;
-          }
+        switch (BaseArena.ArenaType.valueOf(config.getString("instances." + arena.getID() + ".gametype", "solo").toUpperCase())) {
+          case TEAM:
+            arena = new TeamArena(arena.getID(), plugin);
+            break;
+          case GUESS_THE_BUILD:
+            arena = new GuessTheBuildArena(arena.getID(), plugin);
+            break;
+          case SOLO:
+          default:
+            arena = new SoloArena(arena.getID(), plugin);
+            break;
         }
         arena.setReady(true);
         arena.setMinimumPlayers(config.getInt("instances." + arena.getID() + ".minimumplayers"));
@@ -286,9 +288,11 @@ public class SetupInventoryEvents implements Listener {
         }
         ArenaRegistry.registerArena(arena);
         arena.start();
+        plugin.getSignManager().getArenaSigns().clear();
         for (Sign s : signsToUpdate) {
           plugin.getSignManager().getArenaSigns().add(new ArenaSign(s, arena));
         }
+        plugin.getSignManager().updateSigns();
         break;
       case EXTRAS_AD:
         player.sendMessage(plugin.getChatManager().getPrefix()

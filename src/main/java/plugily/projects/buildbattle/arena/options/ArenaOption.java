@@ -43,7 +43,7 @@ public enum ArenaOption {
    */
   IN_PLOT_CHECKER(0);
 
-  private int defaultValue;
+  private final int defaultValue;
 
   ArenaOption(int defaultValue) {
     this.defaultValue = defaultValue;

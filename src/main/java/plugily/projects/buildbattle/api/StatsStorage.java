@@ -77,7 +77,7 @@ public class StatsStorage {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
     Map<UUID, Integer> stats = new TreeMap<>();
     for (String string : config.getKeys(false)) {
-      if (string.equals("data-version")) {
+      if ("data-version".equals(string)) {
         continue;
       }
       stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));
@@ -94,7 +94,6 @@ public class StatsStorage {
    * @see StatisticType
    */
   public static int getUserStats(Player player, StatisticType statisticType) {
-    //Debugger.debug(Debugger.Level.INFO, "BuildBattle API getUserStats(" + player.getName() + ", " + statisticType.getName() + ") run");
     return plugin.getUserManager().getUser(player).getStat(statisticType);
   }
 

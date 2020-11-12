@@ -73,7 +73,7 @@ public class BaseArena extends BukkitRunnable {
   public BaseArena(String id, Main plugin) {
     arenaState = ArenaState.WAITING_FOR_PLAYERS;
     this.plugin = plugin;
-    this.id = id;
+    this.id = id == null ? "" : id;
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
       gameBar = Bukkit.createBossBar(plugin.getChatManager().colorMessage("Bossbar.Waiting-For-Players"), BarColor.BLUE, BarStyle.SOLID);
     }
@@ -123,8 +123,8 @@ public class BaseArena extends BukkitRunnable {
    * @param action add or remove a player from boss bar
    * @param p      player
    */
-  public void doBarAction(BarAction action, Player p) {
-    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+  public void doBarAction(@NotNull BarAction action, Player p) {
+    if (p == null || gameBar == null || !plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
       return;
     }
     switch (action) {
@@ -174,6 +174,7 @@ public class BaseArena extends BukkitRunnable {
    *
    * @return arena ID
    */
+  @NotNull
   public String getID() {
     return id;
   }
@@ -291,6 +292,7 @@ public class BaseArena extends BukkitRunnable {
     }
 
     this.arenaState = arenaState;
+    plugin.getSignManager().updateSigns();
   }
 
   /**
@@ -313,8 +315,8 @@ public class BaseArena extends BukkitRunnable {
 
   public void teleportAllToEndLocation() {
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
-      getPlayers().forEach(plugin.getBungeeManager()::connectToHub);
-      getSpectators().forEach(plugin.getBungeeManager()::connectToHub);
+      players.forEach(plugin.getBungeeManager()::connectToHub);
+      spectators.forEach(plugin.getBungeeManager()::connectToHub);
       return;
     }
 
@@ -325,10 +327,10 @@ public class BaseArena extends BukkitRunnable {
     }
 
     if (location != null) {
-      for (Player player : getPlayers()) {
+      for (Player player : players) {
         player.teleport(location);
       }
-      for (Player player : getSpectators()) {
+      for (Player player : spectators) {
         player.teleport(location);
       }
     }

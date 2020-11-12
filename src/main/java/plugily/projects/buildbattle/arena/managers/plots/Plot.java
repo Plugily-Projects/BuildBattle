@@ -18,26 +18,14 @@
 
 package plugily.projects.buildbattle.arena.managers.plots;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import net.citizensnpcs.api.CitizensAPI;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.WeatherType;
+import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
@@ -47,19 +35,24 @@ import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.utils.Utils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by Tom on 17/08/2015.
  */
 public class Plot {
 
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
-  private BaseArena arena;
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+  private final Map<Location, Particle> particles = new HashMap<>();
+  private final BaseArena arena;
   private Cuboid cuboid;
   private int points;
   private List<Player> owners = new ArrayList<>();
-  private final Map<Location, Particle> particles = new HashMap<>();
   private Time time = Time.WORLD_TIME;
-  private Biome plotDefaultBiome;
+  private final Biome plotDefaultBiome;
   private WeatherType weatherType = WeatherType.CLEAR;
   private int entities = 0;
 
@@ -77,10 +70,9 @@ public class Plot {
   }
 
   public void removeEntity() {
-    if (entities == 0) {
-      return;
+    if (entities > 0) {
+      entities--;
     }
-    entities--;
   }
 
   public Map<Location, Particle> getParticles() {
@@ -191,13 +183,13 @@ public class Plot {
           }
           if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R2)) {
             Utils.sendPacket(p, Utils.getNMSClass("PacketPlayOutMapChunk").getConstructor(Utils.getNMSClass("Chunk"), int.class)
-                    .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535));
+                .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535));
           } else if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_15_R1)) {
             Utils.sendPacket(p, Utils.getNMSClass("PacketPlayOutMapChunk").getConstructor(Utils.getNMSClass("Chunk"), int.class, boolean.class)
-                    .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535, false));
+                .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535, false));
           } else {
             Utils.sendPacket(p, Utils.getNMSClass("PacketPlayOutMapChunk").getConstructor(Utils.getNMSClass("Chunk"), int.class)
-                    .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535));
+                .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535));
           }
         }
       }
@@ -209,12 +201,7 @@ public class Plot {
         .toUpperCase()).orElse(XMaterial.OAK_LOG).parseMaterial());
 
     if (ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_15_R1)) {
-      int y;
-      if (cuboid.getMinPoint().getBlockY() > cuboid.getMaxPoint().getBlockY()) {
-        y = cuboid.getMaxPoint().getBlockY();
-      } else {
-        y = cuboid.getMinPoint().getBlockY();
-      }
+      int y = Math.min(cuboid.getMinPoint().getBlockY(), cuboid.getMaxPoint().getBlockY());
 
       cuboid.getCenter().getWorld().setBiome(cuboid.getMinPoint().getBlockX(), y, cuboid.getMaxPoint().getBlockZ(), plotDefaultBiome);
     } else {
@@ -234,12 +221,7 @@ public class Plot {
   }
 
   private void changeFloor(Material material) {
-    double y;
-    if (cuboid.getMinPoint().getY() > cuboid.getMaxPoint().getY()) {
-      y = cuboid.getMaxPoint().getY();
-    } else {
-      y = cuboid.getMinPoint().getY();
-    }
+    double y = Math.min(cuboid.getMinPoint().getY(), cuboid.getMaxPoint().getY());
     Location min = cuboid.getMinPoint();
     Location max = cuboid.getMaxPoint();
     for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
@@ -257,12 +239,7 @@ public class Plot {
     if (material == Material.LAVA_BUCKET) {
       material = Material.LAVA;
     }
-    double y;
-    if (cuboid.getMinPoint().getY() > cuboid.getMaxPoint().getY()) {
-      y = cuboid.getMaxPoint().getY();
-    } else {
-      y = cuboid.getMinPoint().getY();
-    }
+    double y = Math.min(cuboid.getMinPoint().getY(), cuboid.getMaxPoint().getY());
     Location min = cuboid.getMinPoint();
     Location max = cuboid.getMaxPoint();
     for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
@@ -311,7 +288,7 @@ public class Plot {
   public enum Time {
     WORLD_TIME(-1), DAY(1000), SUNSET(12000), SUNRISE(23000), NIGHT(13000);
 
-    private long ticks;
+    private final long ticks;
 
     Time(long ticks) {
       this.ticks = ticks;

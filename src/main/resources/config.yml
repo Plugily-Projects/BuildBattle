@@ -209,6 +209,9 @@ Signs-Block-States-Enabled: true
 # It will disable the separated chat, for example
 Disable-Separate-Chat: false
 
+# With this true, players couldn't join to the game and can't switch to spectator.
+Disable-Spectators: false
+
 Update-Notifier:
   # Should we check for updates on plugin start/after admin join?
   # You REALLY should have this true!
@@ -243,6 +246,6 @@ Disable-Parties: true
 Announce-PlotOwner-Later: false
 
 # Don't modify.
-Version: 14
+Version: 16
 
 # No way! You've reached the end! But... where's the dragon!?

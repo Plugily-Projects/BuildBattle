@@ -27,6 +27,7 @@ import org.bukkit.block.banner.PatternType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 
 /**
@@ -36,7 +37,7 @@ import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
  */
 public class Banner {
 
-  private List<BannerPattern> patterns = new LinkedList<>();
+  private final List<BannerPattern> patterns = new LinkedList<>();
   private DyeColor color = DyeColor.WHITE;
 
   public void setBaseColor(DyeColor color) {
@@ -59,10 +60,15 @@ public class Banner {
     return patterns.get(patterns.size() - 1);
   }
 
+  @SuppressWarnings("deprecation")
   public ItemStack buildBanner() {
     ItemStack item = XMaterial.WHITE_BANNER.parseItem();
     BannerMeta meta = (BannerMeta) item.getItemMeta();
-    meta.setBaseColor(this.color);
+    if (Version.isCurrentEqualOrLower(Version.v1_12_R1)) {
+      meta.setBaseColor(this.color);
+    } else {
+      ((org.bukkit.block.Banner) item).setBaseColor(this.color);
+    }
     for (BannerPattern pattern : patterns) {
       meta.addPattern(new Pattern(pattern.getDyeColor(), pattern.getPatternType()));
     }

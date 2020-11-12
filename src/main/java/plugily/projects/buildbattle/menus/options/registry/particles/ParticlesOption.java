@@ -75,7 +75,8 @@ public class ParticlesOption {
           return;
         }
         for (ParticleItem particleItem : registry.getParticleRegistry().getRegisteredParticles()) {
-          if (!e.getCurrentItem().isSimilar(particleItem.getItemStack())) {
+          // Only check for the display name for items in gui, because some of item meta is changed
+          if (!e.getCurrentItem().getItemMeta().getDisplayName().contains(particleItem.getItemStack().getItemMeta().getDisplayName())) {
             continue;
           }
           Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());
