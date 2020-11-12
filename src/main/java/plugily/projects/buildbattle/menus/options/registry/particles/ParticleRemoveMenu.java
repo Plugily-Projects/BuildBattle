@@ -60,7 +60,7 @@ public class ParticleRemoveMenu {
         continue;
       }
 
-      ItemStack itemStack = new ItemBuilder(particleItem.getItemStack()).lore(plugin.getChatManager().colorMessage("Menus.Location-Message"),
+      ItemStack itemStack = new ItemBuilder(particleItem.getItemStack().clone()).lore(plugin.getChatManager().colorMessage("Menus.Location-Message"),
           ChatColor.GRAY + "  x: " + Math.round(location.getX()),
           ChatColor.GRAY + "  y: " + Math.round(location.getY()),
           ChatColor.GRAY + "  z: " + Math.round(location.getZ())).build();
@@ -73,6 +73,8 @@ public class ParticleRemoveMenu {
           }
         });
         gui.update();
+        event.getWhoClicked().closeInventory();
+        openMenu(player, buildPlot);
       }), x, y);
       x++;
       if (x == 9) {
