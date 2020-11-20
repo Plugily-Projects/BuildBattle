@@ -25,6 +25,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
+import pl.plajerlair.commonsbox.minecraft.compat.PacketUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
@@ -34,7 +35,6 @@ import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.menus.options.MenuOption;
 import plugily.projects.buildbattle.menus.options.OptionsRegistry;
-import plugily.projects.buildbattle.utils.Utils;
 
 /**
  * @author Plajer
@@ -84,10 +84,10 @@ public class BiomeChangeOption {
                 continue;
               }
               if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1)) {
-                Utils.sendPacket(p, Utils.getNMSClass("PacketPlayOutMapChunk").getConstructor(Utils.getNMSClass("Chunk"), int.class, boolean.class)
+                PacketUtils.sendPacket(p, PacketUtils.getNMSClass("PacketPlayOutMapChunk").getConstructor(PacketUtils.getNMSClass("Chunk"), int.class, boolean.class)
                         .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535, false));
               } else {
-              Utils.sendPacket(p, Utils.getNMSClass("PacketPlayOutMapChunk").getConstructor(Utils.getNMSClass("Chunk"), int.class)
+                PacketUtils.sendPacket(p, PacketUtils.getNMSClass("PacketPlayOutMapChunk").getConstructor(PacketUtils.getNMSClass("Chunk"), int.class)
                   .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535));
               }
             }
