@@ -9,6 +9,9 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+### 4.4.3 Release
+* Fixed joining through a sign while hotbar slot for leave-item is active
+
 ### 4.4.2 Release (02.10.2020 - 12.11.2020)
 * Fixed spectators are able to damage entities
 * Fix NPE related to arenas config not loaded correctly
