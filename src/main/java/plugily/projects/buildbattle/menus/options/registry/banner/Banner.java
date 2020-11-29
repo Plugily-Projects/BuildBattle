@@ -27,7 +27,6 @@ import org.bukkit.block.banner.PatternType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 
 /**
@@ -64,10 +63,10 @@ public class Banner {
   public ItemStack buildBanner() {
     ItemStack item = XMaterial.WHITE_BANNER.parseItem();
     BannerMeta meta = (BannerMeta) item.getItemMeta();
-    if (Version.isCurrentEqualOrLower(Version.v1_12_R1)) {
-      meta.setBaseColor(this.color);
-    } else {
+    if (item instanceof org.bukkit.block.Banner) {
       ((org.bukkit.block.Banner) item).setBaseColor(this.color);
+    } else {
+      meta.setBaseColor(this.color);
     }
     for (BannerPattern pattern : patterns) {
       meta.addPattern(new Pattern(pattern.getDyeColor(), pattern.getPatternType()));
