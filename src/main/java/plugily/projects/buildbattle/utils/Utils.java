@@ -23,10 +23,7 @@ import com.mojang.authlib.properties.Property;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
@@ -126,17 +123,6 @@ public class Utils {
         im.setLore(lore);
         item.setItemMeta(im);
         return item;
-    }
-
-    public static Map sortByValue(Map unsortedMap) {
-        List list = new LinkedList(unsortedMap.entrySet());
-        list.sort((o1, o2) -> ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue()));
-        Map sortedMap = new LinkedHashMap();
-        for (Object aList : list) {
-            Map.Entry entry = (Map.Entry) aList;
-            sortedMap.put(entry.getKey(), entry.getValue());
-        }
-        return sortedMap;
     }
 
     public static String matchColorRegex(String s) {

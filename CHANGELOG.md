@@ -12,6 +12,7 @@ That's all, matcher will stop when detects next line started with `###` match
 ### 4.4.3 Release (30.11.2020)
 * Fixed joining through a sign while hotbar slot for leave-item is active
 * Fix cast exception when banner meta is not item
+* Fix NoSuchMethodError when CommandSender#spigot does not exists on 1.11
 
 ### 4.4.2 Release (02.10.2020 - 12.11.2020)
 * Fixed spectators are able to damage entities

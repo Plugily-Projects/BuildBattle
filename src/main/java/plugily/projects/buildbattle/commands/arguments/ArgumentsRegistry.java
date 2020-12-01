@@ -47,6 +47,7 @@ import plugily.projects.buildbattle.commands.arguments.data.LabelData;
 import plugily.projects.buildbattle.commands.arguments.data.LabeledCommandArgument;
 import plugily.projects.buildbattle.commands.arguments.game.*;
 import plugily.projects.buildbattle.handlers.setup.SetupInventory;
+import plugily.projects.buildbattle.utils.Debugger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -149,23 +150,22 @@ public class ArgumentsRegistry implements CommandExecutor {
           data.addAll(mappedArguments.get("buildbattle").stream().filter(arg -> arg instanceof LabeledCommandArgument)
                   .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList()));
           for (LabelData labelData : data) {
-            TextComponent component;
             if (sender instanceof Player) {
-              component = new TextComponent(labelData.getText());
+              TextComponent component = new TextComponent(labelData.getText());
+              component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, labelData.getCommand()));
+
+              // Backwards compatibility
+              if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1)) {
+                component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(labelData.getDescription())));
+              } else {
+                component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(labelData.getDescription())));
+              }
+
+              ((Player) sender).spigot().sendMessage(component);
             } else {
               //more descriptive for console - split at \n to show only basic description
-              component = new TextComponent(labelData.getText() + " - " + labelData.getDescription().split("\n")[0]);
+              Debugger.sendConsoleMsg(labelData.getText() + " - " + labelData.getDescription().split("\n")[0]);
             }
-            component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, labelData.getCommand()));
-
-            // Backwards compatibility
-            if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1)) {
-              component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(labelData.getDescription())));
-            } else {
-              component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(labelData.getDescription())));
-            }
-
-            sender.spigot().sendMessage(component);
           }
           return true;
         }
