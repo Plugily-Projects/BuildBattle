@@ -182,10 +182,7 @@ public class Plot {
           if (!p.getWorld().equals(chunk.getWorld())) {
             continue;
           }
-          if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R2)) {
-            PacketUtils.sendPacket(p, PacketUtils.getNMSClass("PacketPlayOutMapChunk").getConstructor(PacketUtils.getNMSClass("Chunk"), int.class)
-                .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535));
-          } else if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_15_R1)) {
+          if (ServerVersion.Version.isCurrentEqual(ServerVersion.Version.v1_16_R1)) {
             PacketUtils.sendPacket(p, PacketUtils.getNMSClass("PacketPlayOutMapChunk").getConstructor(PacketUtils.getNMSClass("Chunk"), int.class, boolean.class)
                 .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535, false));
           } else {
