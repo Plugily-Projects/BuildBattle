@@ -21,13 +21,9 @@ package plugily.projects.buildbattle.utils;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
@@ -129,17 +125,6 @@ public class Utils {
         return item;
     }
 
-    public static Map sortByValue(Map unsortedMap) {
-        List list = new LinkedList(unsortedMap.entrySet());
-        list.sort((o1, o2) -> ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue()));
-        Map sortedMap = new LinkedHashMap();
-        for (Object aList : list) {
-            Map.Entry entry = (Map.Entry) aList;
-            sortedMap.put(entry.getKey(), entry.getValue());
-        }
-        return sortedMap;
-    }
-
     public static String matchColorRegex(String s) {
         String regex = "&?#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})";
         Matcher matcher = Pattern.compile(regex).matcher(s);
@@ -178,44 +163,8 @@ public class Utils {
         return meta;
       }
 
-    public static void sendPacket(Player player, Object packet) {
-        try {
-            Object handle = player.getClass().getMethod("getHandle").invoke(player);
-            Object playerConnection = handle.getClass().getField("playerConnection").get(handle);
-            playerConnection.getClass().getMethod("sendPacket", getNMSClass("Packet")).invoke(playerConnection, packet);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public static Class<?> getNMSClass(String nmsClassName) {
-        try {
-            return Class.forName("net.minecraft.server." + Bukkit.getServer().getClass().getPackage().getName().replace('.', ',').split(",")[3] + "." + nmsClassName);
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
-            Debugger.sendConsoleMsg("Reflection failed for " + nmsClassName);
-            return null;
-        }
-    }
-
     public static void sendActionBar(Player player, String message) {
-        String version = Bukkit.getServer().getClass().getPackage().getName().replace('.', ',').split(",")[3];
-        if(version.contains("v1_7") || version.contains("v1_8")) {
-            try {
-                Constructor<?> constructor = getNMSClass("PacketPlayOutChat").getConstructor(getNMSClass("IChatBaseComponent"), byte.class);
-
-                Object icbc = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class).invoke(null, "{\"text\":\"" + message + "\"}");
-                Object packet = constructor.newInstance(icbc, (byte) 2);
-                Object entityPlayer = player.getClass().getMethod("getHandle").invoke(player);
-                Object playerConnection = entityPlayer.getClass().getField("playerConnection").get(entityPlayer);
-
-                playerConnection.getClass().getMethod("sendPacket", getNMSClass("Packet")).invoke(playerConnection, packet);
-            } catch(Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new ComponentBuilder(message).create());
-        }
+      player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new ComponentBuilder(message).create());
     }
 
     // https://www.spigotmc.org/threads/comprehensive-particle-spawning-guide-1-13.343001/

@@ -18,8 +18,6 @@
 
 package plugily.projects.buildbattle.arena.impl;
 
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.boss.BarColor;
@@ -38,6 +36,7 @@ import plugily.projects.buildbattle.arena.ArenaState;
 import plugily.projects.buildbattle.arena.managers.ScoreboardManager;
 import plugily.projects.buildbattle.arena.managers.plots.PlotManager;
 import plugily.projects.buildbattle.arena.options.ArenaOption;
+import plugily.projects.buildbattle.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -150,7 +149,7 @@ public class BaseArena extends BukkitRunnable {
     String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Time-Left-To-Build").replace("%FORMATTEDTIME%", StringFormatUtils.formatIntoMMSS(getTimer()));
     String subtitle = getPlugin().getChatManager().colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", String.valueOf(getTimer()));
     for (Player p : getPlayers()) {
-      p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
+      Utils.sendActionBar(p, message);
       p.sendMessage(getPlugin().getChatManager().getPrefix() + message);
       p.sendTitle(null, subtitle, 5, 30, 5);
     }

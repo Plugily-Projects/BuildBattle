@@ -26,6 +26,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import pl.plajerlair.commonsbox.minecraft.compat.PacketUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
@@ -33,7 +35,6 @@ import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.event.plot.BBPlotResetEvent;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.user.User;
-import plugily.projects.buildbattle.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -181,14 +182,11 @@ public class Plot {
           if (!p.getWorld().equals(chunk.getWorld())) {
             continue;
           }
-          if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R2)) {
-            Utils.sendPacket(p, Utils.getNMSClass("PacketPlayOutMapChunk").getConstructor(Utils.getNMSClass("Chunk"), int.class)
-                .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535));
-          } else if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_15_R1)) {
-            Utils.sendPacket(p, Utils.getNMSClass("PacketPlayOutMapChunk").getConstructor(Utils.getNMSClass("Chunk"), int.class, boolean.class)
+          if (ServerVersion.Version.isCurrentEqual(ServerVersion.Version.v1_16_R1)) {
+            PacketUtils.sendPacket(p, PacketUtils.getNMSClass("PacketPlayOutMapChunk").getConstructor(PacketUtils.getNMSClass("Chunk"), int.class, boolean.class)
                 .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535, false));
           } else {
-            Utils.sendPacket(p, Utils.getNMSClass("PacketPlayOutMapChunk").getConstructor(Utils.getNMSClass("Chunk"), int.class)
+            PacketUtils.sendPacket(p, PacketUtils.getNMSClass("PacketPlayOutMapChunk").getConstructor(PacketUtils.getNMSClass("Chunk"), int.class)
                 .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535));
           }
         }

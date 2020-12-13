@@ -48,7 +48,12 @@ public class PlayerHeadsOption {
       @Override
       public void onClick(InventoryClickEvent e) {
         e.getWhoClicked().closeInventory();
-
+        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.HEADS_COMMAND)) {
+          if (e.getWhoClicked() instanceof Player){
+            ((Player) e.getWhoClicked()).performCommand(plugin.getConfig().getString("Command-Instead-Of-Head-Menu.Command", "heads"));
+          }
+          return;
+        }
         Inventory inventory = Bukkit.getServer().createInventory(null,
             Utils.serializeInt(registry.getPlayerHeadsRegistry().getCategories().size() + 1),
             registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Players-Heads.Inventory-Name"));
@@ -62,12 +67,6 @@ public class PlayerHeadsOption {
       @Override
       public void onTargetClick(InventoryClickEvent e) {
         e.getWhoClicked().closeInventory();
-        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.HEADS_COMMAND)){
-          if (e.getWhoClicked() instanceof Player){
-            ((Player) e.getWhoClicked()).performCommand(plugin.getConfig().getString("Command-Instead-Of-Head-Menu.Command", "heads"));
-          }
-          return;
-        }
         for (HeadsCategory category : registry.getPlayerHeadsRegistry().getCategories().keySet()) {
           if (!category.getItemStack().getItemMeta().getDisplayName().equals(e.getCurrentItem().getItemMeta().getDisplayName())) {
             continue;

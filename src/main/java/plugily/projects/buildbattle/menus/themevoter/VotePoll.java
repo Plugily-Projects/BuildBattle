@@ -27,10 +27,10 @@ import org.bukkit.entity.Player;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import pl.plajerlair.commonsbox.sorter.SortUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.impl.SoloArena;
 import plugily.projects.buildbattle.handlers.reward.Reward;
-import plugily.projects.buildbattle.utils.Utils;
 
 /**
  * @author Plajer
@@ -78,7 +78,7 @@ public class VotePoll {
   }
 
   public String getVotedTheme() {
-    LinkedHashMap<String, Integer> bestTheme = (LinkedHashMap<String, Integer>) Utils.sortByValue(votedThemes);
+    LinkedHashMap<String, Integer> bestTheme = (LinkedHashMap<String, Integer>) SortUtils.sortByValue(votedThemes);
     return (String) bestTheme.keySet().toArray()[bestTheme.keySet().toArray().length - 1];
   }
 

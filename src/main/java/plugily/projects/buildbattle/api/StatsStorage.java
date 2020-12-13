@@ -33,12 +33,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.sorter.SortUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.user.data.MysqlManager;
 import plugily.projects.buildbattle.utils.Debugger;
 import plugily.projects.buildbattle.utils.MessageUtils;
-import plugily.projects.buildbattle.utils.Utils;
 
 /**
  * @author Plajer, TomTheDeveloper
@@ -82,7 +82,7 @@ public class StatsStorage {
       }
       stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));
     }
-    return Utils.sortByValue(stats);
+    return SortUtils.sortByValue(stats);
   }
 
   /**

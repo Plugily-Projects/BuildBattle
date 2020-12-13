@@ -149,7 +149,7 @@ public class SetupInventory {
         .build());
   }
 
-  private static String isOptionDone(String path) {
+  public static String isOptionDone(String path) {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
     if (!config.isSet(path)) {
       return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.RED + "No";

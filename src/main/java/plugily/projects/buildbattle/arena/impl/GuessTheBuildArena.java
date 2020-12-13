@@ -18,8 +18,6 @@
 
 package plugily.projects.buildbattle.arena.impl;
 
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -177,8 +175,8 @@ public class GuessTheBuildArena extends BaseArena {
               .get(r.nextInt(getPlugin().getConfigPreferences().getThemes("Guess-The-Build_" + type).size())), BBTheme.Difficulty.valueOf(type));
           setCurrentTheme(theme);
           setThemeSet(true);
-          currentBuilder.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Is-Name")
-              .replace("%THEME%", theme.getTheme())));
+          Utils.sendActionBar(currentBuilder, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Is-Name")
+              .replace("%THEME%", theme.getTheme()));
           currentBuilder.closeInventory();
 
           String roundMessage = getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Current-Round")
