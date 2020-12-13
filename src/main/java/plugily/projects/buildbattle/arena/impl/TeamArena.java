@@ -80,9 +80,9 @@ public class TeamArena extends SoloArena {
   public String formatWinners(Plot plot, String string) {
     String str = string;
     if (plot.getOwners().size() == 1) {
-      str = str.replace("%player%", plot.getOwners().get(0).getName());
+      str = str.replaceAll("(?i)%player%", plot.getOwners().get(0).getName());
     } else {
-      str = str.replace("%player%", plot.getOwners().get(0).getName() + " & " + plot.getOwners().get(1).getName());
+      str = str.replaceAll("(?i)%player%", plot.getOwners().get(0).getName() + " & " + plot.getOwners().get(1).getName());
     }
     return str;
   }
@@ -100,7 +100,7 @@ public class TeamArena extends SoloArena {
         getPlugin().getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
       }
       if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER)) {
-        String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voted-For-Player-Plot").replace("%PLAYER%", getVotingPlot().getOwners().get(0).getName());
+        String message = formatWinners(getVotingPlot(), getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voted-For-Player-Plot"));
         for (Player p : getPlayers()) {
           String owner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
           owner = formatWinners(getVotingPlot(), owner);

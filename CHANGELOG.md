@@ -9,13 +9,14 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
-### 4.4.3 Release (30.11.2020)
+### 4.4.3 Release (30.11.2020 - 13.12.2020)
 * Fixed joining through a sign while hotbar slot for leave-item is active
 * Fixed cast exception when banner meta is not item
 * Fixed NoSuchMethodError when CommandSender#spigot does not exists on 1.11
 * Fixed BiomeChange specially on 1.15 (PacketPlayOutMapChunk)
 * Fixed Command-Instead-Of-Head-Menu is not executed on the first menu 
 * Fixed lore is not updating on setup inventory
+* Fixed ANNOUNCE_PLOTOWNER_LATER did not show both owners on team mode
 
 ### 4.4.2 Release (02.10.2020 - 12.11.2020)
 * Fixed spectators are able to damage entities
