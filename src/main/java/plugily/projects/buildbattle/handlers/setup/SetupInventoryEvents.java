@@ -36,6 +36,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
+import org.bukkit.inventory.ItemStack;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
@@ -51,6 +52,8 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
+
+import static plugily.projects.buildbattle.handlers.setup.SetupInventory.isOptionDone;
 
 /**
  * Created by Tom on 15/06/2015.
@@ -144,6 +147,16 @@ public class SetupInventoryEvents implements Listener {
           e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
         }
         config.set("instances." + arena.getID() + ".minimumplayers", e.getCurrentItem().getAmount());
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.GRAY + "LEFT click to decrease");
+        lore.add(ChatColor.GRAY + "RIGHT click to increase");
+        lore.add(ChatColor.DARK_GRAY + "(how many players are needed");
+        lore.add(ChatColor.DARK_GRAY + "for game to start lobby countdown)");
+        lore.add(ChatColor.RED + "Set it minimum 3 when using TEAM game type!!!");
+        lore.add(isOptionDone("instances." + arena.getID() + ".minimumplayers"));
+        ItemStack stack = player.getInventory().getItem(SetupInventory.ClickPosition.SET_MINIMUM_PLAYERS.getPosition());
+        if (stack != null)
+          stack.setLore(lore);
         player.updateInventory();
         break;
       case SET_MAXIMUM_PLAYERS:
@@ -154,6 +167,14 @@ public class SetupInventoryEvents implements Listener {
           e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
         }
         config.set("instances." + arena.getID() + ".maximumplayers", e.getCurrentItem().getAmount());
+        List<String> maxlore = new ArrayList<>();
+        maxlore.add(ChatColor.GRAY + "LEFT click to decrease");
+        maxlore.add(ChatColor.GRAY + "RIGHT click to increase");
+        maxlore.add(ChatColor.DARK_GRAY + "(how many players arena can hold)");
+        maxlore.add(isOptionDone("instances." + arena.getID() + ".maximumplayers"));
+        ItemStack itemStack = player.getInventory().getItem(SetupInventory.ClickPosition.SET_MAXIMUM_PLAYERS.getPosition());
+        if (itemStack != null)
+            itemStack.setLore(maxlore);
         player.updateInventory();
         break;
       case ADD_SIGN:

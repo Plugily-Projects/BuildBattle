@@ -15,6 +15,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Fixed NoSuchMethodError when CommandSender#spigot does not exists on 1.11
 * Fixed BiomeChange specially on 1.15 (PacketPlayOutMapChunk)
 * Fixed Command-Instead-Of-Head-Menu is not executed on the first menu 
+* Fixed lore is not updating on setup inventory
 
 ### 4.4.2 Release (02.10.2020 - 12.11.2020)
 * Fixed spectators are able to damage entities
