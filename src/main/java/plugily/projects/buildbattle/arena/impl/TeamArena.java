@@ -81,8 +81,10 @@ public class TeamArena extends SoloArena {
     String str = string;
     if (plot.getOwners().size() == 1) {
       str = str.replaceAll("(?i)%player%", plot.getOwners().get(0).getName());
-    } else {
+    } else if (plot.getOwners().size() > 1) {
       str = str.replaceAll("(?i)%player%", plot.getOwners().get(0).getName() + " & " + plot.getOwners().get(1).getName());
+    } else {
+      str = str.replaceAll("(?i)%player%", "PLAYER_NOT_FOUND");
     }
     return str;
   }
