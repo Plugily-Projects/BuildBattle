@@ -11,13 +11,15 @@ That's all, matcher will stop when detects next line started with `###` match
 
 ### 4.4.3 Release (30.11.2020)
 * Fixed joining through a sign while hotbar slot for leave-item is active
-* Fix cast exception when banner meta is not item
-* Fix NoSuchMethodError when CommandSender#spigot does not exists on 1.11
+* Fixed cast exception when banner meta is not item
+* Fixed NoSuchMethodError when CommandSender#spigot does not exists on 1.11
+* Fixed BiomeChange specially on 1.15 (PacketPlayOutMapChunk)
+* Fixed Command-Instead-Of-Head-Menu is not executed on the first menu 
 
 ### 4.4.2 Release (02.10.2020 - 12.11.2020)
 * Fixed spectators are able to damage entities
-* Fix NPE related to arenas config not loaded correctly
-* Fix for 1.11 player heads
+* Fixed NPE related to arenas config not loaded correctly
+* Fixed for 1.11 player heads
 * Fixed particles can't activate again after they got removed
 * Fixed spectators can't fly after changing world
 * Signs performance improvement
