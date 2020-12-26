@@ -37,6 +37,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
@@ -155,8 +156,11 @@ public class SetupInventoryEvents implements Listener {
         lore.add(ChatColor.RED + "Set it minimum 3 when using TEAM game type!!!");
         lore.add(isOptionDone("instances." + arena.getID() + ".minimumplayers"));
         ItemStack stack = player.getInventory().getItem(SetupInventory.ClickPosition.SET_MINIMUM_PLAYERS.getPosition());
-        if (stack != null)
-          stack.setLore(lore);
+        if (stack != null) {
+          ItemMeta meta = stack.getItemMeta();
+          meta.setLore(lore);
+          stack.setItemMeta(meta);
+        }
         player.updateInventory();
         break;
       case SET_MAXIMUM_PLAYERS:
@@ -173,8 +177,11 @@ public class SetupInventoryEvents implements Listener {
         maxlore.add(ChatColor.DARK_GRAY + "(how many players arena can hold)");
         maxlore.add(isOptionDone("instances." + arena.getID() + ".maximumplayers"));
         ItemStack itemStack = player.getInventory().getItem(SetupInventory.ClickPosition.SET_MAXIMUM_PLAYERS.getPosition());
-        if (itemStack != null)
-            itemStack.setLore(maxlore);
+        if (itemStack != null) {
+          ItemMeta meta = itemStack.getItemMeta();
+          meta.setLore(maxlore);
+          itemStack.setItemMeta(meta);
+        }
         player.updateInventory();
         break;
       case ADD_SIGN:

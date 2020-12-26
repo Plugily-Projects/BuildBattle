@@ -11,6 +11,7 @@ That's all, matcher will stop when detects next line started with `###` match
 
 ### 4.4.4 Release (18.12.2020 - XX.XX.XXXX)
 * Updated ScoreboardLib to fix problems with color matching
+* Fixed setup menu on "normal" spigot servers
 
 ### 4.4.3 Release (30.11.2020 - 13.12.2020)
 * Fixed joining through a sign while hotbar slot for leave-item is active
