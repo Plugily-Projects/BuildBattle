@@ -9,6 +9,11 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+### 4.4.4 Release (18.12.2020 - 29.12.2020)
+* Rewritten scoreboardlib (fixed flickering and color matching) -> 122 chars for 1.14 up and 48 for lower versions
+* Fix async catch exception in old versions when teleporting players to their plots
+* Fixed setup menu on "normal" spigot servers
+
 ### 4.4.3 Release (30.11.2020 - 13.12.2020)
 * Fixed joining through a sign while hotbar slot for leave-item is active
 * Fixed cast exception when banner meta is not item

@@ -148,7 +148,7 @@ public class LanguageManager {
       return;
     }
     /* is beta release */
-    if (plugin.getDescription().getVersion().contains("b") || plugin.getDescription().getVersion().contains("pre")) {
+    if (plugin.getDescription().getVersion().contains("locales") || plugin.getDescription().getVersion().contains("pre")) {
       Debugger.sendConsoleMsg("&c[BuildBattle] Locales aren't supported in beta versions because they're lacking latest translations! Enabling English one...");
       pluginLocale = LocaleRegistry.getByName("English");
       return;
