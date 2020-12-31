@@ -77,6 +77,7 @@ import plugily.projects.buildbattle.utils.services.ServiceRegistry;
 //todo inventoryframework
 public class Main extends JavaPlugin {
 
+  private ArgumentsRegistry registry;
   private ExceptionLogHandler exceptionLogHandler;
   private ChatManager chatManager;
   private ConfigPreferences configPreferences;
@@ -118,6 +119,10 @@ public class Main extends JavaPlugin {
 
   public SpecialItemsRegistry getSpecialItemsRegistry() {
     return specialItemsRegistry;
+  }
+
+  public ArgumentsRegistry getArgumentsRegistry() {
+    return registry;
   }
 
   @Override
@@ -196,7 +201,7 @@ public class Main extends JavaPlugin {
       FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
       database = new MysqlDatabase(config.getString("user"), config.getString("password"), config.getString("address"));
     }
-    new ArgumentsRegistry(this);
+    registry = new ArgumentsRegistry(this);
     userManager = new UserManager(this);
     PermissionManager.init();
     new SetupInventoryEvents(this);
