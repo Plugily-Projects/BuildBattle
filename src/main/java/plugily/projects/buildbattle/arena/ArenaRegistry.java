@@ -172,13 +172,15 @@ public class ArenaRegistry {
           for (String plotName : config.getConfigurationSection(s + "plots").getKeys(false)) {
             if (config.isSet(s + "plots." + plotName + ".maxpoint") && config.isSet(s + "plots." + plotName + ".minpoint")) {
               Location minPoint = LocationSerializer.getLocation(config.getString(s + "plots." + plotName + ".minpoint"));
-              Biome biome = Version.isCurrentHigher(Version.v1_15_R1) ?
-                  minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
-                  : minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
-              Plot buildPlot = new Plot(arena, biome);
-              buildPlot.setCuboid(new Cuboid(minPoint, LocationSerializer.getLocation(config.getString(s + "plots." + plotName + ".maxpoint"))));
-              buildPlot.fullyResetPlot();
-              arena.getPlotManager().addBuildPlot(buildPlot);
+              if (minPoint != null && minPoint.getWorld() != null) {
+                Biome biome = Version.isCurrentHigher(Version.v1_15_R1) ?
+                    minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
+                    : minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
+                Plot buildPlot = new Plot(arena, biome);
+                buildPlot.setCuboid(new Cuboid(minPoint, LocationSerializer.getLocation(config.getString(s + "plots." + plotName + ".maxpoint"))));
+                buildPlot.fullyResetPlot();
+                arena.getPlotManager().addBuildPlot(buildPlot);
+              }
             } else {
               System.out.println("Non configured plot instances found for arena " + id);
               arena.setReady(false);

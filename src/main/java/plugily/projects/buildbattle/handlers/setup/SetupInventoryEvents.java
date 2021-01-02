@@ -131,6 +131,7 @@ public class SetupInventoryEvents implements Listener {
       return;
     }
 
+    ItemStack currentItem = e.getCurrentItem();
     switch (slot) {
       case SET_ENDING:
         config.set("instances." + arena.getID() + ".Endlocation", locationString);
@@ -141,13 +142,17 @@ public class SetupInventoryEvents implements Listener {
         player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aLobby location for arena " + arena.getID() + " set at your location!"));
         break;
       case SET_MINIMUM_PLAYERS:
+        if (currentItem == null) {
+          break; // somehow getCurrentItem is still null even its already checked
+        }
+
         if (clickType.isRightClick()) {
-          e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
+          currentItem.setAmount(currentItem.getAmount() + 1);
         }
         if (clickType.isLeftClick()) {
-          e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
+          currentItem.setAmount(currentItem.getAmount() - 1);
         }
-        config.set("instances." + arena.getID() + ".minimumplayers", e.getCurrentItem().getAmount());
+        config.set("instances." + arena.getID() + ".minimumplayers", currentItem.getAmount());
         List<String> lore = new ArrayList<>();
         lore.add(ChatColor.GRAY + "LEFT click to decrease");
         lore.add(ChatColor.GRAY + "RIGHT click to increase");
@@ -164,13 +169,17 @@ public class SetupInventoryEvents implements Listener {
         player.updateInventory();
         break;
       case SET_MAXIMUM_PLAYERS:
+        if (currentItem == null) {
+          break; // somehow getCurrentItem is still null even its already checked
+        }
+
         if (clickType.isRightClick()) {
-          e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
+          currentItem.setAmount(currentItem.getAmount() + 1);
         }
         if (clickType.isLeftClick()) {
-          e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
+          currentItem.setAmount(currentItem.getAmount() - 1);
         }
-        config.set("instances." + arena.getID() + ".maximumplayers", e.getCurrentItem().getAmount());
+        config.set("instances." + arena.getID() + ".maximumplayers", currentItem.getAmount());
         List<String> maxlore = new ArrayList<>();
         maxlore.add(ChatColor.GRAY + "LEFT click to decrease");
         maxlore.add(ChatColor.GRAY + "RIGHT click to increase");
@@ -216,7 +225,7 @@ public class SetupInventoryEvents implements Listener {
         player.openInventory(inv);
         break;
       case SET_MAP_NAME:
-        if (e.getCurrentItem().getType() == Material.NAME_TAG && e.getCursor().getType() == Material.NAME_TAG) {
+        if (currentItem.getType() == Material.NAME_TAG && e.getCursor().getType() == Material.NAME_TAG) {
           if (!Utils.isNamed(e.getCursor())) {
             player.sendMessage(ChatColor.RED + "This item doesn't has a name!");
             return;
@@ -224,7 +233,7 @@ public class SetupInventoryEvents implements Listener {
           String newName = e.getCursor().getItemMeta().getDisplayName();
           config.set("instances." + arena.getID() + ".mapname", newName);
           player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aName of arena " + arena.getID() + " set to " + newName));
-          e.getCurrentItem().getItemMeta().setDisplayName(ChatColor.GOLD + "Set a mapname (currently: " + newName);
+          currentItem.getItemMeta().setDisplayName(ChatColor.GOLD + "Set a mapname (currently: " + newName);
         }
         break;
       case ADD_GAME_PLOT:

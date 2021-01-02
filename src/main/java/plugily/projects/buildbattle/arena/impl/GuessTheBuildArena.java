@@ -413,7 +413,7 @@ public class GuessTheBuildArena extends BaseArena {
 
   @Override
   public void updateBossBar() {
-    if (!getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+    if (getGameBar() == null) {
       return;
     }
     switch (getArenaState()) {
