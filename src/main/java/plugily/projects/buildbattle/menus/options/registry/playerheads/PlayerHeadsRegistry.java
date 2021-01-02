@@ -31,6 +31,7 @@ import org.bukkit.inventory.ItemStack;
 
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.menus.options.OptionsRegistry;
 import plugily.projects.buildbattle.utils.Utils;
@@ -58,7 +59,7 @@ public class PlayerHeadsRegistry {
       }
       HeadsCategory category = new HeadsCategory(str);
 
-      category.setItemStack(new ItemBuilder(Utils.getSkull(config.getString(str + ".texture")))
+      category.setItemStack(new ItemBuilder(ItemUtils.getSkull(config.getString(str + ".texture")))
           .name(plugin.getChatManager().colorRawMessage(config.getString(str + ".displayname")))
           .lore(config.getStringList(str + ".lore").stream()
               .map(lore -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()))
@@ -72,7 +73,7 @@ public class PlayerHeadsRegistry {
         if (!categoryConfig.getBoolean(path + ".enabled", true)) {
           continue;
         }
-        ItemStack stack = Utils.getSkull(categoryConfig.getString(path + ".texture"));
+        ItemStack stack = ItemUtils.getSkull(categoryConfig.getString(path + ".texture"));
         Utils.setItemNameAndLore(stack, plugin.getChatManager().colorRawMessage(categoryConfig.getString(path + ".displayname")),
             categoryConfig.getStringList(path + ".lore").stream()
                 .map(lore -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()));

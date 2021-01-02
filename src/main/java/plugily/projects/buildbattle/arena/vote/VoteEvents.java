@@ -24,6 +24,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+
+import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
@@ -34,7 +36,6 @@ import plugily.projects.buildbattle.arena.impl.GuessTheBuildArena;
 import plugily.projects.buildbattle.arena.impl.SoloArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.reward.Reward;
-import plugily.projects.buildbattle.utils.Utils;
 
 /**
  * @author Plajer
@@ -56,7 +57,7 @@ public class VoteEvents implements Listener {
       return;
     }
 
-    if (!Utils.isNamed(e.getItem())) {
+    if (!ItemUtils.isItemStackNamed(e.getItem())) {
       return;
     }
 

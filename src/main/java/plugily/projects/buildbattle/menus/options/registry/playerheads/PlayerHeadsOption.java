@@ -26,6 +26,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.menus.options.MenuOption;
@@ -40,7 +41,7 @@ import plugily.projects.buildbattle.utils.Utils;
 public class PlayerHeadsOption {
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
   public PlayerHeadsOption(OptionsRegistry registry) {
-    registry.registerOption(new MenuOption(10, "PLAYER_HEADS", new ItemBuilder(Utils.PLAYER_HEAD_ITEM.clone())
+    registry.registerOption(new MenuOption(10, "PLAYER_HEADS", new ItemBuilder(ItemUtils.PLAYER_HEAD_ITEM.clone())
         .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Players-Heads.Item-Name"))
         .lore(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Players-Heads.Item-Lore"))
         .build(), registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Players-Heads.Inventory-Name")) {

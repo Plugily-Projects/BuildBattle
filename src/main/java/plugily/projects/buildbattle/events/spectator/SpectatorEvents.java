@@ -34,6 +34,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
@@ -106,7 +108,7 @@ public class SpectatorEvents implements Listener {
       }
 
       ItemStack stack = e.getPlayer().getInventory().getItemInMainHand();
-      if (!Utils.isNamed(stack)) {
+      if (!ItemUtils.isItemStackNamed(stack)) {
         return;
       }
 
@@ -132,7 +134,7 @@ public class SpectatorEvents implements Listener {
       ItemStack skull = XMaterial.PLAYER_HEAD.parseItem();
 
       SkullMeta meta = (SkullMeta) skull.getItemMeta();
-      meta = Utils.setPlayerHead(player, meta);
+      meta = MiscUtils.setPlayerHead(player, meta);
       meta.setDisplayName(player.getName());
       skull.setItemMeta(meta);
       inventory.addItem(skull);
@@ -154,7 +156,7 @@ public class SpectatorEvents implements Listener {
 
     e.setCancelled(true);
 
-    if (!Utils.isNamed(e.getCurrentItem()) || !e.getView().getTitle().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
+    if (!ItemUtils.isItemStackNamed(e.getCurrentItem()) || !e.getView().getTitle().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
       return;
     }
 

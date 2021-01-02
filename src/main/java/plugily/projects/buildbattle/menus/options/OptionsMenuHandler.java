@@ -23,6 +23,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
+import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.ArenaState;
@@ -48,7 +49,7 @@ public class OptionsMenuHandler implements Listener {
     if (!(e.getWhoClicked() instanceof Player) || e.getCurrentItem() == null) {
       return;
     }
-    if (!Utils.isNamed(e.getCurrentItem()) || !e.getView().getTitle().equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name"))) {
+    if (!ItemUtils.isItemStackNamed(e.getCurrentItem()) || !e.getView().getTitle().equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name"))) {
       return;
     }
     BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
@@ -67,7 +68,7 @@ public class OptionsMenuHandler implements Listener {
 
   @EventHandler
   public void onRegisteredMenuOptionsClick(InventoryClickEvent e) {
-    if (!(e.getWhoClicked() instanceof Player) || !Utils.isNamed(e.getCurrentItem())) {
+    if (!(e.getWhoClicked() instanceof Player) || !ItemUtils.isItemStackNamed(e.getCurrentItem())) {
       return;
     }
     for (MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {

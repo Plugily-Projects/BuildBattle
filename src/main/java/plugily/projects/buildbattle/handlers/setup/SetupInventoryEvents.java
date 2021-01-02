@@ -47,11 +47,11 @@ import plugily.projects.buildbattle.arena.impl.TeamArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.PermissionManager;
 import plugily.projects.buildbattle.handlers.sign.ArenaSign;
-import plugily.projects.buildbattle.utils.Utils;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 
 import static plugily.projects.buildbattle.handlers.setup.SetupInventory.isOptionDone;
@@ -73,7 +73,7 @@ public class SetupInventoryEvents implements Listener {
     if (!(e.getWhoClicked() instanceof Player || e.getWhoClicked().hasPermission(PermissionManager.getEditGames()))) {
       return;
     }
-    if (!e.getView().getTitle().contains("Game type:") || !Utils.isNamed(e.getCurrentItem())) {
+    if (!e.getView().getTitle().contains("Game type:") || !ItemUtils.isItemStackNamed(e.getCurrentItem())) {
       return;
     }
     Player player = (Player) e.getWhoClicked();
@@ -105,7 +105,7 @@ public class SetupInventoryEvents implements Listener {
       return;
     }
     Player player = (Player) e.getWhoClicked();
-    if (!(player.hasPermission("buildbattle.admin.create") && e.getView().getTitle().contains("BB Arena:") && Utils.isNamed(e.getCurrentItem()))) {
+    if (!(player.hasPermission("buildbattle.admin.create") && e.getView().getTitle().contains("BB Arena:") && ItemUtils.isItemStackNamed(e.getCurrentItem()))) {
       return;
     }
 
@@ -226,7 +226,7 @@ public class SetupInventoryEvents implements Listener {
         break;
       case SET_MAP_NAME:
         if (currentItem.getType() == Material.NAME_TAG && e.getCursor().getType() == Material.NAME_TAG) {
-          if (!Utils.isNamed(e.getCursor())) {
+          if (!ItemUtils.isItemStackNamed(e.getCursor())) {
             player.sendMessage(ChatColor.RED + "This item doesn't has a name!");
             return;
           }

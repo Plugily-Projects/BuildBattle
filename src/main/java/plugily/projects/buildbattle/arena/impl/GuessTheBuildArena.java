@@ -45,7 +45,6 @@ import plugily.projects.buildbattle.menus.themevoter.BBTheme;
 import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.utils.Debugger;
 import plugily.projects.buildbattle.utils.MessageUtils;
-import plugily.projects.buildbattle.utils.Utils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -175,7 +174,7 @@ public class GuessTheBuildArena extends BaseArena {
               .get(r.nextInt(getPlugin().getConfigPreferences().getThemes("Guess-The-Build_" + type).size())), BBTheme.Difficulty.valueOf(type));
           setCurrentTheme(theme);
           setThemeSet(true);
-          Utils.sendActionBar(currentBuilder, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Is-Name")
+          MiscUtils.sendActionBar(currentBuilder, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Is-Name")
               .replace("%THEME%", theme.getTheme()));
           currentBuilder.closeInventory();
 
@@ -199,7 +198,7 @@ public class GuessTheBuildArena extends BaseArena {
               continue;
             }
             if (getWhoGuessed().contains(player)) {
-              Utils.sendActionBar(player, getCurrentTheme().getTheme());
+              MiscUtils.sendActionBar(player, getCurrentTheme().getTheme());
             }
             StringBuilder actionbar = new StringBuilder();
             for (int i = 0; i < getCurrentTheme().getTheme().length(); i++) {
@@ -213,7 +212,7 @@ public class GuessTheBuildArena extends BaseArena {
               }
               actionbar.append("_ ");
             }
-            Utils.sendActionBar(player, actionbar.toString());
+            MiscUtils.sendActionBar(player, actionbar.toString());
           }
         }
         if (getTimer() <= 0 && isThemeSet()) {

@@ -28,6 +28,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
@@ -36,7 +37,6 @@ import plugily.projects.buildbattle.arena.ArenaState;
 import plugily.projects.buildbattle.arena.managers.ScoreboardManager;
 import plugily.projects.buildbattle.arena.managers.plots.PlotManager;
 import plugily.projects.buildbattle.arena.options.ArenaOption;
-import plugily.projects.buildbattle.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -149,7 +149,7 @@ public class BaseArena extends BukkitRunnable {
     String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Time-Left-To-Build").replace("%FORMATTEDTIME%", StringFormatUtils.formatIntoMMSS(getTimer()));
     String subtitle = getPlugin().getChatManager().colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", String.valueOf(getTimer()));
     for (Player p : getPlayers()) {
-      Utils.sendActionBar(p, message);
+      MiscUtils.sendActionBar(p, message);
       p.sendMessage(getPlugin().getChatManager().getPrefix() + message);
       p.sendTitle(null, subtitle, 5, 30, 5);
     }
