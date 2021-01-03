@@ -202,6 +202,8 @@ In-Game:
     Already-Playing: "&cYou're playing already!"
     Cant-Fly-Outside-Plot: "&cYou can't fly outside your plot!"
     Join: "&b%PLAYER%&7 joined the game (%PLAYERSIZE%/%MAXPLAYERS%)!"
+    Join-Title: ""
+    Join-SubTitle: "&e%THEME%"
     Leave: "&b%PLAYER% &7left the game (%PLAYERSIZE%/%MAXPLAYERS%)!"
     Lobby-Messages:
       Waiting-For-Players: "&7Waiting for players... We need at least &b%MINPLAYERS%&7 players to start."
@@ -356,4 +358,4 @@ Arena-Selector:
       - "&eClick to join this arena"
 
 # Do not modify!
-File-Version-Do-Not-Edit: 18
+File-Version-Do-Not-Edit: 19

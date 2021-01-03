@@ -226,6 +226,8 @@ public class ArenaManager {
     player.updateInventory();
 
     chatManager.broadcastAction(arena, player, ChatManager.ActionType.JOIN);
+    player.sendTitle(chatManager.colorMessage("In-Game.Messages.Join-Title").replace("%THEME%", arena.getTheme()),
+        chatManager.colorMessage("In-Game.Messages.Join-Title").replace("%THEME%", arena.getTheme()), 5, 40, 5);
     plugin.getSignManager().updateSigns();
   }
 

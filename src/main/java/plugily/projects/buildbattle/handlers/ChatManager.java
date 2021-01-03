@@ -58,6 +58,10 @@ public class ChatManager {
   }
 
   public void broadcast(BaseArena arena, String message) {
+  if (message.isEmpty()) {
+    return;
+  }
+
     for (Player p : arena.getPlayers()) {
       p.sendMessage(prefix + message);
     }
