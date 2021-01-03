@@ -12,6 +12,8 @@ That's all, matcher will stop when detects next line started with `###` match
 ### 4.4.5 Release (31.12.2020)
 * ArgumentsRegistry now accessible from outside
 * Fixed some reported NPEs about setup inventory
+* Added start game reward action
+* Added join title and subtitle
 
 ### 4.4.4 Release (18.12.2020 - 29.12.2020)
 * Rewritten scoreboardlib (fixed flickering and color matching) -> 122 chars for 1.14 up and 48 for lower versions

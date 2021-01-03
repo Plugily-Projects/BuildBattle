@@ -35,6 +35,9 @@
 
 # Rewards must be enabled via config.yml first!
 rewards:
+  # Commands performed when this game has started.
+  startgame:
+  - say This game has been started!
   # Commands performed when game is finished
   endgame:
     - say %MAPNAME% has ended

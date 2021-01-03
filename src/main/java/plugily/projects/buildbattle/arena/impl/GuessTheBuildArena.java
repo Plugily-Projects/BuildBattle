@@ -138,6 +138,7 @@ public class GuessTheBuildArena extends BaseArena {
           if (plot.getTeleportLocation() != null) {
             for (Player p : getPlayers()) {
               p.teleport(plot.getTeleportLocation());
+              getPlugin().getRewardsHandler().performReward(p, Reward.RewardType.START_GAME, -1);
             }
           }
           nextRoundCooldown = true;

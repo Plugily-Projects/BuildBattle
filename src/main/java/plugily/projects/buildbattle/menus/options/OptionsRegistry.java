@@ -52,10 +52,14 @@ public class OptionsRegistry {
   private PlayerHeadsRegistry playerHeadsRegistry;
   private final Set<MenuOption> registeredOptions = new HashSet<>();
   private int inventorySize = 5 * 9;
+  private ItemBuilder menuItem;
   private Main plugin;
 
   public OptionsRegistry(Main plugin) {
     this.plugin = plugin;
+    this.menuItem = new ItemBuilder(Material.NETHER_STAR)
+            .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item"))
+            .lore(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item-Lore"));
     registerOptions();
   }
 
@@ -137,11 +141,8 @@ public class OptionsRegistry {
     return registeredOptions;
   }
 
-  @Deprecated
   public ItemStack getMenuItem() {
-    return new ItemBuilder(Material.NETHER_STAR)
-        .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item"))
-        .lore(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item-Lore")).build();
+    return menuItem.build();
   }
 
   public BiomesRegistry getBiomesRegistry() {

@@ -81,7 +81,9 @@ public class Reward {
   }
 
   public enum RewardType {
-    END_GAME("endgame"), GTB_GUESS("guess"), GTB_ALL_GUESSED("allguessed"), VOTE("vote"), REPORT("report"), PLACE("place");
+    END_GAME("endgame"), GTB_GUESS("guess"), GTB_ALL_GUESSED("allguessed"), VOTE("vote"), REPORT("report"), PLACE("place"),
+    START_GAME("startgame"),
+    ;
 
     private String path;
 

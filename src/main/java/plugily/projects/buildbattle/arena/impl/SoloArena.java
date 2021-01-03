@@ -169,6 +169,7 @@ public class SoloArena extends BaseArena {
             player.getInventory().setItem(8, getPlugin().getOptionsRegistry().getMenuItem());
             //to prevent Multiverse changing gamemode bug
             Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setGameMode(GameMode.CREATIVE), 20);
+            getPlugin().getRewardsHandler().performReward(player, Reward.RewardType.START_GAME, -1);
           }
         }
         if (isForceStart()) {
