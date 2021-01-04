@@ -346,6 +346,7 @@ Signs:
 Arena-Selector:
   Inv-Title: "Arena selector"
   Item:
+    Name: "&f%mapname%"
     Lore:
       - "&bBuildBattle &f- &e%mapname%"
       - " "
@@ -358,4 +359,4 @@ Arena-Selector:
       - "&eClick to join this arena"
 
 # Do not modify!
-File-Version-Do-Not-Edit: 18
+File-Version-Do-Not-Edit: 19

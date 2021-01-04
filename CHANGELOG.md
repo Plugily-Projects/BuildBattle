@@ -14,6 +14,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Fixed some reported NPEs about setup inventory
 * Added start game reward action
 * Added join title and subtitle
+* Added customizable item name in arena selector gui (by ajgeiss0702)
 
 ### 4.4.4 Release (18.12.2020 - 29.12.2020)
 * Rewritten scoreboardlib (fixed flickering and color matching) -> 122 chars for 1.14 up and 48 for lower versions

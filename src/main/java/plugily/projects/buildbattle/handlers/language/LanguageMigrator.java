@@ -467,6 +467,7 @@ public class LanguageMigrator {
                  "  Messages:\r\n" +
                  "    Join-Title:\r\n" +
                  "    Join-SubTitle: \"&e%THEME%\"");
+          MigratorUtils.insertAfterLine(file, "  Item:", "    Name: \"&f%mapname%\"");
           break;
         default:
           return;
