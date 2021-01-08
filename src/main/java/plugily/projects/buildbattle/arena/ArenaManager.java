@@ -49,7 +49,6 @@ import plugily.projects.buildbattle.handlers.items.SpecialItem;
 import plugily.projects.buildbattle.handlers.party.GameParty;
 import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.utils.Debugger;
-import plugily.projects.buildbattle.utils.NMS;
 
 /**
  * @author Plajer
@@ -201,7 +200,7 @@ public class ArenaManager {
       player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0));
 
       //Hide player from other players
-      arena.getPlayers().forEach(onlinePlayer -> NMS.hidePlayer(onlinePlayer, player));
+      arena.getPlayers().forEach(onlinePlayer -> MiscUtils.hidePlayer(plugin, onlinePlayer, player));
 
       user.setSpectator(true);
       player.setCollidable(false);
@@ -211,9 +210,9 @@ public class ArenaManager {
 
       for (Player spectator : arena.getPlayers()) {
         if (plugin.getUserManager().getUser(spectator).isSpectator()) {
-          NMS.hidePlayer(player, spectator);
+          MiscUtils.hidePlayer(plugin, player, spectator);
         } else {
-          NMS.showPlayer(player, spectator);
+          MiscUtils.showPlayer(plugin, player, spectator);
         }
       }
       return;
@@ -248,7 +247,7 @@ public class ArenaManager {
 
     arena.doBarAction(BaseArena.BarAction.REMOVE, player);
     player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
-    player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
+    MiscUtils.getEntityAttribute(player, Attribute.GENERIC_MAX_HEALTH).ifPresent(ai -> ai.setBaseValue(20.0));
     player.getInventory().clear();
     player.getInventory().setArmorContents(null);
     player.resetPlayerTime();
@@ -271,9 +270,9 @@ public class ArenaManager {
 
     for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
       if (ArenaRegistry.getArena(onlinePlayer) == null) {
-        NMS.showPlayer(onlinePlayer, player);
+        MiscUtils.showPlayer(plugin, onlinePlayer, player);
       }
-      NMS.showPlayer(player, onlinePlayer);
+      MiscUtils.showPlayer(plugin, player, onlinePlayer);
     }
 
     // Spectator
