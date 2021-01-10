@@ -70,10 +70,10 @@ public class ArenaRegistry {
 
     for (BaseArena arena : ARENAS) {
       for (Player player : arena.getPlayers()) {
-        if (player.equals(p)) return arena;
+        if (p == player) return arena;
       }
       for (Player player : arena.getSpectators()) {
-        if (player.equals(p)) return arena;
+        if (p == player) return arena;
       }
     }
     return null;

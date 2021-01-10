@@ -101,7 +101,8 @@ public class GuessTheBuildArena extends BaseArena {
         break;
       case STARTING:
         for (Player player : getPlayers()) {
-          player.setExp((float) (getTimer() / (double) getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this)));
+          float exp = (float) (getTimer() / (double) getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
+          player.setExp((exp > 1f || exp < 0f) ? 1f : exp);
           player.setLevel(getTimer());
         }
         if (getPlayers().size() < getMinimumPlayers()) {
@@ -256,7 +257,7 @@ public class GuessTheBuildArena extends BaseArena {
               return;
             }
             for (Player player : getPlayers()) {
-              if (currentBuilder.equals(player)) {
+              if (currentBuilder == player) {
                 continue;
               }
               player.sendTitle(null, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Being-Selected"), 5, 25, 5);

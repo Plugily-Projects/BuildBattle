@@ -94,7 +94,7 @@ public class ArenaManager {
     //check if player is in party and send party members to the game
     if (plugin.getPartyHandler().isPlayerInParty(player)) {
       GameParty party = plugin.getPartyHandler().getParty(player);
-      if (party.getLeader().equals(player)) {
+      if (party.getLeader() == player) {
         if (arena.getMaximumPlayers() - arena.getPlayers().size() >= party.getPlayers().size()) {
           for (Player partyPlayer : party.getPlayers()) {
             if (partyPlayer == player) {
