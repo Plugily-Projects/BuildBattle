@@ -61,7 +61,6 @@ import plugily.projects.buildbattle.handlers.sign.SignManager;
 import plugily.projects.buildbattle.menus.options.OptionsMenuHandler;
 import plugily.projects.buildbattle.menus.options.OptionsRegistry;
 import plugily.projects.buildbattle.menus.options.registry.banner.BannerMenu;
-import plugily.projects.buildbattle.menus.options.registry.particles.ParticleRefreshScheduler;
 import plugily.projects.buildbattle.menus.themevoter.VoteMenuListener;
 import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.user.UserManager;
@@ -216,7 +215,6 @@ public class Main extends JavaPlugin {
     new ChatEvents(this);
     optionsRegistry = new OptionsRegistry(this);
     new OptionsMenuHandler(this);
-    new ParticleRefreshScheduler(this);
     Metrics metrics = new Metrics(this);
     metrics.addCustomChart(new Metrics.SimplePie("bungeecord_hooked", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.BUNGEE_ENABLED))));
     metrics.addCustomChart(new Metrics.SimplePie("locale_used", LanguageManager.getPluginLocale()::getPrefix));

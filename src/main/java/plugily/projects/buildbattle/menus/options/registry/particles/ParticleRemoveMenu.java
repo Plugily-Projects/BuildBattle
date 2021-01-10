@@ -46,7 +46,6 @@ public class ParticleRemoveMenu {
   private ParticleRemoveMenu() {
   }
 
-  @Deprecated
   public static void openMenu(Player player, Plot buildPlot) {
     Gui gui = new Gui(plugin, 6, plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"));
     StaticPane pane = new StaticPane(9, 6);
