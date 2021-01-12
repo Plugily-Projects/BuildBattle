@@ -50,7 +50,7 @@ public class Plot {
   private final Map<Location, Particle> particles = new HashMap<>();
   private final BaseArena arena;
   private Cuboid cuboid;
-  private int points;
+  private int points = 0;
   private List<Player> owners = new ArrayList<>();
   private Time time = Time.WORLD_TIME;
   private final Biome plotDefaultBiome;
