@@ -9,12 +9,14 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
-### 4.4.5 Release (31.12.2020 - 12.01.2021)
+### 4.4.5 Release (31.12.2020)
 * ArgumentsRegistry now accessible from outside
 * Fixed some reported NPEs about setup inventory
 * Added start game reward action
 * Added join title and subtitle
 * Added customizable item name in arena selector gui (by ajgeiss0702)
+* Fixed asynchronous issue when performing commands from async chat
+* Optimized plot particle refresh scheduler, now it only runs when a game is running
 * Only add points to plot that do not have points already
 
 ### 4.4.4 Release (18.12.2020 - 29.12.2020)

@@ -18,9 +18,6 @@
 
 package plugily.projects.buildbattle.menus.themevoter;
 
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -31,6 +28,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
@@ -153,8 +151,8 @@ public class VoteMenuListener implements Listener {
         ((GuessTheBuildArena) arena).setCurrentTheme(theme);
         ((GuessTheBuildArena) arena).setThemeSet(true);
         arena.setTimer(plugin.getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, arena));
-        ((Player) e.getWhoClicked()).spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Is-Name")
-            .replace("%THEME%", theme.getTheme())));
+        MiscUtils.sendActionBar(((Player) e.getWhoClicked()), plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Is-Name")
+            .replace("%THEME%", theme.getTheme()));
         e.getWhoClicked().closeInventory();
 
         String roundMessage = plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Current-Round")

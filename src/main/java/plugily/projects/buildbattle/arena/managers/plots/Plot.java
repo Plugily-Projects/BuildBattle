@@ -80,6 +80,7 @@ public class Plot {
     return particles;
   }
 
+  @Deprecated
   public void addParticle(Location location, Particle effect) {
     particles.put(location, effect);
   }

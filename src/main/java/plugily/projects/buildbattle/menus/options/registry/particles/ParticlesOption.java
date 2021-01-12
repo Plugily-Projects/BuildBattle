@@ -88,7 +88,7 @@ public class ParticlesOption {
             e.getWhoClicked().sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.Max-Particles-Limit-Reached"));
             return;
           }
-          plot.addParticle(e.getWhoClicked().getLocation(), particleItem.getEffect());
+          plot.getParticles().put(e.getWhoClicked().getLocation(), particleItem.getEffect());
           registry.getPlugin().getUserManager().getUser((Player) e.getWhoClicked())
               .addStat(StatsStorage.StatisticType.PARTICLES_USED, 1);
           e.getWhoClicked().sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.Particle-Added"));

@@ -20,7 +20,7 @@ package plugily.projects.buildbattle.menus.themevoter;
 
 public class BBTheme {
 
-  private String theme;
+  private String theme = "";
   private Difficulty difficulty;
 
   public BBTheme(String theme, Difficulty difficulty) {
