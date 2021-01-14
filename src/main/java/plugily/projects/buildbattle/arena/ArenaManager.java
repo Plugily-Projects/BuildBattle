@@ -172,7 +172,9 @@ public class ArenaManager {
 
     player.setExp(1);
     player.setFoodLevel(20);
-    player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
+    MiscUtils.getEntityAttribute(player, Attribute.GENERIC_MAX_HEALTH).ifPresent(ai -> {
+        player.setHealth(ai.getBaseValue()));
+    });
     player.setLevel(0);
     player.setWalkSpeed(0.2f);
     player.setFlySpeed(0.1f);
