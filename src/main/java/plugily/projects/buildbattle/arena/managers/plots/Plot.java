@@ -28,6 +28,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import pl.plajerlair.commonsbox.minecraft.compat.PacketUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
@@ -115,21 +116,22 @@ public class Plot {
     this.cuboid = cuboid;
   }
 
+  @NotNull
   public List<Player> getOwners() {
     return owners;
   }
 
   public void setOwners(List<Player> players) {
-    this.owners = players;
+    this.owners = players == null ? new ArrayList<>() : players;
   }
 
   public void addOwner(Player player) {
-    this.owners.add(player);
+    owners.add(player);
   }
 
   public void fullyResetPlot() {
     resetPlot();
-    if (owners != null && !owners.isEmpty()) {
+    if (!owners.isEmpty()) {
       for (Player p : owners) {
         User user = plugin.getUserManager().getUser(p);
         user.setCurrentPlot(null);
@@ -153,12 +155,10 @@ public class Plot {
 
     getParticles().clear();
 
-    if (owners != null) {
-      for (Player p : owners) {
-        p.resetPlayerWeather();
-        setWeatherType(p.getPlayerWeather());
-        p.resetPlayerTime();
-      }
+    for (Player p : owners) {
+      p.resetPlayerWeather();
+      setWeatherType(p.getPlayerWeather());
+      p.resetPlayerTime();
     }
 
     if (cuboid.getCenter().getWorld() != null) {

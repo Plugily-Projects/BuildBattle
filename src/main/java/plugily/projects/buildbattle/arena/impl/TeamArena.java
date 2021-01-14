@@ -114,7 +114,7 @@ public class TeamArena extends SoloArena {
       }
     }
     for (Plot p : getPlotManager().getPlots()) {
-      if (p.getOwners() != null && p.getOwners().size() == 2) {
+      if (p.getOwners().size() == 2) {
         //removing second owner to not vote for same plot twice
         getQueue().remove(p.getOwners().get(1));
       }

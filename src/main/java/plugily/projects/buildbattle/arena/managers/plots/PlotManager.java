@@ -54,7 +54,7 @@ public class PlotManager {
 
   public Plot getPlot(Player player) {
     for (Plot buildPlot : plots) {
-      if (buildPlot.getOwners() != null && buildPlot.getOwners().contains(player)) {
+      if (buildPlot.getOwners().contains(player)) {
         return buildPlot;
       }
     }
@@ -82,7 +82,7 @@ public class PlotManager {
 
   public void teleportToPlots() {
     for (Plot buildPlot : plots) {
-      if (buildPlot.getOwners() != null && !buildPlot.getOwners().isEmpty()) {
+      if (!buildPlot.getOwners().isEmpty()) {
         Cuboid cuboid = buildPlot.getCuboid();
         if (cuboid == null) {
           continue;
