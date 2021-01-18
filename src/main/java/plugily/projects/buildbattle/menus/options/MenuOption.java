@@ -94,7 +94,6 @@ public class MenuOption {
    * @param e passed InventoryClickEvent when anything is clicked within target MenuOption
    * @see #onClick(InventoryClickEvent)
    * @see #isInventoryEnabled()
-   * @see Utils#isNamed(ItemStack)
    */
   public void onTargetClick(InventoryClickEvent e) {
   }
