@@ -254,13 +254,12 @@ public class Main extends JavaPlugin {
         arena.getScoreboardManager().stopAllScoreboards();
         arena.doBarAction(BaseArena.BarAction.REMOVE, player);
         arena.teleportToEndLocation(player);
+        player.setGameMode(GameMode.SURVIVAL);
+        player.getInventory().clear();
+        player.getInventory().setArmorContents(null);
+        player.getActivePotionEffects().forEach(pe -> player.removePotionEffect(pe.getType()));
         if (configPreferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
           InventorySerializer.loadInventory(this, player);
-        } else {
-          player.setGameMode(GameMode.SURVIVAL);
-          player.getInventory().clear();
-          player.getInventory().setArmorContents(null);
-          player.getActivePotionEffects().forEach(pe -> player.removePotionEffect(pe.getType()));
         }
       }
       arena.getPlotManager().getPlots().forEach(Plot::fullyResetPlot);
