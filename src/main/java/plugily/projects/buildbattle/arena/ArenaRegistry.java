@@ -1,6 +1,7 @@
 /*
+ *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2020 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.buildbattle.arena;
@@ -70,10 +72,10 @@ public class ArenaRegistry {
 
     for (BaseArena arena : ARENAS) {
       for (Player player : arena.getPlayers()) {
-        if (player.equals(p)) return arena;
+        if (p == player) return arena;
       }
       for (Player player : arena.getSpectators()) {
-        if (player.equals(p)) return arena;
+        if (p == player) return arena;
       }
     }
     return null;
@@ -172,13 +174,15 @@ public class ArenaRegistry {
           for (String plotName : config.getConfigurationSection(s + "plots").getKeys(false)) {
             if (config.isSet(s + "plots." + plotName + ".maxpoint") && config.isSet(s + "plots." + plotName + ".minpoint")) {
               Location minPoint = LocationSerializer.getLocation(config.getString(s + "plots." + plotName + ".minpoint"));
-              Biome biome = Version.isCurrentHigher(Version.v1_15_R1) ?
-                  minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
-                  : minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
-              Plot buildPlot = new Plot(arena, biome);
-              buildPlot.setCuboid(new Cuboid(minPoint, LocationSerializer.getLocation(config.getString(s + "plots." + plotName + ".maxpoint"))));
-              buildPlot.fullyResetPlot();
-              arena.getPlotManager().addBuildPlot(buildPlot);
+              if (minPoint != null && minPoint.getWorld() != null) {
+                Biome biome = Version.isCurrentHigher(Version.v1_15_R1) ?
+                    minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
+                    : minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
+                Plot buildPlot = new Plot(arena, biome);
+                buildPlot.setCuboid(new Cuboid(minPoint, LocationSerializer.getLocation(config.getString(s + "plots." + plotName + ".maxpoint"))));
+                buildPlot.fullyResetPlot();
+                arena.getPlotManager().addBuildPlot(buildPlot);
+              }
             } else {
               System.out.println("Non configured plot instances found for arena " + id);
               arena.setReady(false);

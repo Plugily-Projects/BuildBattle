@@ -1,6 +1,7 @@
 /*
+ *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2020 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.buildbattle.menus.options.registry.playerheads;
@@ -31,6 +33,7 @@ import org.bukkit.inventory.ItemStack;
 
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.menus.options.OptionsRegistry;
 import plugily.projects.buildbattle.utils.Utils;
@@ -58,7 +61,7 @@ public class PlayerHeadsRegistry {
       }
       HeadsCategory category = new HeadsCategory(str);
 
-      category.setItemStack(new ItemBuilder(Utils.getSkull(config.getString(str + ".texture")))
+      category.setItemStack(new ItemBuilder(ItemUtils.getSkull(config.getString(str + ".texture")))
           .name(plugin.getChatManager().colorRawMessage(config.getString(str + ".displayname")))
           .lore(config.getStringList(str + ".lore").stream()
               .map(lore -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()))
@@ -72,7 +75,7 @@ public class PlayerHeadsRegistry {
         if (!categoryConfig.getBoolean(path + ".enabled", true)) {
           continue;
         }
-        ItemStack stack = Utils.getSkull(categoryConfig.getString(path + ".texture"));
+        ItemStack stack = ItemUtils.getSkull(categoryConfig.getString(path + ".texture"));
         Utils.setItemNameAndLore(stack, plugin.getChatManager().colorRawMessage(categoryConfig.getString(path + ".displayname")),
             categoryConfig.getStringList(path + ".lore").stream()
                 .map(lore -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()));

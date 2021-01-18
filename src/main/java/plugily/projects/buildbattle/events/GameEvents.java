@@ -1,6 +1,7 @@
 /*
+ *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2020 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.buildbattle.events;
@@ -40,6 +42,7 @@ import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
@@ -52,7 +55,6 @@ import plugily.projects.buildbattle.arena.impl.SoloArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.items.SpecialItem;
 import plugily.projects.buildbattle.user.User;
-import plugily.projects.buildbattle.utils.Utils;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -76,7 +78,7 @@ public class GameEvents implements Listener {
       return;
     }
     ItemStack itemStack = e.getPlayer().getInventory().getItemInMainHand();
-    if (!Utils.isNamed(itemStack)) {
+    if (!ItemUtils.isItemStackNamed(itemStack)) {
       return;
     }
     SpecialItem item = plugin.getSpecialItemsRegistry().getRelatedSpecialItem(itemStack);
@@ -99,7 +101,7 @@ public class GameEvents implements Listener {
       return;
     }
     ItemStack itemStack = e.getItem();
-    if (!Utils.isNamed(itemStack)) {
+    if (!ItemUtils.isItemStackNamed(itemStack)) {
       return;
     }
     BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
@@ -228,7 +230,7 @@ public class GameEvents implements Listener {
   //only a temporary code
   @EventHandler
   public void onPlayerHeadsClick(InventoryClickEvent e) {
-    if (!Utils.isNamed(e.getCurrentItem()) || !(e.getWhoClicked() instanceof Player)) {
+    if (!ItemUtils.isItemStackNamed(e.getCurrentItem()) || !(e.getWhoClicked() instanceof Player)) {
       return;
     }
     BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
@@ -236,7 +238,7 @@ public class GameEvents implements Listener {
       return;
     }
     if (plugin.getOptionsRegistry().getPlayerHeadsRegistry().isHeadsMenu(e.getInventory())) {
-      if (e.getCurrentItem().getType() != Utils.PLAYER_HEAD_ITEM.getType()) {
+      if (e.getCurrentItem().getType() != ItemUtils.PLAYER_HEAD_ITEM.getType()) {
         return;
       }
       e.getWhoClicked().getInventory().addItem(e.getCurrentItem().clone());
@@ -247,7 +249,7 @@ public class GameEvents implements Listener {
   @Deprecated
   @EventHandler
   public void onOptionItemClick(InventoryClickEvent e) {
-    if (!(e.getWhoClicked() instanceof Player) || !Utils.isNamed(e.getCurrentItem())) {
+    if (!(e.getWhoClicked() instanceof Player) || !ItemUtils.isItemStackNamed(e.getCurrentItem())) {
       return;
     }
     BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
@@ -263,7 +265,7 @@ public class GameEvents implements Listener {
 
   @EventHandler
   public void onOptionItemClick(InventoryInteractEvent e) {
-    if (!(e.getWhoClicked() instanceof Player) || !Utils.isNamed(e.getWhoClicked().getItemOnCursor())) {
+    if (!(e.getWhoClicked() instanceof Player) || !ItemUtils.isItemStackNamed(e.getWhoClicked().getItemOnCursor())) {
       return;
     }
     BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
@@ -420,7 +422,7 @@ public class GameEvents implements Listener {
       return;
     }
     ItemStack drop = e.getItemDrop().getItemStack();
-    if (!Utils.isNamed(drop)) {
+    if (!ItemUtils.isItemStackNamed(drop)) {
       return;
     }
     if (drop.getItemMeta().getDisplayName().equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name")) || plugin.getVoteItems().getPoints(drop) != 0) {

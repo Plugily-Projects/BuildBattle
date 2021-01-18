@@ -1,6 +1,7 @@
 /*
+ *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2020 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.buildbattle.arena.managers.plots;
@@ -26,6 +28,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import pl.plajerlair.commonsbox.minecraft.compat.PacketUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
@@ -50,7 +53,7 @@ public class Plot {
   private final Map<Location, Particle> particles = new HashMap<>();
   private final BaseArena arena;
   private Cuboid cuboid;
-  private int points;
+  private int points = 0;
   private List<Player> owners = new ArrayList<>();
   private Time time = Time.WORLD_TIME;
   private final Biome plotDefaultBiome;
@@ -80,6 +83,7 @@ public class Plot {
     return particles;
   }
 
+  @Deprecated
   public void addParticle(Location location, Particle effect) {
     particles.put(location, effect);
   }
@@ -112,21 +116,22 @@ public class Plot {
     this.cuboid = cuboid;
   }
 
+  @NotNull
   public List<Player> getOwners() {
     return owners;
   }
 
   public void setOwners(List<Player> players) {
-    this.owners = players;
+    this.owners = players == null ? new ArrayList<>() : players;
   }
 
   public void addOwner(Player player) {
-    this.owners.add(player);
+    owners.add(player);
   }
 
   public void fullyResetPlot() {
     resetPlot();
-    if (owners != null && !owners.isEmpty()) {
+    if (!owners.isEmpty()) {
       for (Player p : owners) {
         User user = plugin.getUserManager().getUser(p);
         user.setCurrentPlot(null);
@@ -150,12 +155,10 @@ public class Plot {
 
     getParticles().clear();
 
-    if (owners != null) {
-      for (Player p : owners) {
-        p.resetPlayerWeather();
-        setWeatherType(p.getPlayerWeather());
-        p.resetPlayerTime();
-      }
+    for (Player p : owners) {
+      p.resetPlayerWeather();
+      setWeatherType(p.getPlayerWeather());
+      p.resetPlayerTime();
     }
 
     if (cuboid.getCenter().getWorld() != null) {

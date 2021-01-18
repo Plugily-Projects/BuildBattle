@@ -1,6 +1,7 @@
 /*
+ *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2020 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.buildbattle.arena.impl;
@@ -45,7 +47,6 @@ import plugily.projects.buildbattle.menus.themevoter.BBTheme;
 import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.utils.Debugger;
 import plugily.projects.buildbattle.utils.MessageUtils;
-import plugily.projects.buildbattle.utils.Utils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -102,7 +103,8 @@ public class GuessTheBuildArena extends BaseArena {
         break;
       case STARTING:
         for (Player player : getPlayers()) {
-          player.setExp((float) (getTimer() / (double) getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this)));
+          float exp = (float) (getTimer() / (double) getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
+          player.setExp((exp > 1f || exp < 0f) ? 1f : exp);
           player.setLevel(getTimer());
         }
         if (getPlayers().size() < getMinimumPlayers()) {
@@ -139,6 +141,7 @@ public class GuessTheBuildArena extends BaseArena {
           if (plot.getTeleportLocation() != null) {
             for (Player p : getPlayers()) {
               p.teleport(plot.getTeleportLocation());
+              getPlugin().getRewardsHandler().performReward(p, Reward.RewardType.START_GAME, -1);
             }
           }
           nextRoundCooldown = true;
@@ -175,7 +178,7 @@ public class GuessTheBuildArena extends BaseArena {
               .get(r.nextInt(getPlugin().getConfigPreferences().getThemes("Guess-The-Build_" + type).size())), BBTheme.Difficulty.valueOf(type));
           setCurrentTheme(theme);
           setThemeSet(true);
-          Utils.sendActionBar(currentBuilder, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Is-Name")
+          MiscUtils.sendActionBar(currentBuilder, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Is-Name")
               .replace("%THEME%", theme.getTheme()));
           currentBuilder.closeInventory();
 
@@ -199,7 +202,7 @@ public class GuessTheBuildArena extends BaseArena {
               continue;
             }
             if (getWhoGuessed().contains(player)) {
-              Utils.sendActionBar(player, getCurrentTheme().getTheme());
+              MiscUtils.sendActionBar(player, getCurrentTheme().getTheme());
             }
             StringBuilder actionbar = new StringBuilder();
             for (int i = 0; i < getCurrentTheme().getTheme().length(); i++) {
@@ -213,7 +216,7 @@ public class GuessTheBuildArena extends BaseArena {
               }
               actionbar.append("_ ");
             }
-            Utils.sendActionBar(player, actionbar.toString());
+            MiscUtils.sendActionBar(player, actionbar.toString());
           }
         }
         if (getTimer() <= 0 && isThemeSet()) {
@@ -256,7 +259,7 @@ public class GuessTheBuildArena extends BaseArena {
               return;
             }
             for (Player player : getPlayers()) {
-              if (currentBuilder.equals(player)) {
+              if (currentBuilder == player) {
                 continue;
               }
               player.sendTitle(null, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Being-Selected"), 5, 25, 5);
@@ -413,7 +416,7 @@ public class GuessTheBuildArena extends BaseArena {
 
   @Override
   public void updateBossBar() {
-    if (!getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+    if (getGameBar() == null) {
       return;
     }
     switch (getArenaState()) {

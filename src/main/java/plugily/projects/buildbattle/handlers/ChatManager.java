@@ -1,6 +1,7 @@
 /*
+ *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2020 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.buildbattle.handlers;
@@ -23,10 +25,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.handlers.language.LanguageManager;
-import plugily.projects.buildbattle.utils.Utils;
 
 /**
  * Created by Tom on 27/07/2014.
@@ -58,6 +60,10 @@ public class ChatManager {
   }
 
   public void broadcast(BaseArena arena, String message) {
+  if (message.isEmpty()) {
+    return;
+  }
+
     for (Player p : arena.getPlayers()) {
       p.sendMessage(prefix + message);
     }
@@ -73,7 +79,7 @@ public class ChatManager {
     }
 
     if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1) && msg.contains("#")) {
-      msg = Utils.matchColorRegex(msg);
+      msg = MiscUtils.matchColorRegex(msg);
     }
 
     return ChatColor.translateAlternateColorCodes('&', msg);

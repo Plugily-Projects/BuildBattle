@@ -1,6 +1,7 @@
 /*
+ *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.buildbattle.commands.arguments.game;
@@ -42,6 +44,8 @@ import plugily.projects.buildbattle.handlers.language.LanguageManager;
 import plugily.projects.buildbattle.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -51,6 +55,7 @@ import java.util.ArrayList;
  */
 public class ArenaSelectorArgument implements Listener {
 
+  private final Map<Integer, BaseArena> arenas = new HashMap<>();
 
   public ArenaSelectorArgument(ArgumentsRegistry registry) {
     registry.getPlugin().getServer().getPluginManager().registerEvents(this, registry.getPlugin());
@@ -64,7 +69,12 @@ public class ArenaSelectorArgument implements Listener {
           return;
         }
         Inventory inventory = Bukkit.createInventory(player, Utils.serializeInt(ArenaRegistry.getArenas().size()), registry.getPlugin().getChatManager().colorMessage("Arena-Selector.Inv-Title"));
+
+        int slot = 0;
+        arenas.clear();
+
         for (BaseArena arena : ArenaRegistry.getArenas()) {
+          arenas.put(slot, arena);
           ItemStack itemStack;
           switch (arena.getArenaState()) {
             case WAITING_FOR_PLAYERS:
@@ -78,7 +88,7 @@ public class ArenaSelectorArgument implements Listener {
               break;
           }
           ItemMeta itemMeta = itemStack.getItemMeta();
-          itemMeta.setDisplayName(arena.getID());
+          itemMeta.setDisplayName(formatItem(LanguageManager.getLanguageMessage("Arena-Selector.Item.Name"), arena, registry.getPlugin()));
 
           ArrayList<String> lore = new ArrayList<>();
           for (String string : LanguageManager.getLanguageList("Arena-Selector.Item.Lore")) {
@@ -88,6 +98,7 @@ public class ArenaSelectorArgument implements Listener {
           itemMeta.setLore(lore);
           itemStack.setItemMeta(itemMeta);
           inventory.addItem(itemStack);
+          slot++;
         }
         player.openInventory(inventory);
       }
@@ -123,7 +134,8 @@ public class ArenaSelectorArgument implements Listener {
     Player player = (Player) e.getWhoClicked();
     player.closeInventory();
 
-    BaseArena arena = ArenaRegistry.getArena(e.getCurrentItem().getItemMeta().getDisplayName());
+
+    BaseArena arena = arenas.get(e.getRawSlot());
     if (arena != null) {
       ArenaManager.joinAttempt(player, arena);
     } else {

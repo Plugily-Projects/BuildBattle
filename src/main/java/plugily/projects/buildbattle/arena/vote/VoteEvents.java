@@ -1,6 +1,7 @@
 /*
+ *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2020 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.buildbattle.arena.vote;
@@ -24,6 +26,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+
+import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
@@ -34,7 +38,6 @@ import plugily.projects.buildbattle.arena.impl.GuessTheBuildArena;
 import plugily.projects.buildbattle.arena.impl.SoloArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.reward.Reward;
-import plugily.projects.buildbattle.utils.Utils;
 
 /**
  * @author Plajer
@@ -56,7 +59,7 @@ public class VoteEvents implements Listener {
       return;
     }
 
-    if (!Utils.isNamed(e.getItem())) {
+    if (!ItemUtils.isItemStackNamed(e.getItem())) {
       return;
     }
 
@@ -68,8 +71,7 @@ public class VoteEvents implements Listener {
     SoloArena sArena = ((SoloArena) arena);
     Plot plot = sArena.getVotingPlot();
     if (plugin.getVoteItems().getReportItem().equals(e.getItem())) {
-      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.RUN_COMMAND_ON_REPORT) &&
-          plot != null && plot.getOwners() != null) {
+      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.RUN_COMMAND_ON_REPORT) && plot != null) {
         plot.getOwners().forEach(player -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
             plugin.getConfig().getString("Run-Command-On-Report.Command", "kick %reported%")
                 .replace("%reported%", player.getName()).replace("%reporter%", e.getPlayer().getName())));
@@ -80,7 +82,7 @@ public class VoteEvents implements Listener {
       return;
     }
 
-    if (plot != null && plot.getOwners() != null && plot.getOwners().contains(e.getPlayer())) {
+    if (plot != null && plot.getOwners().contains(e.getPlayer())) {
       e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Cant-Vote-Own-Plot"));
       e.setCancelled(true);
       return;

@@ -1,6 +1,7 @@
 /*
+ *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2020 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.buildbattle.handlers.language;
@@ -39,7 +41,7 @@ import plugily.projects.buildbattle.utils.MessageUtils;
 @SuppressWarnings("deprecation")
 public class LanguageMigrator {
 
-  public static final int LANGUAGE_FILE_VERSION = 18;
+  public static final int LANGUAGE_FILE_VERSION = 19;
   public static final int CONFIG_FILE_VERSION = 16;
   private final List<String> migratable = Arrays.asList("bungee", "config", "language", "mysql");
   private final Main plugin;
@@ -228,6 +230,8 @@ public class LanguageMigrator {
                   "# With this true, players couldn't join to the game and can't switch to spectator.\r\n" +
                   "Disable-Spectators: false\r\n");
           break;
+        default:
+          return;
       }
     }
     Debugger.sendConsoleMsg("&a[BuildBattle] [System notify] Config updated, no comments were removed :)");
@@ -460,6 +464,15 @@ public class LanguageMigrator {
                   "      - \" \"\r\n" +
                   "      - \"&eClick to join this arena\"\r\n");
           break;
+        case 18:
+          MigratorUtils.addNewLines(file, "In-Game:\r\n" +
+                 "  Messages:\r\n" +
+                 "    Join-Title:\r\n" +
+                 "    Join-SubTitle: \"&e%THEME%\"");
+          MigratorUtils.insertAfterLine(file, "  Item:", "    Name: \"&f%mapname%\"");
+          break;
+        default:
+          return;
       }
       version++;
     }

@@ -1,6 +1,7 @@
 /*
- * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ *
+ * BuildBattle - Ultimate building competition minigame
+ * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.buildbattle.events.spectator;
@@ -34,6 +36,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
@@ -106,7 +110,7 @@ public class SpectatorEvents implements Listener {
       }
 
       ItemStack stack = e.getPlayer().getInventory().getItemInMainHand();
-      if (!Utils.isNamed(stack)) {
+      if (!ItemUtils.isItemStackNamed(stack)) {
         return;
       }
 
@@ -132,7 +136,7 @@ public class SpectatorEvents implements Listener {
       ItemStack skull = XMaterial.PLAYER_HEAD.parseItem();
 
       SkullMeta meta = (SkullMeta) skull.getItemMeta();
-      meta = Utils.setPlayerHead(player, meta);
+      meta = MiscUtils.setPlayerHead(player, meta);
       meta.setDisplayName(player.getName());
       skull.setItemMeta(meta);
       inventory.addItem(skull);
@@ -154,7 +158,7 @@ public class SpectatorEvents implements Listener {
 
     e.setCancelled(true);
 
-    if (!Utils.isNamed(e.getCurrentItem()) || !e.getView().getTitle().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
+    if (!ItemUtils.isItemStackNamed(e.getCurrentItem()) || !e.getView().getTitle().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
       return;
     }
 

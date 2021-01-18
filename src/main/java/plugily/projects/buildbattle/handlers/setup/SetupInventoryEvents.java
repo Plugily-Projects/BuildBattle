@@ -1,6 +1,7 @@
 /*
+ *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2020 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.buildbattle.handlers.setup;
@@ -47,11 +49,11 @@ import plugily.projects.buildbattle.arena.impl.TeamArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.PermissionManager;
 import plugily.projects.buildbattle.handlers.sign.ArenaSign;
-import plugily.projects.buildbattle.utils.Utils;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 
 import static plugily.projects.buildbattle.handlers.setup.SetupInventory.isOptionDone;
@@ -73,7 +75,7 @@ public class SetupInventoryEvents implements Listener {
     if (!(e.getWhoClicked() instanceof Player || e.getWhoClicked().hasPermission(PermissionManager.getEditGames()))) {
       return;
     }
-    if (!e.getView().getTitle().contains("Game type:") || !Utils.isNamed(e.getCurrentItem())) {
+    if (!e.getView().getTitle().contains("Game type:") || !ItemUtils.isItemStackNamed(e.getCurrentItem())) {
       return;
     }
     Player player = (Player) e.getWhoClicked();
@@ -105,7 +107,7 @@ public class SetupInventoryEvents implements Listener {
       return;
     }
     Player player = (Player) e.getWhoClicked();
-    if (!(player.hasPermission("buildbattle.admin.create") && e.getView().getTitle().contains("BB Arena:") && Utils.isNamed(e.getCurrentItem()))) {
+    if (!(player.hasPermission("buildbattle.admin.create") && e.getView().getTitle().contains("BB Arena:") && ItemUtils.isItemStackNamed(e.getCurrentItem()))) {
       return;
     }
 
@@ -131,6 +133,7 @@ public class SetupInventoryEvents implements Listener {
       return;
     }
 
+    ItemStack currentItem = e.getCurrentItem();
     switch (slot) {
       case SET_ENDING:
         config.set("instances." + arena.getID() + ".Endlocation", locationString);
@@ -141,13 +144,17 @@ public class SetupInventoryEvents implements Listener {
         player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aLobby location for arena " + arena.getID() + " set at your location!"));
         break;
       case SET_MINIMUM_PLAYERS:
+        if (currentItem == null) {
+          break; // somehow getCurrentItem is still null even its already checked
+        }
+
         if (clickType.isRightClick()) {
-          e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
+          currentItem.setAmount(currentItem.getAmount() + 1);
         }
         if (clickType.isLeftClick()) {
-          e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
+          currentItem.setAmount(currentItem.getAmount() - 1);
         }
-        config.set("instances." + arena.getID() + ".minimumplayers", e.getCurrentItem().getAmount());
+        config.set("instances." + arena.getID() + ".minimumplayers", currentItem.getAmount());
         List<String> lore = new ArrayList<>();
         lore.add(ChatColor.GRAY + "LEFT click to decrease");
         lore.add(ChatColor.GRAY + "RIGHT click to increase");
@@ -164,13 +171,17 @@ public class SetupInventoryEvents implements Listener {
         player.updateInventory();
         break;
       case SET_MAXIMUM_PLAYERS:
+        if (currentItem == null) {
+          break; // somehow getCurrentItem is still null even its already checked
+        }
+
         if (clickType.isRightClick()) {
-          e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
+          currentItem.setAmount(currentItem.getAmount() + 1);
         }
         if (clickType.isLeftClick()) {
-          e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
+          currentItem.setAmount(currentItem.getAmount() - 1);
         }
-        config.set("instances." + arena.getID() + ".maximumplayers", e.getCurrentItem().getAmount());
+        config.set("instances." + arena.getID() + ".maximumplayers", currentItem.getAmount());
         List<String> maxlore = new ArrayList<>();
         maxlore.add(ChatColor.GRAY + "LEFT click to decrease");
         maxlore.add(ChatColor.GRAY + "RIGHT click to increase");
@@ -216,15 +227,15 @@ public class SetupInventoryEvents implements Listener {
         player.openInventory(inv);
         break;
       case SET_MAP_NAME:
-        if (e.getCurrentItem().getType() == Material.NAME_TAG && e.getCursor().getType() == Material.NAME_TAG) {
-          if (!Utils.isNamed(e.getCursor())) {
+        if (currentItem.getType() == Material.NAME_TAG && e.getCursor().getType() == Material.NAME_TAG) {
+          if (!ItemUtils.isItemStackNamed(e.getCursor())) {
             player.sendMessage(ChatColor.RED + "This item doesn't has a name!");
             return;
           }
           String newName = e.getCursor().getItemMeta().getDisplayName();
           config.set("instances." + arena.getID() + ".mapname", newName);
           player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aName of arena " + arena.getID() + " set to " + newName));
-          e.getCurrentItem().getItemMeta().setDisplayName(ChatColor.GOLD + "Set a mapname (currently: " + newName);
+          currentItem.getItemMeta().setDisplayName(ChatColor.GOLD + "Set a mapname (currently: " + newName);
         }
         break;
       case ADD_GAME_PLOT:

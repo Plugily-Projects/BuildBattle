@@ -1,6 +1,7 @@
 /*
+ *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2020 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.buildbattle;
@@ -61,7 +63,6 @@ import plugily.projects.buildbattle.handlers.sign.SignManager;
 import plugily.projects.buildbattle.menus.options.OptionsMenuHandler;
 import plugily.projects.buildbattle.menus.options.OptionsRegistry;
 import plugily.projects.buildbattle.menus.options.registry.banner.BannerMenu;
-import plugily.projects.buildbattle.menus.options.registry.particles.ParticleRefreshScheduler;
 import plugily.projects.buildbattle.menus.themevoter.VoteMenuListener;
 import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.user.UserManager;
@@ -77,6 +78,7 @@ import plugily.projects.buildbattle.utils.services.ServiceRegistry;
 //todo inventoryframework
 public class Main extends JavaPlugin {
 
+  private ArgumentsRegistry registry;
   private ExceptionLogHandler exceptionLogHandler;
   private ChatManager chatManager;
   private ConfigPreferences configPreferences;
@@ -118,6 +120,10 @@ public class Main extends JavaPlugin {
 
   public SpecialItemsRegistry getSpecialItemsRegistry() {
     return specialItemsRegistry;
+  }
+
+  public ArgumentsRegistry getArgumentsRegistry() {
+    return registry;
   }
 
   @Override
@@ -196,7 +202,7 @@ public class Main extends JavaPlugin {
       FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
       database = new MysqlDatabase(config.getString("user"), config.getString("password"), config.getString("address"));
     }
-    new ArgumentsRegistry(this);
+    registry = new ArgumentsRegistry(this);
     userManager = new UserManager(this);
     PermissionManager.init();
     new SetupInventoryEvents(this);
@@ -211,7 +217,6 @@ public class Main extends JavaPlugin {
     new ChatEvents(this);
     optionsRegistry = new OptionsRegistry(this);
     new OptionsMenuHandler(this);
-    new ParticleRefreshScheduler(this);
     Metrics metrics = new Metrics(this);
     metrics.addCustomChart(new Metrics.SimplePie("bungeecord_hooked", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.BUNGEE_ENABLED))));
     metrics.addCustomChart(new Metrics.SimplePie("locale_used", LanguageManager.getPluginLocale()::getPrefix));

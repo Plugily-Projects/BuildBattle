@@ -1,6 +1,7 @@
 /*
+ *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2020 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.buildbattle.utils;
@@ -21,6 +23,7 @@ package plugily.projects.buildbattle.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 
 /**
  * @author Plajer
@@ -74,7 +77,7 @@ public class Debugger {
 
   public static void sendConsoleMsg(String msg) {
     if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1) && msg.contains("#")) {
-      msg = Utils.matchColorRegex(msg);
+      msg = MiscUtils.matchColorRegex(msg);
     }
 
     Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', msg));

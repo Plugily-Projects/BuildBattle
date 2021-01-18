@@ -1,6 +1,7 @@
 /*
+ *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2020 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.buildbattle.arena.impl;
@@ -28,6 +30,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
@@ -36,7 +39,7 @@ import plugily.projects.buildbattle.arena.ArenaState;
 import plugily.projects.buildbattle.arena.managers.ScoreboardManager;
 import plugily.projects.buildbattle.arena.managers.plots.PlotManager;
 import plugily.projects.buildbattle.arena.options.ArenaOption;
-import plugily.projects.buildbattle.utils.Utils;
+import plugily.projects.buildbattle.menus.options.registry.particles.ParticleRefreshScheduler;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -52,10 +55,12 @@ public class BaseArena extends BukkitRunnable {
 
   private final List<Player> players = new ArrayList<>();
   private final List<Player> spectators = new ArrayList<>();
+
   //instead of 2 (lobby, end) location fields we use map with GameLocation enum
   private final Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
   //all arena values that are integers, contains constant and floating values
   private final Map<ArenaOption, Integer> arenaOptions = new EnumMap<>(ArenaOption.class);
+
   private final Main plugin;
   private final String id;
   private final PlotManager plotManager;
@@ -68,6 +73,8 @@ public class BaseArena extends BukkitRunnable {
   private ArenaType arenaType;
   private boolean forceStart = false;
   private boolean ready = true;
+
+  private ParticleRefreshScheduler particleRefreshSched;
 
   public BaseArena(String id, Main plugin) {
     arenaState = ArenaState.WAITING_FOR_PLAYERS;
@@ -110,10 +117,23 @@ public class BaseArena extends BukkitRunnable {
 
   @Override
   public void run() {
+    switch (arenaState) {
+    case STARTING:
+      particleRefreshSched = new ParticleRefreshScheduler(plugin);
+      break;
+    case ENDING:
+      if (particleRefreshSched != null) {
+        particleRefreshSched.task.cancel();
+      }
+
+      break;
+    default:
+      break;
+    }
   }
 
   public void start() {
-    this.runTaskTimer(plugin, 20L, 20L);
+    runTaskTimer(plugin, 20L, 20L);
   }
 
   /**
@@ -149,7 +169,7 @@ public class BaseArena extends BukkitRunnable {
     String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Time-Left-To-Build").replace("%FORMATTEDTIME%", StringFormatUtils.formatIntoMMSS(getTimer()));
     String subtitle = getPlugin().getChatManager().colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", String.valueOf(getTimer()));
     for (Player p : getPlayers()) {
-      Utils.sendActionBar(p, message);
+      MiscUtils.sendActionBar(p, message);
       p.sendMessage(getPlugin().getChatManager().getPrefix() + message);
       p.sendTitle(null, subtitle, 5, 30, 5);
     }

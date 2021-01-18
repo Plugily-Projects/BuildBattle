@@ -1,6 +1,7 @@
 /*
+ *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2020 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.buildbattle.events;
@@ -69,7 +71,7 @@ public class ChatEvents implements Listener {
       event.getPlayer().sendMessage(plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Chat.Cant-Talk-When-Guessed"));
       return;
     }
-    if (event.getPlayer().equals(gameArena.getCurrentBuilder())) {
+    if (event.getPlayer() == gameArena.getCurrentBuilder()) {
       event.setCancelled(true);
       event.getPlayer().sendMessage(plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Chat.Cant-Talk-When-Building"));
       return;
@@ -86,8 +88,10 @@ public class ChatEvents implements Listener {
         + gameArena.getCurrentTheme().getDifficulty().getPointsReward());
     plugin.getUserManager().getUser(gameArena.getCurrentBuilder())
         .addStat(StatsStorage.StatisticType.LOCAL_GUESS_THE_BUILD_POINTS, gameArena.getCurrentTheme().getDifficulty().getPointsReward());
-    gameArena.addWhoGuessed(event.getPlayer());
-    gameArena.recalculateLeaderboard();
+    org.bukkit.Bukkit.getScheduler().runTaskLater(plugin, () -> {
+      gameArena.addWhoGuessed(event.getPlayer());
+      gameArena.recalculateLeaderboard();
+    }, 1L);
 
     //todo add api event for successful guess
   }

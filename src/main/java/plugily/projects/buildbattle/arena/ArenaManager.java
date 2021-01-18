@@ -1,6 +1,7 @@
 /*
+ *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2020 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.buildbattle.arena;
@@ -49,7 +51,6 @@ import plugily.projects.buildbattle.handlers.items.SpecialItem;
 import plugily.projects.buildbattle.handlers.party.GameParty;
 import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.utils.Debugger;
-import plugily.projects.buildbattle.utils.NMS;
 
 /**
  * @author Plajer
@@ -95,7 +96,7 @@ public class ArenaManager {
     //check if player is in party and send party members to the game
     if (plugin.getPartyHandler().isPlayerInParty(player)) {
       GameParty party = plugin.getPartyHandler().getParty(player);
-      if (party.getLeader().equals(player)) {
+      if (party.getLeader() == player) {
         if (arena.getMaximumPlayers() - arena.getPlayers().size() >= party.getPlayers().size()) {
           for (Player partyPlayer : party.getPlayers()) {
             if (partyPlayer == player) {
@@ -171,7 +172,7 @@ public class ArenaManager {
 
     player.setExp(1);
     player.setFoodLevel(20);
-    player.setHealth(20.0);
+    MiscUtils.getEntityAttribute(player, Attribute.GENERIC_MAX_HEALTH).ifPresent(ai -> player.setHealth(ai.getBaseValue()));
     player.setLevel(0);
     player.setWalkSpeed(0.2f);
     player.setFlySpeed(0.1f);
@@ -201,7 +202,7 @@ public class ArenaManager {
       player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0));
 
       //Hide player from other players
-      arena.getPlayers().forEach(onlinePlayer -> NMS.hidePlayer(onlinePlayer, player));
+      arena.getPlayers().forEach(onlinePlayer -> MiscUtils.hidePlayer(plugin, onlinePlayer, player));
 
       user.setSpectator(true);
       player.setCollidable(false);
@@ -211,9 +212,9 @@ public class ArenaManager {
 
       for (Player spectator : arena.getPlayers()) {
         if (plugin.getUserManager().getUser(spectator).isSpectator()) {
-          NMS.hidePlayer(player, spectator);
+          MiscUtils.hidePlayer(plugin, player, spectator);
         } else {
-          NMS.showPlayer(player, spectator);
+          MiscUtils.showPlayer(plugin, player, spectator);
         }
       }
       return;
@@ -226,6 +227,8 @@ public class ArenaManager {
     player.updateInventory();
 
     chatManager.broadcastAction(arena, player, ChatManager.ActionType.JOIN);
+    player.sendTitle(chatManager.colorMessage("In-Game.Messages.Join-Title").replace("%THEME%", arena.getTheme()),
+        chatManager.colorMessage("In-Game.Messages.Join-Title").replace("%THEME%", arena.getTheme()), 5, 40, 5);
     plugin.getSignManager().updateSigns();
   }
 
@@ -246,7 +249,7 @@ public class ArenaManager {
 
     arena.doBarAction(BaseArena.BarAction.REMOVE, player);
     player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
-    player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
+    MiscUtils.getEntityAttribute(player, Attribute.GENERIC_MAX_HEALTH).ifPresent(ai -> ai.setBaseValue(20.0));
     player.getInventory().clear();
     player.getInventory().setArmorContents(null);
     player.resetPlayerTime();
@@ -269,9 +272,9 @@ public class ArenaManager {
 
     for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
       if (ArenaRegistry.getArena(onlinePlayer) == null) {
-        NMS.showPlayer(onlinePlayer, player);
+        MiscUtils.showPlayer(plugin, onlinePlayer, player);
       }
-      NMS.showPlayer(player, onlinePlayer);
+      MiscUtils.showPlayer(plugin, player, onlinePlayer);
     }
 
     // Spectator

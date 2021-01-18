@@ -1,6 +1,7 @@
 /*
+ *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2020 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.buildbattle.arena.impl;
@@ -139,7 +141,8 @@ public class SoloArena extends BaseArena {
         break;
       case STARTING:
         for (Player player : getPlayers()) {
-          player.setExp((float) (getTimer() / (double) getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this)));
+          float exp = (float) (getTimer() / (double) getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
+          player.setExp((exp > 1f || exp < 0f) ? 1f : exp);
           player.setLevel(getTimer());
         }
         if (getPlayers().size() < getMinimumPlayers() && !isForceStart()) {
@@ -169,6 +172,7 @@ public class SoloArena extends BaseArena {
             player.getInventory().setItem(8, getPlugin().getOptionsRegistry().getMenuItem());
             //to prevent Multiverse changing gamemode bug
             Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setGameMode(GameMode.CREATIVE), 20);
+            getPlugin().getRewardsHandler().performReward(player, Reward.RewardType.START_GAME, -1);
           }
         }
         if (isForceStart()) {
@@ -251,6 +255,7 @@ public class SoloArena extends BaseArena {
           if (!queue.isEmpty()) {
             voteForNextPlot();
           } else {
+            if (votingPlot.getPoints() == 0) {
             if (votingPlot != null) {
               for (Player player : getPlayers()) {
                 if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER)) {
@@ -269,6 +274,7 @@ public class SoloArena extends BaseArena {
                 }
                 votingPlot.setPoints(votingPlot.getPoints() + points);
                 getPlugin().getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
+              }
               }
               if (getArenaType() == ArenaType.TEAM) {
                 for (Plot p : getPlotManager().getPlots()) {
@@ -371,7 +377,7 @@ public class SoloArena extends BaseArena {
 
   @Override
   public void updateBossBar() {
-    if (!getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+    if (getGameBar() == null) {
       return;
     }
     switch (getArenaState()) {
@@ -469,9 +475,11 @@ public class SoloArena extends BaseArena {
 
   public void voteForNextPlot() {
     if (votingPlot != null) {
-      for (Player player : getPlayers()) {
-        votingPlot.setPoints(votingPlot.getPoints() + getPlugin().getUserManager().getUser(player).getStat(StatsStorage.StatisticType.LOCAL_POINTS));
-        getPlugin().getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 3);
+      if (votingPlot.getPoints() == 0) {
+        for (Player player : getPlayers()) {
+          votingPlot.setPoints(votingPlot.getPoints() + getPlugin().getUserManager().getUser(player).getStat(StatsStorage.StatisticType.LOCAL_POINTS));
+          getPlugin().getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 3);
+        }
       }
       if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER) && !votingPlot.getOwners().isEmpty()) {
         String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voted-For-Player-Plot").replace("%PLAYER%", votingPlot.getOwners().get(0).getName());
