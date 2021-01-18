@@ -474,22 +474,22 @@ public class SoloArena extends BaseArena {
   }
 
   public void voteForNextPlot() {
-    if (votingPlot.getPoints() == 0) {
-        if (votingPlot != null) {
-            for (Player player : getPlayers()) {
-                votingPlot.setPoints(votingPlot.getPoints() + getPlugin().getUserManager().getUser(player).getStat(StatsStorage.StatisticType.LOCAL_POINTS));
-                getPlugin().getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 3);
-            }
-            if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER) && !votingPlot.getOwners().isEmpty()) {
-                String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voted-For-Player-Plot").replace("%PLAYER%", votingPlot.getOwners().get(0).getName());
-                for (Player p : getPlayers()) {
-                    String owner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
-                    owner = formatWinners(votingPlot, owner);
-                    p.sendTitle(owner, null, 5, 40, 5);
-                    p.sendMessage(getPlugin().getChatManager().getPrefix() + message);
-                }
-            }
+    if (votingPlot != null) {
+      if (votingPlot.getPoints() == 0) {
+        for (Player player : getPlayers()) {
+          votingPlot.setPoints(votingPlot.getPoints() + getPlugin().getUserManager().getUser(player).getStat(StatsStorage.StatisticType.LOCAL_POINTS));
+          getPlugin().getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 3);
         }
+      }
+      if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER) && !votingPlot.getOwners().isEmpty()) {
+        String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voted-For-Player-Plot").replace("%PLAYER%", votingPlot.getOwners().get(0).getName());
+        for (Player p : getPlayers()) {
+          String owner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
+          owner = formatWinners(votingPlot, owner);
+          p.sendTitle(owner, null, 5, 40, 5);
+          p.sendMessage(getPlugin().getChatManager().getPrefix() + message);
+        }
+      }
     }
     voteRoutine();
   }
