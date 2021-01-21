@@ -41,6 +41,7 @@ import plugily.projects.buildbattle.arena.options.ArenaOption;
 import plugily.projects.buildbattle.handlers.HolidayManager;
 import plugily.projects.buildbattle.handlers.language.LanguageManager;
 import plugily.projects.buildbattle.handlers.reward.Reward;
+import plugily.projects.buildbattle.menus.options.registry.particles.ParticleRefreshScheduler;
 import plugily.projects.buildbattle.menus.themevoter.VoteMenu;
 import plugily.projects.buildbattle.menus.themevoter.VotePoll;
 import plugily.projects.buildbattle.user.User;
@@ -157,6 +158,7 @@ public class SoloArena extends BaseArena {
           break;
         }
         if (getTimer() == 0 || isForceStart()) {
+          particleRefreshSched = new ParticleRefreshScheduler(getPlugin());
           if (!getPlotManager().isPlotsCleared()) {
             getPlotManager().resetQueuedPlots();
           }
@@ -349,6 +351,9 @@ public class SoloArena extends BaseArena {
           }
           giveRewards();
           clearPlayers();
+          if (particleRefreshSched != null) {
+            particleRefreshSched.task.cancel();
+          }
           setArenaState(ArenaState.RESTARTING);
         }
         setTimer(getTimer() - 1);

@@ -74,7 +74,7 @@ public class BaseArena extends BukkitRunnable {
   private boolean forceStart = false;
   private boolean ready = true;
 
-  private ParticleRefreshScheduler particleRefreshSched;
+  protected ParticleRefreshScheduler particleRefreshSched;
 
   public BaseArena(String id, Main plugin) {
     arenaState = ArenaState.WAITING_FOR_PLAYERS;
@@ -117,19 +117,6 @@ public class BaseArena extends BukkitRunnable {
 
   @Override
   public void run() {
-    switch (arenaState) {
-    case STARTING:
-      particleRefreshSched = new ParticleRefreshScheduler(plugin);
-      break;
-    case ENDING:
-      if (particleRefreshSched != null) {
-        particleRefreshSched.task.cancel();
-      }
-
-      break;
-    default:
-      break;
-    }
   }
 
   public void start() {

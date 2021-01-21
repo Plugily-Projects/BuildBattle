@@ -43,6 +43,7 @@ import plugily.projects.buildbattle.arena.managers.GuessTheBuildScoreboardManage
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.arena.options.ArenaOption;
 import plugily.projects.buildbattle.handlers.reward.Reward;
+import plugily.projects.buildbattle.menus.options.registry.particles.ParticleRefreshScheduler;
 import plugily.projects.buildbattle.menus.themevoter.BBTheme;
 import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.utils.Debugger;
@@ -119,6 +120,7 @@ public class GuessTheBuildArena extends BaseArena {
           break;
         }
         if (getTimer() == 0) {
+          particleRefreshSched = new ParticleRefreshScheduler(getPlugin());
           if (!getPlotManager().isPlotsCleared()) {
             getPlotManager().resetQueuedPlots();
           }
@@ -332,6 +334,9 @@ public class GuessTheBuildArena extends BaseArena {
           Bukkit.getScheduler().scheduleSyncDelayedTask(getPlugin(), this::giveRewards);
 
           clearPlayers();
+          if (particleRefreshSched != null) {
+            particleRefreshSched.task.cancel();
+          }
           setArenaState(ArenaState.RESTARTING);
           if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
             getPlugin().getServer().getOnlinePlayers().forEach(this::addPlayer);

@@ -11,7 +11,7 @@ That's all, matcher will stop when detects next line started with `###` match
 
 ### 4.4.6 Release (18.01.2021)
 * Fixed bb items are not removed if inventory manager is enabled and the server is stopping
-
+* Fixed particle refresh scheduler not worked on game start
 
 ### 4.4.5 Release (31.12.2020 - 18.01.2021)
 * ArgumentsRegistry now accessible from outside
