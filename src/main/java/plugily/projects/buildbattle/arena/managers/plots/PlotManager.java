@@ -21,6 +21,7 @@
 package plugily.projects.buildbattle.arena.managers.plots;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -130,6 +131,8 @@ public class PlotManager {
           }).thenAccept(loc -> {
             for (Player p : buildPlot.getOwners()) {
               p.teleport(cuboid.getCenter());
+              //apply creative again to prevent multiverse default gamemode on world switch
+              p.setGameMode(GameMode.CREATIVE);
             }
           });
         }
