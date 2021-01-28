@@ -212,9 +212,9 @@ public class ArenaManager {
 
       for (Player spectator : arena.getPlayers()) {
         if (plugin.getUserManager().getUser(spectator).isSpectator()) {
-          MiscUtils.hidePlayer(plugin, player, spectator);
-        } else {
           MiscUtils.showPlayer(plugin, player, spectator);
+        } else {
+          MiscUtils.hidePlayer(plugin, player, spectator);
         }
       }
       return;
@@ -278,7 +278,7 @@ public class ArenaManager {
     }
 
     // Spectator
-    if (user.isSpectator()) {
+    if (user.isSpectator() || arena.getSpectators().contains(player)) {
       arena.removeSpectator(player);
       user.setSpectator(false);
       return;

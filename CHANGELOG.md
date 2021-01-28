@@ -9,7 +9,13 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
-### 4.4.6 Release (18.01.2021)
+### 4.4.7 Release (24.01.2021 - 28.01.2021)
+* Fixed Join SubTitle not being sent 
+* Fixed stack trace array length is 0 when trying to send exception to service
+* Fix NPE related to citizens NPCRegistry method return value
+* Fixed spectators can not see each other after joining game while being ingame
+
+### 4.4.6 Release (18.01.2021 - 22.01.2021)
 * Fixed bb items are not removed if inventory manager is enabled and the server is stopping
 * Fixed particle refresh scheduler not worked on game start
 
