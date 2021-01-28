@@ -14,6 +14,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Fixed stack trace array length is 0 when trying to send exception to service
 * Fix NPE related to citizens NPCRegistry method return value
 * Fixed spectators can not see each other after joining game while being ingame
+* Added 2 new Plot times - Noon, MidNight
 
 ### 4.4.6 Release (18.01.2021 - 22.01.2021)
 * Fixed bb items are not removed if inventory manager is enabled and the server is stopping

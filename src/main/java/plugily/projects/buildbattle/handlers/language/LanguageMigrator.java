@@ -41,7 +41,7 @@ import plugily.projects.buildbattle.utils.MessageUtils;
 @SuppressWarnings("deprecation")
 public class LanguageMigrator {
 
-  public static final int LANGUAGE_FILE_VERSION = 19;
+  public static final int LANGUAGE_FILE_VERSION = 20;
   public static final int CONFIG_FILE_VERSION = 16;
   private final List<String> migratable = Arrays.asList("bungee", "config", "language", "mysql");
   private final Main plugin;
@@ -470,6 +470,11 @@ public class LanguageMigrator {
                  "    Join-Title:\r\n" +
                  "    Join-SubTitle: \"&e%THEME%\"");
           MigratorUtils.insertAfterLine(file, "  Item:", "    Name: \"&f%mapname%\"");
+          break;
+        case 19:
+          MigratorUtils.insertAfterLine(file, "        Time-Type:",
+                    "          Noon: \"&eNoon (6000 ticks)\"\r\n" +
+                          "          MidNight: \"&eMidNight (18000 ticks)\"\r\n");
           break;
         default:
           return;

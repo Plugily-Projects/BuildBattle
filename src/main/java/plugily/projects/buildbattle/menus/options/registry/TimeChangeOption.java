@@ -57,11 +57,15 @@ public class TimeChangeOption {
         timeInv.setItem(1, new ItemBuilder(XMaterial.CLOCK.parseItem())
             .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Time.Time-Type.Day")).build());
         timeInv.setItem(2, new ItemBuilder(XMaterial.CLOCK.parseItem())
-            .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Time.Time-Type.Sunset")).build());
+                .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Time.Time-Type.Noon")).build());
         timeInv.setItem(3, new ItemBuilder(XMaterial.CLOCK.parseItem())
-            .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Time.Time-Type.Night")).build());
+                .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Time.Time-Type.Sunset")).build());
         timeInv.setItem(4, new ItemBuilder(XMaterial.CLOCK.parseItem())
-            .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Time.Time-Type.Sunrise")).build());
+            .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Time.Time-Type.Night")).build());
+        timeInv.setItem(5, new ItemBuilder(XMaterial.CLOCK.parseItem())
+                .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Time.Time-Type.MidNight")).build());
+        timeInv.setItem(6, new ItemBuilder(XMaterial.CLOCK.parseItem())
+                .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Time.Time-Type.Sunrise")).build());
         timeInv.addItem(Utils.getGoBackItem());
         e.getWhoClicked().openInventory(timeInv);
       }
@@ -83,9 +87,9 @@ public class TimeChangeOption {
   }
 
   public enum TimeClickPosition {
-    WORLD_TIME(0), DAY(1), SUNSET(2), NIGHT(3), SUNRISE(4);
+    WORLD_TIME(0), DAY(1), NOON(2), SUNSET(3), NIGHT(4), MIDNIGHT(5), SUNRISE(6);
 
-    private int position;
+    private final int position;
 
     TimeClickPosition(int position) {
       this.position = position;

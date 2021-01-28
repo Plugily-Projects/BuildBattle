@@ -288,7 +288,7 @@ public class Plot {
    * Enum that represents current plot time
    */
   public enum Time {
-    WORLD_TIME(-1), DAY(1000), SUNSET(12000), SUNRISE(23000), NIGHT(13000);
+    WORLD_TIME(-1), DAY(1000), NOON(6000), SUNSET(12000), SUNRISE(23000), NIGHT(13000), MIDNIGHT(18000);
 
     private final long ticks;
 
