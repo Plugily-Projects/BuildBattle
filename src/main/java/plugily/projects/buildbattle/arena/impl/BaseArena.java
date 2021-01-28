@@ -379,7 +379,8 @@ public class BaseArena extends BukkitRunnable {
    */
   @Nullable
   public String getTheme() {
-    return theme;
+    //make sure to have no NPE
+    return theme == null ? "Theme" : theme;
   }
 
   public void setTheme(String theme) {
