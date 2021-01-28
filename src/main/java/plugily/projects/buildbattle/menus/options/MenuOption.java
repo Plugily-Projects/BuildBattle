@@ -22,7 +22,6 @@ package plugily.projects.buildbattle.menus.options;
 
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import plugily.projects.buildbattle.utils.Utils;
 
 /**
  * @author Plajer
