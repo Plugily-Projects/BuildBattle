@@ -220,11 +220,11 @@ public class Main extends JavaPlugin {
     new ChatEvents(this);
     optionsRegistry = new OptionsRegistry(this);
     new OptionsMenuHandler(this);
-    Metrics metrics = new Metrics(this);
-    metrics.addCustomChart(new Metrics.SimplePie("bungeecord_hooked", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.BUNGEE_ENABLED))));
-    metrics.addCustomChart(new Metrics.SimplePie("locale_used", LanguageManager.getPluginLocale()::getPrefix));
-    metrics.addCustomChart(new Metrics.SimplePie("update_notifier", () -> {
-      if(getConfig().getBoolean("Update-Notifier.Enabled", true)) {
+    Metrics metrics = new Metrics(this, 2491);
+    metrics.addCustomChart(new org.bstats.charts.SimplePie("bungeecord_hooked", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.BUNGEE_ENABLED))));
+    metrics.addCustomChart(new org.bstats.charts.SimplePie("locale_used", LanguageManager.getPluginLocale()::getPrefix));
+    metrics.addCustomChart(new org.bstats.charts.SimplePie("update_notifier", () -> {
+      if (getConfig().getBoolean("Update-Notifier.Enabled", true)) {
         return getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true) ? "Enabled with beta notifier" : "Enabled";
       }
       return getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true) ? "Beta notifier only" : "Disabled";
