@@ -20,11 +20,6 @@
 
 package plugily.projects.buildbattle.menus.themevoter;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -34,7 +29,6 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.number.NumberUtils;
@@ -43,6 +37,11 @@ import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.arena.impl.SoloArena;
 import plugily.projects.buildbattle.user.User;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * @author Plajer
  * <p>
@@ -50,10 +49,10 @@ import plugily.projects.buildbattle.user.User;
  */
 public class VoteMenu {
 
-  private Main plugin = JavaPlugin.getPlugin(Main.class);
+  private final Main plugin = JavaPlugin.getPlugin(Main.class);
   private Inventory inventory;
   private VotePoll votePoll;
-  private SoloArena arena;
+  private final SoloArena arena;
 
   public VoteMenu(SoloArena arena) {
     this.arena = arena;
@@ -69,13 +68,13 @@ public class VoteMenu {
     //random themes order
     Collections.shuffle(themesTotal);
     List<String> randomThemes = new ArrayList<>();
-    if (themesTotal.size() <= 5) {
+    if(themesTotal.size() <= 5) {
       randomThemes.addAll(themesTotal);
     } else {
       Iterator<String> itr = themesTotal.iterator();
       int i = 0;
-      while (itr.hasNext()) {
-        if (i == 5) {
+      while(itr.hasNext()) {
+        if(i == 5) {
           break;
         }
         randomThemes.add(itr.next());
@@ -84,7 +83,7 @@ public class VoteMenu {
       }
     }
     this.inventory = Bukkit.createInventory(null, 9 * (randomThemes.size() > 5 ? 5 : randomThemes.size()), plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"));
-    for (int i = 0; i < randomThemes.size(); i++) {
+    for(int i = 0; i < randomThemes.size(); i++) {
       ItemStack item = new ItemStack(XMaterial.OAK_SIGN.parseMaterial());
       setItem(new ItemBuilder(item)
           .name(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Theme-Item-Name").replace("%theme%", randomThemes.get(i)))
@@ -92,7 +91,7 @@ public class VoteMenu {
               .replace("%percent%", "0.0").replace("%time-left%", String.valueOf(arena.getTimer())).split(";"))
           .build(), i * 9);
       setItem(new ItemBuilder(XMaterial.IRON_BARS.parseItem()).build(), (i * 9) + 1);
-      for (int j = 0; j < 6; j++) {
+      for(int j = 0; j < 6; j++) {
         setItem(new ItemBuilder(XMaterial.RED_STAINED_GLASS_PANE.parseItem()).build(), (i * 9) + 1 + j + 1);
       }
       setItem(new ItemBuilder(new ItemStack(Material.PAPER))
@@ -112,15 +111,15 @@ public class VoteMenu {
   }
 
   public void updateInventory(Player player) {
-  if (player == null || votePoll == null) {
+    if(player == null || votePoll == null) {
       return;
     }
     int totalVotes = votePoll.getPlayerVote().size();
     int i = 0;
     User user = plugin.getUserManager().getUser(player);
-    for (String theme : votePoll.getVotedThemes().keySet()) {
+    for(String theme : votePoll.getVotedThemes().keySet()) {
       double percent;
-      if (Double.isNaN(votePoll.getVotedThemes().get(theme)) || votePoll.getVotedThemes().get(theme) == 0) {
+      if(Double.isNaN(votePoll.getVotedThemes().get(theme)) || votePoll.getVotedThemes().get(theme) == 0) {
         percent = 0.0;
       } else {
         percent = ((double) votePoll.getVotedThemes().get(theme) / (double) totalVotes) * 100;
@@ -130,14 +129,14 @@ public class VoteMenu {
           .lore(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Theme-Item-Lore").replace("%theme%", theme)
               .replace("%percent%", String.valueOf(NumberUtils.round(percent, 2))).replace("%time-left%", String.valueOf(arena.getTimer())).split(";"))
           .build();
-      if (votePoll.getPlayerVote().containsKey(player) && votePoll.getPlayerVote().get(player).equals(theme)) {
+      if(votePoll.getPlayerVote().containsKey(player) && votePoll.getPlayerVote().get(player).equals(theme)) {
         ItemMeta meta = stack.getItemMeta();
         meta.addEnchant(Enchantment.DAMAGE_ALL, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         stack.setItemMeta(meta);
       }
       setItem(stack, (i * 9));
-      for (int j = 0; j < 6; j++) {
+      for(int j = 0; j < 6; j++) {
         setItem(new ItemBuilder(XMaterial.RED_STAINED_GLASS_PANE.parseItem()).build(), (i * 9) + 1 + j + 1);
       }
       setItem(new ItemBuilder(new ItemStack(Material.PAPER))
@@ -145,10 +144,10 @@ public class VoteMenu {
           .lore(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Super-Vote-Item-Lore").replace("%theme%", theme)
               .replace("%owned%", String.valueOf(user.getStat(StatsStorage.StatisticType.SUPER_VOTES))).split(";"))
           .build(), (i * 9) + 8);
-      if (votePoll.getVotedThemes().get(theme) > 0) {
+      if(votePoll.getVotedThemes().get(theme) > 0) {
         double vote = 0;
-        for (int j = 0; j < 6; j++) {
-          if (vote > percent) {
+        for(int j = 0; j < 6; j++) {
+          if(vote > percent) {
             break;
           }
           setItem(new ItemBuilder(XMaterial.LIME_STAINED_GLASS_PANE.parseItem()).build(), (i * 9) + 1 + j + 1);

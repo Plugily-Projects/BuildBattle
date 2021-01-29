@@ -20,18 +20,17 @@
 
 package plugily.projects.buildbattle.menus.options.registry.particles;
 
-import java.util.Map.Entry;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.scheduler.BukkitTask;
-
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
+
+import java.util.Map.Entry;
 
 /**
  * Created by Tom on 23/08/2015.
@@ -41,19 +40,19 @@ public class ParticleRefreshScheduler {
   public BukkitTask task;
 
   public ParticleRefreshScheduler(Main plugin) {
-    if (task != null) {
+    if(task != null) {
       task.cancel();
     }
 
     task = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-      for (BaseArena arena : ArenaRegistry.getArenas()) {
-        if (!arena.getPlayers().isEmpty()) {
-          for (Plot buildPlot : arena.getPlotManager().getPlots()) {
-            for (Entry<Location, Particle> map : buildPlot.getParticles().entrySet()) {
-                MiscUtils.spawnParticle(map.getValue(), map.getKey(), plugin.getConfig().getInt("Amount-One-Particle-Effect-Contains", 20),
-                        1, 1, 1, 1);
-              }
+      for(BaseArena arena : ArenaRegistry.getArenas()) {
+        if(!arena.getPlayers().isEmpty()) {
+          for(Plot buildPlot : arena.getPlotManager().getPlots()) {
+            for(Entry<Location, Particle> map : buildPlot.getParticles().entrySet()) {
+              MiscUtils.spawnParticle(map.getValue(), map.getKey(), plugin.getConfig().getInt("Amount-One-Particle-Effect-Contains", 20),
+                  1, 1, 1, 1);
             }
+          }
         }
       }
     }, plugin.getConfig().getInt("Particle-Refresh-Per-Tick", 10), plugin.getConfig().getInt("Particle-Refresh-Per-Tick", 10));

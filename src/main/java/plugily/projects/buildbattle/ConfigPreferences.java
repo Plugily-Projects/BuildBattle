@@ -20,6 +20,11 @@
 
 package plugily.projects.buildbattle;
 
+import org.bukkit.Material;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import plugily.projects.buildbattle.arena.impl.BaseArena;
+import plugily.projects.buildbattle.utils.Debugger;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -27,18 +32,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.Material;
-
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import plugily.projects.buildbattle.arena.impl.BaseArena;
-import plugily.projects.buildbattle.utils.Debugger;
-
 /**
  * Created by Tom on 17/08/2015.
  */
 public class ConfigPreferences {
 
-  private Main plugin;
+  private final Main plugin;
 
   private final Map<String, List<String>> gameThemes = new HashMap<>();
   private final List<String> endGameCommands = new ArrayList<>(), whitelistedCommands = new ArrayList<>();
@@ -59,7 +58,7 @@ public class ConfigPreferences {
     endGameCommands.clear();
     whitelistedCommands.clear();
 
-    for (Option option : Option.values()) {
+    for(Option option : Option.values()) {
       options.put(option, plugin.getConfig().getBoolean(option.getPath(), option.getDefault()));
     }
     endGameCommands.addAll(plugin.getConfig().getStringList("End-Game-Commands"));
@@ -86,8 +85,8 @@ public class ConfigPreferences {
   }
 
   public boolean isThemeBlacklisted(String theme) {
-    for (String s : plugin.getConfig().getStringList("Blacklisted-Themes")) {
-      if (s.equalsIgnoreCase(theme)) {
+    for(String s : plugin.getConfig().getStringList("Blacklisted-Themes")) {
+      if(s.equalsIgnoreCase(theme)) {
         return true;
       }
     }
@@ -111,10 +110,10 @@ public class ConfigPreferences {
   }
 
   private void loadBlackList() {
-    for (String item : plugin.getConfig().getStringList("Blacklisted-Item-Names")) {
+    for(String item : plugin.getConfig().getStringList("Blacklisted-Item-Names")) {
       item = item.toUpperCase();
 
-      if (!XMaterial.matchXMaterial(item).isPresent()) {
+      if(!XMaterial.matchXMaterial(item).isPresent()) {
         Debugger.sendConsoleMsg("&c[BuildBattle] Invalid black listed item! " + item + " doesn't exist, are you sure it's properly named?");
         continue;
       }
@@ -122,15 +121,15 @@ public class ConfigPreferences {
       itemBlacklist.add(XMaterial.matchXMaterial(item).get().parseMaterial());
     }
 
-    for (String item : plugin.getConfig().getStringList("Blacklisted-Floor-Materials")) {
+    for(String item : plugin.getConfig().getStringList("Blacklisted-Floor-Materials")) {
       item = item.toUpperCase();
 
-      if (!XMaterial.matchXMaterial(item).isPresent()) {
-          Debugger.sendConsoleMsg("&c[BuildBattle] Invalid black listed item! " + item + " doesn't exist, are you sure it's properly named?");
-          continue;
-        }
+      if(!XMaterial.matchXMaterial(item).isPresent()) {
+        Debugger.sendConsoleMsg("&c[BuildBattle] Invalid black listed item! " + item + " doesn't exist, are you sure it's properly named?");
+        continue;
+      }
 
-        floorBlacklist.add(XMaterial.matchXMaterial(item).get().parseMaterial());
+      floorBlacklist.add(XMaterial.matchXMaterial(item).get().parseMaterial());
     }
   }
 
@@ -140,7 +139,7 @@ public class ConfigPreferences {
 
   public int getTimer(TimerType type, BaseArena arena) {
     String prefix = "Time-Manager." + arena.getArenaType().getPrefix() + ".";
-    switch (type) {
+    switch(type) {
       case BUILD:
         return plugin.getConfig().getInt(prefix + "Build-Time", 200);
       case LOBBY:
@@ -183,8 +182,8 @@ public class ConfigPreferences {
     DISABLE_SEPARATE_CHAT("Disable-Separate-Chat", false), DISABLE_PARTIES("Disable-Parties", true), ANNOUNCE_PLOTOWNER_LATER("Announce-PlotOwner-Later", false),
     RUN_COMMAND_ON_REPORT("Run-Command-On-Report.Enabled", false), DISABLE_SPECTATORS("Disable-Spectators", false);
 
-    private String path;
-    private boolean def;
+    private final String path;
+    private final boolean def;
 
     Option(String path, boolean def) {
       this.path = path;
@@ -206,7 +205,7 @@ public class ConfigPreferences {
   public enum Position {
     FIRST("First"), SECOND("Second"), THIRD("Third");
 
-    private String name;
+    private final String name;
 
     Position(String name) {
       this.name = name;

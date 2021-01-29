@@ -21,11 +21,10 @@
 package plugily.projects.buildbattle.handlers;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
-
-import org.bukkit.entity.Player;
 
 /**
  * @author Plajer
@@ -56,10 +55,10 @@ public class PlaceholderManager extends PlaceholderExpansion {
 
   @Override
   public String onPlaceholderRequest(Player player, String id) {
-    if (player == null) {
+    if(player == null) {
       return null;
     }
-    switch (id.toLowerCase()) {
+    switch(id.toLowerCase()) {
       case "blocks_broken":
         return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.BLOCKS_BROKEN));
       case "blocks_placed":
@@ -80,7 +79,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
   }
 
   private String handleArenaPlaceholderRequest(String id) {
-    if (!id.contains(":")) {
+    if(!id.contains(":")) {
       return null;
     }
     String[] data = id.split(":");
@@ -88,7 +87,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
     if(arena == null) {
       return null;
     }
-    switch (data[1].toLowerCase()) {
+    switch(data[1].toLowerCase()) {
       case "players":
         return String.valueOf(arena.getPlayers().size());
       case "max_players":

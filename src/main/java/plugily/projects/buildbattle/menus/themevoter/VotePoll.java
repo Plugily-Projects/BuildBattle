@@ -20,19 +20,17 @@
 
 package plugily.projects.buildbattle.menus.themevoter;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.bukkit.entity.Player;
-
 import org.bukkit.plugin.java.JavaPlugin;
-
 import pl.plajerlair.commonsbox.sorter.SortUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.impl.SoloArena;
 import plugily.projects.buildbattle.handlers.reward.Reward;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Plajer
@@ -41,14 +39,14 @@ import plugily.projects.buildbattle.handlers.reward.Reward;
  */
 public class VotePoll {
 
-  private SoloArena arena;
+  private final SoloArena arena;
   private final Map<String, Integer> votedThemes = new LinkedHashMap<>();
   private final Map<Player, String> playerVote = new HashMap<>();
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
   public VotePoll(SoloArena arena, List<String> votedThemes) {
     this.arena = arena;
-    for (String theme : votedThemes) {
+    for(String theme : votedThemes) {
       this.votedThemes.put(theme, 0);
     }
   }
@@ -62,8 +60,8 @@ public class VotePoll {
   }
 
   public boolean addVote(Player player, String theme) {
-    if (playerVote.containsKey(player)) {
-      if (playerVote.get(player).equals(theme)) {
+    if(playerVote.containsKey(player)) {
+      if(playerVote.get(player).equals(theme)) {
         return false;
       }
       votedThemes.put(playerVote.get(player), votedThemes.get(playerVote.get(player)) - 1);
@@ -85,12 +83,12 @@ public class VotePoll {
   }
 
   public String getThemeByPosition(int position) {
-    if (position % 9 != 0) {
+    if(position % 9 != 0) {
       return "Incompatible operation";
     }
     int i = 1;
-    for (String theme : votedThemes.keySet()) {
-      if (position / 9 == i) {
+    for(String theme : votedThemes.keySet()) {
+      if(position / 9 == i) {
         return theme;
       }
       i++;

@@ -45,7 +45,7 @@ public class TeamArena extends SoloArena {
 
   @Override
   public void setMinimumPlayers(int amount) {
-    if (amount <= 2) {
+    if(amount <= 2) {
       Debugger.debug(Debugger.Level.WARN, "Minimum players amount for TEAM game mode arena cannot be less than 3! Setting amount to 3!");
       setOptionValue(ArenaOption.MINIMUM_PLAYERS, 3);
       return;
@@ -56,13 +56,13 @@ public class TeamArena extends SoloArena {
   @Override
   public void distributePlots() {
     //clear plots before distribution to avoid problems
-    for (Plot plot : getPlotManager().getPlots()) {
+    for(Plot plot : getPlotManager().getPlots()) {
       plot.getOwners().clear();
     }
     List<List<Player>> pairs = Lists.partition(new ArrayList<>(getPlayers()), 2);
     int i = 0;
-    for (Plot plot : getPlotManager().getPlots()) {
-      if (pairs.size() <= i) {
+    for(Plot plot : getPlotManager().getPlots()) {
+      if(pairs.size() <= i) {
         break;
       }
       pairs.get(i).forEach(plot::addOwner);
@@ -81,9 +81,9 @@ public class TeamArena extends SoloArena {
   @Override
   public String formatWinners(Plot plot, String string) {
     String str = string;
-    if (plot.getOwners().size() == 1) {
+    if(plot.getOwners().size() == 1) {
       str = str.replaceAll("(?i)%player%", plot.getOwners().get(0).getName());
-    } else if (plot.getOwners().size() > 1) {
+    } else if(plot.getOwners().size() > 1) {
       str = str.replaceAll("(?i)%player%", plot.getOwners().get(0).getName() + " & " + plot.getOwners().get(1).getName());
     } else {
       str = str.replaceAll("(?i)%player%", "PLAYER_NOT_FOUND");
@@ -93,19 +93,19 @@ public class TeamArena extends SoloArena {
 
   @Override
   public void voteForNextPlot() {
-    if (getVotingPlot() != null) {
-      for (Player player : getPlayers()) {
+    if(getVotingPlot() != null) {
+      for(Player player : getPlayers()) {
         int points = getPlugin().getUserManager().getUser(player).getStat(StatsStorage.StatisticType.LOCAL_POINTS);
         //no vote made, in this case make it a good vote
-        if (points == 0) {
+        if(points == 0) {
           points = 3;
         }
         getVotingPlot().setPoints(getVotingPlot().getPoints() + points);
         getPlugin().getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
       }
-      if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER)) {
+      if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER)) {
         String message = formatWinners(getVotingPlot(), getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voted-For-Player-Plot"));
-        for (Player p : getPlayers()) {
+        for(Player p : getPlayers()) {
           String owner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
           owner = formatWinners(getVotingPlot(), owner);
           p.sendTitle(owner, null, 5, 40, 5);
@@ -113,8 +113,8 @@ public class TeamArena extends SoloArena {
         }
       }
     }
-    for (Plot p : getPlotManager().getPlots()) {
-      if (p.getOwners().size() == 2) {
+    for(Plot p : getPlotManager().getPlots()) {
+      if(p.getOwners().size() == 2) {
         //removing second owner to not vote for same plot twice
         getQueue().remove(p.getOwners().get(1));
       }
@@ -124,9 +124,9 @@ public class TeamArena extends SoloArena {
 
   @Override
   public boolean enoughPlayersToContinue() {
-    if (getPlayers().size() >= 2) {
+    if(getPlayers().size() >= 2) {
       return true;
-    } else if (getPlayers().size() == 2) {
+    } else if(getPlayers().size() == 2) {
       return !getPlotManager().getPlot(getPlayers().get(0)).getOwners().contains(getPlayers().get(1));
     } else {
       return false;

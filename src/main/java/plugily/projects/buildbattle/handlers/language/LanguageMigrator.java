@@ -20,18 +20,17 @@
 
 package plugily.projects.buildbattle.handlers.language;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.List;
-
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.configuration.file.FileConfiguration;
-
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.utils.Debugger;
 import plugily.projects.buildbattle.utils.MessageUtils;
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Plajer
@@ -52,17 +51,17 @@ public class LanguageMigrator {
     FileConfiguration lang = ConfigUtils.getConfig(plugin, "language");
     //checks if file architecture don't need to be updated to 3.x format
     //check if using 2.0.0 releases
-    if (lang.isSet("PREFIX") && lang.isSet("Unlocks-at-level")) {
+    if(lang.isSet("PREFIX") && lang.isSet("Unlocks-at-level")) {
       migrateToNewFormat();
     }
 
     FileConfiguration config = ConfigUtils.getConfig(plugin, "config");
-    if (config.isSet("Build-Time")) {
+    if(config.isSet("Build-Time")) {
       MessageUtils.gonnaMigrate();
       Debugger.sendConsoleMsg("&aBuild Battle is migrating config.yml to the new file format...");
       Debugger.sendConsoleMsg("&aDon't worry! Old config.yml will be renamed not overridden!");
       File file = new File(plugin.getDataFolder() + File.separator + "config.yml");
-      if (file.exists() && file.renameTo(new File(plugin.getDataFolder() + File.separator + "oldbb_config.yml"))) {
+      if(file.exists() && file.renameTo(new File(plugin.getDataFolder() + File.separator + "oldbb_config.yml"))) {
         Debugger.sendConsoleMsg("&aRenamed file " + file);
       }
       plugin.saveDefaultConfig();
@@ -78,9 +77,9 @@ public class LanguageMigrator {
     MessageUtils.gonnaMigrate();
     Debugger.sendConsoleMsg("&aBuild Battle is migrating all files to the new file format...");
     Debugger.sendConsoleMsg("&aDon't worry! Old files will be renamed not overridden!");
-    for (String fileName : migratable) {
+    for(String fileName : migratable) {
       File file = new File(plugin.getDataFolder() + File.separator + fileName + ".yml");
-      if (file.exists()) {
+      if(file.exists()) {
         file.renameTo(new File(plugin.getDataFolder(), "BB2_" + file + ".yml"));
         Debugger.sendConsoleMsg("&aRenamed file " + file + ".yml");
       }
@@ -89,7 +88,7 @@ public class LanguageMigrator {
   }
 
   private void configUpdate() {
-    if (plugin.getConfig().getInt("Version") == CONFIG_FILE_VERSION) {
+    if(plugin.getConfig().getInt("Version") == CONFIG_FILE_VERSION) {
       return;
     }
     Debugger.sendConsoleMsg("&e[BuildBattle] System notify >> Your config file is outdated! Updating...");
@@ -100,8 +99,8 @@ public class LanguageMigrator {
     File file = new File(plugin.getDataFolder() + "/config.yml");
     File bungeefile = new File(plugin.getDataFolder() + "/bungee.yml");
 
-    for (int i = version; i < CONFIG_FILE_VERSION; i++) {
-      switch (i) {
+    for(int i = version; i < CONFIG_FILE_VERSION; i++) {
+      switch(i) {
         case 0:
           MigratorUtils.addNewLines(file, "\r\n# Should blocks behind game signs change their color based on game state?\r\n# They will change color to:\r\n" +
               "# - white (waiting for players) stained glass\r\n# - yellow (starting) stained glass\r\n# - orange (in game) stained glass\r\n# - gray (ending) stained glass\r\n" +
@@ -192,43 +191,43 @@ public class LanguageMigrator {
           break;
         case 9:
           MigratorUtils.addNewLines(file, "\r\n" +
-                  "# Should we enable short commands such as /start and /leave\r\n" +
-                  "Enable-Short-Commands: false\r\n");
+              "# Should we enable short commands such as /start and /leave\r\n" +
+              "Enable-Short-Commands: false\r\n");
           MigratorUtils.addNewLines(file, "\r\n" +
-                  "# Should we disable all chat related stuff?\r\n" +
-                  "# It will disable the separated chat, for example\r\n" +
-                  "Disable-Separate-Chat: false\r\n");
+              "# Should we disable all chat related stuff?\r\n" +
+              "# It will disable the separated chat, for example\r\n" +
+              "Disable-Separate-Chat: false\r\n");
           break;
         case 10:
           MigratorUtils.addNewLines(file, "\r\n# Blacklisted floor materials, you can't use them for the floor.\r\n" +
-                  "Blacklisted-Floor-Materials:\r\n" +
-                  "  - MOB_SPAWNER\r\n" +
-                  "  - TNT\r\n" +
-                  "  - AIR\r\n");
+              "Blacklisted-Floor-Materials:\r\n" +
+              "  - MOB_SPAWNER\r\n" +
+              "  - TNT\r\n" +
+              "  - AIR\r\n");
           break;
         case 11:
           MigratorUtils.addNewLines(file, "\r\n" +
-                  "#Disable Party features of external party plugins (such as PAF, Parties ...)\r\n" +
-                  "Disable-Parties: true\r\n");
+              "#Disable Party features of external party plugins (such as PAF, Parties ...)\r\n" +
+              "Disable-Parties: true\r\n");
           break;
         case 12:
           MigratorUtils.addNewLines(file, "\r\n" +
-                  "#Announce the plot owner after voting stage\r\n" +
-                  "#default false - plot owner will be announced at the beginning\r\n" +
-                  "Announce-PlotOwner-Later: false \r\n");
+              "#Announce the plot owner after voting stage\r\n" +
+              "#default false - plot owner will be announced at the beginning\r\n" +
+              "Announce-PlotOwner-Later: false \r\n");
           break;
         case 13:
           MigratorUtils.addNewLines(file, "\r\n" +
-                  "# Enable an command on report item click\r\n" +
-                  "Run-Command-On-Report: \r\n" +
-                  "  Enabled: false\r\n" +
-                  "  # The command that should be executed - Placeholder: %reported%, %reporter%\r\n" +
-                  "  Command: kick %reported% \r\n");
+              "# Enable an command on report item click\r\n" +
+              "Run-Command-On-Report: \r\n" +
+              "  Enabled: false\r\n" +
+              "  # The command that should be executed - Placeholder: %reported%, %reporter%\r\n" +
+              "  Command: kick %reported% \r\n");
           break;
         case 15:
           MigratorUtils.addNewLines(file, "\r\n" +
-                  "# With this true, players couldn't join to the game and can't switch to spectator.\r\n" +
-                  "Disable-Spectators: false\r\n");
+              "# With this true, players couldn't join to the game and can't switch to spectator.\r\n" +
+              "Disable-Spectators: false\r\n");
           break;
         default:
           return;
@@ -240,21 +239,21 @@ public class LanguageMigrator {
 
   private void languageFileUpdate() {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "language");
-    if (config.getString("File-Version-Do-Not-Edit", "").equals(String.valueOf(LANGUAGE_FILE_VERSION))) {
+    if(config.getString("File-Version-Do-Not-Edit", "").equals(String.valueOf(LANGUAGE_FILE_VERSION))) {
       return;
     }
     Debugger.sendConsoleMsg("&e[BuildBattle] [System notify] Your language file is outdated! Updating...");
 
     int version = 0;
-    if (NumberUtils.isNumber(config.getString("File-Version-Do-Not-Edit"))) {
+    if(NumberUtils.isNumber(config.getString("File-Version-Do-Not-Edit"))) {
       version = Integer.parseInt(config.getString("File-Version-Do-Not-Edit"));
     }
     updateLanguageVersionControl(version);
 
     File file = new File(plugin.getDataFolder() + "/language.yml");
 
-    for (int i = version; i < LANGUAGE_FILE_VERSION; i++) {
-      switch (version) {
+    for(int i = version; i < LANGUAGE_FILE_VERSION; i++) {
+      switch(version) {
         case 0:
           MigratorUtils.insertAfterLine(file, "Arena-Started", "  Wait-For-Start: \"&cYou must wait for arena start!\"");
           MigratorUtils.insertAfterLine(file, "No-Arena-Like-That", "  No-Playing: \"&cYou're not playing!\"");
@@ -451,30 +450,30 @@ public class LanguageMigrator {
           break;
         case 17:
           MigratorUtils.addNewLines(file, "Arena-Selector:\r\n" +
-                  "  Inv-Title: \"Arena selector\"\r\n" +
-                  "  Item:\r\n" +
-                  "    Lore:\r\n" +
-                  "      - \"&bBuildbattle &f- &e%mapname%\"\r\n" +
-                  "      - \" \"\r\n" +
-                  "      - \" \"\r\n" +
-                  "      - \"  &fOnline: %playersize%/%maxplayers%\"\r\n" +
-                  "      - \"  &fState: %state%\"\r\n" +
-                  "      - \"  &fType: %type%\"\r\n" +
-                  "      - \" \"\r\n" +
-                  "      - \" \"\r\n" +
-                  "      - \"&eClick to join this arena\"\r\n");
+              "  Inv-Title: \"Arena selector\"\r\n" +
+              "  Item:\r\n" +
+              "    Lore:\r\n" +
+              "      - \"&bBuildbattle &f- &e%mapname%\"\r\n" +
+              "      - \" \"\r\n" +
+              "      - \" \"\r\n" +
+              "      - \"  &fOnline: %playersize%/%maxplayers%\"\r\n" +
+              "      - \"  &fState: %state%\"\r\n" +
+              "      - \"  &fType: %type%\"\r\n" +
+              "      - \" \"\r\n" +
+              "      - \" \"\r\n" +
+              "      - \"&eClick to join this arena\"\r\n");
           break;
         case 18:
           MigratorUtils.addNewLines(file, "In-Game:\r\n" +
-                 "  Messages:\r\n" +
-                 "    Join-Title:\r\n" +
-                 "    Join-SubTitle: \"&e%THEME%\"");
+              "  Messages:\r\n" +
+              "    Join-Title:\r\n" +
+              "    Join-SubTitle: \"&e%THEME%\"");
           MigratorUtils.insertAfterLine(file, "  Item:", "    Name: \"&f%mapname%\"");
           break;
         case 19:
           MigratorUtils.insertAfterLine(file, "        Time-Type:",
-                    "          Noon: \"&eNoon (6000 ticks)\"\r\n" +
-                          "          MidNight: \"&eMidNight (18000 ticks)\"\r\n");
+              "          Noon: \"&eNoon (6000 ticks)\"\r\n" +
+                  "          MidNight: \"&eMidNight (18000 ticks)\"\r\n");
           break;
         default:
           return;

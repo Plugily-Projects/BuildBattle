@@ -21,7 +21,6 @@
 package plugily.projects.buildbattle.handlers.sign;
 
 import org.apache.commons.lang.StringUtils;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -36,7 +35,6 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.jetbrains.annotations.Nullable;
-
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
@@ -61,10 +59,10 @@ import java.util.Map;
  */
 public class SignManager implements Listener {
 
-  private Main plugin;
+  private final Main plugin;
   private final List<ArenaSign> arenaSigns = new ArrayList<>();
   private final Map<ArenaState, String> gameStateToString = new EnumMap<>(ArenaState.class);
-  private List<String> signLines;
+  private final List<String> signLines;
 
   public SignManager(Main plugin) {
     this.plugin = plugin;
@@ -79,18 +77,18 @@ public class SignManager implements Listener {
 
   @EventHandler
   public void onSignChange(SignChangeEvent e) {
-    if (!e.getPlayer().hasPermission("buildbattle.admin.sign.create") || !e.getLine(0).equalsIgnoreCase("[buildbattle]")) {
+    if(!e.getPlayer().hasPermission("buildbattle.admin.sign.create") || !e.getLine(0).equalsIgnoreCase("[buildbattle]")) {
       return;
     }
-    if (e.getLine(1).isEmpty()) {
+    if(e.getLine(1).isEmpty()) {
       e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Please-Type-Arena-Name"));
       return;
     }
-    for (BaseArena arena : ArenaRegistry.getArenas()) {
-      if (!arena.getID().equalsIgnoreCase(e.getLine(1))) {
+    for(BaseArena arena : ArenaRegistry.getArenas()) {
+      if(!arena.getID().equalsIgnoreCase(e.getLine(1))) {
         continue;
       }
-      for (int i = 0; i < signLines.size(); i++) {
+      for(int i = 0; i < signLines.size(); i++) {
         e.setLine(i, formatSign(signLines.get(i), arena));
       }
       arenaSigns.add(new ArenaSign((Sign) e.getBlock().getState(), arena));
@@ -109,7 +107,7 @@ public class SignManager implements Listener {
   private String formatSign(String msg, BaseArena a) {
     String formatted = msg;
     formatted = StringUtils.replace(formatted, "%mapname%", a.getMapName());
-    if (a.getPlayers().size() >= a.getMaximumPlayers()) {
+    if(a.getPlayers().size() >= a.getMaximumPlayers()) {
       formatted = StringUtils.replace(formatted, "%state%", plugin.getChatManager().colorMessage("Signs.Game-States.Full-Game"));
     } else {
       formatted = StringUtils.replace(formatted, "%state%", gameStateToString.get(a.getArenaState()));
@@ -123,15 +121,15 @@ public class SignManager implements Listener {
   @EventHandler
   public void onSignDestroy(BlockBreakEvent e) {
     ArenaSign arenaSign = getArenaSignByBlock(e.getBlock());
-    if (!e.getPlayer().hasPermission("buildbattle.admin.sign.break") || arenaSign == null) {
+    if(!e.getPlayer().hasPermission("buildbattle.admin.sign.break") || arenaSign == null) {
       return;
     }
     arenaSigns.remove(arenaSign);
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
     String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + ".0," + e.getBlock().getY() + ".0," + e.getBlock().getZ() + ".0," + "0.0,0.0";
-    for (String arena : config.getConfigurationSection("instances").getKeys(false)) {
-      for (String sign : config.getStringList("instances." + arena + ".signs")) {
-        if (!sign.equals(location)) {
+    for(String arena : config.getConfigurationSection("instances").getKeys(false)) {
+      for(String sign : config.getStringList("instances." + arena + ".signs")) {
+        if(!sign.equals(location)) {
           continue;
         }
         List<String> signs = config.getStringList("instances." + arena + ".signs");
@@ -147,23 +145,23 @@ public class SignManager implements Listener {
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onJoinAttempt(PlayerInteractEvent e) {
-    if (e.getHand() == EquipmentSlot.OFF_HAND) {
+    if(e.getHand() == EquipmentSlot.OFF_HAND) {
       return;
     }
     ArenaSign arenaSign = getArenaSignByBlock(e.getClickedBlock());
-    if (arenaSign != null && e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getClickedBlock().getState() instanceof Sign) {
+    if(arenaSign != null && e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getClickedBlock().getState() instanceof Sign) {
       ArenaManager.joinAttempt(e.getPlayer(), arenaSign.getArena());
     }
   }
 
   @Nullable
   private ArenaSign getArenaSignByBlock(Block block) {
-    if (block == null) {
+    if(block == null) {
       return null;
     }
 
-    for (ArenaSign sign : arenaSigns) {
-      if (sign.getSign().getLocation().equals(block.getLocation())) {
+    for(ArenaSign sign : arenaSigns) {
+      if(sign.getSign().getLocation().equals(block.getLocation())) {
         return sign;
       }
     }
@@ -175,14 +173,14 @@ public class SignManager implements Listener {
     arenaSigns.clear();
 
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    if (config == null || !config.isConfigurationSection("instances")) {
+    if(config == null || !config.isConfigurationSection("instances")) {
       return;
     }
 
-    for (String path : config.getConfigurationSection("instances").getKeys(false)) {
-      for (String sign : config.getStringList("instances." + path + ".signs")) {
+    for(String path : config.getConfigurationSection("instances").getKeys(false)) {
+      for(String sign : config.getStringList("instances." + path + ".signs")) {
         Location loc = LocationSerializer.getLocation(sign);
-        if (loc.getBlock().getState() instanceof Sign) {
+        if(loc.getBlock().getState() instanceof Sign) {
           arenaSigns.add(new ArenaSign((Sign) loc.getBlock().getState(), ArenaRegistry.getArena(path)));
         } else {
           Debugger.debug(Debugger.Level.WARN, "Block at loc " + loc + " for arena " + path + " not a sign");
@@ -192,50 +190,50 @@ public class SignManager implements Listener {
   }
 
   public void updateSigns() {
-    for (ArenaSign arenaSign : arenaSigns) {
+    for(ArenaSign arenaSign : arenaSigns) {
       Sign sign = arenaSign.getSign();
-      for (int i = 0; i < signLines.size(); i++) {
+      for(int i = 0; i < signLines.size(); i++) {
         sign.setLine(i, formatSign(signLines.get(i), arenaSign.getArena()));
       }
-      if (plugin.getConfig().getBoolean("Signs-Block-States-Enabled", true) && arenaSign.getBehind() != null) {
+      if(plugin.getConfig().getBoolean("Signs-Block-States-Enabled", true) && arenaSign.getBehind() != null) {
         Block behind = arenaSign.getBehind();
         try {
-            switch (arenaSign.getArena().getArenaState()) {
-              case WAITING_FOR_PLAYERS:
-                behind.setType(XMaterial.WHITE_STAINED_GLASS.parseMaterial());
-                if (ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {
-                  Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 0);
-                }
-                break;
-              case STARTING:
-                behind.setType(XMaterial.YELLOW_STAINED_GLASS.parseMaterial());
-                if (ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {
-                  Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 4);
-                }
-                break;
-              case IN_GAME:
-                behind.setType(XMaterial.ORANGE_STAINED_GLASS.parseMaterial());
-                if (ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {
-                  Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 1);
-                }
-                break;
-              case ENDING:
-                behind.setType(XMaterial.GRAY_STAINED_GLASS.parseMaterial());
-                if (ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {
-                  Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 7);
-                }
-                break;
-              case RESTARTING:
-                behind.setType(XMaterial.BLACK_STAINED_GLASS.parseMaterial());
-                if (ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {
-                  Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 15);
-                }
-                break;
-              default:
-                break;
-            }
-          } catch (Exception ignored) {
+          switch(arenaSign.getArena().getArenaState()) {
+            case WAITING_FOR_PLAYERS:
+              behind.setType(XMaterial.WHITE_STAINED_GLASS.parseMaterial());
+              if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {
+                Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 0);
+              }
+              break;
+            case STARTING:
+              behind.setType(XMaterial.YELLOW_STAINED_GLASS.parseMaterial());
+              if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {
+                Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 4);
+              }
+              break;
+            case IN_GAME:
+              behind.setType(XMaterial.ORANGE_STAINED_GLASS.parseMaterial());
+              if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {
+                Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 1);
+              }
+              break;
+            case ENDING:
+              behind.setType(XMaterial.GRAY_STAINED_GLASS.parseMaterial());
+              if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {
+                Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 7);
+              }
+              break;
+            case RESTARTING:
+              behind.setType(XMaterial.BLACK_STAINED_GLASS.parseMaterial());
+              if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {
+                Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 15);
+              }
+              break;
+            default:
+              break;
           }
+        } catch(Exception ignored) {
+        }
       }
       sign.update();
     }

@@ -80,30 +80,30 @@ public class ArenaManager {
 
     ChatManager chatManager = plugin.getChatManager();
 
-    if (!arena.isReady()) {
+    if(!arena.isReady()) {
       player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Arena-Not-Configured"));
       return;
     }
-    if (bbGameJoinEvent.isCancelled()) {
+    if(bbGameJoinEvent.isCancelled()) {
       player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Join-Cancelled-Via-API"));
       return;
     }
-    if (ArenaRegistry.getArena(player) != null) {
+    if(ArenaRegistry.getArena(player) != null) {
       player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Already-Playing"));
       return;
     }
 
     //check if player is in party and send party members to the game
-    if (plugin.getPartyHandler().isPlayerInParty(player)) {
+    if(plugin.getPartyHandler().isPlayerInParty(player)) {
       GameParty party = plugin.getPartyHandler().getParty(player);
-      if (party.getLeader() == player) {
-        if (arena.getMaximumPlayers() - arena.getPlayers().size() >= party.getPlayers().size()) {
-          for (Player partyPlayer : party.getPlayers()) {
-            if (partyPlayer == player) {
+      if(party.getLeader() == player) {
+        if(arena.getMaximumPlayers() - arena.getPlayers().size() >= party.getPlayers().size()) {
+          for(Player partyPlayer : party.getPlayers()) {
+            if(partyPlayer == player) {
               continue;
             }
-            if (ArenaRegistry.getArena(partyPlayer) != null) {
-              if (ArenaRegistry.getArena(partyPlayer).getArenaState() == ArenaState.IN_GAME) {
+            if(ArenaRegistry.getArena(partyPlayer) != null) {
+              if(ArenaRegistry.getArena(partyPlayer).getArenaState() == ArenaState.IN_GAME) {
                 continue;
               }
               leaveAttempt(partyPlayer, ArenaRegistry.getArena(partyPlayer));
@@ -119,21 +119,21 @@ public class ArenaManager {
     }
 
     //Arena join permission when bungee false
-    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) &&
-          (!(player.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", "*"))
-          || player.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", arena.getID()))))) {
+    if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) &&
+        (!(player.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", "*"))
+            || player.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", arena.getID()))))) {
       player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Join-No-Permission")
           .replace("%permission%", PermissionManager.getJoinPerm().replace("<arena>", arena.getID())));
       return;
     }
 
-    if ((arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING)
+    if((arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING)
         && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SPECTATORS)) {
       return;
     }
 
-    if (arena.getArenaState() == ArenaState.RESTARTING) {
-      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+    if(arena.getArenaState() == ArenaState.RESTARTING) {
+      if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
         player.kickPlayer(chatManager.getPrefix() + chatManager.colorMessage("Commands.Arena-Restarting"));
       } else {
         player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Arena-Restarting"));
@@ -141,14 +141,14 @@ public class ArenaManager {
       return;
     }
 
-    if (arena.getPlayers().size() >= arena.getMaximumPlayers() && arena.getArenaState() == ArenaState.STARTING) {
-      if (!player.hasPermission(PermissionManager.getJoinFullGames())) {
+    if(arena.getPlayers().size() >= arena.getMaximumPlayers() && arena.getArenaState() == ArenaState.STARTING) {
+      if(!player.hasPermission(PermissionManager.getJoinFullGames())) {
         player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Full-Game-No-Permission"));
         return;
       }
       boolean foundSlot = false;
-      for (Player loopPlayer : arena.getPlayers()) {
-        if (loopPlayer.hasPermission(PermissionManager.getJoinFullGames())) {
+      for(Player loopPlayer : arena.getPlayers()) {
+        if(loopPlayer.hasPermission(PermissionManager.getJoinFullGames())) {
           continue;
         }
         leaveAttempt(loopPlayer, arena);
@@ -157,7 +157,7 @@ public class ArenaManager {
         foundSlot = true;
         break;
       }
-      if (!foundSlot) {
+      if(!foundSlot) {
         player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.No-Slots-For-Premium"));
         return;
       }
@@ -166,7 +166,7 @@ public class ArenaManager {
     Debugger.debug("Final join attempt, " + player.getName());
     User user = plugin.getUserManager().getUser(player);
     arena.getScoreboardManager().createScoreboard(user);
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.saveInventoryToFile(plugin, player);
     }
 
@@ -183,8 +183,8 @@ public class ArenaManager {
 
     //Set player as spectator as the game is already started
     SpecialItem leaveItem = plugin.getSpecialItemsRegistry().getSpecialItem("Leave");
-    if (arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
-      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SPECTATORS)) {
+    if(arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
+      if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SPECTATORS)) {
         return;
       }
 
@@ -210,8 +210,8 @@ public class ArenaManager {
       player.setAllowFlight(true);
       player.setFlying(true);
 
-      for (Player spectator : arena.getPlayers()) {
-        if (plugin.getUserManager().getUser(spectator).isSpectator()) {
+      for(Player spectator : arena.getPlayers()) {
+        if(plugin.getUserManager().getUser(spectator).isSpectator()) {
           MiscUtils.showPlayer(plugin, player, spectator);
         } else {
           MiscUtils.hidePlayer(plugin, player, spectator);
@@ -266,25 +266,25 @@ public class ArenaManager {
     User user = plugin.getUserManager().getUser(player);
     arena.getScoreboardManager().removeScoreboard(user);
 
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.loadInventory(plugin, player);
     }
 
-    for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
-      if (ArenaRegistry.getArena(onlinePlayer) == null) {
+    for(Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
+      if(ArenaRegistry.getArena(onlinePlayer) == null) {
         MiscUtils.showPlayer(plugin, onlinePlayer, player);
       }
       MiscUtils.showPlayer(plugin, player, onlinePlayer);
     }
 
     // Spectator
-    if (user.isSpectator() || arena.getSpectators().contains(player)) {
+    if(user.isSpectator() || arena.getSpectators().contains(player)) {
       arena.removeSpectator(player);
       user.setSpectator(false);
       return;
     }
 
-    if (arena instanceof SoloArena) {
+    if(arena instanceof SoloArena) {
       ((SoloArena) arena).getQueue().remove(player);
     }
 
@@ -292,7 +292,7 @@ public class ArenaManager {
     plugin.getChatManager().broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
 
     // Games played +1
-    if (arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
+    if(arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
       user.addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
     }
 
@@ -300,20 +300,20 @@ public class ArenaManager {
     user.setStat(StatsStorage.StatisticType.LOCAL_GUESS_THE_BUILD_POINTS, 0);
 
     Plot plot = arena.getPlotManager().getPlot(player);
-    if (plot != null) {
-      if (arena instanceof TeamArena) {
+    if(plot != null) {
+      if(arena instanceof TeamArena) {
         plot.getOwners().remove(player);
-        if (plot.getOwners().size() > 1) {
+        if(plot.getOwners().size() > 1) {
           plot.fullyResetPlot();
         }
       } else
         plot.fullyResetPlot();
     }
-    if (arena instanceof GuessTheBuildArena) {
+    if(arena instanceof GuessTheBuildArena) {
       ((GuessTheBuildArena) arena).getWhoGuessed().remove(player);
     }
 
-    if (arena.getPlayers().isEmpty() && arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS) {
+    if(arena.getPlayers().isEmpty() && arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS) {
       arena.setArenaState(ArenaState.RESTARTING);
       arena.setTimer(0);
     }
@@ -332,22 +332,22 @@ public class ArenaManager {
     Debugger.debug("Game stop event initiate, arena " + arena.getID());
     BBGameEndEvent gameEndEvent = new BBGameEndEvent(arena);
     Bukkit.getPluginManager().callEvent(gameEndEvent);
-    for (Player player : arena.getPlayers()) {
-      if (!quickStop) {
+    for(Player player : arena.getPlayers()) {
+      if(!quickStop) {
         spawnFireworks(arena, player);
       }
     }
     arena.getScoreboardManager().stopAllScoreboards();
     arena.setArenaState(ArenaState.ENDING);
     arena.setTimer(10);
-    if (arena instanceof SoloArena) {
+    if(arena instanceof SoloArena) {
       ((SoloArena) arena).setVoting(false);
     }
     Debugger.debug("Game stop event finish, arena " + arena.getID());
   }
 
   private static void spawnFireworks(BaseArena arena, Player player) {
-    if (!plugin.getConfig().getBoolean("Firework-When-Game-Ends", true)) {
+    if(!plugin.getConfig().getBoolean("Firework-When-Game-Ends", true)) {
       return;
     }
     new BukkitRunnable() {
@@ -355,7 +355,7 @@ public class ArenaManager {
 
       @Override
       public void run() {
-        if (i == 4 || !arena.getPlayers().contains(player)) {
+        if(i == 4 || !arena.getPlayers().contains(player)) {
           this.cancel();
           return;
         }

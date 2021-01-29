@@ -27,9 +27,9 @@ import org.bukkit.inventory.ItemStack;
  */
 public class SpecialItem {
 
-  private String name;
-  private ItemStack itemStack;
-  private int slot;
+  private final String name;
+  private final ItemStack itemStack;
+  private final int slot;
 
   public SpecialItem(String name, ItemStack itemStack, int slot) {
     this.name = name;

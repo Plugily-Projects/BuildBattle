@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class LabeledCommandArgument extends CommandArgument {
 
-  private LabelData labelData;
+  private final LabelData labelData;
 
   public LabeledCommandArgument(String argumentName, List<String> permissions, CommandArgument.ExecutorType validExecutors, LabelData labelData) {
     super(argumentName, permissions, validExecutors);

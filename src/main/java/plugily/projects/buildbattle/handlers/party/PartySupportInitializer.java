@@ -22,7 +22,6 @@ package plugily.projects.buildbattle.handlers.party;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 
@@ -35,12 +34,12 @@ public class PartySupportInitializer {
 
   public PartyHandler initialize(Main plugin) {
     PartyHandler partyHandler;
-    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_PARTIES)){
-      if (Bukkit.getServer().getPluginManager().getPlugin("Parties") != null) {
+    if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_PARTIES)) {
+      if(Bukkit.getServer().getPluginManager().getPlugin("Parties") != null) {
         return new PartiesPartyHandlerImpl();
-      } else if (Bukkit.getServer().getPluginManager().getPlugin("Spigot-Party-API-PAF") != null) {
+      } else if(Bukkit.getServer().getPluginManager().getPlugin("Spigot-Party-API-PAF") != null) {
         return new PAFBPartyHandlerImpl();
-      } else if (Bukkit.getServer().getPluginManager().getPlugin("PartyAndFriends") != null) {
+      } else if(Bukkit.getServer().getPluginManager().getPlugin("PartyAndFriends") != null) {
         return new PAFSPartyHandlerImpl();
       }
     }

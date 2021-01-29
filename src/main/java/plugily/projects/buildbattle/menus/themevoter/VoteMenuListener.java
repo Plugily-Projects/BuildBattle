@@ -28,7 +28,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
@@ -48,7 +47,7 @@ import plugily.projects.buildbattle.user.User;
  */
 public class VoteMenuListener implements Listener {
 
-  private Main plugin;
+  private final Main plugin;
 
   public VoteMenuListener(Main plugin) {
     this.plugin = plugin;
@@ -58,11 +57,11 @@ public class VoteMenuListener implements Listener {
   @EventHandler
   public void onInventoryClose(InventoryCloseEvent e) {
     BaseArena arena = ArenaRegistry.getArena((Player) e.getPlayer());
-    if (!(arena instanceof SoloArena)) {
+    if(!(arena instanceof SoloArena)) {
       return;
     }
-    if (e.getView().getTitle().equals(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"))) {
-      if (!((SoloArena) arena).isThemeVoteTime() || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(e.getView().getTitle().equals(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"))) {
+      if(!((SoloArena) arena).isThemeVoteTime() || arena.getArenaState() != ArenaState.IN_GAME) {
         return;
       }
       Bukkit.getScheduler().runTask(plugin, () -> e.getPlayer().openInventory(((SoloArena) arena).getVoteMenu().getInventory()));
@@ -71,24 +70,24 @@ public class VoteMenuListener implements Listener {
 
   @EventHandler
   public void onInventoryClick(InventoryClickEvent e) {
-    if (e.getCurrentItem() == null) {
+    if(e.getCurrentItem() == null) {
       return;
     }
     BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
-    if (!(arena instanceof SoloArena)) {
+    if(!(arena instanceof SoloArena)) {
       return;
     }
-    if (e.getView().getTitle().equals(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"))) {
+    if(e.getView().getTitle().equals(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"))) {
       e.setCancelled(true);
-      if (e.getCurrentItem().getType() == XMaterial.OAK_SIGN.parseMaterial()) {
+      if(e.getCurrentItem().getType() == XMaterial.OAK_SIGN.parseMaterial()) {
         String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
         displayName = ChatColor.stripColor(displayName);
         boolean success = ((SoloArena) arena).getVotePoll().addVote((Player) e.getWhoClicked(), displayName);
         e.getWhoClicked().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Menus.Theme-Voting." + (!success ? "Already-Voted" : "Voted-Successfully")));
       }
-      if (e.getCurrentItem().getType() == Material.PAPER) {
+      if(e.getCurrentItem().getType() == Material.PAPER) {
         User user = plugin.getUserManager().getUser((Player) e.getWhoClicked());
-        if (user.getStat(StatsStorage.StatisticType.SUPER_VOTES) > 0) {
+        if(user.getStat(StatsStorage.StatisticType.SUPER_VOTES) > 0) {
           user.setStat(StatsStorage.StatisticType.SUPER_VOTES, user.getStat(StatsStorage.StatisticType.SUPER_VOTES) - 1);
           plugin.getChatManager().broadcast(arena, plugin.getChatManager().colorMessage("Menus.Theme-Voting.Super-Vote-Used")
               .replace("%player%", e.getWhoClicked().getName()).replace("%theme%",
@@ -97,7 +96,7 @@ public class VoteMenuListener implements Listener {
           arena.setTheme(((SoloArena) arena).getVotePoll().getThemeByPosition(e.getSlot() + 1));
           arena.setTimer(plugin.getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, arena));
           String message = plugin.getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Game-Started");
-          for (Player p : arena.getPlayers()) {
+          for(Player p : arena.getPlayers()) {
             p.closeInventory();
             p.teleport(arena.getPlotManager().getPlot(p).getTeleportLocation());
             p.sendMessage(plugin.getChatManager().getPrefix() + message);
@@ -111,33 +110,33 @@ public class VoteMenuListener implements Listener {
   @EventHandler
   public void onGTBInventoryClose(InventoryCloseEvent e) {
     BaseArena arena = ArenaRegistry.getArena((Player) e.getPlayer());
-    if (!(arena instanceof GuessTheBuildArena)) {
+    if(!(arena instanceof GuessTheBuildArena)) {
       return;
     }
-    if (!e.getView().getTitle().equals(plugin.getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Inventory-Name"))) {
+    if(!e.getView().getTitle().equals(plugin.getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Inventory-Name"))) {
       return;
     }
-    if (!((GuessTheBuildArena) arena).isThemeSet()) {
+    if(!((GuessTheBuildArena) arena).isThemeSet()) {
       Bukkit.getScheduler().runTask(plugin, () -> e.getPlayer().openInventory(e.getInventory()));
     }
   }
 
   @EventHandler
   public void onInventoryClickOnGuessTheBuild(InventoryClickEvent e) {
-    if (e.getCurrentItem() == null) {
+    if(e.getCurrentItem() == null) {
       return;
     }
     BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
-    if (!(arena instanceof GuessTheBuildArena)) {
+    if(!(arena instanceof GuessTheBuildArena)) {
       return;
     }
-    if (e.getView().getTitle().equals(plugin.getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Inventory-Name"))) {
+    if(e.getView().getTitle().equals(plugin.getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Inventory-Name"))) {
       e.setCancelled(true);
-      if (e.getCurrentItem().getType() == Material.PAPER) {
+      if(e.getCurrentItem().getType() == Material.PAPER) {
         BBTheme theme;
         String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
         displayName = ChatColor.stripColor(displayName);
-        switch (e.getSlot()) {
+        switch(e.getSlot()) {
           case 11:
             theme = new BBTheme(displayName, BBTheme.Difficulty.EASY);
             break;
@@ -160,7 +159,7 @@ public class VoteMenuListener implements Listener {
         String roundMessage = plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Current-Round")
             .replace("%ROUND%", String.valueOf(((GuessTheBuildArena) arena).getRound()))
             .replace("%MAXPLAYERS%", String.valueOf(arena.getPlayers().size()));
-        for (Player p : arena.getPlayers()) {
+        for(Player p : arena.getPlayers()) {
           p.sendTitle(plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Start-Guessing-Title"), null, 5, 25, 5);
           p.sendMessage(roundMessage);
         }

@@ -21,16 +21,12 @@
 package plugily.projects.buildbattle;
 
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
-
-import java.util.Arrays;
-
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import pl.plajerlair.commonsbox.database.MysqlDatabase;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
@@ -67,8 +63,15 @@ import plugily.projects.buildbattle.menus.themevoter.VoteMenuListener;
 import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.user.UserManager;
 import plugily.projects.buildbattle.user.data.MysqlManager;
-import plugily.projects.buildbattle.utils.*;
+import plugily.projects.buildbattle.utils.CuboidSelector;
+import plugily.projects.buildbattle.utils.Debugger;
+import plugily.projects.buildbattle.utils.ExceptionLogHandler;
+import plugily.projects.buildbattle.utils.LegacyDataFixer;
+import plugily.projects.buildbattle.utils.MessageUtils;
+import plugily.projects.buildbattle.utils.UpdateChecker;
 import plugily.projects.buildbattle.utils.services.ServiceRegistry;
+
+import java.util.Arrays;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -128,7 +131,7 @@ public class Main extends JavaPlugin {
 
   @Override
   public void onEnable() {
-    if (!validateIfPluginShouldStart()) {
+    if(!validateIfPluginShouldStart()) {
       return;
     }
 
@@ -137,7 +140,7 @@ public class Main extends JavaPlugin {
     Debugger.setEnabled(getDescription().getVersion().contains("debug") || getConfig().getBoolean("Debug"));
     Debugger.debug("Main setup started");
     saveDefaultConfig();
-    for (String s : Arrays.asList("arenas", "particles", "lobbyitems", "stats", "voteItems", "mysql", "biomes", "bungee", "rewards")) {
+    for(String s : Arrays.asList("arenas", "particles", "lobbyitems", "stats", "voteItems", "mysql", "biomes", "bungee", "rewards")) {
       ConfigUtils.getConfig(this, s);
     }
     LanguageManager.init(this);
@@ -148,15 +151,15 @@ public class Main extends JavaPlugin {
   }
 
   private void checkUpdate() {
-    if (!getConfig().getBoolean("Update-Notifier.Enabled", true)) {
+    if(!getConfig().getBoolean("Update-Notifier.Enabled", true)) {
       return;
     }
     UpdateChecker.init(this, 44703).requestUpdateCheck().whenComplete((result, exception) -> {
-      if (!result.requiresUpdate()) {
+      if(!result.requiresUpdate()) {
         return;
       }
-      if (result.getNewestVersion().contains("b")) {
-        if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
+      if(result.getNewestVersion().contains("b")) {
+        if(getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
           Debugger.sendConsoleMsg("&c[BuildBattle] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
           Debugger.sendConsoleMsg("&c[BuildBattle] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
               result.getNewestVersion()));
@@ -173,7 +176,7 @@ public class Main extends JavaPlugin {
   private boolean validateIfPluginShouldStart() {
     try {
       Class.forName("org.spigotmc.SpigotConfig");
-    } catch (Exception e) {
+    } catch(Exception e) {
       MessageUtils.thisVersionIsNotSupported();
       Debugger.sendConsoleMsg("&cYour server software is not supported by Build Battle!");
       Debugger.sendConsoleMsg("&cWe support only Spigot and Spigot forks only! Shutting off...");
@@ -181,7 +184,7 @@ public class Main extends JavaPlugin {
       getServer().getPluginManager().disablePlugin(this);
       return false;
     }
-    if (ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_11_R1)) {
+    if(ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_11_R1)) {
       MessageUtils.thisVersionIsNotSupported();
       Debugger.sendConsoleMsg("&cYour server version is not supported by Build Battle!");
       Debugger.sendConsoleMsg("&cSadly, we must shut off. Maybe you consider updating your server version?");
@@ -195,10 +198,10 @@ public class Main extends JavaPlugin {
   //order matters
   private void initializeClasses() {
     ScoreboardLib.setPluginInstance(this);
-    if (getConfig().getBoolean("BungeeActivated")) {
+    if(getConfig().getBoolean("BungeeActivated")) {
       bungeeManager = new BungeeManager(this);
     }
-    if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+    if(configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
       database = new MysqlDatabase(config.getString("user"), config.getString("password"), config.getString("address"));
     }
@@ -221,14 +224,14 @@ public class Main extends JavaPlugin {
     metrics.addCustomChart(new Metrics.SimplePie("bungeecord_hooked", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.BUNGEE_ENABLED))));
     metrics.addCustomChart(new Metrics.SimplePie("locale_used", LanguageManager.getPluginLocale()::getPrefix));
     metrics.addCustomChart(new Metrics.SimplePie("update_notifier", () -> {
-      if (getConfig().getBoolean("Update-Notifier.Enabled", true)) {
+      if(getConfig().getBoolean("Update-Notifier.Enabled", true)) {
         return getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true) ? "Enabled with beta notifier" : "Enabled";
       }
       return getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true) ? "Beta notifier only" : "Disabled";
     }));
     new JoinEvents(this);
     new QuitEvents(this);
-    if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+    if(getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       new PlaceholderManager().register();
     }
     cuboidSelector = new CuboidSelector(this);
@@ -245,12 +248,12 @@ public class Main extends JavaPlugin {
 
   @Override
   public void onDisable() {
-    if (forceDisable) return;
+    if(forceDisable) return;
 
     Debugger.debug("System disabling...");
     Bukkit.getLogger().removeHandler(exceptionLogHandler);
-    for (BaseArena arena : ArenaRegistry.getArenas()) {
-      for (Player player : arena.getPlayers()) {
+    for(BaseArena arena : ArenaRegistry.getArenas()) {
+      for(Player player : arena.getPlayers()) {
         arena.getScoreboardManager().stopAllScoreboards();
         arena.doBarAction(BaseArena.BarAction.REMOVE, player);
         arena.teleportToEndLocation(player);
@@ -258,7 +261,7 @@ public class Main extends JavaPlugin {
         player.getInventory().clear();
         player.getInventory().setArmorContents(null);
         player.getActivePotionEffects().forEach(pe -> player.removePotionEffect(pe.getType()));
-        if (configPreferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+        if(configPreferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
           InventorySerializer.loadInventory(this, player);
         }
       }
@@ -266,19 +269,19 @@ public class Main extends JavaPlugin {
       arena.teleportAllToEndLocation();
     }
     saveAllUserStatistics();
-    if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+    if(configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       getMysqlDatabase().shutdownConnPool();
     }
   }
 
   private void saveAllUserStatistics() {
-    for (Player player : getServer().getOnlinePlayers()) {
+    for(Player player : getServer().getOnlinePlayers()) {
       User user = userManager.getUser(player);
-      if (userManager.getDatabase() instanceof MysqlManager) {
+      if(userManager.getDatabase() instanceof MysqlManager) {
         StringBuilder update = new StringBuilder(" SET ");
-        for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-          if (!stat.isPersistent()) continue;
-          if (update.toString().equalsIgnoreCase(" SET ")) {
+        for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+          if(!stat.isPersistent()) continue;
+          if(update.toString().equalsIgnoreCase(" SET ")) {
             update.append(stat.getName()).append('=').append(user.getStat(stat));
           }
           update.append(", ").append(stat.getName()).append('=').append(user.getStat(stat));
@@ -286,10 +289,10 @@ public class Main extends JavaPlugin {
         String finalUpdate = update.toString();
         //copy of userManager#saveStatistic but without async database call that's not allowed in onDisable method.
         ((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE " + ((MysqlManager) getUserManager().getDatabase()).getTableName()
-                + finalUpdate + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+            + finalUpdate + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
         continue;
       }
-      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+      for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
         userManager.getDatabase().saveStatistic(user, stat);
       }
     }

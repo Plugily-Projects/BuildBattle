@@ -20,15 +20,10 @@
 
 package plugily.projects.buildbattle.menus.options.registry.biomes;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
 import pl.plajerlair.commonsbox.minecraft.compat.XBiome;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
@@ -37,6 +32,10 @@ import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.menus.options.OptionsRegistry;
 import plugily.projects.buildbattle.utils.Debugger;
 import plugily.projects.buildbattle.utils.Utils;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Plajer
@@ -47,7 +46,7 @@ public class BiomesRegistry {
 
   private Inventory inventory;
   private final Set<BiomeItem> biomes = new HashSet<>();
-  private Main plugin;
+  private final Main plugin;
 
   public BiomesRegistry(OptionsRegistry registry) {
     this.plugin = registry.getPlugin();
@@ -59,8 +58,8 @@ public class BiomesRegistry {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "biomes");
     Debugger.debug(Debugger.Level.TASK, "Registering biomes!");
     int i = 0;
-    for (String biome : config.getKeys(false)) {
-      if (i >= 52) {
+    for(String biome : config.getKeys(false)) {
+      if(i >= 52) {
         Debugger.debug(Debugger.Level.WARN, "There are too many biomes to register! Menu can't hold any more!");
         break;
       }
@@ -95,8 +94,8 @@ public class BiomesRegistry {
   }
 
   public BiomeItem getByItem(ItemStack stack) {
-    for (BiomeItem item : biomes) {
-      if (item.getItemStack().isSimilar(stack)) {
+    for(BiomeItem item : biomes) {
+      if(item.getItemStack().isSimilar(stack)) {
         return item;
       }
     }

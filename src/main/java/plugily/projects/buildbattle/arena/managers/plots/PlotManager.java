@@ -25,7 +25,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import plugily.projects.buildbattle.api.event.plot.BBPlayerPlotReceiveEvent;
@@ -54,8 +53,8 @@ public class PlotManager {
   }
 
   public Plot getPlot(Player player) {
-    for (Plot buildPlot : plots) {
-      if (buildPlot.getOwners().contains(player)) {
+    for(Plot buildPlot : plots) {
+      if(buildPlot.getOwners().contains(player)) {
         return buildPlot;
       }
     }
@@ -73,7 +72,7 @@ public class PlotManager {
   }
 
   public void resetPlotsGradually() {
-    if (isPlotsCleared()) {
+    if(isPlotsCleared()) {
       return;
     }
 
@@ -82,54 +81,54 @@ public class PlotManager {
   }
 
   public void teleportToPlots() {
-    for (Plot buildPlot : plots) {
-      if (!buildPlot.getOwners().isEmpty()) {
+    for(Plot buildPlot : plots) {
+      if(!buildPlot.getOwners().isEmpty()) {
         Cuboid cuboid = buildPlot.getCuboid();
-        if (cuboid == null) {
+        if(cuboid == null) {
           continue;
         }
 
         final Location tploc = cuboid.getCenter();
-        if (tploc == null) {
+        if(tploc == null) {
           continue;
         }
 
-        if (Version.isCurrentEqualOrLower(Version.v1_13_R2)) { // Async catch in old versions
+        if(Version.isCurrentEqualOrLower(Version.v1_13_R2)) { // Async catch in old versions
           Location loc = tploc;
-          while (loc.getBlock().getType() != Material.AIR) {
-            if (arena.getArenaState() == ArenaState.IN_GAME && arena.getTimer() > 30) {
+          while(loc.getBlock().getType() != Material.AIR) {
+            if(arena.getArenaState() == ArenaState.IN_GAME && arena.getTimer() > 30) {
               break; // Thread never ends on flat map?
             }
 
             loc = loc.add(0, 1, 0);
             //teleporting 1 x and z block away from center cause Y is above plot limit
-            if (loc.getY() >= cuboid.getMaxPoint().getY()) {
+            if(loc.getY() >= cuboid.getMaxPoint().getY()) {
               loc = cuboid.getCenter().clone().add(1, 0, 1);
             }
           }
 
-          for (Player p : buildPlot.getOwners()) {
+          for(Player p : buildPlot.getOwners()) {
             p.teleport(cuboid.getCenter());
           }
         } else {
           // Should do this in async thread to do not cause dead for the main thread
           CompletableFuture.supplyAsync(() -> {
             Location loc = tploc;
-            while (loc.getBlock().getType() != Material.AIR) {
-              if (arena.getArenaState() == ArenaState.IN_GAME && arena.getTimer() > 30) {
+            while(loc.getBlock().getType() != Material.AIR) {
+              if(arena.getArenaState() == ArenaState.IN_GAME && arena.getTimer() > 30) {
                 break; // Thread never ends on flat map?
               }
 
               loc = loc.add(0, 1, 0);
               //teleporting 1 x and z block away from center cause Y is above plot limit
-              if (loc.getY() >= cuboid.getMaxPoint().getY()) {
+              if(loc.getY() >= cuboid.getMaxPoint().getY()) {
                 loc = cuboid.getCenter().clone().add(1, 0, 1);
               }
             }
 
             return loc;
           }).thenAccept(loc -> {
-            for (Player p : buildPlot.getOwners()) {
+            for(Player p : buildPlot.getOwners()) {
               p.teleport(cuboid.getCenter());
               //apply creative again to prevent multiverse default gamemode on world switch
               p.setGameMode(GameMode.CREATIVE);

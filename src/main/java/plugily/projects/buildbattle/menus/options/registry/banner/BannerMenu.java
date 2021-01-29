@@ -24,23 +24,21 @@ import com.github.stefvanschie.inventoryframework.Gui;
 import com.github.stefvanschie.inventoryframework.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
-
-import java.util.EnumMap;
-import java.util.Map;
-
 import org.bukkit.DyeColor;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
-
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.utils.Utils;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 /**
  * @author Plajer
@@ -51,8 +49,8 @@ public class BannerMenu {
 
   private static Main plugin;
   private final Map<PatternStage, Gui> guiStages = new EnumMap<>(PatternStage.class);
-  private Banner banner;
-  private Player player;
+  private final Banner banner;
+  private final Player player;
 
   public BannerMenu(Player player) {
     this(player, new Banner());
@@ -74,13 +72,13 @@ public class BannerMenu {
   private void prepareBaseStageGui() {
     Gui gui = new Gui(plugin, 6, plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Banner-Creator.Inventories.Color-Choose"));
     OutlinePane pane = new OutlinePane(1, 1, 7, 3);
-    for (DyeColor color : DyeColor.values()) {
+    for(DyeColor color : DyeColor.values()) {
       ItemStack item;
-      if (ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {
+      if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {
         item = XMaterial.WHITE_BANNER.parseItem();
         BannerMeta meta = (BannerMeta) item.getItemMeta();
-        if (Version.isCurrentEqualOrLower(Version.v1_12_R1)) {
-            meta.setBaseColor(color);
+        if(Version.isCurrentEqualOrLower(Version.v1_12_R1)) {
+          meta.setBaseColor(color);
         } else {
           ((org.bukkit.block.Banner) item).setBaseColor(color);
         }
@@ -105,7 +103,7 @@ public class BannerMenu {
     Gui gui = new Gui(plugin, 6, plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Banner-Creator.Inventories.Add-Layer"));
     OutlinePane pane = new OutlinePane(0, 0, 9, 5);
     gui.addPane(pane);
-    for (PatternType pattern : PatternType.values()) {
+    for(PatternType pattern : PatternType.values()) {
       ItemStack item = banner.buildBanner();
       BannerMeta meta = (BannerMeta) item.getItemMeta();
       DyeColor color = banner.getColor() == DyeColor.BLACK ? DyeColor.WHITE : DyeColor.BLACK;
@@ -126,7 +124,7 @@ public class BannerMenu {
     Gui gui = new Gui(plugin, 6, plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Banner-Creator.Inventories.Add-Layer-Color"));
     OutlinePane pane = new OutlinePane(1, 1, 7, 3);
     gui.addPane(pane);
-    for (DyeColor color : DyeColor.values()) {
+    for(DyeColor color : DyeColor.values()) {
       ItemStack item = banner.buildBanner();
       BannerMeta meta = (BannerMeta) item.getItemMeta();
       Pattern pattern = new Pattern(color, banner.getLastPattern().getPatternType());

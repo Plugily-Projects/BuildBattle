@@ -44,7 +44,7 @@ public final class Partition<T> extends AbstractList<List<T>> {
     int start = index * chunkSize;
     int end = Math.min(start + chunkSize, list.size());
 
-    if (start > end) {
+    if(start > end) {
       throw new IndexOutOfBoundsException("Index " + index + " is out of the list range <0," + (size() - 1) + ">");
     }
 

@@ -21,7 +21,6 @@
 package plugily.projects.buildbattle.user.data;
 
 import org.bukkit.configuration.file.FileConfiguration;
-
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
@@ -32,8 +31,8 @@ import plugily.projects.buildbattle.user.User;
  */
 public class FileStats implements UserDatabase {
 
-  private FileConfiguration config;
-  private Main plugin;
+  private final FileConfiguration config;
+  private final Main plugin;
 
   public FileStats(Main plugin) {
     this.plugin = plugin;
@@ -48,8 +47,8 @@ public class FileStats implements UserDatabase {
 
   @Override
   public void saveAllStatistic(User user) {
-    for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-      if (!stat.isPersistent()) {
+    for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+      if(!stat.isPersistent()) {
         continue;
       }
       config.set(user.getPlayer().getUniqueId().toString() + "." + stat.getName(), user.getStat(stat));
@@ -59,7 +58,7 @@ public class FileStats implements UserDatabase {
 
   @Override
   public void loadStatistics(User user) {
-    for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+    for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
       user.setStat(stat, config.getInt(user.getPlayer().getUniqueId().toString() + "." + stat.getName(), 0));
     }
   }

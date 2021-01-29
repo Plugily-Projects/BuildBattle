@@ -21,7 +21,12 @@
 package plugily.projects.buildbattle.arena.managers.plots;
 
 import net.citizensnpcs.api.CitizensAPI;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.WeatherType;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -29,7 +34,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-
 import pl.plajerlair.commonsbox.minecraft.compat.PacketUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
@@ -74,7 +78,7 @@ public class Plot {
   }
 
   public void removeEntity() {
-    if (entities > 0) {
+    if(entities > 0) {
       entities--;
     }
   }
@@ -131,8 +135,8 @@ public class Plot {
 
   public void fullyResetPlot() {
     resetPlot();
-    if (!owners.isEmpty()) {
-      for (Player p : owners) {
+    if(!owners.isEmpty()) {
+      for(Player p : owners) {
         User user = plugin.getUserManager().getUser(p);
         user.setCurrentPlot(null);
         setOwners(new ArrayList<>());
@@ -143,11 +147,11 @@ public class Plot {
   }
 
   public void resetPlot() {
-    if (cuboid == null) {
+    if(cuboid == null) {
       return;
     }
 
-    for (Block block : cuboid.blockList()) {
+    for(Block block : cuboid.blockList()) {
       //to ensure 1.14 blocks support (that will be seen as air in api-version 1.13)
       //we set all blocks to air so 1.14 ones will update too
       block.setType(Material.AIR);
@@ -155,38 +159,38 @@ public class Plot {
 
     getParticles().clear();
 
-    for (Player p : owners) {
+    for(Player p : owners) {
       p.resetPlayerWeather();
       setWeatherType(p.getPlayerWeather());
       p.resetPlayerTime();
     }
 
-    if (cuboid.getCenter().getWorld() != null) {
-      for (Entity entity : cuboid.getCenter().getWorld().getEntities()) {
-        if (cuboid.isInWithMarge(entity.getLocation(), 5)) {
-          if (plugin.getServer().getPluginManager().isPluginEnabled("Citizens") && CitizensAPI.getNPCRegistry() != null
+    if(cuboid.getCenter().getWorld() != null) {
+      for(Entity entity : cuboid.getCenter().getWorld().getEntities()) {
+        if(cuboid.isInWithMarge(entity.getLocation(), 5)) {
+          if(plugin.getServer().getPluginManager().isPluginEnabled("Citizens") && CitizensAPI.getNPCRegistry() != null
               && CitizensAPI.getNPCRegistry().isNPC(entity)) {
             continue;
           }
 
-          if (entity.getType() != EntityType.PLAYER) {
+          if(entity.getType() != EntityType.PLAYER) {
             entity.remove();
           }
         }
       }
     }
 
-    for (Block block : cuboid.blockList()) {
+    for(Block block : cuboid.blockList()) {
       block.setBiome(plotDefaultBiome);
     }
 
     try {
-      for (Chunk chunk : cuboid.chunkList()) {
-        for (Player p : Bukkit.getOnlinePlayers()) {
-          if (!p.getWorld().equals(chunk.getWorld())) {
+      for(Chunk chunk : cuboid.chunkList()) {
+        for(Player p : Bukkit.getOnlinePlayers()) {
+          if(!p.getWorld().equals(chunk.getWorld())) {
             continue;
           }
-          if (ServerVersion.Version.isCurrentEqual(ServerVersion.Version.v1_16_R1)) {
+          if(ServerVersion.Version.isCurrentEqual(ServerVersion.Version.v1_16_R1)) {
             PacketUtils.sendPacket(p, PacketUtils.getNMSClass("PacketPlayOutMapChunk").getConstructor(PacketUtils.getNMSClass("Chunk"), int.class, boolean.class)
                 .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535, false));
           } else {
@@ -195,14 +199,14 @@ public class Plot {
           }
         }
       }
-    } catch (ReflectiveOperationException exception) {
+    } catch(ReflectiveOperationException exception) {
       exception.printStackTrace();
     }
 
     changeFloor(XMaterial.matchXMaterial(plugin.getConfig().getString("Default-Floor-Material-Name", "LOG")
         .toUpperCase()).orElse(XMaterial.OAK_LOG).parseMaterial());
 
-    if (ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_15_R1)) {
+    if(ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_15_R1)) {
       int y = Math.min(cuboid.getMinPoint().getBlockY(), cuboid.getMaxPoint().getBlockY());
 
       cuboid.getCenter().getWorld().setBiome(cuboid.getMinPoint().getBlockX(), y, cuboid.getMaxPoint().getBlockZ(), plotDefaultBiome);
@@ -226,8 +230,8 @@ public class Plot {
     double y = Math.min(cuboid.getMinPoint().getY(), cuboid.getMaxPoint().getY());
     Location min = cuboid.getMinPoint();
     Location max = cuboid.getMaxPoint();
-    for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
-      for (int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
+    for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
+      for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
         Location tmpblock = new Location(cuboid.getMaxPoint().getWorld(), x, y, z);
         tmpblock.getBlock().setType(material);
       }
@@ -235,23 +239,23 @@ public class Plot {
   }
 
   public void changeFloor(Material material, byte data) {
-    if (material == Material.WATER_BUCKET || material == Material.MILK_BUCKET) {
+    if(material == Material.WATER_BUCKET || material == Material.MILK_BUCKET) {
       material = Material.WATER;
     }
-    if (material == Material.LAVA_BUCKET) {
+    if(material == Material.LAVA_BUCKET) {
       material = Material.LAVA;
     }
     double y = Math.min(cuboid.getMinPoint().getY(), cuboid.getMaxPoint().getY());
     Location min = cuboid.getMinPoint();
     Location max = cuboid.getMaxPoint();
-    for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
-      for (int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
+    for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
+      for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
         Location tmpblock = new Location(cuboid.getMaxPoint().getWorld(), x, y, z);
         tmpblock.getBlock().setType(material);
-        if (ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {
+        if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {
           try {
             Block.class.getMethod("setData", byte.class).invoke(tmpblock.getBlock(), data);
-          } catch (Exception e) {
+          } catch(Exception e) {
             e.printStackTrace();
           }
         }
@@ -261,14 +265,14 @@ public class Plot {
 
   public Location getTeleportLocation() {
     Location tploc = cuboid.getCenter();
-    while (tploc.getBlock().getType() != Material.AIR || tploc.add(0, 1, 0).getBlock().getType() != Material.AIR) {
+    while(tploc.getBlock().getType() != Material.AIR || tploc.add(0, 1, 0).getBlock().getType() != Material.AIR) {
       tploc = tploc.add(0, 1, 0);
     }
     boolean enclosed = false;
     int counter = 0;
     Location location = tploc.clone();
-    while (counter != 10) {
-      if (!(location.getBlock().getType() == Material.BARRIER || location.getBlock().getType() == Material.AIR)) {
+    while(counter != 10) {
+      if(!(location.getBlock().getType() == Material.BARRIER || location.getBlock().getType() == Material.AIR)) {
         enclosed = true;
         tploc = location;
         counter = 9;
@@ -276,8 +280,8 @@ public class Plot {
       location.add(0, 1, 0);
       counter++;
     }
-    if (enclosed) {
-      while (tploc.getBlock().getType() != Material.AIR || tploc.add(0, 1, 0).getBlock().getType() != Material.AIR) {
+    if(enclosed) {
+      while(tploc.getBlock().getType() != Material.AIR || tploc.add(0, 1, 0).getBlock().getType() != Material.AIR) {
         tploc = tploc.add(0, 1, 0);
       }
     }

@@ -24,9 +24,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-
 import org.bukkit.plugin.java.JavaPlugin;
-
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
@@ -41,7 +39,8 @@ import plugily.projects.buildbattle.utils.Utils;
  * Created at 23.12.2018
  */
 public class PlayerHeadsOption {
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+
   public PlayerHeadsOption(OptionsRegistry registry) {
     registry.registerOption(new MenuOption(10, "PLAYER_HEADS", new ItemBuilder(ItemUtils.PLAYER_HEAD_ITEM.clone())
         .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Players-Heads.Item-Name"))
@@ -51,8 +50,8 @@ public class PlayerHeadsOption {
       @Override
       public void onClick(InventoryClickEvent e) {
         e.getWhoClicked().closeInventory();
-        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.HEADS_COMMAND)) {
-          if (e.getWhoClicked() instanceof Player){
+        if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.HEADS_COMMAND)) {
+          if(e.getWhoClicked() instanceof Player) {
             ((Player) e.getWhoClicked()).performCommand(plugin.getConfig().getString("Command-Instead-Of-Head-Menu.Command", "heads"));
           }
           return;
@@ -60,7 +59,7 @@ public class PlayerHeadsOption {
         Inventory inventory = Bukkit.getServer().createInventory(null,
             Utils.serializeInt(registry.getPlayerHeadsRegistry().getCategories().size() + 1),
             registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Players-Heads.Inventory-Name"));
-        for (HeadsCategory categoryItem : registry.getPlayerHeadsRegistry().getCategories().keySet()) {
+        for(HeadsCategory categoryItem : registry.getPlayerHeadsRegistry().getCategories().keySet()) {
           inventory.addItem(categoryItem.getItemStack());
         }
         inventory.addItem(Utils.getGoBackItem());
@@ -70,11 +69,11 @@ public class PlayerHeadsOption {
       @Override
       public void onTargetClick(InventoryClickEvent e) {
         e.getWhoClicked().closeInventory();
-        for (HeadsCategory category : registry.getPlayerHeadsRegistry().getCategories().keySet()) {
-          if (!category.getItemStack().getItemMeta().getDisplayName().equals(e.getCurrentItem().getItemMeta().getDisplayName())) {
+        for(HeadsCategory category : registry.getPlayerHeadsRegistry().getCategories().keySet()) {
+          if(!category.getItemStack().getItemMeta().getDisplayName().equals(e.getCurrentItem().getItemMeta().getDisplayName())) {
             continue;
           }
-          if (e.getWhoClicked().hasPermission(category.getPermission())) {
+          if(e.getWhoClicked().hasPermission(category.getPermission())) {
             e.getWhoClicked().openInventory(category.getInventory());
             return;
           }

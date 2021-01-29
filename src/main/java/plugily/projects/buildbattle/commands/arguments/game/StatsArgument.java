@@ -23,7 +23,6 @@ package plugily.projects.buildbattle.commands.arguments.game;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
 import plugily.projects.buildbattle.commands.arguments.data.CommandArgument;
@@ -41,12 +40,12 @@ public class StatsArgument {
       @Override
       public void execute(CommandSender sender, String[] args) {
         Player player = args.length == 2 ? Bukkit.getPlayerExact(args[1]) : (Player) sender;
-        if (player == null || registry.getPlugin().getUserManager().getUser(player) == null) {
+        if(player == null || registry.getPlugin().getUserManager().getUser(player) == null) {
           sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Player-Not-Found"));
           return;
         }
         User user = registry.getPlugin().getUserManager().getUser(player);
-        if (player.equals(sender)) {
+        if(player.equals(sender)) {
           sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Stats-Command.Header"));
         } else {
           sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Stats-Command.Header-Other").replace("%player%", player.getName()));

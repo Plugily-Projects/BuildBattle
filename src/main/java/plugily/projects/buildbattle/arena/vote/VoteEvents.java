@@ -26,7 +26,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
-
 import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
@@ -55,23 +54,23 @@ public class VoteEvents implements Listener {
 
   @EventHandler
   public void onVote(PlayerInteractEvent e) {
-    if (e.getHand() == EquipmentSlot.OFF_HAND || e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK || e.getAction() == Action.PHYSICAL) {
+    if(e.getHand() == EquipmentSlot.OFF_HAND || e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK || e.getAction() == Action.PHYSICAL) {
       return;
     }
 
-    if (!ItemUtils.isItemStackNamed(e.getItem())) {
+    if(!ItemUtils.isItemStackNamed(e.getItem())) {
       return;
     }
 
     BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
-    if (arena == null || arena instanceof GuessTheBuildArena || arena.getArenaState() != ArenaState.IN_GAME || !((SoloArena) arena).isVoting()) {
+    if(arena == null || arena instanceof GuessTheBuildArena || arena.getArenaState() != ArenaState.IN_GAME || !((SoloArena) arena).isVoting()) {
       return;
     }
 
     SoloArena sArena = ((SoloArena) arena);
     Plot plot = sArena.getVotingPlot();
-    if (plugin.getVoteItems().getReportItem().equals(e.getItem())) {
-      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.RUN_COMMAND_ON_REPORT) && plot != null) {
+    if(plugin.getVoteItems().getReportItem().equals(e.getItem())) {
+      if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.RUN_COMMAND_ON_REPORT) && plot != null) {
         plot.getOwners().forEach(player -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
             plugin.getConfig().getString("Run-Command-On-Report.Command", "kick %reported%")
                 .replace("%reported%", player.getName()).replace("%reporter%", e.getPlayer().getName())));
@@ -82,7 +81,7 @@ public class VoteEvents implements Listener {
       return;
     }
 
-    if (plot != null && plot.getOwners().contains(e.getPlayer())) {
+    if(plot != null && plot.getOwners().contains(e.getPlayer())) {
       e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Cant-Vote-Own-Plot"));
       e.setCancelled(true);
       return;

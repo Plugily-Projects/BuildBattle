@@ -23,7 +23,6 @@ package plugily.projects.buildbattle.commands.arguments.admin.plot;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
@@ -48,18 +47,18 @@ public class RemovePlotArgument {
       @Override
       public void execute(CommandSender sender, String[] args) {
         Player player = (Player) sender;
-        if (args.length < 2) {
+        if(args.length < 2) {
           //todo translatable
           player.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorRawMessage("&cPlease type arena name and plot ID!"));
           return;
         }
         BaseArena arena = ArenaRegistry.getArena(args[1]);
-        if (arena == null) {
+        if(arena == null) {
           player.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Arena-Like-That"));
           return;
         }
         FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
-        if (config.contains("instances." + arena.getID() + ".plots." + args[2])) {
+        if(config.contains("instances." + arena.getID() + ".plots." + args[2])) {
           config.set("instances." + arena.getID() + ".plots." + args[2], null);
           ConfigUtils.saveConfig(registry.getPlugin(), config, "arenas");
           player.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorRawMessage("&aPlot with ID &e" + args[2] + "&a removed from arena &e" + arena.getID()));

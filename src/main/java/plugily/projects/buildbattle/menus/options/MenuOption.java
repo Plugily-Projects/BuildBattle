@@ -31,8 +31,8 @@ import org.bukkit.inventory.ItemStack;
 public class MenuOption {
 
   private int slot;
-  private String id;
-  private ItemStack itemStack;
+  private final String id;
+  private final ItemStack itemStack;
   private String inventoryName;
   private boolean inventoryEnabled = true;
 

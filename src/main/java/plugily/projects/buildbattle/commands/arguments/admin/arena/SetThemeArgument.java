@@ -22,7 +22,6 @@ package plugily.projects.buildbattle.commands.arguments.admin.arena;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.ArenaState;
@@ -47,29 +46,29 @@ public class SetThemeArgument {
       @Override
       public void execute(CommandSender sender, String[] args) {
         BaseArena arena = ArenaRegistry.getArena((Player) sender);
-        if (arena == null) {
+        if(arena == null) {
           sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Playing"));
           return;
         }
-        if (!(arena instanceof SoloArena)) {
+        if(!(arena instanceof SoloArena)) {
           //todo translatable
           sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorRawMessage("&cCan't set theme on this arena type!"));
           return;
         }
-        if (args.length == 1) {
+        if(args.length == 1) {
           //todo translatable
           sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorRawMessage("&cPlease type arena theme!"));
           return;
         }
-        if (arena.getArenaState() == ArenaState.IN_GAME && registry.getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, arena) - arena.getTimer() <= 20) {
-          if (registry.getPlugin().getConfigPreferences().isThemeBlacklisted(args[1].toLowerCase())) {
+        if(arena.getArenaState() == ArenaState.IN_GAME && registry.getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, arena) - arena.getTimer() <= 20) {
+          if(registry.getPlugin().getConfigPreferences().isThemeBlacklisted(args[1].toLowerCase())) {
             sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Admin-Commands.Theme-Blacklisted"));
             return;
           }
           arena.setTheme(args[1]);
           registry.getPlugin().getChatManager().broadcast(arena, registry.getPlugin().getChatManager().colorMessage("In-Game.Messages.Admin-Messages.Changed-Theme").replace("%THEME%", args[1]));
         } else {
-          if (arena.getArenaState() == ArenaState.STARTING) {
+          if(arena.getArenaState() == ArenaState.STARTING) {
             sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Wait-For-Start"));
           } else {
             sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Arena-Started"));

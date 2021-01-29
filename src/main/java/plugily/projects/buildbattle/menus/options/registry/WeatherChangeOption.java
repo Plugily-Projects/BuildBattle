@@ -26,7 +26,6 @@ import org.bukkit.WeatherType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
@@ -61,20 +60,20 @@ public class WeatherChangeOption {
 
       @Override
       public void onTargetClick(InventoryClickEvent e) {
-        if (e.getCurrentItem() == null)
+        if(e.getCurrentItem() == null)
           return;
 
         BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
-        if (arena == null) {
+        if(arena == null) {
           return;
         }
         Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());
-        if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Downfall"))) {
+        if(e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Downfall"))) {
           plot.setWeatherType(WeatherType.DOWNFALL);
-        } else if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Clear"))) {
+        } else if(e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Clear"))) {
           plot.setWeatherType(WeatherType.CLEAR);
         }
-        for (Player p : plot.getOwners()) {
+        for(Player p : plot.getOwners()) {
           p.setPlayerWeather(plot.getWeatherType());
           p.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Set"));
         }

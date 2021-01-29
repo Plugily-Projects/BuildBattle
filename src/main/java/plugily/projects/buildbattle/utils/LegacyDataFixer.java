@@ -21,7 +21,6 @@
 package plugily.projects.buildbattle.utils;
 
 import org.bukkit.configuration.file.FileConfiguration;
-
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
@@ -35,7 +34,7 @@ import plugily.projects.buildbattle.api.StatsStorage;
 public class LegacyDataFixer {
 
   public static final int DATA_VERSION = 1;
-  private Main plugin;
+  private final Main plugin;
 
   public LegacyDataFixer(Main plugin) {
     this.plugin = plugin;
@@ -44,25 +43,25 @@ public class LegacyDataFixer {
 
   private void initiate() {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
-    if (config.getInt("data-version", 0) >= DATA_VERSION || plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+    if(config.getInt("data-version", 0) >= DATA_VERSION || plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       return;
     }
     Debugger.debug(Debugger.Level.TASK, "Legacy fixer started, fixing player data for yaml storage...");
 
     int migrated = 0;
 
-    for (String key : config.getKeys(false)) {
-      if (key.equals("data-version")) {
+    for(String key : config.getKeys(false)) {
+      if(key.equals("data-version")) {
         continue;
       }
 
       int migratedLocal = 0;
 
-      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-        if (!config.isSet(key + "." + stat)) {
+      for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+        if(!config.isSet(key + "." + stat)) {
           continue;
         }
-        if (!stat.isPersistent()) {
+        if(!stat.isPersistent()) {
           config.set(key + "." + stat, null);
           continue;
         }

@@ -22,7 +22,6 @@ package plugily.projects.buildbattle.api.event.game;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
-
 import plugily.projects.buildbattle.api.event.BBEvent;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 
@@ -32,7 +31,7 @@ import plugily.projects.buildbattle.arena.impl.BaseArena;
 public class BBGameLeaveEvent extends BBEvent {
 
   private static final HandlerList handlers = new HandlerList();
-  private Player player;
+  private final Player player;
 
   public BBGameLeaveEvent(Player player, BaseArena arena) {
     super(arena);

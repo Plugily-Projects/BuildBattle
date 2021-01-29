@@ -20,19 +20,18 @@
 
 package plugily.projects.buildbattle.user;
 
-import java.util.EnumMap;
-import java.util.Map;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.api.event.player.BBPlayerStatisticChangeEvent;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 /**
  * Created by Tom on 27/07/2014.
@@ -74,10 +73,10 @@ public class User {
   }
 
   public int getStat(StatsStorage.StatisticType stat) {
-    if (!stats.containsKey(stat)) {
+    if(!stats.containsKey(stat)) {
       stats.put(stat, 0);
       return 0;
-    } else if (stats.get(stat) == null) {
+    } else if(stats.get(stat) == null) {
       return 0;
     }
 

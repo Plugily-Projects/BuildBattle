@@ -51,8 +51,8 @@ public class VoteItems {
   }
 
   private void loadVoteItems() {
-    for (String key : config.getKeys(false)) {
-      if (!config.isSet(key + ".displayname")) {
+    for(String key : config.getKeys(false)) {
+      if(!config.isSet(key + ".displayname")) {
         continue;
       }
 
@@ -61,21 +61,21 @@ public class VoteItems {
           .name(JavaPlugin.getPlugin(Main.class).getChatManager().colorRawMessage(config.getString(key + ".displayname")))
           .build();
 
-      if (config.getBoolean(key + ".report-item-function", false)) {
+      if(config.getBoolean(key + ".report-item-function", false)) {
         reportItem = stack;
       }
       Sound sound = null;
       try {
         sound = Sound.valueOf(config.getString(key + ".sound", ""));
-      } catch (Exception ignored) {
+      } catch(Exception ignored) {
       }
       VOTEITEMS.add(new VoteItem(stack, Integer.parseInt(key), Integer.parseInt(key) + 1, sound));
     }
   }
 
   private void updateVoteItemsConfig() {
-    for (String key : config.getKeys(false)) {
-      if (!config.isSet(key + ".displayname") || config.isSet(key + ".material-name")) {
+    for(String key : config.getKeys(false)) {
+      if(!config.isSet(key + ".displayname") || config.isSet(key + ".material-name")) {
         continue;
       }
       config.set(key + ".material-name", XMaterial.GREEN_TERRACOTTA.name());
@@ -85,16 +85,16 @@ public class VoteItems {
   }
 
   public void giveVoteItems(Player player) {
-    for (VoteItem voteItem : VOTEITEMS) {
+    for(VoteItem voteItem : VOTEITEMS) {
       player.getInventory().setItem(voteItem.getSlot(), voteItem.getItemStack());
     }
     player.updateInventory();
   }
 
   public void playVoteSound(Player player, ItemStack itemStack) {
-    for (VoteItem item : VOTEITEMS) {
-      if (item.getItemStack().isSimilar(itemStack)) {
-        if (item.getSound() == null) {
+    for(VoteItem item : VOTEITEMS) {
+      if(item.getItemStack().isSimilar(itemStack)) {
+        if(item.getSound() == null) {
           return;
         }
         player.playSound(player.getLocation(), item.getSound(), 1, 1);
@@ -109,8 +109,8 @@ public class VoteItems {
    * @return points
    */
   public int getPoints(ItemStack itemStack) {
-    for (VoteItem item : VOTEITEMS) {
-      if (item.getItemStack().isSimilar(itemStack)) {
+    for(VoteItem item : VOTEITEMS) {
+      if(item.getItemStack().isSimilar(itemStack)) {
         return item.getPoints();
       }
     }

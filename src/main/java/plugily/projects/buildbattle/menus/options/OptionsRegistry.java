@@ -20,14 +20,10 @@
 
 package plugily.projects.buildbattle.menus.options;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.menus.options.registry.FloorChangeOption;
@@ -42,6 +38,9 @@ import plugily.projects.buildbattle.menus.options.registry.particles.ParticlesOp
 import plugily.projects.buildbattle.menus.options.registry.playerheads.PlayerHeadsOption;
 import plugily.projects.buildbattle.menus.options.registry.playerheads.PlayerHeadsRegistry;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * @author Plajer
  * <p>
@@ -54,14 +53,14 @@ public class OptionsRegistry {
   private PlayerHeadsRegistry playerHeadsRegistry;
   private final Set<MenuOption> registeredOptions = new HashSet<>();
   private int inventorySize = 5 * 9;
-  private ItemBuilder menuItem;
-  private Main plugin;
+  private final ItemBuilder menuItem;
+  private final Main plugin;
 
   public OptionsRegistry(Main plugin) {
     this.plugin = plugin;
     this.menuItem = new ItemBuilder(Material.NETHER_STAR)
-            .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item"))
-            .lore(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item-Lore"));
+        .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item"))
+        .lore(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item-Lore"));
     registerOptions();
   }
 
@@ -93,11 +92,11 @@ public class OptionsRegistry {
    *                                  or ID of option is same as one of registered one
    */
   public void registerOption(MenuOption option) {
-    for (MenuOption opt : registeredOptions) {
-      if (opt.getSlot() == option.getSlot()) {
+    for(MenuOption opt : registeredOptions) {
+      if(opt.getSlot() == option.getSlot()) {
         throw new IllegalArgumentException("Cannot register new option on existing option slot!");
       }
-      if (opt.getID().equals(option.getID())) {
+      if(opt.getID().equals(option.getID())) {
         throw new IllegalArgumentException("Cannot register new option with equal identifier!");
       }
     }
@@ -111,7 +110,7 @@ public class OptionsRegistry {
    * @throws IllegalArgumentException if option doesn't exist
    */
   public void unregisterOption(MenuOption option) {
-    if (!registeredOptions.contains(option)) {
+    if(!registeredOptions.contains(option)) {
       throw new IllegalArgumentException("Cannot remove non existing option!");
     }
     registeredOptions.remove(option);
@@ -133,7 +132,7 @@ public class OptionsRegistry {
    */
   public Inventory formatInventory() {
     Inventory inv = Bukkit.createInventory(null, inventorySize, plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name"));
-    for (MenuOption option : registeredOptions) {
+    for(MenuOption option : registeredOptions) {
       inv.setItem(option.getSlot(), option.getItemStack());
     }
     return inv;

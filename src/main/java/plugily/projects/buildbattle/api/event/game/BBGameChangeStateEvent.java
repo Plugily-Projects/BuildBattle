@@ -21,7 +21,6 @@
 package plugily.projects.buildbattle.api.event.game;
 
 import org.bukkit.event.HandlerList;
-
 import plugily.projects.buildbattle.api.event.BBEvent;
 import plugily.projects.buildbattle.arena.ArenaState;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
@@ -32,8 +31,8 @@ import plugily.projects.buildbattle.arena.impl.BaseArena;
 public class BBGameChangeStateEvent extends BBEvent {
 
   private static final HandlerList handlers = new HandlerList();
-  private ArenaState gameState;
-  private ArenaState previous;
+  private final ArenaState gameState;
+  private final ArenaState previous;
 
   public BBGameChangeStateEvent(ArenaState gameState, BaseArena arena, ArenaState previous) {
     super(arena);

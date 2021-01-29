@@ -21,7 +21,6 @@
 package plugily.projects.buildbattle.api.event.plot;
 
 import org.bukkit.event.HandlerList;
-
 import plugily.projects.buildbattle.api.event.BBEvent;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
@@ -35,7 +34,7 @@ import plugily.projects.buildbattle.arena.managers.plots.Plot;
 public class BBPlayerPlotReceiveEvent extends BBEvent {
 
   private static final HandlerList HANDLERS = new HandlerList();
-  private Plot plot;
+  private final Plot plot;
 
   public BBPlayerPlotReceiveEvent(BaseArena eventArena, Plot plot) {
     super(eventArena);

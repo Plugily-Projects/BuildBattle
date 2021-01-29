@@ -20,13 +20,9 @@
 
 package plugily.projects.buildbattle.commands.arguments.admin.arena;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.buildbattle.arena.ArenaManager;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
@@ -35,6 +31,9 @@ import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
 import plugily.projects.buildbattle.commands.arguments.data.CommandArgument;
 import plugily.projects.buildbattle.commands.arguments.data.LabelData;
 import plugily.projects.buildbattle.commands.arguments.data.LabeledCommandArgument;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Plajer
@@ -51,16 +50,16 @@ public class DeleteArgument {
             "&7Deletes specified arena\n&6Permission: &7buildbattle.admin.delete")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        if (args.length == 1) {
+        if(args.length == 1) {
           sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Type-Arena-Name"));
           return;
         }
         BaseArena arena = ArenaRegistry.getArena(args[1]);
-        if (arena == null) {
+        if(arena == null) {
           sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Arena-Like-That"));
           return;
         }
-        if (!confirmations.contains(sender)) {
+        if(!confirmations.contains(sender)) {
           confirmations.add(sender);
           Bukkit.getScheduler().runTaskLater(registry.getPlugin(), () -> confirmations.remove(sender), 20 * 10);
           sender.sendMessage(registry.getPlugin().getChatManager().getPrefix()

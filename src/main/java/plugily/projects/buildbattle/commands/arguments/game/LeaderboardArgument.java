@@ -20,22 +20,21 @@
 
 package plugily.projects.buildbattle.commands.arguments.game;
 
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import plugily.projects.buildbattle.ConfigPreferences;
+import plugily.projects.buildbattle.api.StatsStorage;
+import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
+import plugily.projects.buildbattle.commands.arguments.data.CommandArgument;
+import plugily.projects.buildbattle.user.data.MysqlManager;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedHashMap;
 import java.util.UUID;
-
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-
-import plugily.projects.buildbattle.ConfigPreferences;
-import plugily.projects.buildbattle.api.StatsStorage;
-import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
-import plugily.projects.buildbattle.commands.arguments.data.CommandArgument;
-import plugily.projects.buildbattle.user.data.MysqlManager;
 
 /**
  * @author Plajer
@@ -49,19 +48,19 @@ public class LeaderboardArgument {
       @Override
       public void execute(CommandSender sender, String[] args) {
         try {
-          if (args.length == 1) {
+          if(args.length == 1) {
             sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Statistics.Type-Name"));
             return;
           }
           StatsStorage.StatisticType statisticType = StatsStorage.StatisticType.valueOf(args[1].toUpperCase());
-          if (!statisticType.isPersistent()) {
+          if(!statisticType.isPersistent()) {
             sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Statistics.Invalid-Name"));
             return;
           }
           LinkedHashMap<UUID, Integer> stats = (LinkedHashMap<UUID, Integer>) StatsStorage.getStats(statisticType);
           sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Statistics.Header"));
           String statistic = StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "));
-          for (int i = 0; i < 10; i++) {
+          for(int i = 0; i < 10; i++) {
             try {
               UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
               String message = registry.getPlugin().getChatManager().colorMessage("Commands.Statistics.Format");
@@ -71,20 +70,20 @@ public class LeaderboardArgument {
               message = StringUtils.replace(message, "%statistic%", statistic); //Games_played > Games played etc
               sender.sendMessage(message);
               stats.remove(current);
-            } catch (IndexOutOfBoundsException ex) {
+            } catch(IndexOutOfBoundsException ex) {
               String message = registry.getPlugin().getChatManager().colorMessage("Commands.Statistics.Format");
               message = StringUtils.replace(message, "%position%", String.valueOf(i + 1));
               message = StringUtils.replace(message, "%name%", "Empty");
               message = StringUtils.replace(message, "%value%", "0");
               message = StringUtils.replace(message, "%statistic%", statistic); //Games_played > Games played etc
               sender.sendMessage(message);
-            } catch (NullPointerException ex) {
+            } catch(NullPointerException ex) {
               UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
-              if (registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-                try (Connection connection = registry.getPlugin().getMysqlDatabase().getConnection();
-                     Statement statement = connection.createStatement();
-                     ResultSet set = statement.executeQuery("SELECT name FROM " + ((MysqlManager) registry.getPlugin().getUserManager().getDatabase()).getTableName() + " WHERE UUID='" + current.toString() + "'")) {
-                  if (set.next()) {
+              if(registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+                try(Connection connection = registry.getPlugin().getMysqlDatabase().getConnection();
+                    Statement statement = connection.createStatement();
+                    ResultSet set = statement.executeQuery("SELECT name FROM " + ((MysqlManager) registry.getPlugin().getUserManager().getDatabase()).getTableName() + " WHERE UUID='" + current.toString() + "'")) {
+                  if(set.next()) {
                     String message = registry.getPlugin().getChatManager().colorMessage("Commands.Statistics.Format");
                     message = StringUtils.replace(message, "%position%", String.valueOf(i + 1));
                     message = StringUtils.replace(message, "%name%", set.getString(1));
@@ -93,7 +92,7 @@ public class LeaderboardArgument {
                     sender.sendMessage(message);
                     continue;
                   }
-                } catch (SQLException ignored) {
+                } catch(SQLException ignored) {
                   //fail silently
                 }
               }
@@ -105,7 +104,7 @@ public class LeaderboardArgument {
               sender.sendMessage(message);
             }
           }
-        } catch (IllegalArgumentException e) {
+        } catch(IllegalArgumentException e) {
           sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Statistics.Invalid-Name"));
         }
       }

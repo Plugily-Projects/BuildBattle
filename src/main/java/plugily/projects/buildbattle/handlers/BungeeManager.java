@@ -22,10 +22,6 @@ package plugily.projects.buildbattle.handlers;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-
-import java.util.EnumMap;
-import java.util.Map;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -33,7 +29,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerListPingEvent;
-
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaManager;
@@ -41,14 +36,17 @@ import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.ArenaState;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 /**
  * Created by Tom on 31/08/2014.
  */
 public class BungeeManager implements Listener {
 
-  private Main plugin;
+  private final Main plugin;
   private final Map<ArenaState, String> gameStateToString = new EnumMap<>(ArenaState.class);
-  private String MOTD;
+  private final String MOTD;
 
   public BungeeManager(Main plugin) {
     this.plugin = plugin;
@@ -63,7 +61,7 @@ public class BungeeManager implements Listener {
   }
 
   public void connectToHub(Player player) {
-    if (!ConfigUtils.getConfig(plugin, "bungee").getBoolean("Connect-To-Hub", true)) {
+    if(!ConfigUtils.getConfig(plugin, "bungee").getBoolean("Connect-To-Hub", true)) {
       return;
     }
     ByteArrayDataOutput out = ByteStreams.newDataOutput();
@@ -79,7 +77,7 @@ public class BungeeManager implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onServerListPing(ServerListPingEvent event) {
-    if (!ConfigUtils.getConfig(plugin, "bungee").getBoolean("MOTD.Manager") || ArenaRegistry.getArenas().isEmpty()) {
+    if(!ConfigUtils.getConfig(plugin, "bungee").getBoolean("MOTD.Manager") || ArenaRegistry.getArenas().isEmpty()) {
       return;
     }
     BaseArena arena = ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena());
@@ -97,7 +95,7 @@ public class BungeeManager implements Listener {
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onQuit(PlayerQuitEvent event) {
     event.setQuitMessage("");
-    if (ArenaRegistry.getArena(event.getPlayer()) != null) {
+    if(ArenaRegistry.getArena(event.getPlayer()) != null) {
       ArenaManager.leaveAttempt(event.getPlayer(), ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()));
     }
   }
