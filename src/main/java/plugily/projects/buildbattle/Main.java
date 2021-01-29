@@ -224,7 +224,7 @@ public class Main extends JavaPlugin {
     metrics.addCustomChart(new org.bstats.charts.SimplePie("bungeecord_hooked", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.BUNGEE_ENABLED))));
     metrics.addCustomChart(new org.bstats.charts.SimplePie("locale_used", LanguageManager.getPluginLocale()::getPrefix));
     metrics.addCustomChart(new org.bstats.charts.SimplePie("update_notifier", () -> {
-      if (getConfig().getBoolean("Update-Notifier.Enabled", true)) {
+      if(getConfig().getBoolean("Update-Notifier.Enabled", true)) {
         return getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true) ? "Enabled with beta notifier" : "Enabled";
       }
       return getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true) ? "Beta notifier only" : "Disabled";
