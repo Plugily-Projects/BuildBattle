@@ -75,6 +75,21 @@ public class SignManager implements Listener {
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
+  @Nullable
+  public ArenaSign getArenaSignByBlock(Block block) {
+    if (block == null) {
+      return null;
+    }
+
+    for (ArenaSign sign : arenaSigns) {
+      if (sign.getSign().getLocation().equals(block.getLocation())) {
+        return sign;
+      }
+    }
+
+    return null;
+  }
+
   @EventHandler
   public void onSignChange(SignChangeEvent e) {
     if(!e.getPlayer().hasPermission("buildbattle.admin.sign.create") || !e.getLine(0).equalsIgnoreCase("[buildbattle]")) {
@@ -124,8 +139,14 @@ public class SignManager implements Listener {
     if(!e.getPlayer().hasPermission("buildbattle.admin.sign.break") || arenaSign == null) {
       return;
     }
+
     arenaSigns.remove(arenaSign);
+
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+    if (!config.isConfigurationSection("instances")) {
+      return;
+    }
+
     String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + ".0," + e.getBlock().getY() + ".0," + e.getBlock().getZ() + ".0," + "0.0,0.0";
     for(String arena : config.getConfigurationSection("instances").getKeys(false)) {
       for(String sign : config.getStringList("instances." + arena + ".signs")) {
@@ -154,26 +175,11 @@ public class SignManager implements Listener {
     }
   }
 
-  @Nullable
-  private ArenaSign getArenaSignByBlock(Block block) {
-    if(block == null) {
-      return null;
-    }
-
-    for(ArenaSign sign : arenaSigns) {
-      if(sign.getSign().getLocation().equals(block.getLocation())) {
-        return sign;
-      }
-    }
-
-    return null;
-  }
-
   public void loadSigns() {
     arenaSigns.clear();
 
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    if(config == null || !config.isConfigurationSection("instances")) {
+    if (!config.isConfigurationSection("instances")) {
       return;
     }
 
