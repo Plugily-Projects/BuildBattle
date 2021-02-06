@@ -480,7 +480,7 @@ public class LanguageMigrator {
               "  Game-States:\r\n" +
               "    Waiting: \"&lWaiting for players...\"" +
               "    Starting: \"&e&lStarting\"" +
-              "    In-Game: \"&lIn-game\"" +
+              "    Playing: \"&lPlaying\"" +
               "    Ending: \"&lEnding\"" +
               "    Restarting: \"&c&lRestarting\"");
           break;
