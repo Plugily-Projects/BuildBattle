@@ -20,6 +20,10 @@
 
 package plugily.projects.buildbattle.arena;
 
+import org.bukkit.plugin.java.JavaPlugin;
+
+import plugily.projects.buildbattle.Main;
+
 /**
  * @author TomTheDeveloper
  * <p>
@@ -28,13 +32,19 @@ package plugily.projects.buildbattle.arena;
 public enum ArenaState {
   WAITING_FOR_PLAYERS("Waiting"), STARTING("Starting"), IN_GAME("Playing"), ENDING("Ending"), RESTARTING("Restarting");
 
-  String formattedName;
+  private final String formattedName;
+  private final String placeholder;
 
   ArenaState(String formattedName) {
     this.formattedName = formattedName;
+    this.placeholder = JavaPlugin.getPlugin(Main.class).getChatManager().colorMessage("Placeholders.Game-States." + formattedName);
   }
 
   public String getFormattedName() {
     return formattedName;
+  }
+
+  public String getPlaceholder() {
+    return placeholder;
   }
 }

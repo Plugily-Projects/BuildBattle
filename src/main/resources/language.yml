@@ -360,5 +360,13 @@ Arena-Selector:
       - " "
       - "&eClick to join this arena"
 
+Placeholders:
+  Game-States:
+    Waiting: "&lWaiting for players..."
+    Starting: "&e&lStarting"
+    Playing: "&lPlaying"
+    Ending: "&lEnding"
+    Restarting: "&c&lRestarting"
+
 # Do not modify!
-File-Version-Do-Not-Edit: 20
+File-Version-Do-Not-Edit: 21
