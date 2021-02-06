@@ -40,7 +40,7 @@ import java.util.List;
 @SuppressWarnings("deprecation")
 public class LanguageMigrator {
 
-  public static final int LANGUAGE_FILE_VERSION = 20;
+  public static final int LANGUAGE_FILE_VERSION = 21;
   public static final int CONFIG_FILE_VERSION = 16;
   private final List<String> migratable = Arrays.asList("bungee", "config", "language", "mysql");
   private final Main plugin;
@@ -474,6 +474,15 @@ public class LanguageMigrator {
           MigratorUtils.insertAfterLine(file, "        Time-Type:",
               "          Noon: \"&eNoon (6000 ticks)\"\r\n" +
                   "          MidNight: \"&eMidNight (18000 ticks)\"\r\n");
+          break;
+        case 20:
+          MigratorUtils.addNewLines(file, "Placeholders:\r\n" +
+              "  Game-States:\r\n" +
+              "    Waiting: \"&lWaiting for players...\"" +
+              "    Starting: \"&e&lStarting\"" +
+              "    In-Game: \"&lIn-game\"" +
+              "    Ending: \"&lEnding\"" +
+              "    Restarting: \"&c&lRestarting\"");
           break;
         default:
           return;
