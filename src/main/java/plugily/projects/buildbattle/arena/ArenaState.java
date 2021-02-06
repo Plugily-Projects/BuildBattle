@@ -22,6 +22,8 @@ package plugily.projects.buildbattle.arena;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import plugily.projects.buildbattle.Main;
+
 /**
  * @author TomTheDeveloper
  * <p>
