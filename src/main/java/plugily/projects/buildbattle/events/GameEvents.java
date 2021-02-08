@@ -82,15 +82,15 @@ public class GameEvents implements Listener {
   }
 
   @EventHandler(priority = EventPriority.LOWEST)
-  public void onLeave(PlayerInteractEvent e) {
-    if(e.getHand() == EquipmentSlot.OFF_HAND || e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK || e.getAction() == Action.PHYSICAL) {
+  public void onLeave(PlayerInteractEvent event) {
+    if(event.getHand() == EquipmentSlot.OFF_HAND || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) {
       return;
     }
-    BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
+    BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
     if(arena == null) {
       return;
     }
-    ItemStack itemStack = e.getPlayer().getInventory().getItemInMainHand();
+    ItemStack itemStack = event.getPlayer().getInventory().getItemInMainHand();
     if(!ItemUtils.isItemStackNamed(itemStack)) {
       return;
     }
@@ -99,32 +99,32 @@ public class GameEvents implements Listener {
       return;
     }
     if("Leave".equalsIgnoreCase(item.getName())) {
-      e.setCancelled(true);
+      event.setCancelled(true);
       if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-        plugin.getBungeeManager().connectToHub(e.getPlayer());
+        plugin.getBungeeManager().connectToHub(event.getPlayer());
       } else {
-        ArenaManager.leaveAttempt(e.getPlayer(), arena);
+        ArenaManager.leaveAttempt(event.getPlayer(), arena);
       }
     }
   }
 
   @EventHandler
-  public void onOpenOptionMenu(PlayerInteractEvent e) {
-    if(e.getHand() == EquipmentSlot.OFF_HAND || e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK || e.getAction() == Action.PHYSICAL) {
+  public void onOpenOptionMenu(PlayerInteractEvent event) {
+    if(event.getHand() == EquipmentSlot.OFF_HAND || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) {
       return;
     }
-    ItemStack itemStack = e.getItem();
+    ItemStack itemStack = event.getItem();
     if(!ItemUtils.isItemStackNamed(itemStack)) {
       return;
     }
-    BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
+    BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
     if(arena == null || arena.getArenaState() != ArenaState.IN_GAME || arena instanceof SoloArena && ((SoloArena) arena).isVoting()) {
       return;
     }
     if(!plugin.getOptionsRegistry().getMenuItem().getItemMeta().getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())) {
       return;
     }
-    e.getPlayer().openInventory(plugin.getOptionsRegistry().formatInventory());
+    event.getPlayer().openInventory(plugin.getOptionsRegistry().formatInventory());
   }
 
   @EventHandler
@@ -141,86 +141,86 @@ public class GameEvents implements Listener {
   }
 
   @EventHandler
-  public void onFoodChange(FoodLevelChangeEvent e) {
-    if(!(e.getEntity().getType() == EntityType.PLAYER)) {
+  public void onFoodChange(FoodLevelChangeEvent event) {
+    if(!(event.getEntity().getType() == EntityType.PLAYER)) {
       return;
     }
-    Player player = (Player) e.getEntity();
+    Player player = (Player) event.getEntity();
     if(ArenaRegistry.getArena(player) == null) {
       return;
     }
-    e.setCancelled(true);
+    event.setCancelled(true);
     player.setFoodLevel(20);
   }
 
   @EventHandler
-  public void onWaterFlowEvent(BlockFromToEvent e) {
+  public void onWaterFlowEvent(BlockFromToEvent event) {
     for(BaseArena arena : ArenaRegistry.getArenas()) {
       for(Plot buildPlot : arena.getPlotManager().getPlots()) {
-        if(!buildPlot.getCuboid().isIn(e.getToBlock().getLocation()) && buildPlot.getCuboid().isIn(e.getBlock().getLocation())) {
-          e.setCancelled(true);
+        if(!buildPlot.getCuboid().isIn(event.getToBlock().getLocation()) && buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
+          event.setCancelled(true);
         }
-        if(!buildPlot.getCuboid().isInWithMarge(e.getToBlock().getLocation(), -1) && buildPlot.getCuboid().isIn(e.getToBlock().getLocation())) {
-          e.setCancelled(true);
+        if(!buildPlot.getCuboid().isInWithMarge(event.getToBlock().getLocation(), -1) && buildPlot.getCuboid().isIn(event.getToBlock().getLocation())) {
+          event.setCancelled(true);
         }
       }
     }
   }
 
   @EventHandler
-  public void onTNTExplode(EntityExplodeEvent e) {
+  public void onTNTExplode(EntityExplodeEvent event) {
     for(BaseArena arena : ArenaRegistry.getArenas()) {
       for(Plot buildPlot : arena.getPlotManager().getPlots()) {
-        if(buildPlot.getCuboid().isInWithMarge(e.getEntity().getLocation(), 0)) {
-          e.blockList().clear();
-          e.setCancelled(true);
-        } else if(buildPlot.getCuboid().isInWithMarge(e.getEntity().getLocation(), 5)) {
-          e.getEntity().getLocation().getBlock().setType(Material.TNT);
-          e.blockList().clear();
-          e.setCancelled(true);
+        if(buildPlot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 0)) {
+          event.blockList().clear();
+          event.setCancelled(true);
+        } else if(buildPlot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 5)) {
+          event.getEntity().getLocation().getBlock().setType(Material.TNT);
+          event.blockList().clear();
+          event.setCancelled(true);
         }
       }
     }
   }
 
   @EventHandler
-  public void onTNTInteract(PlayerInteractEvent e) {
-    if(e.getHand() == EquipmentSlot.OFF_HAND) {
+  public void onTNTInteract(PlayerInteractEvent event) {
+    if(event.getHand() == EquipmentSlot.OFF_HAND) {
       return;
     }
-    Player player = e.getPlayer();
+    Player player = event.getPlayer();
     BaseArena arena = ArenaRegistry.getArena(player);
-    if(arena == null || player.getInventory().getItemInMainHand().getType() != Material.FLINT_AND_STEEL || e.getClickedBlock() == null) {
+    if(arena == null || player.getInventory().getItemInMainHand().getType() != Material.FLINT_AND_STEEL || event.getClickedBlock() == null) {
       return;
     }
-    if(e.getClickedBlock().getType() == Material.TNT) {
-      e.setCancelled(true);
+    if(event.getClickedBlock().getType() == Material.TNT) {
+      event.setCancelled(true);
     }
   }
 
   @EventHandler
-  public void onEntityDamageEntity(EntityDamageByEntityEvent e) {
-    if(e.getEntity().getType() != EntityType.PLAYER) {
+  public void onEntityDamageEntity(EntityDamageByEntityEvent event) {
+    if(event.getEntity().getType() != EntityType.PLAYER) {
       return;
     }
-    Player player = (Player) e.getEntity();
+    Player player = (Player) event.getEntity();
     BaseArena arena = ArenaRegistry.getArena(player);
     if(arena != null) {
-      e.setCancelled(true);
+      event.setCancelled(true);
     }
   }
 
   @EventHandler
-  public void onTreeGrow(StructureGrowEvent e) {
-    BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
+  public void onTreeGrow(StructureGrowEvent event) {
+    BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
     if(arena == null) {
       return;
     }
-    Plot buildPlot = arena.getPlotManager().getPlot(e.getPlayer());
+    Plot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
     if(buildPlot == null) {
       return;
     }
-    for(BlockState blockState : e.getBlocks()) {
+    for(BlockState blockState : event.getBlocks()) {
       if(!buildPlot.getCuboid().isIn(blockState.getLocation())) {
         blockState.setType(Material.AIR);
       }
@@ -229,11 +229,11 @@ public class GameEvents implements Listener {
 
   //todo weird code?
   @EventHandler
-  public void onDispense(BlockDispenseEvent e) {
+  public void onDispense(BlockDispenseEvent event) {
     for(BaseArena arena : ArenaRegistry.getArenas()) {
       for(Plot buildPlot : arena.getPlotManager().getPlots()) {
-        if(!buildPlot.getCuboid().isInWithMarge(e.getBlock().getLocation(), -1) && buildPlot.getCuboid().isInWithMarge(e.getBlock().getLocation(), 5)) {
-          e.setCancelled(true);
+        if(!buildPlot.getCuboid().isInWithMarge(event.getBlock().getLocation(), -1) && buildPlot.getCuboid().isInWithMarge(event.getBlock().getLocation(), 5)) {
+          event.setCancelled(true);
         }
       }
     }
@@ -242,54 +242,54 @@ public class GameEvents implements Listener {
   @Deprecated
   //only a temporary code
   @EventHandler
-  public void onPlayerHeadsClick(InventoryClickEvent e) {
-    if(!ItemUtils.isItemStackNamed(e.getCurrentItem()) || !(e.getWhoClicked() instanceof Player)) {
+  public void onPlayerHeadsClick(InventoryClickEvent event) {
+    if(!ItemUtils.isItemStackNamed(event.getCurrentItem()) || !(event.getWhoClicked() instanceof Player)) {
       return;
     }
-    BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+    BaseArena arena = ArenaRegistry.getArena((Player) event.getWhoClicked());
     if(arena == null) {
       return;
     }
-    if(plugin.getOptionsRegistry().getPlayerHeadsRegistry().isHeadsMenu(e.getInventory())) {
-      if(e.getCurrentItem().getType() != ItemUtils.PLAYER_HEAD_ITEM.getType()) {
+    if(plugin.getOptionsRegistry().getPlayerHeadsRegistry().isHeadsMenu(event.getInventory())) {
+      if(event.getCurrentItem().getType() != ItemUtils.PLAYER_HEAD_ITEM.getType()) {
         return;
       }
-      e.getWhoClicked().getInventory().addItem(e.getCurrentItem().clone());
-      e.setCancelled(true);
+      event.getWhoClicked().getInventory().addItem(event.getCurrentItem().clone());
+      event.setCancelled(true);
     }
   }
 
   @Deprecated
   @EventHandler
-  public void onOptionItemClick(InventoryClickEvent e) {
-    if(!(e.getWhoClicked() instanceof Player) || !ItemUtils.isItemStackNamed(e.getCurrentItem())) {
+  public void onOptionItemClick(InventoryClickEvent event) {
+    if(!(event.getWhoClicked() instanceof Player) || !ItemUtils.isItemStackNamed(event.getCurrentItem())) {
       return;
     }
-    BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
-    if(e.getCurrentItem().getType() != Material.NETHER_STAR || arena == null) {
+    BaseArena arena = ArenaRegistry.getArena((Player) event.getWhoClicked());
+    if(event.getCurrentItem().getType() != Material.NETHER_STAR || arena == null) {
       return;
     }
-    if(!e.getCurrentItem().getItemMeta().getDisplayName().equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item"))) {
+    if(!event.getCurrentItem().getItemMeta().getDisplayName().equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item"))) {
       return;
     }
-    e.setResult(Event.Result.DENY);
-    e.setCancelled(true);
+    event.setResult(Event.Result.DENY);
+    event.setCancelled(true);
   }
 
   @EventHandler
-  public void onOptionItemClick(InventoryInteractEvent e) {
-    if(!(e.getWhoClicked() instanceof Player) || !ItemUtils.isItemStackNamed(e.getWhoClicked().getItemOnCursor())) {
+  public void onOptionItemClick(InventoryInteractEvent event) {
+    if(!(event.getWhoClicked() instanceof Player) || !ItemUtils.isItemStackNamed(event.getWhoClicked().getItemOnCursor())) {
       return;
     }
-    BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
-    if(e.getWhoClicked().getItemOnCursor().getType() != Material.NETHER_STAR || arena == null) {
+    BaseArena arena = ArenaRegistry.getArena((Player) event.getWhoClicked());
+    if(event.getWhoClicked().getItemOnCursor().getType() != Material.NETHER_STAR || arena == null) {
       return;
     }
-    if(!e.getWhoClicked().getItemOnCursor().getItemMeta().getDisplayName().equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item"))) {
+    if(!event.getWhoClicked().getItemOnCursor().getItemMeta().getDisplayName().equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item"))) {
       return;
     }
-    e.setResult(Event.Result.DENY);
-    e.setCancelled(true);
+    event.setResult(Event.Result.DENY);
+    event.setCancelled(true);
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)
@@ -319,43 +319,43 @@ public class GameEvents implements Listener {
   }
 
   @EventHandler
-  public void playerCommandExecution(PlayerCommandPreprocessEvent e) {
+  public void playerCommandExecution(PlayerCommandPreprocessEvent event) {
     if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.ENABLE_SHORT_COMMANDS)) {
-      Player player = e.getPlayer();
-      if(e.getMessage().equalsIgnoreCase("/start")) {
+      Player player = event.getPlayer();
+      if(event.getMessage().equalsIgnoreCase("/start")) {
         player.performCommand("bba forcestart");
-        e.setCancelled(true);
+        event.setCancelled(true);
         return;
       }
-      if(e.getMessage().equalsIgnoreCase("/leave")) {
+      if(event.getMessage().equalsIgnoreCase("/leave")) {
         player.performCommand("bb leave");
-        e.setCancelled(true);
+        event.setCancelled(true);
       }
     }
   }
 
   @EventHandler
-  public void onBucketEmpty(PlayerBucketEmptyEvent e) {
-    BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
+  public void onBucketEmpty(PlayerBucketEmptyEvent event) {
+    BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
     if(arena == null) {
       return;
     }
-    Plot buildPlot = arena.getPlotManager().getPlot(e.getPlayer());
-    if(buildPlot != null && !buildPlot.getCuboid().isIn(e.getBlockClicked().getRelative(e.getBlockFace()).getLocation())) {
-      e.setCancelled(true);
+    Plot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
+    if(buildPlot != null && !buildPlot.getCuboid().isIn(event.getBlockClicked().getRelative(event.getBlockFace()).getLocation())) {
+      event.setCancelled(true);
     }
   }
 
   @EventHandler
-  public void onBlockSpread(BlockSpreadEvent e) {
+  public void onBlockSpread(BlockSpreadEvent event) {
     for(BaseArena arena : ArenaRegistry.getArenas()) {
       if(!arena.getPlotManager().getPlots().isEmpty() && arena.getPlotManager().getPlots().get(0) != null) {
         if(arena.getPlotManager().getPlots().get(0).getCuboid() == null) {
           continue;
         }
-        if(arena.getPlotManager().getPlots().get(0).getCuboid().getCenter().getWorld().equals(e.getBlock().getWorld())) {
-          if(e.getSource().getType() == Material.FIRE) {
-            e.setCancelled(true);
+        if(arena.getPlotManager().getPlots().get(0).getCuboid().getCenter().getWorld().equals(event.getBlock().getWorld())) {
+          if(event.getSource().getType() == Material.FIRE) {
+            event.setCancelled(true);
           }
         }
       }
@@ -363,43 +363,43 @@ public class GameEvents implements Listener {
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)
-  public void onCreatureSpawn(CreatureSpawnEvent e) {
+  public void onCreatureSpawn(CreatureSpawnEvent event) {
     for(BaseArena arena : ArenaRegistry.getArenas()) {
       if(arena.getPlotManager().getPlots().isEmpty() || arena.getPlotManager().getPlots().get(0) == null
-          || !e.getEntity().getWorld().equals(arena.getPlotManager().getPlots().get(0).getCuboid().getCenter().getWorld())) {
+          || !event.getEntity().getWorld().equals(arena.getPlotManager().getPlots().get(0).getCuboid().getCenter().getWorld())) {
         continue;
       }
-      if(e.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) {
+      if(event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) {
         return;
       }
-      if(e.getEntity().getType() == EntityType.WITHER || plugin.getConfig().getBoolean("Disable-Mob-Spawning-Completely", true)) {
-        e.setCancelled(true);
+      if(event.getEntity().getType() == EntityType.WITHER || plugin.getConfig().getBoolean("Disable-Mob-Spawning-Completely", true)) {
+        event.setCancelled(true);
         return;
       }
       for(Plot plot : arena.getPlotManager().getPlots()) {
-        if(plot.getCuboid().isInWithMarge(e.getEntity().getLocation(), 1)) {
+        if(plot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 1)) {
           if(plot.getEntities() >= plugin.getConfig().getInt("Mobs-Max-Amount-Per-Plot", 20)) {
             //todo maybe only for spawner player?
             for(Player p : plot.getOwners()) {
               p.sendMessage(plugin.getChatManager().colorMessage("In-Game.Max-Entities-Limit-Reached"));
             }
-            e.setCancelled(true);
+            event.setCancelled(true);
             return;
           }
           plot.addEntity();
-          e.setCancelled(false);
-          e.getEntity().setAI(false);
+          event.setCancelled(false);
+          event.getEntity().setAI(false);
         }
       }
     }
   }
 
   @EventHandler
-  public void onLeavesDecay(LeavesDecayEvent e) {
+  public void onLeavesDecay(LeavesDecayEvent event) {
     for(BaseArena arena : ArenaRegistry.getArenas()) {
       for(Plot buildPlot : arena.getPlotManager().getPlots()) {
-        if(buildPlot.getCuboid().isInWithMarge(e.getBlock().getLocation(), 5)) {
-          e.setCancelled(true);
+        if(buildPlot.getCuboid().isInWithMarge(event.getBlock().getLocation(), 5)) {
+          event.setCancelled(true);
         }
       }
     }
@@ -430,110 +430,110 @@ public class GameEvents implements Listener {
   }
 
   @EventHandler
-  public void onPlayerDropItem(PlayerDropItemEvent e) {
-    if(ArenaRegistry.getArena(e.getPlayer()) == null) {
+  public void onPlayerDropItem(PlayerDropItemEvent event) {
+    if(ArenaRegistry.getArena(event.getPlayer()) == null) {
       return;
     }
-    ItemStack drop = e.getItemDrop().getItemStack();
+    ItemStack drop = event.getItemDrop().getItemStack();
     if(!ItemUtils.isItemStackNamed(drop)) {
       return;
     }
     if(drop.getItemMeta().getDisplayName().equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name")) || plugin.getVoteItems().getPoints(drop) != 0) {
-      e.setCancelled(true);
+      event.setCancelled(true);
     }
   }
 
 
   @EventHandler(priority = EventPriority.HIGH)
-  public void onBreak(BlockBreakEvent e) {
-    BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
+  public void onBreak(BlockBreakEvent event) {
+    BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
     if(arena == null) {
       return;
     }
     if(arena.getArenaState() != ArenaState.IN_GAME || (arena instanceof SoloArena && ((SoloArena) arena).isVoting())
-        || plugin.getConfigPreferences().getItemBlacklist().contains(e.getBlock().getType())) {
-      e.setCancelled(true);
+        || plugin.getConfigPreferences().getItemBlacklist().contains(event.getBlock().getType())) {
+      event.setCancelled(true);
       return;
     }
-    User user = plugin.getUserManager().getUser(e.getPlayer());
+    User user = plugin.getUserManager().getUser(event.getPlayer());
     Plot buildPlot = user.getCurrentPlot();
     if(buildPlot == null) {
-      e.setCancelled(true);
+      event.setCancelled(true);
       return;
     }
-    if(buildPlot.getCuboid().isIn(e.getBlock().getLocation())) {
+    if(buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
       user.addStat(StatsStorage.StatisticType.BLOCKS_BROKEN, 1);
       return;
     }
-    e.setCancelled(true);
+    event.setCancelled(true);
   }
 
   @EventHandler(priority = EventPriority.HIGH)
-  public void onPlace(BlockPlaceEvent e) {
-    BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
+  public void onPlace(BlockPlaceEvent event) {
+    BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
     if(arena == null) {
       return;
     }
-    if(arena.getArenaState() != ArenaState.IN_GAME || plugin.getConfigPreferences().getItemBlacklist().contains(e.getBlock().getType())
+    if(arena.getArenaState() != ArenaState.IN_GAME || plugin.getConfigPreferences().getItemBlacklist().contains(event.getBlock().getType())
         || (arena instanceof SoloArena && ((SoloArena) arena).isVoting())) {
-      e.setCancelled(true);
+      event.setCancelled(true);
       return;
     }
-    if(arena instanceof GuessTheBuildArena && !e.getPlayer().equals(((GuessTheBuildArena) arena).getCurrentBuilder())) {
-      e.setCancelled(true);
+    if(arena instanceof GuessTheBuildArena && !event.getPlayer().equals(((GuessTheBuildArena) arena).getCurrentBuilder())) {
+      event.setCancelled(true);
       return;
     }
-    User user = plugin.getUserManager().getUser(e.getPlayer());
+    User user = plugin.getUserManager().getUser(event.getPlayer());
     Plot buildPlot = user.getCurrentPlot();
     if(buildPlot == null) {
-      e.setCancelled(true);
+      event.setCancelled(true);
       return;
     }
-    if(buildPlot.getCuboid().isIn(e.getBlock().getLocation())) {
+    if(buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
       user.addStat(StatsStorage.StatisticType.BLOCKS_PLACED, 1);
       return;
     }
-    e.setCancelled(true);
+    event.setCancelled(true);
   }
 
   @EventHandler
-  public void onInventoryClick(InventoryClickEvent e) {
-    BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+  public void onInventoryClick(InventoryClickEvent event) {
+    BaseArena arena = ArenaRegistry.getArena((Player) event.getWhoClicked());
     if(arena == null) {
       return;
     }
     if(arena.getArenaState() != ArenaState.IN_GAME) {
-      e.setCancelled(true);
+      event.setCancelled(true);
       return;
     }
     if(arena instanceof SoloArena && !((SoloArena) arena).isVoting()) {
       return;
     }
-    if(arena instanceof GuessTheBuildArena && e.getWhoClicked().equals(((GuessTheBuildArena) arena).getCurrentBuilder())) {
+    if(arena instanceof GuessTheBuildArena && event.getWhoClicked().equals(((GuessTheBuildArena) arena).getCurrentBuilder())) {
       return;
     }
-    e.setCancelled(true);
+    event.setCancelled(true);
   }
 
   @EventHandler
-  public void onNPCClick(PlayerInteractEntityEvent e) {
-    if(e.getHand() == EquipmentSlot.OFF_HAND || e.getPlayer().getInventory().getItemInMainHand().getType() == Material.AIR) {
+  public void onNPCClick(PlayerInteractEntityEvent event) {
+    if(event.getHand() == EquipmentSlot.OFF_HAND || event.getPlayer().getInventory().getItemInMainHand().getType() == Material.AIR) {
       return;
     }
 
-    if(plugin.getUserManager().getUser(e.getPlayer()).isSpectator()) {
+    if(plugin.getUserManager().getUser(event.getPlayer()).isSpectator()) {
       return;
     }
 
-    if(e.getRightClicked() instanceof Villager && e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equalsIgnoreCase(plugin.getChatManager().colorMessage("In-Game.NPC.Floor-Change-NPC-Name"))) {
-      BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
+    if(event.getRightClicked() instanceof Villager && event.getRightClicked().getCustomName() != null && event.getRightClicked().getCustomName().equalsIgnoreCase(plugin.getChatManager().colorMessage("In-Game.NPC.Floor-Change-NPC-Name"))) {
+      BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
       if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
         return;
       }
       if(arena instanceof SoloArena && ((SoloArena) arena).isVoting()) {
         return;
       }
-      Material material = e.getPlayer().getInventory().getItemInMainHand().getType();
+      Material material = event.getPlayer().getInventory().getItemInMainHand().getType();
       if(material != XMaterial.WATER_BUCKET.parseMaterial() && material != XMaterial.LAVA_BUCKET.parseMaterial()
           && !(material.isBlock() && material.isSolid() && material.isOccluding())) {
         return;
@@ -541,13 +541,21 @@ public class GameEvents implements Listener {
       if(plugin.getConfigPreferences().getFloorBlacklist().contains(material)) {
         return;
       }
-      arena.getPlotManager().getPlot(e.getPlayer()).changeFloor(material, e.getPlayer().getInventory().getItemInMainHand().getData().getData());
-      e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Floor.Floor-Changed"));
+      arena.getPlotManager().getPlot(event.getPlayer()).changeFloor(material, event.getPlayer().getInventory().getItemInMainHand().getData().getData());
+      event.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Floor.Floor-Changed"));
     }
   }
 
   @EventHandler
   public void onEnderchestClick(PlayerInteractEvent event) {
+    BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
+    if(arena == null) {
+      return;
+    }
+    if(arena.getArenaState() != ArenaState.IN_GAME) {
+      event.setCancelled(true);
+      return;
+    }
     Block block = event.getClickedBlock();
     if(block != null && block.getType() == XMaterial.ENDER_CHEST.parseMaterial()) {
       event.setCancelled(true);
