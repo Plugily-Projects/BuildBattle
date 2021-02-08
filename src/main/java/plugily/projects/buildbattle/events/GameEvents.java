@@ -546,4 +546,11 @@ public class GameEvents implements Listener {
     }
   }
 
+  @EventHandler
+  public void onEnderchestClick(PlayerInteractEvent event) {
+    Block block = event.getClickedBlock();
+    if(block != null && block.getType() == XMaterial.ENDER_CHEST.parseMaterial()) {
+      event.setCancelled(true);
+    }
+  }
 }

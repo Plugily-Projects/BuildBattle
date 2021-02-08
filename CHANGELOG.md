@@ -8,7 +8,8 @@ deploy webhooks to print changelog successfully
 `<update log line>`
 
 That's all, matcher will stop when detects next line started with `###` match
-
+### 4.4.8 Release (08.02.2021 - xx.02.2021)
+* Changed interaction with enderchest
 ### 4.4.7 Release (24.01.2021 - 28.01.2021)
 * Fixed Join SubTitle not being sent 
 * Fixed stack trace array length is 0 when trying to send exception to service
