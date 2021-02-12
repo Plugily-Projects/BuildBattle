@@ -34,13 +34,11 @@ public class MenuOption {
   private final String id;
   private final ItemStack itemStack;
   private String inventoryName;
-  private boolean inventoryEnabled = true;
 
   public MenuOption(int slot, String id, ItemStack itemStack) {
     this.slot = slot;
     this.id = id;
     this.itemStack = itemStack;
-    this.inventoryEnabled = false;
   }
 
   public MenuOption(int slot, String id, ItemStack itemStack, String inventoryName) {
@@ -68,13 +66,6 @@ public class MenuOption {
 
   public String getInventoryName() {
     return inventoryName;
-  }
-
-  /**
-   * @return true if MenuOption custom inventory is enabled
-   */
-  public boolean isInventoryEnabled() {
-    return inventoryEnabled;
   }
 
   /**

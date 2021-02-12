@@ -73,9 +73,6 @@ public class OptionsMenuHandler implements Listener {
       return;
     }
     for(MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
-      if(!option.isInventoryEnabled()) {
-        continue;
-      }
       if(Utils.getGoBackItem().getItemMeta().getDisplayName().equalsIgnoreCase(e.getCurrentItem().getItemMeta().getDisplayName())) {
         e.getWhoClicked().openInventory(plugin.getOptionsRegistry().formatInventory());
         return;
