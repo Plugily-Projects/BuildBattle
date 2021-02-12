@@ -91,6 +91,10 @@ Default-Floor-Material-Name: log
 # Should mob spawning on arenas be disabled?
 Disable-Mob-Spawning-Completely: true
 
+# The list of restricted entities that can't be spawned in game
+Restricted-Entities-Spawn:
+#- zombie
+
 # How many particle effects should have one spawned particle
 Amount-One-Particle-Effect-Contains: 20
 

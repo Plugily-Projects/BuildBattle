@@ -15,6 +15,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Added modifiable arena state names to language
 * Fix when some inventory can't be opened in game
 * Added option to perform command after specific amount of reports
+* Added list of restricted entities that can't be spawned in game
 
 ### 4.4.7 Release (24.01.2021 - 28.01.2021)
 * Fixed Join SubTitle not being sent 

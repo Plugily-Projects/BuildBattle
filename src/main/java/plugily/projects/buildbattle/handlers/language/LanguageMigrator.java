@@ -231,9 +231,11 @@ public class LanguageMigrator {
           break;
         case 16:
           MigratorUtils.insertAfterLine(file, "Run-Command-On-Report:",
-              "# The amount of reports that the target needs to execute this command.\r\n"
-              + "# Leave it -1 to perform this command immediately.\r\n"
-              + "Reports-Amount-To-Run: -1");
+              "  # The amount of reports that the target needs to execute this command.\r\n"
+              + "  # Leave it -1 to perform this command immediately.\r\n"
+              + "  Reports-Amount-To-Run: -1");
+          MigratorUtils.addNewLines(file, "\r\nThe list of restricted entities that can't be spawned in game"
+              + "Restricted-Entities-Spawn:\r\n#- zombie\r\n");
           break;
         default:
           return;

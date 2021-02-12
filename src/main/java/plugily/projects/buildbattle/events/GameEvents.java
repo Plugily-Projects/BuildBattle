@@ -349,15 +349,10 @@ public class GameEvents implements Listener {
   @EventHandler
   public void onBlockSpread(BlockSpreadEvent event) {
     for(BaseArena arena : ArenaRegistry.getArenas()) {
-      if(!arena.getPlotManager().getPlots().isEmpty() && arena.getPlotManager().getPlots().get(0) != null) {
-        if(arena.getPlotManager().getPlots().get(0).getCuboid() == null) {
-          continue;
-        }
-        if(arena.getPlotManager().getPlots().get(0).getCuboid().getCenter().getWorld().equals(event.getBlock().getWorld())) {
-          if(event.getSource().getType() == Material.FIRE) {
-            event.setCancelled(true);
-          }
-        }
+      java.util.List<Plot> plots = arena.getPlotManager().getPlots();
+      if(!plots.isEmpty() && plots.get(0) != null && plots.get(0).getCuboid() != null
+          && event.getBlock().getWorld().equals(plots.get(0).getCuboid().getCenter().getWorld()) && event.getSource().getType() == Material.FIRE) {
+          event.setCancelled(true);
       }
     }
   }
@@ -386,6 +381,14 @@ public class GameEvents implements Listener {
             event.setCancelled(true);
             return;
           }
+
+          for (String entityNames : plugin.getConfig().getStringList("Restricted-Entities-Spawn")) {
+            if (event.getEntity().getType().name().equalsIgnoreCase(entityNames)) {
+              event.setCancelled(true);
+              return;
+            }
+          }
+
           plot.addEntity();
           event.setCancelled(false);
           event.getEntity().setAI(false);
