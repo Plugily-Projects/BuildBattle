@@ -38,7 +38,7 @@ import java.util.Map;
  */
 public class User {
 
-  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final Main PLUGIN = JavaPlugin.getPlugin(Main.class);
   private final Player player;
   private final Map<StatsStorage.StatisticType, Integer> stats = new EnumMap<>(StatsStorage.StatisticType.class);
   private Plot currentPlot;
@@ -76,28 +76,28 @@ public class User {
     if(!stats.containsKey(stat)) {
       stats.put(stat, 0);
       return 0;
-    } else if(stats.get(stat) == null) {
-      return 0;
     }
 
-    return stats.get(stat);
+    return stats.getOrDefault(stat, 0);
   }
 
   public void setStat(StatsStorage.StatisticType stat, int i) {
     stats.put(stat, i);
 
-    Bukkit.getScheduler().runTask(plugin, () -> {
+    Bukkit.getScheduler().callSyncMethod(PLUGIN, () -> {
       BBPlayerStatisticChangeEvent event = new BBPlayerStatisticChangeEvent(getArena(), player, stat, i);
       Bukkit.getPluginManager().callEvent(event);
+      return event;
     });
   }
 
   public void addStat(StatsStorage.StatisticType stat, int i) {
     stats.put(stat, getStat(stat) + i);
 
-    Bukkit.getScheduler().runTask(plugin, () -> {
+    Bukkit.getScheduler().callSyncMethod(PLUGIN, () -> {
       BBPlayerStatisticChangeEvent event = new BBPlayerStatisticChangeEvent(getArena(), player, stat, getStat(stat));
       Bukkit.getPluginManager().callEvent(event);
+      return event;
     });
   }
 

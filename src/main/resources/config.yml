@@ -235,6 +235,9 @@ Command-Instead-Of-Head-Menu:
 # Enable an command on report item click
 Run-Command-On-Report:
   Enabled: false
+  # The amount of reports that the target needs to execute this command.
+  # Leave it -1 to perform this command immediately.
+  Reports-Amount-To-Run: -1
   # The command that should be executed - Placeholder: %reported%, %reporter%
   Command: kick %reported%
 
@@ -246,6 +249,6 @@ Disable-Parties: true
 Announce-PlotOwner-Later: false
 
 # Don't modify.
-Version: 16
+Version: 17
 
 # No way! You've reached the end! But... where's the dragon!?

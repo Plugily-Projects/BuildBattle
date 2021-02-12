@@ -41,7 +41,7 @@ import java.util.List;
 public class LanguageMigrator {
 
   public static final int LANGUAGE_FILE_VERSION = 21;
-  public static final int CONFIG_FILE_VERSION = 16;
+  public static final int CONFIG_FILE_VERSION = 17;
   private final List<String> migratable = Arrays.asList("bungee", "config", "language", "mysql");
   private final Main plugin;
 
@@ -228,6 +228,12 @@ public class LanguageMigrator {
           MigratorUtils.addNewLines(file, "\r\n" +
               "# With this true, players couldn't join to the game and can't switch to spectator.\r\n" +
               "Disable-Spectators: false\r\n");
+          break;
+        case 16:
+          MigratorUtils.insertAfterLine(file, "Run-Command-On-Report:",
+              "# The amount of reports that the target needs to execute this command.\r\n"
+              + "# Leave it -1 to perform this command immediately.\r\n"
+              + "Reports-Amount-To-Run: -1");
           break;
         default:
           return;

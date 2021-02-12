@@ -37,6 +37,7 @@ import plugily.projects.buildbattle.arena.impl.GuessTheBuildArena;
 import plugily.projects.buildbattle.arena.impl.SoloArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.reward.Reward;
+import plugily.projects.buildbattle.user.User;
 
 /**
  * @author Plajer
@@ -67,10 +68,14 @@ public class VoteEvents implements Listener {
       return;
     }
 
-    SoloArena sArena = ((SoloArena) arena);
-    Plot plot = sArena.getVotingPlot();
+    User user = plugin.getUserManager().getUser(e.getPlayer());
+    Plot plot = ((SoloArena) arena).getVotingPlot();
     if(plugin.getVoteItems().getReportItem().equals(e.getItem())) {
-      if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.RUN_COMMAND_ON_REPORT) && plot != null) {
+      user.setStat(StatsStorage.StatisticType.REPORTS, user.getStat(StatsStorage.StatisticType.REPORTS) + 1);
+      int reportsAmountNeeded = plugin.getConfig().getInt("Run-Command-On-Report.Reports-Amount-To-Run", -1);
+
+      if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.RUN_COMMAND_ON_REPORT)
+          && (reportsAmountNeeded == -1 || user.getStat(StatsStorage.StatisticType.REPORTS) >= reportsAmountNeeded) && plot != null) {
         plot.getOwners().forEach(player -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
             plugin.getConfig().getString("Run-Command-On-Report.Command", "kick %reported%")
                 .replace("%reported%", player.getName()).replace("%reporter%", e.getPlayer().getName())));
