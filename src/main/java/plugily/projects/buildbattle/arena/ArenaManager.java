@@ -30,7 +30,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
@@ -202,7 +204,7 @@ public class ArenaManager {
       player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0));
 
       //Hide player from other players
-      arena.getPlayers().forEach(onlinePlayer -> MiscUtils.hidePlayer(plugin, onlinePlayer, player));
+      arena.getPlayers().forEach(onlinePlayer -> VersionUtils.hidePlayer(plugin, onlinePlayer, player));
 
       user.setSpectator(true);
       player.setCollidable(false);
@@ -212,9 +214,9 @@ public class ArenaManager {
 
       for(Player spectator : arena.getPlayers()) {
         if(plugin.getUserManager().getUser(spectator).isSpectator()) {
-          MiscUtils.showPlayer(plugin, player, spectator);
+          VersionUtils.showPlayer(plugin, player, spectator);
         } else {
-          MiscUtils.hidePlayer(plugin, player, spectator);
+          VersionUtils.hidePlayer(plugin, player, spectator);
         }
       }
       return;
@@ -272,9 +274,9 @@ public class ArenaManager {
 
     for(Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
       if(ArenaRegistry.getArena(onlinePlayer) == null) {
-        MiscUtils.showPlayer(plugin, onlinePlayer, player);
+        VersionUtils.showPlayer(plugin, onlinePlayer, player);
       }
-      MiscUtils.showPlayer(plugin, player, onlinePlayer);
+      VersionUtils.showPlayer(plugin, player, onlinePlayer);
     }
 
     // Spectator

@@ -22,7 +22,8 @@ package plugily.projects.buildbattle.menus.options.registry.biomes;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import pl.plajerlair.commonsbox.minecraft.compat.XBiome;
+
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XBiome;
 
 /**
  * @author Plajer

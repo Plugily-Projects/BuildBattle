@@ -23,7 +23,8 @@ package plugily.projects.buildbattle.utils;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.Main;
 
@@ -33,8 +34,6 @@ import java.util.List;
  * Created by Tom on 29/07/2014.
  */
 public class Utils {
-
-  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
   private Utils() {
   }
@@ -54,6 +53,8 @@ public class Utils {
   }
 
   public static ItemStack getGoBackItem() {
+    final Main plugin = JavaPlugin.getPlugin(Main.class);
+
     return new ItemBuilder(XMaterial.STONE_BUTTON.parseItem())
         .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Go-Back-Button.Item-Name"))
         .lore(plugin.getChatManager().colorMessage("Menus.Option-Menu.Go-Back-Button.Item-Lore")).build();

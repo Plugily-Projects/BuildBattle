@@ -24,7 +24,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
@@ -41,7 +42,8 @@ import plugily.projects.buildbattle.utils.Utils;
 public class TimeChangeOption {
 
   public TimeChangeOption(OptionsRegistry registry) {
-    registry.registerOption(new MenuOption(30, "TIME", new ItemBuilder(XMaterial.CLOCK.parseItem())
+    final org.bukkit.inventory.ItemStack clock = XMaterial.CLOCK.parseItem();
+    registry.registerOption(new MenuOption(30, "TIME", new ItemBuilder(clock)
         .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Time.Item-Name"))
         .lore(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Time.Item-Lore"))
         .build(), registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Time.Inventory-Name")) {
@@ -51,19 +53,19 @@ public class TimeChangeOption {
         e.getWhoClicked().closeInventory();
 
         Inventory timeInv = Bukkit.createInventory(null, 9, registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Time.Inventory-Name"));
-        timeInv.setItem(0, new ItemBuilder(XMaterial.CLOCK.parseItem())
+        timeInv.setItem(0, new ItemBuilder(clock)
             .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Time.Time-Type.World-Time")).build());
-        timeInv.setItem(1, new ItemBuilder(XMaterial.CLOCK.parseItem())
+        timeInv.setItem(1, new ItemBuilder(clock)
             .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Time.Time-Type.Day")).build());
-        timeInv.setItem(2, new ItemBuilder(XMaterial.CLOCK.parseItem())
+        timeInv.setItem(2, new ItemBuilder(clock)
             .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Time.Time-Type.Noon")).build());
-        timeInv.setItem(3, new ItemBuilder(XMaterial.CLOCK.parseItem())
+        timeInv.setItem(3, new ItemBuilder(clock)
             .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Time.Time-Type.Sunset")).build());
-        timeInv.setItem(4, new ItemBuilder(XMaterial.CLOCK.parseItem())
+        timeInv.setItem(4, new ItemBuilder(clock)
             .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Time.Time-Type.Night")).build());
-        timeInv.setItem(5, new ItemBuilder(XMaterial.CLOCK.parseItem())
+        timeInv.setItem(5, new ItemBuilder(clock)
             .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Time.Time-Type.MidNight")).build());
-        timeInv.setItem(6, new ItemBuilder(XMaterial.CLOCK.parseItem())
+        timeInv.setItem(6, new ItemBuilder(clock)
             .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Time.Time-Type.Sunrise")).build());
         timeInv.addItem(Utils.getGoBackItem());
         e.getWhoClicked().openInventory(timeInv);

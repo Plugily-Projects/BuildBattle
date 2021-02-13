@@ -28,8 +28,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
+
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
@@ -152,7 +153,7 @@ public class VoteMenuListener implements Listener {
         ((GuessTheBuildArena) arena).setCurrentTheme(theme);
         ((GuessTheBuildArena) arena).setThemeSet(true);
         arena.setTimer(plugin.getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, arena));
-        MiscUtils.sendActionBar(((Player) e.getWhoClicked()), plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Is-Name")
+        VersionUtils.sendActionBar(((Player) e.getWhoClicked()), plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Is-Name")
             .replace("%THEME%", theme.getTheme()));
         e.getWhoClicked().closeInventory();
 

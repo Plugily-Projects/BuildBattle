@@ -27,6 +27,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
@@ -185,7 +187,7 @@ public class GuessTheBuildArena extends BaseArena {
               .get(r.nextInt(getPlugin().getConfigPreferences().getThemes("Guess-The-Build_" + type).size())), BBTheme.Difficulty.valueOf(type));
           setCurrentTheme(theme);
           setThemeSet(true);
-          MiscUtils.sendActionBar(currentBuilder, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Is-Name")
+          VersionUtils.sendActionBar(currentBuilder, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Is-Name")
               .replace("%THEME%", theme.getTheme()));
           currentBuilder.closeInventory();
 
@@ -209,7 +211,7 @@ public class GuessTheBuildArena extends BaseArena {
               continue;
             }
             if(getWhoGuessed().contains(player)) {
-              MiscUtils.sendActionBar(player, getCurrentTheme().getTheme());
+              VersionUtils.sendActionBar(player, getCurrentTheme().getTheme());
             }
             StringBuilder actionbar = new StringBuilder();
             for(int i = 0; i < getCurrentTheme().getTheme().length(); i++) {
@@ -223,7 +225,7 @@ public class GuessTheBuildArena extends BaseArena {
               }
               actionbar.append("_ ");
             }
-            MiscUtils.sendActionBar(player, actionbar.toString());
+            VersionUtils.sendActionBar(player, actionbar.toString());
           }
         }
         if(getTimer() <= 0 && isThemeSet()) {

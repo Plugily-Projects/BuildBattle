@@ -21,7 +21,8 @@
 package plugily.projects.buildbattle;
 
 import org.bukkit.Material;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.utils.Debugger;
 
