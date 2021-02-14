@@ -82,7 +82,7 @@ public class ConfigPreferences {
   }
 
   public List<String> getThemes(String accessor) {
-    return Collections.unmodifiableList(gameThemes.get(accessor));
+    return Collections.unmodifiableList(gameThemes.getOrDefault(accessor, new ArrayList<>()));
   }
 
   public boolean isThemeBlacklisted(String theme) {
