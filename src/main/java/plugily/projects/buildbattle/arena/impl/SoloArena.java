@@ -204,8 +204,9 @@ public class SoloArena extends BaseArena {
 
           if(getTimer() == 0) {
             setThemeVoteTime(false);
-            String votedTheme = voteMenu.getVotePoll().getVotedTheme();
-            setTheme(votedTheme);
+            if (getVotePoll() != null) {
+              setTheme(getVotePoll().getVotedTheme());
+            }
             setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, this));
             String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Game-Started");
             for(Player p : getPlayers()) {
@@ -404,6 +405,8 @@ public class SoloArena extends BaseArena {
           getGameBar().setTitle(getPlugin().getChatManager().colorMessage("Bossbar.Vote-Time-Left").replace("%time%", String.valueOf(getTimer())));
         }
         break;
+      default:
+        break;
     }
   }
 
@@ -517,19 +520,17 @@ public class SoloArena extends BaseArena {
     List<String> messages = LanguageManager.getLanguageList("In-Game.Messages.Voting-Messages.Summary");
     List<String> formattedSummary = new ArrayList<>();
     for(String summary : messages) {
-      String message = summary;
-      message = getPlugin().getChatManager().colorRawMessage(message);
+      String message = getPlugin().getChatManager().colorRawMessage(summary);
       for(int i = 1; i < 4; i++) {
         String access = "One";
         switch(i) {
-          case 1:
-            access = "One";
-            break;
           case 2:
             access = "Two";
             break;
           case 3:
             access = "Three";
+            break;
+          default:
             break;
         }
         if(message.contains("%place_" + access.toLowerCase() + "%")) {
