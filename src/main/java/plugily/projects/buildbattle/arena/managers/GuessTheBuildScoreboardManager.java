@@ -73,6 +73,9 @@ public class GuessTheBuildScoreboardManager extends ScoreboardManager {
     if(arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
       lines = scoreboardContents.get(arena.getArenaState().getFormattedName() + "_" + BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix());
     }
+    if (lines == null) {
+      return builder.build();
+    }
     for(String line : lines) {
       builder.next(formatScoreboardLine(line, user));
     }
