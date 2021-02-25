@@ -20,7 +20,6 @@
 
 package plugily.projects.buildbattle.events;
 
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -28,6 +27,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.ArenaState;
@@ -67,7 +67,7 @@ public class LobbyEvents implements Listener {
       return;
     }
     e.setCancelled(true);
-    player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+    player.setHealth(VersionUtils.getHealth(player));
   }
 
 }

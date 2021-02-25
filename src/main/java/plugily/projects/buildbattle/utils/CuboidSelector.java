@@ -25,8 +25,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerInteractEvent;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
 import plugily.projects.buildbattle.Main;
@@ -66,7 +66,7 @@ public class CuboidSelector implements Listener {
   }
 
   @EventHandler
-  public void onWandUse(PlayerInteractEvent e) {
+  public void onWandUse(CBPlayerInteractEvent e) {
     if(!ItemUtils.isItemStackNamed(e.getItem()) || !e.getItem().getItemMeta().getDisplayName().equals(plugin.getChatManager().colorRawMessage("&6&lPlot selector"))) {
       return;
     }

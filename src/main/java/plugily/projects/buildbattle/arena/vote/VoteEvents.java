@@ -24,8 +24,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.EquipmentSlot;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerInteractEvent;
 import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
@@ -54,8 +54,8 @@ public class VoteEvents implements Listener {
   }
 
   @EventHandler
-  public void onVote(PlayerInteractEvent e) {
-    if(e.getHand() == EquipmentSlot.OFF_HAND || e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK || e.getAction() == Action.PHYSICAL) {
+  public void onVote(CBPlayerInteractEvent e) {
+    if(VersionUtils.checkOffHand(e.getHand()) || e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK || e.getAction() == Action.PHYSICAL) {
       return;
     }
 

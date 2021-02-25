@@ -26,8 +26,6 @@ import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import pl.plajerlair.commonsbox.minecraft.compat.PacketUtils;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.Main;
@@ -36,6 +34,7 @@ import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.menus.options.MenuOption;
 import plugily.projects.buildbattle.menus.options.OptionsRegistry;
+import plugily.projects.buildbattle.utils.Utils;
 
 /**
  * @author Plajer
@@ -76,25 +75,17 @@ public class BiomeChangeOption {
         }
         Biome biome = item.getBiome().parseBiome();
         for(Block block : plot.getCuboid().blockList()) {
-          block.setBiome(biome);
-        }
-        try {
-          for(Chunk chunk : plot.getCuboid().chunkList()) {
-            for(Player p : Bukkit.getOnlinePlayers()) {
-              if(!p.getWorld().equals(chunk.getWorld())) {
-                continue;
-              }
-              if(ServerVersion.Version.isCurrentEqual(ServerVersion.Version.v1_16_R1)) {
-                PacketUtils.sendPacket(p, PacketUtils.getNMSClass("PacketPlayOutMapChunk").getConstructor(PacketUtils.getNMSClass("Chunk"), int.class, boolean.class)
-                    .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535, false));
-              } else {
-                PacketUtils.sendPacket(p, PacketUtils.getNMSClass("PacketPlayOutMapChunk").getConstructor(PacketUtils.getNMSClass("Chunk"), int.class)
-                    .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535));
-              }
-            }
+          if(biome != null) {
+            block.setBiome(biome);
           }
-        } catch(ReflectiveOperationException exception) {
-          exception.printStackTrace();
+        }
+        for(Chunk chunk : plot.getCuboid().chunkList()) {
+          for(Player p : Bukkit.getOnlinePlayers()) {
+            if(!p.getWorld().equals(chunk.getWorld())) {
+              continue;
+            }
+            Utils.sendMapChunk(p, chunk);
+          }
         }
         for(Player p : plot.getOwners()) {
           p.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Biome.Biome-Set"));

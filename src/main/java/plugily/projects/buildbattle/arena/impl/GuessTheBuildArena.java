@@ -27,7 +27,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
@@ -195,7 +194,7 @@ public class GuessTheBuildArena extends BaseArena {
               .replace("%ROUND%", String.valueOf(round))
               .replace("%MAXPLAYERS%", String.valueOf(getPlayers().size()));
           for(Player p : getPlayers()) {
-            p.sendTitle(getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Start-Guessing-Title"), null, 5, 25, 5);
+            VersionUtils.sendTitle(p, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Start-Guessing-Title"), 5, 25, 5);
             p.sendMessage(roundMessage);
           }
           setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, this));
@@ -231,10 +230,9 @@ public class GuessTheBuildArena extends BaseArena {
         if(getTimer() <= 0 && isThemeSet()) {
           getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Was-Name").replace("%THEME%", getCurrentTheme().getTheme()));
           for(Player p : getPlayers()) {
-            p.sendTitle(getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Was-Title"), getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Was-Subtitle")
+            VersionUtils.sendTitles(p, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Was-Title"), getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Was-Subtitle")
                 .replace("%THEME%", getCurrentTheme().getTheme()), 5, 25, 5);
           }
-
           currentBuilder = null;
           setThemeSet(false);
           setCurrentTheme(null);
@@ -271,7 +269,7 @@ public class GuessTheBuildArena extends BaseArena {
               if(currentBuilder == player) {
                 continue;
               }
-              player.sendTitle(null, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Being-Selected"), 5, 25, 5);
+              VersionUtils.sendSubTitle(player, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Being-Selected"), 5, 25, 5);
             }
           }, 20 * getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.DELAYED_TASK, this));
           //todo next round info and game state?

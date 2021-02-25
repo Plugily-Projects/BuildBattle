@@ -29,7 +29,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajerlair.commonsbox.database.MysqlDatabase;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
+import pl.plajerlair.commonsbox.minecraft.compat.events.EventsInitializer;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
@@ -184,7 +186,7 @@ public class Main extends JavaPlugin {
       getServer().getPluginManager().disablePlugin(this);
       return false;
     }
-    if(ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_11_R1)) {
+    if(ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_8_R1)) {
       MessageUtils.thisVersionIsNotSupported();
       Debugger.sendConsoleMsg("&cYour server version is not supported by Build Battle!");
       Debugger.sendConsoleMsg("&cSadly, we must shut off. Maybe you consider updating your server version?");
@@ -244,6 +246,8 @@ public class Main extends JavaPlugin {
     BannerMenu.init(this);
     partyHandler = new PartySupportInitializer().initialize(this);
     rewardsHandler = new RewardsFactory(this);
+    new EventsInitializer().initialize(this);
+    MiscUtils.sendStartUpMessage(this, "BuildBattle", getDescription(),true, true);
   }
 
   @Override

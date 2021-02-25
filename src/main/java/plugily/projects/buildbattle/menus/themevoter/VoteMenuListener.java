@@ -161,7 +161,7 @@ public class VoteMenuListener implements Listener {
             .replace("%ROUND%", String.valueOf(((GuessTheBuildArena) arena).getRound()))
             .replace("%MAXPLAYERS%", String.valueOf(arena.getPlayers().size()));
         for(Player p : arena.getPlayers()) {
-          p.sendTitle(plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Start-Guessing-Title"), null, 5, 25, 5);
+          VersionUtils.sendTitle(p, plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Start-Guessing-Title"), 5, 25, 5);
           p.sendMessage(roundMessage);
         }
       }

@@ -159,7 +159,7 @@ public class BaseArena extends BukkitRunnable {
     for(Player p : getPlayers()) {
       VersionUtils.sendActionBar(p, message);
       p.sendMessage(getPlugin().getChatManager().getPrefix() + message);
-      p.sendTitle(null, subtitle, 5, 30, 5);
+      VersionUtils.sendSubTitle(p, subtitle, 5, 30, 5);
     }
   }
 

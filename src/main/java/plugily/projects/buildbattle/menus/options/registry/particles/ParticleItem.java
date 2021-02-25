@@ -20,7 +20,6 @@
 
 package plugily.projects.buildbattle.menus.options.registry.particles;
 
-import org.bukkit.Particle;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -29,7 +28,7 @@ import org.bukkit.inventory.ItemStack;
 public class ParticleItem {
 
   private ItemStack itemStack;
-  private Particle effect;
+  private String effect;
   private String permission;
 
   public String getPermission() {
@@ -44,11 +43,11 @@ public class ParticleItem {
     return itemStack.getItemMeta().getDisplayName();
   }
 
-  public Particle getEffect() {
+  public String getEffect() {
     return effect;
   }
 
-  public void setEffect(Particle effect) {
+  public void setEffect(String effect) {
     this.effect = effect;
   }
 

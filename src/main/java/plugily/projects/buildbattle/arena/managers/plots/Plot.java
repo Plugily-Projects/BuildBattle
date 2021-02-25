@@ -25,7 +25,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.WeatherType;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
@@ -34,7 +33,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import pl.plajerlair.commonsbox.minecraft.compat.PacketUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
@@ -42,6 +40,7 @@ import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.event.plot.BBPlotResetEvent;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.user.User;
+import plugily.projects.buildbattle.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,7 +53,7 @@ import java.util.Map;
 public class Plot {
 
   private static final Main plugin = JavaPlugin.getPlugin(Main.class);
-  private final Map<Location, Particle> particles = new HashMap<>();
+  private final Map<Location, String> particles = new HashMap<>();
   private final BaseArena arena;
   private Cuboid cuboid;
   private int points = 0;
@@ -83,12 +82,12 @@ public class Plot {
     }
   }
 
-  public Map<Location, Particle> getParticles() {
+  public Map<Location, String> getParticles() {
     return particles;
   }
 
   @Deprecated
-  public void addParticle(Location location, Particle effect) {
+  public void addParticle(Location location, String effect) {
     particles.put(location, effect);
   }
 
@@ -184,23 +183,13 @@ public class Plot {
       block.setBiome(plotDefaultBiome);
     }
 
-    try {
-      for(Chunk chunk : cuboid.chunkList()) {
-        for(Player p : Bukkit.getOnlinePlayers()) {
-          if(!p.getWorld().equals(chunk.getWorld())) {
-            continue;
-          }
-          if(ServerVersion.Version.isCurrentEqual(ServerVersion.Version.v1_16_R1)) {
-            PacketUtils.sendPacket(p, PacketUtils.getNMSClass("PacketPlayOutMapChunk").getConstructor(PacketUtils.getNMSClass("Chunk"), int.class, boolean.class)
-                .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535, false));
-          } else {
-            PacketUtils.sendPacket(p, PacketUtils.getNMSClass("PacketPlayOutMapChunk").getConstructor(PacketUtils.getNMSClass("Chunk"), int.class)
-                .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535));
-          }
+    for(Chunk chunk : cuboid.chunkList()) {
+      for(Player p : Bukkit.getOnlinePlayers()) {
+        if(!p.getWorld().equals(chunk.getWorld())) {
+          continue;
         }
+        Utils.sendMapChunk(p, chunk);
       }
-    } catch(ReflectiveOperationException exception) {
-      exception.printStackTrace();
     }
 
     changeFloor(XMaterial.matchXMaterial(plugin.getConfig().getString("Default-Floor-Material-Name", "LOG")

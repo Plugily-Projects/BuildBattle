@@ -31,14 +31,14 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerInteractEvent;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
@@ -98,7 +98,7 @@ public class SpectatorEvents implements Listener {
   }
 
   @EventHandler
-  public void onSpectatorInteract(PlayerInteractEvent e) {
+  public void onSpectatorInteract(CBPlayerInteractEvent e) {
     if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() != Action.PHYSICAL) {
 
       if(!plugin.getUserManager().getUser(e.getPlayer()).isSpectator()) {
@@ -110,7 +110,7 @@ public class SpectatorEvents implements Listener {
         return;
       }
 
-      ItemStack stack = e.getPlayer().getInventory().getItemInMainHand();
+      ItemStack stack = VersionUtils.getItemInHand(e.getPlayer());
       if(!ItemUtils.isItemStackNamed(stack)) {
         return;
       }
@@ -137,7 +137,7 @@ public class SpectatorEvents implements Listener {
       ItemStack skull = XMaterial.PLAYER_HEAD.parseItem();
 
       SkullMeta meta = (SkullMeta) skull.getItemMeta();
-      meta = MiscUtils.setPlayerHead(player, meta);
+      meta = VersionUtils.setPlayerHead(player, meta);
       meta.setDisplayName(player.getName());
       skull.setItemMeta(meta);
       inventory.addItem(skull);

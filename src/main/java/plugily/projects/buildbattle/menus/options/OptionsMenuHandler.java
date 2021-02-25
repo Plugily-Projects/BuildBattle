@@ -20,6 +20,7 @@
 
 package plugily.projects.buildbattle.menus.options;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -72,11 +73,13 @@ public class OptionsMenuHandler implements Listener {
     if(!(e.getWhoClicked() instanceof Player) || !ItemUtils.isItemStackNamed(e.getCurrentItem())) {
       return;
     }
+
     for(MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
       if(Utils.getGoBackItem().getItemMeta().getDisplayName().equalsIgnoreCase(e.getCurrentItem().getItemMeta().getDisplayName())) {
         e.getWhoClicked().openInventory(plugin.getOptionsRegistry().formatInventory());
         return;
       }
+      if(option.getInventoryName() == null) continue;
       if(option.getInventoryName().equals(e.getView().getTitle())) {
         e.setCancelled(true);
         option.onTargetClick(e);

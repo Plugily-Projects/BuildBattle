@@ -25,6 +25,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
@@ -271,7 +272,7 @@ public class SoloArena extends BaseArena {
                     for(Player p : getPlayers()) {
                       String owner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
                       owner = formatWinners(votingPlot, owner);
-                      p.sendTitle(owner, null, 5, 40, 5);
+                      VersionUtils.sendTitle(p, owner, 5, 40, 5);
                       p.sendMessage(getPlugin().getChatManager().getPrefix() + message);
                     }
                   }
@@ -315,7 +316,7 @@ public class SoloArena extends BaseArena {
               player.teleport(winnerPlot.getTeleportLocation());
               String winner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Winner-Title");
               winner = formatWinners(winnerPlot, winner);
-              player.sendTitle(winner, null, 5, 35, 5);
+              VersionUtils.sendTitle(player, winner, 5, 35, 5);
             }
             this.setArenaState(ArenaState.ENDING);
             Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
@@ -465,7 +466,7 @@ public class SoloArena extends BaseArena {
         } else {
           String owner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
           owner = formatWinners(votingPlot, owner);
-          p.sendTitle(owner, null, 5, 40, 5);
+          VersionUtils.sendTitle(p, owner, 5, 40, 5);
           p.sendMessage(getPlugin().getChatManager().getPrefix() + message);
         }
       }
@@ -476,7 +477,7 @@ public class SoloArena extends BaseArena {
         spectator.setPlayerTime(Plot.Time.format(votingPlot.getTime(), player.getWorld().getTime()), false);
         String owner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
         owner = formatWinners(votingPlot, owner);
-        spectator.sendTitle(owner, null, 5, 40, 5);
+        VersionUtils.sendTitle(spectator, owner, 5, 40, 5);
         spectator.sendMessage(getPlugin().getChatManager().getPrefix() + message);
       }
     }
@@ -499,7 +500,7 @@ public class SoloArena extends BaseArena {
         for(Player p : getPlayers()) {
           String owner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
           owner = formatWinners(votingPlot, owner);
-          p.sendTitle(owner, null, 5, 40, 5);
+          VersionUtils.sendTitle(p, owner, 5, 40, 5);
           p.sendMessage(getPlugin().getChatManager().getPrefix() + message);
         }
       }

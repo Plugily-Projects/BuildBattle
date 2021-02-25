@@ -22,11 +22,11 @@ package plugily.projects.buildbattle.menus.options.registry.particles;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
@@ -67,14 +67,14 @@ public class ParticleRegistry {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "particles");
     Debugger.debug(Debugger.Level.TASK, "Registering particles!");
     int i = 0;
-    for(Particle particle : Particle.values()) {
+    for(String particle : VersionUtils.getParticleValues()) {
       if(i >= 100) {
         Debugger.debug(Debugger.Level.WARN, "There are too many particles to register! Menu can't hold any more!");
         break;
       }
       boolean blacklisted = false;
       for(String blackList : blackListedParticles) {
-        if(particle.name().contains(blackList)) {
+        if(particle.contains(blackList)) {
           blacklisted = true;
           break;
         }
@@ -103,16 +103,16 @@ public class ParticleRegistry {
 
   private void updateParticlesFile() {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "particles");
-    for(Particle particle : Particle.values()) {
-      if(!config.isSet(particle.toString())) {
-        config.set(particle.toString() + ".displayname", "&6" + particle.toString());
-        config.set(particle.toString() + ".lore", Arrays.asList("&7Click to activate", "&7on your location"));
-        config.set(particle.toString() + ".material-name", Material.PAPER.name());
-        config.set(particle.toString() + ".permission", "particles.VIP");
+    for(String particle : VersionUtils.getParticleValues()) {
+      if(!config.isSet(particle)) {
+        config.set(particle + ".displayname", "&6" + particle);
+        config.set(particle + ".lore", Arrays.asList("&7Click to activate", "&7on your location"));
+        config.set(particle + ".material-name", Material.PAPER.name());
+        config.set(particle + ".permission", "particles.VIP");
         continue;
       }
-      if(!config.isSet(particle.toString() + ".material-name")) {
-        config.set(particle.toString() + ".material-name", Material.PAPER.name());
+      if(!config.isSet(particle + ".material-name")) {
+        config.set(particle + ".material-name", Material.PAPER.name());
         Debugger.debug(Debugger.Level.WARN, "Found outdated item in particles.yml! We've converted it to the newest version!");
       }
     }
@@ -164,9 +164,9 @@ public class ParticleRegistry {
   }
 
   @Nullable
-  public ParticleItem getItemByEffect(Particle effect) {
+  public ParticleItem getItemByEffect(String effect) {
     for(ParticleItem item : registeredParticles) {
-      if(item.getEffect() == effect) {
+      if(item.getEffect().equals(effect)) {
         return item;
       }
     }

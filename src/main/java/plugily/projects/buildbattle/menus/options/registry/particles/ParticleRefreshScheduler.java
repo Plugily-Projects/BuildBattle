@@ -22,9 +22,8 @@ package plugily.projects.buildbattle.menus.options.registry.particles;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Particle;
 import org.bukkit.scheduler.BukkitTask;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
@@ -48,9 +47,8 @@ public class ParticleRefreshScheduler {
       for(BaseArena arena : ArenaRegistry.getArenas()) {
         if(!arena.getPlayers().isEmpty()) {
           for(Plot buildPlot : arena.getPlotManager().getPlots()) {
-            for(Entry<Location, Particle> map : buildPlot.getParticles().entrySet()) {
-              MiscUtils.spawnParticle(map.getValue(), map.getKey(), plugin.getConfig().getInt("Amount-One-Particle-Effect-Contains", 20),
-                  1, 1, 1, 1);
+            for(Entry<Location, String> map : buildPlot.getParticles().entrySet()) {
+              VersionUtils.sendParticles(map.getValue(), buildPlot.getOwners().get(0), map.getKey(), plugin.getConfig().getInt("Amount-One-Particle-Effect-Contains", 20));
             }
           }
         }

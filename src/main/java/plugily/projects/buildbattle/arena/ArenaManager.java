@@ -23,7 +23,6 @@ package plugily.projects.buildbattle.arena;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -174,7 +173,7 @@ public class ArenaManager {
 
     player.setExp(1);
     player.setFoodLevel(20);
-    MiscUtils.getEntityAttribute(player, Attribute.GENERIC_MAX_HEALTH).ifPresent(ai -> player.setHealth(ai.getBaseValue()));
+    player.setHealth(VersionUtils.getHealth(player));
     player.setLevel(0);
     player.setWalkSpeed(0.2f);
     player.setFlySpeed(0.1f);
@@ -229,8 +228,7 @@ public class ArenaManager {
     player.updateInventory();
 
     chatManager.broadcastAction(arena, player, ChatManager.ActionType.JOIN);
-    player.sendTitle(chatManager.colorMessage("In-Game.Messages.Join-Title").replace("%THEME%", arena.getTheme()),
-        chatManager.colorMessage("In-Game.Messages.Join-SubTitle").replace("%THEME%", arena.getTheme()), 5, 40, 5);
+    VersionUtils.sendTitles(player, chatManager.colorMessage("In-Game.Messages.Join-Title").replace("%THEME%", arena.getTheme()), chatManager.colorMessage("In-Game.Messages.Join-SubTitle").replace("%THEME%", arena.getTheme()) , 5, 40, 5);
     plugin.getSignManager().updateSigns();
   }
 
@@ -251,7 +249,7 @@ public class ArenaManager {
 
     arena.doBarAction(BaseArena.BarAction.REMOVE, player);
     player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
-    MiscUtils.getEntityAttribute(player, Attribute.GENERIC_MAX_HEALTH).ifPresent(ai -> ai.setBaseValue(20.0));
+    VersionUtils.setMaxHealth(player, 20);
     player.getInventory().clear();
     player.getInventory().setArmorContents(null);
     player.resetPlayerTime();
@@ -298,7 +296,6 @@ public class ArenaManager {
       user.addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
     }
 
-    //todo maybe not
     user.setStat(StatsStorage.StatisticType.LOCAL_GUESS_THE_BUILD_POINTS, 0);
 
     Plot plot = arena.getPlotManager().getPlot(player);

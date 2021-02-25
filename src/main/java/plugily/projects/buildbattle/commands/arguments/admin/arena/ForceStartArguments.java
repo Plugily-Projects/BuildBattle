@@ -47,7 +47,7 @@ public class ForceStartArguments {
       public void execute(CommandSender sender, String[] args) {
         BaseArena arena = ArenaRegistry.getArena((Player) sender);
         if(arena == null) {
-          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Not-Playing"));
+          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Playing"));
           return;
         }
         if(args.length == 2 && !sender.hasPermission("buildbattle.admin.forcestart.theme")) {

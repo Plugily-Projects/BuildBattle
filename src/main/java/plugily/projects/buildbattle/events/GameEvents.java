@@ -50,11 +50,12 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.StructureGrowEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerInteractEntityEvent;
+import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerInteractEvent;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
@@ -83,15 +84,15 @@ public class GameEvents implements Listener {
   }
 
   @EventHandler(priority = EventPriority.LOWEST)
-  public void onLeave(PlayerInteractEvent event) {
-    if(event.getHand() == EquipmentSlot.OFF_HAND || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) {
+  public void onLeave(CBPlayerInteractEvent event) {
+    if(VersionUtils.checkOffHand(event.getHand()) || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) {
       return;
     }
     BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
     if(arena == null) {
       return;
     }
-    ItemStack itemStack = event.getPlayer().getInventory().getItemInMainHand();
+    ItemStack itemStack = VersionUtils.getItemInHand(event.getPlayer());
     if(!ItemUtils.isItemStackNamed(itemStack)) {
       return;
     }
@@ -110,8 +111,8 @@ public class GameEvents implements Listener {
   }
 
   @EventHandler
-  public void onOpenOptionMenu(PlayerInteractEvent event) {
-    if(event.getHand() == EquipmentSlot.OFF_HAND || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) {
+  public void onOpenOptionMenu(CBPlayerInteractEvent event) {
+    if(VersionUtils.checkOffHand(event.getHand()) || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) {
       return;
     }
     ItemStack itemStack = event.getItem();
@@ -185,13 +186,13 @@ public class GameEvents implements Listener {
   }
 
   @EventHandler
-  public void onTNTInteract(PlayerInteractEvent event) {
-    if(event.getHand() == EquipmentSlot.OFF_HAND) {
+  public void onTNTInteract(CBPlayerInteractEvent event) {
+    if(VersionUtils.checkOffHand(event.getHand())) {
       return;
     }
     Player player = event.getPlayer();
     BaseArena arena = ArenaRegistry.getArena(player);
-    if(arena == null || player.getInventory().getItemInMainHand().getType() != Material.FLINT_AND_STEEL || event.getClickedBlock() == null) {
+    if(arena == null || VersionUtils.getItemInHand(player).getType() != Material.FLINT_AND_STEEL || event.getClickedBlock() == null) {
       return;
     }
     if(event.getClickedBlock().getType() == Material.TNT) {
@@ -520,8 +521,8 @@ public class GameEvents implements Listener {
   }
 
   @EventHandler
-  public void onNPCClick(PlayerInteractEntityEvent event) {
-    if(event.getHand() == EquipmentSlot.OFF_HAND || event.getPlayer().getInventory().getItemInMainHand().getType() == Material.AIR) {
+  public void onNPCClick(CBPlayerInteractEntityEvent event) {
+    if(VersionUtils.checkOffHand(event.getHand()) || VersionUtils.getItemInHand(event.getPlayer()).getType() == Material.AIR) {
       return;
     }
 
@@ -537,7 +538,7 @@ public class GameEvents implements Listener {
       if(arena instanceof SoloArena && ((SoloArena) arena).isVoting()) {
         return;
       }
-      Material material = event.getPlayer().getInventory().getItemInMainHand().getType();
+      Material material = VersionUtils.getItemInHand(event.getPlayer()).getType();
       if(material != XMaterial.WATER_BUCKET.parseMaterial() && material != XMaterial.LAVA_BUCKET.parseMaterial()
           && !(material.isBlock() && material.isSolid() && material.isOccluding())) {
         return;
@@ -545,13 +546,13 @@ public class GameEvents implements Listener {
       if(plugin.getConfigPreferences().getFloorBlacklist().contains(material)) {
         return;
       }
-      arena.getPlotManager().getPlot(event.getPlayer()).changeFloor(material, event.getPlayer().getInventory().getItemInMainHand().getData().getData());
+      arena.getPlotManager().getPlot(event.getPlayer()).changeFloor(material, VersionUtils.getItemInHand(event.getPlayer()).getData().getData());
       event.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Floor.Floor-Changed"));
     }
   }
 
   @EventHandler
-  public void onEnderchestClick(PlayerInteractEvent event) {
+  public void onEnderchestClick(CBPlayerInteractEvent event) {
     BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
     if(arena == null) {
       return;

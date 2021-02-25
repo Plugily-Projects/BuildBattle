@@ -22,6 +22,7 @@ package plugily.projects.buildbattle.arena.impl;
 
 import com.google.common.collect.Lists;
 import org.bukkit.entity.Player;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
@@ -108,7 +109,7 @@ public class TeamArena extends SoloArena {
         for(Player p : getPlayers()) {
           String owner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
           owner = formatWinners(getVotingPlot(), owner);
-          p.sendTitle(owner, null, 5, 40, 5);
+          VersionUtils.sendTitle(p, owner, 5, 40, 5);
           p.sendMessage(getPlugin().getChatManager().getPrefix() + message);
         }
       }

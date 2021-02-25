@@ -20,10 +20,13 @@
 
 package plugily.projects.buildbattle.utils;
 
+import org.bukkit.Chunk;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-
+import pl.plajerlair.commonsbox.minecraft.compat.PacketUtils;
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.Main;
@@ -66,6 +69,25 @@ public class Utils {
     im.setLore(lore);
     item.setItemMeta(im);
     return item;
+  }
+
+  public static void sendMapChunk(Player player, Chunk chunk) {
+    try {
+      if(ServerVersion.Version.isCurrentEqual(ServerVersion.Version.v1_16_R1)) {
+        PacketUtils.sendPacket(player, PacketUtils.getNMSClass("PacketPlayOutMapChunk").getConstructor(PacketUtils.getNMSClass("Chunk"), int.class, boolean.class)
+            .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535, false));
+        return;
+      }
+      if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_8_R3)) {
+        PacketUtils.sendPacket(player, PacketUtils.getNMSClass("PacketPlayOutMapChunk").getConstructor(PacketUtils.getNMSClass("Chunk"), boolean.class, int.class)
+            .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), true, 65535));
+        return;
+      }
+      PacketUtils.sendPacket(player, PacketUtils.getNMSClass("PacketPlayOutMapChunk").getConstructor(PacketUtils.getNMSClass("Chunk"), int.class)
+          .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535));
+    } catch(ReflectiveOperationException exception) {
+      exception.printStackTrace();
+    }
   }
 
 }

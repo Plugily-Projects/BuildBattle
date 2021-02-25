@@ -26,7 +26,6 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -52,7 +51,7 @@ public class ParticleRemoveMenu {
 
     int x = 0;
     int y = 0;
-    for(Entry<Location, Particle> map : new java.util.HashMap<>(buildPlot.getParticles()).entrySet()) {
+    for(Entry<Location, String> map : new java.util.HashMap<>(buildPlot.getParticles()).entrySet()) {
       Location location = map.getKey();
       ParticleItem particleItem = plugin.getOptionsRegistry().getParticleRegistry().getItemByEffect(map.getValue());
       if(particleItem == null) {

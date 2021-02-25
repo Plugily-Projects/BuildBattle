@@ -22,6 +22,7 @@ package plugily.projects.buildbattle.menus.options;
 
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 
 /**
  * @author Plajer
