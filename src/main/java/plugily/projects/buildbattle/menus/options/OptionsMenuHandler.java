@@ -20,7 +20,6 @@
 
 package plugily.projects.buildbattle.menus.options;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -51,7 +50,8 @@ public class OptionsMenuHandler implements Listener {
     if(!(e.getWhoClicked() instanceof Player) || e.getCurrentItem() == null) {
       return;
     }
-    if(!ItemUtils.isItemStackNamed(e.getCurrentItem()) || !e.getView().getTitle().equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name"))) {
+    if(!ItemUtils.isItemStackNamed(e.getCurrentItem())
+        || !plugin.getComplement().getTitle(e.getView()).equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name"))) {
       return;
     }
     BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
@@ -75,12 +75,12 @@ public class OptionsMenuHandler implements Listener {
     }
 
     for(MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
-      if(Utils.getGoBackItem().getItemMeta().getDisplayName().equalsIgnoreCase(e.getCurrentItem().getItemMeta().getDisplayName())) {
+      if(plugin.getComplement().getDisplayName(Utils.getGoBackItem().getItemMeta())
+          .equalsIgnoreCase(plugin.getComplement().getDisplayName(e.getCurrentItem().getItemMeta()))) {
         e.getWhoClicked().openInventory(plugin.getOptionsRegistry().formatInventory());
         return;
       }
-      if(option.getInventoryName() == null) continue;
-      if(option.getInventoryName().equals(e.getView().getTitle())) {
+      if(plugin.getComplement().getTitle(e.getView()).equals(option.getInventoryName())) {
         e.setCancelled(true);
         option.onTargetClick(e);
         return;

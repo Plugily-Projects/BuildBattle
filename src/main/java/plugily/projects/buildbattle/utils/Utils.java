@@ -23,15 +23,12 @@ package plugily.projects.buildbattle.utils;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajerlair.commonsbox.minecraft.compat.PacketUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.Main;
-
-import java.util.List;
 
 /**
  * Created by Tom on 29/07/2014.
@@ -61,14 +58,6 @@ public class Utils {
     return new ItemBuilder(XMaterial.STONE_BUTTON.parseItem())
         .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Go-Back-Button.Item-Name"))
         .lore(plugin.getChatManager().colorMessage("Menus.Option-Menu.Go-Back-Button.Item-Lore")).build();
-  }
-
-  public static ItemStack setItemNameAndLore(ItemStack item, String name, List<String> lore) {
-    ItemMeta im = item.getItemMeta();
-    im.setDisplayName(name);
-    im.setLore(lore);
-    item.setItemMeta(im);
-    return item;
   }
 
   public static void sendMapChunk(Player player, Chunk chunk) {

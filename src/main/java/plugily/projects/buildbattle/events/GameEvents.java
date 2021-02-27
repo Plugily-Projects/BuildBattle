@@ -49,7 +49,6 @@ import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -123,7 +122,8 @@ public class GameEvents implements Listener {
     if(arena == null || arena.getArenaState() != ArenaState.IN_GAME || arena instanceof SoloArena && ((SoloArena) arena).isVoting()) {
       return;
     }
-    if(!plugin.getOptionsRegistry().getMenuItem().getItemMeta().getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())) {
+    if(!plugin.getComplement().getDisplayName(plugin.getOptionsRegistry().getMenuItem().getItemMeta())
+        .equalsIgnoreCase(plugin.getComplement().getDisplayName(itemStack.getItemMeta()))) {
       return;
     }
     event.getPlayer().openInventory(plugin.getOptionsRegistry().formatInventory());
@@ -287,7 +287,8 @@ public class GameEvents implements Listener {
     if(event.getWhoClicked().getItemOnCursor().getType() != Material.NETHER_STAR || arena == null) {
       return;
     }
-    if(!event.getWhoClicked().getItemOnCursor().getItemMeta().getDisplayName().equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item"))) {
+    if(!plugin.getComplement().getDisplayName(event.getWhoClicked().getItemOnCursor().getItemMeta())
+        .equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item"))) {
       return;
     }
     event.setResult(Event.Result.DENY);
@@ -443,7 +444,7 @@ public class GameEvents implements Listener {
     if(!ItemUtils.isItemStackNamed(drop)) {
       return;
     }
-    if(drop.getItemMeta().getDisplayName().equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name")) || plugin.getVoteItems().getPoints(drop) != 0) {
+    if(plugin.getComplement().getDisplayName(drop.getItemMeta()).equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name")) || plugin.getVoteItems().getPoints(drop) != 0) {
       event.setCancelled(true);
     }
   }

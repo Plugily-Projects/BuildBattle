@@ -67,7 +67,7 @@ public class CuboidSelector implements Listener {
 
   @EventHandler
   public void onWandUse(CBPlayerInteractEvent e) {
-    if(!ItemUtils.isItemStackNamed(e.getItem()) || !e.getItem().getItemMeta().getDisplayName().equals(plugin.getChatManager().colorRawMessage("&6&lPlot selector"))) {
+    if(!ItemUtils.isItemStackNamed(e.getItem()) || !plugin.getComplement().getDisplayName(e.getItem().getItemMeta()).equals(plugin.getChatManager().colorRawMessage("&6&lPlot selector"))) {
       return;
     }
     e.setCancelled(true);

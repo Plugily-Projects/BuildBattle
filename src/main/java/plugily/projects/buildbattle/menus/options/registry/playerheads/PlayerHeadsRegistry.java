@@ -20,10 +20,11 @@
 
 package plugily.projects.buildbattle.menus.options.registry.playerheads;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
@@ -74,13 +75,17 @@ public class PlayerHeadsRegistry {
         if(!categoryConfig.getBoolean(path + ".enabled", true)) {
           continue;
         }
+
         ItemStack stack = ItemUtils.getSkull(categoryConfig.getString(path + ".texture"));
-        Utils.setItemNameAndLore(stack, plugin.getChatManager().colorRawMessage(categoryConfig.getString(path + ".displayname")),
-            categoryConfig.getStringList(path + ".lore").stream()
+        ItemMeta im = stack.getItemMeta();
+
+        plugin.getComplement().setDisplayName(im, plugin.getChatManager().colorRawMessage(categoryConfig.getString(path + ".displayname")));
+        plugin.getComplement().setLore(im, categoryConfig.getStringList(path + ".lore").stream()
                 .map(lore -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()));
+        stack.setItemMeta(im);
         playerHeads.add(stack);
       }
-      Inventory inv = Bukkit.createInventory(null, Utils.serializeInt(playerHeads.size() + 1),
+      Inventory inv = plugin.getComplement().createInventory(null, Utils.serializeInt(playerHeads.size() + 1),
           plugin.getChatManager().colorRawMessage(config.getString(str + ".menuname")));
       playerHeads.forEach(inv::addItem);
       inv.addItem(Utils.getGoBackItem());

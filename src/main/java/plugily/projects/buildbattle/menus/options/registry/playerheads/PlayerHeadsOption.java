@@ -20,7 +20,6 @@
 
 package plugily.projects.buildbattle.menus.options.registry.playerheads;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -56,7 +55,7 @@ public class PlayerHeadsOption {
           }
           return;
         }
-        Inventory inventory = Bukkit.getServer().createInventory(null,
+        Inventory inventory = registry.getPlugin().getComplement().createInventory(null,
             Utils.serializeInt(registry.getPlayerHeadsRegistry().getCategories().size() + 1),
             registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Players-Heads.Inventory-Name"));
         for(HeadsCategory categoryItem : registry.getPlayerHeadsRegistry().getCategories().keySet()) {
@@ -70,7 +69,8 @@ public class PlayerHeadsOption {
       public void onTargetClick(InventoryClickEvent e) {
         e.getWhoClicked().closeInventory();
         for(HeadsCategory category : registry.getPlayerHeadsRegistry().getCategories().keySet()) {
-          if(!category.getItemStack().getItemMeta().getDisplayName().equals(e.getCurrentItem().getItemMeta().getDisplayName())) {
+          if(!plugin.getComplement().getDisplayName(category.getItemStack().getItemMeta())
+              .equals(plugin.getComplement().getDisplayName(e.getCurrentItem().getItemMeta()))) {
             continue;
           }
           if(e.getWhoClicked().hasPermission(category.getPermission())) {

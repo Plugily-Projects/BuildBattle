@@ -20,7 +20,6 @@
 
 package plugily.projects.buildbattle.menus.themevoter;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -57,7 +56,7 @@ public class VoteMenu {
 
   public VoteMenu(SoloArena arena) {
     this.arena = arena;
-    this.inventory = Bukkit.createInventory(null, 9 * 5, plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"));
+    this.inventory = plugin.getComplement().createInventory(null, 9 * 5, plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"));
   }
 
   private void setItem(ItemStack itemStack, int pos) {
@@ -83,7 +82,7 @@ public class VoteMenu {
         i++;
       }
     }
-    this.inventory = Bukkit.createInventory(null, 9 * (randomThemes.size() > 5 ? 5 : randomThemes.size()), plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"));
+    this.inventory = plugin.getComplement().createInventory(null, 9 * (randomThemes.size() > 5 ? 5 : randomThemes.size()), plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"));
     for(int i = 0; i < randomThemes.size(); i++) {
       ItemStack item = new ItemStack(XMaterial.OAK_SIGN.parseMaterial());
       setItem(new ItemBuilder(item)

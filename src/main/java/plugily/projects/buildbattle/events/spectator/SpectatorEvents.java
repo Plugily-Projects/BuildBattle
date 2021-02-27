@@ -117,16 +117,16 @@ public class SpectatorEvents implements Listener {
 
       e.setCancelled(true);
 
-      if(stack.getItemMeta().getDisplayName().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
+      if(plugin.getComplement().getDisplayName(stack.getItemMeta()).equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
         openSpectatorMenu(e.getPlayer().getWorld(), e.getPlayer(), arena);
-      } else if(stack.getItemMeta().getDisplayName().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name"))) {
+      } else if(plugin.getComplement().getDisplayName(stack.getItemMeta()).equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name"))) {
         spectatorSettingsMenu.openSpectatorSettingsMenu(e.getPlayer());
       }
     }
   }
 
   private void openSpectatorMenu(World world, Player p, BaseArena arena) {
-    Inventory inventory = plugin.getServer().createInventory(null, Utils.serializeInt(arena.getPlayers().size()),
+    Inventory inventory = plugin.getComplement().createInventory(null, Utils.serializeInt(arena.getPlayers().size()),
         chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
     List<Player> players = arena.getPlayers();
 
@@ -138,7 +138,7 @@ public class SpectatorEvents implements Listener {
 
       SkullMeta meta = (SkullMeta) skull.getItemMeta();
       meta = VersionUtils.setPlayerHead(player, meta);
-      meta.setDisplayName(player.getName());
+      plugin.getComplement().setDisplayName(meta, player.getName());
       skull.setItemMeta(meta);
       inventory.addItem(skull);
     }
@@ -159,11 +159,12 @@ public class SpectatorEvents implements Listener {
 
     e.setCancelled(true);
 
-    if(!ItemUtils.isItemStackNamed(e.getCurrentItem()) || !e.getView().getTitle().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
+    if(!ItemUtils.isItemStackNamed(e.getCurrentItem())
+        || !plugin.getComplement().getTitle(e.getView()).equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
       return;
     }
 
-    String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
+    String displayName = plugin.getComplement().getDisplayName(e.getCurrentItem().getItemMeta());
     Player target = Bukkit.getPlayer(displayName);
     if(target == null) target = Bukkit.getPlayer(ChatColor.stripColor(displayName));
 

@@ -21,6 +21,9 @@
 package plugily.projects.buildbattle.menus.options.registry.particles;
 
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import plugily.projects.buildbattle.Main;
 
 /**
  * Created by Tom on 23/08/2015.
@@ -40,7 +43,7 @@ public class ParticleItem {
   }
 
   public String getDisplayName() {
-    return itemStack.getItemMeta().getDisplayName();
+    return JavaPlugin.getPlugin(Main.class).getComplement().getDisplayName(itemStack.getItemMeta());
   }
 
   public String getEffect() {

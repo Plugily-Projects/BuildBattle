@@ -20,7 +20,6 @@
 
 package plugily.projects.buildbattle.menus.options.registry.biomes;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -77,7 +76,7 @@ public class BiomesRegistry {
   }
 
   private void registerInventory() {
-    Inventory inv = Bukkit.createInventory(null, Utils.serializeInt(biomes.size() + 1),
+    Inventory inv = plugin.getComplement().createInventory(null, Utils.serializeInt(biomes.size() + 1),
         plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Biome.Inventory-Name"));
 
     biomes.stream().map(BiomeItem::getItemStack).forEach(inv::addItem);

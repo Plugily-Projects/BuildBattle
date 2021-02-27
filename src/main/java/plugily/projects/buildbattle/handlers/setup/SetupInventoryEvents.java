@@ -74,12 +74,12 @@ public class SetupInventoryEvents implements Listener {
     if(!(e.getWhoClicked() instanceof Player || e.getWhoClicked().hasPermission(PermissionManager.getEditGames()))) {
       return;
     }
-    if(!e.getView().getTitle().contains("Game type:") || !ItemUtils.isItemStackNamed(e.getCurrentItem())) {
+    if(!plugin.getComplement().getTitle(e.getView()).contains("Game type:") || !ItemUtils.isItemStackNamed(e.getCurrentItem())) {
       return;
     }
     Player player = (Player) e.getWhoClicked();
-    String name = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
-    BaseArena arena = ArenaRegistry.getArena(e.getView().getTitle().replace("Game type: ", ""));
+    String name = ChatColor.stripColor(plugin.getComplement().getDisplayName(e.getCurrentItem().getItemMeta()));
+    BaseArena arena = ArenaRegistry.getArena(plugin.getComplement().getTitle(e.getView()).replace("Game type: ", ""));
     if(arena == null) {
       return;
     }
@@ -106,7 +106,7 @@ public class SetupInventoryEvents implements Listener {
       return;
     }
     Player player = (Player) e.getWhoClicked();
-    if(!(player.hasPermission("buildbattle.admin.create") && e.getView().getTitle().contains("BB Arena:") && ItemUtils.isItemStackNamed(e.getCurrentItem()))) {
+    if(!(player.hasPermission("buildbattle.admin.create") && plugin.getComplement().getTitle(e.getView()).contains("BB Arena:") && ItemUtils.isItemStackNamed(e.getCurrentItem()))) {
       return;
     }
 
@@ -120,7 +120,7 @@ public class SetupInventoryEvents implements Listener {
       e.setCancelled(true);
     }
 
-    BaseArena arena = ArenaRegistry.getArena(e.getView().getTitle().replace("BB Arena: ", ""));
+    BaseArena arena = ArenaRegistry.getArena(plugin.getComplement().getTitle(e.getView()).replace("BB Arena: ", ""));
     if(arena == null) {
       return;
     }
@@ -164,7 +164,7 @@ public class SetupInventoryEvents implements Listener {
         ItemStack stack = player.getInventory().getItem(SetupInventory.ClickPosition.SET_MINIMUM_PLAYERS.getPosition());
         if(stack != null) {
           ItemMeta meta = stack.getItemMeta();
-          meta.setLore(lore);
+          plugin.getComplement().setLore(meta, lore);
           stack.setItemMeta(meta);
         }
         player.updateInventory();
@@ -189,7 +189,7 @@ public class SetupInventoryEvents implements Listener {
         ItemStack itemStack = player.getInventory().getItem(SetupInventory.ClickPosition.SET_MAXIMUM_PLAYERS.getPosition());
         if(itemStack != null) {
           ItemMeta meta = itemStack.getItemMeta();
-          meta.setLore(maxlore);
+          plugin.getComplement().setLore(meta, maxlore);
           itemStack.setItemMeta(meta);
         }
         player.updateInventory();
@@ -210,7 +210,7 @@ public class SetupInventoryEvents implements Listener {
         break;
       case SET_GAME_TYPE:
         //todo inventory framework
-        Inventory inv = Bukkit.createInventory(null, 9, "Game type: " + arena.getID());
+        Inventory inv = plugin.getComplement().createInventory(null, 9, "Game type: " + arena.getID());
         inv.addItem(new ItemBuilder(Material.NAME_TAG)
             .name(ChatColor.GREEN + "Solo game mode")
             .lore(ChatColor.GRAY + "1 player per plot")
@@ -231,10 +231,10 @@ public class SetupInventoryEvents implements Listener {
             player.sendMessage(ChatColor.RED + "This item doesn't has a name!");
             return;
           }
-          String newName = e.getCursor().getItemMeta().getDisplayName();
+          String newName = plugin.getComplement().getDisplayName(e.getCursor().getItemMeta());
           config.set("instances." + arena.getID() + ".mapname", newName);
           player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aName of arena " + arena.getID() + " set to " + newName));
-          currentItem.getItemMeta().setDisplayName(ChatColor.GOLD + "Set a mapname (currently: " + newName);
+          plugin.getComplement().setDisplayName(currentItem.getItemMeta(), ChatColor.GOLD + "Set a mapname (currently: " + newName);
         }
         break;
       case ADD_GAME_PLOT:

@@ -20,7 +20,6 @@
 
 package plugily.projects.buildbattle.menus.options;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -131,7 +130,7 @@ public class OptionsRegistry {
    * @return options inventory
    */
   public Inventory formatInventory() {
-    Inventory inv = Bukkit.createInventory(null, inventorySize, plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name"));
+    Inventory inv = plugin.getComplement().createInventory(null, inventorySize, plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name"));
     for(MenuOption option : registeredOptions) {
       inv.setItem(option.getSlot(), option.getItemStack());
     }

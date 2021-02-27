@@ -20,7 +20,6 @@
 
 package plugily.projects.buildbattle.menus.options.registry.particles;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.Inventory;
@@ -120,9 +119,9 @@ public class ParticleRegistry {
   }
 
   private void registerInventory() {
-    Inventory page1 = Bukkit.createInventory(null, Utils.serializeInt(54),
+    Inventory page1 = plugin.getComplement().createInventory(null, Utils.serializeInt(54),
         plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.Inventory-Name"));
-    Inventory page2 = Bukkit.createInventory(null, Utils.serializeInt(54),
+    Inventory page2 = plugin.getComplement().createInventory(null, Utils.serializeInt(54),
         plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.Inventory-Name"));
 
     int i = 0;

@@ -20,7 +20,6 @@
 
 package plugily.projects.buildbattle.events.spectator;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -61,7 +60,7 @@ public class SpectatorSettingsMenu implements Listener {
 
   @EventHandler
   public void onSpectatorMenuClick(InventoryClickEvent e) {
-    if(!e.getView().getTitle().equals(plugin.getChatManager().colorRawMessage(inventoryName))) {
+    if(!plugin.getComplement().getTitle(e.getView()).equals(plugin.getChatManager().colorRawMessage(inventoryName))) {
       return;
     }
     if(e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {
@@ -103,7 +102,7 @@ public class SpectatorSettingsMenu implements Listener {
 
   private Inventory initInventory() {
     ChatManager cm = plugin.getChatManager();
-    Inventory inv = Bukkit.createInventory(null, 9 * 3, inventoryName);
+    Inventory inv = plugin.getComplement().createInventory(null, 9 * 3, inventoryName);
     inv.setItem(11, new ItemBuilder(Material.LEATHER_BOOTS)
         .name(cm.colorRawMessage(speedOptionName + " I")).build());
     inv.setItem(12, new ItemBuilder(Material.CHAINMAIL_BOOTS)

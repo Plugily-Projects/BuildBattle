@@ -49,7 +49,7 @@ public class SetupInventory {
   private final Inventory inventory;
 
   public SetupInventory(BaseArena arena) {
-    this.inventory = Bukkit.createInventory(null, 9 * 2, "BB Arena: " + arena.getID());
+    this.inventory = plugin.getComplement().createInventory(null, 9 * 2, "BB Arena: " + arena.getID());
 
     inventory.setItem(ClickPosition.SET_ENDING.getPosition(), new ItemBuilder(Material.REDSTONE_BLOCK)
         .name(ChatColor.GOLD + "► Set" + ChatColor.RED + " ending " + ChatColor.GOLD + "location")

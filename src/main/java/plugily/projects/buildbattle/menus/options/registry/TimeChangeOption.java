@@ -20,7 +20,6 @@
 
 package plugily.projects.buildbattle.menus.options.registry;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -52,7 +51,7 @@ public class TimeChangeOption {
       public void onClick(InventoryClickEvent e) {
         e.getWhoClicked().closeInventory();
 
-        Inventory timeInv = Bukkit.createInventory(null, 9, registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Time.Inventory-Name"));
+        Inventory timeInv = registry.getPlugin().getComplement().createInventory(null, 9, registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Time.Inventory-Name"));
         timeInv.setItem(0, new ItemBuilder(clock)
             .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Time.Time-Type.World-Time")).build());
         timeInv.setItem(1, new ItemBuilder(clock)

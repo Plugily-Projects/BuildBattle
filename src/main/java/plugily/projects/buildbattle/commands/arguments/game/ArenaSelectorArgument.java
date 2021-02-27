@@ -21,7 +21,6 @@
 package plugily.projects.buildbattle.commands.arguments.game;
 
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -69,7 +68,7 @@ public class ArenaSelectorArgument implements Listener {
           player.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.No-Arena-Like-That"));
           return;
         }
-        Inventory inventory = Bukkit.createInventory(player, Utils.serializeInt(ArenaRegistry.getArenas().size()), registry.getPlugin().getChatManager().colorMessage("Arena-Selector.Inv-Title"));
+        Inventory inventory = registry.getPlugin().getComplement().createInventory(player, Utils.serializeInt(ArenaRegistry.getArenas().size()), registry.getPlugin().getChatManager().colorMessage("Arena-Selector.Inv-Title"));
 
         int slot = 0;
         arenas.clear();
@@ -89,14 +88,14 @@ public class ArenaSelectorArgument implements Listener {
               break;
           }
           ItemMeta itemMeta = itemStack.getItemMeta();
-          itemMeta.setDisplayName(formatItem(LanguageManager.getLanguageMessage("Arena-Selector.Item.Name"), arena, registry.getPlugin()));
+          registry.getPlugin().getComplement().setDisplayName(itemMeta, formatItem(LanguageManager.getLanguageMessage("Arena-Selector.Item.Name"), arena, registry.getPlugin()));
 
           ArrayList<String> lore = new ArrayList<>();
           for(String string : LanguageManager.getLanguageList("Arena-Selector.Item.Lore")) {
             lore.add(formatItem(string, arena, registry.getPlugin()));
           }
 
-          itemMeta.setLore(lore);
+          registry.getPlugin().getComplement().setLore(itemMeta, lore);
           itemStack.setItemMeta(itemMeta);
           inventory.addItem(itemStack);
           slot++;
@@ -126,7 +125,7 @@ public class ArenaSelectorArgument implements Listener {
 
   @EventHandler
   public void onArenaSelectorMenuClick(InventoryClickEvent e) {
-    if(!e.getView().getTitle().equals(plugin.getChatManager().colorMessage("Arena-Selector.Inv-Title"))) {
+    if(!plugin.getComplement().getTitle(e.getView()).equals(plugin.getChatManager().colorMessage("Arena-Selector.Inv-Title"))) {
       return;
     }
     if(e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {
