@@ -153,7 +153,7 @@ public class ArenaManager {
           continue;
         }
         leaveAttempt(loopPlayer, arena);
-        loopPlayer.sendMessage(chatManager + chatManager.colorMessage("In-Game.Messages.Lobby-Messages.You-Were-Kicked-For-Premium-Slot"));
+        loopPlayer.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Lobby-Messages.You-Were-Kicked-For-Premium-Slot"));
         chatManager.broadcast(arena, chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Kicked-For-Premium-Slot"), loopPlayer));
         foundSlot = true;
         break;
@@ -228,7 +228,8 @@ public class ArenaManager {
     player.updateInventory();
 
     chatManager.broadcastAction(arena, player, ChatManager.ActionType.JOIN);
-    VersionUtils.sendTitles(player, chatManager.colorMessage("In-Game.Messages.Join-Title").replace("%THEME%", arena.getTheme()), chatManager.colorMessage("In-Game.Messages.Join-SubTitle").replace("%THEME%", arena.getTheme()) , 5, 40, 5);
+    VersionUtils.sendTitles(player, chatManager.colorMessage("In-Game.Messages.Join-Title").replace("%ARENANAME%", arena.getMapName()),
+        chatManager.colorMessage("In-Game.Messages.Join-SubTitle").replace("%ARENANAME%", arena.getMapName()) , 5, 40, 5);
     plugin.getSignManager().updateSigns();
   }
 

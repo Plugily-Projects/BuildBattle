@@ -203,7 +203,7 @@ In-Game:
     Cant-Fly-Outside-Plot: "&cYou can't fly outside your plot!"
     Join: "&b%PLAYER%&7 joined the game (%PLAYERSIZE%/%MAXPLAYERS%)!"
     Join-Title: ""
-    Join-SubTitle: "&e%THEME%"
+    Join-SubTitle: "&e%ARENANAME%"
     Leave: "&b%PLAYER% &7left the game (%PLAYERSIZE%/%MAXPLAYERS%)!"
     Lobby-Messages:
       Waiting-For-Players: "&7Waiting for players... We need at least &b%MINPLAYERS%&7 players to start."
