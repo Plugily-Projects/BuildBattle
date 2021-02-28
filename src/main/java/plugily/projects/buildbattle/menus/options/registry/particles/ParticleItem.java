@@ -21,9 +21,8 @@
 package plugily.projects.buildbattle.menus.options.registry.particles;
 
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import plugily.projects.buildbattle.Main;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 
 /**
  * Created by Tom on 23/08/2015.
@@ -43,7 +42,7 @@ public class ParticleItem {
   }
 
   public String getDisplayName() {
-    return JavaPlugin.getPlugin(Main.class).getComplement().getDisplayName(itemStack.getItemMeta());
+    return ComplementAccessor.getComplement().getDisplayName(itemStack.getItemMeta());
   }
 
   public String getEffect() {

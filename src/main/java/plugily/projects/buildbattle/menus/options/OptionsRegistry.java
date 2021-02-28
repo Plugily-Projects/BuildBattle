@@ -24,6 +24,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.menus.options.registry.FloorChangeOption;
 import plugily.projects.buildbattle.menus.options.registry.PlotResetOption;
@@ -130,7 +131,7 @@ public class OptionsRegistry {
    * @return options inventory
    */
   public Inventory formatInventory() {
-    Inventory inv = plugin.getComplement().createInventory(null, inventorySize, plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name"));
+    Inventory inv = ComplementAccessor.getComplement().createInventory(null, inventorySize, plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name"));
     for(MenuOption option : registeredOptions) {
       inv.setItem(option.getSlot(), option.getItemStack());
     }

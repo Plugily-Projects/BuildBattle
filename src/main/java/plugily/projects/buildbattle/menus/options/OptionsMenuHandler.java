@@ -25,6 +25,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.ArenaState;
@@ -51,7 +52,7 @@ public class OptionsMenuHandler implements Listener {
       return;
     }
     if(!ItemUtils.isItemStackNamed(e.getCurrentItem())
-        || !plugin.getComplement().getTitle(e.getView()).equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name"))) {
+        || !ComplementAccessor.getComplement().getTitle(e.getView()).equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name"))) {
       return;
     }
     BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
@@ -75,12 +76,12 @@ public class OptionsMenuHandler implements Listener {
     }
 
     for(MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
-      if(plugin.getComplement().getDisplayName(Utils.getGoBackItem().getItemMeta())
-          .equalsIgnoreCase(plugin.getComplement().getDisplayName(e.getCurrentItem().getItemMeta()))) {
+      if(ComplementAccessor.getComplement().getDisplayName(Utils.getGoBackItem().getItemMeta())
+          .equalsIgnoreCase(ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta()))) {
         e.getWhoClicked().openInventory(plugin.getOptionsRegistry().formatInventory());
         return;
       }
-      if(plugin.getComplement().getTitle(e.getView()).equals(option.getInventoryName())) {
+      if(ComplementAccessor.getComplement().getTitle(e.getView()).equals(option.getInventoryName())) {
         e.setCancelled(true);
         option.onTargetClick(e);
         return;

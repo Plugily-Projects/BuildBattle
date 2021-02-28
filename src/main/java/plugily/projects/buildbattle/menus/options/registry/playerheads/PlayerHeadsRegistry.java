@@ -28,6 +28,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.menus.options.OptionsRegistry;
 import plugily.projects.buildbattle.utils.Utils;
@@ -79,13 +80,13 @@ public class PlayerHeadsRegistry {
         ItemStack stack = ItemUtils.getSkull(categoryConfig.getString(path + ".texture"));
         ItemMeta im = stack.getItemMeta();
 
-        plugin.getComplement().setDisplayName(im, plugin.getChatManager().colorRawMessage(categoryConfig.getString(path + ".displayname")));
-        plugin.getComplement().setLore(im, categoryConfig.getStringList(path + ".lore").stream()
+        ComplementAccessor.getComplement().setDisplayName(im, plugin.getChatManager().colorRawMessage(categoryConfig.getString(path + ".displayname")));
+        ComplementAccessor.getComplement().setLore(im, categoryConfig.getStringList(path + ".lore").stream()
                 .map(lore -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()));
         stack.setItemMeta(im);
         playerHeads.add(stack);
       }
-      Inventory inv = plugin.getComplement().createInventory(null, Utils.serializeInt(playerHeads.size() + 1),
+      Inventory inv = ComplementAccessor.getComplement().createInventory(null, Utils.serializeInt(playerHeads.size() + 1),
           plugin.getChatManager().colorRawMessage(config.getString(str + ".menuname")));
       playerHeads.forEach(inv::addItem);
       inv.addItem(Utils.getGoBackItem());

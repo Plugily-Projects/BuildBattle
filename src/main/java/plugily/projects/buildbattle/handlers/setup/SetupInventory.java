@@ -32,6 +32,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
@@ -49,7 +50,7 @@ public class SetupInventory {
   private final Inventory inventory;
 
   public SetupInventory(BaseArena arena) {
-    this.inventory = plugin.getComplement().createInventory(null, 9 * 2, "BB Arena: " + arena.getID());
+    this.inventory = ComplementAccessor.getComplement().createInventory(null, 9 * 2, "BB Arena: " + arena.getID());
 
     inventory.setItem(ClickPosition.SET_ENDING.getPosition(), new ItemBuilder(Material.REDSTONE_BLOCK)
         .name(ChatColor.GOLD + "► Set" + ChatColor.RED + " ending " + ChatColor.GOLD + "location")

@@ -39,6 +39,7 @@ import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerInteractEvent;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
@@ -117,16 +118,16 @@ public class SpectatorEvents implements Listener {
 
       e.setCancelled(true);
 
-      if(plugin.getComplement().getDisplayName(stack.getItemMeta()).equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
+      if(ComplementAccessor.getComplement().getDisplayName(stack.getItemMeta()).equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
         openSpectatorMenu(e.getPlayer().getWorld(), e.getPlayer(), arena);
-      } else if(plugin.getComplement().getDisplayName(stack.getItemMeta()).equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name"))) {
+      } else if(ComplementAccessor.getComplement().getDisplayName(stack.getItemMeta()).equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name"))) {
         spectatorSettingsMenu.openSpectatorSettingsMenu(e.getPlayer());
       }
     }
   }
 
   private void openSpectatorMenu(World world, Player p, BaseArena arena) {
-    Inventory inventory = plugin.getComplement().createInventory(null, Utils.serializeInt(arena.getPlayers().size()),
+    Inventory inventory = ComplementAccessor.getComplement().createInventory(null, Utils.serializeInt(arena.getPlayers().size()),
         chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
     List<Player> players = arena.getPlayers();
 
@@ -138,7 +139,7 @@ public class SpectatorEvents implements Listener {
 
       SkullMeta meta = (SkullMeta) skull.getItemMeta();
       meta = VersionUtils.setPlayerHead(player, meta);
-      plugin.getComplement().setDisplayName(meta, player.getName());
+      ComplementAccessor.getComplement().setDisplayName(meta, player.getName());
       skull.setItemMeta(meta);
       inventory.addItem(skull);
     }
@@ -160,11 +161,11 @@ public class SpectatorEvents implements Listener {
     e.setCancelled(true);
 
     if(!ItemUtils.isItemStackNamed(e.getCurrentItem())
-        || !plugin.getComplement().getTitle(e.getView()).equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
+        || !ComplementAccessor.getComplement().getTitle(e.getView()).equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
       return;
     }
 
-    String displayName = plugin.getComplement().getDisplayName(e.getCurrentItem().getItemMeta());
+    String displayName = ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta());
     Player target = Bukkit.getPlayer(displayName);
     if(target == null) target = Bukkit.getPlayer(ChatColor.stripColor(displayName));
 

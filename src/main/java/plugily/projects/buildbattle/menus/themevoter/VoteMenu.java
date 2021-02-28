@@ -31,6 +31,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import pl.plajerlair.commonsbox.number.NumberUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
@@ -56,7 +57,7 @@ public class VoteMenu {
 
   public VoteMenu(SoloArena arena) {
     this.arena = arena;
-    this.inventory = plugin.getComplement().createInventory(null, 9 * 5, plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"));
+    this.inventory = ComplementAccessor.getComplement().createInventory(null, 9 * 5, plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"));
   }
 
   private void setItem(ItemStack itemStack, int pos) {
@@ -82,7 +83,7 @@ public class VoteMenu {
         i++;
       }
     }
-    this.inventory = plugin.getComplement().createInventory(null, 9 * (randomThemes.size() > 5 ? 5 : randomThemes.size()), plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"));
+    this.inventory = ComplementAccessor.getComplement().createInventory(null, 9 * (randomThemes.size() > 5 ? 5 : randomThemes.size()), plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"));
     for(int i = 0; i < randomThemes.size(); i++) {
       ItemStack item = new ItemStack(XMaterial.OAK_SIGN.parseMaterial());
       setItem(new ItemBuilder(item)

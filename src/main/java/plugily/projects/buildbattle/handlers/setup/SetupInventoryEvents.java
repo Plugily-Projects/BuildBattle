@@ -41,6 +41,7 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
@@ -74,12 +75,12 @@ public class SetupInventoryEvents implements Listener {
     if(!(e.getWhoClicked() instanceof Player || e.getWhoClicked().hasPermission(PermissionManager.getEditGames()))) {
       return;
     }
-    if(!plugin.getComplement().getTitle(e.getView()).contains("Game type:") || !ItemUtils.isItemStackNamed(e.getCurrentItem())) {
+    if(!ComplementAccessor.getComplement().getTitle(e.getView()).contains("Game type:") || !ItemUtils.isItemStackNamed(e.getCurrentItem())) {
       return;
     }
     Player player = (Player) e.getWhoClicked();
-    String name = ChatColor.stripColor(plugin.getComplement().getDisplayName(e.getCurrentItem().getItemMeta()));
-    BaseArena arena = ArenaRegistry.getArena(plugin.getComplement().getTitle(e.getView()).replace("Game type: ", ""));
+    String name = ChatColor.stripColor(ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta()));
+    BaseArena arena = ArenaRegistry.getArena(ComplementAccessor.getComplement().getTitle(e.getView()).replace("Game type: ", ""));
     if(arena == null) {
       return;
     }
@@ -106,7 +107,7 @@ public class SetupInventoryEvents implements Listener {
       return;
     }
     Player player = (Player) e.getWhoClicked();
-    if(!(player.hasPermission("buildbattle.admin.create") && plugin.getComplement().getTitle(e.getView()).contains("BB Arena:") && ItemUtils.isItemStackNamed(e.getCurrentItem()))) {
+    if(!(player.hasPermission("buildbattle.admin.create") && ComplementAccessor.getComplement().getTitle(e.getView()).contains("BB Arena:") && ItemUtils.isItemStackNamed(e.getCurrentItem()))) {
       return;
     }
 
@@ -120,7 +121,7 @@ public class SetupInventoryEvents implements Listener {
       e.setCancelled(true);
     }
 
-    BaseArena arena = ArenaRegistry.getArena(plugin.getComplement().getTitle(e.getView()).replace("BB Arena: ", ""));
+    BaseArena arena = ArenaRegistry.getArena(ComplementAccessor.getComplement().getTitle(e.getView()).replace("BB Arena: ", ""));
     if(arena == null) {
       return;
     }
@@ -164,7 +165,7 @@ public class SetupInventoryEvents implements Listener {
         ItemStack stack = player.getInventory().getItem(SetupInventory.ClickPosition.SET_MINIMUM_PLAYERS.getPosition());
         if(stack != null) {
           ItemMeta meta = stack.getItemMeta();
-          plugin.getComplement().setLore(meta, lore);
+          ComplementAccessor.getComplement().setLore(meta, lore);
           stack.setItemMeta(meta);
         }
         player.updateInventory();
@@ -189,7 +190,7 @@ public class SetupInventoryEvents implements Listener {
         ItemStack itemStack = player.getInventory().getItem(SetupInventory.ClickPosition.SET_MAXIMUM_PLAYERS.getPosition());
         if(itemStack != null) {
           ItemMeta meta = itemStack.getItemMeta();
-          plugin.getComplement().setLore(meta, maxlore);
+          ComplementAccessor.getComplement().setLore(meta, maxlore);
           itemStack.setItemMeta(meta);
         }
         player.updateInventory();
@@ -210,7 +211,7 @@ public class SetupInventoryEvents implements Listener {
         break;
       case SET_GAME_TYPE:
         //todo inventory framework
-        Inventory inv = plugin.getComplement().createInventory(null, 9, "Game type: " + arena.getID());
+        Inventory inv = ComplementAccessor.getComplement().createInventory(null, 9, "Game type: " + arena.getID());
         inv.addItem(new ItemBuilder(Material.NAME_TAG)
             .name(ChatColor.GREEN + "Solo game mode")
             .lore(ChatColor.GRAY + "1 player per plot")
@@ -231,10 +232,10 @@ public class SetupInventoryEvents implements Listener {
             player.sendMessage(ChatColor.RED + "This item doesn't has a name!");
             return;
           }
-          String newName = plugin.getComplement().getDisplayName(e.getCursor().getItemMeta());
+          String newName = ComplementAccessor.getComplement().getDisplayName(e.getCursor().getItemMeta());
           config.set("instances." + arena.getID() + ".mapname", newName);
           player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aName of arena " + arena.getID() + " set to " + newName));
-          plugin.getComplement().setDisplayName(currentItem.getItemMeta(), ChatColor.GOLD + "Set a mapname (currently: " + newName);
+          ComplementAccessor.getComplement().setDisplayName(currentItem.getItemMeta(), ChatColor.GOLD + "Set a mapname (currently: " + newName);
         }
         break;
       case ADD_GAME_PLOT:

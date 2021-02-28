@@ -25,6 +25,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
@@ -62,14 +63,14 @@ public class ParticlesOption {
         if(arena == null || e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {
           return;
         }
-        if(registry.getPlugin().getComplement().getDisplayName(e.getCurrentItem().getItemMeta())
+        if(ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta())
             .contains("§7-->")) {
           e.setCancelled(false);
           e.getWhoClicked().closeInventory();
           e.getWhoClicked().openInventory(registry.getParticleRegistry().getPage2());
           return;
         }
-        if(registry.getPlugin().getComplement().getDisplayName(e.getCurrentItem().getItemMeta())
+        if(ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta())
             .contains(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))) {
           e.setCancelled(false);
           e.getWhoClicked().closeInventory();
@@ -78,8 +79,8 @@ public class ParticlesOption {
         }
         for(ParticleItem particleItem : registry.getParticleRegistry().getRegisteredParticles()) {
           // Only check for the display name for items in gui, because some of item meta is changed
-          if(!registry.getPlugin().getComplement().getDisplayName(e.getCurrentItem().getItemMeta())
-              .contains(registry.getPlugin().getComplement().getDisplayName(particleItem.getItemStack().getItemMeta()))) {
+          if(!ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta())
+              .contains(ComplementAccessor.getComplement().getDisplayName(particleItem.getItemStack().getItemMeta()))) {
             continue;
           }
           Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());

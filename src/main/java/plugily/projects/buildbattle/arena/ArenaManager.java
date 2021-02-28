@@ -34,6 +34,7 @@ import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
@@ -135,7 +136,7 @@ public class ArenaManager {
 
     if(arena.getArenaState() == ArenaState.RESTARTING) {
       if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-        plugin.getComplement().kickPlayer(player, chatManager.getPrefix() + chatManager.colorMessage("Commands.Arena-Restarting"));
+        ComplementAccessor.getComplement().kickPlayer(player, chatManager.getPrefix() + chatManager.colorMessage("Commands.Arena-Restarting"));
       } else {
         player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Arena-Restarting"));
       }

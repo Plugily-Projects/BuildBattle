@@ -38,6 +38,7 @@ import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerInteractEvent;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaManager;
@@ -92,19 +93,19 @@ public class SignManager implements Listener {
 
   @EventHandler
   public void onSignChange(SignChangeEvent e) {
-    if(!e.getPlayer().hasPermission("buildbattle.admin.sign.create") || !plugin.getComplement().getLine(e, 0).equalsIgnoreCase("[buildbattle]")) {
+    if(!e.getPlayer().hasPermission("buildbattle.admin.sign.create") || !ComplementAccessor.getComplement().getLine(e, 0).equalsIgnoreCase("[buildbattle]")) {
       return;
     }
-    if(plugin.getComplement().getLine(e, 1).isEmpty()) {
+    if(ComplementAccessor.getComplement().getLine(e, 1).isEmpty()) {
       e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Please-Type-Arena-Name"));
       return;
     }
     for(BaseArena arena : ArenaRegistry.getArenas()) {
-      if(!arena.getID().equalsIgnoreCase(plugin.getComplement().getLine(e, 1))) {
+      if(!arena.getID().equalsIgnoreCase(ComplementAccessor.getComplement().getLine(e, 1))) {
         continue;
       }
       for(int i = 0; i < signLines.size(); i++) {
-        plugin.getComplement().setLine(e, i, formatSign(signLines.get(i), arena));
+        ComplementAccessor.getComplement().setLine(e, i, formatSign(signLines.get(i), arena));
       }
       arenaSigns.add(new ArenaSign((Sign) e.getBlock().getState(), arena));
       e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Sign-Created"));
@@ -199,7 +200,7 @@ public class SignManager implements Listener {
     for(ArenaSign arenaSign : arenaSigns) {
       Sign sign = arenaSign.getSign();
       for(int i = 0; i < signLines.size(); i++) {
-        plugin.getComplement().setLine(sign, i, formatSign(signLines.get(i), arenaSign.getArena()));
+        ComplementAccessor.getComplement().setLine(sign, i, formatSign(signLines.get(i), arenaSign.getArena()));
       }
       if(plugin.getConfig().getBoolean("Signs-Block-States-Enabled", true) && arenaSign.getBehind() != null) {
         Block behind = arenaSign.getBehind();

@@ -31,6 +31,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.handlers.ChatManager;
 
@@ -60,7 +61,7 @@ public class SpectatorSettingsMenu implements Listener {
 
   @EventHandler
   public void onSpectatorMenuClick(InventoryClickEvent e) {
-    if(!plugin.getComplement().getTitle(e.getView()).equals(plugin.getChatManager().colorRawMessage(inventoryName))) {
+    if(!ComplementAccessor.getComplement().getTitle(e.getView()).equals(plugin.getChatManager().colorRawMessage(inventoryName))) {
       return;
     }
     if(e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {
@@ -102,7 +103,7 @@ public class SpectatorSettingsMenu implements Listener {
 
   private Inventory initInventory() {
     ChatManager cm = plugin.getChatManager();
-    Inventory inv = plugin.getComplement().createInventory(null, 9 * 3, inventoryName);
+    Inventory inv = ComplementAccessor.getComplement().createInventory(null, 9 * 3, inventoryName);
     inv.setItem(11, new ItemBuilder(Material.LEATHER_BOOTS)
         .name(cm.colorRawMessage(speedOptionName + " I")).build());
     inv.setItem(12, new ItemBuilder(Material.CHAINMAIL_BOOTS)

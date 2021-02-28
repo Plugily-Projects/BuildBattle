@@ -28,6 +28,7 @@ import pl.plajerlair.commonsbox.minecraft.compat.xseries.XBiome;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.menus.options.OptionsRegistry;
 import plugily.projects.buildbattle.utils.Debugger;
@@ -76,7 +77,7 @@ public class BiomesRegistry {
   }
 
   private void registerInventory() {
-    Inventory inv = plugin.getComplement().createInventory(null, Utils.serializeInt(biomes.size() + 1),
+    Inventory inv = ComplementAccessor.getComplement().createInventory(null, Utils.serializeInt(biomes.size() + 1),
         plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Biome.Inventory-Name"));
 
     biomes.stream().map(BiomeItem::getItemStack).forEach(inv::addItem);

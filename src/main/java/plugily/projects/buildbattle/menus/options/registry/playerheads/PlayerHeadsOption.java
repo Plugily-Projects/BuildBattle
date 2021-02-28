@@ -26,6 +26,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.menus.options.MenuOption;
@@ -55,7 +56,7 @@ public class PlayerHeadsOption {
           }
           return;
         }
-        Inventory inventory = registry.getPlugin().getComplement().createInventory(null,
+        Inventory inventory = ComplementAccessor.getComplement().createInventory(null,
             Utils.serializeInt(registry.getPlayerHeadsRegistry().getCategories().size() + 1),
             registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Players-Heads.Inventory-Name"));
         for(HeadsCategory categoryItem : registry.getPlayerHeadsRegistry().getCategories().keySet()) {
@@ -69,8 +70,8 @@ public class PlayerHeadsOption {
       public void onTargetClick(InventoryClickEvent e) {
         e.getWhoClicked().closeInventory();
         for(HeadsCategory category : registry.getPlayerHeadsRegistry().getCategories().keySet()) {
-          if(!plugin.getComplement().getDisplayName(category.getItemStack().getItemMeta())
-              .equals(plugin.getComplement().getDisplayName(e.getCurrentItem().getItemMeta()))) {
+          if(!ComplementAccessor.getComplement().getDisplayName(category.getItemStack().getItemMeta())
+              .equals(ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta()))) {
             continue;
           }
           if(e.getWhoClicked().hasPermission(category.getPermission())) {

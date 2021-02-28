@@ -29,6 +29,7 @@ import org.bukkit.inventory.ItemStack;
 import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerInteractEvent;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.buildbattle.Main;
 
 import java.util.HashMap;
@@ -67,7 +68,7 @@ public class CuboidSelector implements Listener {
 
   @EventHandler
   public void onWandUse(CBPlayerInteractEvent e) {
-    if(!ItemUtils.isItemStackNamed(e.getItem()) || !plugin.getComplement().getDisplayName(e.getItem().getItemMeta()).equals(plugin.getChatManager().colorRawMessage("&6&lPlot selector"))) {
+    if(!ItemUtils.isItemStackNamed(e.getItem()) || !ComplementAccessor.getComplement().getDisplayName(e.getItem().getItemMeta()).equals(plugin.getChatManager().colorRawMessage("&6&lPlot selector"))) {
       return;
     }
     e.setCancelled(true);

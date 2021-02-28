@@ -29,6 +29,7 @@ import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.menus.options.OptionsRegistry;
 import plugily.projects.buildbattle.utils.Debugger;
@@ -119,9 +120,9 @@ public class ParticleRegistry {
   }
 
   private void registerInventory() {
-    Inventory page1 = plugin.getComplement().createInventory(null, Utils.serializeInt(54),
+    Inventory page1 = ComplementAccessor.getComplement().createInventory(null, Utils.serializeInt(54),
         plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.Inventory-Name"));
-    Inventory page2 = plugin.getComplement().createInventory(null, Utils.serializeInt(54),
+    Inventory page2 = ComplementAccessor.getComplement().createInventory(null, Utils.serializeInt(54),
         plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.Inventory-Name"));
 
     int i = 0;

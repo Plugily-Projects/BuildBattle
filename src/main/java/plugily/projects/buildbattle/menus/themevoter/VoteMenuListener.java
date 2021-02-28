@@ -31,6 +31,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
@@ -61,7 +62,7 @@ public class VoteMenuListener implements Listener {
     if(!(arena instanceof SoloArena)) {
       return;
     }
-    if(plugin.getComplement().getTitle(e.getView()).equals(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"))) {
+    if(ComplementAccessor.getComplement().getTitle(e.getView()).equals(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"))) {
       if(!((SoloArena) arena).isThemeVoteTime() || arena.getArenaState() != ArenaState.IN_GAME) {
         return;
       }
@@ -78,10 +79,10 @@ public class VoteMenuListener implements Listener {
     if(!(arena instanceof SoloArena)) {
       return;
     }
-    if(plugin.getComplement().getTitle(e.getView()).equals(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"))) {
+    if(ComplementAccessor.getComplement().getTitle(e.getView()).equals(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"))) {
       e.setCancelled(true);
       if(e.getCurrentItem().getType() == XMaterial.OAK_SIGN.parseMaterial()) {
-        String displayName = plugin.getComplement().getDisplayName(e.getCurrentItem().getItemMeta());
+        String displayName = ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta());
         displayName = ChatColor.stripColor(displayName);
         boolean success = ((SoloArena) arena).getVotePoll().addVote((Player) e.getWhoClicked(), displayName);
         e.getWhoClicked().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Menus.Theme-Voting." + (!success ? "Already-Voted" : "Voted-Successfully")));
@@ -131,11 +132,11 @@ public class VoteMenuListener implements Listener {
     if(!(arena instanceof GuessTheBuildArena)) {
       return;
     }
-    if(plugin.getComplement().getTitle(e.getView()).equals(plugin.getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Inventory-Name"))) {
+    if(ComplementAccessor.getComplement().getTitle(e.getView()).equals(plugin.getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Inventory-Name"))) {
       e.setCancelled(true);
       if(e.getCurrentItem().getType() == Material.PAPER) {
         BBTheme theme;
-        String displayName = plugin.getComplement().getDisplayName(e.getCurrentItem().getItemMeta());
+        String displayName = ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta());
         displayName = ChatColor.stripColor(displayName);
         switch(e.getSlot()) {
           case 11:

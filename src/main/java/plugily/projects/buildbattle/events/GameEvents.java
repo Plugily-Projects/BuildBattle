@@ -57,6 +57,7 @@ import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerInteractEnti
 import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerInteractEvent;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
@@ -122,8 +123,8 @@ public class GameEvents implements Listener {
     if(arena == null || arena.getArenaState() != ArenaState.IN_GAME || arena instanceof SoloArena && ((SoloArena) arena).isVoting()) {
       return;
     }
-    if(!plugin.getComplement().getDisplayName(plugin.getOptionsRegistry().getMenuItem().getItemMeta())
-        .equalsIgnoreCase(plugin.getComplement().getDisplayName(itemStack.getItemMeta()))) {
+    if(!ComplementAccessor.getComplement().getDisplayName(plugin.getOptionsRegistry().getMenuItem().getItemMeta())
+        .equalsIgnoreCase(ComplementAccessor.getComplement().getDisplayName(itemStack.getItemMeta()))) {
       return;
     }
     event.getPlayer().openInventory(plugin.getOptionsRegistry().formatInventory());
@@ -287,7 +288,7 @@ public class GameEvents implements Listener {
     if(event.getWhoClicked().getItemOnCursor().getType() != Material.NETHER_STAR || arena == null) {
       return;
     }
-    if(!plugin.getComplement().getDisplayName(event.getWhoClicked().getItemOnCursor().getItemMeta())
+    if(!ComplementAccessor.getComplement().getDisplayName(event.getWhoClicked().getItemOnCursor().getItemMeta())
         .equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item"))) {
       return;
     }
@@ -444,7 +445,7 @@ public class GameEvents implements Listener {
     if(!ItemUtils.isItemStackNamed(drop)) {
       return;
     }
-    if(plugin.getComplement().getDisplayName(drop.getItemMeta()).equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name")) || plugin.getVoteItems().getPoints(drop) != 0) {
+    if(ComplementAccessor.getComplement().getDisplayName(drop.getItemMeta()).equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name")) || plugin.getVoteItems().getPoints(drop) != 0) {
       event.setCancelled(true);
     }
   }
