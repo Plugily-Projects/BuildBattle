@@ -72,10 +72,10 @@ public class ArenaRegistry {
 
     for(BaseArena arena : ARENAS) {
       for(Player player : arena.getPlayers()) {
-        if(p == player) return arena;
+        if (p.getUniqueId().equals(player.getUniqueId())) return arena;
       }
       for(Player player : arena.getSpectators()) {
-        if(p == player) return arena;
+        if (p.getUniqueId().equals(player.getUniqueId())) return arena;
       }
     }
     return null;

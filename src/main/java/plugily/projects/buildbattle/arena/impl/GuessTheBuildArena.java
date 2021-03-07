@@ -147,7 +147,7 @@ public class GuessTheBuildArena extends BaseArena {
             Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setGameMode(GameMode.SPECTATOR), 20);
           }
           Plot plot = getPlotManager().getPlot(getPlayers().get(round - 1));
-          if(plot.getTeleportLocation() != null) {
+          if(plot != null && plot.getTeleportLocation() != null) {
             for(Player p : getPlayers()) {
               p.teleport(plot.getTeleportLocation());
               getPlugin().getRewardsHandler().performReward(p, Reward.RewardType.START_GAME, -1);
@@ -155,7 +155,9 @@ public class GuessTheBuildArena extends BaseArena {
           }
           nextRoundCooldown = true;
           Bukkit.getScheduler().runTaskLater(getPlugin(), () -> nextRoundCooldown = false, 20 * getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.DELAYED_TASK, this));
-          Bukkit.getScheduler().runTaskLater(getPlugin(), () -> plot.getOwners().get(0).setGameMode(GameMode.CREATIVE), 20);
+          if (plot != null) {
+            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> plot.getOwners().get(0).setGameMode(GameMode.CREATIVE), 20);
+          }
           break;
         }
         setTimer(getTimer() - 1);
@@ -254,14 +256,19 @@ public class GuessTheBuildArena extends BaseArena {
             openThemeSelectionInventoryToCurrentBuilder();
             Plot plot = getPlotManager().getPlot(getPlayers().get(round - 1));
             for(Player p : getPlayers()) {
-              if(plot.getTeleportLocation() != null) {
-                p.teleport(plot.getTeleportLocation());
+              if (plot != null) {
+                if(plot.getTeleportLocation() != null) {
+                  p.teleport(plot.getTeleportLocation());
+                }
+                p.setPlayerWeather(plot.getWeatherType());
+                p.setPlayerTime(Plot.Time.format(plot.getTime(), p.getWorld().getTime()), false);
               }
-              p.setPlayerWeather(plot.getWeatherType());
-              p.setPlayerTime(Plot.Time.format(plot.getTime(), p.getWorld().getTime()), false);
+
               p.setGameMode(GameMode.SPECTATOR);
             }
-            plot.getOwners().get(0).setGameMode(GameMode.CREATIVE);
+            if (plot != null) {
+              plot.getOwners().get(0).setGameMode(GameMode.CREATIVE);
+            }
             setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.THEME_SELECTION, this));
             if(getArenaState() != ArenaState.IN_GAME || isThemeSet()) {
               return;
