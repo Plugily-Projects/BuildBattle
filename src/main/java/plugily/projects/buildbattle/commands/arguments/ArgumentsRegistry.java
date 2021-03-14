@@ -39,6 +39,7 @@ import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.commands.TabCompletion;
 import plugily.projects.buildbattle.commands.arguments.admin.ListArenasArgument;
 import plugily.projects.buildbattle.commands.arguments.admin.ReloadArgument;
+import plugily.projects.buildbattle.commands.arguments.admin.TeleportArgument;
 import plugily.projects.buildbattle.commands.arguments.admin.arena.AddNpcArgument;
 import plugily.projects.buildbattle.commands.arguments.admin.arena.DeleteArgument;
 import plugily.projects.buildbattle.commands.arguments.admin.arena.ForceStartArguments;
@@ -112,6 +113,7 @@ public class ArgumentsRegistry implements CommandExecutor {
     new PlotWandArgument(this);
     new RemovePlotArgument(this);
     new ListArenasArgument(this);
+    new TeleportArgument(this);
   }
 
   //todo complex

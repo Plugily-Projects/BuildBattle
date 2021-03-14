@@ -19,6 +19,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Added legacy support
 * Moved statistic save method inside onDisable
 * Added super_votes papi placeholder
+* Added TeleportArgument (/bba tp)
 
 ### 4.4.7 Release (24.01.2021 - 28.01.2021)
 * Fixed Join SubTitle not being sent 
