@@ -272,13 +272,6 @@ public CuboidSelector getCuboidSelector() {
       arena.getPlotManager().getPlots().forEach(Plot::fullyResetPlot);
       arena.teleportAllToEndLocation();
     }
-    saveAllUserStatistics();
-    if(configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      getMysqlDatabase().shutdownConnPool();
-    }
-  }
-
-  private void saveAllUserStatistics() {
     for(Player player : getServer().getOnlinePlayers()) {
       User user = userManager.getUser(player);
       if(userManager.getDatabase() instanceof MysqlManager) {
@@ -299,6 +292,9 @@ public CuboidSelector getCuboidSelector() {
       for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
         userManager.getDatabase().saveStatistic(user, stat);
       }
+    }
+    if(configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+      getMysqlDatabase().shutdownConnPool();
     }
   }
 
