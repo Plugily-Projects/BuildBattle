@@ -73,6 +73,8 @@ public class PlaceholderManager extends PlaceholderExpansion {
         return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.HIGHEST_WIN));
       case "particles_used":
         return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.PARTICLES_USED));
+      case "super_votes":
+        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.SUPER_VOTES));
       default:
         return handleArenaPlaceholderRequest(id);
     }
