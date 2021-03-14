@@ -10,16 +10,17 @@ deploy webhooks to print changelog successfully
 That's all, matcher will stop when detects next line started with `###` match
 
 ### 4.4.8 Release (08.02.2021 - xx.02.2021)
-* Changed interaction with enderchest
-* Fix when sign instances section is null in some cases
-* Added modifiable arena state names to language
-* Fix when some inventory can't be opened in game
 * Added option to perform command after specific amount of reports
 * Added list of restricted entities that can't be spawned in game
 * Added legacy support
-* Moved statistic save method inside onDisable
 * Added super_votes papi placeholder
 * Added TeleportArgument (/bba tp)
+* Added new RewardType scoreboard_remove
+* Added modifiable arena state names to language
+* Fix when sign instances section is null in some cases
+* Fix when some inventory can't be opened in game
+* Moved statistic save method inside onDisable
+* Changed prevent interaction with enderchest
 
 ### 4.4.7 Release (24.01.2021 - 28.01.2021)
 * Fixed Join SubTitle not being sent 
@@ -29,7 +30,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Added 2 new Plot times - Noon, MidNight
 
 ### 4.4.6 Release (18.01.2021 - 22.01.2021)
-* Fixed bb items are not removed if inventory manager is enabled and the server is stopping
+* Fixed bb items are not removed if inventory manager is enabled and the server is stopping 
 * Fixed particle refresh scheduler not worked on game start
 
 ### 4.4.5 Release (31.12.2020 - 18.01.2021)

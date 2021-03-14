@@ -35,6 +35,7 @@ import plugily.projects.buildbattle.arena.ArenaState;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.impl.SoloArena;
 import plugily.projects.buildbattle.handlers.language.LanguageManager;
+import plugily.projects.buildbattle.handlers.reward.Reward;
 import plugily.projects.buildbattle.user.User;
 
 import java.util.ArrayList;
@@ -108,6 +109,7 @@ public class ScoreboardManager {
       if(board.getHolder().equals(user.getPlayer())) {
         scoreboards.remove(board);
         board.deactivate();
+        plugin.getRewardsHandler().performReward(user.getPlayer(), Reward.RewardType.SCOREBOARD_REMOVED, -1);
         return;
       }
     }
