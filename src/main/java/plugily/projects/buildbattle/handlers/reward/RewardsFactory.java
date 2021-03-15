@@ -93,8 +93,7 @@ public class RewardsFactory {
             Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
             break;
           case PLAYER:
-            if(player.isOnline())
-              player.performCommand(command);
+            player.performCommand(command);
             break;
           case SCRIPT:
             ScriptEngine engine = new ScriptEngine();

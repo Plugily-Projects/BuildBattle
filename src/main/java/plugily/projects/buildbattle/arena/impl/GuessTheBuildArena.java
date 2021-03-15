@@ -274,10 +274,9 @@ public class GuessTheBuildArena extends BaseArena {
               return;
             }
             for(Player player : getPlayers()) {
-              if(currentBuilder == player) {
-                continue;
+              if(currentBuilder != player) {
+                VersionUtils.sendSubTitle(player, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Being-Selected"), 5, 25, 5);
               }
-              VersionUtils.sendSubTitle(player, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Being-Selected"), 5, 25, 5);
             }
           }, 20 * getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.DELAYED_TASK, this));
           //todo next round info and game state?

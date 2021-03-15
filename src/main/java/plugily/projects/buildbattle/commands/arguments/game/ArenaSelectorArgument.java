@@ -91,7 +91,7 @@ public class ArenaSelectorArgument implements Listener {
           ItemMeta itemMeta = itemStack.getItemMeta();
           ComplementAccessor.getComplement().setDisplayName(itemMeta, formatItem(LanguageManager.getLanguageMessage("Arena-Selector.Item.Name"), arena, registry.getPlugin()));
 
-          ArrayList<String> lore = new ArrayList<>();
+          java.util.List<String> lore = new ArrayList<>();
           for(String string : LanguageManager.getLanguageList("Arena-Selector.Item.Lore")) {
             lore.add(formatItem(string, arena, registry.getPlugin()));
           }
@@ -134,7 +134,6 @@ public class ArenaSelectorArgument implements Listener {
     }
     Player player = (Player) e.getWhoClicked();
     player.closeInventory();
-
 
     BaseArena arena = arenas.get(e.getRawSlot());
     if(arena != null) {

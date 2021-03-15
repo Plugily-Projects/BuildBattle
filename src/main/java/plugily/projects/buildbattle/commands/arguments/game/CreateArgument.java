@@ -86,8 +86,9 @@ public class CreateArgument {
   private void createInstanceInConfig(String id) {
     String path = "instances." + id + ".";
     FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
-    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "lobbylocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
-    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "Endlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+    org.bukkit.Location worldSpawn = Bukkit.getServer().getWorlds().get(0).getSpawnLocation();
+    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "lobbylocation", worldSpawn);
+    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "Endlocation", worldSpawn);
     config.set(path + "minimumplayers", 2);
     config.set(path + "maximumplayers", 4);
     config.set(path + "mapname", id);

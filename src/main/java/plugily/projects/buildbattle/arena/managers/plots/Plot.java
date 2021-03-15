@@ -185,10 +185,9 @@ public class Plot {
 
     for(Chunk chunk : cuboid.chunkList()) {
       for(Player p : Bukkit.getOnlinePlayers()) {
-        if(!p.getWorld().equals(chunk.getWorld())) {
-          continue;
+        if(p.getWorld().equals(chunk.getWorld())) {
+          Utils.sendMapChunk(p, chunk);
         }
-        Utils.sendMapChunk(p, chunk);
       }
     }
 
@@ -216,12 +215,12 @@ public class Plot {
   }
 
   private void changeFloor(Material material) {
-    double y = Math.min(cuboid.getMinPoint().getY(), cuboid.getMaxPoint().getY());
     Location min = cuboid.getMinPoint();
     Location max = cuboid.getMaxPoint();
+    double y = Math.min(min.getY(), max.getY());
     for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
       for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
-        Location tmpblock = new Location(cuboid.getMaxPoint().getWorld(), x, y, z);
+        Location tmpblock = new Location(max.getWorld(), x, y, z);
         tmpblock.getBlock().setType(material);
       }
     }

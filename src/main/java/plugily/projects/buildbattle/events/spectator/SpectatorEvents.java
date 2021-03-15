@@ -44,10 +44,7 @@ import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.handlers.ChatManager;
-import plugily.projects.buildbattle.user.UserManager;
 import plugily.projects.buildbattle.utils.Utils;
-
-import java.util.List;
 
 /**
  * @author Plajer
@@ -90,10 +87,7 @@ public class SpectatorEvents implements Listener {
 
   @EventHandler
   public void onEntityDamage(EntityDamageByEntityEvent event) {
-    if(!(event.getDamager() instanceof Player)) return;
-
-    Player player = (Player) event.getDamager();
-    if(plugin.getUserManager().getUser(player).isSpectator()) {
+    if(event.getDamager() instanceof Player && plugin.getUserManager().getUser((Player) event.getDamager()).isSpectator()) {
       event.setCancelled(true);
     }
   }
@@ -129,11 +123,9 @@ public class SpectatorEvents implements Listener {
   private void openSpectatorMenu(World world, Player p, BaseArena arena) {
     Inventory inventory = ComplementAccessor.getComplement().createInventory(null, Utils.serializeInt(arena.getPlayers().size()),
         chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
-    List<Player> players = arena.getPlayers();
 
-    UserManager userManager = plugin.getUserManager();
     for(Player player : world.getPlayers()) {
-      if(!players.contains(player) || userManager.getUser(player).isSpectator()) continue;
+      if(!arena.getPlayers().contains(player) || plugin.getUserManager().getUser(player).isSpectator()) continue;
 
       ItemStack skull = XMaterial.PLAYER_HEAD.parseItem();
 

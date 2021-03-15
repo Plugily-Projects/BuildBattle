@@ -57,7 +57,7 @@ public class LeaderboardArgument {
             sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Statistics.Invalid-Name"));
             return;
           }
-          LinkedHashMap<UUID, Integer> stats = (LinkedHashMap<UUID, Integer>) StatsStorage.getStats(statisticType);
+          java.util.Map<UUID, Integer> stats = (LinkedHashMap<UUID, Integer>) StatsStorage.getStats(statisticType);
           sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Statistics.Header"));
           String statistic = StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "));
           for(int i = 0; i < 10; i++) {

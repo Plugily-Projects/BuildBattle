@@ -64,7 +64,6 @@ public class BiomeChangeOption {
         if(arena == null) {
           return;
         }
-        Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());
         BiomeItem item = registry.getBiomesRegistry().getByItem(e.getCurrentItem());
         if(item == BiomeItem.INVALID_BIOME) {
           return;
@@ -73,18 +72,18 @@ public class BiomeChangeOption {
           e.getWhoClicked().sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.No-Permission-For-Biome"));
           return;
         }
+        Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());
         Biome biome = item.getBiome().parseBiome();
-        for(Block block : plot.getCuboid().blockList()) {
-          if(biome != null) {
+        if(biome != null) {
+          for(Block block : plot.getCuboid().blockList()) {
             block.setBiome(biome);
           }
         }
         for(Chunk chunk : plot.getCuboid().chunkList()) {
           for(Player p : Bukkit.getOnlinePlayers()) {
-            if(!p.getWorld().equals(chunk.getWorld())) {
-              continue;
+            if(p.getWorld().equals(chunk.getWorld())) {
+              Utils.sendMapChunk(p, chunk);
             }
-            Utils.sendMapChunk(p, chunk);
           }
         }
         for(Player p : plot.getOwners()) {
