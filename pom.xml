@@ -26,7 +26,7 @@
 
     <groupId>plugily.projects</groupId>
     <artifactId>buildbattle</artifactId>
-    <version>4.4.7-b12-debug</version>
+    <version>4.4.8</version>
     <name>BuildBattle</name>
 
     <properties>
@@ -333,12 +333,12 @@
     <distributionManagement>
         <repository>
             <id>plugily-projects-repo</id>
-            <url>ftp://46.249.204.191</url>
+            <url>ftp://81.19.211.8</url>
         </repository>
         <site>
             <id>plugily-projects-java-docs</id>
-            <name>BuildBatlle</name>
-            <url>ftp://46.249.204.191</url>
+            <name>thebridge</name>
+            <url>ftp://81.19.211.8</url>
         </site>
     </distributionManagement>
 
