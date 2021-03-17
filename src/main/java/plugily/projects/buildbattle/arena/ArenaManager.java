@@ -97,6 +97,7 @@ public class ArenaManager {
 
     //check if player is in party and send party members to the game
     if(plugin.getPartyHandler().isPlayerInParty(player)) {
+      Debugger.debug("[Party] Initialized party check " + player.getName());
       GameParty party = plugin.getPartyHandler().getParty(player);
       if(party.getLeader() == player) {
         if(arena.getMaximumPlayers() - arena.getPlayers().size() >= party.getPlayers().size()) {
@@ -108,18 +109,21 @@ public class ArenaManager {
               if(ArenaRegistry.getArena(partyPlayer).getArenaState() == ArenaState.IN_GAME) {
                 continue;
               }
+              Debugger.debug("[Party] Remove party member " + partyPlayer + " from other not ingame arena " + player.getName());
               leaveAttempt(partyPlayer, ArenaRegistry.getArena(partyPlayer));
             }
             partyPlayer.sendMessage(chatManager.getPrefix() + chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Join-As-Party-Member"), partyPlayer));
             joinAttempt(partyPlayer, arena);
+            Debugger.debug("[Party] Added party member " + partyPlayer + " to arena of " + player.getName());
           }
         } else {
           player.sendMessage(chatManager.getPrefix() + chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Not-Enough-Space-For-Party"), player));
+          Debugger.debug("[Party] Not enough space for party of " + player.getName());
           return;
         }
       }
+      Debugger.debug("[Party] Party check done for " + player.getName());
     }
-
     //Arena join permission when bungee false
     if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) &&
         (!(player.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", "*"))
