@@ -92,7 +92,7 @@ public class VoteEvents implements Listener {
       return;
     }
 
-    plugin.getUserManager().getUser(e.getPlayer()).setStat(StatsStorage.StatisticType.LOCAL_POINTS, plugin.getVoteItems().getPoints(e.getItem()));
+    user.setStat(StatsStorage.StatisticType.LOCAL_POINTS, plugin.getVoteItems().getPoints(e.getItem()));
     plugin.getVoteItems().playVoteSound(e.getPlayer(), e.getItem());
     e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Vote-Successful"));
     e.setCancelled(true);

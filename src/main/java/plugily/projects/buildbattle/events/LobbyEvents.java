@@ -67,7 +67,7 @@ public class LobbyEvents implements Listener {
       return;
     }
     e.setCancelled(true);
-    player.setHealth(VersionUtils.getHealth(player));
+    player.setHealth(VersionUtils.getMaxHealth(player));
   }
 
 }

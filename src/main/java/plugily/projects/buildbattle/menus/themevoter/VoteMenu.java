@@ -119,16 +119,17 @@ public class VoteMenu {
     int i = 0;
     User user = plugin.getUserManager().getUser(player);
     for(String theme : votePoll.getVotedThemes().keySet()) {
+      int voted = votePoll.getVotedThemes().get(theme);
       double percent;
-      if(Double.isNaN(votePoll.getVotedThemes().get(theme)) || votePoll.getVotedThemes().get(theme) == 0) {
+      if(Double.isNaN(voted) || voted == 0) {
         percent = 0.0;
       } else {
-        percent = ((double) votePoll.getVotedThemes().get(theme) / (double) totalVotes) * 100;
+        percent = ((double) voted / (double) totalVotes) * 100;
       }
       ItemStack stack = new ItemBuilder(new ItemStack(XMaterial.OAK_SIGN.parseMaterial()))
           .name(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Theme-Item-Name").replace("%theme%", theme))
           .lore(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Theme-Item-Lore").replace("%theme%", theme)
-              .replace("%percent%", String.valueOf(NumberUtils.round(percent, 2))).replace("%time-left%", String.valueOf(arena.getTimer())).split(";"))
+              .replace("%percent%", String.valueOf(NumberUtils.round(percent, 2))).replace("%time-left%", Integer.toString(arena.getTimer())).split(";"))
           .build();
       if(votePoll.getPlayerVote().containsKey(player) && votePoll.getPlayerVote().get(player).equals(theme)) {
         ItemMeta meta = stack.getItemMeta();
@@ -145,7 +146,7 @@ public class VoteMenu {
           .lore(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Super-Vote-Item-Lore").replace("%theme%", theme)
               .replace("%owned%", String.valueOf(user.getStat(StatsStorage.StatisticType.SUPER_VOTES))).split(";"))
           .build(), (i * 9) + 8);
-      if(votePoll.getVotedThemes().get(theme) > 0) {
+      if(voted > 0) {
         double vote = 0;
         for(int j = 0; j < 6; j++) {
           if(vote > percent) {

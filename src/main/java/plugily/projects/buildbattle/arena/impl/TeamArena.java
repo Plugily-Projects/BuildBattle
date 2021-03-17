@@ -66,8 +66,10 @@ public class TeamArena extends SoloArena {
       if(pairs.size() <= i) {
         break;
       }
-      pairs.get(i).forEach(plot::addOwner);
-      pairs.get(i).forEach(player -> getPlugin().getUserManager().getUser(player).setCurrentPlot(plot));
+      pairs.get(i).forEach(player -> {
+        plot.addOwner(player);
+        getPlugin().getUserManager().getUser(player).setCurrentPlot(plot);
+      });
       i++;
     }
     /*if (!players.isEmpty()) {

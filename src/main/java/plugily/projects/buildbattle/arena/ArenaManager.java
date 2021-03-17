@@ -174,7 +174,7 @@ public class ArenaManager {
 
     player.setExp(1);
     player.setFoodLevel(20);
-    player.setHealth(VersionUtils.getHealth(player));
+    player.setHealth(VersionUtils.getMaxHealth(player));
     player.setLevel(0);
     player.setWalkSpeed(0.2f);
     player.setFlySpeed(0.1f);
@@ -357,7 +357,7 @@ public class ArenaManager {
       @Override
       public void run() {
         if(i == 4 || !arena.getPlayers().contains(player)) {
-          this.cancel();
+          cancel();
           return;
         }
         MiscUtils.spawnRandomFirework(player.getLocation());

@@ -136,8 +136,7 @@ public class PlotManager {
           });
         }
       }
-      BBPlayerPlotReceiveEvent event = new BBPlayerPlotReceiveEvent(arena, buildPlot);
-      Bukkit.getPluginManager().callEvent(event);
+      Bukkit.getPluginManager().callEvent(new BBPlayerPlotReceiveEvent(arena, buildPlot));
     }
   }
 

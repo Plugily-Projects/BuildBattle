@@ -78,14 +78,17 @@ public class SetupInventoryEvents implements Listener {
     if(!ComplementAccessor.getComplement().getTitle(e.getView()).contains("Game type:") || !ItemUtils.isItemStackNamed(e.getCurrentItem())) {
       return;
     }
-    Player player = (Player) e.getWhoClicked();
-    String name = ChatColor.stripColor(ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta()));
     BaseArena arena = ArenaRegistry.getArena(ComplementAccessor.getComplement().getTitle(e.getView()).replace("Game type: ", ""));
     if(arena == null) {
       return;
     }
+
+    String name = ChatColor.stripColor(ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta()));
+    Player player = (Player) e.getWhoClicked();
+
     e.setCancelled(true);
     player.closeInventory();
+
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
     if(name.contains("Solo")) {
       arena.setArenaType(BaseArena.ArenaType.SOLO);
@@ -125,14 +128,14 @@ public class SetupInventoryEvents implements Listener {
     if(arena == null) {
       return;
     }
-    ClickType clickType = e.getClick();
-    String locationString = player.getLocation().getWorld().getName() + "," + player.getLocation().getX() + "," + player.getLocation().getY() + "," +
-        player.getLocation().getZ() + "," + player.getLocation().getYaw() + ",0.0";
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
     if(config == null) {
       return;
     }
 
+    ClickType clickType = e.getClick();
+    String locationString = player.getLocation().getWorld().getName() + "," + player.getLocation().getX() + "," + player.getLocation().getY() + "," +
+        player.getLocation().getZ() + "," + player.getLocation().getYaw() + ",0.0";
     ItemStack currentItem = e.getCurrentItem();
     switch(slot) {
       case SET_ENDING:

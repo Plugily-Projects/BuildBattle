@@ -115,8 +115,7 @@ public class GameEvents implements Listener {
     if(VersionUtils.checkOffHand(event.getHand()) || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) {
       return;
     }
-    ItemStack itemStack = event.getItem();
-    if(!ItemUtils.isItemStackNamed(itemStack)) {
+    if(!ItemUtils.isItemStackNamed(event.getItem())) {
       return;
     }
     BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
@@ -124,7 +123,7 @@ public class GameEvents implements Listener {
       return;
     }
     if(!ComplementAccessor.getComplement().getDisplayName(plugin.getOptionsRegistry().getMenuItem().getItemMeta())
-        .equalsIgnoreCase(ComplementAccessor.getComplement().getDisplayName(itemStack.getItemMeta()))) {
+        .equalsIgnoreCase(ComplementAccessor.getComplement().getDisplayName(event.getItem().getItemMeta()))) {
       return;
     }
     event.getPlayer().openInventory(plugin.getOptionsRegistry().formatInventory());
@@ -191,9 +190,8 @@ public class GameEvents implements Listener {
     if(VersionUtils.checkOffHand(event.getHand())) {
       return;
     }
-    Player player = event.getPlayer();
-    BaseArena arena = ArenaRegistry.getArena(player);
-    if(arena == null || VersionUtils.getItemInHand(player).getType() != Material.FLINT_AND_STEEL || event.getClickedBlock() == null) {
+    BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
+    if(arena == null || VersionUtils.getItemInHand(event.getPlayer()).getType() != Material.FLINT_AND_STEEL || event.getClickedBlock() == null) {
       return;
     }
     if(event.getClickedBlock().getType() == Material.TNT) {
@@ -206,8 +204,7 @@ public class GameEvents implements Listener {
     if(event.getEntity().getType() != EntityType.PLAYER) {
       return;
     }
-    Player player = (Player) event.getEntity();
-    BaseArena arena = ArenaRegistry.getArena(player);
+    BaseArena arena = ArenaRegistry.getArena((Player) event.getEntity());
     if(arena != null) {
       event.setCancelled(true);
     }
@@ -272,7 +269,8 @@ public class GameEvents implements Listener {
     if(event.getCurrentItem().getType() != Material.NETHER_STAR || arena == null) {
       return;
     }
-    if(!event.getCurrentItem().getItemMeta().getDisplayName().equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item"))) {
+    if(!ComplementAccessor.getComplement().getDisplayName(event.getCurrentItem().getItemMeta())
+        .equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item"))) {
       return;
     }
     event.setResult(Event.Result.DENY);
@@ -353,10 +351,12 @@ public class GameEvents implements Listener {
   @EventHandler
   public void onBlockSpread(BlockSpreadEvent event) {
     for(BaseArena arena : ArenaRegistry.getArenas()) {
-      java.util.List<Plot> plots = arena.getPlotManager().getPlots();
-      if(!plots.isEmpty() && plots.get(0) != null && plots.get(0).getCuboid() != null
-          && event.getBlock().getWorld().equals(plots.get(0).getCuboid().getCenter().getWorld()) && event.getSource().getType() == Material.FIRE) {
-          event.setCancelled(true);
+      if (!arena.getPlotManager().getPlots().isEmpty()) {
+        Plot plot = arena.getPlotManager().getPlots().get(0);
+        if(plot != null && plot.getCuboid() != null
+            && event.getBlock().getWorld().equals(plot.getCuboid().getCenter().getWorld()) && event.getSource().getType() == Material.FIRE) {
+            event.setCancelled(true);
+        }
       }
     }
   }
