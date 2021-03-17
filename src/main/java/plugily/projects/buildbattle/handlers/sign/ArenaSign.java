@@ -25,7 +25,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.jetbrains.annotations.Nullable;
-
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.utils.MaterialUtil;
@@ -36,9 +35,9 @@ import plugily.projects.buildbattle.utils.MaterialUtil;
  */
 public class ArenaSign {
 
-  private Sign sign;
+  private final Sign sign;
   private Block behind;
-  private BaseArena arena;
+  private final BaseArena arena;
 
   public ArenaSign(Sign sign, BaseArena arena) {
     this.sign = sign;
@@ -48,9 +47,9 @@ public class ArenaSign {
 
   private void setBehindBlock() {
     this.behind = null;
-    if (MaterialUtil.isWallSign(sign.getBlock().getType())) {
-        this.behind = ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_14_R1) ? getBlockBehind() : getBlockBehindLegacy();
-      }
+    if(MaterialUtil.isWallSign(sign.getBlock().getType())) {
+      this.behind = ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_14_R1) ? getBlockBehind() : getBlockBehindLegacy();
+    }
   }
 
   private Block getBlockBehind() {
@@ -62,7 +61,7 @@ public class ArenaSign {
       Location location = new Location(sign.getWorld(), loc.getBlockX() - face.getModX(), loc.getBlockY() - face.getModY(),
           loc.getBlockZ() - face.getModZ());
       return location.getBlock();
-    } catch (Exception e) {
+    } catch(Exception e) {
       e.printStackTrace();
       return null;
     }

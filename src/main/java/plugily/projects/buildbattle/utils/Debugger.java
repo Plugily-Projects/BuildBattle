@@ -52,9 +52,9 @@ public class Debugger {
    * @param thing debugged message
    */
   public static void debug(Level level, String thing) {
-    switch (level) {
+    switch(level) {
       case INFO:
-        if (!enabled) {
+        if(!enabled) {
           return;
         }
         sendConsoleMsg(prefix + " " + thing);
@@ -67,7 +67,7 @@ public class Debugger {
         sendConsoleMsg("&4" + prefix + " [SEVERE]" + thing);
         break;
       case TASK:
-        if (!enabled) {
+        if(!enabled) {
           return;
         }
         sendConsoleMsg("&e" + prefix + " Running task '" + thing + "'");
@@ -76,7 +76,7 @@ public class Debugger {
   }
 
   public static void sendConsoleMsg(String msg) {
-    if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1) && msg.contains("#")) {
+    if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1) && msg.contains("#")) {
       msg = MiscUtils.matchColorRegex(msg);
     }
 

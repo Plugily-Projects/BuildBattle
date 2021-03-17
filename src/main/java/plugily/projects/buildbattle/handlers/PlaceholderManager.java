@@ -21,11 +21,10 @@
 package plugily.projects.buildbattle.handlers;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
-
-import org.bukkit.entity.Player;
 
 /**
  * @author Plajer
@@ -56,31 +55,33 @@ public class PlaceholderManager extends PlaceholderExpansion {
 
   @Override
   public String onPlaceholderRequest(Player player, String id) {
-    if (player == null) {
+    if(player == null) {
       return null;
     }
-    switch (id.toLowerCase()) {
+    switch(id.toLowerCase()) {
       case "blocks_broken":
-        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.BLOCKS_BROKEN));
+        return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.BLOCKS_BROKEN));
       case "blocks_placed":
-        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.BLOCKS_PLACED));
+        return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.BLOCKS_PLACED));
       case "games_played":
-        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.GAMES_PLAYED));
+        return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.GAMES_PLAYED));
       case "wins":
-        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.WINS));
+        return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.WINS));
       case "loses":
-        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.LOSES));
+        return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.LOSES));
       case "highest_win":
-        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.HIGHEST_WIN));
+        return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.HIGHEST_WIN));
       case "particles_used":
-        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.PARTICLES_USED));
+        return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.PARTICLES_USED));
+      case "super_votes":
+        return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.SUPER_VOTES));
       default:
         return handleArenaPlaceholderRequest(id);
     }
   }
 
   private String handleArenaPlaceholderRequest(String id) {
-    if (!id.contains(":")) {
+    if(!id.contains(":")) {
       return null;
     }
     String[] data = id.split(":");
@@ -88,15 +89,15 @@ public class PlaceholderManager extends PlaceholderExpansion {
     if(arena == null) {
       return null;
     }
-    switch (data[1].toLowerCase()) {
+    switch(data[1].toLowerCase()) {
       case "players":
-        return String.valueOf(arena.getPlayers().size());
+        return Integer.toString(arena.getPlayers().size());
       case "max_players":
-        return String.valueOf(arena.getMaximumPlayers());
+        return Integer.toString(arena.getMaximumPlayers());
       case "state":
         return arena.getArenaState().toString().toLowerCase();
       case "state_pretty":
-        return arena.getArenaState().getFormattedName();
+        return arena.getArenaState().getPlaceholder();
       case "mapname":
         return arena.getMapName();
       case "arenatype":

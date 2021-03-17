@@ -204,6 +204,8 @@ In-Game:
     Already-Playing: "&cYou're playing already!"
     Cant-Fly-Outside-Plot: "&cYou can't fly outside your plot!"
     Join: "&b%PLAYER%&7 joined the game (%PLAYERSIZE%/%MAXPLAYERS%)!"
+    Join-Title: ""
+    Join-SubTitle: "&e%ARENANAME%"
     Leave: "&b%PLAYER% &7left the game (%PLAYERSIZE%/%MAXPLAYERS%)!"
     Lobby-Messages:
       Waiting-For-Players: "&7Waiting for players... We need at least &b%MINPLAYERS%&7 players to start."
@@ -271,8 +273,10 @@ Menus:
         Time-Type:
           World-Time: "&eWorld time"
           Day: "&eDay (1000 ticks)"
+          Noon: "&eNoon (6000 ticks)"
           Sunset: "&eSunset (12000 ticks)"
           Night: "&eNight (13000 ticks)"
+          MidNight: "&eMidNight (18000 ticks)"
           Sunrise: "&eSunrise (23000 ticks)"
         Time-Set: "&eTime has been changed"
       Biome:
@@ -358,5 +362,13 @@ Arena-Selector:
       - " "
       - "&eClick to join this arena"
 
+Placeholders:
+  Game-States:
+    Waiting: "&lWaiting for players..."
+    Starting: "&e&lStarting"
+    Playing: "&lPlaying"
+    Ending: "&lEnding"
+    Restarting: "&c&lRestarting"
+
 # Do not modify!
-File-Version-Do-Not-Edit: 19
+File-Version-Do-Not-Edit: 21

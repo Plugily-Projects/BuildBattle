@@ -20,16 +20,16 @@
 
 package plugily.projects.buildbattle.menus.options.registry.banner;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.bukkit.DyeColor;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author Plajer
@@ -55,7 +55,7 @@ public class Banner {
   }
 
   public BannerPattern getLastPattern() {
-    if (patterns.isEmpty()) {
+    if(patterns.isEmpty()) {
       return new BannerPattern(DyeColor.BLACK, PatternType.BASE);
     }
     return patterns.get(patterns.size() - 1);
@@ -65,12 +65,12 @@ public class Banner {
   public ItemStack buildBanner() {
     ItemStack item = XMaterial.WHITE_BANNER.parseItem();
     BannerMeta meta = (BannerMeta) item.getItemMeta();
-    if (item instanceof org.bukkit.block.Banner) {
+    if(item instanceof org.bukkit.block.Banner) {
       ((org.bukkit.block.Banner) item).setBaseColor(this.color);
     } else {
       meta.setBaseColor(this.color);
     }
-    for (BannerPattern pattern : patterns) {
+    for(BannerPattern pattern : patterns) {
       meta.addPattern(new Pattern(pattern.getDyeColor(), pattern.getPatternType()));
     }
     item.setItemMeta(meta);

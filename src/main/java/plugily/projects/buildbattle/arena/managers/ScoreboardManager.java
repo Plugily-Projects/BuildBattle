@@ -35,6 +35,7 @@ import plugily.projects.buildbattle.arena.ArenaState;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.impl.SoloArena;
 import plugily.projects.buildbattle.handlers.language.LanguageManager;
+import plugily.projects.buildbattle.handlers.reward.Reward;
 import plugily.projects.buildbattle.user.User;
 
 import java.util.ArrayList;
@@ -57,16 +58,16 @@ public class ScoreboardManager {
 
   public ScoreboardManager(BaseArena arena) {
     this.arena = arena;
-    for (ArenaState state : ArenaState.values()) {
+    for(ArenaState state : ArenaState.values()) {
       //not registering RESTARTING state and registering IN_GAME and ENDING later
-      if (state == ArenaState.RESTARTING || state == ArenaState.IN_GAME || state == ArenaState.ENDING) {
+      if(state == ArenaState.RESTARTING || state == ArenaState.IN_GAME || state == ArenaState.ENDING) {
         continue;
       }
       //todo migrator
       List<String> lines = LanguageManager.getLanguageList("Scoreboard.Content." + state.getFormattedName());
       scoreboardContents.put(state.getFormattedName(), lines);
     }
-    for (BaseArena.ArenaType type : BaseArena.ArenaType.values()) {
+    for(BaseArena.ArenaType type : BaseArena.ArenaType.values()) {
       List<String> playing = LanguageManager.getLanguageList("Scoreboard.Content.Playing-States." + type.getPrefix());
       List<String> ending = LanguageManager.getLanguageList("Scoreboard.Content.Ending-States." + type.getPrefix());
       //todo locale
@@ -104,10 +105,11 @@ public class ScoreboardManager {
    * @see User
    */
   public void removeScoreboard(User user) {
-    for (Scoreboard board : scoreboards) {
-      if (board.getHolder().equals(user.getPlayer())) {
+    for(Scoreboard board : scoreboards) {
+      if(board.getHolder().equals(user.getPlayer())) {
         scoreboards.remove(board);
         board.deactivate();
+        plugin.getRewardsHandler().performReward(user.getPlayer(), Reward.RewardType.SCOREBOARD_REMOVED, -1);
         return;
       }
     }
@@ -124,10 +126,10 @@ public class ScoreboardManager {
   public List<Entry> formatScoreboard(User user) {
     EntryBuilder builder = new EntryBuilder();
     List<String> lines = scoreboardContents.get(arena.getArenaState().getFormattedName());
-    if (arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
+    if(arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
       lines = scoreboardContents.get(arena.getArenaState().getFormattedName() + "_" + arena.getArenaType().getPrefix());
     }
-    for (String line : lines) {
+    for(String line : lines) {
       builder.next(formatScoreboardLine(line, user));
     }
     return builder.build();
@@ -138,16 +140,16 @@ public class ScoreboardManager {
     String returnString = string;
     returnString = StringUtils.replace(returnString, "%PLAYERS%", Integer.toString(arena.getPlayers().size()));
     returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());
-    if (((SoloArena) arena).isThemeVoteTime()) {
+    if(((SoloArena) arena).isThemeVoteTime()) {
       returnString = StringUtils.replace(returnString, "%THEME%", plugin.getChatManager().colorMessage("In-Game.No-Theme-Yet"));
     } else {
       returnString = StringUtils.replace(returnString, "%THEME%", arena.getTheme());
     }
     returnString = replaceValues(returnString);
-    if (!((SoloArena) arena).isThemeVoteTime()) {
-      if (arena.getArenaType() == BaseArena.ArenaType.TEAM && arena.getPlotManager().getPlot(player) != null) {
-        if (arena.getPlotManager().getPlot(player).getOwners().size() == 2) {
-          if (arena.getPlotManager().getPlot(player).getOwners().get(0).equals(player)) {
+    if(!((SoloArena) arena).isThemeVoteTime()) {
+      if(arena.getArenaType() == BaseArena.ArenaType.TEAM && arena.getPlotManager().getPlot(player) != null) {
+        if(arena.getPlotManager().getPlot(player).getOwners().size() == 2) {
+          if(arena.getPlotManager().getPlot(player).getOwners().get(0).equals(player)) {
             returnString = StringUtils.replace(returnString, "%TEAMMATE%", arena.getPlotManager().getPlot(player).getOwners().get(1).getName());
           } else {
             returnString = StringUtils.replace(returnString, "%TEAMMATE%", arena.getPlotManager().getPlot(player).getOwners().get(0).getName());
@@ -159,7 +161,7 @@ public class ScoreboardManager {
     } else {
       returnString = StringUtils.replace(returnString, "%TEAMMATE%", plugin.getChatManager().colorMessage("In-Game.Nobody"));
     }
-    if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+    if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       returnString = PlaceholderAPI.setPlaceholders(player, returnString);
     }
     returnString = plugin.getChatManager().colorRawMessage(returnString);

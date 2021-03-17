@@ -22,14 +22,13 @@ package plugily.projects.buildbattle.commands.arguments.admin.arena;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
 import plugily.projects.buildbattle.commands.arguments.data.CommandArgument;
 import plugily.projects.buildbattle.commands.arguments.data.LabelData;
 import plugily.projects.buildbattle.commands.arguments.data.LabeledCommandArgument;
-
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 
 /**
  * @author Plajer
@@ -44,7 +43,7 @@ public class AddNpcArgument {
             "&7Deletes specified arena\n&6Permission: &7buildbattle.admin.addnpc")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        if (registry.getPlugin().getServer().getPluginManager().isPluginEnabled("Citizens")) {
+        if(registry.getPlugin().getServer().getPluginManager().isPluginEnabled("Citizens")) {
           NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.VILLAGER, registry.getPlugin().getChatManager().colorMessage("In-Game.NPC.Floor-Change-NPC-Name"));
           npc.spawn(((Player) sender).getLocation());
           npc.setProtected(true);

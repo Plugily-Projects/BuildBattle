@@ -23,7 +23,6 @@ package plugily.projects.buildbattle.commands.arguments.admin.plot;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
@@ -48,24 +47,24 @@ public class AddPlotArgument {
       @Override
       public void execute(CommandSender sender, String[] args) {
         Player player = (Player) sender;
-        if (args.length == 1) {
+        if(args.length == 1) {
           //todo translatable
           player.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorRawMessage("&cPlease type arena name!"));
           return;
         }
         BaseArena arena = ArenaRegistry.getArena(args[1]);
-        if (arena == null) {
+        if(arena == null) {
           player.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Arena-Like-That"));
           return;
         }
         CuboidSelector.Selection selection = registry.getPlugin().getCuboidSelector().getSelection(player);
-        if (selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
+        if(selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
           player.sendMessage(registry.getPlugin().getChatManager().colorRawMessage(registry.getPlugin().getChatManager().getPrefix() + "&cPlease select both corners before adding a plot!"));
           return;
         }
         FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
         int id = 0;
-        if (config.getConfigurationSection("instances." + arena.getID() + ".plots") != null) {
+        if(config.getConfigurationSection("instances." + arena.getID() + ".plots") != null) {
           id = config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false).size() + 1;
         }
         LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", "instances." + arena.getID() + ".plots." + id + ".minpoint", selection.getFirstPos());

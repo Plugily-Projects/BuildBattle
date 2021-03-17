@@ -20,8 +20,9 @@
 
 package plugily.projects.buildbattle.menus.options.registry.particles;
 
-import org.bukkit.Particle;
 import org.bukkit.inventory.ItemStack;
+
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 
 /**
  * Created by Tom on 23/08/2015.
@@ -29,7 +30,7 @@ import org.bukkit.inventory.ItemStack;
 public class ParticleItem {
 
   private ItemStack itemStack;
-  private Particle effect;
+  private String effect;
   private String permission;
 
   public String getPermission() {
@@ -41,14 +42,14 @@ public class ParticleItem {
   }
 
   public String getDisplayName() {
-    return itemStack.getItemMeta().getDisplayName();
+    return ComplementAccessor.getComplement().getDisplayName(itemStack.getItemMeta());
   }
 
-  public Particle getEffect() {
+  public String getEffect() {
     return effect;
   }
 
-  public void setEffect(Particle effect) {
+  public void setEffect(String effect) {
     this.effect = effect;
   }
 

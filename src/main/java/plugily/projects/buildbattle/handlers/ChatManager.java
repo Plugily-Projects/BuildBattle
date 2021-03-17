@@ -23,7 +23,6 @@ package plugily.projects.buildbattle.handlers;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
@@ -35,7 +34,7 @@ import plugily.projects.buildbattle.handlers.language.LanguageManager;
  */
 public class ChatManager {
 
-  private String prefix;
+  private final String prefix;
 
   public ChatManager(String prefix) {
     this.prefix = colorRawMessage(prefix);
@@ -60,25 +59,25 @@ public class ChatManager {
   }
 
   public void broadcast(BaseArena arena, String message) {
-  if (message.isEmpty()) {
-    return;
-  }
+    if(message.isEmpty()) {
+      return;
+    }
 
-    for (Player p : arena.getPlayers()) {
+    for(Player p : arena.getPlayers()) {
       p.sendMessage(prefix + message);
     }
   }
 
   public String colorMessage(String message) {
-      return message == null ? "" : colorRawMessage(LanguageManager.getLanguageMessage(message));
+    return message == null ? "" : colorRawMessage(LanguageManager.getLanguageMessage(message));
   }
 
   public String colorRawMessage(String msg) {
-    if (msg == null) {
+    if(msg == null) {
       return "";
     }
 
-    if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1) && msg.contains("#")) {
+    if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1) && msg.contains("#")) {
       msg = MiscUtils.matchColorRegex(msg);
     }
 
@@ -93,7 +92,7 @@ public class ChatManager {
   }
 
   public void broadcastAction(BaseArena arena, Player p, ActionType action) {
-    switch (action) {
+    switch(action) {
       case JOIN:
         broadcast(arena, formatMessage(arena, colorMessage("In-Game.Messages.Join"), p));
         break;

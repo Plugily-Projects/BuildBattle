@@ -32,7 +32,7 @@ import org.bukkit.inventory.ItemStack;
  */
 public class HeadsCategory {
 
-  private String categoryID;
+  private final String categoryID;
   private ItemStack itemStack;
   private String permission;
   private Inventory inventoryView;

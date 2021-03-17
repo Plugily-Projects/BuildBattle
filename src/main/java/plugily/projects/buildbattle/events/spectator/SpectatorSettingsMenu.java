@@ -20,7 +20,6 @@
 
 package plugily.projects.buildbattle.events.spectator;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -29,8 +28,10 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.handlers.ChatManager;
 
@@ -60,16 +61,16 @@ public class SpectatorSettingsMenu implements Listener {
 
   @EventHandler
   public void onSpectatorMenuClick(InventoryClickEvent e) {
-    if (!e.getView().getTitle().equals(plugin.getChatManager().colorRawMessage(inventoryName))) {
+    if(!ComplementAccessor.getComplement().getTitle(e.getView()).equals(plugin.getChatManager().colorRawMessage(inventoryName))) {
       return;
     }
-    if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {
+    if(e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {
       return;
     }
     Player p = (Player) e.getWhoClicked();
     p.closeInventory();
 
-    switch (e.getCurrentItem().getType()) {
+    switch(e.getCurrentItem().getType()) {
       case LEATHER_BOOTS:
         p.removePotionEffect(PotionEffectType.SPEED);
         p.setFlySpeed(0.15f);
@@ -102,7 +103,7 @@ public class SpectatorSettingsMenu implements Listener {
 
   private Inventory initInventory() {
     ChatManager cm = plugin.getChatManager();
-    Inventory inv = Bukkit.createInventory(null, 9 * 3, inventoryName);
+    Inventory inv = ComplementAccessor.getComplement().createInventory(null, 9 * 3, inventoryName);
     inv.setItem(11, new ItemBuilder(Material.LEATHER_BOOTS)
         .name(cm.colorRawMessage(speedOptionName + " I")).build());
     inv.setItem(12, new ItemBuilder(Material.CHAINMAIL_BOOTS)

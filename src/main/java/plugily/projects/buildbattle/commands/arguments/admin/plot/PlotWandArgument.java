@@ -22,7 +22,6 @@ package plugily.projects.buildbattle.commands.arguments.admin.plot;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
 import plugily.projects.buildbattle.commands.arguments.data.CommandArgument;
 import plugily.projects.buildbattle.commands.arguments.data.LabelData;

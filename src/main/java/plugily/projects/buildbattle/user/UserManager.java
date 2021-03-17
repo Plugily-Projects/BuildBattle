@@ -20,12 +20,8 @@
 
 package plugily.projects.buildbattle.user;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
@@ -35,18 +31,21 @@ import plugily.projects.buildbattle.user.data.MysqlManager;
 import plugily.projects.buildbattle.user.data.UserDatabase;
 import plugily.projects.buildbattle.utils.Debugger;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Tom on 27/07/2014.
  */
 public class UserManager {
 
-  private UserDatabase database;
-  private Main plugin;
+  private final UserDatabase database;
+  private final Main plugin;
   private final List<User> users = new ArrayList<>();
 
   public UserManager(Main plugin) {
     this.plugin = plugin;
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       database = new MysqlManager(plugin);
     } else {
       database = new FileStats(plugin);
@@ -55,8 +54,8 @@ public class UserManager {
   }
 
   private void loadStatsForPlayersOnline() {
-    for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+    for(Player player : Bukkit.getServer().getOnlinePlayers()) {
+      if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
         ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()).teleportToLobby(player);
       }
       User user = getUser(player);
@@ -65,8 +64,8 @@ public class UserManager {
   }
 
   public User getUser(Player player) {
-    for (User user : users) {
-      if (user.getPlayer().equals(player)) {
+    for(User user : users) {
+      if(user.getPlayer().equals(player)) {
         return user;
       }
     }
@@ -77,7 +76,7 @@ public class UserManager {
   }
 
   public void saveStatistic(User user, StatsStorage.StatisticType stat) {
-    if (stat.isPersistent()) {
+    if(stat.isPersistent()) {
       database.saveStatistic(user, stat);
     }
   }

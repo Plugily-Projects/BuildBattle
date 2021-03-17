@@ -20,20 +20,19 @@
 
 package plugily.projects.buildbattle.user.data;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.logging.Level;
-
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-
 import pl.plajerlair.commonsbox.database.MysqlDatabase;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.user.User;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
 
 /**
  * @author Plajer
@@ -42,15 +41,15 @@ import plugily.projects.buildbattle.user.User;
  */
 public class MysqlManager implements UserDatabase {
 
-  private Main plugin;
-  private MysqlDatabase database;
+  private final Main plugin;
+  private final MysqlDatabase database;
 
   public MysqlManager(Main plugin) {
     this.plugin = plugin;
     database = plugin.getMysqlDatabase();
     Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-      try (Connection connection = database.getConnection();
-           Statement statement = connection.createStatement()) {
+      try(Connection connection = database.getConnection();
+          Statement statement = connection.createStatement()) {
         statement.executeUpdate(
             "CREATE TABLE IF NOT EXISTS `" + getTableName() + "` (\n"
                 + "  `UUID` char(36) NOT NULL PRIMARY KEY,\n"
@@ -67,19 +66,19 @@ public class MysqlManager implements UserDatabase {
         //temporary workaround
         try {
           statement.executeUpdate("ALTER TABLE " + getTableName() + " ADD supervotes int(11) NOT NULL DEFAULT '0'");
-        } catch (SQLException e) {
-          if (!e.getMessage().contains("Duplicate column name")) {
+        } catch(SQLException e) {
+          if(!e.getMessage().contains("Duplicate column name")) {
             e.printStackTrace();
           }
         }
         try {
           statement.executeUpdate("ALTER TABLE " + getTableName() + " ADD name text NOT NULL");
-        } catch (SQLException e) {
-          if (!e.getMessage().contains("Duplicate column name")) {
+        } catch(SQLException e) {
+          if(!e.getMessage().contains("Duplicate column name")) {
             e.printStackTrace();
           }
         }
-      } catch (SQLException e) {
+      } catch(SQLException e) {
         e.printStackTrace();
       }
     });
@@ -97,11 +96,11 @@ public class MysqlManager implements UserDatabase {
   @Override
   public void saveAllStatistic(User user) {
     StringBuilder update = new StringBuilder(" SET ");
-    for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-      if (!stat.isPersistent()) {
+    for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+      if(!stat.isPersistent()) {
         continue;
       }
-      if (update.toString().equalsIgnoreCase(" SET ")){
+      if(update.toString().equalsIgnoreCase(" SET ")) {
         update.append(stat.getName()).append('=').append(user.getStat(stat));
       }
       update.append(", ").append(stat.getName()).append('=').append(user.getStat(stat));
@@ -109,33 +108,33 @@ public class MysqlManager implements UserDatabase {
     String finalUpdate = update.toString();
 
     Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
-            database.executeUpdate("UPDATE " + getTableName() + finalUpdate + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';"));
+        database.executeUpdate("UPDATE " + getTableName() + finalUpdate + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';"));
   }
 
   @Override
   public void loadStatistics(User user) {
     Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
       String uuid = user.getPlayer().getUniqueId().toString();
-      try (Connection connection = database.getConnection();
-           Statement statement = connection.createStatement()) {
+      try(Connection connection = database.getConnection();
+          Statement statement = connection.createStatement()) {
         ResultSet rs = statement.executeQuery("SELECT * from " + getTableName() + " WHERE UUID='" + uuid + "'");
-        if (rs.next()) {
+        if(rs.next()) {
           //player already exists - get the stats
-          for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-            if (!stat.isPersistent()) continue;
+          for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+            if(!stat.isPersistent()) continue;
             int val = rs.getInt(stat.getName());
             user.setStat(stat, val);
           }
         } else {
           //player doesn't exist - make a new record
           statement.executeUpdate("INSERT INTO " + getTableName() + " (UUID,name) VALUES ('" + uuid + "','" + user.getPlayer().getName() + "')");
-          for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-            if (!stat.isPersistent()) continue;
+          for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+            if(!stat.isPersistent()) continue;
             user.setStat(stat, 0);
           }
         }
-      } catch (SQLException e) {
-        plugin.getLogger().log(Level.WARNING, "Could not connect to MySQL database! Cause: {0} ({1})", new Object[] {e.getSQLState(), e.getErrorCode()});
+      } catch(SQLException e) {
+        plugin.getLogger().log(Level.WARNING, "Could not connect to MySQL database! Cause: {0} ({1})", new Object[]{e.getSQLState(), e.getErrorCode()});
       }
     });
   }

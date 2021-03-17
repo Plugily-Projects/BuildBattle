@@ -22,7 +22,6 @@ package plugily.projects.buildbattle.commands.arguments.game;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.arena.ArenaManager;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
@@ -42,15 +41,15 @@ public class LeaveArgument {
     registry.mapArgument("buildbattle", new CommandArgument("leave", "", CommandArgument.ExecutorType.PLAYER) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        if (!registry.getPlugin().getConfig().getBoolean("Disable-Leave-Command", false)) {
+        if(!registry.getPlugin().getConfig().getBoolean("Disable-Leave-Command", false)) {
           Player p = (Player) sender;
           BaseArena arena = ArenaRegistry.getArena(p);
-          if (arena == null) {
+          if(arena == null) {
             p.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Playing"));
             return;
           }
           p.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Teleported-To-The-Lobby"));
-          if (registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+          if(registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
             registry.getPlugin().getBungeeManager().connectToHub(p);
             Debugger.debug(p.getName() + " was teleported to the Hub server");
           } else {

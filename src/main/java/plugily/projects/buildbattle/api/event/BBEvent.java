@@ -21,7 +21,6 @@
 package plugily.projects.buildbattle.api.event;
 
 import org.bukkit.event.Event;
-
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 
 /**

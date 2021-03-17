@@ -26,10 +26,7 @@ import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-
-import pl.plajerlair.commonsbox.minecraft.compat.PacketUtils;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
@@ -37,6 +34,7 @@ import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.menus.options.MenuOption;
 import plugily.projects.buildbattle.menus.options.OptionsRegistry;
+import plugily.projects.buildbattle.utils.Utils;
 
 /**
  * @author Plajer
@@ -45,7 +43,7 @@ import plugily.projects.buildbattle.menus.options.OptionsRegistry;
  */
 public class BiomeChangeOption {
 
-  private Main plugin;
+  private final Main plugin;
 
   public BiomeChangeOption(OptionsRegistry registry) {
     this.plugin = registry.getPlugin();
@@ -63,41 +61,32 @@ public class BiomeChangeOption {
       @Override
       public void onTargetClick(InventoryClickEvent e) {
         BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
-        if (arena == null) {
+        if(arena == null) {
           return;
         }
-        Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());
         BiomeItem item = registry.getBiomesRegistry().getByItem(e.getCurrentItem());
-        if (item == BiomeItem.INVALID_BIOME) {
+        if(item == BiomeItem.INVALID_BIOME) {
           return;
         }
-        if (!e.getWhoClicked().hasPermission(item.getPermission())) {
+        if(!e.getWhoClicked().hasPermission(item.getPermission())) {
           e.getWhoClicked().sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.No-Permission-For-Biome"));
           return;
         }
+        Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());
         Biome biome = item.getBiome().parseBiome();
-        for (Block block : plot.getCuboid().blockList()) {
-          block.setBiome(biome);
+        if(biome != null) {
+          for(Block block : plot.getCuboid().blockList()) {
+            block.setBiome(biome);
+          }
         }
-        try {
-          for (Chunk chunk : plot.getCuboid().chunkList()) {
-            for (Player p : Bukkit.getOnlinePlayers()) {
-              if (!p.getWorld().equals(chunk.getWorld())) {
-                continue;
-              }
-              if (ServerVersion.Version.isCurrentEqual(ServerVersion.Version.v1_16_R1)) {
-                PacketUtils.sendPacket(p, PacketUtils.getNMSClass("PacketPlayOutMapChunk").getConstructor(PacketUtils.getNMSClass("Chunk"), int.class, boolean.class)
-                        .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535, false));
-              } else {
-                PacketUtils.sendPacket(p, PacketUtils.getNMSClass("PacketPlayOutMapChunk").getConstructor(PacketUtils.getNMSClass("Chunk"), int.class)
-                  .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535));
-              }
+        for(Chunk chunk : plot.getCuboid().chunkList()) {
+          for(Player p : Bukkit.getOnlinePlayers()) {
+            if(p.getWorld().equals(chunk.getWorld())) {
+              Utils.sendMapChunk(p, chunk);
             }
           }
-        } catch (ReflectiveOperationException exception) {
-          exception.printStackTrace();
         }
-        for (Player p : plot.getOwners()) {
+        for(Player p : plot.getOwners()) {
           p.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Biome.Biome-Set"));
         }
       }

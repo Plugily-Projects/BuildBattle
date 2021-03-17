@@ -24,9 +24,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.EquipmentSlot;
-
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerInteractEvent;
 import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
@@ -38,6 +37,7 @@ import plugily.projects.buildbattle.arena.impl.GuessTheBuildArena;
 import plugily.projects.buildbattle.arena.impl.SoloArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.reward.Reward;
+import plugily.projects.buildbattle.user.User;
 
 /**
  * @author Plajer
@@ -54,24 +54,28 @@ public class VoteEvents implements Listener {
   }
 
   @EventHandler
-  public void onVote(PlayerInteractEvent e) {
-    if (e.getHand() == EquipmentSlot.OFF_HAND || e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK || e.getAction() == Action.PHYSICAL) {
+  public void onVote(CBPlayerInteractEvent e) {
+    if(VersionUtils.checkOffHand(e.getHand()) || e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK || e.getAction() == Action.PHYSICAL) {
       return;
     }
 
-    if (!ItemUtils.isItemStackNamed(e.getItem())) {
+    if(!ItemUtils.isItemStackNamed(e.getItem())) {
       return;
     }
 
     BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
-    if (arena == null || arena instanceof GuessTheBuildArena || arena.getArenaState() != ArenaState.IN_GAME || !((SoloArena) arena).isVoting()) {
+    if(arena == null || arena instanceof GuessTheBuildArena || arena.getArenaState() != ArenaState.IN_GAME || !((SoloArena) arena).isVoting()) {
       return;
     }
 
-    SoloArena sArena = ((SoloArena) arena);
-    Plot plot = sArena.getVotingPlot();
-    if (plugin.getVoteItems().getReportItem().equals(e.getItem())) {
-      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.RUN_COMMAND_ON_REPORT) && plot != null) {
+    User user = plugin.getUserManager().getUser(e.getPlayer());
+    Plot plot = ((SoloArena) arena).getVotingPlot();
+    if(plugin.getVoteItems().getReportItem().equals(e.getItem())) {
+      user.setStat(StatsStorage.StatisticType.REPORTS, user.getStat(StatsStorage.StatisticType.REPORTS) + 1);
+      int reportsAmountNeeded = plugin.getConfig().getInt("Run-Command-On-Report.Reports-Amount-To-Run", -1);
+
+      if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.RUN_COMMAND_ON_REPORT)
+          && (reportsAmountNeeded == -1 || user.getStat(StatsStorage.StatisticType.REPORTS) >= reportsAmountNeeded) && plot != null) {
         plot.getOwners().forEach(player -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
             plugin.getConfig().getString("Run-Command-On-Report.Command", "kick %reported%")
                 .replace("%reported%", player.getName()).replace("%reporter%", e.getPlayer().getName())));
@@ -82,13 +86,13 @@ public class VoteEvents implements Listener {
       return;
     }
 
-    if (plot != null && plot.getOwners().contains(e.getPlayer())) {
+    if(plot != null && plot.getOwners().contains(e.getPlayer())) {
       e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Cant-Vote-Own-Plot"));
       e.setCancelled(true);
       return;
     }
 
-    plugin.getUserManager().getUser(e.getPlayer()).setStat(StatsStorage.StatisticType.LOCAL_POINTS, plugin.getVoteItems().getPoints(e.getItem()));
+    user.setStat(StatsStorage.StatisticType.LOCAL_POINTS, plugin.getVoteItems().getPoints(e.getItem()));
     plugin.getVoteItems().playVoteSound(e.getPlayer(), e.getItem());
     e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Vote-Successful"));
     e.setCancelled(true);

@@ -22,7 +22,6 @@ package plugily.projects.buildbattle.commands.arguments.admin.arena;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.ArenaState;
@@ -47,19 +46,19 @@ public class ForceStartArguments {
       @Override
       public void execute(CommandSender sender, String[] args) {
         BaseArena arena = ArenaRegistry.getArena((Player) sender);
-        if (arena == null) {
-          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Not-Playing"));
+        if(arena == null) {
+          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Playing"));
           return;
         }
-        if (args.length == 2 && !sender.hasPermission("buildbattle.admin.forcestart.theme")) {
+        if(args.length == 2 && !sender.hasPermission("buildbattle.admin.forcestart.theme")) {
           sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Permission"));
           return;
         }
-        if (arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) {
+        if(arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) {
           arena.setArenaState(ArenaState.STARTING);
           arena.setForceStart(true);
           arena.setTimer(0);
-          if (args.length == 2 && arena instanceof SoloArena) {
+          if(args.length == 2 && arena instanceof SoloArena) {
             ((SoloArena) arena).setThemeVoteTime(false);
             arena.setTimer(registry.getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, arena));
             arena.setTheme(args[1]);

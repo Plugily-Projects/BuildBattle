@@ -20,14 +20,11 @@
 
 package plugily.projects.buildbattle.commands.arguments.game;
 
-import java.util.ArrayList;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
@@ -39,6 +36,8 @@ import plugily.projects.buildbattle.commands.arguments.data.LabelData;
 import plugily.projects.buildbattle.commands.arguments.data.LabeledCommandArgument;
 import plugily.projects.buildbattle.handlers.setup.SetupInventory;
 
+import java.util.ArrayList;
+
 /**
  * @author Plajer
  * <p>
@@ -46,7 +45,7 @@ import plugily.projects.buildbattle.handlers.setup.SetupInventory;
  */
 public class CreateArgument {
 
-  private ArgumentsRegistry registry;
+  private final ArgumentsRegistry registry;
 
   public CreateArgument(ArgumentsRegistry registry) {
     this.registry = registry;
@@ -55,19 +54,19 @@ public class CreateArgument {
             "&7Create new arena\n&6Permission: &7buildbattle.admin.create")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        if (args.length == 1) {
+        if(args.length == 1) {
           sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Type-Arena-Name"));
           return;
         }
         Player player = (Player) sender;
-        for (BaseArena arena : ArenaRegistry.getArenas()) {
-          if (arena.getID().equalsIgnoreCase(args[1])) {
+        for(BaseArena arena : ArenaRegistry.getArenas()) {
+          if(arena.getID().equalsIgnoreCase(args[1])) {
             player.sendMessage(ChatColor.DARK_RED + "Arena with that ID already exists!");
             player.sendMessage(ChatColor.DARK_RED + "Usage: /bb create <ID>");
             return;
           }
         }
-        if (ConfigUtils.getConfig(registry.getPlugin(), "arenas").contains("instances." + args[1])) {
+        if(ConfigUtils.getConfig(registry.getPlugin(), "arenas").contains("instances." + args[1])) {
           player.sendMessage(ChatColor.DARK_RED + "Instance/Arena already exists! Use another ID or delete it first!");
         } else {
           createInstanceInConfig(args[1]);
@@ -87,8 +86,9 @@ public class CreateArgument {
   private void createInstanceInConfig(String id) {
     String path = "instances." + id + ".";
     FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
-    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "lobbylocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
-    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "Endlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+    org.bukkit.Location worldSpawn = Bukkit.getServer().getWorlds().get(0).getSpawnLocation();
+    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "lobbylocation", worldSpawn);
+    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "Endlocation", worldSpawn);
     config.set(path + "minimumplayers", 2);
     config.set(path + "maximumplayers", 4);
     config.set(path + "mapname", id);

@@ -20,24 +20,21 @@
 
 package plugily.projects.buildbattle.commands;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.util.StringUtil;
-
 import org.jetbrains.annotations.NotNull;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
 import plugily.projects.buildbattle.commands.arguments.data.CommandArgument;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Plajer
@@ -46,7 +43,7 @@ import plugily.projects.buildbattle.commands.arguments.data.CommandArgument;
  */
 public class TabCompletion implements TabCompleter {
 
-  private ArgumentsRegistry registry;
+  private final ArgumentsRegistry registry;
 
   public TabCompletion(ArgumentsRegistry registry) {
     this.registry = registry;
@@ -54,57 +51,45 @@ public class TabCompletion implements TabCompleter {
 
   @Override
   public List<String> onTabComplete(@NotNull CommandSender sender, Command cmd, @NotNull String label, String[] args) {
-    List<String> completionList = new ArrayList<>(), cmds = new ArrayList<>();
-    String partOfCommand = null;
+    List<String> cmds = new ArrayList<>();
 
-    if (cmd.getName().equalsIgnoreCase("buildbattleadmin")) {
-      if (args.length == 1) {
+    if(cmd.getName().equalsIgnoreCase("buildbattleadmin")) {
+      if(args.length == 1) {
         cmds.addAll(registry.getMappedArguments().get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName)
             .collect(Collectors.toList()));
-        partOfCommand = args[0];
-      } else if (args.length == 2) {
-        if (args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("removeplot")
-          || args[0].equalsIgnoreCase("addnpc") || args[0].equalsIgnoreCase("addplot")) {
-            cmds.addAll(ArenaRegistry.getArenas().stream().map(BaseArena::getID).collect(Collectors.toList()));
-        } else if (args[0].equalsIgnoreCase("settheme")) {
-          for (List<String> l : registry.getPlugin().getConfigPreferences().getGameThemes().values()) {
+      } else if(args.length == 2) {
+        if(args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("removeplot")
+            || args[0].equalsIgnoreCase("addnpc") || args[0].equalsIgnoreCase("addplot")) {
+          cmds.addAll(ArenaRegistry.getArenas().stream().map(BaseArena::getID).collect(Collectors.toList()));
+        } else if(args[0].equalsIgnoreCase("settheme")) {
+          for(List<String> l : registry.getPlugin().getConfigPreferences().getGameThemes().values()) {
             cmds.addAll(l);
           }
-        } else if (args[0].equalsIgnoreCase("votes")) {
+        } else if(args[0].equalsIgnoreCase("votes")) {
           cmds.addAll(Arrays.asList("add", "set"));
         }
-        partOfCommand = args[1];
-      } else if (args.length == 3 && args[0].equalsIgnoreCase("removeplot")) {
+      } else if(args.length == 3 && args[0].equalsIgnoreCase("removeplot")) {
         FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
         String path = "instances." + ArenaRegistry.getArena(args[1]).getID() + ".plots";
-        cmds.addAll(config.isConfigurationSection(path) ? new ArrayList<>(config.getConfigurationSection(path)
-                .getKeys(false)) : Collections.emptyList());
-        partOfCommand = args[2];
+        if (config.isConfigurationSection(path)) {
+          cmds.addAll(config.getConfigurationSection(path).getKeys(false));
+        }
       }
     }
 
-    if (cmd.getName().equalsIgnoreCase("buildbattle")) {
-      if (args.length == 2 && (args[0].equalsIgnoreCase("join") || args[0].equalsIgnoreCase("randomjoin"))) {
-        if (args[0].equalsIgnoreCase("randomjoin")) {
+    if(cmd.getName().equalsIgnoreCase("buildbattle")) {
+      if(args.length == 2 && (args[0].equalsIgnoreCase("join") || args[0].equalsIgnoreCase("randomjoin"))) {
+        if(args[0].equalsIgnoreCase("randomjoin")) {
           cmds.addAll(Arrays.asList("solo", "team", "gtb", "guess_the_build"));
         } else {
           cmds.addAll(ArenaRegistry.getArenas().stream().map(BaseArena::getID).collect(Collectors.toList()));
         }
-        partOfCommand = args[1];
-      } else if (args.length == 1) {
+      } else if(args.length == 1) {
         cmds.addAll(registry.getMappedArguments().get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName)
             .collect(Collectors.toList()));
-        partOfCommand = args[0];
       }
     }
 
-    // Completes the player names
-    if (cmds.isEmpty() || partOfCommand == null) {
-      return null;
-    }
-
-    StringUtil.copyPartialMatches(partOfCommand, cmds, completionList);
-    Collections.sort(completionList);
-    return completionList;
+    return cmds.isEmpty() ? null : cmds; // Completes the player names
   }
 }

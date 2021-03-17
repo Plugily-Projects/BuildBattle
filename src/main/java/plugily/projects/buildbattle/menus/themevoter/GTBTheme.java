@@ -29,8 +29,8 @@ package plugily.projects.buildbattle.menus.themevoter;
 @Deprecated
 public class GTBTheme {
 
-  private String theme;
-  private Difficulty difficulty;
+  private final String theme;
+  private final Difficulty difficulty;
 
   public GTBTheme(String theme, Difficulty difficulty) {
     this.theme = theme;
@@ -48,7 +48,7 @@ public class GTBTheme {
   public enum Difficulty {
     EASY(1), MEDIUM(2), HARD(3);
 
-    private int pointsReward;
+    private final int pointsReward;
 
     Difficulty(int pointsReward) {
       this.pointsReward = pointsReward;

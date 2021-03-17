@@ -23,27 +23,24 @@ package plugily.projects.buildbattle.menus.options.registry.particles;
 import com.github.stefvanschie.inventoryframework.Gui;
 import com.github.stefvanschie.inventoryframework.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
-
-import java.util.Map.Entry;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
+
+import java.util.Map.Entry;
 
 /**
  * Created by Tom on 24/08/2015.
  */
 public class ParticleRemoveMenu {
 
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
   private ParticleRemoveMenu() {
   }
@@ -54,10 +51,10 @@ public class ParticleRemoveMenu {
 
     int x = 0;
     int y = 0;
-    for (Entry<Location, Particle> map : new java.util.HashMap<>(buildPlot.getParticles()).entrySet()) {
+    for(Entry<Location, String> map : new java.util.HashMap<>(buildPlot.getParticles()).entrySet()) {
       Location location = map.getKey();
       ParticleItem particleItem = plugin.getOptionsRegistry().getParticleRegistry().getItemByEffect(map.getValue());
-      if (particleItem == null) {
+      if(particleItem == null) {
         continue;
       }
 
@@ -69,7 +66,7 @@ public class ParticleRemoveMenu {
         buildPlot.getParticles().remove(location);
         event.getWhoClicked().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.Particle-Removed"));
         gui.getItems().forEach(item -> {
-          if (item.getItem().isSimilar(itemStack)) {
+          if(item.getItem().isSimilar(itemStack)) {
             item.setVisible(false);
           }
         });
@@ -78,7 +75,7 @@ public class ParticleRemoveMenu {
         openMenu(player, buildPlot);
       }), x, y);
       x++;
-      if (x == 9) {
+      if(x == 9) {
         x = 0;
         y++;
       }

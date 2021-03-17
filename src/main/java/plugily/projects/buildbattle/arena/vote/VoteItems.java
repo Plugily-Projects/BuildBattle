@@ -27,7 +27,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.Main;
@@ -42,8 +43,14 @@ import java.util.Set;
 public class VoteItems {
 
   private static final Set<VoteItem> VOTEITEMS = new HashSet<>();
+  private static final FileConfiguration CONFIG;
+  private static final Main PLUGIN = JavaPlugin.getPlugin(Main.class);
+
   private static ItemStack reportItem = new ItemStack(Material.BEDROCK, 32);
-  private static final FileConfiguration config = ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "voteItems");
+
+  static {
+    CONFIG = ConfigUtils.getConfig(PLUGIN, "voteItems");
+  }
 
   public VoteItems() {
     updateVoteItemsConfig();
@@ -51,50 +58,50 @@ public class VoteItems {
   }
 
   private void loadVoteItems() {
-    for (String key : config.getKeys(false)) {
-      if (!config.isSet(key + ".displayname")) {
+    for(String key : CONFIG.getKeys(false)) {
+      if(!CONFIG.isSet(key + ".displayname")) {
         continue;
       }
 
-      ItemStack stack = new ItemBuilder(XMaterial.matchXMaterial(config.getString(key + ".material-name", "BEDROCK")
+      ItemStack stack = new ItemBuilder(XMaterial.matchXMaterial(CONFIG.getString(key + ".material-name", "BEDROCK")
           .toUpperCase()).orElse(XMaterial.BEDROCK).parseItem())
-          .name(JavaPlugin.getPlugin(Main.class).getChatManager().colorRawMessage(config.getString(key + ".displayname")))
+          .name(PLUGIN.getChatManager().colorRawMessage(CONFIG.getString(key + ".displayname")))
           .build();
 
-      if (config.getBoolean(key + ".report-item-function", false)) {
+      if(CONFIG.getBoolean(key + ".report-item-function", false)) {
         reportItem = stack;
       }
       Sound sound = null;
       try {
-        sound = Sound.valueOf(config.getString(key + ".sound", ""));
-      } catch (Exception ignored) {
+        sound = Sound.valueOf(CONFIG.getString(key + ".sound", ""));
+      } catch(IllegalArgumentException ignored) {
       }
       VOTEITEMS.add(new VoteItem(stack, Integer.parseInt(key), Integer.parseInt(key) + 1, sound));
     }
   }
 
   private void updateVoteItemsConfig() {
-    for (String key : config.getKeys(false)) {
-      if (!config.isSet(key + ".displayname") || config.isSet(key + ".material-name")) {
+    for(String key : CONFIG.getKeys(false)) {
+      if(!CONFIG.isSet(key + ".displayname") || CONFIG.isSet(key + ".material-name")) {
         continue;
       }
-      config.set(key + ".material-name", XMaterial.GREEN_TERRACOTTA.name());
+      CONFIG.set(key + ".material-name", XMaterial.GREEN_TERRACOTTA.name());
       Debugger.debug(Debugger.Level.WARN, "Found outdated item in votingItems.yml! We've converted it to the newest version!");
     }
-    ConfigUtils.saveConfig(JavaPlugin.getPlugin(Main.class), config, "voteItems");
+    ConfigUtils.saveConfig(PLUGIN, CONFIG, "voteItems");
   }
 
   public void giveVoteItems(Player player) {
-    for (VoteItem voteItem : VOTEITEMS) {
+    for(VoteItem voteItem : VOTEITEMS) {
       player.getInventory().setItem(voteItem.getSlot(), voteItem.getItemStack());
     }
     player.updateInventory();
   }
 
   public void playVoteSound(Player player, ItemStack itemStack) {
-    for (VoteItem item : VOTEITEMS) {
-      if (item.getItemStack().isSimilar(itemStack)) {
-        if (item.getSound() == null) {
+    for(VoteItem item : VOTEITEMS) {
+      if(item.getItemStack().isSimilar(itemStack)) {
+        if(item.getSound() == null) {
           return;
         }
         player.playSound(player.getLocation(), item.getSound(), 1, 1);
@@ -109,8 +116,8 @@ public class VoteItems {
    * @return points
    */
   public int getPoints(ItemStack itemStack) {
-    for (VoteItem item : VOTEITEMS) {
-      if (item.getItemStack().isSimilar(itemStack)) {
+    for(VoteItem item : VOTEITEMS) {
+      if(item.getItemStack().isSimilar(itemStack)) {
         return item.getPoints();
       }
     }

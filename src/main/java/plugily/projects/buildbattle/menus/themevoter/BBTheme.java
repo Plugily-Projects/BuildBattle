@@ -23,7 +23,7 @@ package plugily.projects.buildbattle.menus.themevoter;
 public class BBTheme {
 
   private String theme = "";
-  private Difficulty difficulty;
+  private final Difficulty difficulty;
 
   public BBTheme(String theme, Difficulty difficulty) {
     this.theme = theme == null ? "" : theme;
@@ -41,7 +41,7 @@ public class BBTheme {
   public enum Difficulty {
     EASY(1), MEDIUM(2), HARD(3);
 
-    private int pointsReward;
+    private final int pointsReward;
 
     Difficulty(int pointsReward) {
       this.pointsReward = pointsReward;

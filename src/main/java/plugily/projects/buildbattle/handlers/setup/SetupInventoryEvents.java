@@ -20,9 +20,6 @@
 
 package plugily.projects.buildbattle.handlers.setup;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -37,9 +34,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
+import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
@@ -49,12 +52,9 @@ import plugily.projects.buildbattle.arena.impl.TeamArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.PermissionManager;
 import plugily.projects.buildbattle.handlers.sign.ArenaSign;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
-import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static plugily.projects.buildbattle.handlers.setup.SetupInventory.isOptionDone;
 
@@ -63,7 +63,7 @@ import static plugily.projects.buildbattle.handlers.setup.SetupInventory.isOptio
  */
 public class SetupInventoryEvents implements Listener {
 
-  private Main plugin;
+  private final Main plugin;
 
   public SetupInventoryEvents(Main plugin) {
     this.plugin = plugin;
@@ -72,28 +72,31 @@ public class SetupInventoryEvents implements Listener {
 
   @EventHandler
   public void onGameTypeSetClick(InventoryClickEvent e) {
-    if (!(e.getWhoClicked() instanceof Player || e.getWhoClicked().hasPermission(PermissionManager.getEditGames()))) {
+    if(!(e.getWhoClicked() instanceof Player || e.getWhoClicked().hasPermission(PermissionManager.getEditGames()))) {
       return;
     }
-    if (!e.getView().getTitle().contains("Game type:") || !ItemUtils.isItemStackNamed(e.getCurrentItem())) {
+    if(!ComplementAccessor.getComplement().getTitle(e.getView()).contains("Game type:") || !ItemUtils.isItemStackNamed(e.getCurrentItem())) {
       return;
     }
+    BaseArena arena = ArenaRegistry.getArena(ComplementAccessor.getComplement().getTitle(e.getView()).replace("Game type: ", ""));
+    if(arena == null) {
+      return;
+    }
+
+    String name = ChatColor.stripColor(ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta()));
     Player player = (Player) e.getWhoClicked();
-    String name = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
-    BaseArena arena = ArenaRegistry.getArena(e.getView().getTitle().replace("Game type: ", ""));
-    if (arena == null) {
-      return;
-    }
+
     e.setCancelled(true);
     player.closeInventory();
+
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    if (name.contains("Solo")) {
+    if(name.contains("Solo")) {
       arena.setArenaType(BaseArena.ArenaType.SOLO);
       config.set("instances." + arena.getID() + ".gametype", "SOLO");
-    } else if (name.contains("Team")) {
+    } else if(name.contains("Team")) {
       arena.setArenaType(BaseArena.ArenaType.TEAM);
       config.set("instances." + arena.getID() + ".gametype", "TEAM");
-    } else if (name.contains("Guess The Build")) {
+    } else if(name.contains("Guess The Build")) {
       arena.setArenaType(BaseArena.ArenaType.GUESS_THE_BUILD);
       config.set("instances." + arena.getID() + ".gametype", "GUESS_THE_BUILD");
     }
@@ -103,38 +106,38 @@ public class SetupInventoryEvents implements Listener {
 
   @EventHandler
   public void onClick(InventoryClickEvent e) {
-    if (e.getCurrentItem() == null || e.getWhoClicked().getType() != EntityType.PLAYER) {
+    if(e.getCurrentItem() == null || e.getWhoClicked().getType() != EntityType.PLAYER) {
       return;
     }
     Player player = (Player) e.getWhoClicked();
-    if (!(player.hasPermission("buildbattle.admin.create") && e.getView().getTitle().contains("BB Arena:") && ItemUtils.isItemStackNamed(e.getCurrentItem()))) {
+    if(!(player.hasPermission("buildbattle.admin.create") && ComplementAccessor.getComplement().getTitle(e.getView()).contains("BB Arena:") && ItemUtils.isItemStackNamed(e.getCurrentItem()))) {
       return;
     }
 
     SetupInventory.ClickPosition slot = SetupInventory.ClickPosition.getByPosition(e.getSlot());
 
     //do not close inventory nor cancel event when setting arena name via name tag
-    if (e.getCurrentItem().getType() != Material.NAME_TAG) {
-      if (!(slot == SetupInventory.ClickPosition.SET_MINIMUM_PLAYERS || slot == SetupInventory.ClickPosition.SET_MAXIMUM_PLAYERS)) {
+    if(e.getCurrentItem().getType() != Material.NAME_TAG) {
+      if(!(slot == SetupInventory.ClickPosition.SET_MINIMUM_PLAYERS || slot == SetupInventory.ClickPosition.SET_MAXIMUM_PLAYERS)) {
         player.closeInventory();
       }
       e.setCancelled(true);
     }
 
-    BaseArena arena = ArenaRegistry.getArena(e.getView().getTitle().replace("BB Arena: ", ""));
-    if (arena == null) {
+    BaseArena arena = ArenaRegistry.getArena(ComplementAccessor.getComplement().getTitle(e.getView()).replace("BB Arena: ", ""));
+    if(arena == null) {
       return;
     }
-    ClickType clickType = e.getClick();
-    String locationString = player.getLocation().getWorld().getName() + "," + player.getLocation().getX() + "," + player.getLocation().getY() + "," +
-        player.getLocation().getZ() + "," + player.getLocation().getYaw() + ",0.0";
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    if (config == null) {
+    if(config == null) {
       return;
     }
 
+    ClickType clickType = e.getClick();
+    String locationString = player.getLocation().getWorld().getName() + "," + player.getLocation().getX() + "," + player.getLocation().getY() + "," +
+        player.getLocation().getZ() + "," + player.getLocation().getYaw() + ",0.0";
     ItemStack currentItem = e.getCurrentItem();
-    switch (slot) {
+    switch(slot) {
       case SET_ENDING:
         config.set("instances." + arena.getID() + ".Endlocation", locationString);
         player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aEnding location for arena " + arena.getID() + " set at your location!"));
@@ -144,14 +147,14 @@ public class SetupInventoryEvents implements Listener {
         player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aLobby location for arena " + arena.getID() + " set at your location!"));
         break;
       case SET_MINIMUM_PLAYERS:
-        if (currentItem == null) {
+        if(currentItem == null) {
           break; // somehow getCurrentItem is still null even its already checked
         }
 
-        if (clickType.isRightClick()) {
+        if(clickType.isRightClick()) {
           currentItem.setAmount(currentItem.getAmount() + 1);
         }
-        if (clickType.isLeftClick()) {
+        if(clickType.isLeftClick()) {
           currentItem.setAmount(currentItem.getAmount() - 1);
         }
         config.set("instances." + arena.getID() + ".minimumplayers", currentItem.getAmount());
@@ -163,22 +166,22 @@ public class SetupInventoryEvents implements Listener {
         lore.add(ChatColor.RED + "Set it minimum 3 when using TEAM game type!!!");
         lore.add(isOptionDone("instances." + arena.getID() + ".minimumplayers"));
         ItemStack stack = player.getInventory().getItem(SetupInventory.ClickPosition.SET_MINIMUM_PLAYERS.getPosition());
-        if (stack != null) {
+        if(stack != null) {
           ItemMeta meta = stack.getItemMeta();
-          meta.setLore(lore);
+          ComplementAccessor.getComplement().setLore(meta, lore);
           stack.setItemMeta(meta);
         }
         player.updateInventory();
         break;
       case SET_MAXIMUM_PLAYERS:
-        if (currentItem == null) {
+        if(currentItem == null) {
           break; // somehow getCurrentItem is still null even its already checked
         }
 
-        if (clickType.isRightClick()) {
+        if(clickType.isRightClick()) {
           currentItem.setAmount(currentItem.getAmount() + 1);
         }
-        if (clickType.isLeftClick()) {
+        if(clickType.isLeftClick()) {
           currentItem.setAmount(currentItem.getAmount() - 1);
         }
         config.set("instances." + arena.getID() + ".maximumplayers", currentItem.getAmount());
@@ -188,16 +191,16 @@ public class SetupInventoryEvents implements Listener {
         maxlore.add(ChatColor.DARK_GRAY + "(how many players arena can hold)");
         maxlore.add(isOptionDone("instances." + arena.getID() + ".maximumplayers"));
         ItemStack itemStack = player.getInventory().getItem(SetupInventory.ClickPosition.SET_MAXIMUM_PLAYERS.getPosition());
-        if (itemStack != null) {
+        if(itemStack != null) {
           ItemMeta meta = itemStack.getItemMeta();
-          meta.setLore(maxlore);
+          ComplementAccessor.getComplement().setLore(meta, maxlore);
           itemStack.setItemMeta(meta);
         }
         player.updateInventory();
         break;
       case ADD_SIGN:
         Location location = player.getTargetBlock(null, 10).getLocation();
-        if (!(location.getBlock().getState() instanceof Sign)) {
+        if(!(location.getBlock().getState() instanceof Sign)) {
           player.sendMessage(plugin.getChatManager().colorRawMessage("&cPlease look at sign to add it!"));
           break;
         }
@@ -211,7 +214,7 @@ public class SetupInventoryEvents implements Listener {
         break;
       case SET_GAME_TYPE:
         //todo inventory framework
-        Inventory inv = Bukkit.createInventory(null, 9, "Game type: " + arena.getID());
+        Inventory inv = ComplementAccessor.getComplement().createInventory(null, 9, "Game type: " + arena.getID());
         inv.addItem(new ItemBuilder(Material.NAME_TAG)
             .name(ChatColor.GREEN + "Solo game mode")
             .lore(ChatColor.GRAY + "1 player per plot")
@@ -221,21 +224,21 @@ public class SetupInventoryEvents implements Listener {
             .lore(ChatColor.GRAY + "2 players per plot")
             .build());
         inv.addItem(new ItemBuilder(Material.NAME_TAG)
-                .name(ChatColor.GREEN + "Guess The Build game mode")
-                .lore(ChatColor.GRAY + "1 player builds and others try to guess it")
-                .build());
+            .name(ChatColor.GREEN + "Guess The Build game mode")
+            .lore(ChatColor.GRAY + "1 player builds and others try to guess it")
+            .build());
         player.openInventory(inv);
         break;
       case SET_MAP_NAME:
-        if (currentItem.getType() == Material.NAME_TAG && e.getCursor().getType() == Material.NAME_TAG) {
-          if (!ItemUtils.isItemStackNamed(e.getCursor())) {
+        if(currentItem.getType() == Material.NAME_TAG && e.getCursor().getType() == Material.NAME_TAG) {
+          if(!ItemUtils.isItemStackNamed(e.getCursor())) {
             player.sendMessage(ChatColor.RED + "This item doesn't has a name!");
             return;
           }
-          String newName = e.getCursor().getItemMeta().getDisplayName();
+          String newName = ComplementAccessor.getComplement().getDisplayName(e.getCursor().getItemMeta());
           config.set("instances." + arena.getID() + ".mapname", newName);
           player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aName of arena " + arena.getID() + " set to " + newName));
-          currentItem.getItemMeta().setDisplayName(ChatColor.GOLD + "Set a mapname (currently: " + newName);
+          ComplementAccessor.getComplement().setDisplayName(currentItem.getItemMeta(), ChatColor.GOLD + "Set a mapname (currently: " + newName);
         }
         break;
       case ADD_GAME_PLOT:
@@ -245,29 +248,29 @@ public class SetupInventoryEvents implements Listener {
         player.performCommand("bba addnpc");
         break;
       case REGISTER_ARENA:
-        if (arena.isReady()) {
+        if(arena.isReady()) {
           e.getWhoClicked().sendMessage(ChatColor.GREEN + "This arena was already validated and is ready to use!");
           return;
         }
         String[] locations = {"lobbylocation", "Endlocation"};
-        for (String s : locations) {
-          if (!config.isSet("instances." + arena.getID() + "." + s) || config.getString("instances." + arena.getID() + "." + s)
+        for(String s : locations) {
+          if(!config.isSet("instances." + arena.getID() + "." + s) || config.getString("instances." + arena.getID() + "." + s)
               .equals(LocationSerializer.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
             e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure following spawn properly: " + s + " (cannot be world spawn location)");
             return;
           }
         }
-        if (config.getConfigurationSection("instances." + arena.getID() + ".plots") == null) {
+        if(config.getConfigurationSection("instances." + arena.getID() + ".plots") == null) {
           e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure plots properly");
           return;
         }
-        if (arena.getArenaType() == BaseArena.ArenaType.SOLO && config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false).size() < config.getInt("instances." + arena.getID() + ".minimumplayers")) {
+        if(arena.getArenaType() == BaseArena.ArenaType.SOLO && config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false).size() < config.getInt("instances." + arena.getID() + ".minimumplayers")) {
           e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! You need same value of plots as minimumplayers");
-        } else if (arena.getArenaType() == BaseArena.ArenaType.TEAM && (config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false).size() / 2) < config.getInt("instances." + arena.getID() + ".minimumplayers")) {
+        } else if(arena.getArenaType() == BaseArena.ArenaType.TEAM && (config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false).size() / 2) < config.getInt("instances." + arena.getID() + ".minimumplayers")) {
           e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! You need half value of plots as minimumplayers");
         }
-        for (String plotName : config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false)) {
-          if (!config.isSet("instances." + arena.getID() + ".plots." + plotName + ".maxpoint") ||
+        for(String plotName : config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false)) {
+          if(!config.isSet("instances." + arena.getID() + ".plots." + plotName + ".maxpoint") ||
               !config.isSet("instances." + arena.getID() + ".plots." + plotName + ".minpoint")) {
             e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Plots are not configured properly! (missing selection values)");
             return;
@@ -287,12 +290,12 @@ public class SetupInventoryEvents implements Listener {
         List<Sign> signsToUpdate = new ArrayList<>();
         ArenaRegistry.unregisterArena(arena);
 
-        for (ArenaSign arenaSign : plugin.getSignManager().getArenaSigns()) {
-          if (arenaSign.getArena().equals(arena)) {
+        for(ArenaSign arenaSign : plugin.getSignManager().getArenaSigns()) {
+          if(arenaSign.getArena().equals(arena)) {
             signsToUpdate.add(arenaSign.getSign());
           }
         }
-        switch (BaseArena.ArenaType.valueOf(config.getString("instances." + arena.getID() + ".gametype", "solo").toUpperCase())) {
+        switch(BaseArena.ArenaType.valueOf(config.getString("instances." + arena.getID() + ".gametype", "solo").toUpperCase())) {
           case TEAM:
             arena = new TeamArena(arena.getID(), plugin);
             break;
@@ -312,23 +315,23 @@ public class SetupInventoryEvents implements Listener {
         arena.setEndLocation(LocationSerializer.getLocation(config.getString("instances." + arena.getID() + ".Endlocation")));
         arena.setArenaType(BaseArena.ArenaType.valueOf(config.getString("instances." + arena.getID() + ".gametype").toUpperCase()));
 
-        for (String plotName : config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false)) {
+        for(String plotName : config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false)) {
           Location minPoint = LocationSerializer.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint"));
           Biome biome = Version.isCurrentHigher(Version.v1_15_R1) ?
-                  minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
-                  : minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
+              minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
+              : minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
           Plot buildPlot = new Plot(arena, biome);
           buildPlot.setCuboid(new Cuboid(minPoint, LocationSerializer.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint"))));
           buildPlot.fullyResetPlot();
           arena.getPlotManager().addBuildPlot(buildPlot);
         }
-        if (arena instanceof SoloArena) {
+        if(arena instanceof SoloArena) {
           ((SoloArena) arena).initPoll();
         }
         ArenaRegistry.registerArena(arena);
         arena.start();
         plugin.getSignManager().getArenaSigns().clear();
-        for (Sign s : signsToUpdate) {
+        for(Sign s : signsToUpdate) {
           plugin.getSignManager().getArenaSigns().add(new ArenaSign(s, arena));
         }
         plugin.getSignManager().updateSigns();

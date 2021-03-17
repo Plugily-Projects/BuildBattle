@@ -20,6 +20,17 @@
 
 package plugily.projects.buildbattle.api;
 
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.sorter.SortUtils;
+import plugily.projects.buildbattle.ConfigPreferences;
+import plugily.projects.buildbattle.Main;
+import plugily.projects.buildbattle.user.data.MysqlManager;
+import plugily.projects.buildbattle.utils.Debugger;
+import plugily.projects.buildbattle.utils.MessageUtils;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,18 +41,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.sorter.SortUtils;
-import plugily.projects.buildbattle.ConfigPreferences;
-import plugily.projects.buildbattle.Main;
-import plugily.projects.buildbattle.user.data.MysqlManager;
-import plugily.projects.buildbattle.utils.Debugger;
-import plugily.projects.buildbattle.utils.MessageUtils;
-
 /**
  * @author Plajer, TomTheDeveloper
  * @since 2.0.0
@@ -50,7 +49,7 @@ import plugily.projects.buildbattle.utils.MessageUtils;
  */
 public class StatsStorage {
 
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
   /**
    * Get all UUID's sorted ascending by Statistic Type
@@ -59,16 +58,16 @@ public class StatsStorage {
    * @return Map of UUID keys and Integer values sorted in ascending order of requested statistic type
    */
   public static Map<UUID, Integer> getStats(StatisticType stat) {
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      try (Connection connection = plugin.getMysqlDatabase().getConnection();
-           Statement statement = connection.createStatement();
-           ResultSet set = statement.executeQuery("SELECT UUID, " + stat.getName() + " FROM " + ((MysqlManager) plugin.getUserManager().getDatabase()).getTableName() + " ORDER BY " + stat.getName())) {
+    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+      try(Connection connection = plugin.getMysqlDatabase().getConnection();
+          Statement statement = connection.createStatement();
+          ResultSet set = statement.executeQuery("SELECT UUID, " + stat.getName() + " FROM " + ((MysqlManager) plugin.getUserManager().getDatabase()).getTableName() + " ORDER BY " + stat.getName())) {
         Map<UUID, Integer> column = new LinkedHashMap<>();
-        while (set.next()) {
+        while(set.next()) {
           column.put(UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));
         }
         return column;
-      } catch (SQLException e) {
+      } catch(SQLException e) {
         e.printStackTrace();
         MessageUtils.errorOccurred();
         Debugger.sendConsoleMsg("Cannot get contents from MySQL database!");
@@ -78,8 +77,8 @@ public class StatsStorage {
     }
     FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
     Map<UUID, Integer> stats = new TreeMap<>();
-    for (String string : config.getKeys(false)) {
-      if ("data-version".equals(string)) {
+    for(String string : config.getKeys(false)) {
+      if("data-version".equals(string)) {
         continue;
       }
       stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));
@@ -105,10 +104,10 @@ public class StatsStorage {
   public enum StatisticType {
     BLOCKS_PLACED("blocksplaced", true), BLOCKS_BROKEN("blocksbroken", true), GAMES_PLAYED("gamesplayed", true), WINS("wins", true),
     LOSES("loses", true), HIGHEST_WIN("highestwin", true), PARTICLES_USED("particles", true), SUPER_VOTES("supervotes", true),
-    LOCAL_POINTS("points", false), LOCAL_GUESS_THE_BUILD_POINTS("gtb_points", false);
+    LOCAL_POINTS("points", false), LOCAL_GUESS_THE_BUILD_POINTS("gtb_points", false), REPORTS("reports", false);
 
-    private String name;
-    private boolean persistent;
+    private final String name;
+    private final boolean persistent;
 
     StatisticType(String name, boolean persistent) {
       this.name = name;

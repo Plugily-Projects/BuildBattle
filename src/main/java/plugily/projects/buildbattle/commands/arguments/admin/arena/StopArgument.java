@@ -22,7 +22,6 @@ package plugily.projects.buildbattle.commands.arguments.admin.arena;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import plugily.projects.buildbattle.arena.ArenaManager;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.ArenaState;
@@ -46,11 +45,11 @@ public class StopArgument {
       @Override
       public void execute(CommandSender sender, String[] args) {
         BaseArena arena = ArenaRegistry.getArena((Player) sender);
-        if (arena == null) {
-          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Not-Playing"));
+        if(arena == null) {
+          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Playing"));
           return;
         }
-        if (arena.getArenaState() != ArenaState.ENDING) {
+        if(arena.getArenaState() != ArenaState.ENDING) {
           ArenaManager.stopGame(false, arena);
         }
         sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Arguments.Success"));

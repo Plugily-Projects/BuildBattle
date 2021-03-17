@@ -23,7 +23,6 @@ package plugily.projects.buildbattle.api.event.game;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
-
 import plugily.projects.buildbattle.api.event.BBEvent;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 
@@ -34,7 +33,7 @@ public class BBGameJoinEvent extends BBEvent implements Cancellable {
 
   private static final HandlerList handlers = new HandlerList();
   private boolean cancelled;
-  private Player player;
+  private final Player player;
 
   public BBGameJoinEvent(Player player, BaseArena arena) {
     super(arena);

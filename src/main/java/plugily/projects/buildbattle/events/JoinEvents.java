@@ -47,11 +47,11 @@ public class JoinEvents implements Listener {
 
   @EventHandler
   public void onLogin(PlayerLoginEvent e) {
-    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && !plugin.getServer().hasWhitelist()
+    if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && !plugin.getServer().hasWhitelist()
         || e.getResult() != PlayerLoginEvent.Result.KICK_WHITELIST) {
       return;
     }
-    if (e.getPlayer().hasPermission(PermissionManager.getJoinFullGames())) {
+    if(e.getPlayer().hasPermission(PermissionManager.getJoinFullGames())) {
       e.setResult(PlayerLoginEvent.Result.ALLOWED);
     }
   }
@@ -60,15 +60,15 @@ public class JoinEvents implements Listener {
   public void onJoinCheckVersion(PlayerJoinEvent e) {
     //we want to be the first :)
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
-      if (!e.getPlayer().hasPermission("buildbattle.updatenotify") || !plugin.getConfig().getBoolean("Update-Notifier.Enabled", true)) {
+      if(!e.getPlayer().hasPermission("buildbattle.updatenotify") || !plugin.getConfig().getBoolean("Update-Notifier.Enabled", true)) {
         return;
       }
       UpdateChecker.init(plugin, 44703).requestUpdateCheck().whenComplete((result, exception) -> {
-        if (!result.requiresUpdate()) {
+        if(!result.requiresUpdate()) {
           return;
         }
-        if (result.getNewestVersion().contains("b")) {
-          if (plugin.getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
+        if(result.getNewestVersion().contains("b")) {
+          if(plugin.getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
             e.getPlayer().sendMessage("");
             e.getPlayer().sendMessage(ChatColor.BOLD + "BUILD BATTLE UPDATE NOTIFY");
             e.getPlayer().sendMessage(ChatColor.RED + "BETA version of software is ready for update! Proceed with caution.");
@@ -86,7 +86,7 @@ public class JoinEvents implements Listener {
 
   @EventHandler
   public void onJoinLoadStats(PlayerJoinEvent e) {
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && !ArenaRegistry.getArenas().isEmpty()) {
+    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && !ArenaRegistry.getArenas().isEmpty()) {
       ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()).teleportToLobby(e.getPlayer());
     }
     plugin.getUserManager().loadStatistics(plugin.getUserManager().getUser(e.getPlayer()));

@@ -20,10 +20,10 @@
 
 package plugily.projects.buildbattle.commands.arguments.data;
 
+import org.bukkit.command.CommandSender;
+
 import java.util.Collections;
 import java.util.List;
-
-import org.bukkit.command.CommandSender;
 
 /**
  * @author Plajer
@@ -32,9 +32,9 @@ import org.bukkit.command.CommandSender;
  */
 public class CommandArgument {
 
-  private String argumentName;
-  private List<String> permissions;
-  private ExecutorType validExecutors;
+  private final String argumentName;
+  private final List<String> permissions;
+  private final ExecutorType validExecutors;
 
   public CommandArgument(String argumentName, String permissions, ExecutorType validExecutors) {
     this.argumentName = argumentName;

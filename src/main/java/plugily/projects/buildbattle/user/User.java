@@ -20,13 +20,9 @@
 
 package plugily.projects.buildbattle.user;
 
-import java.util.EnumMap;
-import java.util.Map;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.api.event.player.BBPlayerStatisticChangeEvent;
@@ -34,12 +30,15 @@ import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 /**
  * Created by Tom on 27/07/2014.
  */
 public class User {
 
-  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final Main PLUGIN = JavaPlugin.getPlugin(Main.class);
   private final Player player;
   private final Map<StatsStorage.StatisticType, Integer> stats = new EnumMap<>(StatsStorage.StatisticType.class);
   private Plot currentPlot;
@@ -74,31 +73,31 @@ public class User {
   }
 
   public int getStat(StatsStorage.StatisticType stat) {
-    if (!stats.containsKey(stat)) {
+    if(!stats.containsKey(stat)) {
       stats.put(stat, 0);
-      return 0;
-    } else if (stats.get(stat) == null) {
       return 0;
     }
 
-    return stats.get(stat);
+    return stats.getOrDefault(stat, 0);
   }
 
   public void setStat(StatsStorage.StatisticType stat, int i) {
     stats.put(stat, i);
 
-    Bukkit.getScheduler().runTask(plugin, () -> {
+    Bukkit.getScheduler().callSyncMethod(PLUGIN, () -> {
       BBPlayerStatisticChangeEvent event = new BBPlayerStatisticChangeEvent(getArena(), player, stat, i);
       Bukkit.getPluginManager().callEvent(event);
+      return event;
     });
   }
 
   public void addStat(StatsStorage.StatisticType stat, int i) {
     stats.put(stat, getStat(stat) + i);
 
-    Bukkit.getScheduler().runTask(plugin, () -> {
+    Bukkit.getScheduler().callSyncMethod(PLUGIN, () -> {
       BBPlayerStatisticChangeEvent event = new BBPlayerStatisticChangeEvent(getArena(), player, stat, getStat(stat));
       Bukkit.getPluginManager().callEvent(event);
+      return event;
     });
   }
 

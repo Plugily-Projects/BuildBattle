@@ -20,23 +20,24 @@
 
 package plugily.projects.buildbattle.menus.options.registry.playerheads;
 
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
+import plugily.projects.buildbattle.Main;
+import plugily.projects.buildbattle.menus.options.OptionsRegistry;
+import plugily.projects.buildbattle.utils.Utils;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
-import plugily.projects.buildbattle.Main;
-import plugily.projects.buildbattle.menus.options.OptionsRegistry;
-import plugily.projects.buildbattle.utils.Utils;
 
 /**
  * @author Plajer
@@ -45,7 +46,7 @@ import plugily.projects.buildbattle.utils.Utils;
  */
 public class PlayerHeadsRegistry {
 
-  private Main plugin;
+  private final Main plugin;
   private final Map<HeadsCategory, Inventory> categories = new HashMap<>();
 
   public PlayerHeadsRegistry(OptionsRegistry registry) {
@@ -55,8 +56,8 @@ public class PlayerHeadsRegistry {
 
   private void registerCategories() {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "heads/mainmenu");
-    for (String str : config.getKeys(false)) {
-      if (!config.getBoolean(str + ".enabled", true)) {
+    for(String str : config.getKeys(false)) {
+      if(!config.getBoolean(str + ".enabled", true)) {
         continue;
       }
       HeadsCategory category = new HeadsCategory(str);
@@ -71,17 +72,21 @@ public class PlayerHeadsRegistry {
       Set<ItemStack> playerHeads = new HashSet<>();
       FileConfiguration categoryConfig = ConfigUtils.getConfig(plugin, "heads/menus/" +
           config.getString(str + ".config"));
-      for (String path : categoryConfig.getKeys(false)) {
-        if (!categoryConfig.getBoolean(path + ".enabled", true)) {
+      for(String path : categoryConfig.getKeys(false)) {
+        if(!categoryConfig.getBoolean(path + ".enabled", true)) {
           continue;
         }
+
         ItemStack stack = ItemUtils.getSkull(categoryConfig.getString(path + ".texture"));
-        Utils.setItemNameAndLore(stack, plugin.getChatManager().colorRawMessage(categoryConfig.getString(path + ".displayname")),
-            categoryConfig.getStringList(path + ".lore").stream()
+        ItemMeta im = stack.getItemMeta();
+
+        ComplementAccessor.getComplement().setDisplayName(im, plugin.getChatManager().colorRawMessage(categoryConfig.getString(path + ".displayname")));
+        ComplementAccessor.getComplement().setLore(im, categoryConfig.getStringList(path + ".lore").stream()
                 .map(lore -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()));
+        stack.setItemMeta(im);
         playerHeads.add(stack);
       }
-      Inventory inv = Bukkit.createInventory(null, Utils.serializeInt(playerHeads.size() + 1),
+      Inventory inv = ComplementAccessor.getComplement().createInventory(null, Utils.serializeInt(playerHeads.size() + 1),
           plugin.getChatManager().colorRawMessage(config.getString(str + ".menuname")));
       playerHeads.forEach(inv::addItem);
       inv.addItem(Utils.getGoBackItem());

@@ -20,14 +20,13 @@
 
 package plugily.projects.buildbattle.menus.options.registry;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.WeatherType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
@@ -52,7 +51,7 @@ public class WeatherChangeOption {
       public void onClick(InventoryClickEvent e) {
         e.getWhoClicked().closeInventory();
 
-        Inventory weatherInv = Bukkit.createInventory(null, 9, registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Inventory-Name"));
+        Inventory weatherInv = ComplementAccessor.getComplement().createInventory(null, 9, registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Inventory-Name"));
         weatherInv.addItem(new ItemBuilder(Material.BUCKET).name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Clear")).build());
         weatherInv.addItem(new ItemBuilder(Material.BUCKET).name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Downfall")).build());
         weatherInv.addItem(Utils.getGoBackItem());
@@ -61,20 +60,20 @@ public class WeatherChangeOption {
 
       @Override
       public void onTargetClick(InventoryClickEvent e) {
-        if (e.getCurrentItem() == null)
+        if(e.getCurrentItem() == null)
           return;
 
         BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
-        if (arena == null) {
+        if(arena == null) {
           return;
         }
         Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());
-        if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Downfall"))) {
+        if(ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta()).equalsIgnoreCase(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Downfall"))) {
           plot.setWeatherType(WeatherType.DOWNFALL);
-        } else if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Clear"))) {
+        } else if(ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta()).equalsIgnoreCase(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Clear"))) {
           plot.setWeatherType(WeatherType.CLEAR);
         }
-        for (Player p : plot.getOwners()) {
+        for(Player p : plot.getOwners()) {
           p.setPlayerWeather(plot.getWeatherType());
           p.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Set"));
         }

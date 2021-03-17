@@ -50,10 +50,10 @@ public class ChatEvents implements Listener {
   @EventHandler
   public void onChatIngame(AsyncPlayerChatEvent event) {
     BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
-    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SEPARATE_CHAT)) {
-      if (arena == null) {
-        for (BaseArena loopArena : ArenaRegistry.getArenas()) {
-          for (Player player : loopArena.getPlayers()) {
+    if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SEPARATE_CHAT)) {
+      if(arena == null) {
+        for(BaseArena loopArena : ArenaRegistry.getArenas()) {
+          for(Player player : loopArena.getPlayers()) {
             event.getRecipients().remove(player);
           }
         }
@@ -62,21 +62,21 @@ public class ChatEvents implements Listener {
       event.getRecipients().clear();
       event.getRecipients().addAll(new ArrayList<>(arena.getPlayers()));
     }
-    if (!(arena instanceof GuessTheBuildArena)) {
+    if(!(arena instanceof GuessTheBuildArena)) {
       return;
     }
     GuessTheBuildArena gameArena = (GuessTheBuildArena) arena;
-    if (gameArena.getWhoGuessed().contains(event.getPlayer())) {
+    if(gameArena.getWhoGuessed().contains(event.getPlayer())) {
       event.setCancelled(true);
       event.getPlayer().sendMessage(plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Chat.Cant-Talk-When-Guessed"));
       return;
     }
-    if (event.getPlayer() == gameArena.getCurrentBuilder()) {
+    if(event.getPlayer() == gameArena.getCurrentBuilder()) {
       event.setCancelled(true);
       event.getPlayer().sendMessage(plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Chat.Cant-Talk-When-Building"));
       return;
     }
-    if (gameArena.getCurrentTheme() == null || !gameArena.getCurrentTheme().getTheme().equalsIgnoreCase(event.getMessage())) {
+    if(gameArena.getCurrentTheme() == null || !gameArena.getCurrentTheme().getTheme().equalsIgnoreCase(event.getMessage())) {
       return;
     }
     event.setCancelled(true);

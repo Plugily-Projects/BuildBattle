@@ -20,14 +20,10 @@
 
 package plugily.projects.buildbattle.commands.arguments.admin;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.arena.ArenaManager;
@@ -38,6 +34,9 @@ import plugily.projects.buildbattle.commands.arguments.data.CommandArgument;
 import plugily.projects.buildbattle.commands.arguments.data.LabelData;
 import plugily.projects.buildbattle.commands.arguments.data.LabeledCommandArgument;
 import plugily.projects.buildbattle.handlers.language.LanguageManager;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Plajer
@@ -53,7 +52,7 @@ public class ReloadArgument {
         new LabelData("/bba reload", "/bba reload", "&7Reload all game arenas and configuration files\n&7&lThey will be stopped!\n&6Permission: &7buildbattle.admin.reload")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        if (!confirmations.contains(sender)) {
+        if(!confirmations.contains(sender)) {
           confirmations.add(sender);
           Bukkit.getScheduler().runTaskLater(registry.getPlugin(), () -> confirmations.remove(sender), 20 * 10);
           sender.sendMessage(registry.getPlugin().getChatManager().getPrefix()
@@ -65,11 +64,11 @@ public class ReloadArgument {
         registry.getPlugin().reloadConfig();
         LanguageManager.reloadConfig();
 
-        for (BaseArena arena : ArenaRegistry.getArenas()) {
-          for (Player player : arena.getPlayers()) {
+        for(BaseArena arena : ArenaRegistry.getArenas()) {
+          for(Player player : arena.getPlayers()) {
             arena.doBarAction(BaseArena.BarAction.REMOVE, player);
             arena.teleportToEndLocation(player);
-            if (registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+            if(registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
               InventorySerializer.loadInventory(registry.getPlugin(), player);
             } else {
               player.getInventory().clear();

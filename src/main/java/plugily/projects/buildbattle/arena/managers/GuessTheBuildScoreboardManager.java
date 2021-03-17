@@ -49,9 +49,9 @@ public class GuessTheBuildScoreboardManager extends ScoreboardManager {
   public GuessTheBuildScoreboardManager(BaseArena arena) {
     super(arena);
     this.arena = (GuessTheBuildArena) arena;
-    for (ArenaState state : ArenaState.values()) {
+    for(ArenaState state : ArenaState.values()) {
       //not registering RESTARTING state and registering IN_GAME and ENDING later
-      if (state == ArenaState.RESTARTING || state == ArenaState.IN_GAME || state == ArenaState.ENDING) {
+      if(state == ArenaState.RESTARTING || state == ArenaState.IN_GAME || state == ArenaState.ENDING) {
         continue;
       }
       //todo migrator
@@ -70,10 +70,13 @@ public class GuessTheBuildScoreboardManager extends ScoreboardManager {
   public List<Entry> formatScoreboard(User user) {
     EntryBuilder builder = new EntryBuilder();
     List<String> lines = scoreboardContents.get(arena.getArenaState().getFormattedName());
-    if (arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
+    if(arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
       lines = scoreboardContents.get(arena.getArenaState().getFormattedName() + "_" + BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix());
     }
-    for (String line : lines) {
+    if (lines == null) {
+      return builder.build();
+    }
+    for(String line : lines) {
       builder.next(formatScoreboardLine(line, user));
     }
     return builder.build();
@@ -85,13 +88,13 @@ public class GuessTheBuildScoreboardManager extends ScoreboardManager {
     String returnString = string;
     returnString = StringUtils.replace(returnString, "%PLAYERS%", Integer.toString(arena.getPlayers().size()));
     returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());
-    if (arena.isThemeSet()) {
+    if(arena.isThemeSet()) {
       returnString = StringUtils.replace(returnString, "%CURRENT_TIMER%", getPlugin().getChatManager().colorMessage("Scoreboard.GTB-Current-Timer.Build-Time"));
     } else {
       returnString = StringUtils.replace(returnString, "%CURRENT_TIMER%", getPlugin().getChatManager().colorMessage("Scoreboard.GTB-Current-Timer.Starts-In"));
     }
-    if (arena.getCurrentBuilder() != null) {
-      if ((arena.getCurrentBuilder().equals(player) && arena.getCurrentTheme() != null) || arena.getWhoGuessed().contains(player)) {
+    if(arena.getCurrentBuilder() != null) {
+      if((arena.getCurrentBuilder().equals(player) && arena.getCurrentTheme() != null) || arena.getWhoGuessed().contains(player)) {
         returnString = StringUtils.replace(returnString, "%THEME%", arena.getCurrentTheme().getTheme());
       } else {
         returnString = StringUtils.replace(returnString, "%THEME%", getPlugin().getChatManager().colorMessage("Scoreboard.Theme-Unknown"));
@@ -101,11 +104,11 @@ public class GuessTheBuildScoreboardManager extends ScoreboardManager {
       returnString = StringUtils.replace(returnString, "%THEME%", getPlugin().getChatManager().colorMessage("Scoreboard.Theme-Unknown"));
       returnString = StringUtils.replace(returnString, "%BUILDER%", getPlugin().getChatManager().colorMessage("Scoreboard.Theme-Unknown"));
     }
-    if (arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
+    if(arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
       int max = arena.getArenaState() == ArenaState.IN_GAME ? 3 : 10;
       List<Map.Entry<Player, Integer>> list = new ArrayList<>(arena.getPlayersPoints().entrySet());
-      for (int i = 0; i <= max; i++) {
-        if (list.size() - 1 < i) {
+      for(int i = 0; i <= max; i++) {
+        if(list.size() - 1 < i) {
           returnString = StringUtils.replace(returnString, "%" + (i + 1) + "%", "None");
           returnString = StringUtils.replace(returnString, "%" + (i + 1) + "_PTS%", "0");
           continue;
@@ -116,7 +119,7 @@ public class GuessTheBuildScoreboardManager extends ScoreboardManager {
       }
     }
     returnString = replaceValues(returnString);
-    if (getPlugin().getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+    if(getPlugin().getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       returnString = PlaceholderAPI.setPlaceholders(player, returnString);
     }
     returnString = getPlugin().getChatManager().colorRawMessage(returnString);

@@ -24,8 +24,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-
 import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.ArenaState;
@@ -39,7 +39,7 @@ import plugily.projects.buildbattle.utils.Utils;
  */
 public class OptionsMenuHandler implements Listener {
 
-  private Main plugin;
+  private final Main plugin;
 
   public OptionsMenuHandler(Main plugin) {
     this.plugin = plugin;
@@ -48,18 +48,19 @@ public class OptionsMenuHandler implements Listener {
 
   @EventHandler
   public void onOptionsMenuClick(InventoryClickEvent e) {
-    if (!(e.getWhoClicked() instanceof Player) || e.getCurrentItem() == null) {
+    if(!(e.getWhoClicked() instanceof Player) || e.getCurrentItem() == null) {
       return;
     }
-    if (!ItemUtils.isItemStackNamed(e.getCurrentItem()) || !e.getView().getTitle().equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name"))) {
+    if(!ItemUtils.isItemStackNamed(e.getCurrentItem())
+        || !ComplementAccessor.getComplement().getTitle(e.getView()).equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name"))) {
       return;
     }
     BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
-    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
-    for (MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
-      if (!option.getItemStack().isSimilar(e.getCurrentItem())) {
+    for(MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
+      if(!option.getItemStack().isSimilar(e.getCurrentItem())) {
         continue;
       }
       e.setCancelled(true);
@@ -70,18 +71,17 @@ public class OptionsMenuHandler implements Listener {
 
   @EventHandler
   public void onRegisteredMenuOptionsClick(InventoryClickEvent e) {
-    if (!(e.getWhoClicked() instanceof Player) || !ItemUtils.isItemStackNamed(e.getCurrentItem())) {
+    if(!(e.getWhoClicked() instanceof Player) || !ItemUtils.isItemStackNamed(e.getCurrentItem())) {
       return;
     }
-    for (MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
-      if (!option.isInventoryEnabled()) {
-        continue;
-      }
-      if (Utils.getGoBackItem().getItemMeta().getDisplayName().equalsIgnoreCase(e.getCurrentItem().getItemMeta().getDisplayName())) {
+
+    for(MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
+      if(ComplementAccessor.getComplement().getDisplayName(Utils.getGoBackItem().getItemMeta())
+          .equalsIgnoreCase(ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta()))) {
         e.getWhoClicked().openInventory(plugin.getOptionsRegistry().formatInventory());
         return;
       }
-      if (option.getInventoryName().equals(e.getView().getTitle())) {
+      if(ComplementAccessor.getComplement().getTitle(e.getView()).equals(option.getInventoryName())) {
         e.setCancelled(true);
         option.onTargetClick(e);
         return;

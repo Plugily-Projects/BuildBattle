@@ -20,14 +20,13 @@
 
 package plugily.projects.buildbattle.api.event.player;
 
-import javax.annotation.Nullable;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
-
 import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.api.event.BBEvent;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
+
+import javax.annotation.Nullable;
 
 /**
  * @author Plajer
@@ -39,9 +38,9 @@ import plugily.projects.buildbattle.arena.impl.BaseArena;
 public class BBPlayerStatisticChangeEvent extends BBEvent {
 
   private static final HandlerList HANDLERS = new HandlerList();
-  private Player player;
-  private StatsStorage.StatisticType statisticType;
-  private int number;
+  private final Player player;
+  private final StatsStorage.StatisticType statisticType;
+  private final int number;
 
   public BBPlayerStatisticChangeEvent(@Nullable BaseArena eventArena, Player player, StatsStorage.StatisticType statisticType, int number) {
     super(eventArena);

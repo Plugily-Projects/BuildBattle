@@ -21,7 +21,6 @@
 package plugily.projects.buildbattle.handlers;
 
 import org.bukkit.plugin.java.JavaPlugin;
-
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.utils.Debugger;
 
@@ -30,7 +29,7 @@ import plugily.projects.buildbattle.utils.Debugger;
  */
 public class PermissionManager {
 
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
   private static String joinFullPerm = "buildbattle.fullgames";
   private static String joinPerm = "buildbattle.join.<arena>";
   private static String editGames = "buildbattle.editgames";

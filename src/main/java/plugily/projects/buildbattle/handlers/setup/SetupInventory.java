@@ -20,8 +20,6 @@
 
 package plugily.projects.buildbattle.handlers.setup;
 
-import java.util.Random;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -31,13 +29,16 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
+
+import java.util.Random;
 
 /**
  * Created by Tom on 15/06/2015.
@@ -45,11 +46,11 @@ import plugily.projects.buildbattle.arena.impl.BaseArena;
 public class SetupInventory {
 
   public static final String VIDEO_LINK = "https://tutorial.plugily.xyz";
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
-  private Inventory inventory;
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+  private final Inventory inventory;
 
   public SetupInventory(BaseArena arena) {
-    this.inventory = Bukkit.createInventory(null, 9 * 2, "BB Arena: " + arena.getID());
+    this.inventory = ComplementAccessor.getComplement().createInventory(null, 9 * 2, "BB Arena: " + arena.getID());
 
     inventory.setItem(ClickPosition.SET_ENDING.getPosition(), new ItemBuilder(Material.REDSTONE_BLOCK)
         .name(ChatColor.GOLD + "► Set" + ChatColor.RED + " ending " + ChatColor.GOLD + "location")
@@ -68,7 +69,7 @@ public class SetupInventory {
 
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
     int min = config.getInt("instances." + arena.getID() + ".minimumplayers");
-    if (min == 0) {
+    if(min == 0) {
       min = 1;
     }
     inventory.setItem(ClickPosition.SET_MINIMUM_PLAYERS.getPosition(), new ItemBuilder(Material.COAL).amount(min)
@@ -81,7 +82,7 @@ public class SetupInventory {
         .lore(isOptionDone("instances." + arena.getID() + ".minimumplayers"))
         .build());
     int max = config.getInt("instances." + arena.getID() + ".maximumplayers");
-    if (max == 0) {
+    if(max == 0) {
       max = 1;
     }
     inventory.setItem(ClickPosition.SET_MAXIMUM_PLAYERS.getPosition(), new ItemBuilder(Material.REDSTONE).amount(max)
@@ -92,7 +93,7 @@ public class SetupInventory {
         .lore(isOptionDone("instances." + arena.getID() + ".maximumplayers"))
         .build());
 
-    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+    if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       inventory.setItem(ClickPosition.ADD_SIGN.getPosition(), new ItemBuilder(XMaterial.OAK_SIGN.parseMaterial())
           .name(ChatColor.GOLD + "► Add game" + ChatColor.AQUA + " sign")
           .lore(ChatColor.GRAY + "Target a sign and click this.")
@@ -153,7 +154,7 @@ public class SetupInventory {
 
   public static String isOptionDone(String path) {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    if (!config.isSet(path)) {
+    if(!config.isSet(path)) {
       return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.RED + "No";
     }
     return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.GREEN + "Yes " + ChatColor.GRAY + "(value: " + config.getString(path) + ")";
@@ -162,7 +163,7 @@ public class SetupInventory {
 
   public static void sendProTip(Player p) {
     int rand = new Random().nextInt(5 + 1);
-    switch (rand) {
+    switch(rand) {
       case 0:
         p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Plugily-Projects/BuildBattle"));
         break;
@@ -188,7 +189,7 @@ public class SetupInventory {
 
   private String isOptionDoneList(String path) {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    if (!config.isSet(path)) {
+    if(!config.isSet(path)) {
       return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.RED + "No";
     }
     return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.GREEN + "Yes " + ChatColor.GRAY + "(value: " +
@@ -197,10 +198,10 @@ public class SetupInventory {
 
   private String isOptionDoneBool(String path) {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    if (!config.isSet(path)) {
+    if(!config.isSet(path)) {
       return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.RED + "No";
     }
-    if (Bukkit.getServer().getWorlds().get(0).getSpawnLocation().equals(LocationSerializer.getLocation(config.getString(path)))) {
+    if(Bukkit.getServer().getWorlds().get(0).getSpawnLocation().equals(LocationSerializer.getLocation(config.getString(path)))) {
       return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.RED + "No";
     }
     return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.GREEN + "Yes";
@@ -222,15 +223,15 @@ public class SetupInventory {
     SET_ENDING(0), SET_LOBBY(1), SET_MINIMUM_PLAYERS(2), SET_MAXIMUM_PLAYERS(3), ADD_SIGN(4), SET_GAME_TYPE(5), SET_MAP_NAME(6),
     ADD_GAME_PLOT(7), ADD_FLOOR_CHANGER_NPC(8), REGISTER_ARENA(9), EXTRAS_AD(16), VIEW_SETUP_VIDEO(17);
 
-    private int position;
+    private final int position;
 
     ClickPosition(int position) {
       this.position = position;
     }
 
     public static ClickPosition getByPosition(int pos) {
-      for (ClickPosition position : ClickPosition.values()) {
-        if (position.getPosition() == pos) {
+      for(ClickPosition position : ClickPosition.values()) {
+        if(position.getPosition() == pos) {
           return position;
         }
       }

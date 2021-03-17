@@ -20,29 +20,28 @@
 
 package plugily.projects.buildbattle.menus.options.registry.particles;
 
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
+import plugily.projects.buildbattle.Main;
+import plugily.projects.buildbattle.menus.options.OptionsRegistry;
+import plugily.projects.buildbattle.utils.Debugger;
+import plugily.projects.buildbattle.utils.Utils;
+
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.annotation.Nullable;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-import plugily.projects.buildbattle.Main;
-import plugily.projects.buildbattle.menus.options.OptionsRegistry;
-import plugily.projects.buildbattle.utils.Debugger;
-import plugily.projects.buildbattle.utils.Utils;
 
 /**
  * @author Plajer
@@ -55,7 +54,7 @@ public class ParticleRegistry {
   private Inventory page2;
   private final List<String> blackListedParticles = Arrays.asList("BLOCK_CRACK", "ITEM_CRACK", "ITEM_TAKE", "BLOCK_DUST", "MOB_APPEARANCE", "FOOTSTEP", "REDSTONE");
   private final Set<ParticleItem> registeredParticles = new HashSet<>();
-  private Main plugin;
+  private final Main plugin;
 
   public ParticleRegistry(OptionsRegistry registry) {
     this.plugin = registry.getPlugin();
@@ -68,27 +67,27 @@ public class ParticleRegistry {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "particles");
     Debugger.debug(Debugger.Level.TASK, "Registering particles!");
     int i = 0;
-    for (Particle particle : Particle.values()) {
-      if (i >= 100) {
+    for(String particle : VersionUtils.getParticleValues()) {
+      if(i >= 100) {
         Debugger.debug(Debugger.Level.WARN, "There are too many particles to register! Menu can't hold any more!");
         break;
       }
       boolean blacklisted = false;
-      for (String blackList : blackListedParticles) {
-        if (particle.name().contains(blackList)) {
+      for(String blackList : blackListedParticles) {
+        if(particle.contains(blackList)) {
           blacklisted = true;
           break;
         }
       }
-      if (config.getBoolean(particle.toString() + ".disabled")) {
+      if(config.getBoolean(particle.toString() + ".disabled")) {
         blacklisted = true;
       }
-      if (blacklisted) {
+      if(blacklisted) {
         continue;
       }
       ParticleItem particleItem = new ParticleItem();
       particleItem.setItemStack(new ItemBuilder(XMaterial.matchXMaterial(config
-              .getString(particle.toString() + ".material-name", "bedrock").toUpperCase()).orElse(XMaterial.BEDROCK).parseItem())
+          .getString(particle.toString() + ".material-name", "bedrock").toUpperCase()).orElse(XMaterial.BEDROCK).parseItem())
           .name(plugin.getChatManager().colorRawMessage(config.getString(particle.toString() + ".displayname")))
           .lore(config.getStringList(particle.toString() + ".lore")
               .stream().map(lore -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()))
@@ -104,16 +103,16 @@ public class ParticleRegistry {
 
   private void updateParticlesFile() {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "particles");
-    for (Particle particle : Particle.values()) {
-      if (!config.isSet(particle.toString())) {
-        config.set(particle.toString() + ".displayname", "&6" + particle.toString());
-        config.set(particle.toString() + ".lore", Arrays.asList("&7Click to activate", "&7on your location"));
-        config.set(particle.toString() + ".material-name", Material.PAPER.name());
-        config.set(particle.toString() + ".permission", "particles.VIP");
+    for(String particle : VersionUtils.getParticleValues()) {
+      if(!config.isSet(particle)) {
+        config.set(particle + ".displayname", "&6" + particle);
+        config.set(particle + ".lore", Arrays.asList("&7Click to activate", "&7on your location"));
+        config.set(particle + ".material-name", Material.PAPER.name());
+        config.set(particle + ".permission", "particles.VIP");
         continue;
       }
-      if (!config.isSet(particle.toString() + ".material-name")) {
-        config.set(particle.toString() + ".material-name", Material.PAPER.name());
+      if(!config.isSet(particle + ".material-name")) {
+        config.set(particle + ".material-name", Material.PAPER.name());
         Debugger.debug(Debugger.Level.WARN, "Found outdated item in particles.yml! We've converted it to the newest version!");
       }
     }
@@ -121,13 +120,13 @@ public class ParticleRegistry {
   }
 
   private void registerInventory() {
-    Inventory page1 = Bukkit.createInventory(null, Utils.serializeInt(54),
+    Inventory page1 = ComplementAccessor.getComplement().createInventory(null, Utils.serializeInt(54),
         plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.Inventory-Name"));
-    Inventory page2 = Bukkit.createInventory(null, Utils.serializeInt(54),
-            plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.Inventory-Name"));
+    Inventory page2 = ComplementAccessor.getComplement().createInventory(null, Utils.serializeInt(54),
+        plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.Inventory-Name"));
 
     int i = 0;
-    for (ParticleItem item : registeredParticles) {
+    for(ParticleItem item : registeredParticles) {
       (i > 50 ? page2 : page1).addItem(item.getItemStack());
       i++;
     }
@@ -136,14 +135,14 @@ public class ParticleRegistry {
         .lore(Collections.singletonList(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Lore")))
         .build());
     page2.setItem(53, new ItemBuilder(new ItemStack(Material.REDSTONE_BLOCK))
-            .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))
-            .lore(Collections.singletonList(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Lore")))
-            .build());
+        .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))
+        .lore(Collections.singletonList(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Lore")))
+        .build());
     page1.setItem(52, Utils.getGoBackItem());
     page2.setItem(52, Utils.getGoBackItem());
     page1.setItem(51, new ItemBuilder(new ItemStack(Material.STONE_BUTTON))
-            .name("§7-->")
-            .build());
+        .name("§7-->")
+        .build());
     setPage1(page1);
     setPage2(page2);
   }
@@ -165,9 +164,9 @@ public class ParticleRegistry {
   }
 
   @Nullable
-  public ParticleItem getItemByEffect(Particle effect) {
-    for (ParticleItem item : registeredParticles) {
-      if (item.getEffect() == effect) {
+  public ParticleItem getItemByEffect(String effect) {
+    for(ParticleItem item : registeredParticles) {
+      if(item.getEffect().equals(effect)) {
         return item;
       }
     }

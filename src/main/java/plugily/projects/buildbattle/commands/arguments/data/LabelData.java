@@ -21,7 +21,6 @@
 package plugily.projects.buildbattle.commands.arguments.data;
 
 import org.bukkit.plugin.java.JavaPlugin;
-
 import plugily.projects.buildbattle.Main;
 
 /**
@@ -31,8 +30,8 @@ import plugily.projects.buildbattle.Main;
  */
 public class LabelData {
 
-  private Main plugin = JavaPlugin.getPlugin(Main.class);
-  private String text;
+  private final Main plugin = JavaPlugin.getPlugin(Main.class);
+  private final String text;
   private String command;
   private String description;
 

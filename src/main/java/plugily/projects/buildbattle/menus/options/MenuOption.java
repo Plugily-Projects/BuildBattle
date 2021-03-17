@@ -22,7 +22,6 @@ package plugily.projects.buildbattle.menus.options;
 
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import plugily.projects.buildbattle.utils.Utils;
 
 /**
  * @author Plajer
@@ -32,16 +31,14 @@ import plugily.projects.buildbattle.utils.Utils;
 public class MenuOption {
 
   private int slot;
-  private String id;
-  private ItemStack itemStack;
+  private final String id;
+  private final ItemStack itemStack;
   private String inventoryName;
-  private boolean inventoryEnabled = true;
 
   public MenuOption(int slot, String id, ItemStack itemStack) {
     this.slot = slot;
     this.id = id;
     this.itemStack = itemStack;
-    this.inventoryEnabled = false;
   }
 
   public MenuOption(int slot, String id, ItemStack itemStack, String inventoryName) {
@@ -72,13 +69,6 @@ public class MenuOption {
   }
 
   /**
-   * @return true if MenuOption custom inventory is enabled
-   */
-  public boolean isInventoryEnabled() {
-    return inventoryEnabled;
-  }
-
-  /**
    * Called when item is clicked within Options Menu inventory
    *
    * @param e passed InventoryClickEvent from Options Menu
@@ -93,7 +83,6 @@ public class MenuOption {
    *
    * @param e passed InventoryClickEvent when anything is clicked within target MenuOption
    * @see #onClick(InventoryClickEvent)
-   * @see #isInventoryEnabled()
    */
   public void onTargetClick(InventoryClickEvent e) {
   }

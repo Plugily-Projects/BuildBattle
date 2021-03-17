@@ -29,8 +29,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
@@ -80,12 +81,12 @@ public class BaseArena extends BukkitRunnable {
     arenaState = ArenaState.WAITING_FOR_PLAYERS;
     this.plugin = plugin;
     this.id = id == null ? "" : id;
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
       gameBar = Bukkit.createBossBar(plugin.getChatManager().colorMessage("Bossbar.Waiting-For-Players"), BarColor.BLUE, BarStyle.SOLID);
     }
     plotManager = new PlotManager(this);
     scoreboardManager = new ScoreboardManager(this);
-    for (ArenaOption option : ArenaOption.values()) {
+    for(ArenaOption option : ArenaOption.values()) {
       arenaOptions.put(option, option.getDefaultValue());
     }
   }
@@ -130,10 +131,10 @@ public class BaseArena extends BukkitRunnable {
    * @param p      player
    */
   public void doBarAction(@NotNull BarAction action, Player p) {
-    if (p == null || gameBar == null || !plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+    if(p == null || gameBar == null || !plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
       return;
     }
-    switch (action) {
+    switch(action) {
       case ADD:
         gameBar.addPlayer(p);
         break;
@@ -155,10 +156,10 @@ public class BaseArena extends BukkitRunnable {
   public void sendBuildLeftTimeMessage() {
     String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Time-Left-To-Build").replace("%FORMATTEDTIME%", StringFormatUtils.formatIntoMMSS(getTimer()));
     String subtitle = getPlugin().getChatManager().colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", String.valueOf(getTimer()));
-    for (Player p : getPlayers()) {
-      MiscUtils.sendActionBar(p, message);
+    for(Player p : getPlayers()) {
+      VersionUtils.sendActionBar(p, message);
       p.sendMessage(getPlugin().getChatManager().getPrefix() + message);
-      p.sendTitle(null, subtitle, 5, 30, 5);
+      VersionUtils.sendSubTitle(p, subtitle, 5, 30, 5);
     }
   }
 
@@ -292,7 +293,7 @@ public class BaseArena extends BukkitRunnable {
    * @see BBGameChangeStateEvent
    */
   public void setArenaState(@NotNull ArenaState arenaState) {
-    if (this.arenaState != null) {
+    if(this.arenaState != null) {
       BBGameChangeStateEvent gameChangeStateEvent = new BBGameChangeStateEvent(arenaState, this, this.arenaState);
       plugin.getServer().getPluginManager().callEvent(gameChangeStateEvent);
     }
@@ -320,23 +321,23 @@ public class BaseArena extends BukkitRunnable {
   }
 
   public void teleportAllToEndLocation() {
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
+    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
       players.forEach(plugin.getBungeeManager()::connectToHub);
       spectators.forEach(plugin.getBungeeManager()::connectToHub);
       return;
     }
 
     Location location = getEndLocation();
-    if (location == null) {
+    if(location == null) {
       location = getLobbyLocation();
       System.out.print("EndLocation for arena " + getID() + " isn't intialized!");
     }
 
-    if (location != null) {
-      for (Player player : players) {
+    if(location != null) {
+      for(Player player : players) {
         player.teleport(location);
       }
-      for (Player player : spectators) {
+      for(Player player : spectators) {
         player.teleport(location);
       }
     }
@@ -344,7 +345,7 @@ public class BaseArena extends BukkitRunnable {
 
   public void teleportToLobby(Player player) {
     Location location = getLobbyLocation();
-    if (location == null) {
+    if(location == null) {
       System.out.print("LobbyLocation isn't intialized for arena " + getID());
       return;
     }
@@ -353,18 +354,18 @@ public class BaseArena extends BukkitRunnable {
   }
 
   public void teleportToEndLocation(Player player) {
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
+    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
       plugin.getBungeeManager().connectToHub(player);
       return;
     }
 
     Location location = getEndLocation();
-    if (location == null) {
+    if(location == null) {
       location = getLobbyLocation();
       System.out.print("EndLocation for arena " + getID() + " isn't intialized!");
     }
 
-    if (location != null) {
+    if(location != null) {
       player.teleport(location);
     }
   }
@@ -375,11 +376,12 @@ public class BaseArena extends BukkitRunnable {
   /**
    * Get current arena theme
    *
-   * @return arena theme String
+   * @return arena theme String or "Theme" as default
    */
-  @Nullable
+  @NotNull
   public String getTheme() {
-    return theme;
+    //make sure to have no NPE
+    return theme == null ? "Theme" : theme;
   }
 
   public void setTheme(String theme) {
