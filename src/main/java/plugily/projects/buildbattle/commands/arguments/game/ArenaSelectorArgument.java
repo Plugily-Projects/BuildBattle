@@ -76,19 +76,15 @@ public class ArenaSelectorArgument implements Listener {
 
         for(BaseArena arena : ArenaRegistry.getArenas()) {
           arenas.put(slot, arena);
-          ItemStack itemStack;
-          switch(arena.getArenaState()) {
-            case WAITING_FOR_PLAYERS:
-              itemStack = XMaterial.LIME_CONCRETE.parseItem();
-              break;
-            case STARTING:
-              itemStack = XMaterial.YELLOW_CONCRETE.parseItem();
-              break;
-            default:
-              itemStack = XMaterial.RED_CONCRETE.parseItem();
-              break;
-          }
+          ItemStack itemStack = XMaterial.matchXMaterial(registry.getPlugin().getConfig().getString("Arena-Selector.State-Item." + arena.getArenaState().getFormattedName(), "YELLOW_CONCRETE").toUpperCase()).orElse(XMaterial.YELLOW_WOOL).parseItem();
+
+          if(itemStack == null)
+            return;
+
           ItemMeta itemMeta = itemStack.getItemMeta();
+          if(itemMeta == null) {
+            return;
+          }
           ComplementAccessor.getComplement().setDisplayName(itemMeta, formatItem(LanguageManager.getLanguageMessage("Arena-Selector.Item.Name"), arena, registry.getPlugin()));
 
           java.util.List<String> lore = new ArrayList<>();
@@ -113,9 +109,8 @@ public class ArenaSelectorArgument implements Listener {
     if(arena.getPlayers().size() >= arena.getMaximumPlayers()) {
       formatted = StringUtils.replace(formatted, "%state%", plugin.getChatManager().colorMessage("Signs.Game-States.Full-Game"));
     } else {
-      formatted = StringUtils.replace(formatted, "%state%", plugin.getSignManager().getGameStateToString().get(arena.getArenaState()));
+      formatted = StringUtils.replace(formatted, "%state%", arena.getArenaState().getPlaceholder());
     }
-    formatted = StringUtils.replace(formatted, "%type%", String.valueOf(arena.getArenaType()));
     formatted = StringUtils.replace(formatted, "%playersize%", String.valueOf(arena.getPlayers().size()));
     formatted = StringUtils.replace(formatted, "%maxplayers%", String.valueOf(arena.getMaximumPlayers()));
     formatted = plugin.getChatManager().colorRawMessage(formatted);

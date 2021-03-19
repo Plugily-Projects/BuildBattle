@@ -9,6 +9,9 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+### 4.4.9 Release (19.03.2021 - XX)
+* Added configurable arena selector items (per state)
+
 ### 4.4.8 Release (08.02.2021 - 17.03.2021)
 * Added option to perform command after specific amount of reports
 * Added list of restricted entities that can't be spawned in game
