@@ -205,7 +205,7 @@ public class SoloArena extends BaseArena {
 
           if(getTimer() == 0) {
             setThemeVoteTime(false);
-            if (getVotePoll() != null) {
+            if(getVotePoll() != null) {
               setTheme(getVotePoll().getVotedTheme());
             }
             setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, this));
@@ -265,8 +265,8 @@ public class SoloArena extends BaseArena {
           if(!queue.isEmpty()) {
             voteForNextPlot();
           } else {
-            if(votingPlot.getPoints() == 0) {
-              if(votingPlot != null) {
+            if(votingPlot != null) {
+              if(votingPlot.getPoints() == 0) {
                 for(Player player : getPlayers()) {
                   if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER)) {
                     String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voted-For-Player-Plot").replace("%PLAYER%", votingPlot.getOwners().get(0).getName());
