@@ -105,12 +105,13 @@ public class ArenaManager {
             if(partyPlayer == player) {
               continue;
             }
-            if(ArenaRegistry.getArena(partyPlayer) != null) {
-              if(ArenaRegistry.getArena(partyPlayer).getArenaState() == ArenaState.IN_GAME) {
+            BaseArena partyPlayerArena = ArenaRegistry.getArena(partyPlayer);
+            if(partyPlayerArena != null) {
+              if(partyPlayerArena.getArenaState() == ArenaState.IN_GAME) {
                 continue;
               }
               Debugger.debug("[Party] Remove party member " + partyPlayer.getName() + " from other not ingame arena " + player.getName());
-              leaveAttempt(partyPlayer, ArenaRegistry.getArena(partyPlayer));
+              leaveAttempt(partyPlayer, partyPlayerArena);
             }
             partyPlayer.sendMessage(chatManager.getPrefix() + chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Join-As-Party-Member"), partyPlayer));
             joinAttempt(partyPlayer, arena);

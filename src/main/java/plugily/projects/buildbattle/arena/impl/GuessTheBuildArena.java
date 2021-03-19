@@ -47,7 +47,6 @@ import plugily.projects.buildbattle.arena.options.ArenaOption;
 import plugily.projects.buildbattle.handlers.reward.Reward;
 import plugily.projects.buildbattle.menus.options.registry.particles.ParticleRefreshScheduler;
 import plugily.projects.buildbattle.menus.themevoter.BBTheme;
-import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.utils.Debugger;
 import plugily.projects.buildbattle.utils.MessageUtils;
 
@@ -147,9 +146,10 @@ public class GuessTheBuildArena extends BaseArena {
             Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setGameMode(GameMode.SPECTATOR), 20);
           }
           Plot plot = getPlotManager().getPlot(getPlayers().get(round - 1));
-          if(plot != null && plot.getTeleportLocation() != null) {
+          org.bukkit.Location plotLoc = plot == null ? null : plot.getTeleportLocation();
+          if(plotLoc != null) {
             for(Player p : getPlayers()) {
-              p.teleport(plot.getTeleportLocation());
+              p.teleport(plotLoc);
               getPlugin().getRewardsHandler().performReward(p, Reward.RewardType.START_GAME, -1);
             }
           }
@@ -257,8 +257,9 @@ public class GuessTheBuildArena extends BaseArena {
             Plot plot = getPlotManager().getPlot(getPlayers().get(round - 1));
             for(Player p : getPlayers()) {
               if (plot != null) {
-                if(plot.getTeleportLocation() != null) {
-                  p.teleport(plot.getTeleportLocation());
+                org.bukkit.Location plotLoc = plot.getTeleportLocation();
+                if(plotLoc != null) {
+                  p.teleport(plotLoc);
                 }
                 p.setPlayerWeather(plot.getWeatherType());
                 p.setPlayerTime(Plot.Time.format(plot.getTime(), p.getWorld().getTime()), false);
@@ -299,10 +300,10 @@ public class GuessTheBuildArena extends BaseArena {
           if(getOption(ArenaOption.IN_PLOT_CHECKER) == 1) {
             setOptionValue(ArenaOption.IN_PLOT_CHECKER, 0);
             for(Player player : getPlayers()) {
-              User builderUser = getPlugin().getUserManager().getUser(currentBuilder);
-              Plot buildPlot = builderUser.getCurrentPlot();
-              if(buildPlot != null && !buildPlot.getCuboid().isInWithMarge(player.getLocation(), 5) && buildPlot.getTeleportLocation() != null) {
-                player.teleport(buildPlot.getTeleportLocation());
+              Plot buildPlot = getPlugin().getUserManager().getUser(currentBuilder).getCurrentPlot();
+              org.bukkit.Location plotLoc = buildPlot == null ? null : buildPlot.getTeleportLocation();
+              if(plotLoc != null && !buildPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
+                player.teleport(plotLoc);
                 player.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("In-Game.Messages.Cant-Fly-Outside-Plot"));
               }
             }
@@ -464,8 +465,9 @@ public class GuessTheBuildArena extends BaseArena {
       if(players.isEmpty()) {
         break;
       }
-      plot.addOwner(players.get(0));
-      getPlugin().getUserManager().getUser(players.get(0)).setCurrentPlot(plot);
+      Player first = players.get(0);
+      plot.addOwner(first);
+      getPlugin().getUserManager().getUser(first).setCurrentPlot(plot);
       players.remove(0);
     }
     if(!players.isEmpty()) {

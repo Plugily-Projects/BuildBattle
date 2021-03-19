@@ -39,7 +39,6 @@ import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.event.plot.BBPlotResetEvent;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
-import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.utils.Utils;
 
 import java.util.ArrayList;
@@ -136,8 +135,7 @@ public class Plot {
     resetPlot();
     if(!owners.isEmpty()) {
       for(Player p : owners) {
-        User user = plugin.getUserManager().getUser(p);
-        user.setCurrentPlot(null);
+        plugin.getUserManager().getUser(p).setCurrentPlot(null);
         setOwners(new ArrayList<>());
         setPoints(0);
       }
@@ -202,8 +200,7 @@ public class Plot {
       cuboid.getCenter().getWorld().setBiome(cuboid.getMinPoint().getBlockX(), cuboid.getMaxPoint().getBlockZ(), plotDefaultBiome);
     }
 
-    BBPlotResetEvent event = new BBPlotResetEvent(arena, this);
-    Bukkit.getServer().getPluginManager().callEvent(event);
+    Bukkit.getServer().getPluginManager().callEvent(new BBPlotResetEvent(arena, this));
   }
 
   public int getPoints() {

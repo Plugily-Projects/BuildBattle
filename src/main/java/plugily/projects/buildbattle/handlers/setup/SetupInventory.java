@@ -162,8 +162,7 @@ public class SetupInventory {
   }
 
   public static void sendProTip(Player p) {
-    int rand = new Random().nextInt(5 + 1);
-    switch(rand) {
+    switch(new Random().nextInt(5 + 1)) {
       case 0:
         p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Plugily-Projects/BuildBattle"));
         break;

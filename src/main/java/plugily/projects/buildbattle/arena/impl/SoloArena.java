@@ -290,16 +290,16 @@ public class SoloArena extends BaseArena {
                 for(Plot p : getPlotManager().getPlots()) {
                   if(p.getOwners() != null && p.getOwners().size() == 2) {
                     //removing second owner to not vote for same plot twice
-                    getQueue().remove(p.getOwners().get(1));
+                    queue.remove(p.getOwners().get(1));
                   }
                 }
               }
             }
             calculateResults();
             Plot winnerPlot = null;
-            for(Map.Entry<Integer, List<Player>> potentialWinners : topList.entrySet()) {
-              if(!potentialWinners.getValue().isEmpty()) {
-                winnerPlot = getPlotManager().getPlot(potentialWinners.getValue().get(0));
+            for(List<Player> potentialWinners : topList.values()) {
+              if(!potentialWinners.isEmpty()) {
+                winnerPlot = getPlotManager().getPlot(potentialWinners.get(0));
                 break;
               }
             }
@@ -551,22 +551,20 @@ public class SoloArena extends BaseArena {
       formattedSummary.add(message);
     }
     getPlayers().forEach(player -> formattedSummary.forEach(msg -> MiscUtils.sendCenteredMessage(player, msg)));
-    for(int rang : topList.keySet()) {
-      if(topList.containsKey(rang)) {
-        for(Player p : topList.get(rang)) {
-          if(rang > 3) {
-            p.sendMessage(getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Summary-Other-Place").replace("%number%", Integer.toString(rang)));
-          }
-          User user = getPlugin().getUserManager().getUser(p);
-          if(rang != 1) {
-            user.addStat(StatsStorage.StatisticType.LOSES, 1);
-            continue;
-          }
-          Plot plot = getPlotManager().getPlot(p);
-          user.addStat(StatsStorage.StatisticType.WINS, 1);
-          if(plot != null && plot.getPoints() > user.getStat(StatsStorage.StatisticType.HIGHEST_WIN)) {
-            user.setStat(StatsStorage.StatisticType.HIGHEST_WIN, plot.getPoints());
-          }
+    for(Map.Entry<Integer, List<Player>> map : topList.entrySet()) {
+      for(Player p : map.getValue()) {
+        if(map.getKey() > 3) {
+          p.sendMessage(getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Summary-Other-Place").replace("%number%", Integer.toString(map.getKey())));
+        }
+        User user = getPlugin().getUserManager().getUser(p);
+        if(map.getKey() != 1) {
+          user.addStat(StatsStorage.StatisticType.LOSES, 1);
+          continue;
+        }
+        Plot plot = getPlotManager().getPlot(p);
+        user.addStat(StatsStorage.StatisticType.WINS, 1);
+        if(plot != null && plot.getPoints() > user.getStat(StatsStorage.StatisticType.HIGHEST_WIN)) {
+          user.setStat(StatsStorage.StatisticType.HIGHEST_WIN, plot.getPoints());
         }
       }
     }
@@ -594,20 +592,23 @@ public class SoloArena extends BaseArena {
     }
     for(Plot buildPlot : getPlotManager().getPlots()) {
       long i = buildPlot.getPoints();
-      for(int rang : topList.keySet()) {
-        if(!topList.containsKey(rang) || topList.get(rang).isEmpty() || topList.get(rang).get(0) == null || getPlotManager().getPlot(topList.get(rang).get(0)) == null) {
-          topList.put(rang, buildPlot.getOwners());
+
+      for(Map.Entry<Integer, List<Player>> map : new HashMap<>(topList).entrySet()) {
+        Player first = map.getValue().isEmpty() ? null : map.getValue().get(0);
+
+        if(first == null || getPlotManager().getPlot(first) == null) {
+          topList.put(map.getKey(), buildPlot.getOwners());
           break;
         }
-        Plot plot = getPlotManager().getPlot(topList.get(rang).get(0));
+        Plot plot = getPlotManager().getPlot(first);
         if(plot != null && i > plot.getPoints()) {
-          moveScore(rang, buildPlot.getOwners());
+          moveScore(map.getKey(), buildPlot.getOwners());
           break;
         }
         if(plot != null && i == plot.getPoints()) {
-          List<Player> winners = topList.getOrDefault(rang, new ArrayList<>());
+          List<Player> winners = topList.getOrDefault(map.getKey(), new ArrayList<>());
           winners.addAll(buildPlot.getOwners());
-          topList.put(rang, winners);
+          topList.put(map.getKey(), winners);
           break;
         }
       }
