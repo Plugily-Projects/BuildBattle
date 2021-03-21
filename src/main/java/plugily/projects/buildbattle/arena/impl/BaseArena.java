@@ -30,6 +30,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
@@ -70,7 +71,7 @@ public class BaseArena extends BukkitRunnable {
   //todo move?
   private String theme = "Theme";
   private ArenaState arenaState;
-  private BossBar gameBar;
+  private BossBar gameBar = null;
   private ArenaType arenaType;
   private boolean forceStart = false;
   private boolean ready = true;
@@ -81,7 +82,7 @@ public class BaseArena extends BukkitRunnable {
     arenaState = ArenaState.WAITING_FOR_PLAYERS;
     this.plugin = plugin;
     this.id = id == null ? "" : id;
-    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
       gameBar = Bukkit.createBossBar(plugin.getChatManager().colorMessage("Bossbar.Waiting-For-Players"), BarColor.BLUE, BarStyle.SOLID);
     }
     plotManager = new PlotManager(this);
@@ -131,7 +132,7 @@ public class BaseArena extends BukkitRunnable {
    * @param p      player
    */
   public void doBarAction(@NotNull BarAction action, Player p) {
-    if(p == null || gameBar == null || !plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+    if(p == null || gameBar == null || !plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) || !ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
       return;
     }
     switch(action) {
