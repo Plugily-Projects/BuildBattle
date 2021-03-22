@@ -162,8 +162,9 @@ public class Plot {
       p.resetPlayerTime();
     }
 
-    if(cuboid.getCenter().getWorld() != null) {
-      for(Entity entity : cuboid.getCenter().getWorld().getEntities()) {
+    Location center = cuboid.getCenter();
+    if(center.getWorld() != null) {
+      for(Entity entity : center.getWorld().getEntities()) {
         if(cuboid.isInWithMarge(entity.getLocation(), 5)) {
           if(plugin.getServer().getPluginManager().isPluginEnabled("Citizens") && CitizensAPI.getNPCRegistry() != null
               && CitizensAPI.getNPCRegistry().isNPC(entity)) {
@@ -195,9 +196,9 @@ public class Plot {
     if(ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_15_R1)) {
       int y = Math.min(cuboid.getMinPoint().getBlockY(), cuboid.getMaxPoint().getBlockY());
 
-      cuboid.getCenter().getWorld().setBiome(cuboid.getMinPoint().getBlockX(), y, cuboid.getMaxPoint().getBlockZ(), plotDefaultBiome);
+      center.getWorld().setBiome(cuboid.getMinPoint().getBlockX(), y, cuboid.getMaxPoint().getBlockZ(), plotDefaultBiome);
     } else {
-      cuboid.getCenter().getWorld().setBiome(cuboid.getMinPoint().getBlockX(), cuboid.getMaxPoint().getBlockZ(), plotDefaultBiome);
+      center.getWorld().setBiome(cuboid.getMinPoint().getBlockX(), cuboid.getMaxPoint().getBlockZ(), plotDefaultBiome);
     }
 
     Bukkit.getServer().getPluginManager().callEvent(new BBPlotResetEvent(arena, this));

@@ -129,8 +129,10 @@ public class ScoreboardManager {
     if(arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
       lines = scoreboardContents.get(arena.getArenaState().getFormattedName() + "_" + arena.getArenaType().getPrefix());
     }
-    for(String line : lines) {
-      builder.next(formatScoreboardLine(line, user));
+    if (lines != null) {
+      for(String line : lines) {
+        builder.next(formatScoreboardLine(line, user));
+      }
     }
     return builder.build();
   }
