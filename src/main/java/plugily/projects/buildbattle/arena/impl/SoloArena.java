@@ -251,12 +251,14 @@ public class SoloArena extends BaseArena {
           addOptionValue(ArenaOption.IN_PLOT_CHECKER, 1);
         } else if(getTimer() == 0 && !receivedVoteItems) {
           for(Player player : getPlayers()) {
-            if(plugin.getUserManager().getUser(player).isSpectator()) continue;
+            User user = getPlugin().getUserManager().getUser(player);
+
+            if(user.isSpectator()) continue;
 
             queue.add(player);
             player.getInventory().clear();
             getPlugin().getVoteItems().giveVoteItems(player);
-            getPlugin().getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 3);
+            user.setStat(StatsStorage.StatisticType.LOCAL_POINTS, 3);
           }
           receivedVoteItems = true;
         }
@@ -277,13 +279,14 @@ public class SoloArena extends BaseArena {
                       p.sendMessage(getPlugin().getChatManager().getPrefix() + message);
                     }
                   }
-                  int points = getPlugin().getUserManager().getUser(player).getStat(StatsStorage.StatisticType.LOCAL_POINTS);
+                  User user = getPlugin().getUserManager().getUser(player);
+                  int points = user.getStat(StatsStorage.StatisticType.LOCAL_POINTS);
                   //no vote made, in this case make it a good vote
                   if(points == 0) {
                     points = 3;
                   }
                   votingPlot.setPoints(votingPlot.getPoints() + points);
-                  getPlugin().getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
+                  user.setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
                 }
               }
               if(getArenaType() == ArenaType.TEAM) {
@@ -423,12 +426,15 @@ public class SoloArena extends BaseArena {
       if(players.isEmpty()) {
         break;
       }
-      if(plugin.getUserManager().getUser(players.get(0)).isSpectator()) {
+
+      Player first = players.get(0);
+      User user = plugin.getUserManager().getUser(first);
+      if(user.isSpectator()) {
         continue;
       }
 
-      plot.addOwner(players.get(0));
-      getPlugin().getUserManager().getUser(players.get(0)).setCurrentPlot(plot);
+      plot.addOwner(first);
+      user.setCurrentPlot(plot);
 
       players.remove(0);
     }
@@ -492,8 +498,9 @@ public class SoloArena extends BaseArena {
     if(votingPlot != null) {
       if(votingPlot.getPoints() == 0) {
         for(Player player : getPlayers()) {
-          votingPlot.setPoints(votingPlot.getPoints() + getPlugin().getUserManager().getUser(player).getStat(StatsStorage.StatisticType.LOCAL_POINTS));
-          getPlugin().getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_POINTS, 3);
+          User user = getPlugin().getUserManager().getUser(player);
+          votingPlot.setPoints(votingPlot.getPoints() + user.getStat(StatsStorage.StatisticType.LOCAL_POINTS));
+          user.setStat(StatsStorage.StatisticType.LOCAL_POINTS, 3);
         }
       }
       if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER) && !votingPlot.getOwners().isEmpty()) {

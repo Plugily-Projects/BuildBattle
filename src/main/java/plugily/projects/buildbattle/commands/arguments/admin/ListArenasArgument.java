@@ -42,16 +42,16 @@ public class ListArenasArgument {
       @Override
       public void execute(CommandSender sender, String[] args) {
         sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Admin-Commands.List-Command.Header"));
-        int i = 0;
-        for(BaseArena arena : ArenaRegistry.getArenas()) {
-          sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Admin-Commands.List-Command.Format").replace("%arena%", arena.getID())
-              .replace("%status%", arena.getArenaState().getPlaceholder()).replace("%players%", String.valueOf(arena.getPlayers().size()))
-              .replace("%maxplayers%", String.valueOf(arena.getMaximumPlayers())));
-          i++;
-        }
-        if(i == 0) {
+        if(ArenaRegistry.getArenas().size() == 0) {
           sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Admin-Commands.List-Command.No-Arenas"));
           sender.sendMessage(registry.getPlugin().getChatManager().colorRawMessage("&e&lTIP: &7You can get free maps with configs at our wiki! Just head to https://wiki.plugily.xyz/minecraft/buildbattle/free_maps.php"));
+          return;
+        }
+
+        for(BaseArena arena : ArenaRegistry.getArenas()) {
+          sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Admin-Commands.List-Command.Format").replace("%arena%", arena.getID())
+              .replace("%status%", arena.getArenaState().getPlaceholder()).replace("%players%", Integer.toString(arena.getPlayers().size()))
+              .replace("%maxplayers%", String.valueOf(arena.getMaximumPlayers())));
         }
       }
     });

@@ -336,8 +336,7 @@ public class ArenaManager {
    */
   public static void stopGame(boolean quickStop, BaseArena arena) {
     Debugger.debug("Game stop event initiate, arena " + arena.getID());
-    BBGameEndEvent gameEndEvent = new BBGameEndEvent(arena);
-    Bukkit.getPluginManager().callEvent(gameEndEvent);
+    Bukkit.getPluginManager().callEvent(new BBGameEndEvent(arena));
     for(Player player : arena.getPlayers()) {
       if(!quickStop) {
         spawnFireworks(arena, player);

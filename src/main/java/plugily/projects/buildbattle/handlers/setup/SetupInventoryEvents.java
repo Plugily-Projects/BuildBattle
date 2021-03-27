@@ -26,6 +26,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Sign;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -252,24 +253,24 @@ public class SetupInventoryEvents implements Listener {
           e.getWhoClicked().sendMessage(ChatColor.GREEN + "This arena was already validated and is ready to use!");
           return;
         }
-        String[] locations = {"lobbylocation", "Endlocation"};
-        for(String s : locations) {
+        for(String s : new String[] {"lobbylocation", "Endlocation"}) {
           if(!config.isSet("instances." + arena.getID() + "." + s) || config.getString("instances." + arena.getID() + "." + s)
               .equals(LocationSerializer.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
             e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure following spawn properly: " + s + " (cannot be world spawn location)");
             return;
           }
         }
-        if(config.getConfigurationSection("instances." + arena.getID() + ".plots") == null) {
+        ConfigurationSection plotsSection = config.getConfigurationSection("instances." + arena.getID() + ".plots");
+        if(plotsSection == null) {
           e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure plots properly");
           return;
         }
-        if(arena.getArenaType() == BaseArena.ArenaType.SOLO && config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false).size() < config.getInt("instances." + arena.getID() + ".minimumplayers")) {
+        if(arena.getArenaType() == BaseArena.ArenaType.SOLO && plotsSection.getKeys(false).size() < config.getInt("instances." + arena.getID() + ".minimumplayers")) {
           e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! You need same value of plots as minimumplayers");
-        } else if(arena.getArenaType() == BaseArena.ArenaType.TEAM && (config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false).size() / 2) < config.getInt("instances." + arena.getID() + ".minimumplayers")) {
+        } else if(arena.getArenaType() == BaseArena.ArenaType.TEAM && (plotsSection.getKeys(false).size() / 2) < config.getInt("instances." + arena.getID() + ".minimumplayers")) {
           e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! You need half value of plots as minimumplayers");
         }
-        for(String plotName : config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false)) {
+        for(String plotName : plotsSection.getKeys(false)) {
           if(!config.isSet("instances." + arena.getID() + ".plots." + plotName + ".maxpoint") ||
               !config.isSet("instances." + arena.getID() + ".plots." + plotName + ".minpoint")) {
             e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Plots are not configured properly! (missing selection values)");

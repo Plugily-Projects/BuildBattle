@@ -155,11 +155,11 @@ public class BaseArena extends BukkitRunnable {
   }
 
   public void sendBuildLeftTimeMessage() {
-    String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Time-Left-To-Build").replace("%FORMATTEDTIME%", StringFormatUtils.formatIntoMMSS(getTimer()));
-    String subtitle = getPlugin().getChatManager().colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", String.valueOf(getTimer()));
+    String message = plugin.getChatManager().colorMessage("In-Game.Messages.Time-Left-To-Build").replace("%FORMATTEDTIME%", StringFormatUtils.formatIntoMMSS(getTimer()));
+    String subtitle = plugin.getChatManager().colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", String.valueOf(getTimer()));
     for(Player p : getPlayers()) {
       VersionUtils.sendActionBar(p, message);
-      p.sendMessage(getPlugin().getChatManager().getPrefix() + message);
+      p.sendMessage(plugin.getChatManager().getPrefix() + message);
       VersionUtils.sendSubTitle(p, subtitle, 5, 30, 5);
     }
   }
@@ -295,8 +295,7 @@ public class BaseArena extends BukkitRunnable {
    */
   public void setArenaState(@NotNull ArenaState arenaState) {
     if(this.arenaState != null) {
-      BBGameChangeStateEvent gameChangeStateEvent = new BBGameChangeStateEvent(arenaState, this, this.arenaState);
-      plugin.getServer().getPluginManager().callEvent(gameChangeStateEvent);
+      plugin.getServer().getPluginManager().callEvent(new BBGameChangeStateEvent(arenaState, this, this.arenaState));
     }
 
     this.arenaState = arenaState;

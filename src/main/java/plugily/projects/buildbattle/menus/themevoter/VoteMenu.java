@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * @author Plajer
@@ -89,7 +90,7 @@ public class VoteMenu {
       setItem(new ItemBuilder(item)
           .name(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Theme-Item-Name").replace("%theme%", randomThemes.get(i)))
           .lore(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Theme-Item-Lore").replace("%theme%", randomThemes.get(i))
-              .replace("%percent%", "0.0").replace("%time-left%", String.valueOf(arena.getTimer())).split(";"))
+              .replace("%percent%", "0.0").replace("%time-left%", Integer.toString(arena.getTimer())).split(";"))
           .build(), i * 9);
       setItem(new ItemBuilder(XMaterial.IRON_BARS.parseItem()).build(), (i * 9) + 1);
       for(int j = 0; j < 6; j++) {
@@ -118,8 +119,9 @@ public class VoteMenu {
     int totalVotes = votePoll.getPlayerVote().size();
     int i = 0;
     User user = plugin.getUserManager().getUser(player);
-    for(String theme : votePoll.getVotedThemes().keySet()) {
-      int voted = votePoll.getVotedThemes().get(theme);
+    for(Entry<String, Integer> map : votePoll.getVotedThemes().entrySet()) {
+      int voted = map.getValue();
+      String theme = map.getKey();
       double percent;
       if(Double.isNaN(voted) || voted == 0) {
         percent = 0.0;

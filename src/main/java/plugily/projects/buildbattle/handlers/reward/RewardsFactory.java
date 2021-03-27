@@ -117,8 +117,8 @@ public class RewardsFactory {
     String formatted = command;
     formatted = StringUtils.replace(formatted, "%ARENA-ID%", arena.getID());
     formatted = StringUtils.replace(formatted, "%MAPNAME%", arena.getMapName());
-    formatted = StringUtils.replace(formatted, "%PLACE%", "" + place);
-    formatted = StringUtils.replace(formatted, "%PLAYERAMOUNT%", String.valueOf(arena.getPlayers().size()));
+    formatted = StringUtils.replace(formatted, "%PLACE%", Integer.toString(place));
+    formatted = StringUtils.replace(formatted, "%PLAYERAMOUNT%", Integer.toString(arena.getPlayers().size()));
     return formatted;
   }
 

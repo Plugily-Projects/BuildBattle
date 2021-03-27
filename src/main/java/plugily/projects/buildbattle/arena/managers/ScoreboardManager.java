@@ -34,6 +34,7 @@ import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaState;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.impl.SoloArena;
+import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.language.LanguageManager;
 import plugily.projects.buildbattle.handlers.reward.Reward;
 import plugily.projects.buildbattle.user.User;
@@ -149,12 +150,13 @@ public class ScoreboardManager {
     }
     returnString = replaceValues(returnString);
     if(!((SoloArena) arena).isThemeVoteTime()) {
-      if(arena.getArenaType() == BaseArena.ArenaType.TEAM && arena.getPlotManager().getPlot(player) != null) {
-        if(arena.getPlotManager().getPlot(player).getOwners().size() == 2) {
-          if(arena.getPlotManager().getPlot(player).getOwners().get(0).equals(player)) {
-            returnString = StringUtils.replace(returnString, "%TEAMMATE%", arena.getPlotManager().getPlot(player).getOwners().get(1).getName());
+      Plot plot = arena.getPlotManager().getPlot(player);
+      if(arena.getArenaType() == BaseArena.ArenaType.TEAM && plot != null) {
+        if(plot.getOwners().size() == 2) {
+          if(plot.getOwners().get(0).equals(player)) {
+            returnString = StringUtils.replace(returnString, "%TEAMMATE%", plot.getOwners().get(1).getName());
           } else {
-            returnString = StringUtils.replace(returnString, "%TEAMMATE%", arena.getPlotManager().getPlot(player).getOwners().get(0).getName());
+            returnString = StringUtils.replace(returnString, "%TEAMMATE%", plot.getOwners().get(0).getName());
           }
         } else {
           returnString = StringUtils.replace(returnString, "%TEAMMATE%", plugin.getChatManager().colorMessage("In-Game.Nobody"));

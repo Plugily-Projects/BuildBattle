@@ -85,11 +85,6 @@ public class Plot {
     return particles;
   }
 
-  @Deprecated
-  public void addParticle(Location location, String effect) {
-    particles.put(location, effect);
-  }
-
   public Biome getPlotDefaultBiome() {
     return plotDefaultBiome;
   }

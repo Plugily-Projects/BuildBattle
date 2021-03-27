@@ -425,12 +425,12 @@ public class GuessTheBuildArena extends BaseArena {
 
   @Override
   public void giveRewards() {
-    List<Map.Entry<Player, Integer>> list = new ArrayList<>(playersPoints.entrySet());
+    List<Player> list = new ArrayList<>(playersPoints.keySet());
     for(int i = 0; i <= list.size(); i++) {
       if(list.size() - 1 < i) {
         continue;
       }
-      getPlugin().getRewardsHandler().performReward(list.get(i).getKey(), Reward.RewardType.PLACE, i + 1);
+      getPlugin().getRewardsHandler().performReward(list.get(i), Reward.RewardType.PLACE, i + 1);
     }
     getPlugin().getRewardsHandler().performReward(this, Reward.RewardType.END_GAME);
   }

@@ -173,6 +173,9 @@ public class GameEvents implements Listener {
   public void onTNTExplode(EntityExplodeEvent event) {
     for(BaseArena arena : ArenaRegistry.getArenas()) {
       for(Plot buildPlot : arena.getPlotManager().getPlots()) {
+        if (buildPlot.getCuboid() == null)
+          continue;
+
         if(buildPlot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 0)) {
           event.blockList().clear();
           event.setCancelled(true);
@@ -232,7 +235,7 @@ public class GameEvents implements Listener {
   public void onDispense(BlockDispenseEvent event) {
     for(BaseArena arena : ArenaRegistry.getArenas()) {
       for(Plot buildPlot : arena.getPlotManager().getPlots()) {
-        if(!buildPlot.getCuboid().isInWithMarge(event.getBlock().getLocation(), -1) && buildPlot.getCuboid().isInWithMarge(event.getBlock().getLocation(), 5)) {
+        if(buildPlot.getCuboid() != null && !buildPlot.getCuboid().isInWithMarge(event.getBlock().getLocation(), -1) && buildPlot.getCuboid().isInWithMarge(event.getBlock().getLocation(), 5)) {
           event.setCancelled(true);
         }
       }
@@ -343,7 +346,7 @@ public class GameEvents implements Listener {
       return;
     }
     Plot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
-    if(buildPlot != null && !buildPlot.getCuboid().isIn(event.getBlockClicked().getRelative(event.getBlockFace()).getLocation())) {
+    if(buildPlot != null && buildPlot.getCuboid() != null && !buildPlot.getCuboid().isIn(event.getBlockClicked().getRelative(event.getBlockFace()).getLocation())) {
       event.setCancelled(true);
     }
   }
@@ -405,7 +408,7 @@ public class GameEvents implements Listener {
   public void onLeavesDecay(LeavesDecayEvent event) {
     for(BaseArena arena : ArenaRegistry.getArenas()) {
       for(Plot buildPlot : arena.getPlotManager().getPlots()) {
-        if(buildPlot.getCuboid().isInWithMarge(event.getBlock().getLocation(), 5)) {
+        if(buildPlot.getCuboid() != null && buildPlot.getCuboid().isInWithMarge(event.getBlock().getLocation(), 5)) {
           event.setCancelled(true);
         }
       }
@@ -416,7 +419,7 @@ public class GameEvents implements Listener {
   public void onIgniteEvent(BlockIgniteEvent event) {
     for(BaseArena arena : ArenaRegistry.getArenas()) {
       for(Plot buildPlot : arena.getPlotManager().getPlots()) {
-        if(buildPlot.getCuboid().isInWithMarge(event.getBlock().getLocation(), 5)) {
+        if(buildPlot.getCuboid() != null && buildPlot.getCuboid().isInWithMarge(event.getBlock().getLocation(), 5)) {
           event.setCancelled(true);
         }
       }
@@ -428,7 +431,7 @@ public class GameEvents implements Listener {
     for(BaseArena arena : ArenaRegistry.getArenas()) {
       for(Plot buildPlot : arena.getPlotManager().getPlots()) {
         for(Block block : event.getBlocks()) {
-          if(!buildPlot.getCuboid().isInWithMarge(block.getLocation(), -1) && buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
+          if(buildPlot.getCuboid() != null && !buildPlot.getCuboid().isInWithMarge(block.getLocation(), -1) && buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
             event.setCancelled(true);
           }
         }
@@ -464,7 +467,7 @@ public class GameEvents implements Listener {
     }
     User user = plugin.getUserManager().getUser(event.getPlayer());
     Plot buildPlot = user.getCurrentPlot();
-    if(buildPlot == null) {
+    if(buildPlot == null || buildPlot.getCuboid() == null) {
       event.setCancelled(true);
       return;
     }
@@ -492,7 +495,7 @@ public class GameEvents implements Listener {
     }
     User user = plugin.getUserManager().getUser(event.getPlayer());
     Plot buildPlot = user.getCurrentPlot();
-    if(buildPlot == null) {
+    if(buildPlot == null || buildPlot.getCuboid() == null) {
       event.setCancelled(true);
       return;
     }

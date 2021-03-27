@@ -151,16 +151,17 @@ public class VoteMenuListener implements Listener {
           default:
             return;
         }
-        ((GuessTheBuildArena) arena).setCurrentTheme(theme);
-        ((GuessTheBuildArena) arena).setThemeSet(true);
+        GuessTheBuildArena gtb = (GuessTheBuildArena) arena;
+        gtb.setCurrentTheme(theme);
+        gtb.setThemeSet(true);
         arena.setTimer(plugin.getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, arena));
         VersionUtils.sendActionBar(((Player) e.getWhoClicked()), plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Is-Name")
             .replace("%THEME%", theme.getTheme()));
         e.getWhoClicked().closeInventory();
 
         String roundMessage = plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Current-Round")
-            .replace("%ROUND%", String.valueOf(((GuessTheBuildArena) arena).getRound()))
-            .replace("%MAXPLAYERS%", String.valueOf(arena.getPlayers().size()));
+            .replace("%ROUND%", Integer.toString(gtb.getRound()))
+            .replace("%MAXPLAYERS%", Integer.toString(arena.getPlayers().size()));
         for(Player p : arena.getPlayers()) {
           VersionUtils.sendTitle(p, plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Start-Guessing-Title"), 5, 25, 5);
           p.sendMessage(roundMessage);
