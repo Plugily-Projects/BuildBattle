@@ -61,10 +61,11 @@ public class VotePoll {
 
   public boolean addVote(Player player, String theme) {
     if(playerVote.containsKey(player)) {
-      if(playerVote.get(player).equals(theme)) {
+      String playerVoteTheme = playerVote.get(player);
+      if(playerVoteTheme.equals(theme)) {
         return false;
       }
-      votedThemes.put(playerVote.get(player), votedThemes.get(playerVote.get(player)) - 1);
+      votedThemes.put(playerVoteTheme, votedThemes.get(playerVoteTheme) - 1);
     } else {
       plugin.getRewardsHandler().performReward(player, Reward.RewardType.VOTE, -1);
     }
@@ -78,8 +79,8 @@ public class VotePoll {
   }
 
   public String getVotedTheme() {
-    LinkedHashMap<String, Integer> bestTheme = (LinkedHashMap<String, Integer>) SortUtils.sortByValue(votedThemes);
-    return (String) bestTheme.keySet().toArray()[bestTheme.keySet().toArray().length - 1];
+    Object[] themes = SortUtils.sortByValue(votedThemes).keySet().toArray();
+    return themes.length != 0 ? (String) themes[themes.length - 1] : "";
   }
 
   public String getThemeByPosition(int position) {
