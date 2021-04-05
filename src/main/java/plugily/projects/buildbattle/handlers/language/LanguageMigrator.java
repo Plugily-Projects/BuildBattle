@@ -242,11 +242,11 @@ public class LanguageMigrator {
               "Arena-Selector:\r\n" +
               "  # Change items of arena selector\r\n" +
               "  State-Item:\r\n" +
-              "    Waiting: LIME_CONCRETE\r\n" +
-              "    Starting: YELLOW_CONCRETE\r\n" +
-              "    In-Game: RED_CONCRETE\r\n" +
-              "    Ending: RED_CONCRETE\r\n" +
-              "    Restarting: RED_CONCRETE\r\n");
+              "    Waiting: LIME_wool\r\n" +
+              "    Starting: YELLOW_wool\r\n" +
+              "    Playing: RED_wool\r\n" +
+              "    Ending: RED_wool\r\n" +
+              "    Restarting: RED_wool\r\n");
           break;
         default:
           return;
