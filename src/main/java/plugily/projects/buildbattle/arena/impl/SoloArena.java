@@ -69,7 +69,7 @@ public class SoloArena extends BaseArena {
   private final Map<Integer, List<Player>> topList = new HashMap<>();
   private final Queue<Player> queue = new LinkedList<>();
   private boolean receivedVoteItems;
-  private Plot votingPlot = null;
+  private Plot votingPlot;
   private boolean voteTime;
   private boolean themeVoteTime = true;
   private boolean themeTimerSet = false;
@@ -147,8 +147,9 @@ public class SoloArena extends BaseArena {
         setTimer(getTimer() - 1);
         break;
       case STARTING:
+        int lobbyTimer = getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this);
         for(Player player : getPlayers()) {
-          float exp = (float) (getTimer() / (double) getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
+          float exp = (float) (getTimer() / (double) lobbyTimer);
           player.setExp((exp > 1f || exp < 0f) ? 1f : exp);
           player.setLevel(getTimer());
         }
@@ -156,7 +157,7 @@ public class SoloArena extends BaseArena {
           getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", String.valueOf(getMinimumPlayers())));
           setArenaState(ArenaState.WAITING_FOR_PLAYERS);
           Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
-          setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
+          setTimer(lobbyTimer);
           for(Player player : getPlayers()) {
             player.setExp(1);
             player.setLevel(0);
@@ -192,8 +193,8 @@ public class SoloArena extends BaseArena {
         if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           getPlugin().getServer().setWhitelist(getMaximumPlayers() <= getPlayers().size());
         }
-        if(isThemeVoteTime()) {
-          if(!isThemeTimerSet()) {
+        if(themeVoteTime) {
+          if(!themeTimerSet) {
             setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.THEME_VOTE, this));
             setThemeTimerSet(true);
             for(Player p : getPlayers()) {
@@ -225,8 +226,7 @@ public class SoloArena extends BaseArena {
           break;
         }
         if(!enoughPlayersToContinue()) {
-          String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Game-End-Messages.Only-You-Playing");
-          getPlugin().getChatManager().broadcast(this, message);
+          getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Messages.Game-End-Messages.Only-You-Playing"));
           setArenaState(ArenaState.ENDING);
           Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
           setTimer(10);
@@ -240,11 +240,9 @@ public class SoloArena extends BaseArena {
             for(Player player : getPlayers()) {
               User user = getPlugin().getUserManager().getUser(player);
               Plot buildPlot = user.getCurrentPlot();
-              if(buildPlot != null) {
-                if(!buildPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
-                  player.teleport(buildPlot.getTeleportLocation());
-                  player.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("In-Game.Messages.Cant-Fly-Outside-Plot"));
-                }
+              if(buildPlot != null && buildPlot.getCuboid() != null && !buildPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
+                player.teleport(buildPlot.getTeleportLocation());
+                player.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("In-Game.Messages.Cant-Fly-Outside-Plot"));
               }
             }
           }
@@ -291,7 +289,7 @@ public class SoloArena extends BaseArena {
               }
               if(getArenaType() == ArenaType.TEAM) {
                 for(Plot p : getPlotManager().getPlots()) {
-                  if(p.getOwners() != null && p.getOwners().size() == 2) {
+                  if(p.getOwners().size() == 2) {
                     //removing second owner to not vote for same plot twice
                     queue.remove(p.getOwners().get(1));
                   }

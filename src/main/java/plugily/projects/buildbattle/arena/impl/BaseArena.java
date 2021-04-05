@@ -71,7 +71,7 @@ public class BaseArena extends BukkitRunnable {
   //todo move?
   private String theme = "Theme";
   private ArenaState arenaState;
-  private BossBar gameBar = null;
+  private BossBar gameBar;
   private ArenaType arenaType;
   private boolean forceStart = false;
   private boolean ready = true;
@@ -135,15 +135,10 @@ public class BaseArena extends BukkitRunnable {
     if(p == null || gameBar == null || !plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) || !ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
       return;
     }
-    switch(action) {
-      case ADD:
-        gameBar.addPlayer(p);
-        break;
-      case REMOVE:
-        gameBar.removePlayer(p);
-        break;
-      default:
-        break;
+    if (action == BarAction.ADD) {
+      gameBar.addPlayer(p);
+    } else if (action == BarAction.REMOVE) {
+      gameBar.removePlayer(p);
     }
   }
 
