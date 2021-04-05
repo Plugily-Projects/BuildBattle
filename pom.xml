@@ -94,19 +94,19 @@
         <dependency>
             <groupId>pl.plajer</groupId>
             <artifactId>commons-box-database</artifactId>
-            <version>1.2.6</version>
+            <version>1.2.7</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>pl.plajer</groupId>
             <artifactId>commons-box-minecraft</artifactId>
-            <version>1.2.6</version>
+            <version>1.2.7</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>pl.plajer</groupId>
             <artifactId>commons-box-classic</artifactId>
-            <version>1.2.6</version>
+            <version>1.2.7</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -142,7 +142,7 @@
             <artifactId>commons-io</artifactId>
             <groupId>commons-io</groupId>
             <scope>compile</scope>
-            <version>2.6</version>
+            <version>2.8.0</version>
         </dependency>
         <dependency>
             <groupId>com.mojang</groupId>
@@ -155,6 +155,16 @@
             <artifactId>parties-api</artifactId>
             <version>3.0.2</version>
             <scope>provided</scope>
+            <exclusions>
+            	<exclusion>
+            		<groupId>org.spigotmc</groupId>
+            		<artifactId>spigot-api</artifactId>
+            	</exclusion>
+            	<exclusion>
+            		<groupId>net.md-5</groupId>
+            		<artifactId>bungeecord-api</artifactId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>de.simonsator</groupId>
@@ -173,6 +183,12 @@
             <artifactId>Spigot-Party-API-For-RedisBungee</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>provided</scope>
+            <exclusions>
+            	<exclusion>
+            		<groupId>redis.clients</groupId>
+            		<artifactId>jedis</artifactId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>de.simonsator</groupId>
@@ -185,7 +201,7 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>19.0.0</version>
+            <version>20.1.0</version>
         </dependency>
 
     </dependencies>
@@ -201,7 +217,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>3.8.1</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -210,17 +226,17 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.2.0</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.7.1</version>
+                <version>3.9.1</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>3.2.0</version>
                 <configuration>
                     <windowtitle>Build Battle API docs for v${project.version}</windowtitle>
                     <description>Minecraft building minigame.
@@ -285,7 +301,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M3</version>
+                <version>3.0.0-M5</version>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -325,7 +341,7 @@
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
                 <artifactId>wagon-ftp</artifactId>
-                <version>3.4.1</version>
+                <version>3.4.3</version>
             </extension>
         </extensions>
     </build>

@@ -95,9 +95,14 @@ public class PlotManager {
 
         if(Version.isCurrentEqualOrLower(Version.v1_13_R2)) { // Async catch in old versions
           Location loc = tploc;
+          int m = 0;
           while(loc.getBlock().getType() != Material.AIR) {
+            if (m >= 500) {
+              break;// Thread never ends on flat map?
+            }
+
             if(arena.getArenaState() == ArenaState.IN_GAME && arena.getTimer() > 30) {
-              break; // Thread never ends on flat map?
+              break;
             }
 
             loc = loc.add(0, 1, 0);
@@ -105,6 +110,8 @@ public class PlotManager {
             if(loc.getY() >= cuboid.getMaxPoint().getY()) {
               loc = cuboid.getCenter().clone().add(1, 0, 1);
             }
+
+            m++; // Preventing server froze on flat map
           }
 
           for(Player p : buildPlot.getOwners()) {
