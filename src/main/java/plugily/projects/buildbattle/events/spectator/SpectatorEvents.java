@@ -152,12 +152,13 @@ public class SpectatorEvents implements Listener {
 
     e.setCancelled(true);
 
-    if(!ItemUtils.isItemStackNamed(e.getCurrentItem())
+    ItemStack currentItem = e.getCurrentItem();
+    if(!ItemUtils.isItemStackNamed(currentItem)
         || !ComplementAccessor.getComplement().getTitle(e.getView()).equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
       return;
     }
 
-    String displayName = ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta());
+    String displayName = ComplementAccessor.getComplement().getDisplayName(currentItem.getItemMeta());
     Player target = Bukkit.getPlayer(displayName);
     if(target == null) target = Bukkit.getPlayer(ChatColor.stripColor(displayName));
 

@@ -143,13 +143,13 @@ public class ScoreboardManager {
     String returnString = string;
     returnString = StringUtils.replace(returnString, "%PLAYERS%", Integer.toString(arena.getPlayers().size()));
     returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());
+    returnString = replaceValues(returnString);
     if(((SoloArena) arena).isThemeVoteTime()) {
       returnString = StringUtils.replace(returnString, "%THEME%", plugin.getChatManager().colorMessage("In-Game.No-Theme-Yet"));
+      returnString = StringUtils.replace(returnString, "%TEAMMATE%", plugin.getChatManager().colorMessage("In-Game.Nobody"));
     } else {
       returnString = StringUtils.replace(returnString, "%THEME%", arena.getTheme());
-    }
-    returnString = replaceValues(returnString);
-    if(!((SoloArena) arena).isThemeVoteTime()) {
+
       Plot plot = arena.getPlotManager().getPlot(player);
       if(arena.getArenaType() == BaseArena.ArenaType.TEAM && plot != null) {
         if(plot.getOwners().size() == 2) {
@@ -162,8 +162,6 @@ public class ScoreboardManager {
           returnString = StringUtils.replace(returnString, "%TEAMMATE%", plugin.getChatManager().colorMessage("In-Game.Nobody"));
         }
       }
-    } else {
-      returnString = StringUtils.replace(returnString, "%TEAMMATE%", plugin.getChatManager().colorMessage("In-Game.Nobody"));
     }
     if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       returnString = PlaceholderAPI.setPlaceholders(player, returnString);

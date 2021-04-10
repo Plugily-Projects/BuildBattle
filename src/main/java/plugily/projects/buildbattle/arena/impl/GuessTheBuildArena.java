@@ -257,7 +257,7 @@ public class GuessTheBuildArena extends BaseArena {
             nextRoundCooldown = false;
             currentBuilder = getPlayers().get(round - 1);
             openThemeSelectionInventoryToCurrentBuilder();
-            Plot plot = getPlotManager().getPlot(getPlayers().get(round - 1));
+            Plot plot = getPlotManager().getPlot(currentBuilder);
             for(Player p : getPlayers()) {
               if (plot != null) {
                 org.bukkit.Location plotLoc = plot.getTeleportLocation();
@@ -328,7 +328,7 @@ public class GuessTheBuildArena extends BaseArena {
           scoreboardManager.stopAllScoreboards();
           teleportAllToEndLocation();
           for(Player player : getPlayers()) {
-            if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+            if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1) && getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
               getGameBar().removePlayer(player);
             }
             player.getInventory().clear();

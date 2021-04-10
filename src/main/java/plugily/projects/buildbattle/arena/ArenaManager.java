@@ -203,7 +203,9 @@ public class ArenaManager {
 
       player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name")).build());
       player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name")).build());
-      player.getInventory().setItem(8, leaveItem.getItemStack());
+      if (leaveItem != null) {
+        player.getInventory().setItem(8, leaveItem.getItemStack());
+      }
 
       player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
       player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0));
@@ -230,7 +232,9 @@ public class ArenaManager {
     arena.addPlayer(player);
 
     arena.teleportToLobby(player);
-    player.getInventory().setItem(leaveItem.getSlot(), leaveItem.getItemStack());
+    if (leaveItem != null) {
+      player.getInventory().setItem(leaveItem.getSlot(), leaveItem.getItemStack());
+    }
     player.updateInventory();
 
     chatManager.broadcastAction(arena, player, ChatManager.ActionType.JOIN);
@@ -249,8 +253,7 @@ public class ArenaManager {
    */
   public static void leaveAttempt(Player player, BaseArena arena) {
     Debugger.debug("Initial leave attempt, " + player.getName());
-    BBGameLeaveEvent bbGameLeaveEvent = new BBGameLeaveEvent(player, arena);
-    Bukkit.getPluginManager().callEvent(bbGameLeaveEvent);
+    Bukkit.getPluginManager().callEvent(new BBGameLeaveEvent(player, arena));
 
     arena.teleportToEndLocation(player);
 

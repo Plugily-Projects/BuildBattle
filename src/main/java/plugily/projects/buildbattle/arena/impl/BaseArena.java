@@ -82,7 +82,7 @@ public class BaseArena extends BukkitRunnable {
     arenaState = ArenaState.WAITING_FOR_PLAYERS;
     this.plugin = plugin;
     this.id = id == null ? "" : id;
-    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+    if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1) && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
       gameBar = Bukkit.createBossBar(plugin.getChatManager().colorMessage("Bossbar.Waiting-For-Players"), BarColor.BLUE, BarStyle.SOLID);
     }
     plotManager = new PlotManager(this);
@@ -132,7 +132,7 @@ public class BaseArena extends BukkitRunnable {
    * @param p      player
    */
   public void doBarAction(@NotNull BarAction action, Player p) {
-    if(p == null || gameBar == null || !plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) || !ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+    if(p == null || gameBar == null || !ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1) || !plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
       return;
     }
     if (action == BarAction.ADD) {
@@ -151,7 +151,7 @@ public class BaseArena extends BukkitRunnable {
 
   public void sendBuildLeftTimeMessage() {
     String message = plugin.getChatManager().colorMessage("In-Game.Messages.Time-Left-To-Build").replace("%FORMATTEDTIME%", StringFormatUtils.formatIntoMMSS(getTimer()));
-    String subtitle = plugin.getChatManager().colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", String.valueOf(getTimer()));
+    String subtitle = plugin.getChatManager().colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", Integer.toString(getTimer()));
     for(Player p : getPlayers()) {
       VersionUtils.sendActionBar(p, message);
       p.sendMessage(plugin.getChatManager().getPrefix() + message);
