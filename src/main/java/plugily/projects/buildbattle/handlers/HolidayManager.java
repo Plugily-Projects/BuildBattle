@@ -52,7 +52,8 @@ public class HolidayManager {
           //replace themes
           plugin.getConfigPreferences().getGameThemes().clear();
           plugin.getConfigPreferences().getGameThemes().put("Classic", plugin.getConfig().getStringList("Holiday-Themes.Valentines-Day"));
-          plugin.getConfigPreferences().getGameThemes().put("Team", plugin.getConfig().getStringList("Holiday-Themes.Valentines-Day"));
+          plugin.getConfigPreferences().getGameThemes().put("Teams", plugin.getConfig().getStringList("Holiday-Themes.Valentines-Day"));
+          plugin.getConfigPreferences().getGameThemes().put("Guess-The-Build", plugin.getConfig().getStringList("Holiday-Themes.Valentines-Day"));
         }
         break;
       case 3:
@@ -61,7 +62,8 @@ public class HolidayManager {
           currentHoliday = HolidayType.APRIL_FOOLS;
           plugin.getConfigPreferences().getGameThemes().clear();
           plugin.getConfigPreferences().getGameThemes().put("Classic", plugin.getConfig().getStringList("Holiday-Themes.April-Fools"));
-          plugin.getConfigPreferences().getGameThemes().put("Team", plugin.getConfig().getStringList("Holiday-Themes.April-Fools"));
+          plugin.getConfigPreferences().getGameThemes().put("Teams", plugin.getConfig().getStringList("Holiday-Themes.April-Fools"));
+          plugin.getConfigPreferences().getGameThemes().put("Guess-The-Build", plugin.getConfig().getStringList("Holiday-Themes.April-Fools"));
         }
         break;
       case 4:
@@ -70,7 +72,8 @@ public class HolidayManager {
           currentHoliday = HolidayType.APRIL_FOOLS;
           plugin.getConfigPreferences().getGameThemes().clear();
           plugin.getConfigPreferences().getGameThemes().put("Classic", plugin.getConfig().getStringList("Holiday-Themes.April-Fools"));
-          plugin.getConfigPreferences().getGameThemes().put("Team", plugin.getConfig().getStringList("Holiday-Themes.April-Fools"));
+          plugin.getConfigPreferences().getGameThemes().put("Teams", plugin.getConfig().getStringList("Holiday-Themes.April-Fools"));
+          plugin.getConfigPreferences().getGameThemes().put("Guess-The-Build", plugin.getConfig().getStringList("Holiday-Themes.April-Fools"));
         }
         break;
       case 10:
@@ -79,7 +82,8 @@ public class HolidayManager {
           currentHoliday = HolidayType.HALLOWEEN;
           plugin.getConfigPreferences().getGameThemes().clear();
           plugin.getConfigPreferences().getGameThemes().put("Classic", plugin.getConfig().getStringList("Holiday-Themes.Halloween"));
-          plugin.getConfigPreferences().getGameThemes().put("Team", plugin.getConfig().getStringList("Holiday-Themes.Halloween"));
+          plugin.getConfigPreferences().getGameThemes().put("Teams", plugin.getConfig().getStringList("Holiday-Themes.Halloween"));
+          plugin.getConfigPreferences().getGameThemes().put("Guess-The-Build", plugin.getConfig().getStringList("Holiday-Themes.Halloween"));
         }
         break;
       case 11:
@@ -88,7 +92,8 @@ public class HolidayManager {
           currentHoliday = HolidayType.HALLOWEEN;
           plugin.getConfigPreferences().getGameThemes().clear();
           plugin.getConfigPreferences().getGameThemes().put("Classic", plugin.getConfig().getStringList("Holiday-Themes.Halloween"));
-          plugin.getConfigPreferences().getGameThemes().put("Team", plugin.getConfig().getStringList("Holiday-Themes.Halloween"));
+          plugin.getConfigPreferences().getGameThemes().put("Teams", plugin.getConfig().getStringList("Holiday-Themes.Halloween"));
+          plugin.getConfigPreferences().getGameThemes().put("Guess-The-Build", plugin.getConfig().getStringList("Holiday-Themes.Halloween"));
         }
         break;
       case 12:
@@ -96,7 +101,8 @@ public class HolidayManager {
           currentHoliday = HolidayType.CHRISTMAS;
           plugin.getConfigPreferences().getGameThemes().clear();
           plugin.getConfigPreferences().getGameThemes().put("Classic", plugin.getConfig().getStringList("Holiday-Themes.Christmas"));
-          plugin.getConfigPreferences().getGameThemes().put("Team", plugin.getConfig().getStringList("Holiday-Themes.Christmas"));
+          plugin.getConfigPreferences().getGameThemes().put("Teams", plugin.getConfig().getStringList("Holiday-Themes.Christmas"));
+          plugin.getConfigPreferences().getGameThemes().put("Guess-The-Build", plugin.getConfig().getStringList("Holiday-Themes.Christmas"));
         }
       default:
         break;
