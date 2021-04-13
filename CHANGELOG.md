@@ -9,6 +9,12 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+### 4.5.0 Release (21.03.2021 - 13.04.2021)
+* Automatically disable bossbar support on 1.8 to prevent issue if bossbar is enabled on config.yml
+* Fix when arena selector GUI does not opened
+* Fixed HolidayManager that crashes themes on Teams and GTB mode
+* Fixed NPE on ArrowEvents and other version improvements
+
 ### 4.4.9 Release (19.03.2021)
 * Added configurable arena selector items (per state)
 * Fixed particle issues on some versions

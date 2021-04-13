@@ -52,12 +52,12 @@ public class ParticleRemoveMenu {
     int x = 0;
     int y = 0;
     for(Entry<Location, String> map : new java.util.HashMap<>(buildPlot.getParticles()).entrySet()) {
-      Location location = map.getKey();
       ParticleItem particleItem = plugin.getOptionsRegistry().getParticleRegistry().getItemByEffect(map.getValue());
       if(particleItem == null) {
         continue;
       }
 
+      Location location = map.getKey();
       ItemStack itemStack = new ItemBuilder(particleItem.getItemStack().clone()).lore(plugin.getChatManager().colorMessage("Menus.Location-Message"),
           ChatColor.GRAY + "  x: " + Math.round(location.getX()),
           ChatColor.GRAY + "  y: " + Math.round(location.getY()),

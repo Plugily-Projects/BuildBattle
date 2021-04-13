@@ -76,24 +76,23 @@ public class ArenaSelectorArgument implements Listener {
 
         for(BaseArena arena : ArenaRegistry.getArenas()) {
           arenas.put(slot, arena);
-          ItemStack itemStack = XMaterial.matchXMaterial(registry.getPlugin().getConfig().getString("Arena-Selector.State-Item." + arena.getArenaState().getFormattedName(), "YELLOW_CONCRETE").toUpperCase()).orElse(XMaterial.YELLOW_WOOL).parseItem();
+          ItemStack itemStack = XMaterial.matchXMaterial(registry.getPlugin().getConfig().getString("Arena-Selector.State-Item." + arena.getArenaState().getFormattedName(), "YELLOW_WOOL").toUpperCase()).orElse(XMaterial.YELLOW_WOOL).parseItem();
 
           if(itemStack == null)
-            return;
+            continue;
 
           ItemMeta itemMeta = itemStack.getItemMeta();
-          if(itemMeta == null) {
-            return;
-          }
-          ComplementAccessor.getComplement().setDisplayName(itemMeta, formatItem(LanguageManager.getLanguageMessage("Arena-Selector.Item.Name"), arena, registry.getPlugin()));
+          if(itemMeta != null) {
+            ComplementAccessor.getComplement().setDisplayName(itemMeta, formatItem(LanguageManager.getLanguageMessage("Arena-Selector.Item.Name"), arena, registry.getPlugin()));
 
-          java.util.List<String> lore = new ArrayList<>();
-          for(String string : LanguageManager.getLanguageList("Arena-Selector.Item.Lore")) {
-            lore.add(formatItem(string, arena, registry.getPlugin()));
-          }
+            java.util.List<String> lore = new ArrayList<>();
+            for(String string : LanguageManager.getLanguageList("Arena-Selector.Item.Lore")) {
+              lore.add(formatItem(string, arena, registry.getPlugin()));
+            }
 
-          ComplementAccessor.getComplement().setLore(itemMeta, lore);
-          itemStack.setItemMeta(itemMeta);
+            ComplementAccessor.getComplement().setLore(itemMeta, lore);
+            itemStack.setItemMeta(itemMeta);
+          }
           inventory.addItem(itemStack);
           slot++;
         }
@@ -106,13 +105,14 @@ public class ArenaSelectorArgument implements Listener {
   private String formatItem(String string, BaseArena arena, Main plugin) {
     String formatted = string;
     formatted = StringUtils.replace(formatted, "%mapname%", arena.getMapName());
-    if(arena.getPlayers().size() >= arena.getMaximumPlayers()) {
+    int maxPlayers = arena.getMaximumPlayers();
+    if(arena.getPlayers().size() >= maxPlayers) {
       formatted = StringUtils.replace(formatted, "%state%", plugin.getChatManager().colorMessage("Signs.Game-States.Full-Game"));
     } else {
       formatted = StringUtils.replace(formatted, "%state%", arena.getArenaState().getPlaceholder());
     }
-    formatted = StringUtils.replace(formatted, "%playersize%", String.valueOf(arena.getPlayers().size()));
-    formatted = StringUtils.replace(formatted, "%maxplayers%", String.valueOf(arena.getMaximumPlayers()));
+    formatted = StringUtils.replace(formatted, "%playersize%", Integer.toString(arena.getPlayers().size()));
+    formatted = StringUtils.replace(formatted, "%maxplayers%", Integer.toString(maxPlayers));
     formatted = plugin.getChatManager().colorRawMessage(formatted);
     return formatted;
   }

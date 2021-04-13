@@ -73,7 +73,7 @@ public class BiomeChangeOption {
           return;
         }
         Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());
-        Biome biome = item.getBiome().parseBiome();
+        Biome biome = item.getBiome().getBiome();
         if(biome != null) {
           for(Block block : plot.getCuboid().blockList()) {
             block.setBiome(biome);

@@ -68,7 +68,7 @@ public class VoteItems {
           .name(PLUGIN.getChatManager().colorRawMessage(CONFIG.getString(key + ".displayname")))
           .build();
 
-      if(CONFIG.getBoolean(key + ".report-item-function", false)) {
+      if(CONFIG.getBoolean(key + ".report-item-function")) {
         reportItem = stack;
       }
       Sound sound = null;
@@ -76,7 +76,8 @@ public class VoteItems {
         sound = Sound.valueOf(CONFIG.getString(key + ".sound", ""));
       } catch(IllegalArgumentException ignored) {
       }
-      VOTEITEMS.add(new VoteItem(stack, Integer.parseInt(key), Integer.parseInt(key) + 1, sound));
+      int s = Integer.parseInt(key);
+      VOTEITEMS.add(new VoteItem(stack, s, s + 1, sound));
     }
   }
 

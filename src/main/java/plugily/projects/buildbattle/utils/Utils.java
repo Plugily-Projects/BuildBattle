@@ -38,6 +38,15 @@ public class Utils {
   private Utils() {
   }
 
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+
+  private static Class<?> packetPlayOutMapChunk, chunkClass;
+
+  static {
+    packetPlayOutMapChunk = PacketUtils.getNMSClass("PacketPlayOutMapChunk");
+    chunkClass = PacketUtils.getNMSClass("Chunk");
+  }
+
   /**
    * Serialize int to use it in Inventories size
    * ex. you have 38 kits and it will serialize it to 45 (9*5)
@@ -53,8 +62,6 @@ public class Utils {
   }
 
   public static ItemStack getGoBackItem() {
-    final Main plugin = JavaPlugin.getPlugin(Main.class);
-
     return new ItemBuilder(XMaterial.STONE_BUTTON.parseItem())
         .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Go-Back-Button.Item-Name"))
         .lore(plugin.getChatManager().colorMessage("Menus.Option-Menu.Go-Back-Button.Item-Lore")).build();
@@ -63,16 +70,16 @@ public class Utils {
   public static void sendMapChunk(Player player, Chunk chunk) {
     try {
       if(ServerVersion.Version.isCurrentEqual(ServerVersion.Version.v1_16_R1)) {
-        PacketUtils.sendPacket(player, PacketUtils.getNMSClass("PacketPlayOutMapChunk").getConstructor(PacketUtils.getNMSClass("Chunk"), int.class, boolean.class)
+        PacketUtils.sendPacket(player, packetPlayOutMapChunk.getConstructor(chunkClass, int.class, boolean.class)
             .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535, false));
         return;
       }
       if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_8_R3)) {
-        PacketUtils.sendPacket(player, PacketUtils.getNMSClass("PacketPlayOutMapChunk").getConstructor(PacketUtils.getNMSClass("Chunk"), boolean.class, int.class)
+        PacketUtils.sendPacket(player, packetPlayOutMapChunk.getConstructor(chunkClass, boolean.class, int.class)
             .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), true, 65535));
         return;
       }
-      PacketUtils.sendPacket(player, PacketUtils.getNMSClass("PacketPlayOutMapChunk").getConstructor(PacketUtils.getNMSClass("Chunk"), int.class)
+      PacketUtils.sendPacket(player, packetPlayOutMapChunk.getConstructor(chunkClass, int.class)
           .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535));
     } catch(ReflectiveOperationException exception) {
       exception.printStackTrace();

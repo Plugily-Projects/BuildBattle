@@ -64,7 +64,7 @@ public class AddPlotArgument {
         }
         FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
         int id = 0;
-        if(config.getConfigurationSection("instances." + arena.getID() + ".plots") != null) {
+        if(config.isConfigurationSection("instances." + arena.getID() + ".plots")) {
           id = config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false).size() + 1;
         }
         LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", "instances." + arena.getID() + ".plots." + id + ".minpoint", selection.getFirstPos());

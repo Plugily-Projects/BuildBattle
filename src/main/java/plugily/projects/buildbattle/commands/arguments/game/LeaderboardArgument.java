@@ -59,12 +59,12 @@ public class LeaderboardArgument {
           }
           java.util.Map<UUID, Integer> stats = (LinkedHashMap<UUID, Integer>) StatsStorage.getStats(statisticType);
           sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Statistics.Header"));
-          String statistic = StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "));
+          String statistic = StringUtils.capitalize(statisticType.toString().toLowerCase().replace('_', ' '));
           for(int i = 0; i < 10; i++) {
             try {
               UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
               String message = registry.getPlugin().getChatManager().colorMessage("Commands.Statistics.Format");
-              message = StringUtils.replace(message, "%position%", String.valueOf(i + 1));
+              message = StringUtils.replace(message, "%position%", Integer.toString(i + 1));
               message = StringUtils.replace(message, "%name%", Bukkit.getOfflinePlayer(current).getName());
               message = StringUtils.replace(message, "%value%", String.valueOf(stats.get(current)));
               message = StringUtils.replace(message, "%statistic%", statistic); //Games_played > Games played etc
@@ -72,7 +72,7 @@ public class LeaderboardArgument {
               stats.remove(current);
             } catch(IndexOutOfBoundsException ex) {
               String message = registry.getPlugin().getChatManager().colorMessage("Commands.Statistics.Format");
-              message = StringUtils.replace(message, "%position%", String.valueOf(i + 1));
+              message = StringUtils.replace(message, "%position%", Integer.toString(i + 1));
               message = StringUtils.replace(message, "%name%", "Empty");
               message = StringUtils.replace(message, "%value%", "0");
               message = StringUtils.replace(message, "%statistic%", statistic); //Games_played > Games played etc
@@ -85,7 +85,7 @@ public class LeaderboardArgument {
                     ResultSet set = statement.executeQuery("SELECT name FROM " + ((MysqlManager) registry.getPlugin().getUserManager().getDatabase()).getTableName() + " WHERE UUID='" + current.toString() + "'")) {
                   if(set.next()) {
                     String message = registry.getPlugin().getChatManager().colorMessage("Commands.Statistics.Format");
-                    message = StringUtils.replace(message, "%position%", String.valueOf(i + 1));
+                    message = StringUtils.replace(message, "%position%", Integer.toString(i + 1));
                     message = StringUtils.replace(message, "%name%", set.getString(1));
                     message = StringUtils.replace(message, "%value%", String.valueOf(stats.get(current)));
                     message = StringUtils.replace(message, "%statistic%", statistic); //Games_played > Games played etc
@@ -97,7 +97,7 @@ public class LeaderboardArgument {
                 }
               }
               String message = registry.getPlugin().getChatManager().colorMessage("Commands.Statistics.Format");
-              message = StringUtils.replace(message, "%position%", String.valueOf(i + 1));
+              message = StringUtils.replace(message, "%position%", Integer.toString(i + 1));
               message = StringUtils.replace(message, "%name%", "Unknown Player");
               message = StringUtils.replace(message, "%value%", String.valueOf(stats.get(current)));
               message = StringUtils.replace(message, "%statistic%", statistic); //Games_played > Games played etc

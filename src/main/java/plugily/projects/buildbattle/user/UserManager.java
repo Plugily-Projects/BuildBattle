@@ -58,8 +58,7 @@ public class UserManager {
       if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
         ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()).teleportToLobby(player);
       }
-      User user = getUser(player);
-      loadStatistics(user);
+      loadStatistics(getUser(player));
     }
   }
 

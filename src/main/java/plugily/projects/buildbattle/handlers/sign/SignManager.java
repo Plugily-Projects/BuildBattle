@@ -96,12 +96,13 @@ public class SignManager implements Listener {
     if(!e.getPlayer().hasPermission("buildbattle.admin.sign.create") || !ComplementAccessor.getComplement().getLine(e, 0).equalsIgnoreCase("[buildbattle]")) {
       return;
     }
-    if(ComplementAccessor.getComplement().getLine(e, 1).isEmpty()) {
+    String line1 = ComplementAccessor.getComplement().getLine(e, 1);
+    if(line1.isEmpty()) {
       e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Please-Type-Arena-Name"));
       return;
     }
     for(BaseArena arena : ArenaRegistry.getArenas()) {
-      if(!arena.getID().equalsIgnoreCase(ComplementAccessor.getComplement().getLine(e, 1))) {
+      if(!arena.getID().equalsIgnoreCase(line1)) {
         continue;
       }
       for(int i = 0; i < signLines.size(); i++) {
@@ -123,13 +124,14 @@ public class SignManager implements Listener {
   private String formatSign(String msg, BaseArena a) {
     String formatted = msg;
     formatted = StringUtils.replace(formatted, "%mapname%", a.getMapName());
-    if(a.getPlayers().size() >= a.getMaximumPlayers()) {
+    int maxPlayers = a.getMaximumPlayers();
+    if(a.getPlayers().size() >= maxPlayers) {
       formatted = StringUtils.replace(formatted, "%state%", plugin.getChatManager().colorMessage("Signs.Game-States.Full-Game"));
     } else {
       formatted = StringUtils.replace(formatted, "%state%", gameStateToString.get(a.getArenaState()));
     }
-    formatted = StringUtils.replace(formatted, "%playersize%", String.valueOf(a.getPlayers().size()));
-    formatted = StringUtils.replace(formatted, "%maxplayers%", String.valueOf(a.getMaximumPlayers()));
+    formatted = StringUtils.replace(formatted, "%playersize%", Integer.toString(a.getPlayers().size()));
+    formatted = StringUtils.replace(formatted, "%maxplayers%", Integer.toString(maxPlayers));
     formatted = plugin.getChatManager().colorRawMessage(formatted);
     return formatted;
   }

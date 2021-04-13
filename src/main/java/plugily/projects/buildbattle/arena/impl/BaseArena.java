@@ -30,6 +30,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
@@ -81,7 +82,7 @@ public class BaseArena extends BukkitRunnable {
     arenaState = ArenaState.WAITING_FOR_PLAYERS;
     this.plugin = plugin;
     this.id = id == null ? "" : id;
-    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+    if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1) && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
       gameBar = Bukkit.createBossBar(plugin.getChatManager().colorMessage("Bossbar.Waiting-For-Players"), BarColor.BLUE, BarStyle.SOLID);
     }
     plotManager = new PlotManager(this);
@@ -131,18 +132,13 @@ public class BaseArena extends BukkitRunnable {
    * @param p      player
    */
   public void doBarAction(@NotNull BarAction action, Player p) {
-    if(p == null || gameBar == null || !plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+    if(p == null || gameBar == null || !ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1) || !plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
       return;
     }
-    switch(action) {
-      case ADD:
-        gameBar.addPlayer(p);
-        break;
-      case REMOVE:
-        gameBar.removePlayer(p);
-        break;
-      default:
-        break;
+    if (action == BarAction.ADD) {
+      gameBar.addPlayer(p);
+    } else if (action == BarAction.REMOVE) {
+      gameBar.removePlayer(p);
     }
   }
 
@@ -154,11 +150,11 @@ public class BaseArena extends BukkitRunnable {
   }
 
   public void sendBuildLeftTimeMessage() {
-    String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Time-Left-To-Build").replace("%FORMATTEDTIME%", StringFormatUtils.formatIntoMMSS(getTimer()));
-    String subtitle = getPlugin().getChatManager().colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", String.valueOf(getTimer()));
+    String message = plugin.getChatManager().colorMessage("In-Game.Messages.Time-Left-To-Build").replace("%FORMATTEDTIME%", StringFormatUtils.formatIntoMMSS(getTimer()));
+    String subtitle = plugin.getChatManager().colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", Integer.toString(getTimer()));
     for(Player p : getPlayers()) {
       VersionUtils.sendActionBar(p, message);
-      p.sendMessage(getPlugin().getChatManager().getPrefix() + message);
+      p.sendMessage(plugin.getChatManager().getPrefix() + message);
       VersionUtils.sendSubTitle(p, subtitle, 5, 30, 5);
     }
   }
@@ -294,8 +290,7 @@ public class BaseArena extends BukkitRunnable {
    */
   public void setArenaState(@NotNull ArenaState arenaState) {
     if(this.arenaState != null) {
-      BBGameChangeStateEvent gameChangeStateEvent = new BBGameChangeStateEvent(arenaState, this, this.arenaState);
-      plugin.getServer().getPluginManager().callEvent(gameChangeStateEvent);
+      plugin.getServer().getPluginManager().callEvent(new BBGameChangeStateEvent(arenaState, this, this.arenaState));
     }
 
     this.arenaState = arenaState;
