@@ -107,10 +107,11 @@ public class ScoreboardManager {
    */
   public void removeScoreboard(User user) {
     for(Scoreboard board : scoreboards) {
-      if(board.getHolder().equals(user.getPlayer())) {
+      Player player = user.getPlayer();
+      if(board.getHolder().equals(player)) {
         scoreboards.remove(board);
         board.deactivate();
-        plugin.getRewardsHandler().performReward(user.getPlayer(), Reward.RewardType.SCOREBOARD_REMOVED, -1);
+        plugin.getRewardsHandler().performReward(player, Reward.RewardType.SCOREBOARD_REMOVED, -1);
         return;
       }
     }

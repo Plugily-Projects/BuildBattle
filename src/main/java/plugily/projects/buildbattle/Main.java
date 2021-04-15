@@ -99,7 +99,7 @@ public class Main extends JavaPlugin {
   private PartyHandler partyHandler;
   private RewardsFactory rewardsHandler;
 
-public CuboidSelector getCuboidSelector() {
+  public CuboidSelector getCuboidSelector() {
     return cuboidSelector;
   }
 
@@ -286,7 +286,7 @@ public CuboidSelector getCuboidSelector() {
         String finalUpdate = update.toString();
         //copy of userManager#saveStatistic but without async database call that's not allowed in onDisable method.
         ((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE " + ((MysqlManager) getUserManager().getDatabase()).getTableName()
-            + finalUpdate + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+            + finalUpdate + " WHERE UUID='" + user.getUniqueId().toString() + "';");
         continue;
       }
       for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {

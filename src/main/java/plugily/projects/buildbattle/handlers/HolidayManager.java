@@ -104,6 +104,7 @@ public class HolidayManager {
           plugin.getConfigPreferences().getGameThemes().put("Teams", plugin.getConfig().getStringList("Holiday-Themes.Christmas"));
           plugin.getConfigPreferences().getGameThemes().put("Guess-The-Build", plugin.getConfig().getStringList("Holiday-Themes.Christmas"));
         }
+        break;
       default:
         break;
     }

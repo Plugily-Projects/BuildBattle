@@ -64,12 +64,12 @@ public class UserManager {
 
   public User getUser(Player player) {
     for(User user : users) {
-      if(user.getPlayer().equals(player)) {
+      if(user.getUniqueId().equals(player.getUniqueId())) {
         return user;
       }
     }
     Debugger.debug("Registering new user with UUID: " + player.getUniqueId() + " (" + player.getName() + ")");
-    User user = new User(player);
+    User user = new User(player.getUniqueId());
     users.add(user);
     return user;
   }

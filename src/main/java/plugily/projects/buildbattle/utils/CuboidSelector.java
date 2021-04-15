@@ -59,7 +59,7 @@ public class CuboidSelector implements Listener {
   }
 
   public Selection getSelection(Player p) {
-    return selections.getOrDefault(p, null);
+    return selections.get(p);
   }
 
   public void removeSelection(Player p) {
@@ -82,7 +82,7 @@ public class CuboidSelector implements Listener {
           e.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&cPlease select bottom corner using left click first!"));
           break;
         }
-        selections.put(e.getPlayer(), new Selection(selections.get(e.getPlayer()).getFirstPos(), e.getClickedBlock().getLocation()));
+        selections.put(e.getPlayer(), new Selection(getSelection(e.getPlayer()).getFirstPos(), e.getClickedBlock().getLocation()));
         e.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&eNow you can add plot via setup menu!"));
         break;
       case LEFT_CLICK_AIR:

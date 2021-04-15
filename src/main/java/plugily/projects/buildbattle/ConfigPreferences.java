@@ -32,6 +32,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -112,25 +113,23 @@ public class ConfigPreferences {
 
   private void loadBlackList() {
     for(String item : plugin.getConfig().getStringList("Blacklisted-Item-Names")) {
-      item = item.toUpperCase();
-
-      if(!XMaterial.matchXMaterial(item).isPresent()) {
+      Optional<XMaterial> opt = XMaterial.matchXMaterial(item.toUpperCase());
+      if(!opt.isPresent()) {
         Debugger.sendConsoleMsg("&c[BuildBattle] Invalid black listed item! " + item + " doesn't exist, are you sure it's properly named?");
         continue;
       }
 
-      itemBlacklist.add(XMaterial.matchXMaterial(item).get().parseMaterial());
+      itemBlacklist.add(opt.get().parseMaterial());
     }
 
     for(String item : plugin.getConfig().getStringList("Blacklisted-Floor-Materials")) {
-      item = item.toUpperCase();
-
-      if(!XMaterial.matchXMaterial(item).isPresent()) {
+      Optional<XMaterial> opt = XMaterial.matchXMaterial(item.toUpperCase());
+      if(!opt.isPresent()) {
         Debugger.sendConsoleMsg("&c[BuildBattle] Invalid black listed item! " + item + " doesn't exist, are you sure it's properly named?");
         continue;
       }
 
-      floorBlacklist.add(XMaterial.matchXMaterial(item).get().parseMaterial());
+      floorBlacklist.add(opt.get().parseMaterial());
     }
   }
 

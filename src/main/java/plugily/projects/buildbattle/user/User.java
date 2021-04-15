@@ -32,6 +32,7 @@ import plugily.projects.buildbattle.arena.managers.plots.Plot;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by Tom on 27/07/2014.
@@ -39,13 +40,22 @@ import java.util.Map;
 public class User {
 
   private static final Main PLUGIN = JavaPlugin.getPlugin(Main.class);
-  private final Player player;
+  private final UUID uuid;
   private final Map<StatsStorage.StatisticType, Integer> stats = new EnumMap<>(StatsStorage.StatisticType.class);
   private Plot currentPlot;
   private boolean spectator = false;
 
+  @Deprecated
   public User(Player player) {
-    this.player = player;
+    this(player.getUniqueId());
+  }
+
+  public User(UUID uuid) {
+    this.uuid = uuid;
+  }
+
+  public UUID getUniqueId() {
+    return uuid;
   }
 
   public Plot getCurrentPlot() {
@@ -57,11 +67,11 @@ public class User {
   }
 
   public Player getPlayer() {
-    return player;
+    return Bukkit.getPlayer(uuid);
   }
 
   public BaseArena getArena() {
-    return ArenaRegistry.getArena(player);
+    return ArenaRegistry.getArena(getPlayer());
   }
 
   public void setSpectator(boolean b) {
@@ -85,8 +95,8 @@ public class User {
     stats.put(stat, i);
 
     Bukkit.getScheduler().callSyncMethod(PLUGIN, () -> {
-      BBPlayerStatisticChangeEvent event = new BBPlayerStatisticChangeEvent(getArena(), player, stat, i);
-      Bukkit.getPluginManager().callEvent(event);
+      BBPlayerStatisticChangeEvent event = new BBPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, i);
+      Bukkit.getPluginManager().callEvent(new BBPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, i));
       return event;
     });
   }
@@ -95,7 +105,7 @@ public class User {
     stats.put(stat, getStat(stat) + i);
 
     Bukkit.getScheduler().callSyncMethod(PLUGIN, () -> {
-      BBPlayerStatisticChangeEvent event = new BBPlayerStatisticChangeEvent(getArena(), player, stat, getStat(stat));
+      BBPlayerStatisticChangeEvent event = new BBPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, getStat(stat));
       Bukkit.getPluginManager().callEvent(event);
       return event;
     });
