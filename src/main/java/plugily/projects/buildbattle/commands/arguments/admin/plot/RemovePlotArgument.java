@@ -47,7 +47,7 @@ public class RemovePlotArgument {
       @Override
       public void execute(CommandSender sender, String[] args) {
         Player player = (Player) sender;
-        if(args.length < 2) {
+        if(args.length < 3) {
           //todo translatable
           player.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorRawMessage("&cPlease type arena name and plot ID!"));
           return;

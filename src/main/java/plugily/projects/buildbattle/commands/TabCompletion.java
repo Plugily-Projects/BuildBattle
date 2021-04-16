@@ -69,10 +69,13 @@ public class TabCompletion implements TabCompleter {
           cmds.addAll(Arrays.asList("add", "set"));
         }
       } else if(args.length == 3 && args[0].equalsIgnoreCase("removeplot")) {
-        FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
-        String path = "instances." + ArenaRegistry.getArena(args[1]).getID() + ".plots";
-        if (config.isConfigurationSection(path)) {
-          cmds.addAll(config.getConfigurationSection(path).getKeys(false));
+        BaseArena arena = ArenaRegistry.getArena(args[1]);
+        if (arena != null) {
+          FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
+          String path = "instances." + arena.getID() + ".plots";
+          if (config.isConfigurationSection(path)) {
+            cmds.addAll(config.getConfigurationSection(path).getKeys(false));
+          }
         }
       }
     }

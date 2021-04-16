@@ -74,7 +74,7 @@ public class Utils {
             .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535, false));
         return;
       }
-      if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_8_R3)) {
+      if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_10_R2)) {
         PacketUtils.sendPacket(player, packetPlayOutMapChunk.getConstructor(chunkClass, boolean.class, int.class)
             .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), true, 65535));
         return;
