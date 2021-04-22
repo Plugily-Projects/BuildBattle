@@ -48,7 +48,7 @@ public class OptionsMenuHandler implements Listener {
 
   @EventHandler
   public void onOptionsMenuClick(InventoryClickEvent e) {
-    if(!(e.getWhoClicked() instanceof Player) || e.getCurrentItem() == null) {
+    if(!(e.getWhoClicked() instanceof Player)) {
       return;
     }
     if(!ItemUtils.isItemStackNamed(e.getCurrentItem())

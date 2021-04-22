@@ -400,7 +400,7 @@ public class GuessTheBuildArena extends BaseArena {
         .replace("%theme%", !themes.isEmpty() ? themes.get(r.nextInt(themes.size())) : ""))
         .lore(itemLore
             .replace("%difficulty%", getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Difficulties.Easy"))
-            .replace("%points%", Integer.toString(1)).split(";")).build());
+            .replace("%points%", "1").split(";")).build());
 
     themes = getPlugin().getConfigPreferences().getThemes(BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_MEDIUM");
 
@@ -408,7 +408,7 @@ public class GuessTheBuildArena extends BaseArena {
         .replace("%theme%", !themes.isEmpty() ? themes.get(r.nextInt(themes.size())) : ""))
         .lore(itemLore
             .replace("%difficulty%", getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Difficulties.Medium"))
-            .replace("%points%", Integer.toString(2)).split(";")).build());
+            .replace("%points%", "2").split(";")).build());
 
     themes = getPlugin().getConfigPreferences().getThemes(BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_HARD");
 
@@ -416,7 +416,7 @@ public class GuessTheBuildArena extends BaseArena {
         .replace("%theme%", !themes.isEmpty() ? themes.get(r.nextInt(themes.size())) : ""))
         .lore(itemLore
             .replace("%difficulty%", getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Difficulties.Hard"))
-            .replace("%points%", Integer.toString(3)).split(";")).build());
+            .replace("%points%", "3").split(";")).build());
     currentBuilder.openInventory(inv);
   }
 

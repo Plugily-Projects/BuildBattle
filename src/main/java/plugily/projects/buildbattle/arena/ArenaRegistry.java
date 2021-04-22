@@ -155,9 +155,14 @@ public class ArenaRegistry {
       } else {
         arena.setMapName(section.getString("instances.default.mapname"));
       }
-      if(section.contains(id + ".lobbylocation")) {
-        arena.setLobbyLocation(LocationSerializer.getLocation(section.getString(id + ".lobbylocation")));
+
+      Location lobbyLoc = LocationSerializer.getLocation(section.getString(id + ".lobbylocation"));
+      if (lobbyLoc == null || lobbyLoc.getWorld() == null) {
+        arena.setReady(false);
+        continue;
       }
+
+      arena.setLobbyLocation(lobbyLoc);
       if(section.contains(id + ".Endlocation")) {
         arena.setEndLocation(LocationSerializer.getLocation(section.getString(id + ".Endlocation")));
       } else if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
