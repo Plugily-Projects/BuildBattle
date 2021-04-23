@@ -30,6 +30,7 @@ import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
 import plugily.projects.buildbattle.commands.arguments.data.CommandArgument;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,14 +76,21 @@ public class JoinArguments {
                 args[2] = "GUESS_THE_BUILD";
               }
               BaseArena.ArenaType type = BaseArena.ArenaType.valueOf(args[2].toUpperCase());
+              List<BaseArena> baseArenas = new ArrayList<>();
               Map<BaseArena, Integer> arenas = new HashMap<>();
               for(BaseArena arena : ArenaRegistry.getArenas()) {
                 if(arena.getArenaType() == type) {
                   arenas.put(arena, arena.getPlayers().size());
+                  baseArenas.add(arena);
                 }
               }
-              if(ArenaRegistry.getArenaPlayersOnline() == 0) {
+              if(arenas.isEmpty()) {
                 ArenaManager.joinAttempt((Player) sender, ArenaRegistry.getArenas().get(ThreadLocalRandom.current().nextInt(ArenaRegistry.getArenas().size())));
+                return;
+              }
+              if(ArenaRegistry.getArenaPlayersOnline() == 0) {
+                BaseArena arena = baseArenas.get(ThreadLocalRandom.current().nextInt(baseArenas.size()));
+                ArenaManager.joinAttempt((Player) sender, arena);
                 return;
               }
               Stream<Map.Entry<BaseArena, Integer>> sorted = arenas.entrySet().stream().sorted(Map.Entry.comparingByValue());
