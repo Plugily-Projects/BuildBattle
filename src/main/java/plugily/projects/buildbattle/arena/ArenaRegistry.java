@@ -25,6 +25,7 @@ import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
@@ -38,7 +39,6 @@ import plugily.projects.buildbattle.arena.impl.TeamArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.utils.Debugger;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -103,6 +103,14 @@ public class ArenaRegistry {
       }
     }
     return null;
+  }
+
+  public static Integer getArenaPlayersOnline() {
+    int players = 0;
+    for(BaseArena arena : ARENAS){
+      players =+ arena.getPlayers().size();
+    }
+    return players;
   }
 
   public static void registerArenas() {
