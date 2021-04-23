@@ -50,7 +50,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
 
   @Override
   public String getVersion() {
-    return "1.0.1";
+    return "1.0.2";
   }
 
   @Override
@@ -75,6 +75,8 @@ public class PlaceholderManager extends PlaceholderExpansion {
         return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.PARTICLES_USED));
       case "super_votes":
         return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.SUPER_VOTES));
+      case "arena_players_online":
+        return Integer.toString(ArenaRegistry.getArenaPlayersOnline());
       default:
         return handleArenaPlaceholderRequest(id);
     }
