@@ -61,6 +61,9 @@ public class TeamArena extends SoloArena {
     for(Plot plot : getPlotManager().getPlots()) {
       plot.getOwners().clear();
     }
+    //todo team size!!!
+    //todo party members on same team!!!
+    //todo team selector!!!
     List<List<Player>> pairs = Lists.partition(new ArrayList<>(getPlayers()), 2);
     int i = 0;
     for(Plot plot : getPlotManager().getPlots()) {
