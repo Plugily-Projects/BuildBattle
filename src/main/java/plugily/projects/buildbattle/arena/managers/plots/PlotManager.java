@@ -53,9 +53,11 @@ public class PlotManager {
   }
 
   public Plot getPlot(Player player) {
-    for(Plot buildPlot : plots) {
-      if(buildPlot.getOwners().contains(player)) {
-        return buildPlot;
+    if (player != null) {
+      for(Plot buildPlot : plots) {
+        if(buildPlot.getOwners().contains(player)) {
+          return buildPlot;
+        }
       }
     }
 

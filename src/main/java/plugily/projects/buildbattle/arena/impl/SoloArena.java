@@ -541,10 +541,12 @@ public class SoloArena extends BaseArena {
             break;
         }
         if(message.contains("%place_" + access.toLowerCase() + "%")) {
-          if(topList.containsKey(i) && !topList.get(i).isEmpty()) {
-            Plot plot = getPlotManager().getPlot(topList.get(i).get(0));
+          List<Player> list = topList.get(i);
+
+          if(list != null && !list.isEmpty()) {
+            Plot plot = getPlotManager().getPlot(list.get(0));
             message = StringUtils.replace(message, "%place_" + access.toLowerCase() + "%", getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Place-" + access)
-                .replace("%player%", formatWinners(topList.get(i)))
+                .replace("%player%", formatWinners(list))
                 .replace("%number%", plot == null ? "" : Integer.toString(plot.getPoints())));
           } else {
             message = StringUtils.replace(message, "%place_" + access.toLowerCase() + "%", getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Place-" + access)
@@ -601,16 +603,16 @@ public class SoloArena extends BaseArena {
       for(Map.Entry<Integer, List<Player>> map : new HashMap<>(topList).entrySet()) {
         Player first = map.getValue().isEmpty() ? null : map.getValue().get(0);
 
-        if(first == null || getPlotManager().getPlot(first) == null) {
+        Plot plot = getPlotManager().getPlot(first);
+        if(plot == null) {
           topList.put(map.getKey(), buildPlot.getOwners());
           break;
         }
-        Plot plot = getPlotManager().getPlot(first);
-        if(plot != null && i > plot.getPoints()) {
+        if(i > plot.getPoints()) {
           moveScore(map.getKey(), buildPlot.getOwners());
           break;
         }
-        if(plot != null && i == plot.getPoints()) {
+        if(i == plot.getPoints()) {
           List<Player> winners = topList.getOrDefault(map.getKey(), new ArrayList<>());
           winners.addAll(buildPlot.getOwners());
           topList.put(map.getKey(), winners);
@@ -635,11 +637,11 @@ public class SoloArena extends BaseArena {
   @Override
   public void giveRewards() {
     for(int i = 1; i <= topList.size(); i++) {
-      if(!topList.containsKey(i)) {
-        continue;
-      }
-      for(Player player : topList.get(i)) {
-        getPlugin().getRewardsHandler().performReward(player, Reward.RewardType.PLACE, i);
+      List<Player> list = topList.get(i);
+      if (list != null) {
+        for(Player player : list) {
+          getPlugin().getRewardsHandler().performReward(player, Reward.RewardType.PLACE, i);
+        }
       }
     }
     getPlugin().getRewardsHandler().performReward(this, Reward.RewardType.END_GAME);
