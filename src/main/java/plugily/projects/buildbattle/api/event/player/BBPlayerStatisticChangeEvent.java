@@ -22,11 +22,11 @@ package plugily.projects.buildbattle.api.event.player;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.Nullable;
+
 import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.api.event.BBEvent;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
-
-import javax.annotation.Nullable;
 
 /**
  * @author Plajer

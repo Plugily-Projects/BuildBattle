@@ -72,10 +72,13 @@ public class JoinArguments {
               if(args[2].equalsIgnoreCase("gtb") || args[2].equalsIgnoreCase("guess_the_build")) {
                 args[2] = "GUESS_THE_BUILD";
               }
-              if(args[2].equalsIgnoreCase("gtb") || args[2].equalsIgnoreCase("guess_the_build")) {
-                args[2] = "GUESS_THE_BUILD";
+
+              BaseArena.ArenaType type = BaseArena.ArenaType.SOLO;
+              try {
+                type = BaseArena.ArenaType.valueOf(args[2].toUpperCase());
+              } catch (IllegalArgumentException ex) {
               }
-              BaseArena.ArenaType type = BaseArena.ArenaType.valueOf(args[2].toUpperCase());
+
               List<BaseArena> baseArenas = new ArrayList<>();
               Map<BaseArena, Integer> arenas = new HashMap<>();
               for(BaseArena arena : ArenaRegistry.getArenas()) {
@@ -132,7 +135,13 @@ public class JoinArguments {
               if(args[1].equalsIgnoreCase("gtb") || args[1].equalsIgnoreCase("guess_the_build")) {
                 args[1] = "GUESS_THE_BUILD";
               }
-              BaseArena.ArenaType type = BaseArena.ArenaType.valueOf(args[1].toUpperCase());
+              BaseArena.ArenaType t = BaseArena.ArenaType.SOLO;
+              try {
+                t = BaseArena.ArenaType.valueOf(args[1].toUpperCase());
+              } catch (IllegalArgumentException ex) {
+              }
+
+              BaseArena.ArenaType type = t;
               //check starting arenas -> random
               List<BaseArena> arenas = ArenaRegistry.getArenas().stream().filter(baseArena -> baseArena.getArenaType() == type).filter(arena -> arena.getArenaState() == ArenaState.STARTING && arena.getPlayers().size() < arena.getMaximumPlayers()).collect(Collectors.toList());
               if(!arenas.isEmpty()) {

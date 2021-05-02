@@ -26,7 +26,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @SuppressWarnings("serial")
-public class MaterialUtil {
+public final class MaterialUtil {
 
   private static final Set<Material> WALL_SIGNS = new HashSet<Material>() {
     {
@@ -47,6 +47,7 @@ public class MaterialUtil {
   }
 
   private static Material getMat(String name) {
-    return Material.getMaterial(name.toUpperCase());
+    Material mat = Material.getMaterial(name.toUpperCase());
+    return mat == null ? Material.AIR : mat;
   }
 }

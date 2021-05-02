@@ -83,12 +83,13 @@ public class User {
   }
 
   public int getStat(StatsStorage.StatisticType stat) {
-    if(!stats.containsKey(stat)) {
+    Integer statis = stats.get(stat);
+    if(statis == null) {
       stats.put(stat, 0);
       return 0;
     }
 
-    return stats.getOrDefault(stat, 0);
+    return statis.intValue();
   }
 
   public void setStat(StatsStorage.StatisticType stat, int i) {
@@ -96,7 +97,7 @@ public class User {
 
     Bukkit.getScheduler().callSyncMethod(PLUGIN, () -> {
       BBPlayerStatisticChangeEvent event = new BBPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, i);
-      Bukkit.getPluginManager().callEvent(new BBPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, i));
+      Bukkit.getPluginManager().callEvent(event);
       return event;
     });
   }

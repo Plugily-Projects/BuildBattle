@@ -44,7 +44,6 @@ import plugily.projects.buildbattle.commands.arguments.data.LabeledCommandArgume
 import plugily.projects.buildbattle.handlers.language.LanguageManager;
 import plugily.projects.buildbattle.utils.Utils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -85,9 +84,9 @@ public class ArenaSelectorArgument implements Listener {
           if(itemMeta != null) {
             ComplementAccessor.getComplement().setDisplayName(itemMeta, formatItem(LanguageManager.getLanguageMessage("Arena-Selector.Item.Name"), arena, registry.getPlugin()));
 
-            java.util.List<String> lore = new ArrayList<>();
-            for(String string : LanguageManager.getLanguageList("Arena-Selector.Item.Lore")) {
-              lore.add(formatItem(string, arena, registry.getPlugin()));
+            java.util.List<String> lore = LanguageManager.getLanguageList("Arena-Selector.Item.Lore");
+            for(int b = 0; b < lore.size(); b++) {
+              lore.set(b, formatItem(lore.get(b), arena, registry.getPlugin()));
             }
 
             ComplementAccessor.getComplement().setLore(itemMeta, lore);

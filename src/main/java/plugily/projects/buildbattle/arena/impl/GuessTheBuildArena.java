@@ -342,8 +342,9 @@ public class GuessTheBuildArena extends BaseArena {
               InventorySerializer.loadInventory(getPlugin(), player);
             }
             //fast solution
-            if(getPlotManager().getPlot(player) != null)
-              getPlotManager().getPlot(player).fullyResetPlot();
+            Plot plot = getPlotManager().getPlot(player);
+            if(plot != null)
+              plot.fullyResetPlot();
           }
 
           // do it in the main thread to prevent async catch from bukkit
@@ -430,8 +431,9 @@ public class GuessTheBuildArena extends BaseArena {
   @Override
   public void giveRewards() {
     List<Player> list = new ArrayList<>(playersPoints.keySet());
-    for(int i = 0; i <= list.size(); i++) {
-      if(list.size() - 1 < i) {
+    int size = list.size();
+    for(int i = 0; i <= size; i++) {
+      if(size - 1 < i) {
         continue;
       }
       getPlugin().getRewardsHandler().performReward(list.get(i), Reward.RewardType.PLACE, i + 1);

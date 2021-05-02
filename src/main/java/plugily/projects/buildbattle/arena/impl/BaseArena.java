@@ -402,7 +402,7 @@ public class BaseArena extends BukkitRunnable {
   }
 
   public int getOption(ArenaOption option) {
-    return arenaOptions.get(option);
+    return arenaOptions.getOrDefault(option, 0);
   }
 
   public void setOptionValue(ArenaOption option, int value) {
@@ -410,7 +410,7 @@ public class BaseArena extends BukkitRunnable {
   }
 
   public void addOptionValue(ArenaOption option, int value) {
-    arenaOptions.put(option, arenaOptions.get(option) + value);
+    arenaOptions.put(option, getOption(option) + value);
   }
 
   public enum ArenaType {

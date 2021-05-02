@@ -21,7 +21,6 @@
 package plugily.projects.buildbattle.user.data;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import pl.plajerlair.commonsbox.database.MysqlDatabase;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.buildbattle.Main;
@@ -122,8 +121,8 @@ public class MysqlManager implements UserDatabase {
           //player already exists - get the stats
           for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
             if(!stat.isPersistent()) continue;
-            int val = rs.getInt(stat.getName());
-            user.setStat(stat, val);
+
+            user.setStat(stat, rs.getInt(stat.getName()));
           }
         } else {
           //player doesn't exist - make a new record
@@ -140,8 +139,7 @@ public class MysqlManager implements UserDatabase {
   }
 
   public String getTableName() {
-    FileConfiguration config = ConfigUtils.getConfig(plugin, "mysql");
-    return config.getString("table", "buildbattlestats");
+    return ConfigUtils.getConfig(plugin, "mysql").getString("table", "buildbattlestats");
   }
 
 }

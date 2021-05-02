@@ -42,11 +42,15 @@ public class StatsArgument {
       public void execute(CommandSender sender, String[] args) {
         Player player = args.length == 2 ? Bukkit.getPlayerExact(args[1]) : (Player) sender;
         ChatManager cm = registry.getPlugin().getChatManager();
-        if(player == null || registry.getPlugin().getUserManager().getUser(player) == null) {
+        if(player == null) {
           sender.sendMessage(cm.getPrefix() + cm.colorMessage("Commands.Player-Not-Found"));
           return;
         }
         User user = registry.getPlugin().getUserManager().getUser(player);
+        if (user == null) {
+          sender.sendMessage(cm.getPrefix() + cm.colorMessage("Commands.Player-Not-Found"));
+          return;
+        }
         if(player.equals(sender)) {
           sender.sendMessage(cm.colorMessage("Commands.Stats-Command.Header"));
         } else {

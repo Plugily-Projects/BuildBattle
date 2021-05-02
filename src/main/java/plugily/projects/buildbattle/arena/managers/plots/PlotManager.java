@@ -78,8 +78,7 @@ public class PlotManager {
       return;
     }
 
-    plotsToClear.get(0).fullyResetPlot();
-    plotsToClear.remove(0);
+    plotsToClear.remove(0).fullyResetPlot();
   }
 
   public void teleportToPlots() {

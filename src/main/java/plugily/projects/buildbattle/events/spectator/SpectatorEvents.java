@@ -112,9 +112,10 @@ public class SpectatorEvents implements Listener {
 
       e.setCancelled(true);
 
-      if(ComplementAccessor.getComplement().getDisplayName(stack.getItemMeta()).equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
+      String dName = ComplementAccessor.getComplement().getDisplayName(stack.getItemMeta());
+      if(dName.equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
         openSpectatorMenu(e.getPlayer().getWorld(), e.getPlayer(), arena);
-      } else if(ComplementAccessor.getComplement().getDisplayName(stack.getItemMeta()).equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name"))) {
+      } else if(dName.equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name"))) {
         spectatorSettingsMenu.openSpectatorSettingsMenu(e.getPlayer());
       }
     }

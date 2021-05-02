@@ -128,14 +128,12 @@ public class Plot {
 
   public void fullyResetPlot() {
     resetPlot();
-    if(!owners.isEmpty()) {
-      for(Player p : owners) {
-        plugin.getUserManager().getUser(p).setCurrentPlot(null);
-        setOwners(new ArrayList<>());
-        setPoints(0);
-      }
+    for(Player p : owners) {
+      plugin.getUserManager().getUser(p).setCurrentPlot(null);
+      setOwners(new ArrayList<>());
+      setPoints(0);
     }
-    getParticles().clear();
+    particles.clear();
   }
 
   public void resetPlot() {
@@ -149,7 +147,7 @@ public class Plot {
       block.setType(Material.AIR);
     }
 
-    getParticles().clear();
+    particles.clear();
 
     for(Player p : owners) {
       p.resetPlayerWeather();
