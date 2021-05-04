@@ -138,7 +138,7 @@ public class RewardsFactory {
           continue;
         }
         for(String key : section.getKeys(false)) {
-          for(String reward : config.getStringList("rewards." + rewardType.getPath() + "." + key)) {
+          for(String reward : section.getStringList(key)) {
             rewards.add(new Reward(rewardType, reward, Integer.parseInt(key)));
             registeredRewards.put(rewardType, registeredRewards.getOrDefault(rewardType, 0) + 1);
           }

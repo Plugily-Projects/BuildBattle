@@ -25,7 +25,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
 import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerInteractEvent;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
@@ -51,8 +50,7 @@ public class CuboidSelector implements Listener {
   }
 
   public void giveSelectorWand(Player p) {
-    ItemStack stack = new ItemBuilder(Material.BLAZE_ROD).name(plugin.getChatManager().colorRawMessage("&6&lPlot selector")).build();
-    p.getInventory().addItem(stack);
+    p.getInventory().addItem(new ItemBuilder(Material.BLAZE_ROD).name(plugin.getChatManager().colorRawMessage("&6&lPlot selector")).build());
 
     p.sendMessage(plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&eYou received plot selector wand!"));
     p.sendMessage(plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&eSelect bottom corner using left click!"));

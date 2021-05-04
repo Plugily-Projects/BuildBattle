@@ -41,7 +41,7 @@ public class LeaveArgument {
     registry.mapArgument("buildbattle", new CommandArgument("leave", "", CommandArgument.ExecutorType.PLAYER) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        if(!registry.getPlugin().getConfig().getBoolean("Disable-Leave-Command", false)) {
+        if(!registry.getPlugin().getConfig().getBoolean("Disable-Leave-Command")) {
           Player p = (Player) sender;
           BaseArena arena = ArenaRegistry.getArena(p);
           if(arena == null) {

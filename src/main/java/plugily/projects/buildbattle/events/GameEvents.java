@@ -306,7 +306,8 @@ public class GameEvents implements Listener {
       return;
     }
     String command = event.getMessage().substring(1);
-    command = (command.indexOf(' ') >= 0 ? command.substring(0, command.indexOf(' ')) : command);
+    int indexOf = command.indexOf(' ');
+    command = (indexOf >= 0 ? command.substring(0, indexOf) : command);
     for(String string : plugin.getConfigPreferences().getWhitelistedCommands()) {
       if(command.equalsIgnoreCase(string)) {
         return;

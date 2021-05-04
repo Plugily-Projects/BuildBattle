@@ -24,6 +24,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
@@ -35,7 +36,6 @@ import plugily.projects.buildbattle.menus.options.OptionsRegistry;
 import plugily.projects.buildbattle.utils.Debugger;
 import plugily.projects.buildbattle.utils.Utils;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -79,7 +79,7 @@ public class ParticleRegistry {
           break;
         }
       }
-      if(config.getBoolean(particle.toString() + ".disabled")) {
+      if(config.getBoolean(particle + ".disabled")) {
         blacklisted = true;
       }
       if(blacklisted) {
@@ -87,12 +87,12 @@ public class ParticleRegistry {
       }
       ParticleItem particleItem = new ParticleItem();
       particleItem.setItemStack(new ItemBuilder(XMaterial.matchXMaterial(config
-          .getString(particle.toString() + ".material-name", "bedrock").toUpperCase()).orElse(XMaterial.BEDROCK).parseItem())
-          .name(plugin.getChatManager().colorRawMessage(config.getString(particle.toString() + ".displayname")))
-          .lore(config.getStringList(particle.toString() + ".lore")
+          .getString(particle + ".material-name", "bedrock").toUpperCase()).orElse(XMaterial.BEDROCK).parseItem())
+          .name(plugin.getChatManager().colorRawMessage(config.getString(particle + ".displayname")))
+          .lore(config.getStringList(particle + ".lore")
               .stream().map(lore -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()))
           .build());
-      particleItem.setPermission(config.getString(particle.toString() + ".permission"));
+      particleItem.setPermission(config.getString(particle + ".permission"));
       particleItem.setEffect(particle);
       registeredParticles.add(particleItem);
       i++;

@@ -138,27 +138,31 @@ public class SignManager implements Listener {
 
   @EventHandler
   public void onSignDestroy(BlockBreakEvent e) {
+    if(!e.getPlayer().hasPermission("buildbattle.admin.sign.break")) {
+      return;
+    }
+
     ArenaSign arenaSign = getArenaSignByBlock(e.getBlock());
-    if(!e.getPlayer().hasPermission("buildbattle.admin.sign.break") || arenaSign == null) {
+    if (arenaSign == null) {
       return;
     }
 
     arenaSigns.remove(arenaSign);
 
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    if (!config.isConfigurationSection("instances")) {
+    org.bukkit.configuration.ConfigurationSection section = config.getConfigurationSection("instances");
+    if (section == null)
       return;
-    }
 
     String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + ".0," + e.getBlock().getY() + ".0," + e.getBlock().getZ() + ".0," + "0.0,0.0";
-    for(String arena : config.getConfigurationSection("instances").getKeys(false)) {
-      for(String sign : config.getStringList("instances." + arena + ".signs")) {
+    for(String arena : section.getKeys(false)) {
+      for(String sign : section.getStringList(arena + ".signs")) {
         if(!sign.equals(location)) {
           continue;
         }
-        List<String> signs = config.getStringList("instances." + arena + ".signs");
+        List<String> signs = section.getStringList(arena + ".signs");
         signs.remove(location);
-        config.set("instances." + arena + ".signs", signs);
+        section.set(arena + ".signs", signs);
         ConfigUtils.saveConfig(plugin, config, "arenas");
         e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Sign-Removed"));
         return;
@@ -169,11 +173,11 @@ public class SignManager implements Listener {
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onJoinAttempt(CBPlayerInteractEvent e) {
-    if(VersionUtils.checkOffHand(e.getHand())) {
+    if(VersionUtils.checkOffHand(e.getHand()) || e.getAction() != Action.RIGHT_CLICK_BLOCK || !(e.getClickedBlock().getState() instanceof Sign)) {
       return;
     }
     ArenaSign arenaSign = getArenaSignByBlock(e.getClickedBlock());
-    if(arenaSign != null && e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getClickedBlock().getState() instanceof Sign) {
+    if(arenaSign != null) {
       ArenaManager.joinAttempt(e.getPlayer(), arenaSign.getArena());
     }
   }

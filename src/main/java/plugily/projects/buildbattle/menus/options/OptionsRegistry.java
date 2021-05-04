@@ -110,10 +110,9 @@ public class OptionsRegistry {
    * @throws IllegalArgumentException if option doesn't exist
    */
   public void unregisterOption(MenuOption option) {
-    if(!registeredOptions.contains(option)) {
+    if(!registeredOptions.remove(option)) {
       throw new IllegalArgumentException("Cannot remove non existing option!");
     }
-    registeredOptions.remove(option);
   }
 
   /**
