@@ -144,7 +144,7 @@ public class GuessTheBuildArena extends BaseArena {
             player.setFlying(true);
             player.getInventory().setItem(8, getPlugin().getOptionsRegistry().getMenuItem());
             //to prevent Multiverse changing gamemode bug
-            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setGameMode(GameMode.SURVIVAL), 20);
+            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setGameMode(GameMode.ADVENTURE), 20);
           }
           Plot plot = getPlotManager().getPlot(getPlayers().get(round - 1));
           org.bukkit.Location plotLoc = plot == null ? null : plot.getTeleportLocation();
@@ -268,7 +268,7 @@ public class GuessTheBuildArena extends BaseArena {
                 p.setPlayerTime(Plot.Time.format(plot.getTime(), p.getWorld().getTime()), false);
               }
               p.setCollidable(false);
-              p.setGameMode(GameMode.SURVIVAL);
+              p.setGameMode(GameMode.ADVENTURE);
               p.setAllowFlight(true);
               p.setFlying(true);
             }
