@@ -144,7 +144,7 @@ public class GuessTheBuildArena extends BaseArena {
             player.setFlying(true);
             player.getInventory().setItem(8, getPlugin().getOptionsRegistry().getMenuItem());
             //to prevent Multiverse changing gamemode bug
-            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setGameMode(GameMode.SPECTATOR), 20);
+            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setGameMode(GameMode.SURVIVAL), 20);
           }
           Plot plot = getPlotManager().getPlot(getPlayers().get(round - 1));
           org.bukkit.Location plotLoc = plot == null ? null : plot.getTeleportLocation();
@@ -155,7 +155,7 @@ public class GuessTheBuildArena extends BaseArena {
             }
           }
           nextRoundCooldown = true;
-          Bukkit.getScheduler().runTaskLater(getPlugin(), () -> nextRoundCooldown = false, 20 * getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.DELAYED_TASK, this));
+          Bukkit.getScheduler().runTaskLater(getPlugin(), () -> nextRoundCooldown = false, 20L * getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.DELAYED_TASK, this));
           if (plot != null) {
             Bukkit.getScheduler().runTaskLater(getPlugin(), () -> plot.getOwners().get(0).setGameMode(GameMode.CREATIVE), 20);
           }
@@ -267,8 +267,10 @@ public class GuessTheBuildArena extends BaseArena {
                 p.setPlayerWeather(plot.getWeatherType());
                 p.setPlayerTime(Plot.Time.format(plot.getTime(), p.getWorld().getTime()), false);
               }
-
-              p.setGameMode(GameMode.SPECTATOR);
+              p.setCollidable(false);
+              p.setGameMode(GameMode.SURVIVAL);
+              p.setAllowFlight(true);
+              p.setFlying(true);
             }
             if (plot != null) {
               plot.getOwners().get(0).setGameMode(GameMode.CREATIVE);
@@ -282,7 +284,7 @@ public class GuessTheBuildArena extends BaseArena {
                 VersionUtils.sendSubTitle(player, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Being-Selected"), 5, 25, 5);
               }
             }
-          }, 20 * getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.DELAYED_TASK, this));
+          }, 20L * getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.DELAYED_TASK, this));
           //todo next round info and game state?
           break;
         }
