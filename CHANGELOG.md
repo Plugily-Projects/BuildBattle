@@ -15,6 +15,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Added placeholder arena_players_online
 * Added new RewardType scoreboard_add
 * Fixed gtb guesser players can teleport to all players on the server
+* Changed Now builders will also get points if the building is guessed
 
 ### 4.5.0 Release (21.03.2021 - 13.04.2021)
 * Automatically disable bossbar support on 1.8 to prevent issue if bossbar is enabled on config.yml
