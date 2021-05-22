@@ -150,9 +150,10 @@ public class BaseArena extends BukkitRunnable {
   }
 
   public void sendBuildLeftTimeMessage() {
-    String message = plugin.getChatManager().colorMessage("In-Game.Messages.Time-Left-To-Build").replace("%FORMATTEDTIME%", StringFormatUtils.formatIntoMMSS(getTimer()));
-    String subtitle = plugin.getChatManager().colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", Integer.toString(getTimer()));
-    for(Player p : getPlayers()) {
+    int timer = getTimer();
+    String message = plugin.getChatManager().colorMessage("In-Game.Messages.Time-Left-To-Build").replace("%FORMATTEDTIME%", StringFormatUtils.formatIntoMMSS(timer));
+    String subtitle = plugin.getChatManager().colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", Integer.toString(timer));
+    for(Player p : players) {
       VersionUtils.sendActionBar(p, message);
       p.sendMessage(plugin.getChatManager().getPrefix() + message);
       VersionUtils.sendSubTitle(p, subtitle, 5, 30, 5);
@@ -221,7 +222,8 @@ public class BaseArena extends BukkitRunnable {
   }
 
   public void setMapName(String mapname) {
-    this.mapName = mapname == null ? "" : mapname;
+    if (mapname != null)
+      this.mapName = mapname;
   }
 
   public void addPlayer(Player player) {

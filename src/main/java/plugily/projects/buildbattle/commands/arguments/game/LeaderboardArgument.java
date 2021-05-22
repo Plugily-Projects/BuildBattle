@@ -71,10 +71,9 @@ public class LeaderboardArgument {
               String message = registry.getPlugin().getChatManager().colorMessage("Commands.Statistics.Format");
               message = StringUtils.replace(message, "%position%", Integer.toString(i + 1));
               message = StringUtils.replace(message, "%name%", Bukkit.getOfflinePlayer(current).getName());
-              message = StringUtils.replace(message, "%value%", String.valueOf(stats.get(current)));
+              message = StringUtils.replace(message, "%value%", String.valueOf(stats.remove(current)));
               message = StringUtils.replace(message, "%statistic%", statistic); //Games_played > Games played etc
               sender.sendMessage(message);
-              stats.remove(current);
             } catch(IndexOutOfBoundsException ex) {
               String message = registry.getPlugin().getChatManager().colorMessage("Commands.Statistics.Format");
               message = StringUtils.replace(message, "%position%", Integer.toString(i + 1));

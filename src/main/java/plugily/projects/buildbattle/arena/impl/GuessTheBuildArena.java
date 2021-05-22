@@ -94,11 +94,15 @@ public class GuessTheBuildArena extends BaseArena {
         if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           getPlugin().getServer().setWhitelist(false);
         }
+
         getPlotManager().resetPlotsGradually();
-        if(getPlayers().size() < getMinimumPlayers()) {
+
+        int minPlayers = getMinimumPlayers();
+
+        if(getPlayers().size() < minPlayers) {
           if(getTimer() <= 0) {
             setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
-            getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", Integer.toString(getMinimumPlayers())));
+            getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", Integer.toString(minPlayers)));
             return;
           }
         } else {
@@ -110,13 +114,18 @@ public class GuessTheBuildArena extends BaseArena {
         setTimer(getTimer() - 1);
         break;
       case STARTING:
+        int timer = getTimer();
+
         for(Player player : getPlayers()) {
-          float exp = (float) (getTimer() / (double) getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
+          float exp = (float) (timer / (double) getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
           player.setExp((exp > 1f || exp < 0f) ? 1f : exp);
-          player.setLevel(getTimer());
+          player.setLevel(timer);
         }
-        if(getPlayers().size() < getMinimumPlayers()) {
-          getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", Integer.toString(getMinimumPlayers())));
+
+        int minPls = getMinimumPlayers();
+
+        if(getPlayers().size() < minPls) {
+          getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", Integer.toString(minPls)));
           setArenaState(ArenaState.WAITING_FOR_PLAYERS);
           Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
           setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));

@@ -42,65 +42,63 @@ import java.util.Set;
  */
 public class VoteItems {
 
-  private static final Set<VoteItem> VOTEITEMS = new HashSet<>();
-  private static final FileConfiguration CONFIG;
-  private static final Main PLUGIN = JavaPlugin.getPlugin(Main.class);
+  private final Set<VoteItem> voteItems = new HashSet<>();
+  private final FileConfiguration config;
+  private final Main plugin = JavaPlugin.getPlugin(Main.class);
 
-  private static ItemStack reportItem = new ItemStack(Material.BEDROCK, 32);
-
-  static {
-    CONFIG = ConfigUtils.getConfig(PLUGIN, "voteItems");
-  }
+  private ItemStack reportItem = new ItemStack(Material.BEDROCK, 32);
 
   public VoteItems() {
+    config = ConfigUtils.getConfig(plugin, "voteItems");
+
     updateVoteItemsConfig();
     loadVoteItems();
   }
 
   private void loadVoteItems() {
-    for(String key : CONFIG.getKeys(false)) {
-      if(!CONFIG.isSet(key + ".displayname")) {
+    for(String key : config.getKeys(false)) {
+      if(!config.isSet(key + ".displayname")) {
         continue;
       }
 
-      ItemStack stack = new ItemBuilder(XMaterial.matchXMaterial(CONFIG.getString(key + ".material-name", "BEDROCK")
+      ItemStack stack = new ItemBuilder(XMaterial.matchXMaterial(config.getString(key + ".material-name", "BEDROCK")
           .toUpperCase()).orElse(XMaterial.BEDROCK).parseItem())
-          .name(PLUGIN.getChatManager().colorRawMessage(CONFIG.getString(key + ".displayname")))
+          .name(plugin.getChatManager().colorRawMessage(config.getString(key + ".displayname")))
           .build();
 
-      if(CONFIG.getBoolean(key + ".report-item-function")) {
+      if(config.getBoolean(key + ".report-item-function")) {
         reportItem = stack;
       }
       Sound sound = null;
       try {
-        sound = Sound.valueOf(CONFIG.getString(key + ".sound", ""));
+        sound = Sound.valueOf(config.getString(key + ".sound", ""));
       } catch(IllegalArgumentException ignored) {
       }
       int s = Integer.parseInt(key);
-      VOTEITEMS.add(new VoteItem(stack, s, s + 1, sound));
+      voteItems.add(new VoteItem(stack, s, s + 1, sound));
     }
   }
 
   private void updateVoteItemsConfig() {
-    for(String key : CONFIG.getKeys(false)) {
-      if(!CONFIG.isSet(key + ".displayname") || CONFIG.isSet(key + ".material-name")) {
+    for(String key : config.getKeys(false)) {
+      if(!config.isSet(key + ".displayname") || config.isSet(key + ".material-name")) {
         continue;
       }
-      CONFIG.set(key + ".material-name", XMaterial.GREEN_TERRACOTTA.name());
+      config.set(key + ".material-name", XMaterial.GREEN_TERRACOTTA.name());
       Debugger.debug(Debugger.Level.WARN, "Found outdated item in votingItems.yml! We've converted it to the newest version!");
     }
-    ConfigUtils.saveConfig(PLUGIN, CONFIG, "voteItems");
+    ConfigUtils.saveConfig(plugin, config, "voteItems");
   }
 
   public void giveVoteItems(Player player) {
-    for(VoteItem voteItem : VOTEITEMS) {
+    for(VoteItem voteItem : voteItems) {
       player.getInventory().setItem(voteItem.getSlot(), voteItem.getItemStack());
     }
     player.updateInventory();
   }
 
   public void playVoteSound(Player player, ItemStack itemStack) {
-    for(VoteItem item : VOTEITEMS) {
+    for(VoteItem item : voteItems) {
       if(item.getItemStack().isSimilar(itemStack)) {
         if(item.getSound() == null) {
           return;
@@ -117,7 +115,7 @@ public class VoteItems {
    * @return points
    */
   public int getPoints(ItemStack itemStack) {
-    for(VoteItem item : VOTEITEMS) {
+    for(VoteItem item : voteItems) {
       if(item.getItemStack().isSimilar(itemStack)) {
         return item.getPoints();
       }

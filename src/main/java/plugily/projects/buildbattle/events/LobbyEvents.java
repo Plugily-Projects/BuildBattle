@@ -49,8 +49,7 @@ public class LobbyEvents implements Listener {
     if(e.getEntity().getType() != EntityType.PLAYER) {
       return;
     }
-    Player player = (Player) e.getEntity();
-    BaseArena arena = ArenaRegistry.getArena(player);
+    BaseArena arena = ArenaRegistry.getArena((Player) e.getEntity());
     if(arena != null && (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS)) {
       e.setCancelled(true);
     }

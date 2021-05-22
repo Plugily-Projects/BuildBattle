@@ -190,11 +190,11 @@ public class GameEvents implements Listener {
 
   @EventHandler
   public void onTNTInteract(CBPlayerInteractEvent event) {
-    if(VersionUtils.checkOffHand(event.getHand())) {
+    if(event.getClickedBlock() == null || VersionUtils.checkOffHand(event.getHand())) {
       return;
     }
     BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
-    if(arena == null || VersionUtils.getItemInHand(event.getPlayer()).getType() != Material.FLINT_AND_STEEL || event.getClickedBlock() == null) {
+    if(arena == null || VersionUtils.getItemInHand(event.getPlayer()).getType() != Material.FLINT_AND_STEEL) {
       return;
     }
     if(event.getClickedBlock().getType() == Material.TNT) {

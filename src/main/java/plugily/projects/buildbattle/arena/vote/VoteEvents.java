@@ -20,7 +20,6 @@
 
 package plugily.projects.buildbattle.arena.vote;
 
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -64,19 +63,25 @@ public class VoteEvents implements Listener {
     }
 
     BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
-    if(arena == null || arena instanceof GuessTheBuildArena || arena.getArenaState() != ArenaState.IN_GAME || !((SoloArena) arena).isVoting()) {
+    if(arena == null || arena instanceof GuessTheBuildArena || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
 
+    SoloArena solo = (SoloArena) arena;
+    if (!solo.isVoting())
+      return;
+
     User user = plugin.getUserManager().getUser(e.getPlayer());
-    Plot plot = ((SoloArena) arena).getVotingPlot();
+    Plot plot = solo.getVotingPlot();
+
     if(plugin.getVoteItems().getReportItem().equals(e.getItem())) {
       user.setStat(StatsStorage.StatisticType.REPORTS, user.getStat(StatsStorage.StatisticType.REPORTS) + 1);
+
       int reportsAmountNeeded = plugin.getConfig().getInt("Run-Command-On-Report.Reports-Amount-To-Run", -1);
 
-      if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.RUN_COMMAND_ON_REPORT)
-          && (reportsAmountNeeded == -1 || user.getStat(StatsStorage.StatisticType.REPORTS) >= reportsAmountNeeded) && plot != null) {
-        plot.getOwners().forEach(player -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+      if(plot != null && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.RUN_COMMAND_ON_REPORT)
+          && (reportsAmountNeeded == -1 || user.getStat(StatsStorage.StatisticType.REPORTS) >= reportsAmountNeeded)) {
+        plot.getOwners().forEach(player -> plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),
             plugin.getConfig().getString("Run-Command-On-Report.Command", "kick %reported%")
                 .replace("%reported%", player.getName()).replace("%reporter%", e.getPlayer().getName())));
         plugin.getRewardsHandler().performReward(e.getPlayer(), Reward.RewardType.REPORT, -1);

@@ -66,7 +66,7 @@ public class BungeeManager implements Listener {
   }
 
   public void connectToHub(Player player) {
-    if(!conf.getBoolean("Connect-To-Hub", true)) {
+    if(!plugin.isEnabled() || !conf.getBoolean("Connect-To-Hub", true)) {
       return;
     }
     ByteArrayDataOutput out = ByteStreams.newDataOutput();
@@ -89,13 +89,14 @@ public class BungeeManager implements Listener {
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onJoin(final PlayerJoinEvent event) {
     ComplementAccessor.getComplement().setJoinMessage(event, "");
-    plugin.getServer().getScheduler().runTaskLater(plugin, () -> ArenaManager.joinAttempt(event.getPlayer(), ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena())), 1L);
+    if(!ArenaRegistry.getArenas().isEmpty())
+      plugin.getServer().getScheduler().runTaskLater(plugin, () -> ArenaManager.joinAttempt(event.getPlayer(), ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena())), 1L);
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onQuit(PlayerQuitEvent event) {
     ComplementAccessor.getComplement().setQuitMessage(event, "");
-    if(ArenaRegistry.getArena(event.getPlayer()) != null) {
+    if(!ArenaRegistry.getArenas().isEmpty() && ArenaRegistry.getArena(event.getPlayer()) != null) {
       ArenaManager.leaveAttempt(event.getPlayer(), ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()));
     }
   }

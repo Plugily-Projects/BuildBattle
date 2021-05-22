@@ -118,8 +118,8 @@ public class Plot {
     return owners;
   }
 
-  public void setOwners(List<Player> players) {
-    this.owners = players == null ? new ArrayList<>() : players;
+  public void setOwners(List<Player> owners) {
+    this.owners = owners == null ? new ArrayList<>() : owners;
   }
 
   public void addOwner(Player player) {
@@ -208,11 +208,20 @@ public class Plot {
   private void changeFloor(Material material) {
     Location min = cuboid.getMinPoint();
     Location max = cuboid.getMaxPoint();
+
     double y = Math.min(min.getY(), max.getY());
-    for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
-      for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
-        Location tmpblock = new Location(max.getWorld(), x, y, z);
-        tmpblock.getBlock().setType(material);
+
+    int minBlockX = min.getBlockX();
+    int maxBlockX = max.getBlockX();
+
+    int minBlockZ = min.getBlockZ();
+    int maxBlockZ = max.getBlockZ();
+
+    org.bukkit.World maxWorld = max.getWorld();
+
+    for(int x = minBlockX; x <= maxBlockX; x++) {
+      for(int z = minBlockZ; z <= maxBlockZ; z++) {
+        new Location(maxWorld, x, y, z).getBlock().setType(material);
       }
     }
   }
@@ -224,16 +233,30 @@ public class Plot {
     if(material == Material.LAVA_BUCKET) {
       material = Material.LAVA;
     }
+
     double y = Math.min(cuboid.getMinPoint().getY(), cuboid.getMaxPoint().getY());
+
     Location min = cuboid.getMinPoint();
     Location max = cuboid.getMaxPoint();
-    for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
-      for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
-        Location tmpblock = new Location(cuboid.getMaxPoint().getWorld(), x, y, z);
-        tmpblock.getBlock().setType(material);
+
+    int minBlockX = min.getBlockX();
+    int maxBlockX = max.getBlockX();
+
+    int minBlockZ = min.getBlockZ();
+    int maxBlockZ = max.getBlockZ();
+
+    org.bukkit.World maxWorld = max.getWorld();
+
+    for(int x = minBlockX; x <= maxBlockX; x++) {
+      for(int z = minBlockZ; z <= maxBlockZ; z++) {
+        Location tmpblock = new Location(maxWorld, x, y, z);
+
+        Block block = tmpblock.getBlock();
+        block.setType(material);
+
         if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {
           try {
-            Block.class.getMethod("setData", byte.class).invoke(tmpblock.getBlock(), data);
+            Block.class.getMethod("setData", byte.class).invoke(block, data);
           } catch(Exception e) {
             e.printStackTrace();
           }

@@ -84,7 +84,7 @@ public class TeleportArgument {
         player.sendMessage(ChatColor.GRAY + "Teleported to LOBBY location from arena " + arena.getID());
         break;
       case START:
-        if(arena.getLobbyLocation() == null) {
+        if(arena.getPlotManager().getPlots().isEmpty()) {
           player.sendMessage(ChatColor.RED + "Start location isn't set for this arena!");
           return;
         }
@@ -92,7 +92,7 @@ public class TeleportArgument {
         player.sendMessage(ChatColor.GRAY + "Teleported to START location from arena " + arena.getID());
         break;
       case END:
-        if(arena.getLobbyLocation() == null) {
+        if(arena.getEndLocation() == null) {
           player.sendMessage(ChatColor.RED + "End location isn't set for this arena!");
           return;
         }

@@ -176,9 +176,12 @@ public class ScoreboardManager {
     String returnString = string;
     returnString = StringUtils.replace(returnString, "%MIN_PLAYERS%", Integer.toString(arena.getMinimumPlayers()));
     returnString = StringUtils.replace(returnString, "%MAX_PLAYERS%", Integer.toString(arena.getMaximumPlayers()));
-    returnString = StringUtils.replace(returnString, "%TIMER%", Integer.toString(arena.getTimer()));
-    returnString = StringUtils.replace(returnString, "%TIME_LEFT%", Long.toString(arena.getTimer()));
-    returnString = StringUtils.replace(returnString, "%FORMATTED_TIME_LEFT%", StringFormatUtils.formatIntoMMSS(arena.getTimer()));
+
+    int timer = arena.getTimer();
+
+    returnString = StringUtils.replace(returnString, "%TIMER%", Integer.toString(timer));
+    returnString = StringUtils.replace(returnString, "%TIME_LEFT%", Long.toString(timer));
+    returnString = StringUtils.replace(returnString, "%FORMATTED_TIME_LEFT%", StringFormatUtils.formatIntoMMSS(timer));
     returnString = StringUtils.replace(returnString, "%ARENA_ID%", arena.getID());
     returnString = StringUtils.replace(returnString, "%MAPNAME%", arena.getMapName());
     return returnString;

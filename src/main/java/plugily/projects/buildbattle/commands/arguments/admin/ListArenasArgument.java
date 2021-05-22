@@ -51,7 +51,7 @@ public class ListArenasArgument {
         for(BaseArena arena : ArenaRegistry.getArenas()) {
           sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Admin-Commands.List-Command.Format").replace("%arena%", arena.getID())
               .replace("%status%", arena.getArenaState().getPlaceholder()).replace("%players%", Integer.toString(arena.getPlayers().size()))
-              .replace("%maxplayers%", String.valueOf(arena.getMaximumPlayers())));
+              .replace("%maxplayers%", Integer.toString(arena.getMaximumPlayers())));
         }
       }
     });
