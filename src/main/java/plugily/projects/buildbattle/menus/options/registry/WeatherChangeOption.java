@@ -53,7 +53,7 @@ public class WeatherChangeOption {
 
         Inventory weatherInv = ComplementAccessor.getComplement().createInventory(null, 9, registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Inventory-Name"));
         weatherInv.addItem(new ItemBuilder(Material.BUCKET).name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Clear")).build());
-        weatherInv.addItem(new ItemBuilder(Material.BUCKET).name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Downfall")).build());
+        weatherInv.addItem(new ItemBuilder(Material.WATER_BUCKET).name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Downfall")).build());
         weatherInv.addItem(Utils.getGoBackItem());
         e.getWhoClicked().openInventory(weatherInv);
       }

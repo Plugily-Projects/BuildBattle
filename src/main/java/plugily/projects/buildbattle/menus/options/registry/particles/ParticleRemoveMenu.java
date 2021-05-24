@@ -20,8 +20,8 @@
 
 package plugily.projects.buildbattle.menus.options.registry.particles;
 
-import com.github.stefvanschie.inventoryframework.Gui;
-import com.github.stefvanschie.inventoryframework.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -46,7 +46,7 @@ public class ParticleRemoveMenu {
   }
 
   public static void openMenu(Player player, Plot buildPlot) {
-    Gui gui = new Gui(plugin, 6, plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"));
+    ChestGui gui = new ChestGui(6, plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"));
     StaticPane pane = new StaticPane(9, 6);
 
     int x = 0;
