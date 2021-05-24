@@ -22,6 +22,7 @@ package plugily.projects.buildbattle.menus.options.registry.particles;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import plugily.projects.buildbattle.Main;
@@ -47,10 +48,8 @@ public class ParticleRefreshScheduler {
       for(BaseArena arena : ArenaRegistry.getArenas()) {
         if(!arena.getPlayers().isEmpty()) {
           for(Plot buildPlot : arena.getPlotManager().getPlots()) {
-            org.bukkit.entity.Player firstOwner = buildPlot.getOwners().get(0);
-
             for(Entry<Location, String> map : buildPlot.getParticles().entrySet()) {
-              VersionUtils.sendParticles(map.getValue(), firstOwner, map.getKey(), plugin.getConfig().getInt("Amount-One-Particle-Effect-Contains", 20));
+              VersionUtils.sendParticles(map.getValue(), buildPlot.getOwners().get(0), map.getKey(), plugin.getConfig().getInt("Amount-One-Particle-Effect-Contains", 20));
             }
           }
         }
