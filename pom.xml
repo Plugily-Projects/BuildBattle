@@ -26,7 +26,7 @@
 
     <groupId>plugily.projects</groupId>
     <artifactId>buildbattle</artifactId>
-    <version>4.5.0-dev-debug</version>
+    <version>4.5.0-dev2-debug</version>
     <name>BuildBattle</name>
 
     <properties>
@@ -98,7 +98,7 @@
         <dependency>
             <groupId>me.tigerhix.lib</groupId>
             <artifactId>scoreboard</artifactId>
-            <version>1.0.7</version>
+            <version>1.0.8</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
