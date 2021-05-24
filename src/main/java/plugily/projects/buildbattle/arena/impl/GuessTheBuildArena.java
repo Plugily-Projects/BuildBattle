@@ -74,6 +74,7 @@ public class GuessTheBuildArena extends BaseArena {
   private boolean nextRoundCooldown = false;
   private Player currentBuilder;
   private Map<Player, Integer> playersPoints = new HashMap<>();
+  private List<Integer> removedCharsAt = new ArrayList<>();
 
   public GuessTheBuildArena(String id, Main plugin) {
     super(id, plugin);
@@ -228,14 +229,28 @@ public class GuessTheBuildArena extends BaseArena {
               VersionUtils.sendActionBar(player, currentTheme.getTheme());
             }
             StringBuilder actionbar = new StringBuilder();
+            List<Integer> charsAt = new ArrayList<>();
+
+            for(int i = 0; i < currentTheme.getTheme().length(); i++) {
+              if(!removedCharsAt.contains(i)) {
+                charsAt.add(i);
+              }
+            }
             for(int i = 0; i < currentTheme.getTheme().length(); i++) {
               if(Character.isWhitespace(currentTheme.getTheme().charAt(i))) {
                 actionbar.append("  ");
                 continue;
               }
-              if((getTimer() <= 75 && i == 0) || (getTimer() <= 40 && i == currentTheme.getTheme().length() - 1) || (getTimer() <= 20 && i == 2) || (getTimer() <= 10 && i == 5)) {
+              if(removedCharsAt.contains(i)) {
                 actionbar.append(currentTheme.getTheme().charAt(i)).append(' ');
                 continue;
+              }
+              if(currentTheme.getTheme().length() - removedCharsAt.size() > 2) {
+                if(getTimer() % 10 == 0 && getTimer() <= 70) {
+                  actionbar.append(currentTheme.getTheme().charAt(charsAt.get(new Random().nextInt(charsAt.size())))).append(' ');
+                  removedCharsAt.add(i);
+                  continue;
+                }
               }
               actionbar.append("_ ");
             }
@@ -248,6 +263,7 @@ public class GuessTheBuildArena extends BaseArena {
             VersionUtils.sendTitles(p, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Was-Title"), getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Was-Subtitle")
                 .replace("%THEME%", currentTheme.getTheme()), 5, 25, 5);
           }
+          removedCharsAt.clear();
           currentBuilder = null;
           setThemeSet(false);
           setCurrentTheme(null);
