@@ -252,7 +252,6 @@ Disable-Parties: true
 #default false - plot owner will be announced at the beginning
 Announce-PlotOwner-Later: false
 
-
 Arena-Selector:
   # Change items of arena selector
   State-Item:
@@ -261,7 +260,6 @@ Arena-Selector:
     In-Game: RED_CONCRETE
     Ending: RED_CONCRETE
     Restarting: RED_CONCRETE
-
 
 # Don't modify.
 Version: 18

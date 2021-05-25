@@ -30,7 +30,7 @@ import plugily.projects.buildbattle.Main;
  * Contains all GameStates.
  */
 public enum ArenaState {
-  WAITING_FOR_PLAYERS("Waiting"), STARTING("Starting"), IN_GAME("Playing"), ENDING("Ending"), RESTARTING("Restarting");
+  WAITING_FOR_PLAYERS("Waiting"), STARTING("Starting"), IN_GAME("In-Game"), ENDING("Ending"), RESTARTING("Restarting");
 
   private final String formattedName;
   private final String placeholder;
