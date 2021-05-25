@@ -60,19 +60,25 @@ public class WeatherChangeOption {
 
       @Override
       public void onTargetClick(InventoryClickEvent e) {
-        if(e.getCurrentItem() == null)
+        org.bukkit.inventory.ItemStack item = e.getCurrentItem();
+        if(item == null)
           return;
 
         BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
         if(arena == null) {
           return;
         }
+
         Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());
-        if(ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta()).equalsIgnoreCase(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Downfall"))) {
+        if (plot == null)
+          return;
+
+        if(ComplementAccessor.getComplement().getDisplayName(item.getItemMeta()).equalsIgnoreCase(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Downfall"))) {
           plot.setWeatherType(WeatherType.DOWNFALL);
-        } else if(ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta()).equalsIgnoreCase(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Clear"))) {
+        } else if(ComplementAccessor.getComplement().getDisplayName(item.getItemMeta()).equalsIgnoreCase(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Type.Clear"))) {
           plot.setWeatherType(WeatherType.CLEAR);
         }
+
         for(Player p : plot.getOwners()) {
           p.setPlayerWeather(plot.getWeatherType());
           p.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Set"));

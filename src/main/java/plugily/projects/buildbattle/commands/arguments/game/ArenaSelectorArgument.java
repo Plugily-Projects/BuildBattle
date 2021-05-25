@@ -64,19 +64,22 @@ public class ArenaSelectorArgument implements Listener {
       @Override
       public void execute(CommandSender sender, String[] args) {
         Player player = (Player) sender;
-        if(ArenaRegistry.getArenas().size() == 0) {
+
+        int arenaSize = ArenaRegistry.getArenas().size();
+        if(arenaSize == 0) {
           player.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.No-Arena-Like-That"));
           return;
         }
-        Inventory inventory = ComplementAccessor.getComplement().createInventory(player, Utils.serializeInt(ArenaRegistry.getArenas().size()), registry.getPlugin().getChatManager().colorMessage("Arena-Selector.Inv-Title"));
+
+        Inventory inventory = ComplementAccessor.getComplement().createInventory(player, Utils.serializeInt(arenaSize), registry.getPlugin().getChatManager().colorMessage("Arena-Selector.Inv-Title"));
 
         int slot = 0;
         arenas.clear();
 
         for(BaseArena arena : ArenaRegistry.getArenas()) {
           arenas.put(slot, arena);
-          ItemStack itemStack = XMaterial.matchXMaterial(registry.getPlugin().getConfig().getString("Arena-Selector.State-Item." + arena.getArenaState().getFormattedName(), "YELLOW_WOOL").toUpperCase()).orElse(XMaterial.YELLOW_WOOL).parseItem();
 
+          ItemStack itemStack = XMaterial.matchXMaterial(registry.getPlugin().getConfig().getString("Arena-Selector.State-Item." + arena.getArenaState().getFormattedName(), "YELLOW_WOOL").toUpperCase()).orElse(XMaterial.YELLOW_WOOL).parseItem();
           if(itemStack == null)
             continue;
 
@@ -104,13 +107,16 @@ public class ArenaSelectorArgument implements Listener {
   private String formatItem(String string, BaseArena arena, Main plugin) {
     String formatted = string;
     formatted = StringUtils.replace(formatted, "%mapname%", arena.getMapName());
+
     int maxPlayers = arena.getMaximumPlayers();
-    if(arena.getPlayers().size() >= maxPlayers) {
+    int players = arena.getPlayers().size();
+
+    if(players >= maxPlayers) {
       formatted = StringUtils.replace(formatted, "%state%", plugin.getChatManager().colorMessage("Signs.Game-States.Full-Game"));
     } else {
       formatted = StringUtils.replace(formatted, "%state%", arena.getArenaState().getPlaceholder());
     }
-    formatted = StringUtils.replace(formatted, "%playersize%", Integer.toString(arena.getPlayers().size()));
+    formatted = StringUtils.replace(formatted, "%playersize%", Integer.toString(players));
     formatted = StringUtils.replace(formatted, "%maxplayers%", Integer.toString(maxPlayers));
     formatted = plugin.getChatManager().colorRawMessage(formatted);
     return formatted;

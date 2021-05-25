@@ -36,7 +36,6 @@ import plugily.projects.buildbattle.utils.Utils;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author Plajer
@@ -64,11 +63,14 @@ public class BiomesRegistry {
         Debugger.debug(Debugger.Level.WARN, "There are too many biomes to register! Menu can't hold any more!");
         break;
       }
+      java.util.List<String> lore = config.getStringList(biome + ".lore");
+      for (int b = 0; b < lore.size(); b++) {
+        lore.set(b, plugin.getChatManager().colorRawMessage(lore.get(b)));
+      }
       BiomeItem biomeItem = new BiomeItem(new ItemBuilder(XMaterial.matchXMaterial(config
           .getString(biome + ".material-name", "bedrock").toUpperCase()).orElse(XMaterial.BEDROCK).parseItem())
           .name(plugin.getChatManager().colorRawMessage(config.getString(biome + ".displayname")))
-          .lore(config.getStringList(biome + ".lore")
-              .stream().map(lore -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()))
+          .lore(lore)
           .build(), config.getString(biome + ".permission"), XBiome.matchXBiome(biome).orElse(XBiome.BADLANDS));
       biomes.add(biomeItem);
       i++;

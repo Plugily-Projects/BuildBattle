@@ -44,14 +44,21 @@ public class PlotResetOption {
         .build()) {
       @Override
       public void onClick(InventoryClickEvent e) {
-        e.getWhoClicked().closeInventory();
-        BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+        Player who = (Player) e.getWhoClicked();
+
+        who.closeInventory();
+
+        BaseArena arena = ArenaRegistry.getArena(who);
         if(arena == null) {
           return;
         }
-        Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());
-        plot.resetPlot();
-        e.getWhoClicked().sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Reset.Plot-Reset"));
+
+        Plot plot = arena.getPlotManager().getPlot(who);
+
+        if (plot != null) {
+          plot.resetPlot();
+          e.getWhoClicked().sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Reset.Plot-Reset"));
+        }
       }
     });
   }

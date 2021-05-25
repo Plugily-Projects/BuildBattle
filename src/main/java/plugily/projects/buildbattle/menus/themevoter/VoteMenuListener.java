@@ -72,31 +72,43 @@ public class VoteMenuListener implements Listener {
 
   @EventHandler
   public void onInventoryClick(InventoryClickEvent e) {
-    if(e.getCurrentItem() == null) {
+    org.bukkit.inventory.ItemStack current = e.getCurrentItem();
+    if(current == null) {
       return;
     }
-    BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+    Player who = (Player) e.getWhoClicked();
+    BaseArena arena = ArenaRegistry.getArena(who);
     if(!(arena instanceof SoloArena)) {
       return;
     }
     if(ComplementAccessor.getComplement().getTitle(e.getView()).equals(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"))) {
       e.setCancelled(true);
-      if(e.getCurrentItem().getType() == XMaterial.OAK_SIGN.parseMaterial()) {
-        String displayName = ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta());
-        displayName = ChatColor.stripColor(displayName);
-        boolean success = ((SoloArena) arena).getVotePoll().addVote((Player) e.getWhoClicked(), displayName);
-        e.getWhoClicked().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Menus.Theme-Voting." + (!success ? "Already-Voted" : "Voted-Successfully")));
+
+      SoloArena solo = (SoloArena) arena;
+
+      if(current.getType() == XMaterial.OAK_SIGN.parseMaterial()) {
+        String displayName = ComplementAccessor.getComplement().getDisplayName(current.getItemMeta());
+        boolean success = solo.getVotePoll().addVote(who, ChatColor.stripColor(displayName));
+
+        who.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Menus.Theme-Voting." + (!success ? "Already-Voted" : "Voted-Successfully")));
       }
-      if(e.getCurrentItem().getType() == Material.PAPER) {
-        User user = plugin.getUserManager().getUser((Player) e.getWhoClicked());
-        if(user.getStat(StatsStorage.StatisticType.SUPER_VOTES) > 0) {
-          user.setStat(StatsStorage.StatisticType.SUPER_VOTES, user.getStat(StatsStorage.StatisticType.SUPER_VOTES) - 1);
+
+      if(current.getType() == Material.PAPER) {
+        User user = plugin.getUserManager().getUser(who);
+        int votes = user.getStat(StatsStorage.StatisticType.SUPER_VOTES);
+
+        if(votes > 0) {
+          user.setStat(StatsStorage.StatisticType.SUPER_VOTES, votes - 1);
+
+          String theme = solo.getVotePoll().getThemeByPosition(e.getSlot() + 1);
+
           plugin.getChatManager().broadcast(arena, plugin.getChatManager().colorMessage("Menus.Theme-Voting.Super-Vote-Used")
-              .replace("%player%", e.getWhoClicked().getName()).replace("%theme%",
-                  ((SoloArena) arena).getVotePoll().getThemeByPosition(e.getSlot() + 1)));
-          ((SoloArena) arena).setThemeVoteTime(false);
-          arena.setTheme(((SoloArena) arena).getVotePoll().getThemeByPosition(e.getSlot() + 1));
+              .replace("%player%", who.getName()).replace("%theme%", theme));
+
+          solo.setThemeVoteTime(false);
+          arena.setTheme(theme);
           arena.setTimer(plugin.getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, arena));
+
           String message = plugin.getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Game-Started");
           for(Player p : arena.getPlayers()) {
             p.closeInventory();

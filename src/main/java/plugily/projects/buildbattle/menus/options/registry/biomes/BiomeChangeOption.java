@@ -60,7 +60,8 @@ public class BiomeChangeOption {
 
       @Override
       public void onTargetClick(InventoryClickEvent e) {
-        BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+        Player who = (Player) e.getWhoClicked();
+        BaseArena arena = ArenaRegistry.getArena(who);
         if(arena == null) {
           return;
         }
@@ -68,11 +69,11 @@ public class BiomeChangeOption {
         if(item == BiomeItem.INVALID_BIOME) {
           return;
         }
-        if(!e.getWhoClicked().hasPermission(item.getPermission())) {
-          e.getWhoClicked().sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.No-Permission-For-Biome"));
+        if(!who.hasPermission(item.getPermission())) {
+          who.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.No-Permission-For-Biome"));
           return;
         }
-        Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());
+        Plot plot = arena.getPlotManager().getPlot(who);
         Biome biome = item.getBiome().getBiome();
         if(biome != null) {
           for(Block block : plot.getCuboid().blockList()) {

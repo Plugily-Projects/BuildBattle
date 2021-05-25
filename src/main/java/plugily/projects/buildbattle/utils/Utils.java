@@ -40,6 +40,8 @@ public class Utils {
 
   private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
+  private static ItemStack goBackItem;
+
   private static Class<?> packetPlayOutMapChunk, chunkClass;
 
   static {
@@ -62,9 +64,9 @@ public class Utils {
   }
 
   public static ItemStack getGoBackItem() {
-    return new ItemBuilder(XMaterial.STONE_BUTTON.parseItem())
+    return goBackItem == null ? goBackItem = new ItemBuilder(XMaterial.STONE_BUTTON.parseItem())
         .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Go-Back-Button.Item-Name"))
-        .lore(plugin.getChatManager().colorMessage("Menus.Option-Menu.Go-Back-Button.Item-Lore")).build();
+        .lore(plugin.getChatManager().colorMessage("Menus.Option-Menu.Go-Back-Button.Item-Lore")).build() : goBackItem;
   }
 
   public static void sendMapChunk(Player player, Chunk chunk) {

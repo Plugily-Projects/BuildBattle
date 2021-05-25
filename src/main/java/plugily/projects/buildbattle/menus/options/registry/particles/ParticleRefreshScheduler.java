@@ -43,17 +43,22 @@ public class ParticleRefreshScheduler {
       task.cancel();
     }
 
+    int particleRefreshTick = plugin.getConfig().getInt("Particle-Refresh-Per-Tick", 10);
+    int amountParticle = plugin.getConfig().getInt("Amount-One-Particle-Effect-Contains", 20);
+
     task = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
       for(BaseArena arena : ArenaRegistry.getArenas()) {
         if(!arena.getPlayers().isEmpty()) {
           for(Plot buildPlot : arena.getPlotManager().getPlots()) {
-            for(Entry<Location, String> map : buildPlot.getParticles().entrySet()) {
-              VersionUtils.sendParticles(map.getValue(), buildPlot.getOwners().get(0), map.getKey(), plugin.getConfig().getInt("Amount-One-Particle-Effect-Contains", 20));
+            if (!buildPlot.getOwners().isEmpty()) {
+              for(Entry<Location, String> map : buildPlot.getParticles().entrySet()) {
+                VersionUtils.sendParticles(map.getValue(), buildPlot.getOwners().get(0), map.getKey(), amountParticle);
+              }
             }
           }
         }
       }
-    }, plugin.getConfig().getInt("Particle-Refresh-Per-Tick", 10), plugin.getConfig().getInt("Particle-Refresh-Per-Tick", 10));
+    }, particleRefreshTick, particleRefreshTick);
   }
 
 }

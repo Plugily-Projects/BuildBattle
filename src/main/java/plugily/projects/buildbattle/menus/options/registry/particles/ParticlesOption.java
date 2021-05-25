@@ -59,43 +59,48 @@ public class ParticlesOption {
 
       @Override
       public void onTargetClick(InventoryClickEvent e) {
-        BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
-        if(arena == null || e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {
+        org.bukkit.inventory.ItemStack current = e.getCurrentItem();
+        if (current == null)
+          return;
+
+        Player who = (Player) e.getWhoClicked();
+        BaseArena arena = ArenaRegistry.getArena(who);
+        if(arena == null || !current.hasItemMeta()) {
           return;
         }
-        if(ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta())
+        if(ComplementAccessor.getComplement().getDisplayName(current.getItemMeta())
             .contains("§7-->")) {
           e.setCancelled(false);
-          e.getWhoClicked().closeInventory();
-          e.getWhoClicked().openInventory(registry.getParticleRegistry().getPage2());
+          who.closeInventory();
+          who.openInventory(registry.getParticleRegistry().getPage2());
           return;
         }
-        if(ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta())
+        if(ComplementAccessor.getComplement().getDisplayName(current.getItemMeta())
             .contains(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))) {
           e.setCancelled(false);
-          e.getWhoClicked().closeInventory();
-          ParticleRemoveMenu.openMenu((Player) e.getWhoClicked(), arena.getPlotManager().getPlot((Player) e.getWhoClicked()));
+          who.closeInventory();
+          ParticleRemoveMenu.openMenu(who, arena.getPlotManager().getPlot(who));
           return;
         }
         for(ParticleItem particleItem : registry.getParticleRegistry().getRegisteredParticles()) {
           // Only check for the display name for items in gui, because some of item meta is changed
-          if(!ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta())
+          if(!ComplementAccessor.getComplement().getDisplayName(current.getItemMeta())
               .contains(ComplementAccessor.getComplement().getDisplayName(particleItem.getItemStack().getItemMeta()))) {
             continue;
           }
-          Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());
-          if(!e.getWhoClicked().hasPermission(particleItem.getPermission())) {
-            e.getWhoClicked().sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.No-Permission-For-Particle"));
+          Plot plot = arena.getPlotManager().getPlot(who);
+          if(!who.hasPermission(particleItem.getPermission())) {
+            who.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.No-Permission-For-Particle"));
             continue;
           }
           if(plot.getParticles().size() >= registry.getPlugin().getConfig().getInt("Max-Amount-Particles", 25)) {
-            e.getWhoClicked().sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.Max-Particles-Limit-Reached"));
+            who.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.Max-Particles-Limit-Reached"));
             return;
           }
-          plot.getParticles().put(e.getWhoClicked().getLocation(), particleItem.getEffect());
-          registry.getPlugin().getUserManager().getUser((Player) e.getWhoClicked())
+          plot.getParticles().put(who.getLocation(), particleItem.getEffect());
+          registry.getPlugin().getUserManager().getUser(who)
               .addStat(StatsStorage.StatisticType.PARTICLES_USED, 1);
-          e.getWhoClicked().sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.Particle-Added"));
+          who.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.Particle-Added"));
         }
       }
     });

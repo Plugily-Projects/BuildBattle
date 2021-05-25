@@ -103,10 +103,11 @@ public class User {
   }
 
   public void addStat(StatsStorage.StatisticType stat, int i) {
-    stats.put(stat, getStat(stat) + i);
+    int currentStat = getStat(stat);
+    stats.put(stat, currentStat + i);
 
     Bukkit.getScheduler().callSyncMethod(PLUGIN, () -> {
-      BBPlayerStatisticChangeEvent event = new BBPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, getStat(stat));
+      BBPlayerStatisticChangeEvent event = new BBPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, currentStat);
       Bukkit.getPluginManager().callEvent(event);
       return event;
     });

@@ -41,7 +41,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author Plajer
@@ -85,12 +84,16 @@ public class ParticleRegistry {
       if(blacklisted) {
         continue;
       }
+      List<String> lore = config.getStringList(particle + ".lore");
+      for (int a = 0; a < lore.size(); a++) {
+        lore.set(a, plugin.getChatManager().colorRawMessage(lore.get(a)));
+      }
+
       ParticleItem particleItem = new ParticleItem();
       particleItem.setItemStack(new ItemBuilder(XMaterial.matchXMaterial(config
           .getString(particle + ".material-name", "bedrock").toUpperCase()).orElse(XMaterial.BEDROCK).parseItem())
           .name(plugin.getChatManager().colorRawMessage(config.getString(particle + ".displayname")))
-          .lore(config.getStringList(particle + ".lore")
-              .stream().map(lore -> lore = plugin.getChatManager().colorRawMessage(lore)).collect(Collectors.toList()))
+          .lore(lore)
           .build());
       particleItem.setPermission(config.getString(particle + ".permission"));
       particleItem.setEffect(particle);

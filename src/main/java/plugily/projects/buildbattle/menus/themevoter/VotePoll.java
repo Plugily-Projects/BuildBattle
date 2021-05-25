@@ -60,8 +60,8 @@ public class VotePoll {
   }
 
   public boolean addVote(Player player, String theme) {
-    if(playerVote.containsKey(player)) {
-      String playerVoteTheme = playerVote.get(player);
+    String playerVoteTheme = playerVote.get(player);
+    if(playerVoteTheme != null) {
       if(playerVoteTheme.equals(theme)) {
         return false;
       }
