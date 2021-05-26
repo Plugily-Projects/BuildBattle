@@ -116,6 +116,8 @@ public class ArenaSelectorArgument implements Listener {
     } else {
       formatted = StringUtils.replace(formatted, "%state%", arena.getArenaState().getPlaceholder());
     }
+
+    formatted = StringUtils.replace(formatted, "%type%", arena.getArenaType().getPrefix());
     formatted = StringUtils.replace(formatted, "%playersize%", Integer.toString(players));
     formatted = StringUtils.replace(formatted, "%maxplayers%", Integer.toString(maxPlayers));
     formatted = plugin.getChatManager().colorRawMessage(formatted);
