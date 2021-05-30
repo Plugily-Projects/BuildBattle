@@ -30,7 +30,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
@@ -214,7 +216,11 @@ public class ArenaManager {
       arena.getPlayers().forEach(onlinePlayer -> VersionUtils.hidePlayer(plugin, onlinePlayer, player));
 
       user.setSpectator(true);
-      player.setCollidable(false);
+
+      if (ServerVersion.Version.isCurrentEqualOrHigher(Version.v1_9_R1)) {
+        player.setCollidable(false);
+      }
+
       player.setGameMode(GameMode.ADVENTURE);
       player.setAllowFlight(true);
       player.setFlying(true);
