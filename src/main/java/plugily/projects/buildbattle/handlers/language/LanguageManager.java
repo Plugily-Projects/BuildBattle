@@ -110,16 +110,16 @@ public class LanguageManager {
       LocaleService.DownloadStatus status = service.demandLocaleDownload(pluginLocale);
       if(status == LocaleService.DownloadStatus.FAIL) {
         pluginLocale = LocaleRegistry.getByName("English");
-        Debugger.sendConsoleMsg("&c[BuildBattle] Locale service couldn't download latest locale for plugin! English locale will be used instead!");
+        Debugger.sendConsoleMsg("&c[Build Battle] Locale service couldn't download latest locale for plugin! English locale will be used instead!");
         return;
       } else if(status == LocaleService.DownloadStatus.SUCCESS) {
-        Debugger.sendConsoleMsg("&c[BuildBattle] Downloaded locale " + pluginLocale.getPrefix() + " properly!");
+        Debugger.sendConsoleMsg("&c[Build Battle] Downloaded locale " + pluginLocale.getPrefix() + " properly!");
       } else if(status == LocaleService.DownloadStatus.LATEST) {
-        Debugger.sendConsoleMsg("&c[BuildBattle] Locale " + pluginLocale.getPrefix() + " is latest! Awesome!");
+        Debugger.sendConsoleMsg("&c[Build Battle] Locale " + pluginLocale.getPrefix() + " is latest! Awesome!");
       }
     } else {
       pluginLocale = LocaleRegistry.getByName("English");
-      Debugger.sendConsoleMsg("&c[BuildBattle] Your plugin version is too old to use latest locale! Please update plugin to access latest updates of locale!");
+      Debugger.sendConsoleMsg("&c[Build Battle] Your plugin version is too old to use latest locale! Please update plugin to access latest updates of locale!");
       return;
     }
     try {
@@ -144,17 +144,17 @@ public class LanguageManager {
       }
     }
     if(pluginLocale == null) {
-      Debugger.sendConsoleMsg("&c[BuildBattle] Plugin locale is invalid! Using default one...");
+      Debugger.sendConsoleMsg("&c[Build Battle] Plugin locale is invalid! Using default one...");
       pluginLocale = LocaleRegistry.getByName("English");
       return;
     }
     /* is beta release */
     if(plugin.getDescription().getVersion().contains("locales") || plugin.getDescription().getVersion().contains("pre")) {
-      Debugger.sendConsoleMsg("&c[BuildBattle] Locales aren't supported in beta versions because they're lacking latest translations! Enabling English one...");
+      Debugger.sendConsoleMsg("&c[Build Battle] Locales aren't supported in beta versions because they're lacking latest translations! Enabling English one...");
       pluginLocale = LocaleRegistry.getByName("English");
       return;
     }
-    Debugger.sendConsoleMsg("&a[BuildBattle] Loaded locale " + pluginLocale.getName() + " (" + pluginLocale.getOriginalName() + " ID: " +
+    Debugger.sendConsoleMsg("&a[Build Battle] Loaded locale " + pluginLocale.getName() + " (" + pluginLocale.getOriginalName() + " ID: " +
         pluginLocale.getPrefix() + ") by " + pluginLocale.getAuthor());
     loadProperties();
   }
@@ -197,9 +197,9 @@ public class LanguageManager {
     if(!language.isSet(path)) {
       language = defaultLanguageConfig;
       if(!language.isSet(path)) {
-        Debugger.sendConsoleMsg("&c[BuildBattle] Game message not found in your locale!");
-        Debugger.sendConsoleMsg("&c[BuildBattle] Please regenerate your language.yml file! If error still occurs report it to the developer on discord!");
-        Debugger.sendConsoleMsg("&c[BuildBattle] Path: " + path);
+        Debugger.sendConsoleMsg("&c[Build Battle] Game message not found in your locale!");
+        Debugger.sendConsoleMsg("&c[Build Battle] Please regenerate your language.yml file! If error still occurs report it to the developer on discord!");
+        Debugger.sendConsoleMsg("&c[Build Battle] Path: " + path);
         return Collections.singletonList("ERR_MESSAGE_" + path + "_NOT_FOUND");
       }
     }
@@ -214,9 +214,9 @@ public class LanguageManager {
     if(!language.isSet(path)) {
       language = defaultLanguageConfig;
       if(!language.isSet(path)) {
-        Debugger.sendConsoleMsg("&c[BuildBattle] Game message not found in your locale!");
-        Debugger.sendConsoleMsg("&c[BuildBattle] Please regenerate your language.yml file! If error still occurs report it to the developer on discord!");
-        Debugger.sendConsoleMsg("&c[BuildBattle] Path: " + path);
+        Debugger.sendConsoleMsg("&c[Build Battle] Game message not found in your locale!");
+        Debugger.sendConsoleMsg("&c[Build Battle] Please regenerate your language.yml file! If error still occurs report it to the developer on discord!");
+        Debugger.sendConsoleMsg("&c[Build Battle] Path: " + path);
         return "ERR_MESSAGE_" + path + "_NOT_FOUND";
       }
     }

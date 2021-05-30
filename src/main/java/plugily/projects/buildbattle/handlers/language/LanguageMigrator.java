@@ -91,7 +91,7 @@ public class LanguageMigrator {
     if(plugin.getConfig().getInt("Version") == CONFIG_FILE_VERSION) {
       return;
     }
-    Debugger.sendConsoleMsg("&e[BuildBattle] System notify >> Your config file is outdated! Updating...");
+    Debugger.sendConsoleMsg("&e[Build Battle] System notify >> Your config file is outdated! Updating...");
 
     int version = plugin.getConfig().getInt("Version", CONFIG_FILE_VERSION - 1);
     updateConfigVersionControl(version);
@@ -252,8 +252,8 @@ public class LanguageMigrator {
           return;
       }
     }
-    Debugger.sendConsoleMsg("&a[BuildBattle] [System notify] Config updated, no comments were removed :)");
-    Debugger.sendConsoleMsg("&a[BuildBattle] [System notify] You're using latest config file version! Nice!");
+    Debugger.sendConsoleMsg("&a[Build Battle] [System notify] Config updated, no comments were removed :)");
+    Debugger.sendConsoleMsg("&a[Build Battle] [System notify] You're using latest config file version! Nice!");
   }
 
   private void languageFileUpdate() {
@@ -261,7 +261,7 @@ public class LanguageMigrator {
     if(config.getString("File-Version-Do-Not-Edit", "").equals(String.valueOf(LANGUAGE_FILE_VERSION))) {
       return;
     }
-    Debugger.sendConsoleMsg("&e[BuildBattle] [System notify] Your language file is outdated! Updating...");
+    Debugger.sendConsoleMsg("&e[Build Battle] [System notify] Your language file is outdated! Updating...");
 
     int version = 0;
     if(NumberUtils.isNumber(config.getString("File-Version-Do-Not-Edit"))) {
@@ -508,8 +508,8 @@ public class LanguageMigrator {
       }
       version++;
     }
-    Debugger.sendConsoleMsg("&a[BuildBattle] [System notify] Language file updated! Nice!");
-    Debugger.sendConsoleMsg("&a[BuildBattle] [System notify] You're using latest language file version! Nice!");
+    Debugger.sendConsoleMsg("&a[Build Battle] [System notify] Language file updated! Nice!");
+    Debugger.sendConsoleMsg("&a[Build Battle] [System notify] You're using latest language file version! Nice!");
   }
 
   private void updateLanguageVersionControl(int oldVersion) {

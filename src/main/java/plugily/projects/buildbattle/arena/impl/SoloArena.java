@@ -447,7 +447,7 @@ public class SoloArena extends BaseArena {
     }
     if(!players.isEmpty()) {
       MessageUtils.errorOccurred();
-      Debugger.sendConsoleMsg("&c[BuildBattle] [PLOT WARNING] Not enough plots in arena " + getID() + "! Lacks " + players.size() + " plots");
+      Debugger.sendConsoleMsg("&c[Build Battle] [PLOT WARNING] Not enough plots in arena " + getID() + "! Lacks " + players.size() + " plots");
       Debugger.sendConsoleMsg("&c[PLOT WARNING] Required " + getPlayers().size() + " but have " + getPlotManager().getPlots().size());
       Debugger.sendConsoleMsg("&c[PLOT WARNING] Instance was stopped!");
       ArenaManager.stopGame(false, this);

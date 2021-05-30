@@ -18,7 +18,8 @@ That's all, matcher will stop when detects next line started with `###` match
 * Changed Now builders will also get points if the building is guessed
 * Changed gtb word hints are now randomly chosen
 * Changed gtb word hints will stop if there are only 2 chars left to show
-
+* Changed empty message is no longer sent
+  
 ### 4.5.0 Release (21.03.2021 - 13.04.2021)
 * Automatically disable bossbar support on 1.8 to prevent issue if bossbar is enabled on config.yml
 * Fix when arena selector GUI does not opened

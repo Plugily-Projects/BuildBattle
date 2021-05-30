@@ -146,7 +146,7 @@ public class Main extends JavaPlugin {
       ConfigUtils.getConfig(this, s);
     }
     LanguageManager.init(this);
-    chatManager = new ChatManager(LanguageManager.getLanguageMessage("In-Game.Plugin-Prefix"));
+    chatManager = new ChatManager(this);
     configPreferences = new ConfigPreferences(this);
     new LegacyDataFixer(this);
     initializeClasses();
@@ -162,8 +162,8 @@ public class Main extends JavaPlugin {
       }
       if(result.getNewestVersion().contains("b")) {
         if(getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
-          Debugger.sendConsoleMsg("&c[BuildBattle] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
-          Debugger.sendConsoleMsg("&c[BuildBattle] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
+          Debugger.sendConsoleMsg("&c[Build Battle] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
+          Debugger.sendConsoleMsg("&c[Build Battle] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
               result.getNewestVersion()));
         }
         return;

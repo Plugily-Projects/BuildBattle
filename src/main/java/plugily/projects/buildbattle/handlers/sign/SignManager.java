@@ -94,7 +94,8 @@ public class SignManager implements Listener {
 
   @EventHandler
   public void onSignChange(SignChangeEvent e) {
-    if(!e.getPlayer().hasPermission("buildbattle.admin.sign.create") || !ComplementAccessor.getComplement().getLine(e, 0).equalsIgnoreCase("[buildbattle]")) {
+    if(!e.getPlayer().hasPermission("buildbattle.admin.sign.create") ||
+        !ComplementAccessor.getComplement().getLine(e, 0).equalsIgnoreCase("[buildbattle]")) {
       return;
     }
     String line1 = ComplementAccessor.getComplement().getLine(e, 1);

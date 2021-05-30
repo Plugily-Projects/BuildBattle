@@ -65,7 +65,7 @@ public class Reward {
       int loc = processedCode.indexOf(')');
       //modifier is invalid
       if(loc == -1) {
-        Bukkit.getLogger().log(Level.WARNING, "[BuildBattle] rewards.yml configuration is broken! Make sure you did not forget using ) character in chance condition! Command: {0}", rawCode);
+        Bukkit.getLogger().log(Level.WARNING, "[Build Battle] rewards.yml configuration is broken! Make sure you did not forget using ) character in chance condition! Command: {0}", rawCode);
         //invalid code, 0% chance to execute
         this.chance = 0.0;
         return;

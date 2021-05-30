@@ -20,12 +20,14 @@
 
 package plugily.projects.buildbattle.handlers;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
+import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.handlers.language.LanguageManager;
 
@@ -34,41 +36,19 @@ import plugily.projects.buildbattle.handlers.language.LanguageManager;
  */
 public class ChatManager {
 
-  private final String prefix;
+  private final String pluginPrefix;
+  private final Main plugin;
 
-  public ChatManager(String prefix) {
-    this.prefix = colorRawMessage(prefix);
-  }
-
-  private static String formatPlaceholders(String message, BaseArena arena) {
-    String returnString = message;
-    returnString = StringUtils.replace(returnString, "%ARENANAME%", arena.getMapName());
-
-    int timer = arena.getTimer();
-
-    returnString = StringUtils.replace(returnString, "%TIME%", Integer.toString(timer));
-    returnString = StringUtils.replace(returnString, "%FORMATTEDTIME%", StringFormatUtils.formatIntoMMSS(timer));
-    returnString = StringUtils.replace(returnString, "%PLAYERSIZE%", Integer.toString(arena.getPlayers().size()));
-    returnString = StringUtils.replace(returnString, "%MAXPLAYERS%", Integer.toString(arena.getMaximumPlayers()));
-    returnString = StringUtils.replace(returnString, "%MINPLAYERS%", Integer.toString(arena.getMinimumPlayers()));
-    return returnString;
+  public ChatManager(Main plugin) {
+    this.plugin = plugin;
+    this.pluginPrefix = colorMessage("In-Game.Plugin-Prefix");
   }
 
   /**
    * @return game prefix
    */
   public String getPrefix() {
-    return prefix;
-  }
-
-  public void broadcast(BaseArena arena, String message) {
-    if(message.isEmpty()) {
-      return;
-    }
-
-    for(Player p : arena.getPlayers()) {
-      p.sendMessage(prefix + message);
-    }
+    return pluginPrefix;
   }
 
   public String colorMessage(String message) {
@@ -87,24 +67,51 @@ public class ChatManager {
     return ChatColor.translateAlternateColorCodes('&', msg);
   }
 
+  public void broadcast(BaseArena arena, String message) {
+    if(message != null && !message.isEmpty()) {
+      for(Player p : arena.getPlayers()) {
+        p.sendMessage(pluginPrefix + message);
+      }
+    }
+  }
+
   public String formatMessage(BaseArena arena, String message, Player player) {
     String returnString = message;
     returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());
     returnString = colorRawMessage(formatPlaceholders(returnString, arena));
+    if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+      returnString = PlaceholderAPI.setPlaceholders(player, returnString);
+    }
     return returnString;
   }
 
-  public void broadcastAction(BaseArena arena, Player p, ActionType action) {
+  private static String formatPlaceholders(String message, BaseArena arena) {
+    String returnString = message;
+    returnString = StringUtils.replace(returnString, "%ARENANAME%", arena.getMapName());
+
+    int timer = arena.getTimer();
+
+    returnString = StringUtils.replace(returnString, "%TIME%", Integer.toString(timer));
+    returnString = StringUtils.replace(returnString, "%FORMATTEDTIME%", StringFormatUtils.formatIntoMMSS(timer));
+    returnString = StringUtils.replace(returnString, "%PLAYERSIZE%", Integer.toString(arena.getPlayers().size()));
+    returnString = StringUtils.replace(returnString, "%MAXPLAYERS%", Integer.toString(arena.getMaximumPlayers()));
+    returnString = StringUtils.replace(returnString, "%MINPLAYERS%", Integer.toString(arena.getMinimumPlayers()));
+    return returnString;
+  }
+
+  public void broadcastAction(BaseArena arena, Player player, ActionType action) {
+    String path;
     switch(action) {
       case JOIN:
-        broadcast(arena, formatMessage(arena, colorMessage("In-Game.Messages.Join"), p));
+        path = "In-Game.Messages.Join";
         break;
       case LEAVE:
-        broadcast(arena, formatMessage(arena, colorMessage("In-Game.Messages.Leave"), p));
+        path = "In-Game.Messages.Leave";
         break;
       default:
-        break;
+        return; //likely won't ever happen
     }
+    broadcast(arena, formatMessage(arena, colorMessage(path), player));
   }
 
   public enum ActionType {

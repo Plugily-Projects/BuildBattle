@@ -78,7 +78,7 @@ public class TeamArena extends SoloArena {
     }
     /*if (!players.isEmpty()) {
       MessageUtils.errorOccurred();
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] [PLOT WARNING] Not enough plots in arena " + getID() + "!");
+      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Build Battle] [PLOT WARNING] Not enough plots in arena " + getID() + "!");
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[PLOT WARNING] Required " + Math.ceil((double) getPlayers().size() / 2) + " but have " + getPlotManager().getPlots().size());
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[PLOT WARNING] Instance was stopped!");
       ArenaManager.stopGame(false, this);

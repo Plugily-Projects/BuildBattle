@@ -115,7 +115,7 @@ public class ConfigPreferences {
     for(String item : plugin.getConfig().getStringList("Blacklisted-Item-Names")) {
       Optional<XMaterial> opt = XMaterial.matchXMaterial(item.toUpperCase());
       if(!opt.isPresent()) {
-        Debugger.sendConsoleMsg("&c[BuildBattle] Invalid black listed item! " + item + " doesn't exist, are you sure it's properly named?");
+        Debugger.sendConsoleMsg("&c[Build Battle] Invalid black listed item! " + item + " doesn't exist, are you sure it's properly named?");
         continue;
       }
 
@@ -125,7 +125,7 @@ public class ConfigPreferences {
     for(String item : plugin.getConfig().getStringList("Blacklisted-Floor-Materials")) {
       Optional<XMaterial> opt = XMaterial.matchXMaterial(item.toUpperCase());
       if(!opt.isPresent()) {
-        Debugger.sendConsoleMsg("&c[BuildBattle] Invalid black listed item! " + item + " doesn't exist, are you sure it's properly named?");
+        Debugger.sendConsoleMsg("&c[Build Battle] Invalid black listed item! " + item + " doesn't exist, are you sure it's properly named?");
         continue;
       }
 
