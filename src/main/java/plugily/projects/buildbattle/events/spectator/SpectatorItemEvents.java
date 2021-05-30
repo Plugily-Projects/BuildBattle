@@ -75,7 +75,7 @@ public class SpectatorItemEvents implements Listener {
       if(!stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {
         return;
       }
-      String key = plugin.getSpecialItemsRegistry().getRelatedSpecialItem(stack).getName();
+      String key = plugin.getSpecialItemsManager().getRelatedSpecialItem(stack).getName();
       if(key == null) {
         return;
       }

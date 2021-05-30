@@ -93,7 +93,7 @@ public class GameEvents implements Listener {
     if(arena == null || !ItemUtils.isItemStackNamed(itemStack)) {
       return;
     }
-    String key = plugin.getSpecialItemsRegistry().getRelatedSpecialItem(itemStack).getName();
+    String key = plugin.getSpecialItemsManager().getRelatedSpecialItem(itemStack).getName();
     if(key == null) {
       return;
     }
@@ -284,7 +284,7 @@ public class GameEvents implements Listener {
       return;
     }
     BaseArena arena = ArenaRegistry.getArena((Player) event.getWhoClicked());
-    String key = plugin.getSpecialItemsRegistry().getRelatedSpecialItem(event.getCurrentItem()).getName();
+    String key = plugin.getSpecialItemsManager().getRelatedSpecialItem(event.getCurrentItem()).getName();
     if(key == null || arena == null) {
       return;
     }
@@ -301,7 +301,7 @@ public class GameEvents implements Listener {
       return;
     }
     BaseArena arena = ArenaRegistry.getArena((Player) event.getWhoClicked());
-    String key = plugin.getSpecialItemsRegistry().getRelatedSpecialItem(event.getWhoClicked().getItemOnCursor()).getName();
+    String key = plugin.getSpecialItemsManager().getRelatedSpecialItem(event.getWhoClicked().getItemOnCursor()).getName();
     if(key == null || arena == null) {
       return;
     }

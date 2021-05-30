@@ -57,7 +57,7 @@ public class OptionsRegistry {
 
   public OptionsRegistry(Main plugin) {
     this.plugin = plugin;
-    this.menuItem = plugin.getSpecialItemsRegistry().getSpecialItem(SpecialItemsManager.SpecialItems.OPTIONS_MENU.getName()).getItemStack();
+    this.menuItem = plugin.getSpecialItemsManager().getSpecialItem(SpecialItemsManager.SpecialItems.OPTIONS_MENU.getName()).getItemStack();
     registerOptions();
   }
 

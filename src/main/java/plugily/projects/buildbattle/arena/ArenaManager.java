@@ -197,7 +197,7 @@ public class ArenaManager {
       player.sendMessage(chatManager.colorMessage("In-Game.Spectator.You-Are-Spectator"));
       player.getInventory().clear();
 
-      for(SpecialItem item : plugin.getSpecialItemsRegistry().getSpecialItems()) {
+      for(SpecialItem item : plugin.getSpecialItemsManager().getSpecialItems()) {
         if(item.getDisplayStage() != SpecialItem.DisplayStage.SPECTATOR) {
           continue;
         }
@@ -232,7 +232,7 @@ public class ArenaManager {
 
     arena.teleportToLobby(player);
     if(arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
-      for(SpecialItem item : plugin.getSpecialItemsRegistry().getSpecialItems()) {
+      for(SpecialItem item : plugin.getSpecialItemsManager().getSpecialItems()) {
         if(item.getDisplayStage() != SpecialItem.DisplayStage.LOBBY) {
           continue;
         }
@@ -347,7 +347,7 @@ public class ArenaManager {
     if(!quickStop) {
       for(Player player : arena.getPlayers()) {
         spawnFireworks(arena, player);
-        for(SpecialItem item : plugin.getSpecialItemsRegistry().getSpecialItems()) {
+        for(SpecialItem item : plugin.getSpecialItemsManager().getSpecialItems()) {
           if(item.getDisplayStage() != SpecialItem.DisplayStage.SPECTATOR) {
             continue;
           }

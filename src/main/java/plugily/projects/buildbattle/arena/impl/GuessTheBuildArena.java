@@ -150,11 +150,13 @@ public class GuessTheBuildArena extends BaseArena {
           setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.DELAYED_TASK, this));
           for(Player player : getPlayers()) {
             player.getInventory().clear();
-            VersionUtils.setCollidable(player, false);
-            player.setAllowFlight(true);
-            player.setFlying(true);
             //to prevent Multiverse changing gamemode bug
-            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setGameMode(GameMode.ADVENTURE), 20);
+            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
+              player.setGameMode(GameMode.ADVENTURE);
+              VersionUtils.setCollidable(player, false);
+              player.setAllowFlight(true);
+              player.setFlying(true);
+            }, 20);
           }
           Plot plot = getPlotManager().getPlot(getPlayers().get(round - 1));
           org.bukkit.Location plotLoc = plot == null ? null : plot.getTeleportLocation();
@@ -166,7 +168,7 @@ public class GuessTheBuildArena extends BaseArena {
           }
           nextRoundCooldown = true;
           Bukkit.getScheduler().runTaskLater(getPlugin(), () -> nextRoundCooldown = false, 20L * getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.DELAYED_TASK, this));
-          if (plot != null) {
+          if(plot != null) {
             Bukkit.getScheduler().runTaskLater(getPlugin(), () -> plot.getOwners().get(0).setGameMode(GameMode.CREATIVE), 20);
           }
           break;
@@ -197,7 +199,7 @@ public class GuessTheBuildArena extends BaseArena {
               break;
           }
           List<String> themes = getPlugin().getConfigPreferences().getThemes(BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_" + type);
-          if (!themes.isEmpty()) {
+          if(!themes.isEmpty()) {
             BBTheme theme = new BBTheme(themes.get(themes.size() == 1 ? 0 : r.nextInt(themes.size())), BBTheme.Difficulty.valueOf(type));
             setCurrentTheme(theme);
             setThemeSet(true);
@@ -236,6 +238,13 @@ public class GuessTheBuildArena extends BaseArena {
                 charsAt.add(i);
               }
             }
+            if(currentTheme.getTheme().length() - removedCharsAt.size() > 2) {
+              if(getTimer() % 10 == 0 && getTimer() <= 70) {
+                int removeCharAt = charsAt.get(charsAt.size() == 1 ? 0 : new Random().nextInt(charsAt.size()));
+                removedCharsAt.add(removeCharAt);
+                continue;
+              }
+            }
             for(int i = 0; i < currentTheme.getTheme().length(); i++) {
               if(Character.isWhitespace(currentTheme.getTheme().charAt(i))) {
                 actionbar.append("  ");
@@ -244,13 +253,6 @@ public class GuessTheBuildArena extends BaseArena {
               if(removedCharsAt.contains(i)) {
                 actionbar.append(currentTheme.getTheme().charAt(i)).append(' ');
                 continue;
-              }
-              if(currentTheme.getTheme().length() - removedCharsAt.size() > 2) {
-                if(getTimer() % 10 == 0 && getTimer() <= 70) {
-                  actionbar.append(currentTheme.getTheme().charAt(charsAt.get(charsAt.size() == 1 ? 0 : new Random().nextInt(charsAt.size())))).append(' ');
-                  removedCharsAt.add(i);
-                  continue;
-                }
               }
               actionbar.append("_ ");
             }
@@ -281,10 +283,9 @@ public class GuessTheBuildArena extends BaseArena {
           Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
             nextRoundCooldown = false;
             currentBuilder = getPlayers().get(round - 1);
-            openThemeSelectionInventoryToCurrentBuilder();
             Plot plot = getPlotManager().getPlot(currentBuilder);
             for(Player p : getPlayers()) {
-              if (plot != null) {
+              if(plot != null) {
                 org.bukkit.Location plotLoc = plot.getTeleportLocation();
                 if(plotLoc != null) {
                   p.teleport(plotLoc);
@@ -299,7 +300,8 @@ public class GuessTheBuildArena extends BaseArena {
               p.getInventory().clear(8);
               p.updateInventory();
             }
-            if (plot != null) {
+            openThemeSelectionInventoryToCurrentBuilder();
+            if(plot != null) {
               plot.getOwners().get(0).setGameMode(GameMode.CREATIVE);
             }
             setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.THEME_SELECTION, this));
@@ -449,6 +451,7 @@ public class GuessTheBuildArena extends BaseArena {
             .replace("%points%", "3").split(";")).build());
     currentBuilder.openInventory(inv);
     currentBuilder.getInventory().setItem(8, getPlugin().getOptionsRegistry().getMenuItem());
+    currentBuilder.updateInventory();
   }
 
   public void recalculateLeaderboard() {

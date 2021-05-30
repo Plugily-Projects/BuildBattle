@@ -95,7 +95,7 @@ public class Main extends JavaPlugin {
   private CuboidSelector cuboidSelector;
   private VoteItems voteItems;
   private OptionsRegistry optionsRegistry;
-  private SpecialItemsManager specialItemsRegistry;
+  private SpecialItemsManager specialItemsManager;
   private boolean forceDisable = false;
   private PartyHandler partyHandler;
   private RewardsFactory rewardsHandler;
@@ -124,8 +124,8 @@ public class Main extends JavaPlugin {
     return configPreferences;
   }
 
-  public SpecialItemsManager getSpecialItemsRegistry() {
-    return specialItemsRegistry;
+  public SpecialItemsManager getSpecialItemsManager() {
+    return specialItemsManager;
   }
 
   public ArgumentsRegistry getArgumentsRegistry() {
@@ -216,7 +216,7 @@ public class Main extends JavaPlugin {
     ArenaRegistry.registerArenas();
     signManager.loadSigns();
     signManager.updateSigns();
-    specialItemsRegistry = new SpecialItemsManager(this);
+    specialItemsManager = new SpecialItemsManager(this);
     voteItems = new VoteItems();
     new VoteEvents(this);
     new LobbyEvents(this);
