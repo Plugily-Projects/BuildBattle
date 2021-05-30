@@ -150,7 +150,7 @@ public class GuessTheBuildArena extends BaseArena {
           setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.DELAYED_TASK, this));
           for(Player player : getPlayers()) {
             player.getInventory().clear();
-            //to prevent Multiverse changing gamemode bug
+            //to prevent world switch bug
             Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
               player.setGameMode(GameMode.ADVENTURE);
               VersionUtils.setCollidable(player, false);
@@ -336,6 +336,8 @@ public class GuessTheBuildArena extends BaseArena {
             for(Player player : getPlayers()) {
               Plot buildPlot = getPlugin().getUserManager().getUser(currentBuilder).getCurrentPlot();
               org.bukkit.Location plotLoc = buildPlot == null ? null : buildPlot.getTeleportLocation();
+              player.setPlayerWeather(buildPlot.getWeatherType());
+              player.setPlayerTime(Plot.Time.format(buildPlot.getTime(), player.getWorld().getTime()), false);
               if(plotLoc != null && !buildPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
                 player.teleport(plotLoc);
                 player.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("In-Game.Messages.Cant-Fly-Outside-Plot"));
