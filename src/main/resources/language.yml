@@ -169,10 +169,8 @@ In-Game:
   No-Theme-Yet: "&cVoting"
   Spectator:
     You-Are-Spectator: "&eYou're now a spectator! You can fly now!"
-    Spectator-Item-Name: "&7Players list"
     Spectator-Menu-Name: "Players list"
     Settings-Menu:
-      Item-Name: "&7Spectator settings"
       Inventory-Name: "&7Spectator settings"
       Speed-Name: "&aSpeed"
   Guess-The-Build:
@@ -242,8 +240,6 @@ Menus:
   Location-Message: "&aLocation: "
   Option-Menu:
     Inventory-Name: "&aOptions menu"
-    Option-Item: "&aOptions"
-    Option-Item-Lore: "&7Right click to open menu"
     Go-Back-Button:
       Item-Name: "&aGo to Options Page"
       Item-Lore: "&7Click to go to main options page"
@@ -369,4 +365,4 @@ Placeholders:
     Restarting: "&c&lRestarting"
 
 # Do not modify!
-File-Version-Do-Not-Edit: 21
+File-Version-Do-Not-Edit: 22

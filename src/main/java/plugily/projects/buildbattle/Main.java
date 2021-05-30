@@ -46,12 +46,13 @@ import plugily.projects.buildbattle.events.JoinEvents;
 import plugily.projects.buildbattle.events.LobbyEvents;
 import plugily.projects.buildbattle.events.QuitEvents;
 import plugily.projects.buildbattle.events.spectator.SpectatorEvents;
+import plugily.projects.buildbattle.events.spectator.SpectatorItemEvents;
 import plugily.projects.buildbattle.handlers.BungeeManager;
 import plugily.projects.buildbattle.handlers.ChatManager;
 import plugily.projects.buildbattle.handlers.HolidayManager;
 import plugily.projects.buildbattle.handlers.PermissionManager;
 import plugily.projects.buildbattle.handlers.PlaceholderManager;
-import plugily.projects.buildbattle.handlers.items.SpecialItemsRegistry;
+import plugily.projects.buildbattle.handlers.items.SpecialItemsManager;
 import plugily.projects.buildbattle.handlers.language.LanguageManager;
 import plugily.projects.buildbattle.handlers.party.PartyHandler;
 import plugily.projects.buildbattle.handlers.party.PartySupportInitializer;
@@ -94,7 +95,7 @@ public class Main extends JavaPlugin {
   private CuboidSelector cuboidSelector;
   private VoteItems voteItems;
   private OptionsRegistry optionsRegistry;
-  private SpecialItemsRegistry specialItemsRegistry;
+  private SpecialItemsManager specialItemsRegistry;
   private boolean forceDisable = false;
   private PartyHandler partyHandler;
   private RewardsFactory rewardsHandler;
@@ -123,7 +124,7 @@ public class Main extends JavaPlugin {
     return configPreferences;
   }
 
-  public SpecialItemsRegistry getSpecialItemsRegistry() {
+  public SpecialItemsManager getSpecialItemsRegistry() {
     return specialItemsRegistry;
   }
 
@@ -142,7 +143,7 @@ public class Main extends JavaPlugin {
     Debugger.setEnabled(getDescription().getVersion().contains("debug") || getConfig().getBoolean("Debug"));
     Debugger.debug("Main setup started");
     saveDefaultConfig();
-    for(String s : Arrays.asList("arenas", "particles", "lobbyitems", "stats", "voteItems", "mysql", "biomes", "bungee", "rewards")) {
+    for(String s : Arrays.asList("arenas", "particles", "special_items", "stats", "voteItems", "mysql", "biomes", "bungee", "rewards")) {
       ConfigUtils.getConfig(this, s);
     }
     LanguageManager.init(this);
@@ -215,7 +216,7 @@ public class Main extends JavaPlugin {
     ArenaRegistry.registerArenas();
     signManager.loadSigns();
     signManager.updateSigns();
-    specialItemsRegistry = new SpecialItemsRegistry(this);
+    specialItemsRegistry = new SpecialItemsManager(this);
     voteItems = new VoteItems();
     new VoteEvents(this);
     new LobbyEvents(this);
@@ -243,6 +244,7 @@ public class Main extends JavaPlugin {
     new VoteMenuListener(this);
     new HolidayManager(this);
     new SpectatorEvents(this);
+    new SpectatorItemEvents(this);
     BannerMenu.init(this);
     partyHandler = new PartySupportInitializer().initialize(this);
     rewardsHandler = new RewardsFactory(this);

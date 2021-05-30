@@ -29,12 +29,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
@@ -191,7 +186,6 @@ public class ArenaManager {
     player.getInventory().setArmorContents(new ItemStack[]{new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
 
     //Set player as spectator as the game is already started
-    SpecialItem leaveItem = plugin.getSpecialItemsRegistry().getSpecialItem("Leave");
     if(arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
       if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SPECTATORS)) {
         return;
@@ -203,10 +197,11 @@ public class ArenaManager {
       player.sendMessage(chatManager.colorMessage("In-Game.Spectator.You-Are-Spectator"));
       player.getInventory().clear();
 
-      player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name")).build());
-      player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name")).build());
-      if (leaveItem != null) {
-        player.getInventory().setItem(8, leaveItem.getItemStack());
+      for(SpecialItem item : plugin.getSpecialItemsRegistry().getSpecialItems()) {
+        if(item.getDisplayStage() != SpecialItem.DisplayStage.SPECTATOR) {
+          continue;
+        }
+        player.getInventory().setItem(item.getSlot(), item.getItemStack());
       }
 
       player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
@@ -236,14 +231,19 @@ public class ArenaManager {
     arena.addPlayer(player);
 
     arena.teleportToLobby(player);
-    if (leaveItem != null) {
-      player.getInventory().setItem(leaveItem.getSlot(), leaveItem.getItemStack());
+    if(arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+      for(SpecialItem item : plugin.getSpecialItemsRegistry().getSpecialItems()) {
+        if(item.getDisplayStage() != SpecialItem.DisplayStage.LOBBY) {
+          continue;
+        }
+        player.getInventory().setItem(item.getSlot(), item.getItemStack());
+      }
     }
     player.updateInventory();
 
     chatManager.broadcastAction(arena, player, ChatManager.ActionType.JOIN);
     VersionUtils.sendTitles(player, chatManager.colorMessage("In-Game.Messages.Join-Title").replace("%ARENANAME%", arena.getMapName()),
-        chatManager.colorMessage("In-Game.Messages.Join-SubTitle").replace("%ARENANAME%", arena.getMapName()) , 5, 40, 5);
+        chatManager.colorMessage("In-Game.Messages.Join-SubTitle").replace("%ARENANAME%", arena.getMapName()), 5, 40, 5);
     plugin.getSignManager().updateSigns();
   }
 
@@ -347,6 +347,12 @@ public class ArenaManager {
     if(!quickStop) {
       for(Player player : arena.getPlayers()) {
         spawnFireworks(arena, player);
+        for(SpecialItem item : plugin.getSpecialItemsRegistry().getSpecialItems()) {
+          if(item.getDisplayStage() != SpecialItem.DisplayStage.SPECTATOR) {
+            continue;
+          }
+          player.getInventory().setItem(item.getSlot(), item.getItemStack());
+        }
       }
     }
     arena.getScoreboardManager().stopAllScoreboards();

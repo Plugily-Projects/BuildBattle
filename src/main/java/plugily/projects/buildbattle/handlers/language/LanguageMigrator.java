@@ -40,7 +40,7 @@ import java.util.List;
 @SuppressWarnings("deprecation")
 public class LanguageMigrator {
 
-  public static final int LANGUAGE_FILE_VERSION = 21;
+  public static final int LANGUAGE_FILE_VERSION = 22;
   public static final int CONFIG_FILE_VERSION = 18;
   private final List<String> migratable = Arrays.asList("bungee", "config", "language", "mysql");
   private final Main plugin;
@@ -459,10 +459,8 @@ public class LanguageMigrator {
         case 16:
           MigratorUtils.insertAfterLine(file, "In-Game:", "  Spectator:");
           MigratorUtils.insertAfterLine(file, "Spectator:", "    You-Are-Spectator: \"&eYou're now a spectator! You can fly now!\"");
-          MigratorUtils.insertAfterLine(file, "Spectator:", "    Spectator-Item-Name: \"&7Players list\"");
           MigratorUtils.insertAfterLine(file, "Spectator:", "    Spectator-Menu-Name: \"Players list\"");
           MigratorUtils.insertAfterLine(file, "Spectator:", "    Settings-Menu:");
-          MigratorUtils.insertAfterLine(file, "Settings-Menu:", "      Item-Name: \"&7Spectator settings\"");
           MigratorUtils.insertAfterLine(file, "Settings-Menu:", "      Inventory-Name: \"&7Spectator settings\"");
           MigratorUtils.insertAfterLine(file, "Settings-Menu:", "      Speed-Name: \"&aSpeed\"");
           MigratorUtils.insertAfterLine(file, "Commands:", "  Arena-Restarting: \"&cThis arena is currently restarting!\"");
@@ -503,6 +501,8 @@ public class LanguageMigrator {
               "    Ending: \"&lEnding\"\r\n" +
               "    Restarting: \"&c&lRestarting\"\r\n");
           break;
+        case 21:
+          //just removed unused lines, no need to migrate anything
         default:
           return;
       }

@@ -42,6 +42,7 @@ import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -51,7 +52,6 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
-
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerInteractEntityEvent;
 import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerInteractEvent;
@@ -68,7 +68,7 @@ import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.impl.GuessTheBuildArena;
 import plugily.projects.buildbattle.arena.impl.SoloArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
-import plugily.projects.buildbattle.handlers.items.SpecialItem;
+import plugily.projects.buildbattle.handlers.items.SpecialItemsManager;
 import plugily.projects.buildbattle.user.User;
 
 /**
@@ -83,24 +83,21 @@ public class GameEvents implements Listener {
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
-  @EventHandler(priority = EventPriority.LOWEST)
-  public void onLeave(CBPlayerInteractEvent event) {
-    if(VersionUtils.checkOffHand(event.getHand()) || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) {
+  @EventHandler
+  public void onSpecialLeaveItem(CBPlayerInteractEvent event) {
+    if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) {
       return;
     }
     BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
-    if(arena == null) {
-      return;
-    }
     ItemStack itemStack = VersionUtils.getItemInHand(event.getPlayer());
-    if(!ItemUtils.isItemStackNamed(itemStack)) {
+    if(arena == null || !ItemUtils.isItemStackNamed(itemStack)) {
       return;
     }
-    SpecialItem item = plugin.getSpecialItemsRegistry().getRelatedSpecialItem(itemStack);
-    if(item == null) {
+    String key = plugin.getSpecialItemsRegistry().getRelatedSpecialItem(itemStack).getName();
+    if(key == null) {
       return;
     }
-    if("Leave".equalsIgnoreCase(item.getName())) {
+    if(key.equals(SpecialItemsManager.SpecialItems.LOBBY_LEAVE_ITEM.getName()) || key.equals(SpecialItemsManager.SpecialItems.SPECTATOR_LEAVE_ITEM.getName())) {
       event.setCancelled(true);
       if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
         plugin.getBungeeManager().connectToHub(event.getPlayer());
@@ -173,9 +170,8 @@ public class GameEvents implements Listener {
   public void onTNTExplode(EntityExplodeEvent event) {
     for(BaseArena arena : ArenaRegistry.getArenas()) {
       for(Plot buildPlot : arena.getPlotManager().getPlots()) {
-        if (buildPlot.getCuboid() == null)
+        if(buildPlot.getCuboid() == null)
           continue;
-
         if(buildPlot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 0)) {
           event.blockList().clear();
           event.setCancelled(true);
@@ -213,6 +209,25 @@ public class GameEvents implements Listener {
     }
   }
 
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onDamage(EntityDamageEvent event) {
+    if(event.getEntity().getType() != EntityType.PLAYER) {
+      return;
+    }
+    BaseArena arena = ArenaRegistry.getArena((Player) event.getEntity());
+    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+      return;
+    }
+    event.setCancelled(true);
+    Player player = (Player) event.getEntity();
+    if(player.getLocation().getY() < 1) {
+      Plot plot = arena.getPlotManager().getPlot(player);
+      if(plot != null) {
+        player.teleport(plot.getTeleportLocation());
+      }
+    }
+  }
+
   @EventHandler
   public void onTreeGrow(StructureGrowEvent event) {
     BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
@@ -230,7 +245,7 @@ public class GameEvents implements Listener {
     }
   }
 
-  //todo weird code?
+
   @EventHandler
   public void onDispense(BlockDispenseEvent event) {
     for(BaseArena arena : ArenaRegistry.getArenas()) {
@@ -269,11 +284,11 @@ public class GameEvents implements Listener {
       return;
     }
     BaseArena arena = ArenaRegistry.getArena((Player) event.getWhoClicked());
-    if(event.getCurrentItem().getType() != Material.NETHER_STAR || arena == null) {
+    String key = plugin.getSpecialItemsRegistry().getRelatedSpecialItem(event.getCurrentItem()).getName();
+    if(key == null || arena == null) {
       return;
     }
-    if(!ComplementAccessor.getComplement().getDisplayName(event.getCurrentItem().getItemMeta())
-        .equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item"))) {
+    if(!key.equals(SpecialItemsManager.SpecialItems.OPTIONS_MENU.getName())) {
       return;
     }
     event.setResult(Event.Result.DENY);
@@ -286,11 +301,11 @@ public class GameEvents implements Listener {
       return;
     }
     BaseArena arena = ArenaRegistry.getArena((Player) event.getWhoClicked());
-    if(event.getWhoClicked().getItemOnCursor().getType() != Material.NETHER_STAR || arena == null) {
+    String key = plugin.getSpecialItemsRegistry().getRelatedSpecialItem(event.getWhoClicked().getItemOnCursor()).getName();
+    if(key == null || arena == null) {
       return;
     }
-    if(!ComplementAccessor.getComplement().getDisplayName(event.getWhoClicked().getItemOnCursor().getItemMeta())
-        .equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item"))) {
+    if(!key.equals(SpecialItemsManager.SpecialItems.OPTIONS_MENU.getName())) {
       return;
     }
     event.setResult(Event.Result.DENY);
@@ -355,11 +370,11 @@ public class GameEvents implements Listener {
   @EventHandler
   public void onBlockSpread(BlockSpreadEvent event) {
     for(BaseArena arena : ArenaRegistry.getArenas()) {
-      if (!arena.getPlotManager().getPlots().isEmpty()) {
+      if(!arena.getPlotManager().getPlots().isEmpty()) {
         Plot plot = arena.getPlotManager().getPlots().get(0);
         if(plot != null && plot.getCuboid() != null
             && event.getBlock().getWorld().equals(plot.getCuboid().getCenter().getWorld()) && event.getSource().getType() == Material.FIRE) {
-            event.setCancelled(true);
+          event.setCancelled(true);
         }
       }
     }
@@ -390,8 +405,8 @@ public class GameEvents implements Listener {
             return;
           }
 
-          for (String entityNames : plugin.getConfig().getStringList("Restricted-Entities-Spawn")) {
-            if (event.getEntity().getType().name().equalsIgnoreCase(entityNames)) {
+          for(String entityNames : plugin.getConfig().getStringList("Restricted-Entities-Spawn")) {
+            if(event.getEntity().getType().name().equalsIgnoreCase(entityNames)) {
               event.setCancelled(true);
               return;
             }

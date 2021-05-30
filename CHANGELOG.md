@@ -19,6 +19,10 @@ That's all, matcher will stop when detects next line started with `###` match
 * Changed gtb word hints are now randomly chosen
 * Changed gtb word hints will stop if there are only 2 chars left to show
 * Changed empty message is no longer sent
+* Removed lobbyitems.yml 
+* Added special_items.yml
+* Added changeable options menu item
+* Fixed gtb guessers got options menu on there inventory
   
 ### 4.5.0 Release (21.03.2021 - 13.04.2021)
 * Automatically disable bossbar support on 1.8 to prevent issue if bossbar is enabled on config.yml

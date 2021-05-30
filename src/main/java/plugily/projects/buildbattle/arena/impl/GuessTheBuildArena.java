@@ -150,9 +150,9 @@ public class GuessTheBuildArena extends BaseArena {
           setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.DELAYED_TASK, this));
           for(Player player : getPlayers()) {
             player.getInventory().clear();
+            VersionUtils.setCollidable(player, false);
             player.setAllowFlight(true);
             player.setFlying(true);
-            player.getInventory().setItem(8, getPlugin().getOptionsRegistry().getMenuItem());
             //to prevent Multiverse changing gamemode bug
             Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setGameMode(GameMode.ADVENTURE), 20);
           }
@@ -296,6 +296,8 @@ public class GuessTheBuildArena extends BaseArena {
               p.setGameMode(GameMode.ADVENTURE);
               p.setAllowFlight(true);
               p.setFlying(true);
+              p.getInventory().clear(8);
+              p.updateInventory();
             }
             if (plot != null) {
               plot.getOwners().get(0).setGameMode(GameMode.CREATIVE);
@@ -446,6 +448,7 @@ public class GuessTheBuildArena extends BaseArena {
             .replace("%difficulty%", getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Difficulties.Hard"))
             .replace("%points%", "3").split(";")).build());
     currentBuilder.openInventory(inv);
+    currentBuilder.getInventory().setItem(8, getPlugin().getOptionsRegistry().getMenuItem());
   }
 
   public void recalculateLeaderboard() {
