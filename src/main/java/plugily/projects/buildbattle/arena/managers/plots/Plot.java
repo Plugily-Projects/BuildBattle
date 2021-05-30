@@ -52,7 +52,10 @@ import java.util.Map;
 public class Plot {
 
   private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+
   private final Map<Location, String> particles = new HashMap<>();
+  private final XMaterial defaultFloor;
+
   private final BaseArena arena;
   private Cuboid cuboid;
   private int points = 0;
@@ -65,6 +68,8 @@ public class Plot {
   public Plot(BaseArena arena, Biome biome) {
     this.arena = arena;
     plotDefaultBiome = biome;
+    defaultFloor = XMaterial.matchXMaterial(plugin.getConfig().getString("Default-Floor-Material-Name", "LOG")
+        .toUpperCase()).orElse(XMaterial.OAK_LOG);
   }
 
   public int getEntities() {
@@ -183,8 +188,7 @@ public class Plot {
       }
     }
 
-    changeFloor(XMaterial.matchXMaterial(plugin.getConfig().getString("Default-Floor-Material-Name", "LOG")
-        .toUpperCase()).orElse(XMaterial.OAK_LOG).parseMaterial());
+    changeFloor(defaultFloor.parseMaterial());
 
     if(ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_15_R1)) {
       int y = Math.min(cuboid.getMinPoint().getBlockY(), cuboid.getMaxPoint().getBlockY());

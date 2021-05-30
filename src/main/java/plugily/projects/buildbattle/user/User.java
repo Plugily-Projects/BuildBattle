@@ -96,7 +96,8 @@ public class User {
     stats.put(stat, i);
 
     Bukkit.getScheduler().callSyncMethod(PLUGIN, () -> {
-      BBPlayerStatisticChangeEvent event = new BBPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, i);
+      Player player = getPlayer();
+      BBPlayerStatisticChangeEvent event = new BBPlayerStatisticChangeEvent(ArenaRegistry.getArena(player), player, stat, i);
       Bukkit.getPluginManager().callEvent(event);
       return event;
     });
@@ -107,7 +108,8 @@ public class User {
     stats.put(stat, currentStat + i);
 
     Bukkit.getScheduler().callSyncMethod(PLUGIN, () -> {
-      BBPlayerStatisticChangeEvent event = new BBPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, currentStat);
+      Player player = getPlayer();
+      BBPlayerStatisticChangeEvent event = new BBPlayerStatisticChangeEvent(ArenaRegistry.getArena(player), player, stat, currentStat);
       Bukkit.getPluginManager().callEvent(event);
       return event;
     });

@@ -185,16 +185,24 @@ public class ArenaRegistry {
       if(section.contains(id + ".plots")) {
         if(section.isConfigurationSection(id + ".plots")) {
           for(String plotName : section.getConfigurationSection(id + ".plots").getKeys(false)) {
-            if(section.isSet(id + ".plots." + plotName + ".maxpoint") && section.isSet(id + ".plots." + plotName + ".minpoint")) {
+            if(section.isSet(id + ".plots." + plotName + ".maxpoint")) {
               Location minPoint = LocationSerializer.getLocation(section.getString(id + ".plots." + plotName + ".minpoint"));
-              if(minPoint != null && minPoint.getWorld() != null) {
-                Biome biome = Version.isCurrentHigher(Version.v1_15_R1) ?
-                    minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
-                    : minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
-                Plot buildPlot = new Plot(arena, biome);
-                buildPlot.setCuboid(new Cuboid(minPoint, LocationSerializer.getLocation(section.getString(id + ".plots." + plotName + ".maxpoint"))));
-                buildPlot.fullyResetPlot();
-                arena.getPlotManager().addBuildPlot(buildPlot);
+
+              if(minPoint != null) {
+                org.bukkit.World minWorld = minPoint.getWorld();
+
+                if (minWorld != null) {
+                  Biome biome = Version.isCurrentHigher(Version.v1_15_R1) ?
+                      minWorld.getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
+                      : minWorld.getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
+
+                  Plot buildPlot = new Plot(arena, biome);
+
+                  buildPlot.setCuboid(new Cuboid(minPoint, LocationSerializer.getLocation(section.getString(id + ".plots." + plotName + ".maxpoint"))));
+                  buildPlot.fullyResetPlot();
+
+                  arena.getPlotManager().addBuildPlot(buildPlot);
+                }
               }
             } else {
               System.out.println("Non configured plot instances found for arena " + id);

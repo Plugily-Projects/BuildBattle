@@ -132,13 +132,17 @@ public class TeamArena extends SoloArena {
 
   @Override
   public boolean enoughPlayersToContinue() {
-    if(getPlayers().size() >= 2) {
+    int size = getPlayers().size();
+
+    if(size >= 2) {
       return true;
-    } else if(getPlayers().size() == 2) {
-      return !getPlotManager().getPlot(getPlayers().get(0)).getOwners().contains(getPlayers().get(1));
-    } else {
-      return false;
     }
+
+    if(size == 2) {
+      return !getPlotManager().getPlot(getPlayers().get(0)).getOwners().contains(getPlayers().get(1));
+    }
+
+    return false;
   }
 
 }

@@ -25,7 +25,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.Main;
@@ -88,11 +87,22 @@ public class SpecialItemsRegistry {
   private void registerItems() {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "lobbyitems");
     for(String key : config.getKeys(false)) {
-      addItem(new SpecialItem(key, new ItemBuilder(XMaterial.matchXMaterial(config.getString(key + ".material-name", "BEDROCK")
-          .toUpperCase()).orElse(XMaterial.BEDROCK).parseItem())
+      Material mat;
+      try {
+        mat = Material.valueOf(config.getString(key + ".material-name", "BEDROCK").toUpperCase());
+      } catch (IllegalArgumentException e) {
+        mat = Material.BEDROCK;
+      }
+
+      java.util.List<String> lore = config.getStringList(key + ".lore");
+
+      for (int a = 0; a < lore.size(); a++) {
+        lore.set(a, plugin.getChatManager().colorRawMessage(lore.get(a)));
+      }
+
+      addItem(new SpecialItem(key, new ItemBuilder(mat)
           .name(plugin.getChatManager().colorRawMessage(config.getString(key + ".displayname")))
-          .lore(config.getStringList(key + ".lore").stream().map(lore -> lore = plugin.getChatManager().colorRawMessage(lore))
-              .collect(Collectors.toList()))
+          .lore(lore)
           .build(), config.getInt(key + ".slot")));
     }
   }

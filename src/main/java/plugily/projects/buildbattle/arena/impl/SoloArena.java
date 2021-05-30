@@ -23,6 +23,7 @@ package plugily.projects.buildbattle.arena.impl;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
@@ -142,7 +143,7 @@ public class SoloArena extends BaseArena {
           getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
           setArenaState(ArenaState.STARTING);
           if(HolidayManager.getCurrentHoliday() != HolidayManager.HolidayType.NONE) {
-            this.initPoll();
+            initPoll();
           }
           Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
           setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
@@ -325,8 +326,10 @@ public class SoloArena extends BaseArena {
             }
             announceResults();
 
+            Location winnerLocation = winnerPlot.getTeleportLocation();
+
             for(Player player : getPlayers()) {
-              player.teleport(winnerPlot.getTeleportLocation());
+              player.teleport(winnerLocation);
               String winner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Winner-Title");
               winner = formatWinners(winnerPlot, winner);
               VersionUtils.sendTitle(player, winner, 5, 35, 5);
@@ -351,8 +354,8 @@ public class SoloArena extends BaseArena {
           }
         }
         if(getTimer() <= 0) {
-          teleportAllToEndLocation();
           for(Player player : getPlayers()) {
+            teleportToEndLocation(player);
             doBarAction(BarAction.REMOVE, player);
             player.getInventory().clear();
             player.setGameMode(GameMode.SURVIVAL);
@@ -471,8 +474,10 @@ public class SoloArena extends BaseArena {
       votingPlot = getPlotManager().getPlot(player);
       String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voting-For-Player-Plot").replace("%PLAYER%", player.getName());
 
+      Location teleportLoc = votingPlot.getTeleportLocation();
+
       for(Player p : getPlayers()) {
-        p.teleport(votingPlot.getTeleportLocation());
+        p.teleport(teleportLoc);
         p.setPlayerWeather(votingPlot.getWeatherType());
         p.setPlayerTime(Plot.Time.format(votingPlot.getTime(), p.getWorld().getTime()), false);
         if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER)) {
@@ -486,7 +491,7 @@ public class SoloArena extends BaseArena {
       }
 
       for(Player spectator : getSpectators()) {
-        spectator.teleport(votingPlot.getTeleportLocation());
+        spectator.teleport(teleportLoc);
         spectator.setPlayerWeather(votingPlot.getWeatherType());
         spectator.setPlayerTime(Plot.Time.format(votingPlot.getTime(), player.getWorld().getTime()), false);
         String owner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");

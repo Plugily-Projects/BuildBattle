@@ -148,7 +148,7 @@ public class ArenaManager {
       return;
     }
 
-    if(arena.getPlayers().size() >= arena.getMaximumPlayers() && arena.getArenaState() == ArenaState.STARTING) {
+    if(arena.getArenaState() == ArenaState.STARTING && arena.getPlayers().size() >= arena.getMaximumPlayers()) {
       if(!player.hasPermission(PermissionManager.getJoinFullGames())) {
         player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Full-Game-No-Permission"));
         return;
@@ -322,7 +322,7 @@ public class ArenaManager {
       ((GuessTheBuildArena) arena).getWhoGuessed().remove(player);
     }
 
-    if(arena.getPlayers().isEmpty() && arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS) {
+    if(arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS && arena.getPlayers().isEmpty()) {
       arena.setArenaState(ArenaState.RESTARTING);
       arena.setTimer(0);
     }
