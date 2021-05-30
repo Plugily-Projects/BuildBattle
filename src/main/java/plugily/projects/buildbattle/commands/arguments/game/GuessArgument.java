@@ -57,7 +57,7 @@ public class GuessArgument {
           player.sendMessage(registry.getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Chat.Cant-Talk-When-Building"));
           return;
         }
-        if(gameArena.getCurrentTheme() == null || !gameArena.getCurrentTheme().getTheme().equalsIgnoreCase(Arrays.toString(args).split(" ", 3)[3])) {
+        if(gameArena.getCurrentTheme() == null || !gameArena.getCurrentTheme().getTheme().equalsIgnoreCase(Arrays.toString(args).split(" ", 3)[2])) {
           return;
         }
         registry.getPlugin().getChatManager().broadcast(arena, registry.getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Chat.Guessed-The-Theme").replace("%player%", player.getName()));
