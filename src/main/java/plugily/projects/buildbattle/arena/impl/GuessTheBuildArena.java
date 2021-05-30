@@ -292,7 +292,7 @@ public class GuessTheBuildArena extends BaseArena {
                 p.setPlayerWeather(plot.getWeatherType());
                 p.setPlayerTime(Plot.Time.format(plot.getTime(), p.getWorld().getTime()), false);
               }
-              p.setCollidable(false);
+              VersionUtils.setCollidable(p, false);
               p.setGameMode(GameMode.ADVENTURE);
               p.setAllowFlight(true);
               p.setFlying(true);

@@ -217,9 +217,7 @@ public class ArenaManager {
 
       user.setSpectator(true);
 
-      if (ServerVersion.Version.isCurrentEqualOrHigher(Version.v1_9_R1)) {
-        player.setCollidable(false);
-      }
+      VersionUtils.setCollidable(player, false);
 
       player.setGameMode(GameMode.ADVENTURE);
       player.setAllowFlight(true);
