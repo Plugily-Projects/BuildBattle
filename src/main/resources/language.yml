@@ -364,7 +364,7 @@ Placeholders:
   Game-States:
     Waiting: "&lWaiting for players..."
     Starting: "&e&lStarting"
-    Playing: "&lPlaying"
+    In-Game: "&lPlaying"
     Ending: "&lEnding"
     Restarting: "&c&lRestarting"
 
