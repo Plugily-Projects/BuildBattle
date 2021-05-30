@@ -24,6 +24,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Added changeable options menu item
 * Fixed gtb guessers got options menu on there inventory
 * Fixed on gtb the time and weather is not synced with all players
+* Added /bb guess <word> argument (useful for servers with bungee handled chat)
   
 ### 4.5.0 Release (21.03.2021 - 13.04.2021)
 * Automatically disable bossbar support on 1.8 to prevent issue if bossbar is enabled on config.yml

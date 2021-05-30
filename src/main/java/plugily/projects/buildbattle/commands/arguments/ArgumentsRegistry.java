@@ -54,6 +54,7 @@ import plugily.projects.buildbattle.commands.arguments.data.LabelData;
 import plugily.projects.buildbattle.commands.arguments.data.LabeledCommandArgument;
 import plugily.projects.buildbattle.commands.arguments.game.ArenaSelectorArgument;
 import plugily.projects.buildbattle.commands.arguments.game.CreateArgument;
+import plugily.projects.buildbattle.commands.arguments.game.GuessArgument;
 import plugily.projects.buildbattle.commands.arguments.game.JoinArguments;
 import plugily.projects.buildbattle.commands.arguments.game.LeaderboardArgument;
 import plugily.projects.buildbattle.commands.arguments.game.LeaveArgument;
@@ -95,6 +96,7 @@ public class ArgumentsRegistry implements CommandExecutor {
     new JoinArguments(this);
     new LeaderboardArgument(this);
     new LeaveArgument(this);
+    new GuessArgument(this);
     new StatsArgument(this);
     new ArenaSelectorArgument(this);
 
