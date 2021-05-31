@@ -24,7 +24,9 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Vehicle;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -50,6 +52,7 @@ import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
@@ -585,6 +588,22 @@ public class GameEvents implements Listener {
     Block block = event.getClickedBlock();
     if(block != null && block.getType() == XMaterial.ENDER_CHEST.parseMaterial()) {
       event.setCancelled(true);
+    }
+  }
+
+  @EventHandler
+  public void onMinecartMove(VehicleMoveEvent event) {
+    Vehicle vehicle = event.getVehicle();
+    if(!(vehicle instanceof Minecart)) {
+      return;
+    }
+    for(BaseArena arena : ArenaRegistry.getArenas()) {
+      for(Plot buildPlot : arena.getPlotManager().getPlots()) {
+        if(buildPlot.getCuboid() != null && !buildPlot.getCuboid().isInWithMarge(event.getTo(), -1) && buildPlot.getCuboid().isIn(event.getTo())) {
+          ((Minecart) vehicle).setMaxSpeed(0);
+          vehicle.setVelocity(vehicle.getVelocity().zero());
+        }
+      }
     }
   }
 }
