@@ -177,10 +177,7 @@ public class GameEvents implements Listener {
       for(Plot buildPlot : arena.getPlotManager().getPlots()) {
         if(buildPlot.getCuboid() == null)
           continue;
-        if(buildPlot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 0)) {
-          event.blockList().clear();
-          event.setCancelled(true);
-        } else if(buildPlot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 5)) {
+        if(buildPlot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 5)) {
           event.blockList().clear();
           event.setCancelled(true);
         }
