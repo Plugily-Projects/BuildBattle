@@ -181,7 +181,6 @@ public class GameEvents implements Listener {
           event.blockList().clear();
           event.setCancelled(true);
         } else if(buildPlot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 5)) {
-          event.getEntity().getLocation().getBlock().setType(Material.TNT);
           event.blockList().clear();
           event.setCancelled(true);
         }
