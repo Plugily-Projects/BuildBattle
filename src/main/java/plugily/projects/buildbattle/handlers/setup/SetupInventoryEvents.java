@@ -339,7 +339,7 @@ public class SetupInventoryEvents implements Listener {
         break;
       case EXTRAS_AD:
         player.sendMessage(plugin.getChatManager().getPrefix()
-            + plugin.getChatManager().colorRawMessage("&6Check patron program here: https://patreon.plugily.xyz/"));
+            + plugin.getChatManager().colorRawMessage("&6Check patron program here: https://wiki.plugily.xyz/buildbattle/addon/overview"));
         break;
       case VIEW_SETUP_VIDEO:
         player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorRawMessage("&6Check out this video: " + SetupInventory.VIDEO_LINK));

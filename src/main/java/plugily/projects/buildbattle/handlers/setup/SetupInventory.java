@@ -170,10 +170,10 @@ public class SetupInventory {
         p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Help us translating plugin to your language here: https://translate.plugily.xyz"));
         break;
       case 2:
-        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Download some free maps! Get them here: https://wiki.plugily.xyz/minecraft/buildbattle/free_maps.php"));
+        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Download some free maps! Get them here: https://wiki.plugily.xyz/buildbattle/setup/maps"));
         break;
       case 3:
-        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7You can use PlaceholderAPI placeholders from our plugin! Check: https://wiki.plugily.xyz/minecraft/buildbattle/papi_placeholders.php"));
+        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7You can use PlaceholderAPI placeholders from our plugin! Check: https://wiki.plugily.xyz/buildbattle/placeholders/placeholderapi"));
         break;
       case 4:
         p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Suggest new ideas for the plugin or vote on current ones! https://app.feedbacky.net/b/BuildBattle"));
