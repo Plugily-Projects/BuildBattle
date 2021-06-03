@@ -77,12 +77,14 @@ public class ChatManager {
 
   public String formatMessage(BaseArena arena, String message, Player player) {
     String returnString = message;
+
     returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());
-    returnString = colorRawMessage(formatPlaceholders(returnString, arena));
+
     if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       returnString = PlaceholderAPI.setPlaceholders(player, returnString);
     }
-    return returnString;
+
+    return colorRawMessage(formatPlaceholders(returnString, arena));
   }
 
   private static String formatPlaceholders(String message, BaseArena arena) {

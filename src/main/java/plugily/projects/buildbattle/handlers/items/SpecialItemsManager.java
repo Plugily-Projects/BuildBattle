@@ -94,7 +94,7 @@ public class SpecialItemsManager {
             .collect(Collectors.toList());
         slot = config.getInt(key + ".slot");
       } catch(Exception ex) {
-        plugin.getLogger().log(Level.WARNING, "Configuration of " + key + "is missing a value. (material-name, displayname, lore or slot)");
+        plugin.getLogger().log(Level.WARNING, "Configuration of " + key + "is missing a value. (displayname, lore or slot)");
         continue;
       }
       SpecialItem.DisplayStage stage;

@@ -123,21 +123,19 @@ public class Plot {
     return owners;
   }
 
-  public void setOwners(List<Player> owners) {
-    this.owners = owners == null ? new ArrayList<>() : owners;
-  }
-
   public void addOwner(Player player) {
     owners.add(player);
   }
 
   public void fullyResetPlot() {
     resetPlot();
+
     for(Player p : owners) {
       plugin.getUserManager().getUser(p).setCurrentPlot(null);
-      setOwners(new ArrayList<>());
-      setPoints(0);
     }
+
+    setPoints(0);
+    owners.clear();
     particles.clear();
   }
 
