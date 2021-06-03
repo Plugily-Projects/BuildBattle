@@ -99,8 +99,8 @@ public class SpecialItemsManager {
       }
       SpecialItem.DisplayStage stage;
       try {
-        stage = SpecialItem.DisplayStage.valueOf(config.getString(key + ".stage").toUpperCase());
-      } catch(Exception ex) {
+        stage = SpecialItem.DisplayStage.valueOf(config.getString(key + ".stage", "LOBBY").toUpperCase());
+      } catch(IllegalArgumentException ex) {
         Debugger.debug("Invalid display stage of special item " + key + " in special_items.yml! Please use lobby or spectator!");
         stage = SpecialItem.DisplayStage.LOBBY;
       }

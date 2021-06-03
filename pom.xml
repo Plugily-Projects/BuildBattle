@@ -48,7 +48,7 @@
             <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
         <repository>
-            <id>plajerlair-repo</id>
+            <id>plugily-repo</id>
             <url>https://maven.plugily.xyz/</url>
         </repository>
         <repository>

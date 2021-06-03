@@ -123,9 +123,11 @@ public class ParticleRegistry {
   }
 
   private void registerInventory() {
-    Inventory page1 = ComplementAccessor.getComplement().createInventory(null, Utils.serializeInt(54),
+    int size = Utils.serializeInt(54);
+
+    Inventory page1 = ComplementAccessor.getComplement().createInventory(null, size,
         plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.Inventory-Name"));
-    Inventory page2 = ComplementAccessor.getComplement().createInventory(null, Utils.serializeInt(54),
+    Inventory page2 = ComplementAccessor.getComplement().createInventory(null, size,
         plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.Inventory-Name"));
 
     int i = 0;

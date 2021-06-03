@@ -40,8 +40,6 @@ public class Utils {
 
   private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
-  private static ItemStack goBackItem;
-
   private static Class<?> packetPlayOutMapChunk, chunkClass;
 
   static {
@@ -58,15 +56,15 @@ public class Utils {
    * @param i integer to serialize
    * @return serialized number
    */
-  public static int serializeInt(Integer i) {
+  public static int serializeInt(int i) {
     if(i == 0) return 9; //The function bellow doesn't work if i == 0, so return 9 in case that happens.
     return (i % 9) == 0 ? i : (i + 9 - 1) / 9 * 9;
   }
 
   public static ItemStack getGoBackItem() {
-    return goBackItem == null ? goBackItem = new ItemBuilder(XMaterial.STONE_BUTTON.parseItem())
+    return new ItemBuilder(XMaterial.STONE_BUTTON.parseItem())
         .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Go-Back-Button.Item-Name"))
-        .lore(plugin.getChatManager().colorMessage("Menus.Option-Menu.Go-Back-Button.Item-Lore")).build() : goBackItem;
+        .lore(plugin.getChatManager().colorMessage("Menus.Option-Menu.Go-Back-Button.Item-Lore")).build();
   }
 
   public static void sendMapChunk(Player player, Chunk chunk) {
