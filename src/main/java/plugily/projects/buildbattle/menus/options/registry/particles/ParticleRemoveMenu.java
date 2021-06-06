@@ -71,6 +71,7 @@ public class ParticleRemoveMenu {
           }
         });
         gui.update();
+        event.setCancelled(true);
         event.getWhoClicked().closeInventory();
         openMenu(player, buildPlot);
       }), x, y);
@@ -85,8 +86,9 @@ public class ParticleRemoveMenu {
         .name(plugin.getChatManager().colorMessage("Menus.Buttons.Back-Button.Name"))
         .lore(plugin.getChatManager().colorMessage("Menus.Buttons.Back-Button.Lore"))
         .build(), event -> {
+      event.setCancelled(true);
       event.getWhoClicked().closeInventory();
-      event.getWhoClicked().openInventory(plugin.getOptionsRegistry().getParticleRegistry().getPage1());
+      plugin.getOptionsRegistry().getParticleRegistry().getParticles().show(player);
     }), 4, 5);
     gui.addPane(pane);
     gui.show(player);

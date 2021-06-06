@@ -22,14 +22,10 @@ package plugily.projects.buildbattle.menus.options.registry.particles;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
-import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
-import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.menus.options.MenuOption;
 import plugily.projects.buildbattle.menus.options.OptionsRegistry;
 
@@ -48,60 +44,13 @@ public class ParticlesOption {
         .build(), registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.Inventory-Name")) {
 
       @Override
-      public void onClick(InventoryClickEvent e) {
-        e.getWhoClicked().closeInventory();
-        BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+      public void onClick(InventoryClickEvent event) {
+        event.getWhoClicked().closeInventory();
+        BaseArena arena = ArenaRegistry.getArena((Player) event.getWhoClicked());
         if(arena == null) {
           return;
         }
-        e.getWhoClicked().openInventory(registry.getParticleRegistry().getPage1());
-      }
-
-      @Override
-      public void onTargetClick(InventoryClickEvent e) {
-        org.bukkit.inventory.ItemStack current = e.getCurrentItem();
-        if (current == null)
-          return;
-
-        Player who = (Player) e.getWhoClicked();
-        BaseArena arena = ArenaRegistry.getArena(who);
-        if(arena == null || !current.hasItemMeta()) {
-          return;
-        }
-        if(ComplementAccessor.getComplement().getDisplayName(current.getItemMeta())
-            .contains("§7-->")) {
-          e.setCancelled(false);
-          who.closeInventory();
-          who.openInventory(registry.getParticleRegistry().getPage2());
-          return;
-        }
-        if(ComplementAccessor.getComplement().getDisplayName(current.getItemMeta())
-            .contains(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))) {
-          e.setCancelled(false);
-          who.closeInventory();
-          ParticleRemoveMenu.openMenu(who, arena.getPlotManager().getPlot(who));
-          return;
-        }
-        for(ParticleItem particleItem : registry.getParticleRegistry().getRegisteredParticles()) {
-          // Only check for the display name for items in gui, because some of item meta is changed
-          if(!ComplementAccessor.getComplement().getDisplayName(current.getItemMeta())
-              .contains(ComplementAccessor.getComplement().getDisplayName(particleItem.getItemStack().getItemMeta()))) {
-            continue;
-          }
-          Plot plot = arena.getPlotManager().getPlot(who);
-          if(!who.hasPermission(particleItem.getPermission())) {
-            who.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.No-Permission-For-Particle"));
-            continue;
-          }
-          if(plot.getParticles().size() >= registry.getPlugin().getConfig().getInt("Max-Amount-Particles", 25)) {
-            who.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.Max-Particles-Limit-Reached"));
-            return;
-          }
-          plot.getParticles().put(who.getLocation(), particleItem.getEffect());
-          registry.getPlugin().getUserManager().getUser(who)
-              .addStat(StatsStorage.StatisticType.PARTICLES_USED, 1);
-          who.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.Particle-Added"));
-        }
+        registry.getPlugin().getOptionsRegistry().getParticleRegistry().getParticles().show(event.getWhoClicked());
       }
     });
   }

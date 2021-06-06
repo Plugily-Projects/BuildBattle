@@ -26,7 +26,7 @@
 
     <groupId>plugily.projects</groupId>
     <artifactId>buildbattle</artifactId>
-    <version>4.5.0-dev5-debug</version>
+    <version>4.5.0-dev6-debug</version>
     <name>BuildBattle</name>
 
     <properties>

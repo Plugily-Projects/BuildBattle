@@ -20,18 +20,25 @@
 
 package plugily.projects.buildbattle.menus.options.registry.particles;
 
+import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
+import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
+import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
+import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.inventory.Inventory;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
-
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.buildbattle.Main;
+import plugily.projects.buildbattle.api.StatsStorage;
+import plugily.projects.buildbattle.arena.ArenaRegistry;
+import plugily.projects.buildbattle.arena.impl.BaseArena;
+import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.menus.options.OptionsRegistry;
 import plugily.projects.buildbattle.utils.Debugger;
 import plugily.projects.buildbattle.utils.Utils;
@@ -49,8 +56,7 @@ import java.util.Set;
  */
 public class ParticleRegistry {
 
-  private Inventory page1;
-  private Inventory page2;
+  private ChestGui particles;
   private final List<String> blackListedParticles = Arrays.asList("BLOCK_CRACK", "ITEM_CRACK", "ITEM_TAKE", "BLOCK_DUST", "MOB_APPEARANCE", "FOOTSTEP", "REDSTONE");
   private final Set<ParticleItem> registeredParticles = new HashSet<>();
   private final Main plugin;
@@ -85,7 +91,7 @@ public class ParticleRegistry {
         continue;
       }
       List<String> lore = config.getStringList(particle + ".lore");
-      for (int a = 0; a < lore.size(); a++) {
+      for(int a = 0; a < lore.size(); a++) {
         lore.set(a, plugin.getChatManager().colorRawMessage(lore.get(a)));
       }
 
@@ -123,49 +129,131 @@ public class ParticleRegistry {
   }
 
   private void registerInventory() {
-    int size = Utils.serializeInt(54);
-
-    Inventory page1 = ComplementAccessor.getComplement().createInventory(null, size,
-        plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.Inventory-Name"));
-    Inventory page2 = ComplementAccessor.getComplement().createInventory(null, size,
-        plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.Inventory-Name"));
-
     int i = 0;
+    Set<ParticleItem> particleItemsPage1 = new HashSet<>();
+    Set<ParticleItem> particleItemsPage2 = new HashSet<>();
     for(ParticleItem item : registeredParticles) {
-      (i > 50 ? page2 : page1).addItem(item.getItemStack());
+      particleItemsPage1.add(item);
+      (i > 50 ? particleItemsPage2 : particleItemsPage1).add(item);
       i++;
     }
-    page1.setItem(53, new ItemBuilder(new ItemStack(Material.REDSTONE_BLOCK))
+
+    ChestGui gui = new ChestGui(6, plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.Inventory-Name"));
+
+    PaginatedPane pane = new PaginatedPane(0, 0, 9, 5);
+
+//page one
+    OutlinePane pageOne = new OutlinePane(0, 0, 9, 5);
+    for(ParticleItem item : particleItemsPage1) {
+      pageOne.addItem(new GuiItem(item.getItemStack(), event -> {
+        Player who = (Player) event.getWhoClicked();
+        BaseArena arena = ArenaRegistry.getArena(who);
+        if(arena == null) {
+          return;
+        }
+        Plot plot = arena.getPlotManager().getPlot(who);
+        if(!who.hasPermission(item.getPermission())) {
+          who.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.No-Permission-For-Particle"));
+          return;
+        }
+        if(plot.getParticles().size() >= plugin.getConfig().getInt("Max-Amount-Particles", 25)) {
+          who.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Max-Particles-Limit-Reached"));
+          return;
+        }
+        plot.getParticles().put(who.getLocation(), item.getEffect());
+        plugin.getUserManager().getUser(who)
+            .addStat(StatsStorage.StatisticType.PARTICLES_USED, 1);
+        who.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Particle-Added"));
+      }));
+    }
+    pane.addPane(0, pageOne);
+
+//page two
+    OutlinePane pageTwo = new OutlinePane(0, 0, 9, 5);
+    for(ParticleItem item : particleItemsPage2) {
+      pageTwo.addItem(new GuiItem(item.getItemStack(), event -> {
+        Player who = (Player) event.getWhoClicked();
+        BaseArena arena = ArenaRegistry.getArena(who);
+        if(arena == null) {
+          return;
+        }
+        Plot plot = arena.getPlotManager().getPlot(who);
+        if(!who.hasPermission(item.getPermission())) {
+          who.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.No-Permission-For-Particle"));
+          return;
+        }
+        if(plot.getParticles().size() >= plugin.getConfig().getInt("Max-Amount-Particles", 25)) {
+          who.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Max-Particles-Limit-Reached"));
+          return;
+        }
+        plot.getParticles().put(who.getLocation(), item.getEffect());
+        plugin.getUserManager().getUser(who)
+            .addStat(StatsStorage.StatisticType.PARTICLES_USED, 1);
+        who.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Particle-Added"));
+      }));
+    }
+    pane.addPane(1, pageTwo);
+
+    gui.addPane(pane);
+
+//page selection
+    StaticPane back = new StaticPane(2, 5, 1, 1);
+    StaticPane forward = new StaticPane(6, 5, 1, 1);
+
+    back.addItem(new GuiItem(new ItemStack(Material.ARROW), event -> {
+      pane.setPage(pane.getPage() - 1);
+
+      if(pane.getPage() == 0) {
+        back.setVisible(false);
+      }
+
+      forward.setVisible(true);
+      gui.update();
+      event.setCancelled(true);
+    }), 0, 0);
+
+    back.setVisible(false);
+
+    forward.addItem(new GuiItem(new ItemStack(Material.ARROW), event -> {
+      pane.setPage(pane.getPage() + 1);
+
+      if(pane.getPage() == pane.getPages() - 1) {
+        forward.setVisible(false);
+      }
+
+      back.setVisible(true);
+      gui.update();
+      event.setCancelled(true);
+    }), 0, 0);
+
+    gui.addPane(back);
+    gui.addPane(forward);
+
+    StaticPane particleRemover = new StaticPane(4, 5, 1, 1);
+    particleRemover.addItem(new GuiItem(new ItemBuilder(new ItemStack(Material.REDSTONE_BLOCK))
         .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))
         .lore(Collections.singletonList(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Lore")))
-        .build());
-    page2.setItem(53, new ItemBuilder(new ItemStack(Material.REDSTONE_BLOCK))
-        .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"))
-        .lore(Collections.singletonList(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Lore")))
-        .build());
-    page1.setItem(52, Utils.getGoBackItem());
-    page2.setItem(52, Utils.getGoBackItem());
-    page1.setItem(51, new ItemBuilder(new ItemStack(Material.STONE_BUTTON))
-        .name("§7-->")
-        .build());
-    setPage1(page1);
-    setPage2(page2);
+        .build(), event -> {
+      Player who = (Player) event.getWhoClicked();
+      BaseArena arena = ArenaRegistry.getArena(who);
+      if(arena == null) {
+        return;
+      }
+      event.setCancelled(false);
+      who.closeInventory();
+      ParticleRemoveMenu.openMenu(who, arena.getPlotManager().getPlot(who));
+    }), 0, 0);
+    gui.addPane(particleRemover);
+
+    setParticles(gui);
   }
 
-  public Inventory getPage1() {
-    return page1;
+  public ChestGui getParticles() {
+    return particles;
   }
 
-  public void setPage1(Inventory inventory) {
-    this.page1 = inventory;
-  }
-
-  public Inventory getPage2() {
-    return page2;
-  }
-
-  public void setPage2(Inventory inventory) {
-    this.page2 = inventory;
+  public void setParticles(ChestGui particles) {
+    this.particles = particles;
   }
 
   @Nullable
