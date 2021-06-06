@@ -78,6 +78,8 @@ public class OptionsMenuHandler implements Listener {
     for(MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
       if(ComplementAccessor.getComplement().getDisplayName(Utils.getGoBackItem().getItemMeta())
           .equalsIgnoreCase(ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta()))) {
+        e.setCancelled(true);
+        e.getWhoClicked().closeInventory();
         e.getWhoClicked().openInventory(plugin.getOptionsRegistry().formatInventory());
         return;
       }
