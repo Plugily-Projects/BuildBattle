@@ -169,6 +169,10 @@ public class ArenaManager {
 
     Debugger.debug("Final join attempt, " + player.getName());
     User user = plugin.getUserManager().getUser(player);
+    user.lastBoard = player.getScoreboard();
+    //reset scoreboard
+    player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+
     arena.getScoreboardManager().createScoreboard(user);
     if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.saveInventoryToFile(plugin, player);
@@ -278,7 +282,7 @@ public class ArenaManager {
     player.setWalkSpeed(0.2f);
 
     User user = plugin.getUserManager().getUser(player);
-    arena.getScoreboardManager().removeScoreboard(user);
+    user.removeScoreboard(arena);
 
     if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.loadInventory(plugin, player);
@@ -353,6 +357,8 @@ public class ArenaManager {
           }
           player.getInventory().setItem(item.getSlot(), item.getItemStack());
         }
+        User user = plugin.getUserManager().getUser(player);
+        user.removeScoreboard(arena);
       }
     }
     arena.getScoreboardManager().stopAllScoreboards();

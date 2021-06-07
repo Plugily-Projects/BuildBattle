@@ -48,6 +48,7 @@ import plugily.projects.buildbattle.arena.options.ArenaOption;
 import plugily.projects.buildbattle.handlers.reward.Reward;
 import plugily.projects.buildbattle.menus.options.registry.particles.ParticleRefreshScheduler;
 import plugily.projects.buildbattle.menus.themevoter.BBTheme;
+import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.utils.Debugger;
 import plugily.projects.buildbattle.utils.MessageUtils;
 
@@ -364,6 +365,8 @@ public class GuessTheBuildArena extends BaseArena {
             if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1) && getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
               getGameBar().removePlayer(player);
             }
+            User user = getPlugin().getUserManager().getUser(player);
+            user.removeScoreboard(this);
             player.getInventory().clear();
             player.setGameMode(GameMode.SURVIVAL);
             player.setFlying(false);

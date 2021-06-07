@@ -355,6 +355,8 @@ public class SoloArena extends BaseArena {
         }
         if(getTimer() <= 0) {
           for(Player player : getPlayers()) {
+            User user = plugin.getUserManager().getUser(player);
+            user.removeScoreboard(this);
             teleportToEndLocation(player);
             doBarAction(BarAction.REMOVE, player);
             player.getInventory().clear();

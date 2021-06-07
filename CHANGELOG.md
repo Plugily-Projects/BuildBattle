@@ -13,7 +13,6 @@ That's all, matcher will stop when detects next line started with `###` match
 * Changed randomjoin mechanics -> Searches for starting -> random join -> Searches for waiting -> random join
 * Added /bb join maxplayers type which tries to get the arena with the highest amount of players
 * Added placeholder arena_players_online
-* Added new RewardType scoreboard_add
 * Fixed gtb guesser players can teleport to all players on the server
 * Changed Now builders will also get points if the building is guessed
 * Changed gtb word hints are now randomly chosen
@@ -28,6 +27,8 @@ That's all, matcher will stop when detects next line started with `###` match
 * Fixed minecarts can go outside of plot  
 * Fixed item frames can be rotated outside plot
 * Fixed some bugs on particle menu
+* Fixed when plugins scoreboards not re-appeared after game end
+* Removed temp added scoreboard rewards
 
 ### 4.5.0 Release (21.03.2021 - 13.04.2021)
 * Automatically disable bossbar support on 1.8 to prevent issue if bossbar is enabled on config.yml

@@ -84,7 +84,6 @@ public class ScoreboardManager {
    * @see User
    */
   public void createScoreboard(User user) {
-    plugin.getRewardsHandler().performReward(user.getPlayer(), Reward.RewardType.SCOREBOARD_ADD, -1);
     Scoreboard scoreboard = ScoreboardLib.createScoreboard(user.getPlayer()).setHandler(new ScoreboardHandler() {
       @Override
       public String getTitle(Player player) {
@@ -112,7 +111,6 @@ public class ScoreboardManager {
       if(board.getHolder().equals(player)) {
         scoreboards.remove(board);
         board.deactivate();
-        plugin.getRewardsHandler().performReward(player, Reward.RewardType.SCOREBOARD_REMOVED, -1);
         return;
       }
     }

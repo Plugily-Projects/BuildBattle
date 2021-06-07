@@ -23,6 +23,7 @@ package plugily.projects.buildbattle.user;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Scoreboard;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.api.event.player.BBPlayerStatisticChangeEvent;
@@ -44,6 +45,7 @@ public class User {
   private final Map<StatsStorage.StatisticType, Integer> stats = new EnumMap<>(StatsStorage.StatisticType.class);
   private Plot currentPlot;
   private boolean spectator = false;
+  public Scoreboard lastBoard;
 
   @Deprecated
   public User(Player player) {
@@ -89,7 +91,15 @@ public class User {
       return 0;
     }
 
-    return statis.intValue();
+    return statis;
+  }
+
+  public void removeScoreboard(BaseArena arena) {
+    arena.getScoreboardManager().removeScoreboard(this);
+    if(lastBoard != null) {
+      getPlayer().setScoreboard(lastBoard);
+      lastBoard = null;
+    }
   }
 
   public void setStat(StatsStorage.StatisticType stat, int i) {
