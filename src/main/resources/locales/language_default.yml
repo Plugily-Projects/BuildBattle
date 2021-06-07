@@ -169,6 +169,7 @@ In-Game:
   Join-As-Party-Member: "&cYou joined %ARENANAME% because the party leader joined it!"
   Nobody: "&eNobody"
   No-Theme-Yet: "&cVoting"
+  Floor-Item-Blacklisted: "&cThe item on your hand is not allowed to be set as floor!"
   Spectator:
     You-Are-Spectator: "&eYou're now a spectator! You can fly now!"
     Spectator-Menu-Name: "Players list"
@@ -367,4 +368,4 @@ Placeholders:
     Restarting: "&c&lRestarting"
 
 # Do not modify!
-File-Version-Do-Not-Edit: 22
+File-Version-Do-Not-Edit: 23

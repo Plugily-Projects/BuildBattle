@@ -51,8 +51,8 @@ public class ChatManager {
     return pluginPrefix;
   }
 
-  public String colorMessage(String message) {
-    return message == null ? "" : colorRawMessage(LanguageManager.getLanguageMessage(message));
+  public String colorMessage(String path) {
+    return path == null ? "" : colorRawMessage(LanguageManager.getLanguageMessage(path));
   }
 
   public String colorRawMessage(String msg) {

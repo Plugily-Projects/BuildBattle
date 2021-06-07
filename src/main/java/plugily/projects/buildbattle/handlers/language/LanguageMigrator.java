@@ -40,7 +40,7 @@ import java.util.List;
 @SuppressWarnings("deprecation")
 public class LanguageMigrator {
 
-  public static final int LANGUAGE_FILE_VERSION = 22;
+  public static final int LANGUAGE_FILE_VERSION = 23;
   public static final int CONFIG_FILE_VERSION = 18;
   private final List<String> migratable = Arrays.asList("bungee", "config", "language", "mysql");
   private final Main plugin;
@@ -503,6 +503,8 @@ public class LanguageMigrator {
           break;
         case 21:
           //just removed unused lines, no need to migrate anything
+        case 22:
+          MigratorUtils.insertAfterLine(file, "In-Game:", "  Floor-Item-Blacklisted: \"&cThe item on your hand is not allowed to be set as floor!\"");
         default:
           return;
       }

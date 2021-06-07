@@ -563,9 +563,11 @@ public class GameEvents implements Listener {
       Material material = VersionUtils.getItemInHand(event.getPlayer()).getType();
       if(material != XMaterial.WATER_BUCKET.parseMaterial() && material != XMaterial.LAVA_BUCKET.parseMaterial()
           && !(material.isBlock() && material.isSolid() && material.isOccluding())) {
+        event.getPlayer().sendMessage(plugin.getChatManager().colorMessage("In-Game.Floor-Item-Blacklisted"));
         return;
       }
       if(plugin.getConfigPreferences().getFloorBlacklist().contains(material)) {
+        event.getPlayer().sendMessage(plugin.getChatManager().colorMessage("In-Game.Floor-Item-Blacklisted"));
         return;
       }
       arena.getPlotManager().getPlot(event.getPlayer()).changeFloor(material, VersionUtils.getItemInHand(event.getPlayer()).getData().getData());

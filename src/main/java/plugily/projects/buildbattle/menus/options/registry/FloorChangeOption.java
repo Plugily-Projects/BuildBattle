@@ -63,10 +63,12 @@ public class FloorChangeOption {
         Material material = itemStack.getType();
         if(material != XMaterial.WATER_BUCKET.parseMaterial() && material != XMaterial.LAVA_BUCKET.parseMaterial()
             && !(material.isBlock() && material.isSolid() && material.isOccluding())) {
+          who.sendMessage(registry.getPlugin().getChatManager().colorMessage("In-Game.Floor-Item-Blacklisted"));
           return;
         }
 
         if(registry.getPlugin().getConfigPreferences().getFloorBlacklist().contains(material)) {
+          who.sendMessage(registry.getPlugin().getChatManager().colorMessage("In-Game.Floor-Item-Blacklisted"));
           return;
         }
 

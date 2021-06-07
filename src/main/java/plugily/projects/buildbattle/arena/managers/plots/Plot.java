@@ -39,6 +39,7 @@ import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.event.plot.BBPlotResetEvent;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
+import plugily.projects.buildbattle.utils.Debugger;
 import plugily.projects.buildbattle.utils.Utils;
 
 import java.util.ArrayList;
@@ -162,8 +163,13 @@ public class Plot {
     if(center.getWorld() != null) {
       for(Entity entity : center.getWorld().getEntities()) {
         if(cuboid.isInWithMarge(entity.getLocation(), 5)) {
+          //deprecated seems not to work with latest builds of citizens
           if(plugin.getServer().getPluginManager().isPluginEnabled("Citizens") && CitizensAPI.getNPCRegistry() != null
               && CitizensAPI.getNPCRegistry().isNPC(entity)) {
+            continue;
+          }
+          //citizens also uses metadata, see https://wiki.citizensnpcs.co/API
+          if(entity.hasMetadata("NPC")) {
             continue;
           }
 
