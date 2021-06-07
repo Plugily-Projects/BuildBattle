@@ -80,6 +80,8 @@ public class ChatManager {
 
     returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());
 
+    returnString = formatPlaceholders(returnString, arena);
+
     if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       returnString = PlaceholderAPI.setPlaceholders(player, returnString);
     }
