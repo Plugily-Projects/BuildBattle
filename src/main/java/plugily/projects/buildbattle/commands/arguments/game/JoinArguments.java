@@ -59,7 +59,7 @@ public class JoinArguments {
           return;
         }
         if(args[1].equalsIgnoreCase("maxplayers") && ArenaRegistry.getArena("maxplayers") == null) {
-          if(args[2].isEmpty()) {
+          if(args.length == 2) {
             sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Invalid-Args"));
             return;
           }
@@ -76,7 +76,7 @@ public class JoinArguments {
               BaseArena.ArenaType type = BaseArena.ArenaType.SOLO;
               try {
                 type = BaseArena.ArenaType.valueOf(args[2].toUpperCase());
-              } catch (IllegalArgumentException ex) {
+              } catch (IllegalArgumentException ignored) {
               }
 
               List<BaseArena> baseArenas = new ArrayList<>();
