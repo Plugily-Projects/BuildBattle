@@ -71,10 +71,10 @@ public class ArenaRegistry {
 
     for(BaseArena arena : ARENAS) {
       for(Player player : arena.getPlayers()) {
-        if (p.getUniqueId().equals(player.getUniqueId())) return arena;
+        if(p.getUniqueId().equals(player.getUniqueId())) return arena;
       }
       for(Player player : arena.getSpectators()) {
-        if (p.getUniqueId().equals(player.getUniqueId())) return arena;
+        if(p.getUniqueId().equals(player.getUniqueId())) return arena;
       }
     }
     return null;
@@ -107,8 +107,8 @@ public class ArenaRegistry {
 
   public static int getArenaPlayersOnline() {
     int players = 0;
-    for(BaseArena arena : ARENAS){
-      players =+ arena.getPlayers().size();
+    for(BaseArena arena : ARENAS) {
+      players += arena.getPlayers().size();
     }
     return players;
   }
@@ -130,7 +130,7 @@ public class ArenaRegistry {
       BaseArena.ArenaType arenaType;
       try {
         arenaType = BaseArena.ArenaType.valueOf(section.getString(id + ".gametype", "solo").toUpperCase());
-      } catch (IllegalArgumentException e) {
+      } catch(IllegalArgumentException e) {
         arenaType = BaseArena.ArenaType.SOLO;
       }
 
@@ -165,7 +165,7 @@ public class ArenaRegistry {
       }
 
       Location lobbyLoc = LocationSerializer.getLocation(section.getString(id + ".lobbylocation"));
-      if (lobbyLoc == null || lobbyLoc.getWorld() == null) {
+      if(lobbyLoc == null || lobbyLoc.getWorld() == null) {
         arena.setReady(false);
         continue;
       }
@@ -191,7 +191,7 @@ public class ArenaRegistry {
               if(minPoint != null) {
                 org.bukkit.World minWorld = minPoint.getWorld();
 
-                if (minWorld != null) {
+                if(minWorld != null) {
                   Biome biome = Version.isCurrentHigher(Version.v1_15_R1) ?
                       minWorld.getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
                       : minWorld.getBiome(minPoint.getBlockX(), minPoint.getBlockZ());

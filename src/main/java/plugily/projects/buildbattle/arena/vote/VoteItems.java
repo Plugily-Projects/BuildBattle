@@ -29,6 +29,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XSound;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.Main;
@@ -47,7 +48,7 @@ public class VoteItems {
   private final Main plugin = JavaPlugin.getPlugin(Main.class);
 
   private ItemStack reportItem = new ItemStack(Material.BEDROCK, 32);
-  private VoteItem reportVoteItem = new VoteItem(new ItemStack(Material.BEDROCK, 32), 8, 8 + 1, Sound.valueOf("ENTITY_MINECART_INSIDE"));
+  private VoteItem reportVoteItem = new VoteItem(new ItemStack(Material.BEDROCK, 32), 8, 8 + 1, XSound.ENTITY_ARROW_HIT.parseSound());
 
   public VoteItems() {
     config = ConfigUtils.getConfig(plugin, "voteItems");

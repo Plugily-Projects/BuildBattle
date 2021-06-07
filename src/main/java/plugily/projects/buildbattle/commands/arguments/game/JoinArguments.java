@@ -31,12 +31,13 @@ import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
 import plugily.projects.buildbattle.commands.arguments.data.CommandArgument;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Plajer
@@ -76,7 +77,7 @@ public class JoinArguments {
               BaseArena.ArenaType type = BaseArena.ArenaType.SOLO;
               try {
                 type = BaseArena.ArenaType.valueOf(args[2].toUpperCase());
-              } catch (IllegalArgumentException ignored) {
+              } catch(IllegalArgumentException ignored) {
               }
 
               List<BaseArena> baseArenas = new ArrayList<>();
@@ -88,7 +89,7 @@ public class JoinArguments {
                 }
               }
               if(arenas.isEmpty()) {
-                ArenaManager.joinAttempt((Player) sender, ArenaRegistry.getArenas().get(ThreadLocalRandom.current().nextInt(ArenaRegistry.getArenas().size())));
+                sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Free-Arenas"));
                 return;
               }
               if(ArenaRegistry.getArenaPlayersOnline() == 0) {
@@ -96,13 +97,20 @@ public class JoinArguments {
                 ArenaManager.joinAttempt((Player) sender, arena);
                 return;
               }
-              Stream<Map.Entry<BaseArena, Integer>> sorted = arenas.entrySet().stream().sorted(Map.Entry.comparingByValue());
-              if(sorted.findFirst().isPresent()) {
-                BaseArena arena = sorted.findFirst().get().getKey();
+
+              LinkedHashMap<BaseArena, Integer> orderedArenas = new LinkedHashMap<>();
+              arenas.entrySet()
+                  .stream()
+                  .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                  .forEachOrdered(x -> orderedArenas.put(x.getKey(), x.getValue()));
+
+              if(!orderedArenas.isEmpty()) {
+                BaseArena arena = orderedArenas.keySet().stream().findFirst().get();
                 ArenaManager.joinAttempt((Player) sender, arena);
                 return;
               }
           }
+          return;
         }
         for(BaseArena arena : ArenaRegistry.getArenas()) {
           if(args[1].equalsIgnoreCase(arena.getID())) {
@@ -138,7 +146,7 @@ public class JoinArguments {
               BaseArena.ArenaType t = BaseArena.ArenaType.SOLO;
               try {
                 t = BaseArena.ArenaType.valueOf(args[1].toUpperCase());
-              } catch (IllegalArgumentException ex) {
+              } catch(IllegalArgumentException ex) {
               }
 
               BaseArena.ArenaType type = t;
