@@ -84,6 +84,8 @@ public class VoteEvents implements Listener {
         plot.getOwners().forEach(player -> plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),
             plugin.getConfig().getString("Run-Command-On-Report.Command", "kick %reported%")
                 .replace("%reported%", player.getName()).replace("%reporter%", e.getPlayer().getName())));
+        e.getPlayer().getInventory().remove(e.getItem());
+        e.getPlayer().updateInventory();
         plugin.getRewardsHandler().performReward(e.getPlayer(), Reward.RewardType.REPORT, -1);
       }
 

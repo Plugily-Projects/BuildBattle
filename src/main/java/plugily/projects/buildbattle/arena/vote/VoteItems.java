@@ -47,6 +47,7 @@ public class VoteItems {
   private final Main plugin = JavaPlugin.getPlugin(Main.class);
 
   private ItemStack reportItem = new ItemStack(Material.BEDROCK, 32);
+  private VoteItem reportVoteItem = new VoteItem(new ItemStack(Material.BEDROCK, 32), 8, 8 + 1, Sound.valueOf("ENTITY_MINECART_INSIDE"));
 
   public VoteItems() {
     config = ConfigUtils.getConfig(plugin, "voteItems");
@@ -75,7 +76,9 @@ public class VoteItems {
       } catch(IllegalArgumentException ignored) {
       }
       int s = Integer.parseInt(key);
-      voteItems.add(new VoteItem(stack, s, s + 1, sound));
+      VoteItem voteItem = new VoteItem(stack, s, s + 1, sound);
+      reportVoteItem = voteItem;
+      voteItems.add(voteItem);
     }
   }
 
@@ -128,6 +131,13 @@ public class VoteItems {
    */
   public ItemStack getReportItem() {
     return reportItem;
+  }
+
+  /**
+   * @return itemStack that represents report building function
+   */
+  public VoteItem getReportVoteItem() {
+    return reportVoteItem;
   }
 
   public static class VoteItem {
