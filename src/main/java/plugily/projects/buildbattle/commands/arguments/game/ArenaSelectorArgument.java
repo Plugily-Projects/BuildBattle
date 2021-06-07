@@ -45,6 +45,7 @@ import plugily.projects.buildbattle.handlers.language.LanguageManager;
 import plugily.projects.buildbattle.utils.Utils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -78,7 +79,6 @@ public class ArenaSelectorArgument implements Listener {
 
         for(BaseArena arena : ArenaRegistry.getArenas()) {
           arenas.put(slot, arena);
-
           ItemStack itemStack = XMaterial.matchXMaterial(registry.getPlugin().getConfig().getString("Arena-Selector.State-Item." + arena.getArenaState().getFormattedName(), "YELLOW_WOOL").toUpperCase()).orElse(XMaterial.YELLOW_WOOL).parseItem();
           if(itemStack == null)
             continue;
@@ -87,7 +87,7 @@ public class ArenaSelectorArgument implements Listener {
           if(itemMeta != null) {
             ComplementAccessor.getComplement().setDisplayName(itemMeta, formatItem(LanguageManager.getLanguageMessage("Arena-Selector.Item.Name"), arena, registry.getPlugin()));
 
-            java.util.List<String> lore = LanguageManager.getLanguageList("Arena-Selector.Item.Lore");
+            List<String> lore = LanguageManager.getLanguageList("Arena-Selector.Item.Lore");
             for(int b = 0; b < lore.size(); b++) {
               lore.set(b, formatItem(lore.get(b), arena, registry.getPlugin()));
             }
