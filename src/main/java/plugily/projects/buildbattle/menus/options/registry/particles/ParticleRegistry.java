@@ -133,8 +133,7 @@ public class ParticleRegistry {
     Set<ParticleItem> particleItemsPage1 = new HashSet<>();
     Set<ParticleItem> particleItemsPage2 = new HashSet<>();
     for(ParticleItem item : registeredParticles) {
-      particleItemsPage1.add(item);
-      (i > 50 ? particleItemsPage2 : particleItemsPage1).add(item);
+      (i > 45 ? particleItemsPage2 : particleItemsPage1).add(item);
       i++;
     }
 
