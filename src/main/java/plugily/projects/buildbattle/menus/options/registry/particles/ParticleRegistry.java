@@ -41,7 +41,6 @@ import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.menus.options.OptionsRegistry;
 import plugily.projects.buildbattle.utils.Debugger;
-import plugily.projects.buildbattle.utils.Utils;
 
 import java.util.Arrays;
 import java.util.Collections;

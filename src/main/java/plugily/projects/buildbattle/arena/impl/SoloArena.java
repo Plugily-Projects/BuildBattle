@@ -354,9 +354,12 @@ public class SoloArena extends BaseArena {
           }
         }
         if(getTimer() <= 0) {
-          for(Player player : getPlayers()) {
+          List<Player> players = getPlayers();
+          players.addAll(getSpectators());
+          for(Player player : players) {
             User user = plugin.getUserManager().getUser(player);
             user.removeScoreboard(this);
+            user.setSpectator(false);
             teleportToEndLocation(player);
             doBarAction(BarAction.REMOVE, player);
             player.getInventory().clear();
@@ -394,6 +397,9 @@ public class SoloArena extends BaseArena {
         setThemeTimerSet(false);
         setThemeVoteTime(true);
         voteMenu.resetPoll();
+        for(Player spectator : new ArrayList<>(getSpectators())) {
+          ArenaManager.leaveAttempt(spectator, this);
+        }
         if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           if(ConfigUtils.getConfig(getPlugin(), "bungee").getBoolean("Shutdown-When-Game-Ends")) {
             getPlugin().getServer().shutdown();

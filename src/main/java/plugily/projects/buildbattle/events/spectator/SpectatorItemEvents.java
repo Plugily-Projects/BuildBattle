@@ -21,30 +21,34 @@
 
 package plugily.projects.buildbattle.events.spectator;
 
-import org.bukkit.ChatColor;
+import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
+import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
+import org.bukkit.Material;
 import org.bukkit.SkullType;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerInteractEvent;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
 import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
+import pl.plajerlair.commonsbox.number.NumberUtils;
 import plugily.projects.buildbattle.Main;
+import plugily.projects.buildbattle.arena.ArenaManager;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.handlers.ChatManager;
 import plugily.projects.buildbattle.handlers.items.SpecialItemsManager;
 import plugily.projects.buildbattle.utils.Utils;
 
-import java.util.List;
+import java.util.Collections;
 
 /**
  * @author Tigerpanzer_02
@@ -66,70 +70,51 @@ public class SpectatorItemEvents implements Listener {
   }
 
   @EventHandler
-  public void onSpectatorItemClick(PlayerInteractEvent e) {
-    if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() != Action.PHYSICAL) {
-      if(ArenaRegistry.getArena(e.getPlayer()) == null) {
-        return;
-      }
-      ItemStack stack = VersionUtils.getItemInHand(e.getPlayer());
-      if(!stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {
-        return;
-      }
-      String key = plugin.getSpecialItemsManager().getRelatedSpecialItem(stack).getName();
-      if(key == null) {
-        return;
-      }
-      if(key.equals(SpecialItemsManager.SpecialItems.SPECTATOR_OPTIONS.getName())) {
-        e.setCancelled(true);
-        spectatorSettingsMenu.openSpectatorSettingsMenu(e.getPlayer());
-      } else if(key.equals(SpecialItemsManager.SpecialItems.PLAYERS_LIST.getName())) {
-        e.setCancelled(true);
-        openSpectatorMenu(e.getPlayer().getWorld(), e.getPlayer());
-      }
+  public void onSpectatorItemClick(CBPlayerInteractEvent e) {
+    if(e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK || e.getAction() == Action.PHYSICAL) {
+      return;
+    }
+    BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
+    ItemStack stack = VersionUtils.getItemInHand(e.getPlayer());
+    if(arena == null || !ItemUtils.isItemStackNamed(stack)) {
+      return;
+    }
+    if(plugin.getSpecialItemsManager().getRelatedSpecialItem(stack).getName().equals(SpecialItemsManager.SpecialItems.PLAYERS_LIST.getName())) {
+      e.setCancelled(true);
+      openSpectatorMenu(arena, e.getPlayer());
+    } else if(plugin.getSpecialItemsManager().getRelatedSpecialItem(stack).getName().equals(SpecialItemsManager.SpecialItems.SPECTATOR_OPTIONS.getName())) {
+      e.setCancelled(true);
+      spectatorSettingsMenu.openSpectatorSettingsMenu(e.getPlayer());
+    } else if(plugin.getSpecialItemsManager().getRelatedSpecialItem(stack).getName().equals(SpecialItemsManager.SpecialItems.SPECTATOR_LEAVE_ITEM.getName())) {
+      e.setCancelled(true);
+      ArenaManager.leaveAttempt(e.getPlayer(), arena);
     }
   }
 
-  private void openSpectatorMenu(World world, Player p) {
-    Inventory inventory = plugin.getServer().createInventory(null, Utils.serializeInt(ArenaRegistry.getArena(p).getPlayers().size()),
-      chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
-    List<Player> players = ArenaRegistry.getArena(p).getPlayers();
+  private void openSpectatorMenu(BaseArena arena, Player player) {
+    int rows = Utils.serializeInt(arena.getPlayers().size()) / 9;
+    ChestGui gui = new ChestGui(rows, plugin.getChatManager().colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
+    OutlinePane pane = new OutlinePane(9, rows);
+    ItemStack skull = XMaterial.PLAYER_HEAD.parseItem();
 
-    for(Player player : world.getPlayers()) {
-      if(players.contains(player) && !plugin.getUserManager().getUser(player).isSpectator()) {
-        ItemStack skull = XMaterial.PLAYER_HEAD.parseItem();
-        SkullMeta meta = (SkullMeta) skull.getItemMeta();
-        meta = VersionUtils.setPlayerHead(player, meta);
-        ComplementAccessor.getComplement().setDisplayName(meta, player.getName());
-        VersionUtils.setDurability(skull, (short) SkullType.PLAYER.ordinal());
-        skull.setItemMeta(meta);
-        inventory.addItem(skull);
+    for(Player arenaPlayer : arena.getPlayers()) {
+      if(plugin.getUserManager().getUser(arenaPlayer).isSpectator()) {
+        continue;
       }
+      ItemStack cloneSkull = skull.clone();
+      SkullMeta meta = VersionUtils.setPlayerHead(arenaPlayer, (SkullMeta) cloneSkull.getItemMeta());
+      ComplementAccessor.getComplement().setDisplayName(meta, arenaPlayer.getName());
+      cloneSkull.setItemMeta(meta);
+      pane.addItem(new GuiItem(cloneSkull, e -> {
+        e.setCancelled(true);
+        e.getWhoClicked().sendMessage(plugin.getChatManager().formatMessage(arena, plugin.getChatManager().colorMessage("Commands.Admin-Commands.Teleported-To-Player"), arenaPlayer));
+        e.getWhoClicked().closeInventory();
+        e.getWhoClicked().teleport(arenaPlayer);
+      }));
     }
-    p.openInventory(inventory);
-  }
-
-  @EventHandler
-  public void onSpectatorInventoryClick(InventoryClickEvent e) {
-    Player p = (Player) e.getWhoClicked();
-    BaseArena arena = ArenaRegistry.getArena(p);
-    if(arena == null || e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()
-      || !e.getCurrentItem().getItemMeta().hasDisplayName() || !e.getCurrentItem().getItemMeta().hasLore()) {
-      return;
-    }
-    if(!e.getView().getTitle().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
-      return;
-    }
-    e.setCancelled(true);
-    ItemMeta meta = e.getCurrentItem().getItemMeta();
-    for(Player player : arena.getPlayers()) {
-      if(player.getName().equalsIgnoreCase(meta.getDisplayName()) || ChatColor.stripColor(meta.getDisplayName()).contains(player.getName())) {
-        p.sendMessage(chatManager.formatMessage(arena, chatManager.colorMessage("Commands.Admin-Commands.Teleported-To-Player"), player));
-        p.teleport(player);
-        p.closeInventory();
-        return;
-      }
-    }
-    p.sendMessage(chatManager.colorMessage("Commands.Player-Not-Found"));
+    gui.addPane(pane);
+    gui.update();
+    gui.show(player);
   }
 
 }

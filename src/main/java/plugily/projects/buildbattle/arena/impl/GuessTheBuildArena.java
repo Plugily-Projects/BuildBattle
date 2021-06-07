@@ -361,12 +361,15 @@ public class GuessTheBuildArena extends BaseArena {
         if(getTimer() <= 0) {
           scoreboardManager.stopAllScoreboards();
           teleportAllToEndLocation();
-          for(Player player : getPlayers()) {
+          List<Player> players = getPlayers();
+          players.addAll(getSpectators());
+          for(Player player : players) {
             if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1) && getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
               getGameBar().removePlayer(player);
             }
             User user = getPlugin().getUserManager().getUser(player);
             user.removeScoreboard(this);
+            user.setSpectator(false);
             player.getInventory().clear();
             player.setGameMode(GameMode.SURVIVAL);
             player.setFlying(false);
@@ -409,6 +412,9 @@ public class GuessTheBuildArena extends BaseArena {
         currentBuilder = null;
         setThemeSet(false);
         setCurrentTheme(null);
+        for(Player spectator : new ArrayList<>(getSpectators())) {
+          ArenaManager.leaveAttempt(spectator, this);
+        }
         if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           if(ConfigUtils.getConfig(getPlugin(), "bungee").getBoolean("Shutdown-When-Game-Ends")) {
             getPlugin().getServer().shutdown();
