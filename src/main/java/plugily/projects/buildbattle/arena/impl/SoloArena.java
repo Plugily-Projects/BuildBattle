@@ -516,7 +516,6 @@ public class SoloArena extends BaseArena {
           votingPlot.setPoints(votingPlot.getPoints() + user.getStat(StatsStorage.StatisticType.LOCAL_POINTS));
           user.setStat(StatsStorage.StatisticType.LOCAL_POINTS, 3);
           if(!player.getInventory().contains(plugin.getVoteItems().getReportItem())) {
-            player.getInventory().addItem(plugin.getVoteItems().getReportItem());
             player.getInventory().setItem(plugin.getVoteItems().getReportVoteItem().getSlot(), plugin.getVoteItems().getReportVoteItem().getItemStack());
             player.updateInventory();
           }
