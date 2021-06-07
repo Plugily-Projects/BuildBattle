@@ -142,55 +142,11 @@ public class ParticleRegistry {
     PaginatedPane pane = new PaginatedPane(0, 0, 9, 5);
 
 //page one
-    OutlinePane pageOne = new OutlinePane(0, 0, 9, 5);
-    for(ParticleItem item : particleItemsPage1) {
-      pageOne.addItem(new GuiItem(item.getItemStack(), event -> {
-        Player who = (Player) event.getWhoClicked();
-        BaseArena arena = ArenaRegistry.getArena(who);
-        if(arena == null) {
-          return;
-        }
-        Plot plot = arena.getPlotManager().getPlot(who);
-        if(!who.hasPermission(item.getPermission())) {
-          who.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.No-Permission-For-Particle"));
-          return;
-        }
-        if(plot.getParticles().size() >= plugin.getConfig().getInt("Max-Amount-Particles", 25)) {
-          who.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Max-Particles-Limit-Reached"));
-          return;
-        }
-        plot.getParticles().put(who.getLocation(), item.getEffect());
-        plugin.getUserManager().getUser(who)
-            .addStat(StatsStorage.StatisticType.PARTICLES_USED, 1);
-        who.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Particle-Added"));
-      }));
-    }
+    OutlinePane pageOne = getParticlePage(particleItemsPage1);
     pane.addPane(0, pageOne);
 
 //page two
-    OutlinePane pageTwo = new OutlinePane(0, 0, 9, 5);
-    for(ParticleItem item : particleItemsPage2) {
-      pageTwo.addItem(new GuiItem(item.getItemStack(), event -> {
-        Player who = (Player) event.getWhoClicked();
-        BaseArena arena = ArenaRegistry.getArena(who);
-        if(arena == null) {
-          return;
-        }
-        Plot plot = arena.getPlotManager().getPlot(who);
-        if(!who.hasPermission(item.getPermission())) {
-          who.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.No-Permission-For-Particle"));
-          return;
-        }
-        if(plot.getParticles().size() >= plugin.getConfig().getInt("Max-Amount-Particles", 25)) {
-          who.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Max-Particles-Limit-Reached"));
-          return;
-        }
-        plot.getParticles().put(who.getLocation(), item.getEffect());
-        plugin.getUserManager().getUser(who)
-            .addStat(StatsStorage.StatisticType.PARTICLES_USED, 1);
-        who.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Particle-Added"));
-      }));
-    }
+    OutlinePane pageTwo = getParticlePage(particleItemsPage2);
     pane.addPane(1, pageTwo);
 
     gui.addPane(pane);
@@ -245,6 +201,33 @@ public class ParticleRegistry {
     gui.addPane(particleRemover);
 
     setParticles(gui);
+  }
+
+  private OutlinePane getParticlePage(Set<ParticleItem> particleItems) {
+    OutlinePane page = new OutlinePane(0, 0, 9, 5);
+    for(ParticleItem item : particleItems) {
+      page.addItem(new GuiItem(item.getItemStack(), event -> {
+        Player who = (Player) event.getWhoClicked();
+        BaseArena arena = ArenaRegistry.getArena(who);
+        if(arena == null) {
+          return;
+        }
+        Plot plot = arena.getPlotManager().getPlot(who);
+        if(!who.hasPermission(item.getPermission())) {
+          who.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.No-Permission-For-Particle"));
+          return;
+        }
+        if(plot.getParticles().size() >= plugin.getConfig().getInt("Max-Amount-Particles", 25)) {
+          who.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Max-Particles-Limit-Reached"));
+          return;
+        }
+        plot.getParticles().put(who.getLocation(), item.getEffect());
+        plugin.getUserManager().getUser(who)
+            .addStat(StatsStorage.StatisticType.PARTICLES_USED, 1);
+        who.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Particle-Added"));
+      }));
+    }
+    return page;
   }
 
   public ChestGui getParticles() {
