@@ -28,6 +28,7 @@ import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.impl.GuessTheBuildArena;
 import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
 import plugily.projects.buildbattle.commands.arguments.data.CommandArgument;
+import plugily.projects.buildbattle.utils.Debugger;
 
 import java.util.Arrays;
 
@@ -44,6 +45,10 @@ public class GuessArgument {
       public void execute(CommandSender sender, String[] args) {
         Player player = (Player) sender;
         BaseArena arena = ArenaRegistry.getArena(player);
+        if(args.length < 2) {
+          sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Invalid-Args"));
+          return;
+        }
         if(arena == null || arena.getArenaType() != BaseArena.ArenaType.GUESS_THE_BUILD || arena.getArenaState() != ArenaState.IN_GAME) {
           player.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Playing"));
           return;
@@ -57,7 +62,7 @@ public class GuessArgument {
           player.sendMessage(registry.getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Chat.Cant-Talk-When-Building"));
           return;
         }
-        if(gameArena.getCurrentTheme() == null || !gameArena.getCurrentTheme().getTheme().equalsIgnoreCase(Arrays.toString(args).split(" ", 3)[2])) {
+        if(gameArena.getCurrentTheme() == null || !gameArena.getCurrentTheme().getTheme().equalsIgnoreCase(Arrays.toString(args).split(" ", 2)[1].replace(",", "").replace("]", ""))) {
           return;
         }
         registry.getPlugin().getChatManager().broadcast(arena, registry.getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Chat.Guessed-The-Theme").replace("%player%", player.getName()));
