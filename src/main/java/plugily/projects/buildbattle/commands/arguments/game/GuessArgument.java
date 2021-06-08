@@ -28,7 +28,6 @@ import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.impl.GuessTheBuildArena;
 import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
 import plugily.projects.buildbattle.commands.arguments.data.CommandArgument;
-import plugily.projects.buildbattle.utils.Debugger;
 
 import java.util.Arrays;
 
