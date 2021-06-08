@@ -10,6 +10,7 @@ deploy webhooks to print changelog successfully
 That's all, matcher will stop when detects next line started with `###` match
 
 ### 4.5.1 Release (15.04.2021 - XX.XX.2021)
+>>> b1
 * Changed randomjoin mechanics -> Searches for starting -> random join -> Searches for waiting -> random join
 * Added /bb join maxplayers type which tries to get the arena with the highest amount of players
 * Added placeholder arena_players_online
