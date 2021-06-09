@@ -39,7 +39,6 @@ import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.event.plot.BBPlotResetEvent;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
-import plugily.projects.buildbattle.utils.Debugger;
 import plugily.projects.buildbattle.utils.Utils;
 
 import java.util.ArrayList;

@@ -36,7 +36,6 @@ import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.impl.SoloArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.language.LanguageManager;
-import plugily.projects.buildbattle.handlers.reward.Reward;
 import plugily.projects.buildbattle.user.User;
 
 import java.util.ArrayList;
@@ -153,10 +152,12 @@ public class ScoreboardManager {
       Plot plot = arena.getPlotManager().getPlot(player);
       if(arena.getArenaType() == BaseArena.ArenaType.TEAM && plot != null) {
         if(plot.getOwners().size() == 2) {
-          if(plot.getOwners().get(0).equals(player)) {
+          Player firstOwner = plot.getOwners().get(0);
+
+          if(firstOwner.equals(player)) {
             returnString = StringUtils.replace(returnString, "%TEAMMATE%", plot.getOwners().get(1).getName());
           } else {
-            returnString = StringUtils.replace(returnString, "%TEAMMATE%", plot.getOwners().get(0).getName());
+            returnString = StringUtils.replace(returnString, "%TEAMMATE%", firstOwner.getName());
           }
         } else {
           returnString = StringUtils.replace(returnString, "%TEAMMATE%", plugin.getChatManager().colorMessage("In-Game.Nobody"));

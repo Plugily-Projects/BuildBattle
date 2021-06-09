@@ -240,7 +240,9 @@ public class GuessTheBuildArena extends BaseArena {
               }
             }
             if(currentTheme.getTheme().length() - removedCharsAt.size() > 2) {
-              if(getTimer() % 10 == 0 && getTimer() <= 70) {
+              int t = getTimer();
+
+              if(t % 10 == 0 && t <= 70) {
                 int removeCharAt = charsAt.get(charsAt.size() == 1 ? 0 : new Random().nextInt(charsAt.size()));
                 removedCharsAt.add(removeCharAt);
                 continue;

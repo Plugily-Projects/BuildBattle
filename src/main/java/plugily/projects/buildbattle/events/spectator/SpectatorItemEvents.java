@@ -24,22 +24,18 @@ package plugily.projects.buildbattle.events.spectator;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
-import org.bukkit.Material;
-import org.bukkit.SkullType;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerInteractEvent;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
 import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
-import pl.plajerlair.commonsbox.number.NumberUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaManager;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
@@ -47,8 +43,6 @@ import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.handlers.ChatManager;
 import plugily.projects.buildbattle.handlers.items.SpecialItemsManager;
 import plugily.projects.buildbattle.utils.Utils;
-
-import java.util.Collections;
 
 /**
  * @author Tigerpanzer_02
@@ -93,6 +87,10 @@ public class SpectatorItemEvents implements Listener {
 
   private void openSpectatorMenu(BaseArena arena, Player player) {
     int rows = Utils.serializeInt(arena.getPlayers().size()) / 9;
+    if (rows > 6 || rows < 1) {
+      rows = 6;
+    }
+
     ChestGui gui = new ChestGui(rows, plugin.getChatManager().colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
     OutlinePane pane = new OutlinePane(9, rows);
     ItemStack skull = XMaterial.PLAYER_HEAD.parseItem();
