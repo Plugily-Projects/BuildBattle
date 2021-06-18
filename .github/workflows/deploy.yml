@@ -61,4 +61,4 @@ jobs:
                 "password": "${{ secrets.PLUGILY_JD_PASSWORD }}"
             }]
             
-      - run: mvn clean compile package site:site deploy -f pom.xml
+      - run: mvn clean verify compile package site:site site:deploy deploy -f pom.xml
