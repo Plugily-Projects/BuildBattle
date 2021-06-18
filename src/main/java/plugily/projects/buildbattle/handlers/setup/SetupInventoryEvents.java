@@ -276,14 +276,21 @@ public class SetupInventoryEvents implements Listener {
             e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Plots are not configured properly! (missing selection values)");
             return;
           }
+
           Location minPoint = LocationSerializer.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint"));
-          Biome biome = Version.isCurrentHigher(Version.v1_15_R1) ?
-              minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
-              : minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
-          Plot buildPlot = new Plot(arena, biome);
-          buildPlot.setCuboid(new Cuboid(minPoint, LocationSerializer.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint"))));
-          buildPlot.fullyResetPlot();
-          arena.getPlotManager().addBuildPlot(buildPlot);
+          org.bukkit.World world = minPoint.getWorld();
+
+          if (world != null) {
+            Biome biome = Version.isCurrentHigher(Version.v1_15_R1) ?
+                world.getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
+                : world.getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
+
+            Plot buildPlot = new Plot(arena, biome);
+
+            buildPlot.setCuboid(new Cuboid(minPoint, LocationSerializer.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint"))));
+            buildPlot.fullyResetPlot();
+            arena.getPlotManager().addBuildPlot(buildPlot);
+          }
         }
         e.getWhoClicked().sendMessage(ChatColor.GREEN + "Validation succeeded! Registering new arena instance: " + arena.getID());
         config.set("instances." + arena.getID() + ".isdone", true);
@@ -318,13 +325,19 @@ public class SetupInventoryEvents implements Listener {
 
         for(String plotName : config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false)) {
           Location minPoint = LocationSerializer.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint"));
-          Biome biome = Version.isCurrentHigher(Version.v1_15_R1) ?
-              minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
-              : minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
-          Plot buildPlot = new Plot(arena, biome);
-          buildPlot.setCuboid(new Cuboid(minPoint, LocationSerializer.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint"))));
-          buildPlot.fullyResetPlot();
-          arena.getPlotManager().addBuildPlot(buildPlot);
+          org.bukkit.World world = minPoint.getWorld();
+
+          if (world != null) {
+            Biome biome = Version.isCurrentHigher(Version.v1_15_R1) ?
+                world.getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
+                : world.getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
+
+            Plot buildPlot = new Plot(arena, biome);
+
+            buildPlot.setCuboid(new Cuboid(minPoint, LocationSerializer.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".maxpoint"))));
+            buildPlot.fullyResetPlot();
+            arena.getPlotManager().addBuildPlot(buildPlot);
+          }
         }
         if(arena instanceof SoloArena) {
           ((SoloArena) arena).initPoll();

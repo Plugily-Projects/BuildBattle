@@ -20,7 +20,6 @@
 
 package plugily.projects.buildbattle.menus.options.registry.biomes;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
@@ -81,7 +80,7 @@ public class BiomeChangeOption {
           }
         }
         for(Chunk chunk : plot.getCuboid().chunkList()) {
-          for(Player p : Bukkit.getOnlinePlayers()) {
+          for(Player p : plugin.getServer().getOnlinePlayers()) {
             if(p.getWorld().equals(chunk.getWorld())) {
               Utils.sendMapChunk(p, chunk);
             }

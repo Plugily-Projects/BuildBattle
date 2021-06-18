@@ -378,7 +378,7 @@ public class GuessTheBuildArena extends BaseArena {
             player.setAllowFlight(false);
             player.getInventory().setArmorContents(null);
             player.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("Commands.Teleported-To-The-Lobby"));
-            getPlugin().getUserManager().getUser(player).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
+            user.addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
             if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
               InventorySerializer.loadInventory(getPlugin(), player);
             }

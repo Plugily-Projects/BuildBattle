@@ -21,11 +21,11 @@
 package plugily.projects.buildbattle.arena.managers.plots;
 
 import net.citizensnpcs.api.CitizensAPI;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.WeatherType;
+import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -158,9 +158,10 @@ public class Plot {
       p.resetPlayerTime();
     }
 
-    Location center = cuboid.getCenter();
-    if(center.getWorld() != null) {
-      for(Entity entity : center.getWorld().getEntities()) {
+    World centerWorld = cuboid.getCenter().getWorld();
+
+    if(centerWorld != null) {
+      for(Entity entity : centerWorld.getEntities()) {
         if(cuboid.isInWithMarge(entity.getLocation(), 5)) {
           //deprecated seems not to work with latest builds of citizens
           if(plugin.getServer().getPluginManager().isPluginEnabled("Citizens") && CitizensAPI.getNPCRegistry() != null
@@ -184,7 +185,7 @@ public class Plot {
     }
 
     for(Chunk chunk : cuboid.chunkList()) {
-      for(Player p : Bukkit.getOnlinePlayers()) {
+      for(Player p : plugin.getServer().getOnlinePlayers()) {
         if(p.getWorld().equals(chunk.getWorld())) {
           Utils.sendMapChunk(p, chunk);
         }
@@ -193,15 +194,20 @@ public class Plot {
 
     changeFloor(defaultFloor.parseMaterial());
 
-    if(ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_15_R1)) {
-      int y = Math.min(cuboid.getMinPoint().getBlockY(), cuboid.getMaxPoint().getBlockY());
+    if (centerWorld != null) {
+      if(ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_15_R1)) {
+        Location min = cuboid.getMinPoint();
+        Location max = cuboid.getMaxPoint();
 
-      center.getWorld().setBiome(cuboid.getMinPoint().getBlockX(), y, cuboid.getMaxPoint().getBlockZ(), plotDefaultBiome);
-    } else {
-      center.getWorld().setBiome(cuboid.getMinPoint().getBlockX(), cuboid.getMaxPoint().getBlockZ(), plotDefaultBiome);
+        int y = Math.min(min.getBlockY(), max.getBlockY());
+
+        centerWorld.setBiome(min.getBlockX(), y, max.getBlockZ(), plotDefaultBiome);
+      } else {
+        centerWorld.setBiome(cuboid.getMinPoint().getBlockX(), cuboid.getMaxPoint().getBlockZ(), plotDefaultBiome);
+      }
     }
 
-    Bukkit.getServer().getPluginManager().callEvent(new BBPlotResetEvent(arena, this));
+    plugin.getServer().getPluginManager().callEvent(new BBPlotResetEvent(arena, this));
   }
 
   public int getPoints() {
@@ -224,11 +230,11 @@ public class Plot {
     int minBlockZ = min.getBlockZ();
     int maxBlockZ = max.getBlockZ();
 
-    org.bukkit.World maxWorld = max.getWorld();
+    World maxWorld = max.getWorld();
 
     for(int x = minBlockX; x <= maxBlockX; x++) {
       for(int z = minBlockZ; z <= maxBlockZ; z++) {
-        new Location(maxWorld, x, y, z).getBlock().setType(material);
+        maxWorld.getBlockAt(new Location(maxWorld, x, y, z)).setType(material);
       }
     }
   }
@@ -241,10 +247,10 @@ public class Plot {
       material = Material.LAVA;
     }
 
-    double y = Math.min(cuboid.getMinPoint().getY(), cuboid.getMaxPoint().getY());
-
     Location min = cuboid.getMinPoint();
     Location max = cuboid.getMaxPoint();
+
+    double y = Math.min(min.getY(), max.getY());
 
     int minBlockX = min.getBlockX();
     int maxBlockX = max.getBlockX();
@@ -252,13 +258,11 @@ public class Plot {
     int minBlockZ = min.getBlockZ();
     int maxBlockZ = max.getBlockZ();
 
-    org.bukkit.World maxWorld = max.getWorld();
+    World maxWorld = max.getWorld();
 
     for(int x = minBlockX; x <= maxBlockX; x++) {
       for(int z = minBlockZ; z <= maxBlockZ; z++) {
-        Location tmpblock = new Location(maxWorld, x, y, z);
-
-        Block block = tmpblock.getBlock();
+        Block block = maxWorld.getBlockAt(new Location(maxWorld, x, y, z));
         block.setType(material);
 
         if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {
