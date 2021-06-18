@@ -69,6 +69,7 @@ import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.arena.ArenaManager;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.ArenaState;
+import plugily.projects.buildbattle.arena.ArenaUtils;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.impl.GuessTheBuildArena;
 import plugily.projects.buildbattle.arena.impl.SoloArena;
@@ -89,7 +90,7 @@ public class GameEvents implements Listener {
   }
 
   @EventHandler
-  public void onSpecialLeaveItem(CBPlayerInteractEvent event) {
+  public void onSpecialItem(CBPlayerInteractEvent event) {
     if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) {
       return;
     }
@@ -100,6 +101,11 @@ public class GameEvents implements Listener {
     }
     String key = plugin.getSpecialItemsManager().getRelatedSpecialItem(itemStack).getName();
     if(key == null) {
+      return;
+    }
+    if(key.equalsIgnoreCase(SpecialItemsManager.SpecialItems.FORCESTART.getName())) {
+      event.setCancelled(true);
+      ArenaUtils.arenaForceStart(event.getPlayer(), "");
       return;
     }
     if(key.equals(SpecialItemsManager.SpecialItems.LOBBY_LEAVE_ITEM.getName()) || key.equals(SpecialItemsManager.SpecialItems.SPECTATOR_LEAVE_ITEM.getName())) {

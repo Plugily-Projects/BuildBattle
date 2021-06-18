@@ -33,6 +33,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Added new message In-Game.Floor-Item-Blacklisted
 * Fixed players can report more than one time
 * Fixed spectator mode does not work correctly
+* Added forcestart item
 
 ### 4.5.0 Release (21.03.2021 - 13.04.2021)
 * Automatically disable bossbar support on 1.8 to prevent issue if bossbar is enabled on config.yml

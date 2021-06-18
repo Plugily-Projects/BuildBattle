@@ -21,10 +21,9 @@
 
 package plugily.projects.buildbattle.events.spectator;
 
-import com.github.stefvanschie.inventoryframework.gui.GuiItem;
-import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
-import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
-
+import plugily.projects.inventoryframework.gui.GuiItem;
+import plugily.projects.inventoryframework.gui.type.ChestGui;
+import plugily.projects.inventoryframework.pane.OutlinePane;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -87,14 +86,14 @@ public class SpectatorItemEvents implements Listener {
 
   private void openSpectatorMenu(BaseArena arena, Player player) {
     int rows = Utils.serializeInt(arena.getPlayers().size()) / 9;
-    if (rows > 6 || rows < 1) {
+    if(rows > 6 || rows < 1) {
       rows = 6;
     }
 
     ChestGui gui = new ChestGui(rows, plugin.getChatManager().colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
     OutlinePane pane = new OutlinePane(9, rows);
     ItemStack skull = XMaterial.PLAYER_HEAD.parseItem();
-
+    gui.setOnGlobalClick(event -> event.setCancelled(true));
     for(Player arenaPlayer : arena.getPlayers()) {
       if(plugin.getUserManager().getUser(arenaPlayer).isSpectator()) {
         continue;
@@ -111,7 +110,6 @@ public class SpectatorItemEvents implements Listener {
       }));
     }
     gui.addPane(pane);
-    gui.update();
     gui.show(player);
   }
 
