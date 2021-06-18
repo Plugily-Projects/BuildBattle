@@ -24,6 +24,8 @@ Have fun using it! Leave a good rating if you really like it.
 
 Thanks to Code Whale for Open Source license for POEditor project.
 ## Contributors
-This section will be updated soon
+<a href="https://github.com/Plugily-Projects/BuildBattle/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Plugily-Projects/BuildBattle" />
+</a>
 
 <img align="right" src="https://i.imgur.com/EmFfDXN.png">
