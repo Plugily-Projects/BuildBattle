@@ -24,11 +24,11 @@ import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajerlair.commonsbox.minecraft.compat.PacketUtils;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.Main;
+import plugily.projects.commonsbox.minecraft.compat.PacketUtils;
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
+import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
+import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
 
 /**
  * Created by Tom on 29/07/2014.
@@ -43,8 +43,8 @@ public class Utils {
   private static Class<?> packetPlayOutMapChunk, chunkClass;
 
   static {
-    packetPlayOutMapChunk = PacketUtils.getNMSClass("PacketPlayOutMapChunk");
-    chunkClass = PacketUtils.getNMSClass("Chunk");
+    packetPlayOutMapChunk = PacketUtils.classByName("net.minecraft.network.protocol.game", "PacketPlayOutMapChunk");
+    chunkClass = PacketUtils.classByName("net.minecraft.world.level.chunk", "Chunk");
   }
 
   /**
@@ -69,6 +69,11 @@ public class Utils {
 
   public static void sendMapChunk(Player player, Chunk chunk) {
     try {
+      if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_17_R1)) {
+        PacketUtils.sendPacket(player, packetPlayOutMapChunk.getConstructor(chunkClass)
+            .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk)));
+        return;
+      }
       if(ServerVersion.Version.isCurrentEqual(ServerVersion.Version.v1_16_R1)) {
         PacketUtils.sendPacket(player, packetPlayOutMapChunk.getConstructor(chunkClass, int.class, boolean.class)
             .newInstance(chunk.getClass().getMethod("getHandle").invoke(chunk), 65535, false));

@@ -21,7 +21,7 @@
 package plugily.projects.buildbattle.handlers.language;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.utils.Debugger;
 import plugily.projects.buildbattle.utils.services.ServiceRegistry;

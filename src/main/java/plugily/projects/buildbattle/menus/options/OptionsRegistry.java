@@ -22,7 +22,7 @@ package plugily.projects.buildbattle.menus.options;
 
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
+import plugily.projects.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.handlers.items.SpecialItemsManager;
 import plugily.projects.buildbattle.menus.options.registry.FloorChangeOption;

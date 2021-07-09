@@ -22,7 +22,7 @@ package plugily.projects.buildbattle.arena.impl;
 
 import com.google.common.collect.Lists;
 import org.bukkit.entity.Player;
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
