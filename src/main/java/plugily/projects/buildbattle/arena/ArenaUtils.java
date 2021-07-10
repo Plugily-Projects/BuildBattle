@@ -46,8 +46,10 @@ public class ArenaUtils {
       player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.No-Playing"));
       return;
     }
-    if(arena.getPlayers().size() < arena.getMinimumPlayers()) {
-      plugin.getChatManager().broadcast(arena, plugin.getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", Integer.toString(arena.getMinimumPlayers())));
+
+    int minPlayers = arena.getMinimumPlayers();
+    if(arena.getPlayers().size() < minPlayers) {
+      plugin.getChatManager().broadcast(arena, plugin.getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", Integer.toString(minPlayers)));
       return;
     }
     if(arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) {
