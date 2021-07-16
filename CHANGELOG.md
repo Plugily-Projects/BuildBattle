@@ -12,6 +12,7 @@ That's all, matcher will stop when detects next line started with `###` match
 ### 4.5.1 Release (15.04.2021 - XX.XX.2021)
 * 1.17 ready
 * Renamed class paths from commonsbox
+* Reuse XMaterial for specialitems
 >>> b1
 * Changed randomjoin mechanics -> Searches for starting -> random join -> Searches for waiting -> random join
 * Added /bb join maxplayers type which tries to get the arena with the highest amount of players
