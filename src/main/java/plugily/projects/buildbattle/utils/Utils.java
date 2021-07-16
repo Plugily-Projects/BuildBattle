@@ -52,7 +52,11 @@ public class Utils {
     chunkClass = PacketUtils.classByName("net.minecraft.world.level.chunk", "Chunk");
 
     if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_17_R1)) {
-      mapChunkConstructor = packetPlayOutMapChunk.getConstructor(chunkClass);
+      try {
+        mapChunkConstructor = packetPlayOutMapChunk.getConstructor(chunkClass);
+      } catch(NoSuchMethodException e) {
+        e.printStackTrace();
+      }
     }
   }
 
