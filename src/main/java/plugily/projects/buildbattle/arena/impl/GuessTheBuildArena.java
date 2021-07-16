@@ -85,7 +85,7 @@ public class GuessTheBuildArena extends BaseArena {
   @Override
   public void run() {
     //idle task
-    if(getPlayers().isEmpty() && getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+    if(getArenaState() == ArenaState.WAITING_FOR_PLAYERS && getPlayers().isEmpty()) {
       return;
     }
     if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
