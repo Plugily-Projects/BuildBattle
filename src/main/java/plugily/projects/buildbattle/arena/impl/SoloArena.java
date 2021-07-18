@@ -282,7 +282,7 @@ public class SoloArena extends BaseArena {
               if(votingPlot.getPoints() == 0) {
                 for(Player player : getPlayers()) {
                   if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER)) {
-                    String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voted-For-Player-Plot").replace("%PLAYER%", votingPlot.getOwners().get(0).getName());
+                    String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voted-For-Player-Plot").replace("%PLAYER%", votingPlot.getMembers().get(0).getName());
                     for(Player p : getPlayers()) {
                       String owner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
                       owner = formatWinners(votingPlot, owner);
@@ -300,14 +300,17 @@ public class SoloArena extends BaseArena {
                   user.setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
                 }
               }
+              /*
+              Code to let only vote one plot member of the team
               if(getArenaType() == ArenaType.TEAM) {
                 for(Plot p : getPlotManager().getPlots()) {
-                  if(p.getOwners().size() == 2) {
-                    //removing second owner to not vote for same plot twice
-                    queue.remove(p.getOwners().get(1));
+                  if(p.getMembers().size() > 1) {
+                    //removing other owners to not vote for same plot
+                    p.getMembers().forEach(player -> queue.remove(player));
+                    queue.add(p.getMembers().get(0));
                   }
                 }
-              }
+              }*/
             }
             calculateResults();
             Plot winnerPlot = null;
@@ -437,7 +440,7 @@ public class SoloArena extends BaseArena {
   public void distributePlots() {
     //clear plots before distribution to avoid problems
     for(Plot plot : getPlotManager().getPlots()) {
-      plot.getOwners().clear();
+      plot.getMembers().clear();
     }
     List<Player> players = new ArrayList<>(getPlayers());
     for(Plot plot : getPlotManager().getPlots()) {
@@ -451,7 +454,7 @@ public class SoloArena extends BaseArena {
         continue;
       }
 
-      plot.addOwner(first);
+      plot.addMember(first);
       user.setCurrentPlot(plot);
 
       players.remove(0);
@@ -511,7 +514,7 @@ public class SoloArena extends BaseArena {
   }
 
   public String formatWinners(Plot plot, String string) {
-    return string.replace("%player%", !plot.getOwners().isEmpty() ? plot.getOwners().get(0).getName() : "");
+    return string.replace("%player%", !plot.getMembers().isEmpty() ? plot.getMembers().get(0).getName() : "");
   }
 
   public void voteForNextPlot() {
@@ -527,8 +530,8 @@ public class SoloArena extends BaseArena {
           }
         }
       }
-      if(!votingPlot.getOwners().isEmpty() && getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER)) {
-        String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voted-For-Player-Plot").replace("%PLAYER%", votingPlot.getOwners().get(0).getName());
+      if(!votingPlot.getMembers().isEmpty() && getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER)) {
+        String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voted-For-Player-Plot").replace("%PLAYER%", votingPlot.getMembers().get(0).getName());
         for(Player p : getPlayers()) {
           String owner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
           owner = formatWinners(votingPlot, owner);
@@ -634,16 +637,16 @@ public class SoloArena extends BaseArena {
 
         Plot plot = getPlotManager().getPlot(first);
         if(plot == null) {
-          topList.put(map.getKey(), buildPlot.getOwners());
+          topList.put(map.getKey(), buildPlot.getMembers());
           break;
         }
         if(i > plot.getPoints()) {
-          moveScore(map.getKey(), buildPlot.getOwners());
+          moveScore(map.getKey(), buildPlot.getMembers());
           break;
         }
         if(i == plot.getPoints()) {
           List<Player> winners = topList.getOrDefault(map.getKey(), new ArrayList<>());
-          winners.addAll(buildPlot.getOwners());
+          winners.addAll(buildPlot.getMembers());
           topList.put(map.getKey(), winners);
           break;
         }

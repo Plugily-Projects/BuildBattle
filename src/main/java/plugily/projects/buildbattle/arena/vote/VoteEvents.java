@@ -81,7 +81,7 @@ public class VoteEvents implements Listener {
 
       if(plot != null && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.RUN_COMMAND_ON_REPORT)
           && (reportsAmountNeeded == -1 || user.getStat(StatsStorage.StatisticType.REPORTS) >= reportsAmountNeeded)) {
-        plot.getOwners().forEach(player -> plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),
+        plot.getMembers().forEach(player -> plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),
             plugin.getConfig().getString("Run-Command-On-Report.Command", "kick %reported%")
                 .replace("%reported%", player.getName()).replace("%reporter%", e.getPlayer().getName())));
         e.getPlayer().getInventory().remove(e.getItem());
@@ -93,7 +93,7 @@ public class VoteEvents implements Listener {
       return;
     }
 
-    if(plot != null && plot.getOwners().contains(e.getPlayer())) {
+    if(plot != null && plot.getMembers().contains(e.getPlayer())) {
       e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Cant-Vote-Own-Plot"));
       e.setCancelled(true);
       return;

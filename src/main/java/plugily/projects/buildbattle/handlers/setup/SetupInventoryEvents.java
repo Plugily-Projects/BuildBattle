@@ -37,13 +37,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import plugily.projects.commonsbox.minecraft.compat.ServerVersion.Version;
-import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
-import plugily.projects.commonsbox.minecraft.dimensional.Cuboid;
-import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
-import plugily.projects.commonsbox.minecraft.item.ItemUtils;
-import plugily.projects.commonsbox.minecraft.misc.stuff.ComplementAccessor;
-import plugily.projects.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
@@ -53,6 +46,13 @@ import plugily.projects.buildbattle.arena.impl.TeamArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.PermissionManager;
 import plugily.projects.buildbattle.handlers.sign.ArenaSign;
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion.Version;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.dimensional.Cuboid;
+import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
+import plugily.projects.commonsbox.minecraft.item.ItemUtils;
+import plugily.projects.commonsbox.minecraft.misc.stuff.ComplementAccessor;
+import plugily.projects.commonsbox.minecraft.serialization.LocationSerializer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,7 +119,7 @@ public class SetupInventoryEvents implements Listener {
 
     //do not close inventory nor cancel event when setting arena name via name tag
     if(e.getCurrentItem().getType() != Material.NAME_TAG) {
-      if(!(slot == SetupInventory.ClickPosition.SET_MINIMUM_PLAYERS || slot == SetupInventory.ClickPosition.SET_MAXIMUM_PLAYERS)) {
+      if(!(slot == SetupInventory.ClickPosition.SET_MINIMUM_PLAYERS || slot == SetupInventory.ClickPosition.SET_MAXIMUM_PLAYERS || slot == SetupInventory.ClickPosition.SET_PLOT_SIZE)) {
         player.closeInventory();
       }
       e.setCancelled(true);
@@ -171,6 +171,31 @@ public class SetupInventoryEvents implements Listener {
           ItemMeta meta = stack.getItemMeta();
           ComplementAccessor.getComplement().setLore(meta, lore);
           stack.setItemMeta(meta);
+        }
+        player.updateInventory();
+        break;
+      case SET_PLOT_SIZE:
+        if(currentItem == null) {
+          break; // somehow getCurrentItem is still null even its already checked
+        }
+        if(clickType.isRightClick()) {
+          currentItem.setAmount(currentItem.getAmount() + 1);
+        }
+        if(clickType.isLeftClick()) {
+          currentItem.setAmount(currentItem.getAmount() - 1);
+        }
+        config.set("instances." + arena.getID() + ".plotSize", currentItem.getAmount());
+        List<String> plotSizeLore = new ArrayList<>();
+        plotSizeLore.add(ChatColor.GRAY + "LEFT click to decrease");
+        plotSizeLore.add(ChatColor.GRAY + "RIGHT click to increase");
+        plotSizeLore.add(ChatColor.DARK_GRAY + "(how many players can play on one plot)");
+        plotSizeLore.add(ChatColor.RED + "Only needed on TEAM mode!!!");
+        plotSizeLore.add(isOptionDone("instances." + arena.getID() + ".plotSize"));
+        ItemStack plotSizeStack = player.getInventory().getItem(SetupInventory.ClickPosition.SET_PLOT_SIZE.getPosition());
+        if(plotSizeStack != null) {
+          ItemMeta meta = plotSizeStack.getItemMeta();
+          ComplementAccessor.getComplement().setLore(meta, plotSizeLore);
+          plotSizeStack.setItemMeta(meta);
         }
         player.updateInventory();
         break;
@@ -253,7 +278,7 @@ public class SetupInventoryEvents implements Listener {
           e.getWhoClicked().sendMessage(ChatColor.GREEN + "This arena was already validated and is ready to use!");
           return;
         }
-        for(String s : new String[] {"lobbylocation", "Endlocation"}) {
+        for(String s : new String[]{"lobbylocation", "Endlocation"}) {
           if(!config.isSet("instances." + arena.getID() + "." + s) || config.getString("instances." + arena.getID() + "." + s)
               .equals(LocationSerializer.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
             e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure following spawn properly: " + s + " (cannot be world spawn location)");
@@ -280,7 +305,7 @@ public class SetupInventoryEvents implements Listener {
           Location minPoint = LocationSerializer.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint"));
           org.bukkit.World world = minPoint.getWorld();
 
-          if (world != null) {
+          if(world != null) {
             Biome biome = Version.isCurrentHigher(Version.v1_15_R1) ?
                 world.getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
                 : world.getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
@@ -327,7 +352,7 @@ public class SetupInventoryEvents implements Listener {
           Location minPoint = LocationSerializer.getLocation(config.getString("instances." + arena.getID() + ".plots." + plotName + ".minpoint"));
           org.bukkit.World world = minPoint.getWorld();
 
-          if (world != null) {
+          if(world != null) {
             Biome biome = Version.isCurrentHigher(Version.v1_15_R1) ?
                 world.getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
                 : world.getBiome(minPoint.getBlockX(), minPoint.getBlockZ());

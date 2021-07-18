@@ -170,7 +170,7 @@ public class GuessTheBuildArena extends BaseArena {
           nextRoundCooldown = true;
           Bukkit.getScheduler().runTaskLater(getPlugin(), () -> nextRoundCooldown = false, 20L * getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.DELAYED_TASK, this));
           if(plot != null) {
-            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> plot.getOwners().get(0).setGameMode(GameMode.CREATIVE), 20);
+            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> plot.getMembers().get(0).setGameMode(GameMode.CREATIVE), 20);
           }
           break;
         }
@@ -305,7 +305,7 @@ public class GuessTheBuildArena extends BaseArena {
             }
             openThemeSelectionInventoryToCurrentBuilder();
             if(plot != null) {
-              plot.getOwners().get(0).setGameMode(GameMode.CREATIVE);
+              plot.getMembers().get(0).setGameMode(GameMode.CREATIVE);
             }
             setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.THEME_SELECTION, this));
             if(getArenaState() != ArenaState.IN_GAME || themeSet) {
@@ -511,7 +511,7 @@ public class GuessTheBuildArena extends BaseArena {
   public void distributePlots() {
     //clear plots before distribution to avoid problems
     for(Plot plot : getPlotManager().getPlots()) {
-      plot.getOwners().clear();
+      plot.getMembers().clear();
     }
     List<Player> players = new ArrayList<>(getPlayers());
     for(Plot plot : getPlotManager().getPlots()) {
@@ -519,7 +519,7 @@ public class GuessTheBuildArena extends BaseArena {
         break;
       }
       Player first = players.get(0);
-      plot.addOwner(first);
+      plot.addMember(first);
       getPlugin().getUserManager().getUser(first).setCurrentPlot(plot);
       players.remove(0);
     }

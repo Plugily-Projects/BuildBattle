@@ -84,7 +84,7 @@ public class TimeChangeOption {
 
         plot.setTime(Plot.Time.valueOf(TimeClickPosition.getByPosition(e.getSlot()).toString()));
 
-        for(Player p : plot.getOwners()) {
+        for(Player p : plot.getMembers()) {
           p.setPlayerTime(Plot.Time.format(plot.getTime(), p.getWorld().getTime()), false);
           p.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Time.Time-Set"));
         }

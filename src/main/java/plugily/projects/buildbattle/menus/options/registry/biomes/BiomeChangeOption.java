@@ -86,7 +86,7 @@ public class BiomeChangeOption {
             }
           }
         }
-        for(Player p : plot.getOwners()) {
+        for(Player p : plot.getMembers()) {
           p.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Biome.Biome-Set"));
         }
       }

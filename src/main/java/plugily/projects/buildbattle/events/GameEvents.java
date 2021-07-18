@@ -405,7 +405,7 @@ public class GameEvents implements Listener {
         if(plot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 1)) {
           if(plot.getEntities() >= plugin.getConfig().getInt("Mobs-Max-Amount-Per-Plot", 20)) {
             //todo maybe only for spawner player?
-            for(Player p : plot.getOwners()) {
+            for(Player p : plot.getMembers()) {
               p.sendMessage(plugin.getChatManager().colorMessage("In-Game.Max-Entities-Limit-Reached"));
             }
             event.setCancelled(true);

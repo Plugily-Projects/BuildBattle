@@ -79,7 +79,7 @@ public class WeatherChangeOption {
           plot.setWeatherType(WeatherType.CLEAR);
         }
 
-        for(Player p : plot.getOwners()) {
+        for(Player p : plot.getMembers()) {
           p.setPlayerWeather(plot.getWeatherType());
           p.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Weather.Weather-Set"));
         }

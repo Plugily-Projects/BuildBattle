@@ -26,10 +26,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
-import plugily.projects.commonsbox.minecraft.compat.ServerVersion.Version;
-import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
-import plugily.projects.commonsbox.minecraft.dimensional.Cuboid;
-import plugily.projects.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
@@ -38,6 +34,10 @@ import plugily.projects.buildbattle.arena.impl.SoloArena;
 import plugily.projects.buildbattle.arena.impl.TeamArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.utils.Debugger;
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion.Version;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.dimensional.Cuboid;
+import plugily.projects.commonsbox.minecraft.serialization.LocationSerializer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -181,6 +181,8 @@ public class ArenaRegistry {
       }
 
       arena.setArenaType(arenaType);
+
+      arena.setPlotSize(section.getInt(id + ".plotSize", 2));
 
       if(section.contains(id + ".plots")) {
         if(section.isConfigurationSection(id + ".plots")) {

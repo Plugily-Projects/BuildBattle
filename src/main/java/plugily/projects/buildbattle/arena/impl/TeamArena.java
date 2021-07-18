@@ -47,7 +47,7 @@ public class TeamArena extends SoloArena {
 
   @Override
   public void setMinimumPlayers(int amount) {
-    if(amount <= 2) {
+    if(amount <= getPlotSize()) {
       Debugger.debug(Debugger.Level.WARN, "Minimum players amount for TEAM game mode arena cannot be less than 3! Setting amount to 3!");
       setOptionValue(ArenaOption.MINIMUM_PLAYERS, 3);
       return;
@@ -59,19 +59,19 @@ public class TeamArena extends SoloArena {
   public void distributePlots() {
     //clear plots before distribution to avoid problems
     for(Plot plot : getPlotManager().getPlots()) {
-      plot.getOwners().clear();
+      plot.getMembers().clear();
     }
     //todo team size!!!
     //todo party members on same team!!!
     //todo team selector!!!
-    List<List<Player>> pairs = Lists.partition(new ArrayList<>(getPlayers()), 2);
+    List<List<Player>> plotPlayers = Lists.partition(new ArrayList<>(getPlayers()), getPlotSize());
     int i = 0;
     for(Plot plot : getPlotManager().getPlots()) {
-      if(pairs.size() <= i) {
+      if(plotPlayers.size() <= i) {
         break;
       }
-      pairs.get(i).forEach(player -> {
-        plot.addOwner(player);
+      plotPlayers.get(i).forEach(player -> {
+        plot.addMember(player);
         getPlugin().getUserManager().getUser(player).setCurrentPlot(plot);
       });
       i++;
@@ -88,10 +88,13 @@ public class TeamArena extends SoloArena {
   @Override
   public String formatWinners(Plot plot, String string) {
     String str = string;
-    if(plot.getOwners().size() == 1) {
-      str = str.replaceAll("(?i)%player%", plot.getOwners().get(0).getName());
-    } else if(plot.getOwners().size() > 1) {
-      str = str.replaceAll("(?i)%player%", plot.getOwners().get(0).getName() + " & " + plot.getOwners().get(1).getName());
+    if(plot.getMembers().size() == 1) {
+      str = str.replaceAll("(?i)%player%", plot.getMembers().get(0).getName());
+    } else if(plot.getMembers().size() > 1) {
+      StringBuilder members = new StringBuilder();
+      plot.getMembers().forEach(player -> members.append(player.getName()).append(" & "));
+      members.deleteCharAt(members.length() - 2);
+      str = str.replaceAll("(?i)%player%", members.toString());
     } else {
       str = str.replaceAll("(?i)%player%", "PLAYER_NOT_FOUND");
     }
@@ -121,12 +124,15 @@ public class TeamArena extends SoloArena {
         }
       }
     }
+    /*
+    Code to let only vote one plot member of the team
     for(Plot p : getPlotManager().getPlots()) {
-      if(p.getOwners().size() == 2) {
-        //removing second owner to not vote for same plot twice
-        getQueue().remove(p.getOwners().get(1));
+      if(p.getMembers().size() > 1) {
+        //removing other owners to not vote for same plot
+        p.getMembers().forEach(player -> getQueue().remove(player));
+        getQueue().add(p.getMembers().get(0));
       }
-    }
+    }*/
     voteRoutine();
   }
 
@@ -134,12 +140,12 @@ public class TeamArena extends SoloArena {
   public boolean enoughPlayersToContinue() {
     int size = getPlayers().size();
 
-    if(size > 2) {
+    if(size > getPlotSize()) {
       return true;
     }
 
-    if(size == 2) {
-      return !getPlotManager().getPlot(getPlayers().get(0)).getOwners().contains(getPlayers().get(1));
+    if(size == getPlotSize()) {
+      return !getPlotManager().getPlot(getPlayers().get(0)).getMembers().containsAll(getPlayers());
     }
 
     return false;

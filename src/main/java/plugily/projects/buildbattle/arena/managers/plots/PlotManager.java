@@ -55,7 +55,7 @@ public class PlotManager {
   public Plot getPlot(Player player) {
     if(player != null) {
       for(Plot buildPlot : plots) {
-        if(buildPlot.getOwners().contains(player)) {
+        if(buildPlot.getMembers().contains(player)) {
           return buildPlot;
         }
       }
@@ -82,7 +82,7 @@ public class PlotManager {
 
   public void teleportToPlots() {
     for(Plot buildPlot : plots) {
-      if(!buildPlot.getOwners().isEmpty()) {
+      if(!buildPlot.getMembers().isEmpty()) {
         Cuboid cuboid = buildPlot.getCuboid();
         if(cuboid == null) {
           continue;
@@ -114,7 +114,7 @@ public class PlotManager {
             m++; // Preventing server froze on flat map
           }
 
-          for(Player p : buildPlot.getOwners()) {
+          for(Player p : buildPlot.getMembers()) {
             p.teleport(cuboid.getCenter());
           }
         } else {
@@ -135,7 +135,7 @@ public class PlotManager {
 
             return loc;
           }).thenAccept(loc -> {
-            for(Player p : buildPlot.getOwners()) {
+            for(Player p : buildPlot.getMembers()) {
               p.teleport(cuboid.getCenter());
               //apply creative again to prevent multiverse default gamemode on world switch
               p.setGameMode(GameMode.CREATIVE);

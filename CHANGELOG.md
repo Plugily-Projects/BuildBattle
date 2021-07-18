@@ -11,6 +11,7 @@ That's all, matcher will stop when detects next line started with `###` match
 
 ### 4.5.1 Release (15.04.2021 - XX.XX.2021)
 * 1.17 ready
+* Added adjustable team mode plot size  
 * Renamed class paths from commonsbox
 * Reuse XMaterial for specialitems
 * Fixed teamarena does not stop when only two players are left from the same team

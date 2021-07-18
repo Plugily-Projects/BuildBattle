@@ -50,9 +50,9 @@ public class ParticleRefreshScheduler {
       for(BaseArena arena : ArenaRegistry.getArenas()) {
         if(!arena.getPlayers().isEmpty()) {
           for(Plot buildPlot : arena.getPlotManager().getPlots()) {
-            if (!buildPlot.getOwners().isEmpty()) {
+            if (!buildPlot.getMembers().isEmpty()) {
               for(Entry<Location, String> map : buildPlot.getParticles().entrySet()) {
-                VersionUtils.sendParticles(map.getValue(), buildPlot.getOwners().get(0), map.getKey(), amountParticle);
+                VersionUtils.sendParticles(map.getValue(), buildPlot.getMembers().get(0), map.getKey(), amountParticle);
               }
             }
           }

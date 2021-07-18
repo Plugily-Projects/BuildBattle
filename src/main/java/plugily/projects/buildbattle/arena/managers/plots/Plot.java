@@ -59,7 +59,7 @@ public class Plot {
   private final BaseArena arena;
   private Cuboid cuboid;
   private int points = 0;
-  private List<Player> owners = new ArrayList<>();
+  private List<Player> members = new ArrayList<>();
   private Time time = Time.WORLD_TIME;
   private final Biome plotDefaultBiome;
   private WeatherType weatherType = WeatherType.CLEAR;
@@ -119,23 +119,23 @@ public class Plot {
   }
 
   @NotNull
-  public List<Player> getOwners() {
-    return owners;
+  public List<Player> getMembers() {
+    return members;
   }
 
-  public void addOwner(Player player) {
-    owners.add(player);
+  public void addMember(Player player) {
+    members.add(player);
   }
 
   public void fullyResetPlot() {
     resetPlot();
 
-    for(Player p : owners) {
+    for(Player p : members) {
       plugin.getUserManager().getUser(p).setCurrentPlot(null);
     }
 
     setPoints(0);
-    owners.clear();
+    members.clear();
     particles.clear();
   }
 
@@ -152,7 +152,7 @@ public class Plot {
 
     particles.clear();
 
-    for(Player p : owners) {
+    for(Player p : members) {
       p.resetPlayerWeather();
       setWeatherType(p.getPlayerWeather());
       p.resetPlayerTime();

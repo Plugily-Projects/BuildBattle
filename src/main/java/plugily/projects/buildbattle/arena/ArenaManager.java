@@ -319,8 +319,8 @@ public class ArenaManager {
     Plot plot = arena.getPlotManager().getPlot(player);
     if(plot != null) {
       if(arena instanceof TeamArena) {
-        plot.getOwners().remove(player);
-        if(plot.getOwners().size() > 1) {
+        plot.getMembers().remove(player);
+        if(plot.getMembers().size() > 1) {
           plot.fullyResetPlot();
         }
       } else

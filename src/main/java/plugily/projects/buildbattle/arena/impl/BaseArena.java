@@ -29,11 +29,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
-import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
-import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
-import plugily.projects.commonsbox.string.StringFormatUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.event.game.BBGameChangeStateEvent;
@@ -42,6 +37,10 @@ import plugily.projects.buildbattle.arena.managers.ScoreboardManager;
 import plugily.projects.buildbattle.arena.managers.plots.PlotManager;
 import plugily.projects.buildbattle.arena.options.ArenaOption;
 import plugily.projects.buildbattle.menus.options.registry.particles.ParticleRefreshScheduler;
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.string.StringFormatUtils;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -73,6 +72,7 @@ public class BaseArena extends BukkitRunnable {
   private ArenaState arenaState;
   private BossBar gameBar;
   private ArenaType arenaType;
+  private int plotSize = 2;
   private boolean forceStart = false;
   private boolean ready = true;
 
@@ -117,6 +117,14 @@ public class BaseArena extends BukkitRunnable {
     this.arenaType = arenaType;
   }
 
+  public void setPlotSize(int plotSize) {
+    this.plotSize = plotSize;
+  }
+
+  public int getPlotSize() {
+    return plotSize;
+  }
+
   @Override
   public void run() {
   }
@@ -135,9 +143,9 @@ public class BaseArena extends BukkitRunnable {
     if(p == null || gameBar == null || !ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1) || !plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
       return;
     }
-    if (action == BarAction.ADD) {
+    if(action == BarAction.ADD) {
       gameBar.addPlayer(p);
-    } else if (action == BarAction.REMOVE) {
+    } else if(action == BarAction.REMOVE) {
       gameBar.removePlayer(p);
     }
   }
@@ -222,7 +230,7 @@ public class BaseArena extends BukkitRunnable {
   }
 
   public void setMapName(String mapname) {
-    if (mapname != null)
+    if(mapname != null)
       this.mapName = mapname;
   }
 
