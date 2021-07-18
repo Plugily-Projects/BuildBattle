@@ -92,7 +92,7 @@ public class Utils {
 
       if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1)) {
         if (mapChunkConstructor == null)
-          packetPlayOutMapChunk.getConstructor(chunkClass, int.class, boolean.class);
+          mapChunkConstructor = packetPlayOutMapChunk.getConstructor(chunkClass, int.class, boolean.class);
 
         PacketUtils.sendPacket(player, mapChunkConstructor.newInstance(chunkHandleMethod.invoke(chunk), 65535, false));
         return;
@@ -100,14 +100,14 @@ public class Utils {
 
       if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_10_R2)) {
         if (mapChunkConstructor == null)
-          packetPlayOutMapChunk.getConstructor(chunkClass, boolean.class, int.class);
+          mapChunkConstructor = packetPlayOutMapChunk.getConstructor(chunkClass, boolean.class, int.class);
 
         PacketUtils.sendPacket(player, mapChunkConstructor.newInstance(chunkHandleMethod.invoke(chunk), true, 65535));
         return;
       }
 
       if (mapChunkConstructor == null)
-        packetPlayOutMapChunk.getConstructor(chunkClass, int.class);
+        mapChunkConstructor = packetPlayOutMapChunk.getConstructor(chunkClass, int.class);
 
       PacketUtils.sendPacket(player, mapChunkConstructor.newInstance(chunkHandleMethod.invoke(chunk), 65535));
     } catch(ReflectiveOperationException exception) {
