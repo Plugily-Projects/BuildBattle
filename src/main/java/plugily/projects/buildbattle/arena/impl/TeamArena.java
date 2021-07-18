@@ -22,7 +22,6 @@ package plugily.projects.buildbattle.arena.impl;
 
 import com.google.common.collect.Lists;
 import org.bukkit.entity.Player;
-import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
@@ -30,6 +29,7 @@ import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.arena.options.ArenaOption;
 import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.utils.Debugger;
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -134,7 +134,7 @@ public class TeamArena extends SoloArena {
   public boolean enoughPlayersToContinue() {
     int size = getPlayers().size();
 
-    if(size >= 2) {
+    if(size > 2) {
       return true;
     }
 

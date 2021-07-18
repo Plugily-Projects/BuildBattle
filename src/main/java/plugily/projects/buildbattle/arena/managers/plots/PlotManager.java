@@ -25,11 +25,11 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import plugily.projects.commonsbox.minecraft.compat.ServerVersion.Version;
-import plugily.projects.commonsbox.minecraft.dimensional.Cuboid;
 import plugily.projects.buildbattle.api.event.plot.BBPlayerPlotReceiveEvent;
 import plugily.projects.buildbattle.arena.ArenaState;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion.Version;
+import plugily.projects.commonsbox.minecraft.dimensional.Cuboid;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,14 +53,13 @@ public class PlotManager {
   }
 
   public Plot getPlot(Player player) {
-    if (player != null) {
+    if(player != null) {
       for(Plot buildPlot : plots) {
         if(buildPlot.getOwners().contains(player)) {
           return buildPlot;
         }
       }
     }
-
     return null;
   }
 
@@ -98,7 +97,7 @@ public class PlotManager {
           Location loc = tploc;
           int m = 0;
           while(loc.getBlock().getType() != Material.AIR) {
-            if (m >= 500) {
+            if(m >= 500) {
               break;// Thread never ends on flat map?
             }
 

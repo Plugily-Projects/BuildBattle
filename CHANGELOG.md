@@ -13,6 +13,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * 1.17 ready
 * Renamed class paths from commonsbox
 * Reuse XMaterial for specialitems
+* Fixed teamarena does not stop when only two players are left from the same team
 >>> b1
 * Changed randomjoin mechanics -> Searches for starting -> random join -> Searches for waiting -> random join
 * Added /bb join maxplayers type which tries to get the arena with the highest amount of players

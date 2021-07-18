@@ -33,13 +33,13 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
-import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
-import plugily.projects.commonsbox.minecraft.dimensional.Cuboid;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.event.plot.BBPlotResetEvent;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.utils.Utils;
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
+import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
+import plugily.projects.commonsbox.minecraft.dimensional.Cuboid;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -194,7 +194,7 @@ public class Plot {
 
     changeFloor(defaultFloor.parseMaterial());
 
-    if (centerWorld != null) {
+    if(centerWorld != null) {
       if(ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_15_R1)) {
         Location min = cuboid.getMinPoint();
         Location max = cuboid.getMaxPoint();
