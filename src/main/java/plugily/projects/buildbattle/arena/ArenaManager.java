@@ -320,7 +320,7 @@ public class ArenaManager {
     if(plot != null) {
       if(arena instanceof TeamArena) {
         plot.getMembers().remove(player);
-        if(plot.getMembers().size() > 1) {
+        if(plot.getMembers().size() < 1) {
           plot.fullyResetPlot();
         }
       } else

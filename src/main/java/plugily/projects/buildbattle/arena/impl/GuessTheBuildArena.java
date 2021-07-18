@@ -170,7 +170,7 @@ public class GuessTheBuildArena extends BaseArena {
           nextRoundCooldown = true;
           Bukkit.getScheduler().runTaskLater(getPlugin(), () -> nextRoundCooldown = false, 20L * getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.DELAYED_TASK, this));
           if(plot != null) {
-            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> plot.getMembers().get(0).setGameMode(GameMode.CREATIVE), 20);
+            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> plot.getMembers().forEach(player -> player.setGameMode(GameMode.CREATIVE)), 20);
           }
           break;
         }
@@ -305,7 +305,7 @@ public class GuessTheBuildArena extends BaseArena {
             }
             openThemeSelectionInventoryToCurrentBuilder();
             if(plot != null) {
-              plot.getMembers().get(0).setGameMode(GameMode.CREATIVE);
+              plot.getMembers().forEach(player -> player.setGameMode(GameMode.CREATIVE));
             }
             setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.THEME_SELECTION, this));
             if(getArenaState() != ArenaState.IN_GAME || themeSet) {

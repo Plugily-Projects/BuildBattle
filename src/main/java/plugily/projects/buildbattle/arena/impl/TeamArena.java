@@ -88,9 +88,7 @@ public class TeamArena extends SoloArena {
   @Override
   public String formatWinners(Plot plot, String string) {
     String str = string;
-    if(plot.getMembers().size() == 1) {
-      str = str.replaceAll("(?i)%player%", plot.getMembers().get(0).getName());
-    } else if(plot.getMembers().size() > 1) {
+    if(plot.getMembers().size() >= 1) {
       StringBuilder members = new StringBuilder();
       plot.getMembers().forEach(player -> members.append(player.getName()).append(" & "));
       members.deleteCharAt(members.length() - 2);

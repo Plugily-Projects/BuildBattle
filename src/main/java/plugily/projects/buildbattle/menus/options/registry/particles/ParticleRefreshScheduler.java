@@ -23,12 +23,13 @@ package plugily.projects.buildbattle.menus.options.registry.particles;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitTask;
-import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
 
+import java.util.HashSet;
 import java.util.Map.Entry;
 
 /**
@@ -50,9 +51,9 @@ public class ParticleRefreshScheduler {
       for(BaseArena arena : ArenaRegistry.getArenas()) {
         if(!arena.getPlayers().isEmpty()) {
           for(Plot buildPlot : arena.getPlotManager().getPlots()) {
-            if (!buildPlot.getMembers().isEmpty()) {
+            if(!buildPlot.getMembers().isEmpty()) {
               for(Entry<Location, String> map : buildPlot.getParticles().entrySet()) {
-                VersionUtils.sendParticles(map.getValue(), buildPlot.getMembers().get(0), map.getKey(), amountParticle);
+                VersionUtils.sendParticles(map.getValue(), new HashSet<>(buildPlot.getMembers()), map.getKey(), amountParticle);
               }
             }
           }
