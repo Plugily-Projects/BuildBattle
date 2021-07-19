@@ -96,7 +96,13 @@ public class PlayerHeadsRegistry {
   }
 
   public boolean isHeadsMenu(Inventory inventory) {
-    return categories.values().stream().filter(inv -> inv.equals(inventory)).findFirst().isPresent();
+    for (Inventory inv : categories.values()) {
+      if (inv.equals(inventory)) {
+        return inv;
+      }
+    }
+
+    return false;
   }
 
   public Map<HeadsCategory, Inventory> getCategories() {

@@ -47,19 +47,23 @@ public class FileStats implements UserDatabase {
 
   @Override
   public void saveAllStatistic(User user) {
+    String stringId = user.getUniqueId().toString();
+
     for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-      if(!stat.isPersistent()) {
-        continue;
+      if(stat.isPersistent()) {
+        config.set(stringId + "." + stat.getName(), user.getStat(stat));
       }
-      config.set(user.getUniqueId().toString() + "." + stat.getName(), user.getStat(stat));
     }
+
     ConfigUtils.saveConfig(plugin, config, "stats");
   }
 
   @Override
   public void loadStatistics(User user) {
+    String stringId = user.getUniqueId().toString();
+
     for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-      user.setStat(stat, config.getInt(user.getUniqueId().toString() + "." + stat.getName(), 0));
+      user.setStat(stat, config.getInt(stringId + "." + stat.getName(), 0));
     }
   }
 }

@@ -490,11 +490,8 @@ public class GameEvents implements Listener {
     }
     User user = plugin.getUserManager().getUser(event.getPlayer());
     Plot buildPlot = user.getCurrentPlot();
-    if(buildPlot == null || buildPlot.getCuboid() == null) {
-      event.setCancelled(true);
-      return;
-    }
-    if(buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
+
+    if(buildPlot != null && buildPlot.getCuboid() != null && buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
       user.addStat(StatsStorage.StatisticType.BLOCKS_BROKEN, 1);
       return;
     }
@@ -518,11 +515,8 @@ public class GameEvents implements Listener {
     }
     User user = plugin.getUserManager().getUser(event.getPlayer());
     Plot buildPlot = user.getCurrentPlot();
-    if(buildPlot == null || buildPlot.getCuboid() == null) {
-      event.setCancelled(true);
-      return;
-    }
-    if(buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
+
+    if(buildPlot != null && buildPlot.getCuboid() != null && buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
       user.addStat(StatsStorage.StatisticType.BLOCKS_PLACED, 1);
       return;
     }

@@ -83,8 +83,10 @@ public class SignManager implements Listener {
       return null;
     }
 
+    Location blockLoc = block.getLocation();
+
     for (ArenaSign sign : arenaSigns) {
-      if (sign.getSign().getLocation().equals(block.getLocation())) {
+      if (sign.getSign().getLocation().equals(blockLoc)) {
         return sign;
       }
     }
@@ -143,12 +145,12 @@ public class SignManager implements Listener {
 
   @EventHandler
   public void onSignDestroy(BlockBreakEvent e) {
-    if(!e.getPlayer().hasPermission("buildbattle.admin.sign.break")) {
+    ArenaSign arenaSign = getArenaSignByBlock(e.getBlock());
+    if (arenaSign == null) {
       return;
     }
 
-    ArenaSign arenaSign = getArenaSignByBlock(e.getBlock());
-    if (arenaSign == null) {
+    if(!e.getPlayer().hasPermission("buildbattle.admin.sign.break")) {
       return;
     }
 

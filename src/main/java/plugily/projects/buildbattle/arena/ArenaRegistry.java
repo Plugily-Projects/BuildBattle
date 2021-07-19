@@ -65,7 +65,7 @@ public class ArenaRegistry {
    */
   @Nullable
   public static BaseArena getArena(Player p) {
-    if(p == null || !p.isOnline()) {
+    if(p == null) {
       return null;
     }
 

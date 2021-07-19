@@ -63,13 +63,16 @@ public class UserManager {
   }
 
   public User getUser(Player player) {
+    java.util.UUID playerId = player.getUniqueId();
+
     for(User user : users) {
-      if(user.getUniqueId().equals(player.getUniqueId())) {
+      if(user.getUniqueId().equals(playerId)) {
         return user;
       }
     }
-    Debugger.debug("Registering new user with UUID: " + player.getUniqueId() + " (" + player.getName() + ")");
-    User user = new User(player.getUniqueId());
+
+    Debugger.debug("Registering new user with UUID: " + playerId + " (" + player.getName() + ")");
+    User user = new User(playerId);
     users.add(user);
     return user;
   }
