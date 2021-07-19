@@ -98,7 +98,7 @@ public class PlayerHeadsRegistry {
   public boolean isHeadsMenu(Inventory inventory) {
     for (Inventory inv : categories.values()) {
       if (inv.equals(inventory)) {
-        return inv;
+        return true;
       }
     }
 
