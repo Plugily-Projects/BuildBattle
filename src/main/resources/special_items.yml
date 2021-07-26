@@ -52,3 +52,11 @@ Forcestart:
   material-name: EMERALD
   slot: 0
   stage: lobby
+
+Plot-Selector:
+  displayname: "&b&lSelect Plot"
+  lore:
+    "&7Right-click to select your plot"
+  material-name: WOOL
+  slot: 1
+  stage: team

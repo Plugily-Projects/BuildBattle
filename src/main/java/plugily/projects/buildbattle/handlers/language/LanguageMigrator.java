@@ -22,11 +22,11 @@ package plugily.projects.buildbattle.handlers.language;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.configuration.file.FileConfiguration;
-import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
-import plugily.projects.commonsbox.minecraft.migrator.MigratorUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.utils.Debugger;
 import plugily.projects.buildbattle.utils.MessageUtils;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.migrator.MigratorUtils;
 
 import java.io.File;
 import java.util.Arrays;
@@ -40,7 +40,7 @@ import java.util.List;
 @SuppressWarnings("deprecation")
 public class LanguageMigrator {
 
-  public static final int LANGUAGE_FILE_VERSION = 24;
+  public static final int LANGUAGE_FILE_VERSION = 25;
   public static final int CONFIG_FILE_VERSION = 18;
   private final List<String> migratable = Arrays.asList("bungee", "config", "language", "mysql");
   private final Main plugin;
@@ -232,8 +232,8 @@ public class LanguageMigrator {
         case 16:
           MigratorUtils.insertAfterLine(file, "Run-Command-On-Report:",
               "  # The amount of reports that the target needs to execute this command.\r\n"
-              + "  # Leave it -1 to perform this command immediately.\r\n"
-              + "  Reports-Amount-To-Run: -1");
+                  + "  # Leave it -1 to perform this command immediately.\r\n"
+                  + "  Reports-Amount-To-Run: -1");
           MigratorUtils.addNewLines(file, "\r\nThe list of restricted entities that can't be spawned in game"
               + "Restricted-Entities-Spawn:\r\n#- zombie\r\n");
           break;
@@ -505,9 +505,23 @@ public class LanguageMigrator {
           //just removed unused lines, no need to migrate anything
         case 22:
           MigratorUtils.insertAfterLine(file, "In-Game:", "  Floor-Item-Blacklisted: \"&cThe item on your hand is not allowed to be set as floor!\"");
+          break;
         case 23:
           MigratorUtils.insertAfterLine(file, "  Stats-Command:", "    Highest-Points: \"&aHighest points: &e\"\r\n" +
               "    Total-Points-Earned: \"&aTotal points earned: &e\"\r\n");
+          break;
+        case 24:
+          MigratorUtils.addNewLines(file, "\r\n" +
+              "Plots:\r\n" +
+              "  Team:\r\n" +
+              "    Full: \"Team is full\"\r\n" +
+              "    Empty: \"You can join this team\"\r\n" +
+              "    Inside: \"Your team\"\r\n" +
+              "    Name: \"Plot - %plot%\"\r\n" +
+              "    Menu-Name: \"Plot Menu\"\r\n" +
+              "    Plot-Choose: \"You are now on plot %plot%\"\r\n" +
+              "    Member: \"You are already member of it!\"\r\n");
+          break;
         default:
           return;
       }

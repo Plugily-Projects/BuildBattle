@@ -367,5 +367,15 @@ Placeholders:
     Ending: "&lEnding"
     Restarting: "&c&lRestarting"
 
+Plots:
+  Team:
+    Full: "Team is full"
+    Empty: "You can join this team"
+    Inside: "Your team"
+    Name: "Plot - %plot%"
+    Menu-Name: "Plot Menu"
+    Plot-Choose: "You are now on plot %plot%"
+    Member: "You are already member of it!"
+
 # Do not modify!
-File-Version-Do-Not-Edit: 24
+File-Version-Do-Not-Edit: 25

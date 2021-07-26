@@ -27,16 +27,11 @@ import org.bukkit.GameMode;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import plugily.projects.commonsbox.database.MysqlDatabase;
-import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
-import plugily.projects.commonsbox.minecraft.compat.events.EventsInitializer;
-import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
-import plugily.projects.commonsbox.minecraft.misc.MiscUtils;
-import plugily.projects.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
+import plugily.projects.buildbattle.arena.managers.plots.PlotMenuHandler;
 import plugily.projects.buildbattle.arena.vote.VoteEvents;
 import plugily.projects.buildbattle.arena.vote.VoteItems;
 import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
@@ -73,6 +68,12 @@ import plugily.projects.buildbattle.utils.LegacyDataFixer;
 import plugily.projects.buildbattle.utils.MessageUtils;
 import plugily.projects.buildbattle.utils.UpdateChecker;
 import plugily.projects.buildbattle.utils.services.ServiceRegistry;
+import plugily.projects.commonsbox.database.MysqlDatabase;
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
+import plugily.projects.commonsbox.minecraft.compat.events.EventsInitializer;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.misc.MiscUtils;
+import plugily.projects.commonsbox.minecraft.serialization.InventorySerializer;
 
 import java.util.Arrays;
 
@@ -99,6 +100,7 @@ public class Main extends JavaPlugin {
   private boolean forceDisable = false;
   private PartyHandler partyHandler;
   private RewardsFactory rewardsHandler;
+  private PlotMenuHandler plotMenuHandler;
 
   public CuboidSelector getCuboidSelector() {
     return cuboidSelector;
@@ -248,8 +250,9 @@ public class Main extends JavaPlugin {
     BannerMenu.init(this);
     partyHandler = new PartySupportInitializer().initialize(this);
     rewardsHandler = new RewardsFactory(this);
+    plotMenuHandler = new PlotMenuHandler(this);
     new EventsInitializer().initialize(this);
-    MiscUtils.sendStartUpMessage(this, "BuildBattle", getDescription(),true, true);
+    MiscUtils.sendStartUpMessage(this, "BuildBattle", getDescription(), true, true);
   }
 
   @Override
@@ -320,4 +323,7 @@ public class Main extends JavaPlugin {
     return rewardsHandler;
   }
 
+  public PlotMenuHandler getPlotMenuHandler() {
+    return plotMenuHandler;
+  }
 }

@@ -112,7 +112,8 @@ public class SpecialItemsManager {
 
   public enum SpecialItems {
     OPTIONS_MENU("Options-Menu"), LOBBY_LEAVE_ITEM("Leave-Lobby"), PLAYERS_LIST("Player-List"),
-    SPECTATOR_OPTIONS("Spectator-Options"), SPECTATOR_LEAVE_ITEM("Leave-Spectator"), FORCESTART("Forcestart");
+    SPECTATOR_OPTIONS("Spectator-Options"), SPECTATOR_LEAVE_ITEM("Leave-Spectator"),
+    FORCESTART("Forcestart"), PLOT_SELECTOR("Plot-Selector");
 
     private final String name;
 

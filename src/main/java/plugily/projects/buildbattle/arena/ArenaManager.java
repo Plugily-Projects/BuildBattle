@@ -29,10 +29,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
-import plugily.projects.commonsbox.minecraft.misc.MiscUtils;
-import plugily.projects.commonsbox.minecraft.misc.stuff.ComplementAccessor;
-import plugily.projects.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
@@ -50,6 +46,12 @@ import plugily.projects.buildbattle.handlers.items.SpecialItem;
 import plugily.projects.buildbattle.handlers.party.GameParty;
 import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.utils.Debugger;
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
+import plugily.projects.commonsbox.minecraft.misc.MiscUtils;
+import plugily.projects.commonsbox.minecraft.misc.stuff.ComplementAccessor;
+import plugily.projects.commonsbox.minecraft.serialization.InventorySerializer;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Plajer
@@ -91,13 +93,14 @@ public class ArenaManager {
       player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Already-Playing"));
       return;
     }
-
+    Plot partyPlot = null;
     //check if player is in party and send party members to the game
     if(plugin.getPartyHandler().isPlayerInParty(player)) {
       Debugger.debug("[Party] Initialized party check " + player.getName());
       GameParty party = plugin.getPartyHandler().getParty(player);
       if(party.getLeader() == player) {
         if(arena.getMaximumPlayers() - arena.getPlayers().size() >= party.getPlayers().size()) {
+          partyPlot = arena.getPlotManager().getPlots().get(ThreadLocalRandom.current().nextInt(arena.getPlotManager().getPlots().size()));
           for(Player partyPlayer : party.getPlayers()) {
             if(partyPlayer == player) {
               continue;
@@ -118,6 +121,13 @@ public class ArenaManager {
           player.sendMessage(chatManager.getPrefix() + chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Not-Enough-Space-For-Party"), player));
           Debugger.debug("[Party] Not enough space for party of " + player.getName());
           return;
+        }
+      }
+      Player partyLeader = party.getLeader();
+      if(arena.getPlayers().contains(partyLeader)) {
+        Plot partyLeaderPlot = arena.getPlotManager().getPlot(partyLeader);
+        if(partyLeaderPlot != null) {
+          partyPlot = partyLeaderPlot;
         }
       }
       Debugger.debug("[Party] Party check done for " + player.getName());
@@ -231,12 +241,18 @@ public class ArenaManager {
       }
       return;
     }
-
+    if(partyPlot != null) {
+      partyPlot.addMember(player);
+    }
     arena.addPlayer(player);
 
     arena.teleportToLobby(player);
     if(arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
       for(SpecialItem item : plugin.getSpecialItemsManager().getSpecialItems()) {
+        if(arena.getArenaType() == BaseArena.ArenaType.TEAM && item.getDisplayStage() == SpecialItem.DisplayStage.TEAM) {
+          player.getInventory().setItem(item.getSlot(), item.getItemStack());
+          continue;
+        }
         if(item.getDisplayStage() != SpecialItem.DisplayStage.LOBBY) {
           continue;
         }

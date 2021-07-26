@@ -397,6 +397,10 @@ public class SoloArena extends BaseArena {
         setOptionValue(ArenaOption.IN_PLOT_CHECKER, 0);
         setArenaState(ArenaState.WAITING_FOR_PLAYERS);
         topList.clear();
+        //clear plot members
+        for(Plot plot : getPlotManager().getPlots()) {
+          plot.getMembers().clear();
+        }
         setThemeTimerSet(false);
         setThemeVoteTime(true);
         voteMenu.resetPoll();

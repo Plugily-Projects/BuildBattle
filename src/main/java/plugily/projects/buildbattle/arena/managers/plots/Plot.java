@@ -35,6 +35,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.event.plot.BBPlotResetEvent;
+import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.utils.Utils;
 import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
@@ -123,8 +124,33 @@ public class Plot {
     return members;
   }
 
-  public void addMember(Player player) {
+  public Integer getMembersSize() {
+    return members.size();
+  }
+
+  public boolean addMember(Player player) {
+    BaseArena arena = ArenaRegistry.getArena(player);
+    if(arena == null) {
+      return false;
+    }
+    if(members.contains(player)) {
+      player.sendMessage(plugin.getChatManager().colorMessage("Plots.Team.Member"));
+      return false;
+    }
+    if(members.size() >= arena.getPlotSize()) {
+      player.sendMessage(plugin.getChatManager().colorMessage("Plots.Team.Full"));
+      return false;
+    }
+    Plot plot = arena.getPlotManager().getPlot(player);
+    if(plot != null) {
+      plot.removeMember(player);
+    }
     members.add(player);
+    return true;
+  }
+
+  public void removeMember(Player player) {
+    members.remove(player);
   }
 
   public void fullyResetPlot() {

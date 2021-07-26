@@ -20,7 +20,6 @@
 
 package plugily.projects.buildbattle.arena.impl;
 
-import com.google.common.collect.Lists;
 import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
@@ -31,8 +30,7 @@ import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.utils.Debugger;
 import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Comparator;
 
 /**
  * @author Plajer
@@ -57,24 +55,31 @@ public class TeamArena extends SoloArena {
 
   @Override
   public void distributePlots() {
-    //clear plots before distribution to avoid problems
-    for(Plot plot : getPlotManager().getPlots()) {
-      plot.getMembers().clear();
-    }
-    //todo team size!!!
-    //todo party members on same team!!!
-    //todo team selector!!!
-    List<List<Player>> plotPlayers = Lists.partition(new ArrayList<>(getPlayers()), getPlotSize());
-    int i = 0;
-    for(Plot plot : getPlotManager().getPlots()) {
-      if(plotPlayers.size() <= i) {
-        break;
+    for(Player player : getPlayers()) {
+      // get base with min players
+      Plot minPlayers = getPlotManager().getPlots().stream().min(Comparator.comparing(Plot::getMembersSize)).get();
+      // add player to min base if he got no base
+      Plot playerPlot = getPlotManager().getPlot(player);
+      if(playerPlot == null) {
+        minPlayers.addMember(player);
+        getPlugin().getUserManager().getUser(player).setCurrentPlot(minPlayers);
       }
-      plotPlayers.get(i).forEach(player -> {
-        plot.addMember(player);
-        getPlugin().getUserManager().getUser(player).setCurrentPlot(plot);
-      });
-      i++;
+      // fallback
+      if(playerPlot == null) {
+        getPlotManager().getPlots().get(0).addMember(player);
+        getPlugin().getUserManager().getUser(player).setCurrentPlot(getPlotManager().getPlots().get(0));
+      }
+    }
+    //check if not only one plot got players
+    Plot maxPlayers = getPlotManager().getPlots().stream().max(Comparator.comparing(Plot::getMembersSize)).get();
+    Plot minPlayers = getPlotManager().getPlots().stream().min(Comparator.comparing(Plot::getMembersSize)).get();
+    if(maxPlayers.getMembersSize() == getPlayers().size()) {
+      for(int i = 0; i < maxPlayers.getMembersSize() / 2; i++) {
+        Player move = maxPlayers.getMembers().get(i);
+        minPlayers.addMember(move);
+        maxPlayers.removeMember(move);
+        getPlugin().getUserManager().getUser(move).setCurrentPlot(minPlayers);
+      }
     }
     /*if (!players.isEmpty()) {
       MessageUtils.errorOccurred();

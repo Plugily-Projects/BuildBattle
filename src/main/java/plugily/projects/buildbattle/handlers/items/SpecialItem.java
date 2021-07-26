@@ -62,7 +62,7 @@ public class SpecialItem {
   }
 
   public enum DisplayStage {
-    LOBBY, SPECTATOR, IN_GAME
+    LOBBY, SPECTATOR, IN_GAME, TEAM
   }
 
 }
