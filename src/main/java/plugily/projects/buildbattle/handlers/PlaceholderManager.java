@@ -71,6 +71,10 @@ public class PlaceholderManager extends PlaceholderExpansion {
         return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.LOSES));
       case "highest_win":
         return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.HIGHEST_WIN));
+      case "highest_points":
+        return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.HIGHEST_POINTS));
+      case "total_points_earned":
+        return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.TOTAL_POINTS_EARNED));
       case "particles_used":
         return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.PARTICLES_USED));
       case "super_votes":

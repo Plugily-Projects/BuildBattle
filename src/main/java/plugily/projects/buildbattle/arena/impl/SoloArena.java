@@ -26,10 +26,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
-import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
-import plugily.projects.commonsbox.minecraft.misc.MiscUtils;
-import plugily.projects.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
@@ -49,6 +45,10 @@ import plugily.projects.buildbattle.menus.themevoter.VotePoll;
 import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.utils.Debugger;
 import plugily.projects.buildbattle.utils.MessageUtils;
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.misc.MiscUtils;
+import plugily.projects.commonsbox.minecraft.serialization.InventorySerializer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -596,11 +596,17 @@ public class SoloArena extends BaseArena {
           p.sendMessage(getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Summary-Other-Place").replace("%number%", Integer.toString(map.getKey())));
         }
         User user = getPlugin().getUserManager().getUser(p);
+        Plot plot = getPlotManager().getPlot(p);
+        if(plot != null) {
+          if(plot.getPoints() > user.getStat(StatsStorage.StatisticType.HIGHEST_POINTS)) {
+            user.setStat(StatsStorage.StatisticType.HIGHEST_POINTS, plot.getPoints());
+          }
+          user.addStat(StatsStorage.StatisticType.TOTAL_POINTS_EARNED, plot.getPoints());
+        }
         if(map.getKey() != 1) {
           user.addStat(StatsStorage.StatisticType.LOSES, 1);
           continue;
         }
-        Plot plot = getPlotManager().getPlot(p);
         user.addStat(StatsStorage.StatisticType.WINS, 1);
         if(plot != null && plot.getPoints() > user.getStat(StatsStorage.StatisticType.HIGHEST_WIN)) {
           user.setStat(StatsStorage.StatisticType.HIGHEST_WIN, plot.getPoints());
@@ -670,7 +676,7 @@ public class SoloArena extends BaseArena {
   public void giveRewards() {
     for(int i = 1; i <= topList.size(); i++) {
       List<Player> list = topList.get(i);
-      if (list != null) {
+      if(list != null) {
         for(Player player : list) {
           getPlugin().getRewardsHandler().performReward(player, Reward.RewardType.PLACE, i);
         }

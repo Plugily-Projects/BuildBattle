@@ -42,6 +42,8 @@ Commands:
     Loses: "&aLoses: &e"
     Games-Played: "&aGames played: &e"
     Highest-Win: "&aHighest win (points): &e"
+    Highest-Points: "&aHighest points: &e"
+    Total-Points-Earned: "&aTotal points earned: &e"
     Blocks-Placed: "&aBlocks placed: &e"
     Blocks-Broken: "&aBlocks broken: &e"
     Particles-Placed: "&aParticles placed: &e"
@@ -368,4 +370,4 @@ Placeholders:
     Restarting: "&c&lRestarting"
 
 # Do not modify!
-File-Version-Do-Not-Edit: 23
+File-Version-Do-Not-Edit: 24
