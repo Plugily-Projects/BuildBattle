@@ -78,15 +78,19 @@ public class PlotMenuHandler implements Listener {
 
   private ItemStack getItemStack(Plot plot, int maxPlotMembers, Player player) {
     int plotMembers = plot.getMembers().size();
-    if(plot.getMembers().contains(player)) {
-      return inside;
-    }
+
     if(plotMembers == 0) {
       return empty;
     }
+
+    if(plot.getMembers().contains(player)) {
+      return inside;
+    }
+
     if(plotMembers == maxPlotMembers) {
       return full;
     }
+
     return waiting;
   }
 
@@ -115,7 +119,7 @@ public class PlotMenuHandler implements Listener {
       if(plot.getMembers().contains(player)) {
         itemStack = new ItemBuilder(itemStack).lore(insideTeam).build();
       }
-      itemStack = new ItemBuilder(itemStack).name(teamName.replace("%plot%", String.valueOf(plots))).build();
+      itemStack = new ItemBuilder(itemStack).name(teamName.replace("%plot%", Integer.toString(plots))).build();
       pane.addItem(new GuiItem(itemStack, e -> {
         e.setCancelled(true);
         if(!(e.getWhoClicked() instanceof Player) || !(e.isLeftClick() || e.isRightClick())) {
@@ -126,10 +130,10 @@ public class PlotMenuHandler implements Listener {
         if(event.isCancelled()) {
           return;
         }
-        if(!plot.addMember(player)) {
+        if(!plot.addMember(player, arena)) {
           return;
         }
-        player.sendMessage(plugin.getChatManager().colorMessage("Plots.Team.Plot-Choose").replace("%plot%", String.valueOf(plots)));
+        player.sendMessage(plugin.getChatManager().colorMessage("Plots.Team.Plot-Choose").replace("%plot%", Integer.toString(plots)));
         e.getWhoClicked().closeInventory();
       }), x, y);
       x++;

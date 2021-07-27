@@ -242,7 +242,7 @@ public class ArenaManager {
       return;
     }
     if(partyPlot != null) {
-      partyPlot.addMember(player);
+      partyPlot.addMember(player, arena);
     }
     arena.addPlayer(player);
 

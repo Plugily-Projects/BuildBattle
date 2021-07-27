@@ -519,7 +519,7 @@ public class GuessTheBuildArena extends BaseArena {
         break;
       }
       Player first = players.get(0);
-      plot.addMember(first);
+      plot.addMember(first, this);
       getPlugin().getUserManager().getUser(first).setCurrentPlot(plot);
       players.remove(0);
     }

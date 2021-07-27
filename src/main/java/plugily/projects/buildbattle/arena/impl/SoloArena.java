@@ -458,7 +458,7 @@ public class SoloArena extends BaseArena {
         continue;
       }
 
-      plot.addMember(first);
+      plot.addMember(first, this);
       user.setCurrentPlot(plot);
 
       players.remove(0);
