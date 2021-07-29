@@ -201,10 +201,6 @@ public class ArenaManager {
 
     //Set player as spectator as the game is already started
     if(arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
-      if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SPECTATORS)) {
-        return;
-      }
-
       arena.addSpectator(player);
 
       player.teleport(arena.getPlotManager().getPlots().get(0).getTeleportLocation());
