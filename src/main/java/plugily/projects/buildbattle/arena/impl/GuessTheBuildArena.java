@@ -27,7 +27,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
 import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
 import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
@@ -88,9 +87,9 @@ public class GuessTheBuildArena extends BaseArena {
     if(getArenaState() == ArenaState.WAITING_FOR_PLAYERS && getPlayers().isEmpty()) {
       return;
     }
-    if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-      updateBossBar();
-    }
+
+    updateBossBar();
+
     switch(getArenaState()) {
       case WAITING_FOR_PLAYERS:
         if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
@@ -117,10 +116,15 @@ public class GuessTheBuildArena extends BaseArena {
         break;
       case STARTING:
         int timer = getTimer();
+        int lobbyTimer = getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this);
+        float exp = (float) (timer / (double) lobbyTimer);
+
+        if (exp > 1f || exp < 0f) {
+          exp = 1f;
+        }
 
         for(Player player : getPlayers()) {
-          float exp = (float) (timer / (double) getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
-          player.setExp((exp > 1f || exp < 0f) ? 1f : exp);
+          player.setExp(exp);
           player.setLevel(timer);
         }
 
@@ -130,7 +134,7 @@ public class GuessTheBuildArena extends BaseArena {
           getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", Integer.toString(minPls)));
           setArenaState(ArenaState.WAITING_FOR_PLAYERS);
           Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
-          setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
+          setTimer(lobbyTimer);
           for(Player player : getPlayers()) {
             player.setExp(1);
             player.setLevel(0);
@@ -264,9 +268,13 @@ public class GuessTheBuildArena extends BaseArena {
         }
         if(getTimer() <= 0 && themeSet) {
           getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Was-Name").replace("%THEME%", currentTheme.getTheme()));
+
+          String themeTitle = getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Was-Title");
+          String themeSubtitle = getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Was-Subtitle")
+                  .replace("%THEME%", currentTheme.getTheme());
+
           for(Player p : getPlayers()) {
-            VersionUtils.sendTitles(p, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Was-Title"), getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Was-Subtitle")
-                .replace("%THEME%", currentTheme.getTheme()), 5, 25, 5);
+            VersionUtils.sendTitles(p, themeTitle, themeSubtitle, 5, 25, 5);
           }
           removedCharsAt.clear();
           currentBuilder = null;
@@ -286,10 +294,12 @@ public class GuessTheBuildArena extends BaseArena {
           Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
             nextRoundCooldown = false;
             currentBuilder = getPlayers().get(round - 1);
+
             Plot plot = getPlotManager().getPlot(currentBuilder);
+            org.bukkit.Location plotLoc = plot == null ? null : plot.getTeleportLocation();
+
             for(Player p : getPlayers()) {
               if(plot != null) {
-                org.bukkit.Location plotLoc = plot.getTeleportLocation();
                 if(plotLoc != null) {
                   p.teleport(plotLoc);
                 }
@@ -336,14 +346,19 @@ public class GuessTheBuildArena extends BaseArena {
         if(getTimer() != 0 && currentBuilder != null) {
           if(getOption(ArenaOption.IN_PLOT_CHECKER) == 1) {
             setOptionValue(ArenaOption.IN_PLOT_CHECKER, 0);
-            for(Player player : getPlayers()) {
-              Plot buildPlot = getPlugin().getUserManager().getUser(currentBuilder).getCurrentPlot();
-              org.bukkit.Location plotLoc = buildPlot == null ? null : buildPlot.getTeleportLocation();
-              player.setPlayerWeather(buildPlot.getWeatherType());
-              player.setPlayerTime(Plot.Time.format(buildPlot.getTime(), player.getWorld().getTime()), false);
-              if(plotLoc != null && !buildPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
-                player.teleport(plotLoc);
-                player.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("In-Game.Messages.Cant-Fly-Outside-Plot"));
+
+            Plot buildPlot = getPlugin().getUserManager().getUser(currentBuilder).getCurrentPlot();
+
+            if (buildPlot != null) {
+              org.bukkit.Location plotLoc = buildPlot.getTeleportLocation();
+
+              for(Player player : getPlayers()) {
+                player.setPlayerWeather(buildPlot.getWeatherType());
+                player.setPlayerTime(Plot.Time.format(buildPlot.getTime(), player.getWorld().getTime()), false);
+                if(plotLoc != null && !buildPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
+                  player.teleport(plotLoc);
+                  player.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("In-Game.Messages.Cant-Fly-Outside-Plot"));
+                }
               }
             }
           }
@@ -362,11 +377,13 @@ public class GuessTheBuildArena extends BaseArena {
         }
         if(getTimer() <= 0) {
           scoreboardManager.stopAllScoreboards();
-          teleportAllToEndLocation();
+
           List<Player> players = getPlayers();
           players.addAll(getSpectators());
+
           for(Player player : players) {
-            if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1) && getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+            teleportToEndLocation(player);
+            if(getGameBar() != null) {
               getGameBar().removePlayer(player);
             }
             User user = getPlugin().getUserManager().getUser(player);
