@@ -275,7 +275,6 @@ public class Main extends JavaPlugin {
         }
       }
       arena.getPlotManager().getPlots().forEach(Plot::fullyResetPlot);
-      arena.teleportAllToEndLocation();
     }
     for(Player player : getServer().getOnlinePlayers()) {
       User user = userManager.getUser(player);
@@ -283,15 +282,20 @@ public class Main extends JavaPlugin {
         StringBuilder update = new StringBuilder(" SET ");
         for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
           if(!stat.isPersistent()) continue;
+
+          int userStat = user.getStat(stat);
+
           if(update.toString().equalsIgnoreCase(" SET ")) {
-            update.append(stat.getName()).append('=').append(user.getStat(stat));
+            update.append(stat.getName()).append('=').append(userStat);
           }
-          update.append(", ").append(stat.getName()).append('=').append(user.getStat(stat));
+
+          update.append(", ").append(stat.getName()).append('=').append(userStat);
         }
-        String finalUpdate = update.toString();
+
+        MysqlManager db = (MysqlManager) userManager.getDatabase();
         //copy of userManager#saveStatistic but without async database call that's not allowed in onDisable method.
-        ((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE " + ((MysqlManager) getUserManager().getDatabase()).getTableName()
-            + finalUpdate + " WHERE UUID='" + user.getUniqueId().toString() + "';");
+        db.getDatabase().executeUpdate("UPDATE " + db.getTableName()
+            + update.toString() + " WHERE UUID='" + user.getUniqueId().toString() + "';");
         continue;
       }
       for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
