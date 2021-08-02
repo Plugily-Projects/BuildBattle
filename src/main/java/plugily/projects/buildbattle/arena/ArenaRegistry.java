@@ -69,12 +69,14 @@ public class ArenaRegistry {
       return null;
     }
 
+    java.util.UUID playerId = p.getUniqueId();
+
     for(BaseArena arena : ARENAS) {
       for(Player player : arena.getPlayers()) {
-        if(p.getUniqueId().equals(player.getUniqueId())) return arena;
+        if(playerId.equals(player.getUniqueId())) return arena;
       }
       for(Player player : arena.getSpectators()) {
-        if(p.getUniqueId().equals(player.getUniqueId())) return arena;
+        if(playerId.equals(player.getUniqueId())) return arena;
       }
     }
     return null;
@@ -181,42 +183,41 @@ public class ArenaRegistry {
       }
 
       arena.setArenaType(arenaType);
-
       arena.setPlotSize(section.getInt(id + ".plotSize", 2));
 
-      if(section.contains(id + ".plots")) {
-        if(section.isConfigurationSection(id + ".plots")) {
-          for(String plotName : section.getConfigurationSection(id + ".plots").getKeys(false)) {
-            if(section.isSet(id + ".plots." + plotName + ".maxpoint")) {
-              Location minPoint = LocationSerializer.getLocation(section.getString(id + ".plots." + plotName + ".minpoint"));
+      ConfigurationSection plotSection = section.getConfigurationSection(id + ".plots");
 
-              if(minPoint != null) {
-                org.bukkit.World minWorld = minPoint.getWorld();
+      if(plotSection != null) {
+        for(String plotName : plotSection.getKeys(false)) {
+          String minPointString = plotSection.getString(plotName + ".minpoint");
+          String maxPointString = plotSection.getString(plotName + ".maxpoint");
 
-                if(minWorld != null) {
-                  Biome biome = Version.isCurrentHigher(Version.v1_15_R1) ?
-                      minWorld.getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
-                      : minWorld.getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
+          if(minPointString != null && maxPointString != null) {
+            Location minPoint = LocationSerializer.getLocation(minPointString);
 
-                  Plot buildPlot = new Plot(arena, biome);
+            if(minPoint != null) {
+              org.bukkit.World minWorld = minPoint.getWorld();
 
-                  buildPlot.setCuboid(new Cuboid(minPoint, LocationSerializer.getLocation(section.getString(id + ".plots." + plotName + ".maxpoint"))));
-                  buildPlot.fullyResetPlot();
+              if(minWorld != null) {
+                Biome biome = Version.isCurrentHigher(Version.v1_15_R1) ?
+                    minWorld.getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
+                    : minWorld.getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
 
-                  arena.getPlotManager().addBuildPlot(buildPlot);
-                }
+                Plot buildPlot = new Plot(arena, biome);
+
+                buildPlot.setCuboid(new Cuboid(minPoint, LocationSerializer.getLocation(maxPointString)));
+                buildPlot.fullyResetPlot();
+
+                arena.getPlotManager().addBuildPlot(buildPlot);
               }
-            } else {
-              System.out.println("Non configured plot instances found for arena " + id);
-              arena.setReady(false);
             }
+          } else {
+            System.out.println("Non configured plot instances found for arena " + id);
+            arena.setReady(false);
           }
-        } else {
-          System.out.println("Non configured plots in arena " + id);
-          arena.setReady(false);
         }
       } else {
-        System.out.print("Instance " + id + " doesn't contains plots!");
+        System.out.println("Non configured plots in arena " + id);
         arena.setReady(false);
       }
       arena.setReady(section.getBoolean(id + ".isdone"));

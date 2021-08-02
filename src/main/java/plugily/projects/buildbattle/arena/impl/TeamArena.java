@@ -61,13 +61,15 @@ public class TeamArena extends SoloArena {
       // add player to min base if he got no base
       Plot playerPlot = getPlotManager().getPlot(player);
       if(playerPlot == null) {
-        minPlayers.addMember(player);
+        minPlayers.addMember(player, this);
         getPlugin().getUserManager().getUser(player).setCurrentPlot(minPlayers);
       }
       // fallback
       if(playerPlot == null) {
-        getPlotManager().getPlots().get(0).addMember(player);
-        getPlugin().getUserManager().getUser(player).setCurrentPlot(getPlotManager().getPlots().get(0));
+        Plot firstPlot = getPlotManager().getPlots().get(0);
+
+        firstPlot.addMember(player, this);
+        getPlugin().getUserManager().getUser(player).setCurrentPlot(firstPlot);
       }
     }
     //check if not only one plot got players
@@ -76,7 +78,7 @@ public class TeamArena extends SoloArena {
     if(maxPlayers.getMembersSize() == getPlayers().size()) {
       for(int i = 0; i < maxPlayers.getMembersSize() / 2; i++) {
         Player move = maxPlayers.getMembers().get(i);
-        minPlayers.addMember(move);
+        minPlayers.addMember(move, this);
         maxPlayers.removeMember(move);
         getPlugin().getUserManager().getUser(move).setCurrentPlot(minPlayers);
       }

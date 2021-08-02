@@ -124,27 +124,30 @@ public class Plot {
     return members;
   }
 
-  public Integer getMembersSize() {
+  public int getMembersSize() {
     return members.size();
   }
 
-  public boolean addMember(Player player) {
-    BaseArena arena = ArenaRegistry.getArena(player);
-    if(arena == null) {
+  public boolean addMember(Player player, BaseArena playerArena) {
+    if(playerArena == null) {
       return false;
     }
+
     if(members.contains(player)) {
       player.sendMessage(plugin.getChatManager().colorMessage("Plots.Team.Member"));
       return false;
     }
-    if(members.size() >= arena.getPlotSize()) {
+
+    if(members.size() >= playerArena.getPlotSize()) {
       player.sendMessage(plugin.getChatManager().colorMessage("Plots.Team.Full"));
       return false;
     }
-    Plot plot = arena.getPlotManager().getPlot(player);
+
+    Plot plot = playerArena.getPlotManager().getPlot(player);
     if(plot != null) {
       plot.removeMember(player);
     }
+
     members.add(player);
     return true;
   }
@@ -248,7 +251,7 @@ public class Plot {
     Location min = cuboid.getMinPoint();
     Location max = cuboid.getMaxPoint();
 
-    double y = Math.min(min.getY(), max.getY());
+    int y = (int) Math.min(min.getY(), max.getY());
 
     int minBlockX = min.getBlockX();
     int maxBlockX = max.getBlockX();
@@ -260,7 +263,7 @@ public class Plot {
 
     for(int x = minBlockX; x <= maxBlockX; x++) {
       for(int z = minBlockZ; z <= maxBlockZ; z++) {
-        maxWorld.getBlockAt(new Location(maxWorld, x, y, z)).setType(material);
+        maxWorld.getBlockAt(x, y, z).setType(material);
       }
     }
   }
@@ -276,7 +279,7 @@ public class Plot {
     Location min = cuboid.getMinPoint();
     Location max = cuboid.getMaxPoint();
 
-    double y = Math.min(min.getY(), max.getY());
+    int y = (int) Math.min(min.getY(), max.getY());
 
     int minBlockX = min.getBlockX();
     int maxBlockX = max.getBlockX();
@@ -288,7 +291,7 @@ public class Plot {
 
     for(int x = minBlockX; x <= maxBlockX; x++) {
       for(int z = minBlockZ; z <= maxBlockZ; z++) {
-        Block block = maxWorld.getBlockAt(new Location(maxWorld, x, y, z));
+        Block block = maxWorld.getBlockAt(x, y, z);
         block.setType(material);
 
         if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {

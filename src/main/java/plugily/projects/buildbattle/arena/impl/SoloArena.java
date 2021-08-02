@@ -118,12 +118,12 @@ public class SoloArena extends BaseArena {
   @Override
   public void run() {
     //idle task
-    if(getPlayers().isEmpty() && getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+    if(getArenaState() == ArenaState.WAITING_FOR_PLAYERS && getPlayers().isEmpty()) {
       return;
     }
-    if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-      updateBossBar();
-    }
+
+    updateBossBar();
+
     switch(getArenaState()) {
       case WAITING_FOR_PLAYERS:
         if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
@@ -153,10 +153,14 @@ public class SoloArena extends BaseArena {
       case STARTING:
         int lobbyTimer = getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this);
         int timer = getTimer();
+        float exp = (float) (timer / (double) lobbyTimer);
+
+        if (exp > 1f || exp < 0f) {
+          exp = 1f;
+        }
 
         for(Player player : getPlayers()) {
-          float exp = (float) (timer / (double) lobbyTimer);
-          player.setExp((exp > 1f || exp < 0f) ? 1f : exp);
+          player.setExp(exp);
           player.setLevel(timer);
         }
 
@@ -280,9 +284,10 @@ public class SoloArena extends BaseArena {
           } else {
             if(votingPlot != null) {
               if(votingPlot.getPoints() == 0) {
+                String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voted-For-Player-Plot").replace("%PLAYER%", votingPlot.getMembers().get(0).getName());
+
                 for(Player player : getPlayers()) {
                   if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER)) {
-                    String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voted-For-Player-Plot").replace("%PLAYER%", votingPlot.getMembers().get(0).getName());
                     for(Player p : getPlayers()) {
                       String owner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
                       owner = formatWinners(votingPlot, owner);
@@ -371,7 +376,7 @@ public class SoloArena extends BaseArena {
             player.setAllowFlight(false);
             player.getInventory().setArmorContents(null);
             player.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("Commands.Teleported-To-The-Lobby"));
-            getPlugin().getUserManager().getUser(player).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
+            user.addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
             if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
               InventorySerializer.loadInventory(getPlugin(), player);
             }
@@ -458,7 +463,7 @@ public class SoloArena extends BaseArena {
         continue;
       }
 
-      plot.addMember(first);
+      plot.addMember(first, this);
       user.setCurrentPlot(plot);
 
       players.remove(0);
