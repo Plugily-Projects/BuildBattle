@@ -21,13 +21,13 @@
 package plugily.projects.buildbattle.handlers.language;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.utils.Debugger;
 import plugily.projects.buildbattle.utils.services.ServiceRegistry;
 import plugily.projects.buildbattle.utils.services.locale.Locale;
 import plugily.projects.buildbattle.utils.services.locale.LocaleRegistry;
 import plugily.projects.buildbattle.utils.services.locale.LocaleService;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
 
 import java.io.File;
 import java.io.FileReader;
@@ -72,30 +72,31 @@ public class LanguageManager {
 
   private static void registerLocales() {
     Arrays.asList(new Locale("Basque", "Basque", "eu_EU", "POEditor contributors", Arrays.asList("basque", "eu")),
-        new Locale("Belarusian", "Belarus", "be_BY", "POEditor contributors", Arrays.asList("belarusian", "belarus", "by", "be")),
-        new Locale("Chinese (Simplified)", "简体中文", "zh_CN", "POEditor contributors", Arrays.asList("简体中文", "中文", "chinese", "chinese_simplified", "cn")),
-        new Locale("Chinese (Traditional)", "简体中文", "zh_HK", "POEditor contributors", Arrays.asList("中文(傳統)", "中國傳統", "chinese_traditional", "zh_hk")),
-        new Locale("Czech", "Český", "cs_CZ", "POEditor contributors", Arrays.asList("czech", "cesky", "český", "cs")),
-        new Locale("Dutch", "Nederlands", "nl_NL", "POEditor contributors", Arrays.asList("dutch", "nederlands", "nl")),
-        new Locale("English", "English", "en_GB", "Plajer", Arrays.asList("default", "english", "en")),
-        new Locale("Estonian", "Eesti", "et_EE", "POEditor contributors", Arrays.asList("estonian", "eesti", "et")),
-        new Locale("French", "Français", "fr_FR", "POEditor contributors", Arrays.asList("french", "francais", "français", "fr")),
-        new Locale("German", "Deutsch", "de_DE", "Tigerkatze and POEditor contributors", Arrays.asList("deutsch", "german", "de")),
-        new Locale("Hungarian", "Magyar", "hu_HU", "POEditor contributors", Arrays.asList("hungarian", "magyar", "hu")),
-        new Locale("Indonesian", "Indonesia", "id_ID", "POEditor contributors", Arrays.asList("indonesian", "indonesia", "id")),
-        new Locale("Italian", "Italiano", "it_IT", "POEditor contributors", Arrays.asList("italian", "italiano", "it")),
-        new Locale("Japanese", "日本語", "ja_JP", "POEditor contributors", Arrays.asList("日本語", "japanese", "jp", "ja")),
-        new Locale("Korean", "한국의", "ko_KR", "POEditor contributors", Arrays.asList("korean", "한국의", "kr")),
-        new Locale("Lithuanian", "Lietuvių", "lt_LT", "POEditor contributors", Arrays.asList("lithuanian", "lietuvių", "lietuviu", "lt")),
-        new Locale("Polish", "Polski", "pl_PL", "Plajer", Arrays.asList("polish", "polski", "pl")),
-        new Locale("Portuguese (BR)", "Português (Brasil)", "pt_BR", "POEditor contributors", Arrays.asList("portuguese br", "português br", "português brasil", "pt_br")),
-        new Locale("Romanian", "Românesc", "ro_RO", "POEditor contributors", Arrays.asList("romanian", "romanesc", "românesc", "ro")),
-        new Locale("Russian", "Pусский", "ru_RU", "POEditor contributors", Arrays.asList("russian", "russkiy", "pусский", "ru")),
-        new Locale("Slovenian", "Slovenščina", "sl_SL", "POEditor contributors", Arrays.asList("slovenian", "slovenščina", "slovenscina", "sl")),
-        new Locale("Spanish", "Español", "es_ES", "POEditor contributors", Arrays.asList("spanish", "espanol", "español", "es")),
-        new Locale("Turkish", "Türk", "tr_TR", "POEditor contributors", Arrays.asList("turkish", "turk", "türk", "tr")),
-        new Locale("Ukrainian", "Ukraine", "uk_UA", "POEditor contributors", Arrays.asList("ukraine", "ua", "uk")),
-        new Locale("Vietnamese", "Việt", "vn_VN", "POEditor contributors", Arrays.asList("vietnamese", "viet", "việt", "vn")))
+            new Locale("Belarusian", "Belarus", "be_BY", "POEditor contributors", Arrays.asList("belarusian", "belarus", "by", "be")),
+            new Locale("Chinese (Simplified)", "简体中文", "zh_CN", "POEditor contributors", Arrays.asList("简体中文", "中文", "chinese", "chinese_simplified", "cn")),
+            new Locale("Chinese (Traditional)", "简体中文", "zh_HK", "POEditor contributors", Arrays.asList("中文(傳統)", "中國傳統", "chinese_traditional", "zh_hk")),
+            new Locale("Czech", "Český", "cs_CZ", "POEditor contributors", Arrays.asList("czech", "cesky", "český", "cs")),
+            new Locale("Dutch", "Nederlands", "nl_NL", "POEditor contributors", Arrays.asList("dutch", "nederlands", "nl")),
+            new Locale("English", "English", "en_GB", "Plajer", Arrays.asList("default", "english", "en")),
+            new Locale("Estonian", "Eesti", "et_EE", "POEditor contributors", Arrays.asList("estonian", "eesti", "et")),
+            new Locale("French", "Français", "fr_FR", "POEditor contributors", Arrays.asList("french", "francais", "français", "fr")),
+            new Locale("German", "Deutsch", "de_DE", "Tigerkatze and POEditor contributors", Arrays.asList("deutsch", "german", "de")),
+            new Locale("Greek", "ελληνικά", "el_EL", "POEditor contributors", Arrays.asList("ελληνικά", "el", "gre", "ell")),
+            new Locale("Hungarian", "Magyar", "hu_HU", "POEditor contributors", Arrays.asList("hungarian", "magyar", "hu")),
+            new Locale("Indonesian", "Indonesia", "id_ID", "POEditor contributors", Arrays.asList("indonesian", "indonesia", "id")),
+            new Locale("Italian", "Italiano", "it_IT", "POEditor contributors", Arrays.asList("italian", "italiano", "it")),
+            new Locale("Japanese", "日本語", "ja_JP", "POEditor contributors", Arrays.asList("日本語", "japanese", "jp", "ja")),
+            new Locale("Korean", "한국의", "ko_KR", "POEditor contributors", Arrays.asList("korean", "한국의", "kr")),
+            new Locale("Lithuanian", "Lietuvių", "lt_LT", "POEditor contributors", Arrays.asList("lithuanian", "lietuvių", "lietuviu", "lt")),
+            new Locale("Polish", "Polski", "pl_PL", "Plajer", Arrays.asList("polish", "polski", "pl")),
+            new Locale("Portuguese (BR)", "Português (Brasil)", "pt_BR", "POEditor contributors", Arrays.asList("portuguese br", "português br", "português brasil", "pt_br")),
+            new Locale("Romanian", "Românesc", "ro_RO", "POEditor contributors", Arrays.asList("romanian", "romanesc", "românesc", "ro")),
+            new Locale("Russian", "Pусский", "ru_RU", "POEditor contributors", Arrays.asList("russian", "russkiy", "pусский", "ru")),
+            new Locale("Slovenian", "Slovenščina", "sl_SL", "POEditor contributors", Arrays.asList("slovenian", "slovenščina", "slovenscina", "sl")),
+            new Locale("Spanish", "Español", "es_ES", "POEditor contributors", Arrays.asList("spanish", "espanol", "español", "es")),
+            new Locale("Turkish", "Türk", "tr_TR", "POEditor contributors", Arrays.asList("turkish", "turk", "türk", "tr")),
+            new Locale("Ukrainian", "Ukraine", "uk_UA", "POEditor contributors", Arrays.asList("ukraine", "ua", "uk")),
+            new Locale("Vietnamese", "Việt", "vn_VN", "POEditor contributors", Arrays.asList("vietnamese", "viet", "việt", "vn")))
         .forEach(LocaleRegistry::registerLocale);
   }
 

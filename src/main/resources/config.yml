@@ -19,7 +19,7 @@
 #   lt - Lietuvių kalba            sl - Slovenščina
 #   pt_BR - Português (Brasil)     zh_tw - 中文(繁體)
 #   uk - Ukrainian                 be - Belarusian
-#   eu - Basque
+#   eu - Basque                    el - Greek
 locale: default
 
 # Enable boss bar for the game?
