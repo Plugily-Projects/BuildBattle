@@ -313,11 +313,12 @@ public class ArenaManager {
       user.setSpectator(false);
       return;
     }
-
-    if(arena instanceof SoloArena) {
-      Plot userPlot = user.getCurrentPlot();
-      if(userPlot.getMembers().size() <= 1) {
-        ((SoloArena) arena).getQueue().remove(user.getCurrentPlot());
+    Plot plot = arena.getPlotManager().getPlot(player);
+    if(plot != null) {
+      if(arena instanceof SoloArena) {
+        if(plot.getMembers().size() <= 1) {
+          ((SoloArena) arena).getQueue().remove(plot);
+        }
       }
     }
 
@@ -331,7 +332,6 @@ public class ArenaManager {
 
     user.setStat(StatsStorage.StatisticType.LOCAL_GUESS_THE_BUILD_POINTS, 0);
 
-    Plot plot = arena.getPlotManager().getPlot(player);
     if(plot != null) {
       if(arena instanceof TeamArena) {
         plot.getMembers().remove(player);
