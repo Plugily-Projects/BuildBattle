@@ -232,7 +232,7 @@ public class ArenaManager {
         if(plugin.getUserManager().getUser(spectator).isSpectator()) {
           VersionUtils.showPlayer(plugin, player, spectator);
         } else {
-          VersionUtils.hidePlayer(plugin, player, spectator);
+          VersionUtils.hidePlayer(plugin, spectator, player);
         }
       }
       return;

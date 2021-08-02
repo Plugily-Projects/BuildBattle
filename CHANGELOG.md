@@ -18,6 +18,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Added placeholder total_points_earned and highest_points
 * Added plot selector for team mode
 * Added greek as language (Thanks to poeditor contributors)
+* Fixed spectatormode does not display summary and players
 >>> b1
 * Changed randomjoin mechanics -> Searches for starting -> random join -> Searches for waiting -> random join
 * Added /bb join maxplayers type which tries to get the arena with the highest amount of players

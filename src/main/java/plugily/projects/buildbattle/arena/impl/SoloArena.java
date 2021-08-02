@@ -324,8 +324,9 @@ public class SoloArena extends BaseArena {
             announceResults();
 
             Location winnerLocation = winnerPlot.getTeleportLocation();
-
-            for(Player player : getPlayers()) {
+            List<Player> players = getPlayers();
+            players.addAll(getSpectators());
+            for(Player player : players) {
               player.teleport(winnerLocation);
               String winner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Winner-Title");
               winner = formatWinners(winnerPlot, winner);
@@ -339,6 +340,8 @@ public class SoloArena extends BaseArena {
         setTimer(getTimer() - 1);
         break;
       case ENDING:
+        List<Player> players = getPlayers();
+        players.addAll(getSpectators());
         getScoreboardManager().stopAllScoreboards();
         if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           getPlugin().getServer().setWhitelist(false);
@@ -346,13 +349,11 @@ public class SoloArena extends BaseArena {
         setVoting(false);
         setThemeTimerSet(false);
         if(getPlugin().getConfig().getBoolean("Firework-When-Game-Ends", true)) {
-          for(Player player : getPlayers()) {
+          for(Player player : players) {
             MiscUtils.spawnRandomFirework(player.getLocation());
           }
         }
         if(getTimer() <= 0) {
-          List<Player> players = getPlayers();
-          players.addAll(getSpectators());
           for(Player player : players) {
             User user = plugin.getUserManager().getUser(player);
             user.removeScoreboard(this);
@@ -590,7 +591,9 @@ public class SoloArena extends BaseArena {
       }
       formattedSummary.add(message);
     }
-    getPlayers().forEach(player -> formattedSummary.forEach(msg -> MiscUtils.sendCenteredMessage(player, msg)));
+    List<Player> players = getPlayers();
+    players.addAll(getSpectators());
+    players.forEach(player -> formattedSummary.forEach(msg -> MiscUtils.sendCenteredMessage(player, msg)));
     for(Map.Entry<Integer, List<Player>> map : topList.entrySet()) {
       for(Player p : map.getValue()) {
         if(map.getKey() > 3) {
