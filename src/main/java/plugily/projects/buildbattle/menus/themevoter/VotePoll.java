@@ -22,7 +22,7 @@ package plugily.projects.buildbattle.menus.themevoter;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajerlair.commonsbox.sorter.SortUtils;
+import plugily.projects.commonsbox.sorter.SortUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.impl.SoloArena;
 import plugily.projects.buildbattle.handlers.reward.Reward;
@@ -60,8 +60,8 @@ public class VotePoll {
   }
 
   public boolean addVote(Player player, String theme) {
-    if(playerVote.containsKey(player)) {
-      String playerVoteTheme = playerVote.get(player);
+    String playerVoteTheme = playerVote.get(player);
+    if(playerVoteTheme != null) {
       if(playerVoteTheme.equals(theme)) {
         return false;
       }

@@ -31,8 +31,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
+import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
+import plugily.projects.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaManager;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
@@ -44,8 +44,8 @@ import plugily.projects.buildbattle.commands.arguments.data.LabeledCommandArgume
 import plugily.projects.buildbattle.handlers.language.LanguageManager;
 import plugily.projects.buildbattle.utils.Utils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -65,11 +65,14 @@ public class ArenaSelectorArgument implements Listener {
       @Override
       public void execute(CommandSender sender, String[] args) {
         Player player = (Player) sender;
-        if(ArenaRegistry.getArenas().size() == 0) {
+
+        int arenaSize = ArenaRegistry.getArenas().size();
+        if(arenaSize == 0) {
           player.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.No-Arena-Like-That"));
           return;
         }
-        Inventory inventory = ComplementAccessor.getComplement().createInventory(player, Utils.serializeInt(ArenaRegistry.getArenas().size()), registry.getPlugin().getChatManager().colorMessage("Arena-Selector.Inv-Title"));
+
+        Inventory inventory = ComplementAccessor.getComplement().createInventory(player, Utils.serializeInt(arenaSize), registry.getPlugin().getChatManager().colorMessage("Arena-Selector.Inv-Title"));
 
         int slot = 0;
         arenas.clear();
@@ -77,7 +80,6 @@ public class ArenaSelectorArgument implements Listener {
         for(BaseArena arena : ArenaRegistry.getArenas()) {
           arenas.put(slot, arena);
           ItemStack itemStack = XMaterial.matchXMaterial(registry.getPlugin().getConfig().getString("Arena-Selector.State-Item." + arena.getArenaState().getFormattedName(), "YELLOW_WOOL").toUpperCase()).orElse(XMaterial.YELLOW_WOOL).parseItem();
-
           if(itemStack == null)
             continue;
 
@@ -85,9 +87,9 @@ public class ArenaSelectorArgument implements Listener {
           if(itemMeta != null) {
             ComplementAccessor.getComplement().setDisplayName(itemMeta, formatItem(LanguageManager.getLanguageMessage("Arena-Selector.Item.Name"), arena, registry.getPlugin()));
 
-            java.util.List<String> lore = new ArrayList<>();
-            for(String string : LanguageManager.getLanguageList("Arena-Selector.Item.Lore")) {
-              lore.add(formatItem(string, arena, registry.getPlugin()));
+            List<String> lore = LanguageManager.getLanguageList("Arena-Selector.Item.Lore");
+            for(int b = 0; b < lore.size(); b++) {
+              lore.set(b, formatItem(lore.get(b), arena, registry.getPlugin()));
             }
 
             ComplementAccessor.getComplement().setLore(itemMeta, lore);
@@ -105,13 +107,18 @@ public class ArenaSelectorArgument implements Listener {
   private String formatItem(String string, BaseArena arena, Main plugin) {
     String formatted = string;
     formatted = StringUtils.replace(formatted, "%mapname%", arena.getMapName());
+
     int maxPlayers = arena.getMaximumPlayers();
-    if(arena.getPlayers().size() >= maxPlayers) {
+    int players = arena.getPlayers().size();
+
+    if(players >= maxPlayers) {
       formatted = StringUtils.replace(formatted, "%state%", plugin.getChatManager().colorMessage("Signs.Game-States.Full-Game"));
     } else {
       formatted = StringUtils.replace(formatted, "%state%", arena.getArenaState().getPlaceholder());
     }
-    formatted = StringUtils.replace(formatted, "%playersize%", Integer.toString(arena.getPlayers().size()));
+
+    formatted = StringUtils.replace(formatted, "%type%", arena.getArenaType().getPrefix());
+    formatted = StringUtils.replace(formatted, "%playersize%", Integer.toString(players));
     formatted = StringUtils.replace(formatted, "%maxplayers%", Integer.toString(maxPlayers));
     formatted = plugin.getChatManager().colorRawMessage(formatted);
     return formatted;

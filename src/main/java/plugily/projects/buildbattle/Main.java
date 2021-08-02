@@ -27,16 +27,11 @@ import org.bukkit.GameMode;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajerlair.commonsbox.database.MysqlDatabase;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
-import pl.plajerlair.commonsbox.minecraft.compat.events.EventsInitializer;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
-import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
+import plugily.projects.buildbattle.arena.managers.plots.PlotMenuHandler;
 import plugily.projects.buildbattle.arena.vote.VoteEvents;
 import plugily.projects.buildbattle.arena.vote.VoteItems;
 import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
@@ -46,12 +41,13 @@ import plugily.projects.buildbattle.events.JoinEvents;
 import plugily.projects.buildbattle.events.LobbyEvents;
 import plugily.projects.buildbattle.events.QuitEvents;
 import plugily.projects.buildbattle.events.spectator.SpectatorEvents;
+import plugily.projects.buildbattle.events.spectator.SpectatorItemEvents;
 import plugily.projects.buildbattle.handlers.BungeeManager;
 import plugily.projects.buildbattle.handlers.ChatManager;
 import plugily.projects.buildbattle.handlers.HolidayManager;
 import plugily.projects.buildbattle.handlers.PermissionManager;
 import plugily.projects.buildbattle.handlers.PlaceholderManager;
-import plugily.projects.buildbattle.handlers.items.SpecialItemsRegistry;
+import plugily.projects.buildbattle.handlers.items.SpecialItemsManager;
 import plugily.projects.buildbattle.handlers.language.LanguageManager;
 import plugily.projects.buildbattle.handlers.party.PartyHandler;
 import plugily.projects.buildbattle.handlers.party.PartySupportInitializer;
@@ -72,6 +68,12 @@ import plugily.projects.buildbattle.utils.LegacyDataFixer;
 import plugily.projects.buildbattle.utils.MessageUtils;
 import plugily.projects.buildbattle.utils.UpdateChecker;
 import plugily.projects.buildbattle.utils.services.ServiceRegistry;
+import plugily.projects.commonsbox.database.MysqlDatabase;
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
+import plugily.projects.commonsbox.minecraft.compat.events.EventsInitializer;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.misc.MiscUtils;
+import plugily.projects.commonsbox.minecraft.serialization.InventorySerializer;
 
 import java.util.Arrays;
 
@@ -94,12 +96,13 @@ public class Main extends JavaPlugin {
   private CuboidSelector cuboidSelector;
   private VoteItems voteItems;
   private OptionsRegistry optionsRegistry;
-  private SpecialItemsRegistry specialItemsRegistry;
+  private SpecialItemsManager specialItemsManager;
   private boolean forceDisable = false;
   private PartyHandler partyHandler;
   private RewardsFactory rewardsHandler;
+  private PlotMenuHandler plotMenuHandler;
 
-public CuboidSelector getCuboidSelector() {
+  public CuboidSelector getCuboidSelector() {
     return cuboidSelector;
   }
 
@@ -123,8 +126,8 @@ public CuboidSelector getCuboidSelector() {
     return configPreferences;
   }
 
-  public SpecialItemsRegistry getSpecialItemsRegistry() {
-    return specialItemsRegistry;
+  public SpecialItemsManager getSpecialItemsManager() {
+    return specialItemsManager;
   }
 
   public ArgumentsRegistry getArgumentsRegistry() {
@@ -142,11 +145,11 @@ public CuboidSelector getCuboidSelector() {
     Debugger.setEnabled(getDescription().getVersion().contains("debug") || getConfig().getBoolean("Debug"));
     Debugger.debug("Main setup started");
     saveDefaultConfig();
-    for(String s : Arrays.asList("arenas", "particles", "lobbyitems", "stats", "voteItems", "mysql", "biomes", "bungee", "rewards")) {
+    for(String s : Arrays.asList("arenas", "particles", "special_items", "stats", "voteItems", "mysql", "biomes", "bungee", "rewards")) {
       ConfigUtils.getConfig(this, s);
     }
     LanguageManager.init(this);
-    chatManager = new ChatManager(LanguageManager.getLanguageMessage("In-Game.Plugin-Prefix"));
+    chatManager = new ChatManager(this);
     configPreferences = new ConfigPreferences(this);
     new LegacyDataFixer(this);
     initializeClasses();
@@ -162,8 +165,8 @@ public CuboidSelector getCuboidSelector() {
       }
       if(result.getNewestVersion().contains("b")) {
         if(getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
-          Debugger.sendConsoleMsg("&c[BuildBattle] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
-          Debugger.sendConsoleMsg("&c[BuildBattle] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
+          Debugger.sendConsoleMsg("&c[Build Battle] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
+          Debugger.sendConsoleMsg("&c[Build Battle] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
               result.getNewestVersion()));
         }
         return;
@@ -215,7 +218,7 @@ public CuboidSelector getCuboidSelector() {
     ArenaRegistry.registerArenas();
     signManager.loadSigns();
     signManager.updateSigns();
-    specialItemsRegistry = new SpecialItemsRegistry(this);
+    specialItemsManager = new SpecialItemsManager(this);
     voteItems = new VoteItems();
     new VoteEvents(this);
     new LobbyEvents(this);
@@ -243,11 +246,13 @@ public CuboidSelector getCuboidSelector() {
     new VoteMenuListener(this);
     new HolidayManager(this);
     new SpectatorEvents(this);
+    new SpectatorItemEvents(this);
     BannerMenu.init(this);
     partyHandler = new PartySupportInitializer().initialize(this);
     rewardsHandler = new RewardsFactory(this);
+    plotMenuHandler = new PlotMenuHandler(this);
     new EventsInitializer().initialize(this);
-    MiscUtils.sendStartUpMessage(this, "BuildBattle", getDescription(),true, true);
+    MiscUtils.sendStartUpMessage(this, "BuildBattle", getDescription(), true, true);
   }
 
   @Override
@@ -270,7 +275,6 @@ public CuboidSelector getCuboidSelector() {
         }
       }
       arena.getPlotManager().getPlots().forEach(Plot::fullyResetPlot);
-      arena.teleportAllToEndLocation();
     }
     for(Player player : getServer().getOnlinePlayers()) {
       User user = userManager.getUser(player);
@@ -278,15 +282,20 @@ public CuboidSelector getCuboidSelector() {
         StringBuilder update = new StringBuilder(" SET ");
         for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
           if(!stat.isPersistent()) continue;
+
+          int userStat = user.getStat(stat);
+
           if(update.toString().equalsIgnoreCase(" SET ")) {
-            update.append(stat.getName()).append('=').append(user.getStat(stat));
+            update.append(stat.getName()).append('=').append(userStat);
           }
-          update.append(", ").append(stat.getName()).append('=').append(user.getStat(stat));
+
+          update.append(", ").append(stat.getName()).append('=').append(userStat);
         }
-        String finalUpdate = update.toString();
+
+        MysqlManager db = (MysqlManager) userManager.getDatabase();
         //copy of userManager#saveStatistic but without async database call that's not allowed in onDisable method.
-        ((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE " + ((MysqlManager) getUserManager().getDatabase()).getTableName()
-            + finalUpdate + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+        db.getDatabase().executeUpdate("UPDATE " + db.getTableName()
+            + update.toString() + " WHERE UUID='" + user.getUniqueId().toString() + "';");
         continue;
       }
       for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
@@ -318,4 +327,7 @@ public CuboidSelector getCuboidSelector() {
     return rewardsHandler;
   }
 
+  public PlotMenuHandler getPlotMenuHandler() {
+    return plotMenuHandler;
+  }
 }

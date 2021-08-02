@@ -25,7 +25,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.jetbrains.annotations.Nullable;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.utils.MaterialUtil;
 
@@ -54,7 +54,8 @@ public class ArenaSign {
 
   private Block getBlockBehind() {
     try {
-      Object blockData = sign.getBlock().getState().getClass().getMethod("getBlockData").invoke(sign.getBlock().getState());
+      org.bukkit.block.BlockState state = sign.getBlock().getState();
+      Object blockData = state.getClass().getMethod("getBlockData").invoke(state);
       BlockFace face = (BlockFace) blockData.getClass().getMethod("getFacing").invoke(blockData);
 
       Location loc = sign.getLocation();

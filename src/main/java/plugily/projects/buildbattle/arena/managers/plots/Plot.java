@@ -21,11 +21,11 @@
 package plugily.projects.buildbattle.arena.managers.plots;
 
 import net.citizensnpcs.api.CitizensAPI;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.WeatherType;
+import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -33,13 +33,13 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.event.plot.BBPlotResetEvent;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.utils.Utils;
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
+import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
+import plugily.projects.commonsbox.minecraft.dimensional.Cuboid;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,11 +52,14 @@ import java.util.Map;
 public class Plot {
 
   private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+
   private final Map<Location, String> particles = new HashMap<>();
+  private final XMaterial defaultFloor;
+
   private final BaseArena arena;
   private Cuboid cuboid;
   private int points = 0;
-  private List<Player> owners = new ArrayList<>();
+  private List<Player> members = new ArrayList<>();
   private Time time = Time.WORLD_TIME;
   private final Biome plotDefaultBiome;
   private WeatherType weatherType = WeatherType.CLEAR;
@@ -65,6 +68,8 @@ public class Plot {
   public Plot(BaseArena arena, Biome biome) {
     this.arena = arena;
     plotDefaultBiome = biome;
+    defaultFloor = XMaterial.matchXMaterial(plugin.getConfig().getString("Default-Floor-Material-Name", "LOG")
+        .toUpperCase()).orElse(XMaterial.OAK_LOG);
   }
 
   public int getEntities() {
@@ -114,28 +119,63 @@ public class Plot {
   }
 
   @NotNull
-  public List<Player> getOwners() {
-    return owners;
+  public List<Player> getMembers() {
+    return members;
   }
 
-  public void setOwners(List<Player> players) {
-    this.owners = players == null ? new ArrayList<>() : players;
+  @NotNull
+  public String getFormattedMembers() {
+    if(members.size() >= 1) {
+      StringBuilder member = new StringBuilder();
+      members.forEach(player -> member.append(player.getName()).append(" & "));
+      return member.substring(0, member.length() - 3);
+    } else {
+      return "PLAYER_NOT_FOUND";
+    }
   }
 
-  public void addOwner(Player player) {
-    owners.add(player);
+  public int getMembersSize() {
+    return members.size();
+  }
+
+  public boolean addMember(Player player, BaseArena playerArena, boolean silent) {
+    if(playerArena == null) {
+      return false;
+    }
+
+    if(members.contains(player)) {
+      if(!silent) player.sendMessage(plugin.getChatManager().colorMessage("Plots.Team.Member"));
+      return false;
+    }
+
+    if(members.size() >= playerArena.getPlotSize()) {
+      if(!silent) player.sendMessage(plugin.getChatManager().colorMessage("Plots.Team.Full"));
+      return false;
+    }
+
+    Plot plot = playerArena.getPlotManager().getPlot(player);
+    if(plot != null) {
+      plot.removeMember(player);
+    }
+    members.add(player);
+    plugin.getUserManager().getUser(player).setCurrentPlot(this);
+    return true;
+  }
+
+  public void removeMember(Player player) {
+    members.remove(player);
   }
 
   public void fullyResetPlot() {
     resetPlot();
-    if(!owners.isEmpty()) {
-      for(Player p : owners) {
-        plugin.getUserManager().getUser(p).setCurrentPlot(null);
-        setOwners(new ArrayList<>());
-        setPoints(0);
-      }
+
+    for(Player p : members) {
+      plugin.getUserManager().getUser(p).setCurrentPlot(null);
     }
-    getParticles().clear();
+
+    setPoints(0);
+    members.clear();
+    particles.clear();
   }
 
   public void resetPlot() {
@@ -149,20 +189,26 @@ public class Plot {
       block.setType(Material.AIR);
     }
 
-    getParticles().clear();
+    particles.clear();
 
-    for(Player p : owners) {
+    for(Player p : members) {
       p.resetPlayerWeather();
       setWeatherType(p.getPlayerWeather());
       p.resetPlayerTime();
     }
 
-    Location center = cuboid.getCenter();
-    if(center.getWorld() != null) {
-      for(Entity entity : center.getWorld().getEntities()) {
+    World centerWorld = cuboid.getCenter().getWorld();
+
+    if(centerWorld != null) {
+      for(Entity entity : centerWorld.getEntities()) {
         if(cuboid.isInWithMarge(entity.getLocation(), 5)) {
+          //deprecated seems not to work with latest builds of citizens
           if(plugin.getServer().getPluginManager().isPluginEnabled("Citizens") && CitizensAPI.getNPCRegistry() != null
               && CitizensAPI.getNPCRegistry().isNPC(entity)) {
+            continue;
+          }
+          //citizens also uses metadata, see https://wiki.citizensnpcs.co/API
+          if(entity.hasMetadata("NPC")) {
             continue;
           }
 
@@ -178,25 +224,29 @@ public class Plot {
     }
 
     for(Chunk chunk : cuboid.chunkList()) {
-      for(Player p : Bukkit.getOnlinePlayers()) {
+      for(Player p : plugin.getServer().getOnlinePlayers()) {
         if(p.getWorld().equals(chunk.getWorld())) {
           Utils.sendMapChunk(p, chunk);
         }
       }
     }
 
-    changeFloor(XMaterial.matchXMaterial(plugin.getConfig().getString("Default-Floor-Material-Name", "LOG")
-        .toUpperCase()).orElse(XMaterial.OAK_LOG).parseMaterial());
+    changeFloor(defaultFloor.parseMaterial());
 
-    if(ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_15_R1)) {
-      int y = Math.min(cuboid.getMinPoint().getBlockY(), cuboid.getMaxPoint().getBlockY());
+    if(centerWorld != null) {
+      if(ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_15_R1)) {
+        Location min = cuboid.getMinPoint();
+        Location max = cuboid.getMaxPoint();
 
-      center.getWorld().setBiome(cuboid.getMinPoint().getBlockX(), y, cuboid.getMaxPoint().getBlockZ(), plotDefaultBiome);
-    } else {
-      center.getWorld().setBiome(cuboid.getMinPoint().getBlockX(), cuboid.getMaxPoint().getBlockZ(), plotDefaultBiome);
+        int y = Math.min(min.getBlockY(), max.getBlockY());
+
+        centerWorld.setBiome(min.getBlockX(), y, max.getBlockZ(), plotDefaultBiome);
+      } else {
+        centerWorld.setBiome(cuboid.getMinPoint().getBlockX(), cuboid.getMaxPoint().getBlockZ(), plotDefaultBiome);
+      }
     }
 
-    Bukkit.getServer().getPluginManager().callEvent(new BBPlotResetEvent(arena, this));
+    plugin.getServer().getPluginManager().callEvent(new BBPlotResetEvent(arena, this));
   }
 
   public int getPoints() {
@@ -210,11 +260,20 @@ public class Plot {
   private void changeFloor(Material material) {
     Location min = cuboid.getMinPoint();
     Location max = cuboid.getMaxPoint();
-    double y = Math.min(min.getY(), max.getY());
-    for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
-      for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
-        Location tmpblock = new Location(max.getWorld(), x, y, z);
-        tmpblock.getBlock().setType(material);
+
+    int y = (int) Math.min(min.getY(), max.getY());
+
+    int minBlockX = min.getBlockX();
+    int maxBlockX = max.getBlockX();
+
+    int minBlockZ = min.getBlockZ();
+    int maxBlockZ = max.getBlockZ();
+
+    World maxWorld = max.getWorld();
+
+    for(int x = minBlockX; x <= maxBlockX; x++) {
+      for(int z = minBlockZ; z <= maxBlockZ; z++) {
+        maxWorld.getBlockAt(x, y, z).setType(material);
       }
     }
   }
@@ -226,16 +285,28 @@ public class Plot {
     if(material == Material.LAVA_BUCKET) {
       material = Material.LAVA;
     }
-    double y = Math.min(cuboid.getMinPoint().getY(), cuboid.getMaxPoint().getY());
+
     Location min = cuboid.getMinPoint();
     Location max = cuboid.getMaxPoint();
-    for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
-      for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
-        Location tmpblock = new Location(cuboid.getMaxPoint().getWorld(), x, y, z);
-        tmpblock.getBlock().setType(material);
+
+    int y = (int) Math.min(min.getY(), max.getY());
+
+    int minBlockX = min.getBlockX();
+    int maxBlockX = max.getBlockX();
+
+    int minBlockZ = min.getBlockZ();
+    int maxBlockZ = max.getBlockZ();
+
+    World maxWorld = max.getWorld();
+
+    for(int x = minBlockX; x <= maxBlockX; x++) {
+      for(int z = minBlockZ; z <= maxBlockZ; z++) {
+        Block block = maxWorld.getBlockAt(x, y, z);
+        block.setType(material);
+
         if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {
           try {
-            Block.class.getMethod("setData", byte.class).invoke(tmpblock.getBlock(), data);
+            Block.class.getMethod("setData", byte.class).invoke(block, data);
           } catch(Exception e) {
             e.printStackTrace();
           }

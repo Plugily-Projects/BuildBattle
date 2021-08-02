@@ -20,31 +20,28 @@
 
 package plugily.projects.buildbattle.events.spectator;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
-
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
-import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerInteractEvent;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
-import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
+import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerShearEntityEvent;
+import plugily.projects.commonsbox.minecraft.compat.events.api.CBEntityPickupItemEvent;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
-import plugily.projects.buildbattle.handlers.ChatManager;
-import plugily.projects.buildbattle.utils.Utils;
+import plugily.projects.buildbattle.user.User;
 
 /**
  * @author Plajer
@@ -53,16 +50,94 @@ import plugily.projects.buildbattle.utils.Utils;
  */
 public class SpectatorEvents implements Listener {
 
-  private final ChatManager chatManager;
   private final Main plugin;
-  private final SpectatorSettingsMenu spectatorSettingsMenu;
 
   public SpectatorEvents(Main plugin) {
     this.plugin = plugin;
-    chatManager = plugin.getChatManager();
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    spectatorSettingsMenu = new SpectatorSettingsMenu(plugin, chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Inventory-Name"),
-        chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Speed-Name"));
+  }
+
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void onSpectatorTarget(EntityTargetEvent e) {
+    if(!(e.getTarget() instanceof Player)) {
+      return;
+    }
+    if(plugin.getUserManager().getUser((Player) e.getTarget()).isSpectator()) {
+      e.setCancelled(true);
+      e.setTarget(null);
+    }
+  }
+
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void onSpectatorTarget(EntityTargetLivingEntityEvent e) {
+    if(!(e.getTarget() instanceof Player)) {
+      return;
+    }
+    if(plugin.getUserManager().getUser((Player) e.getTarget()).isSpectator()) {
+      e.setCancelled(true);
+      e.setTarget(null);
+    }
+  }
+
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onBlockPlace(BlockPlaceEvent event) {
+    if(plugin.getUserManager().getUser(event.getPlayer()).isSpectator()) {
+      event.setCancelled(true);
+    }
+  }
+
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onBlockBreak(BlockBreakEvent event) {
+    if(plugin.getUserManager().getUser(event.getPlayer()).isSpectator()) {
+      event.setCancelled(true);
+    }
+  }
+
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onDropItem(PlayerDropItemEvent event) {
+    if(plugin.getUserManager().getUser(event.getPlayer()).isSpectator()) {
+      event.setCancelled(true);
+    }
+  }
+
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onBucketEmpty(PlayerBucketEmptyEvent event) {
+    if(plugin.getUserManager().getUser(event.getPlayer()).isSpectator()) {
+      event.setCancelled(true);
+    }
+  }
+
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onInteract(PlayerInteractEntityEvent event) {
+    if(plugin.getUserManager().getUser(event.getPlayer()).isSpectator()) {
+      event.setCancelled(true);
+    }
+  }
+
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onShear(PlayerShearEntityEvent event) {
+    if(plugin.getUserManager().getUser(event.getPlayer()).isSpectator()) {
+      event.setCancelled(true);
+    }
+  }
+
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onConsume(PlayerItemConsumeEvent event) {
+    if(plugin.getUserManager().getUser(event.getPlayer()).isSpectator()) {
+      event.setCancelled(true);
+    }
+  }
+
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onFoodLevelChange(FoodLevelChangeEvent event) {
+    if(!(event.getEntity() instanceof Player)) {
+      return;
+    }
+    Player player = (Player) event.getEntity();
+    if(plugin.getUserManager().getUser(player).isSpectator()) {
+      event.setFoodLevel(20);
+      event.setCancelled(true);
+    }
   }
 
   @EventHandler(priority = EventPriority.HIGH)
@@ -71,104 +146,49 @@ public class SpectatorEvents implements Listener {
       return;
     }
     Player player = (Player) event.getEntity();
-    if(!plugin.getUserManager().getUser(player).isSpectator()) {
+    User user = plugin.getUserManager().getUser(player);
+    if(!user.isSpectator()) {
       return;
     }
-
-    event.setCancelled(true);
-
+    if(user.getArena() == null) {
+      return;
+    }
     if(player.getLocation().getY() < 1) {
       BaseArena arena = ArenaRegistry.getArena(player);
       if(arena != null) {
         player.teleport(arena.getPlotManager().getPlots().get(0).getTeleportLocation());
       }
+      event.setDamage(0);
     }
+    event.setCancelled(true);
   }
 
-  @EventHandler
-  public void onEntityDamage(EntityDamageByEntityEvent event) {
-    if(event.getDamager() instanceof Player && plugin.getUserManager().getUser((Player) event.getDamager()).isSpectator()) {
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onDamageByBlock(EntityDamageByBlockEvent event) {
+    if(!(event.getEntity() instanceof Player)) {
+      return;
+    }
+    Player player = (Player) event.getEntity();
+    if(plugin.getUserManager().getUser(player).isSpectator()) {
       event.setCancelled(true);
     }
   }
 
-  @EventHandler
-  public void onSpectatorInteract(CBPlayerInteractEvent e) {
-    if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() != Action.PHYSICAL) {
-
-      if(!plugin.getUserManager().getUser(e.getPlayer()).isSpectator()) {
-        return;
-      }
-
-      BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
-      if(arena == null) {
-        return;
-      }
-
-      ItemStack stack = VersionUtils.getItemInHand(e.getPlayer());
-      if(!ItemUtils.isItemStackNamed(stack)) {
-        return;
-      }
-
-      e.setCancelled(true);
-
-      if(ComplementAccessor.getComplement().getDisplayName(stack.getItemMeta()).equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
-        openSpectatorMenu(e.getPlayer().getWorld(), e.getPlayer(), arena);
-      } else if(ComplementAccessor.getComplement().getDisplayName(stack.getItemMeta()).equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name"))) {
-        spectatorSettingsMenu.openSpectatorSettingsMenu(e.getPlayer());
-      }
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onDamageByEntity(EntityDamageByEntityEvent event) {
+    if(!(event.getDamager() instanceof Player)) {
+      return;
+    }
+    Player player = (Player) event.getDamager();
+    if(plugin.getUserManager().getUser(player).isSpectator()) {
+      event.setCancelled(true);
     }
   }
 
-  private void openSpectatorMenu(World world, Player p, BaseArena arena) {
-    Inventory inventory = ComplementAccessor.getComplement().createInventory(null, Utils.serializeInt(arena.getPlayers().size()),
-        chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
-
-    for(Player player : world.getPlayers()) {
-      if(!arena.getPlayers().contains(player) || plugin.getUserManager().getUser(player).isSpectator()) continue;
-
-      ItemStack skull = XMaterial.PLAYER_HEAD.parseItem();
-
-      SkullMeta meta = (SkullMeta) skull.getItemMeta();
-      meta = VersionUtils.setPlayerHead(player, meta);
-      ComplementAccessor.getComplement().setDisplayName(meta, player.getName());
-      skull.setItemMeta(meta);
-      inventory.addItem(skull);
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onPickup(CBEntityPickupItemEvent event) {
+    if(event.getEntity() instanceof Player && plugin.getUserManager().getUser((Player) event.getEntity()).isSpectator()) {
+      event.setCancelled(true);
     }
-    p.openInventory(inventory);
-  }
-
-  @EventHandler
-  public void onSpectatorInventoryClick(InventoryClickEvent e) {
-    Player p = (Player) e.getWhoClicked();
-    BaseArena arena = ArenaRegistry.getArena(p);
-    if(arena == null) {
-      return;
-    }
-
-    if(!plugin.getUserManager().getUser(p).isSpectator()) {
-      return;
-    }
-
-    e.setCancelled(true);
-
-    ItemStack currentItem = e.getCurrentItem();
-    if(!ItemUtils.isItemStackNamed(currentItem)
-        || !ComplementAccessor.getComplement().getTitle(e.getView()).equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
-      return;
-    }
-
-    String displayName = ComplementAccessor.getComplement().getDisplayName(currentItem.getItemMeta());
-    Player target = Bukkit.getPlayer(displayName);
-    if(target == null) target = Bukkit.getPlayer(ChatColor.stripColor(displayName));
-
-    if(target == null) {
-      p.sendMessage(chatManager.colorMessage("Commands.Player-Not-Found"));
-      return;
-    }
-
-    p.sendMessage(chatManager.formatMessage(arena, chatManager.colorMessage("Commands.Admin-Commands.Teleported-To-Player"), target));
-    p.teleport(target);
-    p.closeInventory();
   }
 }

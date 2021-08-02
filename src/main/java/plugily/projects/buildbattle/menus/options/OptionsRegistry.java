@@ -20,12 +20,11 @@
 
 package plugily.projects.buildbattle.menus.options;
 
-import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
+import plugily.projects.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.buildbattle.Main;
+import plugily.projects.buildbattle.handlers.items.SpecialItemsManager;
 import plugily.projects.buildbattle.menus.options.registry.FloorChangeOption;
 import plugily.projects.buildbattle.menus.options.registry.PlotResetOption;
 import plugily.projects.buildbattle.menus.options.registry.TimeChangeOption;
@@ -53,14 +52,12 @@ public class OptionsRegistry {
   private PlayerHeadsRegistry playerHeadsRegistry;
   private final Set<MenuOption> registeredOptions = new HashSet<>();
   private int inventorySize = 5 * 9;
-  private final ItemBuilder menuItem;
+  private final ItemStack menuItem;
   private final Main plugin;
 
   public OptionsRegistry(Main plugin) {
     this.plugin = plugin;
-    this.menuItem = new ItemBuilder(Material.NETHER_STAR)
-        .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item"))
-        .lore(plugin.getChatManager().colorMessage("Menus.Option-Menu.Option-Item-Lore"));
+    this.menuItem = plugin.getSpecialItemsManager().getSpecialItem(SpecialItemsManager.SpecialItems.OPTIONS_MENU.getName()).getItemStack();
     registerOptions();
   }
 
@@ -110,10 +107,9 @@ public class OptionsRegistry {
    * @throws IllegalArgumentException if option doesn't exist
    */
   public void unregisterOption(MenuOption option) {
-    if(!registeredOptions.contains(option)) {
+    if(!registeredOptions.remove(option)) {
       throw new IllegalArgumentException("Cannot remove non existing option!");
     }
-    registeredOptions.remove(option);
   }
 
   /**
@@ -143,7 +139,7 @@ public class OptionsRegistry {
   }
 
   public ItemStack getMenuItem() {
-    return menuItem.build();
+    return menuItem;
   }
 
   public BiomesRegistry getBiomesRegistry() {

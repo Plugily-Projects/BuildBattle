@@ -22,11 +22,11 @@ package plugily.projects.buildbattle.handlers.language;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.configuration.file.FileConfiguration;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.utils.Debugger;
 import plugily.projects.buildbattle.utils.MessageUtils;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.migrator.MigratorUtils;
 
 import java.io.File;
 import java.util.Arrays;
@@ -40,7 +40,7 @@ import java.util.List;
 @SuppressWarnings("deprecation")
 public class LanguageMigrator {
 
-  public static final int LANGUAGE_FILE_VERSION = 21;
+  public static final int LANGUAGE_FILE_VERSION = 25;
   public static final int CONFIG_FILE_VERSION = 18;
   private final List<String> migratable = Arrays.asList("bungee", "config", "language", "mysql");
   private final Main plugin;
@@ -91,7 +91,7 @@ public class LanguageMigrator {
     if(plugin.getConfig().getInt("Version") == CONFIG_FILE_VERSION) {
       return;
     }
-    Debugger.sendConsoleMsg("&e[BuildBattle] System notify >> Your config file is outdated! Updating...");
+    Debugger.sendConsoleMsg("&e[Build Battle] System notify >> Your config file is outdated! Updating...");
 
     int version = plugin.getConfig().getInt("Version", CONFIG_FILE_VERSION - 1);
     updateConfigVersionControl(version);
@@ -232,8 +232,8 @@ public class LanguageMigrator {
         case 16:
           MigratorUtils.insertAfterLine(file, "Run-Command-On-Report:",
               "  # The amount of reports that the target needs to execute this command.\r\n"
-              + "  # Leave it -1 to perform this command immediately.\r\n"
-              + "  Reports-Amount-To-Run: -1");
+                  + "  # Leave it -1 to perform this command immediately.\r\n"
+                  + "  Reports-Amount-To-Run: -1");
           MigratorUtils.addNewLines(file, "\r\nThe list of restricted entities that can't be spawned in game"
               + "Restricted-Entities-Spawn:\r\n#- zombie\r\n");
           break;
@@ -252,8 +252,8 @@ public class LanguageMigrator {
           return;
       }
     }
-    Debugger.sendConsoleMsg("&a[BuildBattle] [System notify] Config updated, no comments were removed :)");
-    Debugger.sendConsoleMsg("&a[BuildBattle] [System notify] You're using latest config file version! Nice!");
+    Debugger.sendConsoleMsg("&a[Build Battle] [System notify] Config updated, no comments were removed :)");
+    Debugger.sendConsoleMsg("&a[Build Battle] [System notify] You're using latest config file version! Nice!");
   }
 
   private void languageFileUpdate() {
@@ -261,7 +261,7 @@ public class LanguageMigrator {
     if(config.getString("File-Version-Do-Not-Edit", "").equals(String.valueOf(LANGUAGE_FILE_VERSION))) {
       return;
     }
-    Debugger.sendConsoleMsg("&e[BuildBattle] [System notify] Your language file is outdated! Updating...");
+    Debugger.sendConsoleMsg("&e[Build Battle] [System notify] Your language file is outdated! Updating...");
 
     int version = 0;
     if(NumberUtils.isNumber(config.getString("File-Version-Do-Not-Edit"))) {
@@ -459,10 +459,8 @@ public class LanguageMigrator {
         case 16:
           MigratorUtils.insertAfterLine(file, "In-Game:", "  Spectator:");
           MigratorUtils.insertAfterLine(file, "Spectator:", "    You-Are-Spectator: \"&eYou're now a spectator! You can fly now!\"");
-          MigratorUtils.insertAfterLine(file, "Spectator:", "    Spectator-Item-Name: \"&7Players list\"");
           MigratorUtils.insertAfterLine(file, "Spectator:", "    Spectator-Menu-Name: \"Players list\"");
           MigratorUtils.insertAfterLine(file, "Spectator:", "    Settings-Menu:");
-          MigratorUtils.insertAfterLine(file, "Settings-Menu:", "      Item-Name: \"&7Spectator settings\"");
           MigratorUtils.insertAfterLine(file, "Settings-Menu:", "      Inventory-Name: \"&7Spectator settings\"");
           MigratorUtils.insertAfterLine(file, "Settings-Menu:", "      Speed-Name: \"&aSpeed\"");
           MigratorUtils.insertAfterLine(file, "Commands:", "  Arena-Restarting: \"&cThis arena is currently restarting!\"");
@@ -503,13 +501,34 @@ public class LanguageMigrator {
               "    Ending: \"&lEnding\"\r\n" +
               "    Restarting: \"&c&lRestarting\"\r\n");
           break;
+        case 21:
+          //just removed unused lines, no need to migrate anything
+        case 22:
+          MigratorUtils.insertAfterLine(file, "In-Game:", "  Floor-Item-Blacklisted: \"&cThe item on your hand is not allowed to be set as floor!\"");
+          break;
+        case 23:
+          MigratorUtils.insertAfterLine(file, "  Stats-Command:", "    Highest-Points: \"&aHighest points: &e\"\r\n" +
+              "    Total-Points-Earned: \"&aTotal points earned: &e\"\r\n");
+          break;
+        case 24:
+          MigratorUtils.addNewLines(file, "\r\n" +
+              "Plots:\r\n" +
+              "  Team:\r\n" +
+              "    Full: \"Team is full\"\r\n" +
+              "    Empty: \"You can join this team\"\r\n" +
+              "    Inside: \"Your team\"\r\n" +
+              "    Name: \"Plot - %plot%\"\r\n" +
+              "    Menu-Name: \"Plot Menu\"\r\n" +
+              "    Plot-Choose: \"You are now on plot %plot%\"\r\n" +
+              "    Member: \"You are already member of it!\"\r\n");
+          break;
         default:
           return;
       }
       version++;
     }
-    Debugger.sendConsoleMsg("&a[BuildBattle] [System notify] Language file updated! Nice!");
-    Debugger.sendConsoleMsg("&a[BuildBattle] [System notify] You're using latest language file version! Nice!");
+    Debugger.sendConsoleMsg("&a[Build Battle] [System notify] Language file updated! Nice!");
+    Debugger.sendConsoleMsg("&a[Build Battle] [System notify] You're using latest language file version! Nice!");
   }
 
   private void updateLanguageVersionControl(int oldVersion) {

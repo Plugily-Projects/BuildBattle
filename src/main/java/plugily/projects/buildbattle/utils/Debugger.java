@@ -22,8 +22,8 @@ package plugily.projects.buildbattle.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
+import plugily.projects.commonsbox.minecraft.misc.MiscUtils;
 
 /**
  * @author Plajer

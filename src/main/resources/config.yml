@@ -19,7 +19,7 @@
 #   lt - Lietuvių kalba            sl - Slovenščina
 #   pt_BR - Português (Brasil)     zh_tw - 中文(繁體)
 #   uk - Ukrainian                 be - Belarusian
-#   eu - Basque
+#   eu - Basque                    el - Greek
 locale: default
 
 # Enable boss bar for the game?
@@ -27,7 +27,7 @@ Boss-Bar-Enabled: false
 
 # Should we hook into bungee cord? (If you wanna use arena per server option)
 # You STILL need to use external addon for HUB server game signs
-# Check here for more info: https://wiki.plugily.xyz/minecraft/buildbattle/addons.php#bungee-signs-not-official
+# Check here for more info: https://wiki.plugily.xyz/buildbattle/support/servertips#bungeecord-lobby-signs
 BungeeActivated: false
 
 # Enable Inventory Manager for your games? (VERY USEFUL feature for MULTI ARENA)
@@ -35,7 +35,7 @@ BungeeActivated: false
 # Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions
 InventoryManager: true
 
-# Basic permissions for game, permissions explained here: https://wiki.plugily.xyz/minecraft/buildbattle/cmds_and_perms.php#basic-permissions
+# Basic permissions for game, permissions explained here: https://wiki.plugily.xyz/buildbattle/setup/cmdsandperms#basic-permissions
 Basic-Permissions:
   Full-Games-Permission: "buildbattle.fullgames"
   # Permissions to edit/create arenas
@@ -252,16 +252,14 @@ Disable-Parties: true
 #default false - plot owner will be announced at the beginning
 Announce-PlotOwner-Later: false
 
-
 Arena-Selector:
   # Change items of arena selector
   State-Item:
-    Waiting: LIME_CONCRETE
-    Starting: YELLOW_CONCRETE
-    In-Game: RED_CONCRETE
-    Ending: RED_CONCRETE
-    Restarting: RED_CONCRETE
-
+    Waiting: LIME_wool
+    Starting: YELLOW_wool
+    In-Game: RED_wool
+    Ending: RED_wool
+    Restarting: RED_wool
 
 # Don't modify.
 Version: 18

@@ -20,20 +20,20 @@
 
 package plugily.projects.buildbattle.menus.options.registry.banner;
 
-import com.github.stefvanschie.inventoryframework.Gui;
-import com.github.stefvanschie.inventoryframework.GuiItem;
-import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
-import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+import plugily.projects.inventoryframework.gui.GuiItem;
+import plugily.projects.inventoryframework.gui.type.ChestGui;
+import plugily.projects.inventoryframework.pane.OutlinePane;
+import plugily.projects.inventoryframework.pane.StaticPane;
 import org.bukkit.DyeColor;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion.Version;
+import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
+import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.utils.Utils;
 
@@ -48,7 +48,7 @@ import java.util.Map;
 public class BannerMenu {
 
   private static Main plugin;
-  private final Map<PatternStage, Gui> guiStages = new EnumMap<>(PatternStage.class);
+  private final Map<PatternStage, ChestGui> guiStages = new EnumMap<>(PatternStage.class);
   private final Banner banner;
   private final Player player;
 
@@ -70,7 +70,7 @@ public class BannerMenu {
 
   @SuppressWarnings("deprecation")
   private void prepareBaseStageGui() {
-    Gui gui = new Gui(plugin, 6, plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Banner-Creator.Inventories.Color-Choose"));
+    ChestGui gui = new ChestGui(6, plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Banner-Creator.Inventories.Color-Choose"));
     OutlinePane pane = new OutlinePane(1, 1, 7, 3);
     for(DyeColor color : DyeColor.values()) {
       ItemStack item;
@@ -99,7 +99,7 @@ public class BannerMenu {
   }
 
   private void prepareLayerStageGui() {
-    Gui gui = new Gui(plugin, 6, plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Banner-Creator.Inventories.Add-Layer"));
+    ChestGui gui = new ChestGui(6, plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Banner-Creator.Inventories.Add-Layer"));
     OutlinePane pane = new OutlinePane(0, 0, 9, 5);
     gui.addPane(pane);
     for(PatternType pattern : PatternType.values()) {
@@ -120,7 +120,7 @@ public class BannerMenu {
   }
 
   private void prepareLayerColorStageGui() {
-    Gui gui = new Gui(plugin, 6, plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Banner-Creator.Inventories.Add-Layer-Color"));
+    ChestGui gui = new ChestGui(6, plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Banner-Creator.Inventories.Add-Layer-Color"));
     OutlinePane pane = new OutlinePane(1, 1, 7, 3);
     gui.addPane(pane);
     for(DyeColor color : DyeColor.values()) {
@@ -140,7 +140,7 @@ public class BannerMenu {
     guiStages.put(PatternStage.LAYER_COLOR, gui);
   }
 
-  private void addCreatorItem(Gui gui) {
+  private void addCreatorItem(ChestGui gui) {
     StaticPane bannerPane = new StaticPane(4, 5, 2, 1);
     gui.addPane(bannerPane);
 
@@ -154,7 +154,7 @@ public class BannerMenu {
     }), 0, 0);
   }
 
-  private void addGoBackItem(Gui gui) {
+  private void addGoBackItem(ChestGui gui) {
     StaticPane bannerPane = new StaticPane(2, 5, 2, 1);
     gui.addPane(bannerPane);
 

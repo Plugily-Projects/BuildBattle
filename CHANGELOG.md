@@ -9,6 +9,41 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+### 4.5.1 Release (15.04.2021 - 02.08.2021)
+* Added 1.17 support
+* Added adjustable team mode plot size  
+* Added placeholder total_points_earned and highest_points
+* Added plot selector for team mode
+* Added greek as language (Thanks to poeditor contributors)
+* Renamed class paths from commonsbox
+* Reuse XMaterial for specialitems
+* Fixed teamarena does not stop when only two players are left from the same team
+* Fixed spectatormode does not display summary and players
+>>> b1
+* Added forcestart item
+* Added new message In-Game.Floor-Item-Blacklisted
+* Added /bb guess <word> argument (useful for servers with bungee handled chat)
+* Added placeholder arena_players_online
+* Added /bb join maxplayers type which tries to get the arena with the highest amount of players
+* Added special_items.yml
+* Added changeable options menu item
+* Changed randomjoin mechanics -> Searches for starting -> random join -> Searches for waiting -> random join
+* Changed Now builders will also get points if the building is guessed
+* Changed gtb word hints are now randomly chosen
+* Changed gtb word hints will stop if there are only 2 chars left to show
+* Changed empty message is no longer sent
+* Fixed gtb guessers got options menu on there inventory
+* Fixed on gtb the time and weather is not synced with all players
+* Fixed minecarts can go outside of plot  
+* Fixed item frames can be rotated outside plot
+* Fixed some bugs on particle menu
+* Fixed when plugins scoreboards not re-appeared after game end
+* Fixed players can report more than one time
+* Fixed spectator mode does not work correctly
+* Fixed gtb guesser players can teleport to all players on the server
+* Removed lobbyitems.yml
+* Removed temp added scoreboard rewards
+
 ### 4.5.0 Release (21.03.2021 - 13.04.2021)
 * Automatically disable bossbar support on 1.8 to prevent issue if bossbar is enabled on config.yml
 * Fix when arena selector GUI does not opened

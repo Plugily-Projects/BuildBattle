@@ -20,14 +20,13 @@
 
 package plugily.projects.buildbattle.menus.options.registry.biomes;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
+import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
@@ -60,7 +59,8 @@ public class BiomeChangeOption {
 
       @Override
       public void onTargetClick(InventoryClickEvent e) {
-        BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+        Player who = (Player) e.getWhoClicked();
+        BaseArena arena = ArenaRegistry.getArena(who);
         if(arena == null) {
           return;
         }
@@ -68,11 +68,11 @@ public class BiomeChangeOption {
         if(item == BiomeItem.INVALID_BIOME) {
           return;
         }
-        if(!e.getWhoClicked().hasPermission(item.getPermission())) {
-          e.getWhoClicked().sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.No-Permission-For-Biome"));
+        if(!who.hasPermission(item.getPermission())) {
+          who.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.No-Permission-For-Biome"));
           return;
         }
-        Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());
+        Plot plot = arena.getPlotManager().getPlot(who);
         Biome biome = item.getBiome().getBiome();
         if(biome != null) {
           for(Block block : plot.getCuboid().blockList()) {
@@ -80,13 +80,13 @@ public class BiomeChangeOption {
           }
         }
         for(Chunk chunk : plot.getCuboid().chunkList()) {
-          for(Player p : Bukkit.getOnlinePlayers()) {
+          for(Player p : plugin.getServer().getOnlinePlayers()) {
             if(p.getWorld().equals(chunk.getWorld())) {
               Utils.sendMapChunk(p, chunk);
             }
           }
         }
-        for(Player p : plot.getOwners()) {
+        for(Player p : plot.getMembers()) {
           p.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Biome.Biome-Set"));
         }
       }

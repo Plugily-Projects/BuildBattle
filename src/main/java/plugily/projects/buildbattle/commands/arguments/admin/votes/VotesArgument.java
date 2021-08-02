@@ -25,7 +25,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import pl.plajerlair.commonsbox.number.NumberUtils;
+import plugily.projects.commonsbox.number.NumberUtils;
 import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
 import plugily.projects.buildbattle.commands.arguments.data.CommandArgument;

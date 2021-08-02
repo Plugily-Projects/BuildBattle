@@ -20,13 +20,12 @@
 
 package plugily.projects.buildbattle.arena.vote;
 
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
-import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerInteractEvent;
-import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
+import plugily.projects.commonsbox.minecraft.compat.events.api.CBPlayerInteractEvent;
+import plugily.projects.commonsbox.minecraft.item.ItemUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
@@ -64,21 +63,29 @@ public class VoteEvents implements Listener {
     }
 
     BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
-    if(arena == null || arena instanceof GuessTheBuildArena || arena.getArenaState() != ArenaState.IN_GAME || !((SoloArena) arena).isVoting()) {
+    if(arena == null || arena instanceof GuessTheBuildArena || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
 
+    SoloArena solo = (SoloArena) arena;
+    if (!solo.isVoting())
+      return;
+
     User user = plugin.getUserManager().getUser(e.getPlayer());
-    Plot plot = ((SoloArena) arena).getVotingPlot();
+    Plot plot = solo.getVotingPlot();
+
     if(plugin.getVoteItems().getReportItem().equals(e.getItem())) {
       user.setStat(StatsStorage.StatisticType.REPORTS, user.getStat(StatsStorage.StatisticType.REPORTS) + 1);
+
       int reportsAmountNeeded = plugin.getConfig().getInt("Run-Command-On-Report.Reports-Amount-To-Run", -1);
 
-      if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.RUN_COMMAND_ON_REPORT)
-          && (reportsAmountNeeded == -1 || user.getStat(StatsStorage.StatisticType.REPORTS) >= reportsAmountNeeded) && plot != null) {
-        plot.getOwners().forEach(player -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+      if(plot != null && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.RUN_COMMAND_ON_REPORT)
+          && (reportsAmountNeeded == -1 || user.getStat(StatsStorage.StatisticType.REPORTS) >= reportsAmountNeeded)) {
+        plot.getMembers().forEach(player -> plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),
             plugin.getConfig().getString("Run-Command-On-Report.Command", "kick %reported%")
                 .replace("%reported%", player.getName()).replace("%reporter%", e.getPlayer().getName())));
+        e.getPlayer().getInventory().remove(e.getItem());
+        e.getPlayer().updateInventory();
         plugin.getRewardsHandler().performReward(e.getPlayer(), Reward.RewardType.REPORT, -1);
       }
 
@@ -86,7 +93,7 @@ public class VoteEvents implements Listener {
       return;
     }
 
-    if(plot != null && plot.getOwners().contains(e.getPlayer())) {
+    if(plot != null && plot.getMembers().contains(e.getPlayer())) {
       e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Cant-Vote-Own-Plot"));
       e.setCancelled(true);
       return;

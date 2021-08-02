@@ -78,6 +78,3 @@ rewards:
       - eco give %PLAYER% 2
     10:
       - eco give %PLAYER% 1
-  #Helpful for servers that are using more than one scoreboard!
-  scoreboard_remove:
-    - p:sb on

@@ -33,7 +33,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.LinkedHashMap;
 import java.util.UUID;
 
 /**
@@ -52,24 +51,29 @@ public class LeaderboardArgument {
             sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Statistics.Type-Name"));
             return;
           }
-          StatsStorage.StatisticType statisticType = StatsStorage.StatisticType.valueOf(args[1].toUpperCase());
+          StatsStorage.StatisticType statisticType = StatsStorage.StatisticType.BLOCKS_BROKEN;
+          try {
+            statisticType = StatsStorage.StatisticType.valueOf(args[1].toUpperCase());
+          } catch (IllegalArgumentException ex) {
+          }
+
           if(!statisticType.isPersistent()) {
             sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Statistics.Invalid-Name"));
             return;
           }
-          java.util.Map<UUID, Integer> stats = (LinkedHashMap<UUID, Integer>) StatsStorage.getStats(statisticType);
+          java.util.Map<UUID, Integer> stats = StatsStorage.getStats(statisticType);
           sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Statistics.Header"));
           String statistic = StringUtils.capitalize(statisticType.toString().toLowerCase().replace('_', ' '));
+          Object[] array = stats.keySet().toArray();
+          UUID current = (UUID) array[array.length - 1];
           for(int i = 0; i < 10; i++) {
             try {
-              UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
               String message = registry.getPlugin().getChatManager().colorMessage("Commands.Statistics.Format");
               message = StringUtils.replace(message, "%position%", Integer.toString(i + 1));
               message = StringUtils.replace(message, "%name%", Bukkit.getOfflinePlayer(current).getName());
-              message = StringUtils.replace(message, "%value%", String.valueOf(stats.get(current)));
+              message = StringUtils.replace(message, "%value%", String.valueOf(stats.remove(current)));
               message = StringUtils.replace(message, "%statistic%", statistic); //Games_played > Games played etc
               sender.sendMessage(message);
-              stats.remove(current);
             } catch(IndexOutOfBoundsException ex) {
               String message = registry.getPlugin().getChatManager().colorMessage("Commands.Statistics.Format");
               message = StringUtils.replace(message, "%position%", Integer.toString(i + 1));
@@ -78,7 +82,6 @@ public class LeaderboardArgument {
               message = StringUtils.replace(message, "%statistic%", statistic); //Games_played > Games played etc
               sender.sendMessage(message);
             } catch(NullPointerException ex) {
-              UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
               if(registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
                 try(Connection connection = registry.getPlugin().getMysqlDatabase().getConnection();
                     Statement statement = connection.createStatement();

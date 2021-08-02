@@ -21,7 +21,7 @@
 package plugily.projects.buildbattle.user.data;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.user.User;
@@ -41,25 +41,29 @@ public class FileStats implements UserDatabase {
 
   @Override
   public void saveStatistic(User user, StatsStorage.StatisticType stat) {
-    config.set(user.getPlayer().getUniqueId().toString() + "." + stat.getName(), user.getStat(stat));
+    config.set(user.getUniqueId().toString() + "." + stat.getName(), user.getStat(stat));
     ConfigUtils.saveConfig(plugin, config, "stats");
   }
 
   @Override
   public void saveAllStatistic(User user) {
+    String stringId = user.getUniqueId().toString();
+
     for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-      if(!stat.isPersistent()) {
-        continue;
+      if(stat.isPersistent()) {
+        config.set(stringId + "." + stat.getName(), user.getStat(stat));
       }
-      config.set(user.getPlayer().getUniqueId().toString() + "." + stat.getName(), user.getStat(stat));
     }
+
     ConfigUtils.saveConfig(plugin, config, "stats");
   }
 
   @Override
   public void loadStatistics(User user) {
+    String stringId = user.getUniqueId().toString();
+
     for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-      user.setStat(stat, config.getInt(user.getPlayer().getUniqueId().toString() + "." + stat.getName(), 0));
+      user.setStat(stat, config.getInt(stringId + "." + stat.getName(), 0));
     }
   }
 }

@@ -20,6 +20,7 @@
 
 package plugily.projects.buildbattle.handlers.items;
 
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -27,27 +28,41 @@ import org.bukkit.inventory.ItemStack;
  */
 public class SpecialItem {
 
+  public static final SpecialItem INVALID_ITEM = new SpecialItem("INVALID", new ItemStack(Material.BEDROCK), -1, DisplayStage.LOBBY);
   private final String name;
   private final ItemStack itemStack;
-  private final int slot;
+  private int slot;
+  private final DisplayStage displayStage;
 
-  public SpecialItem(String name, ItemStack itemStack, int slot) {
+  public SpecialItem(String name, ItemStack itemStack, int slot, DisplayStage displayStage) {
     this.name = name;
     this.itemStack = itemStack;
     this.slot = slot;
+    this.displayStage = displayStage;
   }
 
   public String getName() {
     return name;
   }
 
-  public int getSlot() {
-    return slot;
-  }
-
   public ItemStack getItemStack() {
     return itemStack;
   }
 
+  public int getSlot() {
+    return slot;
+  }
+
+  public void setSlot(int slot) {
+    this.slot = slot;
+  }
+
+  public DisplayStage getDisplayStage() {
+    return displayStage;
+  }
+
+  public enum DisplayStage {
+    LOBBY, SPECTATOR, IN_GAME, TEAM
+  }
 
 }

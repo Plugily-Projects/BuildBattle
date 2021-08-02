@@ -20,14 +20,18 @@
 
 package plugily.projects.buildbattle.events;
 
+import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.ArenaState;
@@ -45,29 +49,53 @@ public class LobbyEvents implements Listener {
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)
-  public void onFoodLose(FoodLevelChangeEvent e) {
-    if(e.getEntity().getType() != EntityType.PLAYER) {
+  public void onFoodLose(FoodLevelChangeEvent event) {
+    if(event.getEntity().getType() != EntityType.PLAYER) {
       return;
     }
-    Player player = (Player) e.getEntity();
-    BaseArena arena = ArenaRegistry.getArena(player);
+    BaseArena arena = ArenaRegistry.getArena((Player) event.getEntity());
     if(arena != null && (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS)) {
-      e.setCancelled(true);
+      event.setCancelled(true);
     }
   }
 
   @EventHandler
-  public void onLobbyDamage(EntityDamageEvent e) {
-    if(e.getEntity().getType() != EntityType.PLAYER) {
+  public void onLobbyDamage(EntityDamageEvent event) {
+    if(event.getEntity().getType() != EntityType.PLAYER) {
       return;
     }
-    Player player = (Player) e.getEntity();
+    Player player = (Player) event.getEntity();
     BaseArena arena = ArenaRegistry.getArena(player);
     if(arena == null || arena.getArenaState() == ArenaState.IN_GAME) {
       return;
     }
-    e.setCancelled(true);
+    event.setCancelled(true);
     player.setHealth(VersionUtils.getMaxHealth(player));
+  }
+
+  @EventHandler
+  public void onItemFrameRotate(PlayerInteractEntityEvent event) {
+    Player player = event.getPlayer();
+    BaseArena arena = ArenaRegistry.getArena(player);
+    if(arena == null || arena.getArenaState() == ArenaState.IN_GAME) {
+      return;
+    }
+    if(event.getRightClicked() instanceof ItemFrame && !((ItemFrame) event.getRightClicked()).getItem().getType().equals(Material.AIR)) {
+      event.setCancelled(true);
+    }
+  }
+
+  @EventHandler
+  public void onHangingBreak(HangingBreakByEntityEvent event) {
+    if(event.getEntity().getType() != EntityType.PLAYER) {
+      return;
+    }
+    Player player = (Player) event.getEntity();
+    BaseArena arena = ArenaRegistry.getArena(player);
+    if(arena == null || arena.getArenaState() == ArenaState.IN_GAME) {
+      return;
+    }
+    event.setCancelled(true);
   }
 
 }

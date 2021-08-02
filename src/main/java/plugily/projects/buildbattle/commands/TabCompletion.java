@@ -25,7 +25,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
@@ -55,7 +55,7 @@ public class TabCompletion implements TabCompleter {
 
     if(cmd.getName().equalsIgnoreCase("buildbattleadmin")) {
       if(args.length == 1) {
-        cmds.addAll(registry.getMappedArguments().get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName)
+        cmds.addAll(registry.getMappedArguments().get("buildbattleadmin").stream().map(CommandArgument::getArgumentName)
             .collect(Collectors.toList()));
       } else if(args.length == 2) {
         if(args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("removeplot")
@@ -69,12 +69,18 @@ public class TabCompletion implements TabCompleter {
           cmds.addAll(Arrays.asList("add", "set"));
         }
       } else if(args.length == 3 && args[0].equalsIgnoreCase("removeplot")) {
-        FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
-        String path = "instances." + ArenaRegistry.getArena(args[1]).getID() + ".plots";
-        if (config.isConfigurationSection(path)) {
-          cmds.addAll(config.getConfigurationSection(path).getKeys(false));
+        BaseArena arena = ArenaRegistry.getArena(args[1]);
+        if (arena != null) {
+          FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
+          org.bukkit.configuration.ConfigurationSection section =
+              config.getConfigurationSection("instances." + arena.getID() + ".plots");
+          if (section != null) {
+            cmds.addAll(section.getKeys(false));
+          }
         }
       }
+
+      return cmds.isEmpty() ? null : cmds; // Completes the player names
     }
 
     if(cmd.getName().equalsIgnoreCase("buildbattle")) {
@@ -85,7 +91,7 @@ public class TabCompletion implements TabCompleter {
           cmds.addAll(ArenaRegistry.getArenas().stream().map(BaseArena::getID).collect(Collectors.toList()));
         }
       } else if(args.length == 1) {
-        cmds.addAll(registry.getMappedArguments().get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName)
+        cmds.addAll(registry.getMappedArguments().get("buildbattle").stream().map(CommandArgument::getArgumentName)
             .collect(Collectors.toList()));
       }
     }

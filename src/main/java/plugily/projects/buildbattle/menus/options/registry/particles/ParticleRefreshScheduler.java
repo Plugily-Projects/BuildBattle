@@ -23,12 +23,13 @@ package plugily.projects.buildbattle.menus.options.registry.particles;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitTask;
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
 
+import java.util.HashSet;
 import java.util.Map.Entry;
 
 /**
@@ -43,17 +44,22 @@ public class ParticleRefreshScheduler {
       task.cancel();
     }
 
+    int particleRefreshTick = plugin.getConfig().getInt("Particle-Refresh-Per-Tick", 10);
+    int amountParticle = plugin.getConfig().getInt("Amount-One-Particle-Effect-Contains", 20);
+
     task = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
       for(BaseArena arena : ArenaRegistry.getArenas()) {
         if(!arena.getPlayers().isEmpty()) {
           for(Plot buildPlot : arena.getPlotManager().getPlots()) {
-            for(Entry<Location, String> map : buildPlot.getParticles().entrySet()) {
-              VersionUtils.sendParticles(map.getValue(), buildPlot.getOwners().get(0), map.getKey(), plugin.getConfig().getInt("Amount-One-Particle-Effect-Contains", 20));
+            if(!buildPlot.getMembers().isEmpty()) {
+              for(Entry<Location, String> map : buildPlot.getParticles().entrySet()) {
+                VersionUtils.sendParticles(map.getValue(), new HashSet<>(buildPlot.getMembers()), map.getKey(), amountParticle);
+              }
             }
           }
         }
       }
-    }, plugin.getConfig().getInt("Particle-Refresh-Per-Tick", 10), plugin.getConfig().getInt("Particle-Refresh-Per-Tick", 10));
+    }, particleRefreshTick, particleRefreshTick);
   }
 
 }

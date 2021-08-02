@@ -25,10 +25,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
-import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
+import plugily.projects.commonsbox.minecraft.item.ItemUtils;
+import plugily.projects.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.menus.options.OptionsRegistry;
 import plugily.projects.buildbattle.utils.Utils;
@@ -96,7 +96,13 @@ public class PlayerHeadsRegistry {
   }
 
   public boolean isHeadsMenu(Inventory inventory) {
-    return categories.values().stream().filter(inv -> inv.equals(inventory)).findFirst().isPresent();
+    for (Inventory inv : categories.values()) {
+      if (inv.equals(inventory)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   public Map<HeadsCategory, Inventory> getCategories() {

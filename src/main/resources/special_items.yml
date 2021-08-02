@@ -1,0 +1,62 @@
+# Custom arena special items.
+# Probably you will only translate displayname and lore so don't mess with it.
+
+# Please don't modify 'Options', 'Leave-Lobby', 'Leave-Spectator', 'Player-List' and 'Spectator-Options', 'Forcestart'
+# nodes as they are hardcoded in code!
+
+Options-Menu:
+  displayname: "&a&lOptions menu &7(Right Click)"
+  lore:
+    - "&7Right-click to open options menu"
+  material-name: NETHER_STAR
+  slot: 8
+  stage: in_game
+
+Leave-Lobby:
+  displayname: "&c&lReturn to Lobby &7(Right Click)"
+  lore:
+    - "&7Right-click to leave to the lobby"
+  material-name: BED
+  slot: 8
+  stage: lobby
+
+Leave-Spectator:
+  displayname: "&c&lLeave the Game &7(Right Click)"
+  lore:
+    - "&7Right-click to leave to the lobby"
+  material-name: BED
+  slot: 8
+  stage: spectator
+
+Player-List:
+  displayname: "&a&lAlive Players &7(Right Click)"
+  lore:
+    - "&7Right-click to see alive players list"
+  material-name: PLAYER_HEAD
+  slot: 0
+  stage: spectator
+
+Spectator-Options:
+  displayname: "&b&lSpectator Settings &7(Right Click)"
+  lore:
+    - "&7Right-click to adjust spectator settings"
+  material-name: COMPARATOR
+  slot: 4
+  stage: spectator
+
+Forcestart:
+  displayname: "&c&lClick to start the game &7(Right Click)"
+  lore:
+    - "&7You need the following permission for it"
+    - "&7buildbattle.admin.forcestart"
+  material-name: EMERALD
+  slot: 0
+  stage: lobby
+
+Plot-Selector:
+  displayname: "&b&lSelect Plot"
+  lore:
+    "&7Right-click to select your plot"
+  material-name: WOOL
+  slot: 1
+  stage: team

@@ -29,15 +29,14 @@ import me.tigerhix.lib.scoreboard.type.ScoreboardHandler;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaState;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.impl.SoloArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.language.LanguageManager;
-import plugily.projects.buildbattle.handlers.reward.Reward;
 import plugily.projects.buildbattle.user.User;
+import plugily.projects.commonsbox.string.StringFormatUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -110,7 +109,6 @@ public class ScoreboardManager {
       if(board.getHolder().equals(user.getPlayer())) {
         scoreboards.remove(board);
         board.deactivate();
-        plugin.getRewardsHandler().performReward(user.getPlayer(), Reward.RewardType.SCOREBOARD_REMOVED, -1);
         return;
       }
     }
@@ -130,7 +128,7 @@ public class ScoreboardManager {
     if(arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
       lines = scoreboardContents.get(arena.getArenaState().getFormattedName() + "_" + arena.getArenaType().getPrefix());
     }
-    if (lines != null) {
+    if(lines != null) {
       for(String line : lines) {
         builder.next(formatScoreboardLine(line, user));
       }
@@ -152,12 +150,11 @@ public class ScoreboardManager {
 
       Plot plot = arena.getPlotManager().getPlot(player);
       if(arena.getArenaType() == BaseArena.ArenaType.TEAM && plot != null) {
-        if(plot.getOwners().size() == 2) {
-          if(plot.getOwners().get(0).equals(player)) {
-            returnString = StringUtils.replace(returnString, "%TEAMMATE%", plot.getOwners().get(1).getName());
-          } else {
-            returnString = StringUtils.replace(returnString, "%TEAMMATE%", plot.getOwners().get(0).getName());
-          }
+        if(plot.getMembers().size() > 1) {
+          StringBuilder members = new StringBuilder();
+          plot.getMembers().forEach(p -> members.append(p.getName()).append(" & "));
+          members.deleteCharAt(members.length() - 2);
+          returnString = StringUtils.replace(returnString, "%TEAMMATE%", members.toString());
         } else {
           returnString = StringUtils.replace(returnString, "%TEAMMATE%", plugin.getChatManager().colorMessage("In-Game.Nobody"));
         }
@@ -174,9 +171,12 @@ public class ScoreboardManager {
     String returnString = string;
     returnString = StringUtils.replace(returnString, "%MIN_PLAYERS%", Integer.toString(arena.getMinimumPlayers()));
     returnString = StringUtils.replace(returnString, "%MAX_PLAYERS%", Integer.toString(arena.getMaximumPlayers()));
-    returnString = StringUtils.replace(returnString, "%TIMER%", Integer.toString(arena.getTimer()));
-    returnString = StringUtils.replace(returnString, "%TIME_LEFT%", Long.toString(arena.getTimer()));
-    returnString = StringUtils.replace(returnString, "%FORMATTED_TIME_LEFT%", StringFormatUtils.formatIntoMMSS(arena.getTimer()));
+
+    int timer = arena.getTimer();
+
+    returnString = StringUtils.replace(returnString, "%TIMER%", Integer.toString(timer));
+    returnString = StringUtils.replace(returnString, "%TIME_LEFT%", Long.toString(timer));
+    returnString = StringUtils.replace(returnString, "%FORMATTED_TIME_LEFT%", StringFormatUtils.formatIntoMMSS(timer));
     returnString = StringUtils.replace(returnString, "%ARENA_ID%", arena.getID());
     returnString = StringUtils.replace(returnString, "%MAPNAME%", arena.getMapName());
     return returnString;

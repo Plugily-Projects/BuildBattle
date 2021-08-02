@@ -23,12 +23,9 @@ package plugily.projects.buildbattle.arena.impl;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
-import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
@@ -48,6 +45,10 @@ import plugily.projects.buildbattle.menus.themevoter.VotePoll;
 import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.utils.Debugger;
 import plugily.projects.buildbattle.utils.MessageUtils;
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.misc.MiscUtils;
+import plugily.projects.commonsbox.minecraft.serialization.InventorySerializer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,7 +68,7 @@ public class SoloArena extends BaseArena {
   private final Main plugin;
 
   private final Map<Integer, List<Player>> topList = new HashMap<>();
-  private final Queue<Player> queue = new LinkedList<>();
+  private final Queue<Plot> queue = new LinkedList<>();
   private boolean receivedVoteItems;
   private Plot votingPlot;
   private boolean voteTime;
@@ -110,36 +111,39 @@ public class SoloArena extends BaseArena {
   }
 
   @NotNull
-  public Queue<Player> getQueue() {
+  public Queue<Plot> getQueue() {
     return queue;
   }
 
   @Override
   public void run() {
     //idle task
-    if(getPlayers().isEmpty() && getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+    if(getArenaState() == ArenaState.WAITING_FOR_PLAYERS && getPlayers().isEmpty()) {
       return;
     }
-    if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-      updateBossBar();
-    }
+
+    updateBossBar();
+
     switch(getArenaState()) {
       case WAITING_FOR_PLAYERS:
         if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           getPlugin().getServer().setWhitelist(false);
         }
         getPlotManager().resetPlotsGradually();
-        if(getPlayers().size() < getMinimumPlayers()) {
+
+        int minmPlayers = getMinimumPlayers();
+
+        if(getPlayers().size() < minmPlayers) {
           if(getTimer() <= 0) {
             setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
-            getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", String.valueOf(getMinimumPlayers())));
+            getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", Integer.toString(minmPlayers)));
             return;
           }
         } else {
           getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
           setArenaState(ArenaState.STARTING);
           if(HolidayManager.getCurrentHoliday() != HolidayManager.HolidayType.NONE) {
-            this.initPoll();
+            initPoll();
           }
           Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
           setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this));
@@ -148,13 +152,22 @@ public class SoloArena extends BaseArena {
         break;
       case STARTING:
         int lobbyTimer = getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this);
-        for(Player player : getPlayers()) {
-          float exp = (float) (getTimer() / (double) lobbyTimer);
-          player.setExp((exp > 1f || exp < 0f) ? 1f : exp);
-          player.setLevel(getTimer());
+        int timer = getTimer();
+        float exp = (float) (timer / (double) lobbyTimer);
+
+        if(exp > 1f || exp < 0f) {
+          exp = 1f;
         }
-        if(getPlayers().size() < getMinimumPlayers() && !isForceStart()) {
-          getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", String.valueOf(getMinimumPlayers())));
+
+        for(Player player : getPlayers()) {
+          player.setExp(exp);
+          player.setLevel(timer);
+        }
+
+        int minPlayers = getMinimumPlayers();
+
+        if(getPlayers().size() < minPlayers && !isForceStart()) {
+          getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", Integer.toString(minPlayers)));
           setArenaState(ArenaState.WAITING_FOR_PLAYERS);
           Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
           setTimer(lobbyTimer);
@@ -171,7 +184,6 @@ public class SoloArena extends BaseArena {
           }
           setArenaState(ArenaState.IN_GAME);
           distributePlots();
-          getPlotManager().teleportToPlots();
           setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.THEME_VOTE, this));
           for(Player player : getPlayers()) {
             player.getInventory().clear();
@@ -231,10 +243,14 @@ public class SoloArena extends BaseArena {
           Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
           setTimer(10);
         }
-        if((getTimer() == (4 * 60) || getTimer() == (3 * 60) || getTimer() == 5 * 60 || getTimer() == 30 || getTimer() == 2 * 60 || getTimer() == 60 || getTimer() == 15) && !this.isVoting()) {
+
+        int timerco = getTimer();
+
+        if((timerco == (4 * 60) || timerco == (3 * 60) || timerco == (5 * 60) || timerco == 30 || timerco == (2 * 60) || timerco == 60 || timerco == 15) && !voteTime) {
           sendBuildLeftTimeMessage();
         }
-        if(getTimer() != 0 && !receivedVoteItems) {
+
+        if(timerco != 0 && !receivedVoteItems) {
           if(getOption(ArenaOption.IN_PLOT_CHECKER) == 1) {
             setOptionValue(ArenaOption.IN_PLOT_CHECKER, 0);
             for(Player player : getPlayers()) {
@@ -247,13 +263,14 @@ public class SoloArena extends BaseArena {
             }
           }
           addOptionValue(ArenaOption.IN_PLOT_CHECKER, 1);
-        } else if(getTimer() == 0 && !receivedVoteItems) {
+        } else if(timerco == 0 && !receivedVoteItems) {
           for(Player player : getPlayers()) {
             User user = getPlugin().getUserManager().getUser(player);
 
             if(user.isSpectator()) continue;
-
-            queue.add(player);
+            if(!queue.contains(user.getCurrentPlot())) {
+              queue.add(user.getCurrentPlot());
+            }
             player.getInventory().clear();
             getPlugin().getVoteItems().giveVoteItems(player);
             user.setStat(StatsStorage.StatisticType.LOCAL_POINTS, 3);
@@ -267,9 +284,9 @@ public class SoloArena extends BaseArena {
           } else {
             if(votingPlot != null) {
               if(votingPlot.getPoints() == 0) {
+                String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voted-For-Player-Plot").replace("%PLAYER%", votingPlot.getFormattedMembers());
                 for(Player player : getPlayers()) {
                   if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER)) {
-                    String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voted-For-Player-Plot").replace("%PLAYER%", votingPlot.getOwners().get(0).getName());
                     for(Player p : getPlayers()) {
                       String owner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
                       owner = formatWinners(votingPlot, owner);
@@ -283,16 +300,9 @@ public class SoloArena extends BaseArena {
                   if(points == 0) {
                     points = 3;
                   }
-                  votingPlot.setPoints(votingPlot.getPoints() + points);
-                  user.setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
-                }
-              }
-              if(getArenaType() == ArenaType.TEAM) {
-                for(Plot p : getPlotManager().getPlots()) {
-                  if(p.getOwners().size() == 2) {
-                    //removing second owner to not vote for same plot twice
-                    queue.remove(p.getOwners().get(1));
-                  }
+                  if(!votingPlot.getMembers().contains(player))
+                    votingPlot.setPoints(votingPlot.getPoints() + points);
+                  user.setStat(StatsStorage.StatisticType.LOCAL_POINTS, 3);
                 }
               }
             }
@@ -313,8 +323,11 @@ public class SoloArena extends BaseArena {
             }
             announceResults();
 
-            for(Player player : getPlayers()) {
-              player.teleport(winnerPlot.getTeleportLocation());
+            Location winnerLocation = winnerPlot.getTeleportLocation();
+            List<Player> players = getPlayers();
+            players.addAll(getSpectators());
+            for(Player player : players) {
+              player.teleport(winnerLocation);
               String winner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Winner-Title");
               winner = formatWinners(winnerPlot, winner);
               VersionUtils.sendTitle(player, winner, 5, 35, 5);
@@ -327,6 +340,8 @@ public class SoloArena extends BaseArena {
         setTimer(getTimer() - 1);
         break;
       case ENDING:
+        List<Player> players = getPlayers();
+        players.addAll(getSpectators());
         getScoreboardManager().stopAllScoreboards();
         if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           getPlugin().getServer().setWhitelist(false);
@@ -334,13 +349,16 @@ public class SoloArena extends BaseArena {
         setVoting(false);
         setThemeTimerSet(false);
         if(getPlugin().getConfig().getBoolean("Firework-When-Game-Ends", true)) {
-          for(Player player : getPlayers()) {
+          for(Player player : players) {
             MiscUtils.spawnRandomFirework(player.getLocation());
           }
         }
         if(getTimer() <= 0) {
-          teleportAllToEndLocation();
-          for(Player player : getPlayers()) {
+          for(Player player : players) {
+            User user = plugin.getUserManager().getUser(player);
+            user.removeScoreboard(this);
+            user.setSpectator(false);
+            teleportToEndLocation(player);
             doBarAction(BarAction.REMOVE, player);
             player.getInventory().clear();
             player.setGameMode(GameMode.SURVIVAL);
@@ -348,7 +366,7 @@ public class SoloArena extends BaseArena {
             player.setAllowFlight(false);
             player.getInventory().setArmorContents(null);
             player.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("Commands.Teleported-To-The-Lobby"));
-            getPlugin().getUserManager().getUser(player).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
+            user.addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
             if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
               InventorySerializer.loadInventory(getPlugin(), player);
             }
@@ -374,9 +392,16 @@ public class SoloArena extends BaseArena {
         setOptionValue(ArenaOption.IN_PLOT_CHECKER, 0);
         setArenaState(ArenaState.WAITING_FOR_PLAYERS);
         topList.clear();
+        //clear plot members
+        for(Plot plot : getPlotManager().getPlots()) {
+          plot.getMembers().clear();
+        }
         setThemeTimerSet(false);
         setThemeVoteTime(true);
         voteMenu.resetPoll();
+        for(Player spectator : new ArrayList<>(getSpectators())) {
+          ArenaManager.leaveAttempt(spectator, this);
+        }
         if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           if(ConfigUtils.getConfig(getPlugin(), "bungee").getBoolean("Shutdown-When-Game-Ends")) {
             getPlugin().getServer().shutdown();
@@ -402,11 +427,8 @@ public class SoloArena extends BaseArena {
         getGameBar().setTitle(getPlugin().getChatManager().colorMessage("Bossbar.Starting-In").replace("%time%", Integer.toString(getTimer())));
         break;
       case IN_GAME:
-        if(!isVoting()) {
-          getGameBar().setTitle(getPlugin().getChatManager().colorMessage("Bossbar.Time-Left").replace("%time%", Integer.toString(getTimer())));
-        } else {
-          getGameBar().setTitle(getPlugin().getChatManager().colorMessage("Bossbar.Vote-Time-Left").replace("%time%", Integer.toString(getTimer())));
-        }
+        getGameBar().setTitle(getPlugin().getChatManager().colorMessage(voteTime ? "Bossbar.Vote-Time-Left" : "Bossbar.Time-Left")
+            .replace("%time%", Integer.toString(getTimer())));
         break;
       default:
         break;
@@ -417,7 +439,7 @@ public class SoloArena extends BaseArena {
   public void distributePlots() {
     //clear plots before distribution to avoid problems
     for(Plot plot : getPlotManager().getPlots()) {
-      plot.getOwners().clear();
+      plot.getMembers().clear();
     }
     List<Player> players = new ArrayList<>(getPlayers());
     for(Plot plot : getPlotManager().getPlots()) {
@@ -431,39 +453,43 @@ public class SoloArena extends BaseArena {
         continue;
       }
 
-      plot.addOwner(first);
+      plot.addMember(first, this, true);
       user.setCurrentPlot(plot);
 
       players.remove(0);
     }
     if(!players.isEmpty()) {
       MessageUtils.errorOccurred();
-      Debugger.sendConsoleMsg("&c[BuildBattle] [PLOT WARNING] Not enough plots in arena " + getID() + "! Lacks " + players.size() + " plots");
+      Debugger.sendConsoleMsg("&c[Build Battle] [PLOT WARNING] Not enough plots in arena " + getID() + "! Lacks " + players.size() + " plots");
       Debugger.sendConsoleMsg("&c[PLOT WARNING] Required " + getPlayers().size() + " but have " + getPlotManager().getPlots().size());
       Debugger.sendConsoleMsg("&c[PLOT WARNING] Instance was stopped!");
       ArenaManager.stopGame(false, this);
     }
+    getPlotManager().teleportToPlots();
   }
 
   public void voteRoutine() {
     if(!queue.isEmpty()) {
       setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.PLOT_VOTE, this));
-      Player player = queue.poll();
-      while(getPlotManager().getPlot(player) == null && !queue.isEmpty()) {
+      Plot plot = queue.poll();
+      while(plot == null && !queue.isEmpty()) {
+        // should not happen anymore... to be removed
         System.out.print("A PLAYER HAS NO PLOT!");
-        player = queue.poll();
+        plot = queue.poll();
       }
-      if(queue.isEmpty() && getPlotManager().getPlot(player) == null) {
+      if(queue.isEmpty() && plot == null) {
         votingPlot = null;
         return;
       }
 
       // getPlotManager().teleportAllToPlot(plotManager.getPlot(player.getUniqueId()));
-      votingPlot = getPlotManager().getPlot(player);
-      String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voting-For-Player-Plot").replace("%PLAYER%", player.getName());
+      votingPlot = plot;
+      String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voting-For-Player-Plot").replace("%PLAYER%", plot.getFormattedMembers());
+
+      Location teleportLoc = votingPlot.getTeleportLocation();
 
       for(Player p : getPlayers()) {
-        p.teleport(votingPlot.getTeleportLocation());
+        p.teleport(teleportLoc);
         p.setPlayerWeather(votingPlot.getWeatherType());
         p.setPlayerTime(Plot.Time.format(votingPlot.getTime(), p.getWorld().getTime()), false);
         if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER)) {
@@ -477,9 +503,9 @@ public class SoloArena extends BaseArena {
       }
 
       for(Player spectator : getSpectators()) {
-        spectator.teleport(votingPlot.getTeleportLocation());
+        spectator.teleport(teleportLoc);
         spectator.setPlayerWeather(votingPlot.getWeatherType());
-        spectator.setPlayerTime(Plot.Time.format(votingPlot.getTime(), player.getWorld().getTime()), false);
+        spectator.setPlayerTime(Plot.Time.format(votingPlot.getTime(), spectator.getWorld().getTime()), false);
         String owner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
         owner = formatWinners(votingPlot, owner);
         VersionUtils.sendTitle(spectator, owner, 5, 40, 5);
@@ -489,7 +515,7 @@ public class SoloArena extends BaseArena {
   }
 
   public String formatWinners(Plot plot, String string) {
-    return string.replace("%player%", !plot.getOwners().isEmpty() ? plot.getOwners().get(0).getName() : "");
+    return string.replace("%player%", plot.getFormattedMembers());
   }
 
   public void voteForNextPlot() {
@@ -497,12 +523,17 @@ public class SoloArena extends BaseArena {
       if(votingPlot.getPoints() == 0) {
         for(Player player : getPlayers()) {
           User user = getPlugin().getUserManager().getUser(player);
-          votingPlot.setPoints(votingPlot.getPoints() + user.getStat(StatsStorage.StatisticType.LOCAL_POINTS));
+          if(!votingPlot.getMembers().contains(player))
+            votingPlot.setPoints(votingPlot.getPoints() + user.getStat(StatsStorage.StatisticType.LOCAL_POINTS));
           user.setStat(StatsStorage.StatisticType.LOCAL_POINTS, 3);
+          if(!player.getInventory().contains(plugin.getVoteItems().getReportItem())) {
+            player.getInventory().setItem(plugin.getVoteItems().getReportVoteItem().getSlot(), plugin.getVoteItems().getReportVoteItem().getItemStack());
+            player.updateInventory();
+          }
         }
       }
-      if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER) && !votingPlot.getOwners().isEmpty()) {
-        String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voted-For-Player-Plot").replace("%PLAYER%", votingPlot.getOwners().get(0).getName());
+      if(!votingPlot.getMembers().isEmpty() && getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER)) {
+        String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voted-For-Player-Plot").replace("%PLAYER%", votingPlot.getFormattedMembers());
         for(Player p : getPlayers()) {
           String owner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
           owner = formatWinners(votingPlot, owner);
@@ -540,14 +571,19 @@ public class SoloArena extends BaseArena {
           default:
             break;
         }
-        if(message.contains("%place_" + access.toLowerCase() + "%")) {
-          if(topList.containsKey(i) && !topList.get(i).isEmpty()) {
-            Plot plot = getPlotManager().getPlot(topList.get(i).get(0));
-            message = StringUtils.replace(message, "%place_" + access.toLowerCase() + "%", getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Place-" + access)
-                .replace("%player%", formatWinners(topList.get(i)))
+
+        String accessLower = access.toLowerCase();
+
+        if(message.contains("%place_" + accessLower + "%")) {
+          List<Player> list = topList.get(i);
+
+          if(list != null && !list.isEmpty()) {
+            Plot plot = getPlotManager().getPlot(list.get(0));
+            message = StringUtils.replace(message, "%place_" + accessLower + "%", getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Place-" + access)
+                .replace("%player%", formatWinners(list))
                 .replace("%number%", plot == null ? "" : Integer.toString(plot.getPoints())));
           } else {
-            message = StringUtils.replace(message, "%place_" + access.toLowerCase() + "%", getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Place-" + access)
+            message = StringUtils.replace(message, "%place_" + accessLower + "%", getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Place-" + access)
                 .replace("%player%", "None")
                 .replace("%number%", "none"));
           }
@@ -555,18 +591,26 @@ public class SoloArena extends BaseArena {
       }
       formattedSummary.add(message);
     }
-    getPlayers().forEach(player -> formattedSummary.forEach(msg -> MiscUtils.sendCenteredMessage(player, msg)));
+    List<Player> players = getPlayers();
+    players.addAll(getSpectators());
+    players.forEach(player -> formattedSummary.forEach(msg -> MiscUtils.sendCenteredMessage(player, msg)));
     for(Map.Entry<Integer, List<Player>> map : topList.entrySet()) {
       for(Player p : map.getValue()) {
         if(map.getKey() > 3) {
           p.sendMessage(getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Summary-Other-Place").replace("%number%", Integer.toString(map.getKey())));
         }
         User user = getPlugin().getUserManager().getUser(p);
+        Plot plot = getPlotManager().getPlot(p);
+        if(plot != null) {
+          if(plot.getPoints() > user.getStat(StatsStorage.StatisticType.HIGHEST_POINTS)) {
+            user.setStat(StatsStorage.StatisticType.HIGHEST_POINTS, plot.getPoints());
+          }
+          user.addStat(StatsStorage.StatisticType.TOTAL_POINTS_EARNED, plot.getPoints());
+        }
         if(map.getKey() != 1) {
           user.addStat(StatsStorage.StatisticType.LOSES, 1);
           continue;
         }
-        Plot plot = getPlotManager().getPlot(p);
         user.addStat(StatsStorage.StatisticType.WINS, 1);
         if(plot != null && plot.getPoints() > user.getStat(StatsStorage.StatisticType.HIGHEST_WIN)) {
           user.setStat(StatsStorage.StatisticType.HIGHEST_WIN, plot.getPoints());
@@ -601,18 +645,18 @@ public class SoloArena extends BaseArena {
       for(Map.Entry<Integer, List<Player>> map : new HashMap<>(topList).entrySet()) {
         Player first = map.getValue().isEmpty() ? null : map.getValue().get(0);
 
-        if(first == null || getPlotManager().getPlot(first) == null) {
-          topList.put(map.getKey(), buildPlot.getOwners());
-          break;
-        }
         Plot plot = getPlotManager().getPlot(first);
-        if(plot != null && i > plot.getPoints()) {
-          moveScore(map.getKey(), buildPlot.getOwners());
+        if(plot == null) {
+          topList.put(map.getKey(), buildPlot.getMembers());
           break;
         }
-        if(plot != null && i == plot.getPoints()) {
+        if(i > plot.getPoints()) {
+          moveScore(map.getKey(), buildPlot.getMembers());
+          break;
+        }
+        if(i == plot.getPoints()) {
           List<Player> winners = topList.getOrDefault(map.getKey(), new ArrayList<>());
-          winners.addAll(buildPlot.getOwners());
+          winners.addAll(buildPlot.getMembers());
           topList.put(map.getKey(), winners);
           break;
         }
@@ -635,11 +679,11 @@ public class SoloArena extends BaseArena {
   @Override
   public void giveRewards() {
     for(int i = 1; i <= topList.size(); i++) {
-      if(!topList.containsKey(i)) {
-        continue;
-      }
-      for(Player player : topList.get(i)) {
-        getPlugin().getRewardsHandler().performReward(player, Reward.RewardType.PLACE, i);
+      List<Player> list = topList.get(i);
+      if(list != null) {
+        for(Player player : list) {
+          getPlugin().getRewardsHandler().performReward(player, Reward.RewardType.PLACE, i);
+        }
       }
     }
     getPlugin().getRewardsHandler().performReward(this, Reward.RewardType.END_GAME);

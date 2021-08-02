@@ -23,13 +23,9 @@ package plugily.projects.buildbattle.arena;
 import org.bukkit.Location;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
-import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
+import org.jetbrains.annotations.Nullable;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
@@ -38,8 +34,11 @@ import plugily.projects.buildbattle.arena.impl.SoloArena;
 import plugily.projects.buildbattle.arena.impl.TeamArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.utils.Debugger;
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion.Version;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.dimensional.Cuboid;
+import plugily.projects.commonsbox.minecraft.serialization.LocationSerializer;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -66,16 +65,18 @@ public class ArenaRegistry {
    */
   @Nullable
   public static BaseArena getArena(Player p) {
-    if(p == null || !p.isOnline()) {
+    if(p == null) {
       return null;
     }
 
+    java.util.UUID playerId = p.getUniqueId();
+
     for(BaseArena arena : ARENAS) {
       for(Player player : arena.getPlayers()) {
-        if (p.getUniqueId().equals(player.getUniqueId())) return arena;
+        if(playerId.equals(player.getUniqueId())) return arena;
       }
       for(Player player : arena.getSpectators()) {
-        if (p.getUniqueId().equals(player.getUniqueId())) return arena;
+        if(playerId.equals(player.getUniqueId())) return arena;
       }
     }
     return null;
@@ -106,11 +107,19 @@ public class ArenaRegistry {
     return null;
   }
 
+  public static int getArenaPlayersOnline() {
+    int players = 0;
+    for(BaseArena arena : ARENAS) {
+      players += arena.getPlayers().size();
+    }
+    return players;
+  }
+
   public static void registerArenas() {
     Debugger.debug("Initial arenas registration");
     ArenaRegistry.getArenas().clear();
-    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    ConfigurationSection section = config.getConfigurationSection("instances");
+
+    ConfigurationSection section = ConfigUtils.getConfig(plugin, "arenas").getConfigurationSection("instances");
     if(section == null) {
       Debugger.debug(Debugger.Level.WARN, "No instances configuration section in arenas.yml, skipping registration process! Was it manually edited?");
       return;
@@ -119,10 +128,16 @@ public class ArenaRegistry {
       if(id.equalsIgnoreCase("default")) {
         continue;
       }
-      BaseArena arena;
-      String s = "instances." + id + ".";
 
-      switch(BaseArena.ArenaType.valueOf(config.getString(s + "gametype", "solo").toUpperCase())) {
+      BaseArena.ArenaType arenaType;
+      try {
+        arenaType = BaseArena.ArenaType.valueOf(section.getString(id + ".gametype", "solo").toUpperCase());
+      } catch(IllegalArgumentException e) {
+        arenaType = BaseArena.ArenaType.SOLO;
+      }
+
+      BaseArena arena;
+      switch(arenaType) {
         case TEAM:
           arena = new TeamArena(id, plugin);
           break;
@@ -135,68 +150,77 @@ public class ArenaRegistry {
           break;
       }
 
-      if(config.contains(s + "minimumplayers")) {
-        arena.setMinimumPlayers(config.getInt(s + "minimumplayers"));
+      if(section.contains(id + ".minimumplayers")) {
+        arena.setMinimumPlayers(section.getInt(id + ".minimumplayers"));
       } else {
-        arena.setMinimumPlayers(config.getInt("instances.default.minimumplayers"));
+        arena.setMinimumPlayers(section.getInt("instances.default.minimumplayers"));
       }
-      if(config.contains(s + "maximumplayers")) {
-        arena.setMaximumPlayers(config.getInt(s + "maximumplayers"));
+      if(section.contains(id + ".maximumplayers")) {
+        arena.setMaximumPlayers(section.getInt(id + ".maximumplayers"));
       } else {
-        arena.setMaximumPlayers(config.getInt("instances.default.maximumplayers"));
+        arena.setMaximumPlayers(section.getInt("instances.default.maximumplayers"));
       }
-      if(config.contains(s + "mapname")) {
-        arena.setMapName(config.getString(s + "mapname"));
+      if(section.contains(id + ".mapname")) {
+        arena.setMapName(section.getString(id + ".mapname"));
       } else {
-        arena.setMapName(config.getString("instances.default.mapname"));
+        arena.setMapName(section.getString("instances.default.mapname"));
       }
-      if(config.contains(s + "lobbylocation")) {
-        arena.setLobbyLocation(LocationSerializer.getLocation(config.getString(s + "lobbylocation")));
+
+      Location lobbyLoc = LocationSerializer.getLocation(section.getString(id + ".lobbylocation"));
+      if(lobbyLoc == null || lobbyLoc.getWorld() == null) {
+        arena.setReady(false);
+        continue;
       }
-      if(config.contains(s + "Endlocation")) {
-        arena.setEndLocation(LocationSerializer.getLocation(config.getString(s + "Endlocation")));
-      } else {
-        if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-          System.out.print(id + " doesn't contains an end location!");
-          arena.setReady(false);
-          ArenaRegistry.registerArena(arena);
-          continue;
-        }
+
+      arena.setLobbyLocation(lobbyLoc);
+      if(section.contains(id + ".Endlocation")) {
+        arena.setEndLocation(LocationSerializer.getLocation(section.getString(id + ".Endlocation")));
+      } else if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+        System.out.print(id + " doesn't contains an end location!");
+        arena.setReady(false);
+        ArenaRegistry.registerArena(arena);
+        continue;
       }
-      if(config.contains(s + "gametype")) {
-        arena.setArenaType(BaseArena.ArenaType.valueOf(config.getString(s + "gametype").toUpperCase()));
-      } else {
-        //assuming that arena is from 3.1.x releases we set arena type to SOLO by default
-        arena.setArenaType(BaseArena.ArenaType.SOLO);
-      }
-      if(config.contains(s + "plots")) {
-        if(config.isConfigurationSection(s + "plots")) {
-          for(String plotName : config.getConfigurationSection(s + "plots").getKeys(false)) {
-            if(config.isSet(s + "plots." + plotName + ".maxpoint") && config.isSet(s + "plots." + plotName + ".minpoint")) {
-              Location minPoint = LocationSerializer.getLocation(config.getString(s + "plots." + plotName + ".minpoint"));
-              if(minPoint != null && minPoint.getWorld() != null) {
+
+      arena.setArenaType(arenaType);
+      arena.setPlotSize(section.getInt(id + ".plotSize", 2));
+
+      ConfigurationSection plotSection = section.getConfigurationSection(id + ".plots");
+
+      if(plotSection != null) {
+        for(String plotName : plotSection.getKeys(false)) {
+          String minPointString = plotSection.getString(plotName + ".minpoint");
+          String maxPointString = plotSection.getString(plotName + ".maxpoint");
+
+          if(minPointString != null && maxPointString != null) {
+            Location minPoint = LocationSerializer.getLocation(minPointString);
+
+            if(minPoint != null) {
+              org.bukkit.World minWorld = minPoint.getWorld();
+
+              if(minWorld != null) {
                 Biome biome = Version.isCurrentHigher(Version.v1_15_R1) ?
-                    minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
-                    : minPoint.getWorld().getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
+                    minWorld.getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
+                    : minWorld.getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
+
                 Plot buildPlot = new Plot(arena, biome);
-                buildPlot.setCuboid(new Cuboid(minPoint, LocationSerializer.getLocation(config.getString(s + "plots." + plotName + ".maxpoint"))));
+
+                buildPlot.setCuboid(new Cuboid(minPoint, LocationSerializer.getLocation(maxPointString)));
                 buildPlot.fullyResetPlot();
+
                 arena.getPlotManager().addBuildPlot(buildPlot);
               }
-            } else {
-              System.out.println("Non configured plot instances found for arena " + id);
-              arena.setReady(false);
             }
+          } else {
+            System.out.println("Non configured plot instances found for arena " + id);
+            arena.setReady(false);
           }
-        } else {
-          System.out.println("Non configured plots in arena " + id);
-          arena.setReady(false);
         }
       } else {
-        System.out.print("Instance " + id + " doesn't contains plots!");
+        System.out.println("Non configured plots in arena " + id);
         arena.setReady(false);
       }
-      arena.setReady(config.getBoolean("instances." + id + ".isdone"));
+      arena.setReady(section.getBoolean(id + ".isdone"));
       if(arena instanceof SoloArena) {
         ((SoloArena) arena).initPoll();
       }

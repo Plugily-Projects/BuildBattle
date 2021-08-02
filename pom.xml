@@ -26,12 +26,15 @@
 
     <groupId>plugily.projects</groupId>
     <artifactId>buildbattle</artifactId>
-    <version>4.5.0</version>
+    <version>4.5.1</version>
     <name>BuildBattle</name>
 
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <sonar.projectKey>Plugily-Projects_BuildBattle</sonar.projectKey>
+        <sonar.organization>plugily-projects</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <repositories>
@@ -48,7 +51,7 @@
             <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
         <repository>
-            <id>plajerlair-repo</id>
+            <id>plugily-repo</id>
             <url>https://maven.plugily.xyz/</url>
         </repository>
         <repository>
@@ -80,75 +83,93 @@
     <dependencies>
         <!-- Paper API-->
         <dependency>
-            <groupId>com.destroystokyo.paper</groupId>
+            <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.16.5-R0.1-SNAPSHOT</version>
+            <version>1.17.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+            <exclusions>
+            	<exclusion>
+            		<groupId>com.google.code.findbugs</groupId>
+            		<artifactId>jsr305</artifactId>
+            	</exclusion>
+            	<exclusion>
+            		<groupId>org.checkerframework</groupId>
+            		<artifactId>checker-qual</artifactId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>me.tigerhix.lib</groupId>
             <artifactId>scoreboard</artifactId>
-            <version>1.0.6</version>
+            <version>1.0.9</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>pl.plajer</groupId>
+            <groupId>plugily.projects</groupId>
             <artifactId>commons-box-database</artifactId>
-            <version>1.2.7</version>
+            <version>1.3.3</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>pl.plajer</groupId>
+            <groupId>plugily.projects</groupId>
             <artifactId>commons-box-minecraft</artifactId>
-            <version>1.2.7</version>
+            <version>1.3.3</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>pl.plajer</groupId>
+            <groupId>plugily.projects</groupId>
             <artifactId>commons-box-classic</artifactId>
-            <version>1.2.7</version>
+            <version>1.3.3</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.stefvanschie.inventoryframework</groupId>
+            <groupId>plugily.projects.inventoryframework</groupId>
             <artifactId>IF</artifactId>
-            <version>0.5.19</version>
+            <version>0.10.0</version>
+            <scope>compile</scope>
+            <classifier>legacy-jar-with-dependencies</classifier>
         </dependency>
         <dependency>
             <groupId>net.citizensnpcs</groupId>
             <artifactId>citizensapi</artifactId>
             <version>2.0.26-SNAPSHOT</version>
             <scope>provided</scope>
+            <exclusions>
+            	<exclusion>
+            		<groupId>ch.ethz.globis.phtree</groupId>
+            		<artifactId>phtree</artifactId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
-            <version>2.1.0</version>
+            <version>2.2.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
-            <version>2.10.9</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <version>3.0.2</version>
+            <version>2.10.10</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <artifactId>commons-io</artifactId>
             <groupId>commons-io</groupId>
             <scope>compile</scope>
-            <version>2.8.0</version>
+            <version>2.10.0</version>
         </dependency>
         <dependency>
             <groupId>com.mojang</groupId>
             <artifactId>authlib</artifactId>
             <version>1.5.21</version>
             <scope>provided</scope>
+            <exclusions>
+            	<exclusion>
+            		<groupId>com.google.code.findbugs</groupId>
+            		<artifactId>jsr305</artifactId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.alessiodp.parties</groupId>
@@ -163,6 +184,14 @@
             	<exclusion>
             		<groupId>net.md-5</groupId>
             		<artifactId>bungeecord-api</artifactId>
+            	</exclusion>
+            	<exclusion>
+            		<groupId>org.checkerframework</groupId>
+            		<artifactId>checker-qual</artifactId>
+            	</exclusion>
+            	<exclusion>
+            		<groupId>com.google.errorprone</groupId>
+            		<artifactId>javac</artifactId>
             	</exclusion>
             </exclusions>
         </dependency>
@@ -201,7 +230,7 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>20.1.0</version>
+            <version>21.0.1</version>
         </dependency>
 
     </dependencies>
@@ -236,7 +265,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.3.0</version>
                 <configuration>
                     <windowtitle>Build Battle API docs for v${project.version}</windowtitle>
                     <description>Minecraft building minigame.
@@ -281,15 +310,15 @@
                                     <shadedPattern>plugily.projects.buildbattle.database.hikari</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>pl.plajerlair.commonsbox</pattern>
-                                    <shadedPattern>plugily.projects.buildbattle.plajerlair.commonsbox</shadedPattern>
+                                    <pattern>plugily.projects.commonsbox</pattern>
+                                    <shadedPattern>plugily.projects.buildbattle.commonsbox</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.bstats</pattern>
-                                    <shadedPattern>plugily.projects.buildbattle.utils</shadedPattern>
+                                    <shadedPattern>plugily.projects.buildbattle.utils.bstats</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>com.github.stefvanschie.inventoryframework</pattern>
+                                    <pattern>plugily.projects.inventoryframework</pattern>
                                     <shadedPattern>plugily.projects.buildbattle.inventoryframework</shadedPattern>
                                 </relocation>
                             </relocations>
@@ -306,7 +335,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.2.201409121644</version>
+                <version>0.8.7</version>
                 <configuration>
                     <append>true</append>
                 </configuration>

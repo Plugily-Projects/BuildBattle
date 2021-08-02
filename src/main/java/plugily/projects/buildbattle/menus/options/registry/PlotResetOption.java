@@ -23,7 +23,7 @@ package plugily.projects.buildbattle.menus.options.registry;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
@@ -44,14 +44,21 @@ public class PlotResetOption {
         .build()) {
       @Override
       public void onClick(InventoryClickEvent e) {
-        e.getWhoClicked().closeInventory();
-        BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+        Player who = (Player) e.getWhoClicked();
+
+        who.closeInventory();
+
+        BaseArena arena = ArenaRegistry.getArena(who);
         if(arena == null) {
           return;
         }
-        Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());
-        plot.resetPlot();
-        e.getWhoClicked().sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Reset.Plot-Reset"));
+
+        Plot plot = arena.getPlotManager().getPlot(who);
+
+        if (plot != null) {
+          plot.resetPlot();
+          e.getWhoClicked().sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Reset.Plot-Reset"));
+        }
       }
     });
   }

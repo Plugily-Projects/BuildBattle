@@ -20,19 +20,13 @@
 
 package plugily.projects.buildbattle.arena.impl;
 
-import com.google.common.collect.Lists;
 import org.bukkit.entity.Player;
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
-import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
-import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.arena.options.ArenaOption;
-import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.utils.Debugger;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Comparator;
 
 /**
  * @author Plajer
@@ -47,7 +41,7 @@ public class TeamArena extends SoloArena {
 
   @Override
   public void setMinimumPlayers(int amount) {
-    if(amount <= 2) {
+    if(amount <= getPlotSize()) {
       Debugger.debug(Debugger.Level.WARN, "Minimum players amount for TEAM game mode arena cannot be less than 3! Setting amount to 3!");
       setOptionValue(ArenaOption.MINIMUM_PLAYERS, 3);
       return;
@@ -57,25 +51,34 @@ public class TeamArena extends SoloArena {
 
   @Override
   public void distributePlots() {
-    //clear plots before distribution to avoid problems
-    for(Plot plot : getPlotManager().getPlots()) {
-      plot.getOwners().clear();
-    }
-    List<List<Player>> pairs = Lists.partition(new ArrayList<>(getPlayers()), 2);
-    int i = 0;
-    for(Plot plot : getPlotManager().getPlots()) {
-      if(pairs.size() <= i) {
-        break;
+    for(Player player : getPlayers()) {
+      // get base with min players
+      Plot minPlayers = getPlotManager().getPlots().stream().min(Comparator.comparing(Plot::getMembersSize)).get();
+      // add player to min base if he got no base
+      Plot playerPlot = getPlotManager().getPlot(player);
+      if(playerPlot == null) {
+        minPlayers.addMember(player, this, true);
       }
-      pairs.get(i).forEach(player -> {
-        plot.addOwner(player);
-        getPlugin().getUserManager().getUser(player).setCurrentPlot(plot);
-      });
-      i++;
+      // fallback
+      if(playerPlot == null) {
+        Plot firstPlot = getPlotManager().getPlots().get(0);
+        firstPlot.addMember(player, this, true);
+      }
     }
+    //check if not only one plot got players
+    Plot maxPlayers = getPlotManager().getPlots().stream().max(Comparator.comparing(Plot::getMembersSize)).get();
+    Plot minPlayers = getPlotManager().getPlots().stream().min(Comparator.comparing(Plot::getMembersSize)).get();
+    if(maxPlayers.getMembersSize() == getPlayers().size()) {
+      for(int i = 0; i < maxPlayers.getMembersSize() / 2; i++) {
+        Player move = maxPlayers.getMembers().get(i);
+        minPlayers.addMember(move, this, true);
+        maxPlayers.removeMember(move);
+      }
+    }
+    getPlotManager().teleportToPlots();
     /*if (!players.isEmpty()) {
       MessageUtils.errorOccurred();
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BuildBattle] [PLOT WARNING] Not enough plots in arena " + getID() + "!");
+      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Build Battle] [PLOT WARNING] Not enough plots in arena " + getID() + "!");
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[PLOT WARNING] Required " + Math.ceil((double) getPlayers().size() / 2) + " but have " + getPlotManager().getPlots().size());
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[PLOT WARNING] Instance was stopped!");
       ArenaManager.stopGame(false, this);
@@ -83,59 +86,18 @@ public class TeamArena extends SoloArena {
   }
 
   @Override
-  public String formatWinners(Plot plot, String string) {
-    String str = string;
-    if(plot.getOwners().size() == 1) {
-      str = str.replaceAll("(?i)%player%", plot.getOwners().get(0).getName());
-    } else if(plot.getOwners().size() > 1) {
-      str = str.replaceAll("(?i)%player%", plot.getOwners().get(0).getName() + " & " + plot.getOwners().get(1).getName());
-    } else {
-      str = str.replaceAll("(?i)%player%", "PLAYER_NOT_FOUND");
-    }
-    return str;
-  }
-
-  @Override
-  public void voteForNextPlot() {
-    if(getVotingPlot() != null) {
-      for(Player player : getPlayers()) {
-        User user = getPlugin().getUserManager().getUser(player);
-        int points = user.getStat(StatsStorage.StatisticType.LOCAL_POINTS);
-        //no vote made, in this case make it a good vote
-        if(points == 0) {
-          points = 3;
-        }
-        getVotingPlot().setPoints(getVotingPlot().getPoints() + points);
-        user.setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
-      }
-      if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER)) {
-        String message = formatWinners(getVotingPlot(), getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voted-For-Player-Plot"));
-        for(Player p : getPlayers()) {
-          String owner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
-          owner = formatWinners(getVotingPlot(), owner);
-          VersionUtils.sendTitle(p, owner, 5, 40, 5);
-          p.sendMessage(getPlugin().getChatManager().getPrefix() + message);
-        }
-      }
-    }
-    for(Plot p : getPlotManager().getPlots()) {
-      if(p.getOwners().size() == 2) {
-        //removing second owner to not vote for same plot twice
-        getQueue().remove(p.getOwners().get(1));
-      }
-    }
-    voteRoutine();
-  }
-
-  @Override
   public boolean enoughPlayersToContinue() {
-    if(getPlayers().size() >= 2) {
+    int size = getPlayers().size();
+
+    if(size > getPlotSize()) {
       return true;
-    } else if(getPlayers().size() == 2) {
-      return !getPlotManager().getPlot(getPlayers().get(0)).getOwners().contains(getPlayers().get(1));
-    } else {
-      return false;
     }
+
+    if(size == getPlotSize()) {
+      return !getPlotManager().getPlot(getPlayers().get(0)).getMembers().containsAll(getPlayers());
+    }
+
+    return false;
   }
 
 }

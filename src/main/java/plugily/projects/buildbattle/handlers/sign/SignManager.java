@@ -25,6 +25,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -33,13 +34,13 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.jetbrains.annotations.Nullable;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
-import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerInteractEvent;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
-import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
+import plugily.projects.commonsbox.minecraft.compat.events.api.CBPlayerInteractEvent;
+import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.misc.stuff.ComplementAccessor;
+import plugily.projects.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaManager;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
@@ -82,8 +83,10 @@ public class SignManager implements Listener {
       return null;
     }
 
+    Location blockLoc = block.getLocation();
+
     for (ArenaSign sign : arenaSigns) {
-      if (sign.getSign().getLocation().equals(block.getLocation())) {
+      if (sign.getSign().getLocation().equals(blockLoc)) {
         return sign;
       }
     }
@@ -93,7 +96,8 @@ public class SignManager implements Listener {
 
   @EventHandler
   public void onSignChange(SignChangeEvent e) {
-    if(!e.getPlayer().hasPermission("buildbattle.admin.sign.create") || !ComplementAccessor.getComplement().getLine(e, 0).equalsIgnoreCase("[buildbattle]")) {
+    if(!e.getPlayer().hasPermission("buildbattle.admin.sign.create") ||
+        !ComplementAccessor.getComplement().getLine(e, 0).equalsIgnoreCase("[buildbattle]")) {
       return;
     }
     String line1 = ComplementAccessor.getComplement().getLine(e, 1);
@@ -124,13 +128,16 @@ public class SignManager implements Listener {
   private String formatSign(String msg, BaseArena a) {
     String formatted = msg;
     formatted = StringUtils.replace(formatted, "%mapname%", a.getMapName());
+
     int maxPlayers = a.getMaximumPlayers();
-    if(a.getPlayers().size() >= maxPlayers) {
+    int players = a.getPlayers().size();
+
+    if(players >= maxPlayers) {
       formatted = StringUtils.replace(formatted, "%state%", plugin.getChatManager().colorMessage("Signs.Game-States.Full-Game"));
     } else {
       formatted = StringUtils.replace(formatted, "%state%", gameStateToString.get(a.getArenaState()));
     }
-    formatted = StringUtils.replace(formatted, "%playersize%", Integer.toString(a.getPlayers().size()));
+    formatted = StringUtils.replace(formatted, "%playersize%", Integer.toString(players));
     formatted = StringUtils.replace(formatted, "%maxplayers%", Integer.toString(maxPlayers));
     formatted = plugin.getChatManager().colorRawMessage(formatted);
     return formatted;
@@ -139,26 +146,30 @@ public class SignManager implements Listener {
   @EventHandler
   public void onSignDestroy(BlockBreakEvent e) {
     ArenaSign arenaSign = getArenaSignByBlock(e.getBlock());
-    if(!e.getPlayer().hasPermission("buildbattle.admin.sign.break") || arenaSign == null) {
+    if (arenaSign == null) {
+      return;
+    }
+
+    if(!e.getPlayer().hasPermission("buildbattle.admin.sign.break")) {
       return;
     }
 
     arenaSigns.remove(arenaSign);
 
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    if (!config.isConfigurationSection("instances")) {
+    ConfigurationSection section = config.getConfigurationSection("instances");
+    if (section == null)
       return;
-    }
 
     String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + ".0," + e.getBlock().getY() + ".0," + e.getBlock().getZ() + ".0," + "0.0,0.0";
-    for(String arena : config.getConfigurationSection("instances").getKeys(false)) {
-      for(String sign : config.getStringList("instances." + arena + ".signs")) {
+    for(String arena : section.getKeys(false)) {
+      for(String sign : section.getStringList(arena + ".signs")) {
         if(!sign.equals(location)) {
           continue;
         }
-        List<String> signs = config.getStringList("instances." + arena + ".signs");
+        List<String> signs = section.getStringList(arena + ".signs");
         signs.remove(location);
-        config.set("instances." + arena + ".signs", signs);
+        section.set(arena + ".signs", signs);
         ConfigUtils.saveConfig(plugin, config, "arenas");
         e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Sign-Removed"));
         return;
@@ -169,11 +180,11 @@ public class SignManager implements Listener {
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onJoinAttempt(CBPlayerInteractEvent e) {
-    if(VersionUtils.checkOffHand(e.getHand())) {
+    if(VersionUtils.checkOffHand(e.getHand()) || e.getAction() != Action.RIGHT_CLICK_BLOCK || !(e.getClickedBlock().getState() instanceof Sign)) {
       return;
     }
     ArenaSign arenaSign = getArenaSignByBlock(e.getClickedBlock());
-    if(arenaSign != null && e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getClickedBlock().getState() instanceof Sign) {
+    if(arenaSign != null) {
       ArenaManager.joinAttempt(e.getPlayer(), arenaSign.getArena());
     }
   }
@@ -181,13 +192,12 @@ public class SignManager implements Listener {
   public void loadSigns() {
     arenaSigns.clear();
 
-    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    if (!config.isConfigurationSection("instances")) {
+    ConfigurationSection section = ConfigUtils.getConfig(plugin, "arenas").getConfigurationSection("instances");
+    if (section == null)
       return;
-    }
 
-    for(String path : config.getConfigurationSection("instances").getKeys(false)) {
-      for(String sign : config.getStringList("instances." + path + ".signs")) {
+    for(String path : section.getKeys(false)) {
+      for(String sign : section.getStringList(path + ".signs")) {
         Location loc = LocationSerializer.getLocation(sign);
         if(loc.getBlock().getState() instanceof Sign) {
           arenaSigns.add(new ArenaSign((Sign) loc.getBlock().getState(), ArenaRegistry.getArena(path)));

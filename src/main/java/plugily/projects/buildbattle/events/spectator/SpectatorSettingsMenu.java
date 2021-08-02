@@ -28,18 +28,12 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
+import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
+import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
+import plugily.projects.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.handlers.ChatManager;
 
-/**
- * @author Plajer
- * <p>
- * Created at 06.04.2019
- */
 public class SpectatorSettingsMenu implements Listener {
 
   private final Main plugin;
@@ -52,11 +46,11 @@ public class SpectatorSettingsMenu implements Listener {
     this.inventoryName = inventoryName;
     this.speedOptionName = speedOptionName;
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    this.inv = initInventory();
+    inv = initInventory();
   }
 
   public void openSpectatorSettingsMenu(Player player) {
-    player.openInventory(this.inv);
+    player.openInventory(inv);
   }
 
   @EventHandler
@@ -103,18 +97,18 @@ public class SpectatorSettingsMenu implements Listener {
   }
 
   private Inventory initInventory() {
-    ChatManager cm = plugin.getChatManager();
     Inventory inv = ComplementAccessor.getComplement().createInventory(null, 9 * 3, inventoryName);
+    ChatManager chatManager = plugin.getChatManager();
     inv.setItem(11, new ItemBuilder(Material.LEATHER_BOOTS)
-        .name(cm.colorRawMessage(speedOptionName + " I")).build());
+        .name(chatManager.colorRawMessage(speedOptionName + " I")).build());
     inv.setItem(12, new ItemBuilder(Material.CHAINMAIL_BOOTS)
-        .name(cm.colorRawMessage(speedOptionName + " II")).build());
+        .name(chatManager.colorRawMessage(speedOptionName + " II")).build());
     inv.setItem(13, new ItemBuilder(Material.IRON_BOOTS)
-        .name(cm.colorRawMessage(speedOptionName + " III")).build());
+        .name(chatManager.colorRawMessage(speedOptionName + " III")).build());
     inv.setItem(14, new ItemBuilder(XMaterial.GOLDEN_BOOTS.parseItem())
-        .name(cm.colorRawMessage(speedOptionName + " IV")).build());
+        .name(chatManager.colorRawMessage(speedOptionName + " IV")).build());
     inv.setItem(15, new ItemBuilder(Material.DIAMOND_BOOTS)
-        .name(cm.colorRawMessage(speedOptionName + " V")).build());
+        .name(chatManager.colorRawMessage(speedOptionName + " V")).build());
     return inv;
   }
 

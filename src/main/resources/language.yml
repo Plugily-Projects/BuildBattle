@@ -40,6 +40,8 @@ Commands:
     Loses: "&aLoses: &e"
     Games-Played: "&aGames played: &e"
     Highest-Win: "&aHighest win (points): &e"
+    Highest-Points: "&aHighest points: &e"
+    Total-Points-Earned: "&aTotal points earned: &e"
     Blocks-Placed: "&aBlocks placed: &e"
     Blocks-Broken: "&aBlocks broken: &e"
     Particles-Placed: "&aParticles placed: &e"
@@ -167,12 +169,11 @@ In-Game:
   Join-As-Party-Member: "&cYou joined %ARENANAME% because the party leader joined it!"
   Nobody: "&eNobody"
   No-Theme-Yet: "&cVoting"
+  Floor-Item-Blacklisted: "&cThe item on your hand is not allowed to be set as floor!"
   Spectator:
     You-Are-Spectator: "&eYou're now a spectator! You can fly now!"
-    Spectator-Item-Name: "&7Players list"
     Spectator-Menu-Name: "Players list"
     Settings-Menu:
-      Item-Name: "&7Spectator settings"
       Inventory-Name: "&7Spectator settings"
       Speed-Name: "&aSpeed"
   Guess-The-Build:
@@ -242,8 +243,6 @@ Menus:
   Location-Message: "&aLocation: "
   Option-Menu:
     Inventory-Name: "&aOptions menu"
-    Option-Item: "&aOptions"
-    Option-Item-Lore: "&7Right click to open menu"
     Go-Back-Button:
       Item-Name: "&aGo to Options Page"
       Item-Lore: "&7Click to go to main options page"
@@ -364,9 +363,19 @@ Placeholders:
   Game-States:
     Waiting: "&lWaiting for players..."
     Starting: "&e&lStarting"
-    Playing: "&lPlaying"
+    In-Game: "&lPlaying"
     Ending: "&lEnding"
     Restarting: "&c&lRestarting"
 
+Plots:
+  Team:
+    Full: "Team is full"
+    Empty: "You can join this team"
+    Inside: "Your team"
+    Name: "Plot - %plot%"
+    Menu-Name: "Plot Menu"
+    Plot-Choose: "You are now on plot %plot%"
+    Member: "You are already member of it!"
+
 # Do not modify!
-File-Version-Do-Not-Edit: 21
+File-Version-Do-Not-Edit: 25

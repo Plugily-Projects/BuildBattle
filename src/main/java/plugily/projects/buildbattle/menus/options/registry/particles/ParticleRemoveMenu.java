@@ -20,16 +20,16 @@
 
 package plugily.projects.buildbattle.menus.options.registry.particles;
 
-import com.github.stefvanschie.inventoryframework.Gui;
-import com.github.stefvanschie.inventoryframework.GuiItem;
-import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+import plugily.projects.inventoryframework.gui.GuiItem;
+import plugily.projects.inventoryframework.gui.type.ChestGui;
+import plugily.projects.inventoryframework.pane.StaticPane;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 
@@ -46,7 +46,7 @@ public class ParticleRemoveMenu {
   }
 
   public static void openMenu(Player player, Plot buildPlot) {
-    Gui gui = new Gui(plugin, 6, plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"));
+    ChestGui gui = new ChestGui(6, plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Particle.In-Inventory-Item-Name"));
     StaticPane pane = new StaticPane(9, 6);
 
     int x = 0;
@@ -71,6 +71,7 @@ public class ParticleRemoveMenu {
           }
         });
         gui.update();
+        event.setCancelled(true);
         event.getWhoClicked().closeInventory();
         openMenu(player, buildPlot);
       }), x, y);
@@ -85,8 +86,9 @@ public class ParticleRemoveMenu {
         .name(plugin.getChatManager().colorMessage("Menus.Buttons.Back-Button.Name"))
         .lore(plugin.getChatManager().colorMessage("Menus.Buttons.Back-Button.Lore"))
         .build(), event -> {
+      event.setCancelled(true);
       event.getWhoClicked().closeInventory();
-      event.getWhoClicked().openInventory(plugin.getOptionsRegistry().getParticleRegistry().getPage1());
+      plugin.getOptionsRegistry().getParticleRegistry().getParticles().show(player);
     }), 4, 5);
     gui.addPane(pane);
     gui.show(player);

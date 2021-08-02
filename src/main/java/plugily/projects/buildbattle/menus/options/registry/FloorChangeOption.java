@@ -27,10 +27,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
+import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
+import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.menus.options.MenuOption;
 import plugily.projects.buildbattle.menus.options.OptionsRegistry;
 
@@ -49,27 +50,41 @@ public class FloorChangeOption {
         .build()) {
       @Override
       public void onClick(InventoryClickEvent e) {
-        BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
         ItemStack itemStack = e.getCursor();
-        if(arena == null || itemStack == null) {
+        if (itemStack == null)
+          return;
+
+        Player who = (Player) e.getWhoClicked();
+        BaseArena arena = ArenaRegistry.getArena(who);
+        if(arena == null) {
           return;
         }
+
         Material material = itemStack.getType();
         if(material != XMaterial.WATER_BUCKET.parseMaterial() && material != XMaterial.LAVA_BUCKET.parseMaterial()
             && !(material.isBlock() && material.isSolid() && material.isOccluding())) {
+          who.sendMessage(registry.getPlugin().getChatManager().colorMessage("In-Game.Floor-Item-Blacklisted"));
           return;
         }
+
         if(registry.getPlugin().getConfigPreferences().getFloorBlacklist().contains(material)) {
+          who.sendMessage(registry.getPlugin().getChatManager().colorMessage("In-Game.Floor-Item-Blacklisted"));
           return;
         }
-        byte materialData = XMaterial.matchXMaterial(itemStack).getData();
-        arena.getPlotManager().getPlot((Player) e.getWhoClicked()).changeFloor(material, materialData);
-        e.getWhoClicked().sendMessage(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Floor.Floor-Changed"));
+
+        Plot plot = arena.getPlotManager().getPlot(who);
+        if (plot == null)
+          return;
+
+        plot.changeFloor(material, XMaterial.matchXMaterial(itemStack).getData());
+        who.sendMessage(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Floor.Floor-Changed"));
+
         itemStack.setAmount(0);
         itemStack.setType(Material.AIR);
         e.getCurrentItem().setType(Material.AIR);
-        e.getWhoClicked().closeInventory();
-        e.getWhoClicked().getNearbyEntities(5, 5, 5).stream().filter(entity -> entity.getType() == EntityType.DROPPED_ITEM)
+        who.closeInventory();
+
+        who.getNearbyEntities(5, 5, 5).stream().filter(entity -> entity.getType() == EntityType.DROPPED_ITEM)
             .forEach(Entity::remove);
       }
     });

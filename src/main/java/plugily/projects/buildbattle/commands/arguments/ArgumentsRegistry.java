@@ -31,8 +31,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
-import pl.plajerlair.commonsbox.string.StringMatcher;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
@@ -48,18 +46,22 @@ import plugily.projects.buildbattle.commands.arguments.admin.arena.StopArgument;
 import plugily.projects.buildbattle.commands.arguments.admin.plot.AddPlotArgument;
 import plugily.projects.buildbattle.commands.arguments.admin.plot.PlotWandArgument;
 import plugily.projects.buildbattle.commands.arguments.admin.plot.RemovePlotArgument;
+import plugily.projects.buildbattle.commands.arguments.admin.plot.SelectPlotArgument;
 import plugily.projects.buildbattle.commands.arguments.admin.votes.VotesArgument;
 import plugily.projects.buildbattle.commands.arguments.data.CommandArgument;
 import plugily.projects.buildbattle.commands.arguments.data.LabelData;
 import plugily.projects.buildbattle.commands.arguments.data.LabeledCommandArgument;
 import plugily.projects.buildbattle.commands.arguments.game.ArenaSelectorArgument;
 import plugily.projects.buildbattle.commands.arguments.game.CreateArgument;
+import plugily.projects.buildbattle.commands.arguments.game.GuessArgument;
 import plugily.projects.buildbattle.commands.arguments.game.JoinArguments;
 import plugily.projects.buildbattle.commands.arguments.game.LeaderboardArgument;
 import plugily.projects.buildbattle.commands.arguments.game.LeaveArgument;
 import plugily.projects.buildbattle.commands.arguments.game.StatsArgument;
 import plugily.projects.buildbattle.handlers.setup.SetupInventory;
 import plugily.projects.buildbattle.utils.Debugger;
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
+import plugily.projects.commonsbox.string.StringMatcher;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -95,6 +97,7 @@ public class ArgumentsRegistry implements CommandExecutor {
     new JoinArguments(this);
     new LeaderboardArgument(this);
     new LeaveArgument(this);
+    new GuessArgument(this);
     new StatsArgument(this);
     new ArenaSelectorArgument(this);
 
@@ -108,10 +111,13 @@ public class ArgumentsRegistry implements CommandExecutor {
     new StopArgument(this);
     new VotesArgument(this);
 
-    //other admin related arguments
+    //plot related arguments
     new AddPlotArgument(this);
     new PlotWandArgument(this);
     new RemovePlotArgument(this);
+    new SelectPlotArgument(this);
+
+    //other admin related arguments
     new ListArenasArgument(this);
     new TeleportArgument(this);
   }

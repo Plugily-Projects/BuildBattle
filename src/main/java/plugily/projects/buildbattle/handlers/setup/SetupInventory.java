@@ -28,15 +28,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
-import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.impl.BaseArena;
+import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
+import plugily.projects.commonsbox.minecraft.misc.stuff.ComplementAccessor;
+import plugily.projects.commonsbox.minecraft.serialization.LocationSerializer;
 
 import java.util.Random;
 
@@ -137,6 +136,19 @@ public class SetupInventory {
         .lore(ChatColor.GRAY + "Click this when you're done with configuration.")
         .lore(ChatColor.GRAY + "It will validate and register arena.")
         .build());
+    int plotSize = config.getInt("instances." + arena.getID() + ".plotSize", 2);
+    if(plotSize <= 2) {
+      plotSize = 2;
+      config.set("instances." + arena.getID() + ".plotSize", 2);
+    }
+    inventory.setItem(ClickPosition.SET_PLOT_SIZE.getPosition(), new ItemBuilder(XMaterial.CAKE.parseItem()).amount(plotSize)
+        .name(ChatColor.GOLD + "► Set" + ChatColor.DARK_GREEN + " minimum players " + ChatColor.GOLD + "size")
+        .lore(ChatColor.GRAY + "LEFT click to decrease")
+        .lore(ChatColor.GRAY + "RIGHT click to increase")
+        .lore(ChatColor.DARK_GRAY + "(how many players can play on one plot)")
+        .lore(ChatColor.RED + "Only needed on TEAM mode!!!")
+        .lore(isOptionDone("instances." + arena.getID() + ".plotSize"))
+        .build());
 
     inventory.setItem(16, new ItemBuilder(XMaterial.GOLD_INGOT.parseItem())
         .name(ChatColor.GOLD + "► Extras Addon (AD) ◄")
@@ -170,10 +182,10 @@ public class SetupInventory {
         p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Help us translating plugin to your language here: https://translate.plugily.xyz"));
         break;
       case 2:
-        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Download some free maps! Get them here: https://wiki.plugily.xyz/minecraft/buildbattle/free_maps.php"));
+        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Download some free maps! Get them here: https://wiki.plugily.xyz/buildbattle/setup/maps"));
         break;
       case 3:
-        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7You can use PlaceholderAPI placeholders from our plugin! Check: https://wiki.plugily.xyz/minecraft/buildbattle/papi_placeholders.php"));
+        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7You can use PlaceholderAPI placeholders from our plugin! Check: https://wiki.plugily.xyz/buildbattle/placeholders/placeholderapi"));
         break;
       case 4:
         p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Suggest new ideas for the plugin or vote on current ones! https://app.feedbacky.net/b/BuildBattle"));
@@ -220,7 +232,7 @@ public class SetupInventory {
 
   public enum ClickPosition {
     SET_ENDING(0), SET_LOBBY(1), SET_MINIMUM_PLAYERS(2), SET_MAXIMUM_PLAYERS(3), ADD_SIGN(4), SET_GAME_TYPE(5), SET_MAP_NAME(6),
-    ADD_GAME_PLOT(7), ADD_FLOOR_CHANGER_NPC(8), REGISTER_ARENA(9), EXTRAS_AD(16), VIEW_SETUP_VIDEO(17);
+    ADD_GAME_PLOT(7), ADD_FLOOR_CHANGER_NPC(8), REGISTER_ARENA(9), SET_PLOT_SIZE(10), EXTRAS_AD(16), VIEW_SETUP_VIDEO(17);
 
     private final int position;
 

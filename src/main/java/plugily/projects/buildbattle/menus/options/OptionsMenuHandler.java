@@ -24,8 +24,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
-import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
+import org.bukkit.inventory.ItemStack;
+
+import plugily.projects.commonsbox.minecraft.item.ItemUtils;
+import plugily.projects.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.ArenaState;
@@ -48,10 +50,13 @@ public class OptionsMenuHandler implements Listener {
 
   @EventHandler
   public void onOptionsMenuClick(InventoryClickEvent e) {
-    if(!(e.getWhoClicked() instanceof Player) || e.getCurrentItem() == null) {
+    if(!(e.getWhoClicked() instanceof Player)) {
       return;
     }
-    if(!ItemUtils.isItemStackNamed(e.getCurrentItem())
+
+    ItemStack currentItem = e.getCurrentItem();
+
+    if(!ItemUtils.isItemStackNamed(currentItem)
         || !ComplementAccessor.getComplement().getTitle(e.getView()).equals(plugin.getChatManager().colorMessage("Menus.Option-Menu.Inventory-Name"))) {
       return;
     }
@@ -60,7 +65,7 @@ public class OptionsMenuHandler implements Listener {
       return;
     }
     for(MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
-      if(!option.getItemStack().isSimilar(e.getCurrentItem())) {
+      if(!option.getItemStack().isSimilar(currentItem)) {
         continue;
       }
       e.setCancelled(true);
@@ -71,16 +76,24 @@ public class OptionsMenuHandler implements Listener {
 
   @EventHandler
   public void onRegisteredMenuOptionsClick(InventoryClickEvent e) {
-    if(!(e.getWhoClicked() instanceof Player) || !ItemUtils.isItemStackNamed(e.getCurrentItem())) {
+    if(!(e.getWhoClicked() instanceof Player)) {
+      return;
+    }
+
+    ItemStack currentItem = e.getCurrentItem();
+
+    if (!ItemUtils.isItemStackNamed(currentItem))
+      return;
+
+    if(ComplementAccessor.getComplement().getDisplayName(Utils.getGoBackItem().getItemMeta())
+        .equalsIgnoreCase(ComplementAccessor.getComplement().getDisplayName(currentItem.getItemMeta()))) {
+      e.setCancelled(true);
+      e.getWhoClicked().closeInventory();
+      e.getWhoClicked().openInventory(plugin.getOptionsRegistry().formatInventory());
       return;
     }
 
     for(MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
-      if(ComplementAccessor.getComplement().getDisplayName(Utils.getGoBackItem().getItemMeta())
-          .equalsIgnoreCase(ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta()))) {
-        e.getWhoClicked().openInventory(plugin.getOptionsRegistry().formatInventory());
-        return;
-      }
       if(ComplementAccessor.getComplement().getTitle(e.getView()).equals(option.getInventoryName())) {
         e.setCancelled(true);
         option.onTargetClick(e);

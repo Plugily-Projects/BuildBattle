@@ -22,11 +22,7 @@ package plugily.projects.buildbattle.commands.arguments.admin.arena;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import plugily.projects.buildbattle.ConfigPreferences;
-import plugily.projects.buildbattle.arena.ArenaRegistry;
-import plugily.projects.buildbattle.arena.ArenaState;
-import plugily.projects.buildbattle.arena.impl.BaseArena;
-import plugily.projects.buildbattle.arena.impl.SoloArena;
+import plugily.projects.buildbattle.arena.ArenaUtils;
 import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
 import plugily.projects.buildbattle.commands.arguments.data.CommandArgument;
 import plugily.projects.buildbattle.commands.arguments.data.LabelData;
@@ -45,26 +41,11 @@ public class ForceStartArguments {
             "&7Force starts arena you're in\n&6Permission: &7buildbattle.admin.forcestart")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        BaseArena arena = ArenaRegistry.getArena((Player) sender);
-        if(arena == null) {
-          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Playing"));
-          return;
-        }
         if(args.length == 2 && !sender.hasPermission("buildbattle.admin.forcestart.theme")) {
           sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Permission"));
           return;
         }
-        if(arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) {
-          arena.setArenaState(ArenaState.STARTING);
-          arena.setForceStart(true);
-          arena.setTimer(0);
-          if(args.length == 2 && arena instanceof SoloArena) {
-            ((SoloArena) arena).setThemeVoteTime(false);
-            arena.setTimer(registry.getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, arena));
-            arena.setTheme(args[1]);
-          }
-          registry.getPlugin().getChatManager().broadcast(arena, registry.getPlugin().getChatManager().colorMessage("In-Game.Messages.Admin-Messages.Set-Starting-In-To-0"));
-        }
+        ArenaUtils.arenaForceStart((Player) sender, args.length == 2 ? args[1] : "");
       }
     });
   }

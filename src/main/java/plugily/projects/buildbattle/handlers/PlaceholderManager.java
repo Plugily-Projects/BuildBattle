@@ -50,7 +50,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
 
   @Override
   public String getVersion() {
-    return "1.0.1";
+    return "1.0.2";
   }
 
   @Override
@@ -71,20 +71,26 @@ public class PlaceholderManager extends PlaceholderExpansion {
         return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.LOSES));
       case "highest_win":
         return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.HIGHEST_WIN));
+      case "highest_points":
+        return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.HIGHEST_POINTS));
+      case "total_points_earned":
+        return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.TOTAL_POINTS_EARNED));
       case "particles_used":
         return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.PARTICLES_USED));
       case "super_votes":
         return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.SUPER_VOTES));
+      case "arena_players_online":
+        return Integer.toString(ArenaRegistry.getArenaPlayersOnline());
       default:
         return handleArenaPlaceholderRequest(id);
     }
   }
 
   private String handleArenaPlaceholderRequest(String id) {
-    if(!id.contains(":")) {
+    String[] data = id.split(":", 2);
+    if (data.length < 2)
       return null;
-    }
-    String[] data = id.split(":");
+
     BaseArena arena = ArenaRegistry.getArena(data[0]);
     if(arena == null) {
       return null;

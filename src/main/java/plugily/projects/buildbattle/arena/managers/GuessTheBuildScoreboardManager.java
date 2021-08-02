@@ -107,8 +107,9 @@ public class GuessTheBuildScoreboardManager extends ScoreboardManager {
     if(arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
       int max = arena.getArenaState() == ArenaState.IN_GAME ? 3 : 10;
       List<Map.Entry<Player, Integer>> list = new ArrayList<>(arena.getPlayersPoints().entrySet());
+      int size = list.size();
       for(int i = 0; i <= max; i++) {
-        if(list.size() - 1 < i) {
+        if(size - 1 < i) {
           returnString = StringUtils.replace(returnString, "%" + (i + 1) + "%", "None");
           returnString = StringUtils.replace(returnString, "%" + (i + 1) + "_PTS%", "0");
           continue;

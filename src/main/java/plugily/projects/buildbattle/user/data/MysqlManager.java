@@ -21,9 +21,8 @@
 package plugily.projects.buildbattle.user.data;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import pl.plajerlair.commonsbox.database.MysqlDatabase;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.database.MysqlDatabase;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.user.User;
@@ -90,7 +89,7 @@ public class MysqlManager implements UserDatabase {
 
   @Override
   public void saveStatistic(User user, StatsStorage.StatisticType stat) {
-    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate("UPDATE " + getTableName() + " SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';"));
+    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate("UPDATE " + getTableName() + " SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getUniqueId().toString() + "';"));
   }
 
   @Override
@@ -108,13 +107,13 @@ public class MysqlManager implements UserDatabase {
     String finalUpdate = update.toString();
 
     Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
-        database.executeUpdate("UPDATE " + getTableName() + finalUpdate + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';"));
+        database.executeUpdate("UPDATE " + getTableName() + finalUpdate + " WHERE UUID='" + user.getUniqueId().toString() + "';"));
   }
 
   @Override
   public void loadStatistics(User user) {
     Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-      String uuid = user.getPlayer().getUniqueId().toString();
+      String uuid = user.getUniqueId().toString();
       try(Connection connection = database.getConnection();
           Statement statement = connection.createStatement()) {
         ResultSet rs = statement.executeQuery("SELECT * from " + getTableName() + " WHERE UUID='" + uuid + "'");
@@ -122,8 +121,8 @@ public class MysqlManager implements UserDatabase {
           //player already exists - get the stats
           for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
             if(!stat.isPersistent()) continue;
-            int val = rs.getInt(stat.getName());
-            user.setStat(stat, val);
+
+            user.setStat(stat, rs.getInt(stat.getName()));
           }
         } else {
           //player doesn't exist - make a new record
@@ -140,8 +139,7 @@ public class MysqlManager implements UserDatabase {
   }
 
   public String getTableName() {
-    FileConfiguration config = ConfigUtils.getConfig(plugin, "mysql");
-    return config.getString("table", "buildbattlestats");
+    return ConfigUtils.getConfig(plugin, "mysql").getString("table", "buildbattlestats");
   }
 
 }

@@ -1,6 +1,6 @@
 ![](https://images.plugily.xyz/banner/display.php?id=BuildBattle)
 
-# Build Battle [![](https://img.shields.io/badge/javadocs-latest-green.svg)](https://jd.plugily.xyz/minecraft/buildbattle) [![](https://img.shields.io/badge/wiki-click-blue.svg)](https://wiki.plugily.xyz/minecraft/buildbattle/index.php) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Plajer-Lair_BuildBattle&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=Plajer-Lair_BuildBattle) [![Discord](https://img.shields.io/discord/345628548716822530.svg?color=7289DA&label=discord)](https://discord.gg/UXzUdTP)
+# Build Battle [![](https://img.shields.io/badge/javadocs-latest-green.svg)](https://jd.plugily.xyz/apidocs/minecraft/buildbattle) [![](https://img.shields.io/badge/wiki-click-blue.svg)](https://wiki.plugily.xyz/minecraft/buildbattle/index.php) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Plugily-Projects_BuildBattle&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=Plugily-Projects_BuildBattle) [![Discord](https://img.shields.io/discord/345628548716822530.svg?color=7289DA&label=discord)](https://discord.gg/UXzUdTP)
 BuildBattle is a Minecraft minigame designed for small and big servers. This minigame is unique and very configurable, 100% free and open source! 
 
 The goal is to build the best you can! You must compete with other players in this building game. Who will be the best?
@@ -24,6 +24,8 @@ Have fun using it! Leave a good rating if you really like it.
 
 Thanks to Code Whale for Open Source license for POEditor project.
 ## Contributors
-This section will be updated soon
+<a href="https://github.com/Plugily-Projects/BuildBattle/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Plugily-Projects/BuildBattle" />
+</a>
 
 <img align="right" src="https://i.imgur.com/EmFfDXN.png">

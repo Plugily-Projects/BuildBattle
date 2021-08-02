@@ -22,7 +22,7 @@ package plugily.projects.buildbattle.menus.options.registry.particles;
 
 import org.bukkit.inventory.ItemStack;
 
-import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
+import plugily.projects.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 
 /**
  * Created by Tom on 23/08/2015.

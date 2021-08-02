@@ -29,13 +29,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
-import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
-import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
@@ -53,6 +46,12 @@ import plugily.projects.buildbattle.handlers.items.SpecialItem;
 import plugily.projects.buildbattle.handlers.party.GameParty;
 import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.utils.Debugger;
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
+import plugily.projects.commonsbox.minecraft.misc.MiscUtils;
+import plugily.projects.commonsbox.minecraft.misc.stuff.ComplementAccessor;
+import plugily.projects.commonsbox.minecraft.serialization.InventorySerializer;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Plajer
@@ -94,13 +93,14 @@ public class ArenaManager {
       player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Already-Playing"));
       return;
     }
-
+    Plot partyPlot = null;
     //check if player is in party and send party members to the game
     if(plugin.getPartyHandler().isPlayerInParty(player)) {
       Debugger.debug("[Party] Initialized party check " + player.getName());
       GameParty party = plugin.getPartyHandler().getParty(player);
       if(party.getLeader() == player) {
         if(arena.getMaximumPlayers() - arena.getPlayers().size() >= party.getPlayers().size()) {
+          partyPlot = arena.getPlotManager().getPlots().get(ThreadLocalRandom.current().nextInt(arena.getPlotManager().getPlots().size()));
           for(Player partyPlayer : party.getPlayers()) {
             if(partyPlayer == player) {
               continue;
@@ -121,6 +121,13 @@ public class ArenaManager {
           player.sendMessage(chatManager.getPrefix() + chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Not-Enough-Space-For-Party"), player));
           Debugger.debug("[Party] Not enough space for party of " + player.getName());
           return;
+        }
+      }
+      Player partyLeader = party.getLeader();
+      if(arena.getPlayers().contains(partyLeader)) {
+        Plot partyLeaderPlot = arena.getPlotManager().getPlot(partyLeader);
+        if(partyLeaderPlot != null) {
+          partyPlot = partyLeaderPlot;
         }
       }
       Debugger.debug("[Party] Party check done for " + player.getName());
@@ -148,7 +155,7 @@ public class ArenaManager {
       return;
     }
 
-    if(arena.getPlayers().size() >= arena.getMaximumPlayers() && arena.getArenaState() == ArenaState.STARTING) {
+    if(arena.getArenaState() == ArenaState.STARTING && arena.getPlayers().size() >= arena.getMaximumPlayers()) {
       if(!player.hasPermission(PermissionManager.getJoinFullGames())) {
         player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Full-Game-No-Permission"));
         return;
@@ -172,6 +179,10 @@ public class ArenaManager {
 
     Debugger.debug("Final join attempt, " + player.getName());
     User user = plugin.getUserManager().getUser(player);
+    user.lastBoard = player.getScoreboard();
+    //reset scoreboard
+    player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+
     arena.getScoreboardManager().createScoreboard(user);
     if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.saveInventoryToFile(plugin, player);
@@ -189,22 +200,18 @@ public class ArenaManager {
     player.getInventory().setArmorContents(new ItemStack[]{new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
 
     //Set player as spectator as the game is already started
-    SpecialItem leaveItem = plugin.getSpecialItemsRegistry().getSpecialItem("Leave");
     if(arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
-      if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SPECTATORS)) {
-        return;
-      }
-
       arena.addSpectator(player);
 
       player.teleport(arena.getPlotManager().getPlots().get(0).getTeleportLocation());
       player.sendMessage(chatManager.colorMessage("In-Game.Spectator.You-Are-Spectator"));
       player.getInventory().clear();
 
-      player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name")).build());
-      player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name")).build());
-      if (leaveItem != null) {
-        player.getInventory().setItem(8, leaveItem.getItemStack());
+      for(SpecialItem item : plugin.getSpecialItemsManager().getSpecialItems()) {
+        if(item.getDisplayStage() != SpecialItem.DisplayStage.SPECTATOR) {
+          continue;
+        }
+        player.getInventory().setItem(item.getSlot(), item.getItemStack());
       }
 
       player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
@@ -214,7 +221,9 @@ public class ArenaManager {
       arena.getPlayers().forEach(onlinePlayer -> VersionUtils.hidePlayer(plugin, onlinePlayer, player));
 
       user.setSpectator(true);
-      player.setCollidable(false);
+
+      VersionUtils.setCollidable(player, false);
+
       player.setGameMode(GameMode.ADVENTURE);
       player.setAllowFlight(true);
       player.setFlying(true);
@@ -223,23 +232,34 @@ public class ArenaManager {
         if(plugin.getUserManager().getUser(spectator).isSpectator()) {
           VersionUtils.showPlayer(plugin, player, spectator);
         } else {
-          VersionUtils.hidePlayer(plugin, player, spectator);
+          VersionUtils.hidePlayer(plugin, spectator, player);
         }
       }
       return;
     }
-
+    if(partyPlot != null) {
+      partyPlot.addMember(player, arena, false);
+    }
     arena.addPlayer(player);
 
     arena.teleportToLobby(player);
-    if (leaveItem != null) {
-      player.getInventory().setItem(leaveItem.getSlot(), leaveItem.getItemStack());
+    if(arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+      for(SpecialItem item : plugin.getSpecialItemsManager().getSpecialItems()) {
+        if(arena.getArenaType() == BaseArena.ArenaType.TEAM && item.getDisplayStage() == SpecialItem.DisplayStage.TEAM) {
+          player.getInventory().setItem(item.getSlot(), item.getItemStack());
+          continue;
+        }
+        if(item.getDisplayStage() != SpecialItem.DisplayStage.LOBBY) {
+          continue;
+        }
+        player.getInventory().setItem(item.getSlot(), item.getItemStack());
+      }
     }
     player.updateInventory();
 
     chatManager.broadcastAction(arena, player, ChatManager.ActionType.JOIN);
     VersionUtils.sendTitles(player, chatManager.colorMessage("In-Game.Messages.Join-Title").replace("%ARENANAME%", arena.getMapName()),
-        chatManager.colorMessage("In-Game.Messages.Join-SubTitle").replace("%ARENANAME%", arena.getMapName()) , 5, 40, 5);
+        chatManager.colorMessage("In-Game.Messages.Join-SubTitle").replace("%ARENANAME%", arena.getMapName()), 5, 40, 5);
     plugin.getSignManager().updateSigns();
   }
 
@@ -274,7 +294,7 @@ public class ArenaManager {
     player.setWalkSpeed(0.2f);
 
     User user = plugin.getUserManager().getUser(player);
-    arena.getScoreboardManager().removeScoreboard(user);
+    user.removeScoreboard(arena);
 
     if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.loadInventory(plugin, player);
@@ -295,7 +315,10 @@ public class ArenaManager {
     }
 
     if(arena instanceof SoloArena) {
-      ((SoloArena) arena).getQueue().remove(player);
+      Plot userPlot = user.getCurrentPlot();
+      if(userPlot.getMembers().size() <= 1) {
+        ((SoloArena) arena).getQueue().remove(user.getCurrentPlot());
+      }
     }
 
     arena.removePlayer(player);
@@ -311,8 +334,8 @@ public class ArenaManager {
     Plot plot = arena.getPlotManager().getPlot(player);
     if(plot != null) {
       if(arena instanceof TeamArena) {
-        plot.getOwners().remove(player);
-        if(plot.getOwners().size() > 1) {
+        plot.getMembers().remove(player);
+        if(plot.getMembers().size() < 1) {
           plot.fullyResetPlot();
         }
       } else
@@ -322,7 +345,7 @@ public class ArenaManager {
       ((GuessTheBuildArena) arena).getWhoGuessed().remove(player);
     }
 
-    if(arena.getPlayers().isEmpty() && arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS) {
+    if(arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS && arena.getPlayers().isEmpty()) {
       arena.setArenaState(ArenaState.RESTARTING);
       arena.setTimer(0);
     }
@@ -340,9 +363,17 @@ public class ArenaManager {
   public static void stopGame(boolean quickStop, BaseArena arena) {
     Debugger.debug("Game stop event initiate, arena " + arena.getID());
     Bukkit.getPluginManager().callEvent(new BBGameEndEvent(arena));
-    for(Player player : arena.getPlayers()) {
-      if(!quickStop) {
+    if(!quickStop) {
+      for(Player player : arena.getPlayers()) {
         spawnFireworks(arena, player);
+        for(SpecialItem item : plugin.getSpecialItemsManager().getSpecialItems()) {
+          if(item.getDisplayStage() != SpecialItem.DisplayStage.SPECTATOR) {
+            continue;
+          }
+          player.getInventory().setItem(item.getSlot(), item.getItemStack());
+        }
+        User user = plugin.getUserManager().getUser(player);
+        user.removeScoreboard(arena);
       }
     }
     arena.getScoreboardManager().stopAllScoreboards();

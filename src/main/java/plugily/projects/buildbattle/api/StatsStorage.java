@@ -23,8 +23,8 @@ package plugily.projects.buildbattle.api;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.sorter.SortUtils;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.sorter.SortUtils;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.user.data.MysqlManager;
@@ -101,9 +101,10 @@ public class StatsStorage {
   /**
    * Available statistics to get.
    */
+  //todo separate stats for different arena modes!
   public enum StatisticType {
     BLOCKS_PLACED("blocksplaced", true), BLOCKS_BROKEN("blocksbroken", true), GAMES_PLAYED("gamesplayed", true), WINS("wins", true),
-    LOSES("loses", true), HIGHEST_WIN("highestwin", true), PARTICLES_USED("particles", true), SUPER_VOTES("supervotes", true),
+    LOSES("loses", true), HIGHEST_WIN("highestwin", true), HIGHEST_POINTS("higestpoints", true), TOTAL_POINTS_EARNED("totalpointsearned", true), PARTICLES_USED("particles", true), SUPER_VOTES("supervotes", true),
     LOCAL_POINTS("points", false), LOCAL_GUESS_THE_BUILD_POINTS("gtb_points", false), REPORTS("reports", false);
 
     private final String name;
