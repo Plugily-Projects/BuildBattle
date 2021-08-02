@@ -21,14 +21,10 @@
 package plugily.projects.buildbattle.arena.impl;
 
 import org.bukkit.entity.Player;
-import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
-import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.arena.options.ArenaOption;
-import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.utils.Debugger;
-import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
 
 import java.util.Comparator;
 
@@ -87,55 +83,6 @@ public class TeamArena extends SoloArena {
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[PLOT WARNING] Instance was stopped!");
       ArenaManager.stopGame(false, this);
     }*/
-  }
-
-  @Override
-  public String formatWinners(Plot plot, String string) {
-    String str = string;
-    if(plot.getMembers().size() >= 1) {
-      StringBuilder members = new StringBuilder();
-      plot.getMembers().forEach(player -> members.append(player.getName()).append(" & "));
-      members.deleteCharAt(members.length() - 2);
-      str = str.replaceAll("(?i)%player%", members.toString());
-    } else {
-      str = str.replaceAll("(?i)%player%", "PLAYER_NOT_FOUND");
-    }
-    return str;
-  }
-
-  @Override
-  public void voteForNextPlot() {
-    if(getVotingPlot() != null) {
-      for(Player player : getPlayers()) {
-        User user = getPlugin().getUserManager().getUser(player);
-        int points = user.getStat(StatsStorage.StatisticType.LOCAL_POINTS);
-        //no vote made, in this case make it a good vote
-        if(points == 0) {
-          points = 3;
-        }
-        getVotingPlot().setPoints(getVotingPlot().getPoints() + points);
-        user.setStat(StatsStorage.StatisticType.LOCAL_POINTS, 0);
-      }
-      if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.ANNOUNCE_PLOTOWNER_LATER)) {
-        String message = formatWinners(getVotingPlot(), getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voted-For-Player-Plot"));
-        for(Player p : getPlayers()) {
-          String owner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Plot-Owner-Title");
-          owner = formatWinners(getVotingPlot(), owner);
-          VersionUtils.sendTitle(p, owner, 5, 40, 5);
-          p.sendMessage(getPlugin().getChatManager().getPrefix() + message);
-        }
-      }
-    }
-    /*
-    Code to let only vote one plot member of the team
-    for(Plot p : getPlotManager().getPlots()) {
-      if(p.getMembers().size() > 1) {
-        //removing other owners to not vote for same plot
-        p.getMembers().forEach(player -> getQueue().remove(player));
-        getQueue().add(p.getMembers().get(0));
-      }
-    }*/
-    voteRoutine();
   }
 
   @Override

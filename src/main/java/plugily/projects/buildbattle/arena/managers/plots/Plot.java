@@ -123,6 +123,17 @@ public class Plot {
     return members;
   }
 
+  @NotNull
+  public String getFormattedMembers() {
+    if(members.size() >= 1) {
+      StringBuilder member = new StringBuilder();
+      members.forEach(player -> member.append(player.getName()).append(" & "));
+      return member.substring(0, member.length() - 3);
+    } else {
+      return "PLAYER_NOT_FOUND";
+    }
+  }
+
   public int getMembersSize() {
     return members.size();
   }

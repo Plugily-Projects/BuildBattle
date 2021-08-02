@@ -315,7 +315,10 @@ public class ArenaManager {
     }
 
     if(arena instanceof SoloArena) {
-      ((SoloArena) arena).getQueue().remove(player);
+      Plot userPlot = user.getCurrentPlot();
+      if(userPlot.getMembers().size() <= 1) {
+        ((SoloArena) arena).getQueue().remove(user.getCurrentPlot());
+      }
     }
 
     arena.removePlayer(player);
