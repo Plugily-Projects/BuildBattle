@@ -155,7 +155,7 @@ public class SoloArena extends BaseArena {
         int timer = getTimer();
         float exp = (float) (timer / (double) lobbyTimer);
 
-        if (exp > 1f || exp < 0f) {
+        if(exp > 1f || exp < 0f) {
           exp = 1f;
         }
 
@@ -184,7 +184,6 @@ public class SoloArena extends BaseArena {
           }
           setArenaState(ArenaState.IN_GAME);
           distributePlots();
-          getPlotManager().teleportToPlots();
           setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.THEME_VOTE, this));
           for(Player player : getPlayers()) {
             player.getInventory().clear();
@@ -463,7 +462,7 @@ public class SoloArena extends BaseArena {
         continue;
       }
 
-      plot.addMember(first, this);
+      plot.addMember(first, this, true);
       user.setCurrentPlot(plot);
 
       players.remove(0);
@@ -475,6 +474,7 @@ public class SoloArena extends BaseArena {
       Debugger.sendConsoleMsg("&c[PLOT WARNING] Instance was stopped!");
       ArenaManager.stopGame(false, this);
     }
+    getPlotManager().teleportToPlots();
   }
 
   public void voteRoutine() {

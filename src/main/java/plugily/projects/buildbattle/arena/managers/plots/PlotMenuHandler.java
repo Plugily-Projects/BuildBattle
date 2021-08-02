@@ -80,18 +80,18 @@ public class PlotMenuHandler implements Listener {
     int plotMembers = plot.getMembers().size();
 
     if(plotMembers == 0) {
-      return empty;
+      return empty.clone();
     }
 
     if(plot.getMembers().contains(player)) {
-      return inside;
+      return inside.clone();
     }
 
     if(plotMembers == maxPlotMembers) {
-      return full;
+      return full.clone();
     }
 
-    return waiting;
+    return waiting.clone();
   }
 
   public void createMenu(Player player, BaseArena arena) {
@@ -120,6 +120,7 @@ public class PlotMenuHandler implements Listener {
         itemStack = new ItemBuilder(itemStack).lore(insideTeam).build();
       }
       itemStack = new ItemBuilder(itemStack).name(teamName.replace("%plot%", Integer.toString(plots))).build();
+      int finalPlots = plots;
       pane.addItem(new GuiItem(itemStack, e -> {
         e.setCancelled(true);
         if(!(e.getWhoClicked() instanceof Player) || !(e.isLeftClick() || e.isRightClick())) {
@@ -130,12 +131,13 @@ public class PlotMenuHandler implements Listener {
         if(event.isCancelled()) {
           return;
         }
-        if(!plot.addMember(player, arena)) {
+        if(!plot.addMember(player, arena, false)) {
           return;
         }
-        player.sendMessage(plugin.getChatManager().colorMessage("Plots.Team.Plot-Choose").replace("%plot%", Integer.toString(plots)));
+        player.sendMessage(plugin.getChatManager().colorMessage("Plots.Team.Plot-Choose").replace("%plot%", Integer.toString(finalPlots)));
         e.getWhoClicked().closeInventory();
       }), x, y);
+      plots++;
       x++;
       if(x == 9) {
         x = 0;

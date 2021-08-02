@@ -27,12 +27,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
-import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
-import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
-import plugily.projects.commonsbox.minecraft.misc.MiscUtils;
-import plugily.projects.commonsbox.minecraft.misc.stuff.ComplementAccessor;
-import plugily.projects.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.StatsStorage;
@@ -50,6 +44,12 @@ import plugily.projects.buildbattle.menus.themevoter.BBTheme;
 import plugily.projects.buildbattle.user.User;
 import plugily.projects.buildbattle.utils.Debugger;
 import plugily.projects.buildbattle.utils.MessageUtils;
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
+import plugily.projects.commonsbox.minecraft.misc.MiscUtils;
+import plugily.projects.commonsbox.minecraft.misc.stuff.ComplementAccessor;
+import plugily.projects.commonsbox.minecraft.serialization.InventorySerializer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -119,7 +119,7 @@ public class GuessTheBuildArena extends BaseArena {
         int lobbyTimer = getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.LOBBY, this);
         float exp = (float) (timer / (double) lobbyTimer);
 
-        if (exp > 1f || exp < 0f) {
+        if(exp > 1f || exp < 0f) {
           exp = 1f;
         }
 
@@ -271,7 +271,7 @@ public class GuessTheBuildArena extends BaseArena {
 
           String themeTitle = getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Was-Title");
           String themeSubtitle = getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Was-Subtitle")
-                  .replace("%THEME%", currentTheme.getTheme());
+              .replace("%THEME%", currentTheme.getTheme());
 
           for(Player p : getPlayers()) {
             VersionUtils.sendTitles(p, themeTitle, themeSubtitle, 5, 25, 5);
@@ -349,7 +349,7 @@ public class GuessTheBuildArena extends BaseArena {
 
             Plot buildPlot = getPlugin().getUserManager().getUser(currentBuilder).getCurrentPlot();
 
-            if (buildPlot != null) {
+            if(buildPlot != null) {
               org.bukkit.Location plotLoc = buildPlot.getTeleportLocation();
 
               for(Player player : getPlayers()) {
@@ -459,7 +459,7 @@ public class GuessTheBuildArena extends BaseArena {
 
     Inventory inv = ComplementAccessor.getComplement().createInventory(null, 27, getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Inventory-Name"));
     inv.setItem(11, new ItemBuilder(Material.PAPER).name(themeItemName
-        .replace("%theme%", !themes.isEmpty() ? themes.get(themes.size() == 1 ? 0 : r.nextInt(themes.size())) : ""))
+            .replace("%theme%", !themes.isEmpty() ? themes.get(themes.size() == 1 ? 0 : r.nextInt(themes.size())) : ""))
         .lore(itemLore
             .replace("%difficulty%", getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Difficulties.Easy"))
             .replace("%points%", "1").split(";")).build());
@@ -467,7 +467,7 @@ public class GuessTheBuildArena extends BaseArena {
     themes = getPlugin().getConfigPreferences().getThemes(BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_MEDIUM");
 
     inv.setItem(13, new ItemBuilder(Material.PAPER).name(themeItemName
-        .replace("%theme%", !themes.isEmpty() ? themes.get(themes.size() == 1 ? 0 : r.nextInt(themes.size())) : ""))
+            .replace("%theme%", !themes.isEmpty() ? themes.get(themes.size() == 1 ? 0 : r.nextInt(themes.size())) : ""))
         .lore(itemLore
             .replace("%difficulty%", getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Difficulties.Medium"))
             .replace("%points%", "2").split(";")).build());
@@ -475,7 +475,7 @@ public class GuessTheBuildArena extends BaseArena {
     themes = getPlugin().getConfigPreferences().getThemes(BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_HARD");
 
     inv.setItem(15, new ItemBuilder(Material.PAPER).name(themeItemName
-        .replace("%theme%", !themes.isEmpty() ? themes.get(themes.size() == 1 ? 0 : r.nextInt(themes.size())) : ""))
+            .replace("%theme%", !themes.isEmpty() ? themes.get(themes.size() == 1 ? 0 : r.nextInt(themes.size())) : ""))
         .lore(itemLore
             .replace("%difficulty%", getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Difficulties.Hard"))
             .replace("%points%", "3").split(";")).build());
@@ -536,7 +536,7 @@ public class GuessTheBuildArena extends BaseArena {
         break;
       }
       Player first = players.get(0);
-      plot.addMember(first, this);
+      plot.addMember(first, this, true);
       getPlugin().getUserManager().getUser(first).setCurrentPlot(plot);
       players.remove(0);
     }

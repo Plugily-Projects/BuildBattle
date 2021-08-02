@@ -238,7 +238,7 @@ public class ArenaManager {
       return;
     }
     if(partyPlot != null) {
-      partyPlot.addMember(player, arena);
+      partyPlot.addMember(player, arena, false);
     }
     arena.addPlayer(player);
 

@@ -61,15 +61,12 @@ public class TeamArena extends SoloArena {
       // add player to min base if he got no base
       Plot playerPlot = getPlotManager().getPlot(player);
       if(playerPlot == null) {
-        minPlayers.addMember(player, this);
-        getPlugin().getUserManager().getUser(player).setCurrentPlot(minPlayers);
+        minPlayers.addMember(player, this, true);
       }
       // fallback
       if(playerPlot == null) {
         Plot firstPlot = getPlotManager().getPlots().get(0);
-
-        firstPlot.addMember(player, this);
-        getPlugin().getUserManager().getUser(player).setCurrentPlot(firstPlot);
+        firstPlot.addMember(player, this, true);
       }
     }
     //check if not only one plot got players
@@ -78,11 +75,11 @@ public class TeamArena extends SoloArena {
     if(maxPlayers.getMembersSize() == getPlayers().size()) {
       for(int i = 0; i < maxPlayers.getMembersSize() / 2; i++) {
         Player move = maxPlayers.getMembers().get(i);
-        minPlayers.addMember(move, this);
+        minPlayers.addMember(move, this, true);
         maxPlayers.removeMember(move);
-        getPlugin().getUserManager().getUser(move).setCurrentPlot(minPlayers);
       }
     }
+    getPlotManager().teleportToPlots();
     /*if (!players.isEmpty()) {
       MessageUtils.errorOccurred();
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Build Battle] [PLOT WARNING] Not enough plots in arena " + getID() + "!");
