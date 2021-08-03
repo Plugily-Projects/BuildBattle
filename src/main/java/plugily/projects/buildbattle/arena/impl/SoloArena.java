@@ -341,7 +341,6 @@ public class SoloArena extends BaseArena {
         break;
       case ENDING:
         List<Player> players = getPlayers();
-        players.addAll(getSpectators());
         getScoreboardManager().stopAllScoreboards();
         if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           getPlugin().getServer().setWhitelist(false);
@@ -354,6 +353,11 @@ public class SoloArena extends BaseArena {
           }
         }
         if(getTimer() <= 0) {
+          for(Player spectator: getSpectators()){
+            if(!players.contains(spectator)){
+              players.add(spectator)
+            }
+          }
           for(Player player : players) {
             User user = plugin.getUserManager().getUser(player);
             user.removeScoreboard(this);
