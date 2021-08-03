@@ -317,6 +317,18 @@ public class BaseArena extends BukkitRunnable {
     return players;
   }
 
+  /**
+   * Get players of the game and spectators
+   *
+   * @return List with players
+   */
+  @NotNull
+  public List<Player> getAllArenaPlayers() {
+    List<Player> allPlayers = new ArrayList<>(players);
+    allPlayers.addAll(spectators);
+    return allPlayers;
+  }
+
   public List<Player> getSpectators() {
     return spectators;
   }

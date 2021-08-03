@@ -324,9 +324,8 @@ public class SoloArena extends BaseArena {
             announceResults();
 
             Location winnerLocation = winnerPlot.getTeleportLocation();
-            List<Player> players = getPlayers();
-            players.addAll(getSpectators());
-            for(Player player : players) {
+
+            for(Player player : getAllArenaPlayers()) {
               player.teleport(winnerLocation);
               String winner = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Winner-Title");
               winner = formatWinners(winnerPlot, winner);
@@ -340,8 +339,6 @@ public class SoloArena extends BaseArena {
         setTimer(getTimer() - 1);
         break;
       case ENDING:
-        List<Player> players = getPlayers();
-        players.addAll(getSpectators());
         getScoreboardManager().stopAllScoreboards();
         if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           getPlugin().getServer().setWhitelist(false);
@@ -349,12 +346,12 @@ public class SoloArena extends BaseArena {
         setVoting(false);
         setThemeTimerSet(false);
         if(getPlugin().getConfig().getBoolean("Firework-When-Game-Ends", true)) {
-          for(Player player : players) {
+          for(Player player : getAllArenaPlayers()) {
             MiscUtils.spawnRandomFirework(player.getLocation());
           }
         }
         if(getTimer() <= 0) {
-          for(Player player : players) {
+          for(Player player : getAllArenaPlayers()) {
             User user = plugin.getUserManager().getUser(player);
             user.removeScoreboard(this);
             user.setSpectator(false);
@@ -591,9 +588,7 @@ public class SoloArena extends BaseArena {
       }
       formattedSummary.add(message);
     }
-    List<Player> players = getPlayers();
-    players.addAll(getSpectators());
-    players.forEach(player -> formattedSummary.forEach(msg -> MiscUtils.sendCenteredMessage(player, msg)));
+    getAllArenaPlayers().forEach(player -> formattedSummary.forEach(msg -> MiscUtils.sendCenteredMessage(player, msg)));
     for(Map.Entry<Integer, List<Player>> map : topList.entrySet()) {
       for(Player p : map.getValue()) {
         if(map.getKey() > 3) {
