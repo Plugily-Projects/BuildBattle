@@ -378,10 +378,7 @@ public class GuessTheBuildArena extends BaseArena {
         if(getTimer() <= 0) {
           scoreboardManager.stopAllScoreboards();
 
-          List<Player> players = getPlayers();
-          players.addAll(getSpectators());
-
-          for(Player player : players) {
+          for(Player player : getAllArenaPlayers()) {
             teleportToEndLocation(player);
             if(getGameBar() != null) {
               getGameBar().removePlayer(player);
