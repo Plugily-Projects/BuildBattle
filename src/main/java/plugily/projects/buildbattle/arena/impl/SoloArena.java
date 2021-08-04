@@ -246,8 +246,13 @@ public class SoloArena extends BaseArena {
 
         int timerco = getTimer();
 
-        if((timerco == (4 * 60) || timerco == (3 * 60) || timerco == (5 * 60) || timerco == 30 || timerco == (2 * 60) || timerco == 60 || timerco == 15) && !voteTime) {
-          sendBuildLeftTimeMessage();
+        if (!voteTime && timerco != 0) {
+          for (int timers : getPlugin().getConfig().getIntegerList("Build-Left-Time-Message-Intervals")) {
+            if (timers == timerco) {
+              sendBuildLeftTimeMessage();
+              break;
+            }
+          }
         }
 
         if(timerco != 0 && !receivedVoteItems) {
@@ -277,7 +282,7 @@ public class SoloArena extends BaseArena {
           }
           receivedVoteItems = true;
         }
-        if(getTimer() == 0 && receivedVoteItems) {
+        if(receivedVoteItems && getTimer() == 0) {
           setVoting(true);
           if(!queue.isEmpty()) {
             voteForNextPlot();

@@ -41,7 +41,7 @@ import java.util.List;
 public class LanguageMigrator {
 
   public static final int LANGUAGE_FILE_VERSION = 25;
-  public static final int CONFIG_FILE_VERSION = 18;
+  public static final int CONFIG_FILE_VERSION = 19;
   private final List<String> migratable = Arrays.asList("bungee", "config", "language", "mysql");
   private final Main plugin;
 
@@ -247,6 +247,11 @@ public class LanguageMigrator {
               "    Playing: RED_wool\r\n" +
               "    Ending: RED_wool\r\n" +
               "    Restarting: RED_wool\r\n");
+          break;
+        case 18:
+          MigratorUtils.addNewLines(file, "\r\n" +
+              "# At what intervals should players be notified of the remaining build time?\r\n"
+              + "Build-Left-Time-Message-Intervals: [15, 30, 60, 300, 240, 180, 120]\r\n");
           break;
         default:
           return;

@@ -345,15 +345,24 @@ public class GuessTheBuildArena extends BaseArena {
           setTimer(15);
         }
 
-        int gTimer = getTimer();
-        if(themeSet && (gTimer == (4 * 60) || gTimer == (3 * 60) || gTimer == 5 * 60 || gTimer == 30 || gTimer == 2 * 60 || gTimer == 60 || gTimer == 15)) {
-          sendBuildLeftTimeMessage();
+        if (themeSet) {
+          int gTimer = getTimer();
+
+          if (gTimer != 0) {
+            for (int timers : getPlugin().getConfig().getIntegerList("Build-Left-Time-Message-Intervals")) {
+              if (timers == gTimer) {
+                sendBuildLeftTimeMessage();
+                break;
+              }
+            }
+          }
         }
+
         //if player leaves during round force next round
         if(currentBuilder != null && !currentBuilder.isOnline()) {
           setTimer(1);
         }
-        if(getTimer() != 0 && currentBuilder != null) {
+        if(currentBuilder != null && getTimer() != 0) {
           if(getOption(ArenaOption.IN_PLOT_CHECKER) == 1) {
             setOptionValue(ArenaOption.IN_PLOT_CHECKER, 0);
 

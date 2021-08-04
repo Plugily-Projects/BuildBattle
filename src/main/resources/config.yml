@@ -197,6 +197,9 @@ Whitelisted-Commands:
   - me
   - help
 
+# At what intervals should players be notified of the remaining build time?
+Build-Left-Time-Message-Intervals: [15, 30, 60, 300, 240, 180, 120]
+
 # Should we enable short commands such as /start and /leave
 Enable-Short-Commands: false
 
@@ -262,6 +265,6 @@ Arena-Selector:
     Restarting: RED_wool
 
 # Don't modify.
-Version: 18
+Version: 19
 
 # No way! You've reached the end! But... where's the dragon!?
