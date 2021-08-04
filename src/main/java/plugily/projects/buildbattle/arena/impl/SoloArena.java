@@ -487,7 +487,7 @@ public class SoloArena extends BaseArena {
 
       // getPlotManager().teleportAllToPlot(plotManager.getPlot(player.getUniqueId()));
       votingPlot = plot;
-      String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voting-For-Player-Plot").replace("%PLAYER%", plot.getFormattedMembers());
+      String message = getPlugin().getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Voting-For-Player-Plot").replace("%PLAYER%", votingPlot.getFormattedMembers());
 
       Location teleportLoc = votingPlot.getTeleportLocation();
 
@@ -558,10 +558,10 @@ public class SoloArena extends BaseArena {
   }
 
   private void announceResults() {
-    List<String> messages = LanguageManager.getLanguageList("In-Game.Messages.Voting-Messages.Summary");
-    List<String> formattedSummary = new ArrayList<>();
-    for(String summary : messages) {
-      String message = getPlugin().getChatManager().colorRawMessage(summary);
+    List<String> formattedSummary = LanguageManager.getLanguageList("In-Game.Messages.Voting-Messages.Summary");
+
+    for(int b = 0; b < formattedSummary.size(); b++) {
+      String message = getPlugin().getChatManager().colorRawMessage(formattedSummary.get(b));
       for(int i = 1; i < 4; i++) {
         String access = "One";
         switch(i) {
@@ -592,7 +592,7 @@ public class SoloArena extends BaseArena {
           }
         }
       }
-      formattedSummary.add(message);
+      formattedSummary.set(b, message);
     }
     getAllArenaPlayers().forEach(player -> formattedSummary.forEach(msg -> MiscUtils.sendCenteredMessage(player, msg)));
     for(Map.Entry<Integer, List<Player>> map : topList.entrySet()) {
@@ -641,8 +641,6 @@ public class SoloArena extends BaseArena {
       topList.put(b, new ArrayList<>());
     }
     for(Plot buildPlot : getPlotManager().getPlots()) {
-      long i = buildPlot.getPoints();
-
       for(Map.Entry<Integer, List<Player>> map : new HashMap<>(topList).entrySet()) {
         Player first = map.getValue().isEmpty() ? null : map.getValue().get(0);
 
@@ -651,11 +649,11 @@ public class SoloArena extends BaseArena {
           topList.put(map.getKey(), buildPlot.getMembers());
           break;
         }
-        if(i > plot.getPoints()) {
+        if(buildPlot.getPoints() > plot.getPoints()) {
           moveScore(map.getKey(), buildPlot.getMembers());
           break;
         }
-        if(i == plot.getPoints()) {
+        if(buildPlot.getPoints() == plot.getPoints()) {
           List<Player> winners = topList.getOrDefault(map.getKey(), new ArrayList<>());
           winners.addAll(buildPlot.getMembers());
           topList.put(map.getKey(), winners);

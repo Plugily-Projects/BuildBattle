@@ -216,18 +216,23 @@ public class GuessTheBuildArena extends BaseArena {
           String roundMessage = getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Current-Round")
               .replace("%ROUND%", Integer.toString(round))
               .replace("%MAXPLAYERS%", Integer.toString(getPlayers().size()));
+          String title = getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Start-Guessing-Title");
+
           for(Player p : getPlayers()) {
-            VersionUtils.sendTitle(p, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Start-Guessing-Title"), 5, 25, 5);
+            VersionUtils.sendTitle(p, title, 5, 25, 5);
             p.sendMessage(roundMessage);
           }
           setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, this));
           break;
         }
         if(getTimer() <= 90 && currentTheme != null) {
+          int themeLength = currentTheme.getTheme().length();
+
           if(getTimer() == 90) {
             getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Is-Long")
-                .replace("%NUM%", Integer.toString(currentTheme.getTheme().length())));
+                .replace("%NUM%", Integer.toString(themeLength)));
           }
+
           for(Player player : getPlayers()) {
             if(currentBuilder == player) {
               continue;
@@ -235,15 +240,16 @@ public class GuessTheBuildArena extends BaseArena {
             if(whoGuessed.contains(player)) {
               VersionUtils.sendActionBar(player, currentTheme.getTheme());
             }
+
             StringBuilder actionbar = new StringBuilder();
             List<Integer> charsAt = new ArrayList<>();
 
-            for(int i = 0; i < currentTheme.getTheme().length(); i++) {
+            for(int i = 0; i < themeLength; i++) {
               if(!removedCharsAt.contains(i)) {
                 charsAt.add(i);
               }
             }
-            if(currentTheme.getTheme().length() - removedCharsAt.size() > 2) {
+            if(themeLength - removedCharsAt.size() > 2) {
               int t = getTimer();
 
               if(t % 10 == 0 && t <= 70) {
@@ -252,13 +258,15 @@ public class GuessTheBuildArena extends BaseArena {
                 continue;
               }
             }
-            for(int i = 0; i < currentTheme.getTheme().length(); i++) {
-              if(Character.isWhitespace(currentTheme.getTheme().charAt(i))) {
+            for(int i = 0; i < themeLength; i++) {
+              char charAt = currentTheme.getTheme().charAt(i);
+
+              if(Character.isWhitespace(charAt)) {
                 actionbar.append("  ");
                 continue;
               }
               if(removedCharsAt.contains(i)) {
-                actionbar.append(currentTheme.getTheme().charAt(i)).append(' ');
+                actionbar.append(charAt).append(' ');
                 continue;
               }
               actionbar.append("_ ");
@@ -281,8 +289,8 @@ public class GuessTheBuildArena extends BaseArena {
           setThemeSet(false);
           setCurrentTheme(null);
           whoGuessed.clear();
-          round++;
-          if(round > getPlayers().size()) {
+
+          if(round++ > getPlayers().size()) {
             setTimer(15);
             setArenaState(ArenaState.ENDING);
             Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
@@ -336,7 +344,9 @@ public class GuessTheBuildArena extends BaseArena {
           Bukkit.getPluginManager().callEvent(new BBGameEndEvent(this));
           setTimer(15);
         }
-        if(themeSet && (getTimer() == (4 * 60) || getTimer() == (3 * 60) || getTimer() == 5 * 60 || getTimer() == 30 || getTimer() == 2 * 60 || getTimer() == 60 || getTimer() == 15)) {
+
+        int gTimer = getTimer();
+        if(themeSet && (gTimer == (4 * 60) || gTimer == (3 * 60) || gTimer == 5 * 60 || gTimer == 30 || gTimer == 2 * 60 || gTimer == 60 || gTimer == 15)) {
           sendBuildLeftTimeMessage();
         }
         //if player leaves during round force next round
@@ -396,14 +406,20 @@ public class GuessTheBuildArena extends BaseArena {
             if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
               InventorySerializer.loadInventory(getPlugin(), player);
             }
-            //fast solution
-            Plot plot = getPlotManager().getPlot(player);
-            if(plot != null)
-              plot.fullyResetPlot();
           }
 
           // do it in the main thread to prevent async catch from bukkit
-          Bukkit.getScheduler().scheduleSyncDelayedTask(getPlugin(), this::giveRewards);
+          Bukkit.getScheduler().callSyncMethod(getPlugin(), () -> {
+            giveRewards();
+            return 1;
+          });
+
+          for (Player player : getAllArenaPlayers()) {
+            Plot plot = getPlotManager().getPlot(player);
+
+            if(plot != null)
+              plot.fullyResetPlot();
+          }
 
           clearPlayers();
           if(particleRefreshSched != null) {
