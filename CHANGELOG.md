@@ -8,6 +8,9 @@ deploy webhooks to print changelog successfully
 `<update log line>`
 
 That's all, matcher will stop when detects next line started with `###` match
+### 4.5.3 Release (04.08.2021 - xx.xx.2021)
+* Fixed when players didn't got rewards after plot reset
+
 ### 4.5.2 Release (02.08.2021 - 03.08.2021)
 * Fixed issues with spectators get added multiple times to the players list
 * Fixed Cannot invoke because "userPlot" is null

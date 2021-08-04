@@ -367,13 +367,19 @@ public class SoloArena extends BaseArena {
             if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
               InventorySerializer.loadInventory(getPlugin(), player);
             }
+          }
+
+          giveRewards();
+
+          for (Player player : getAllArenaPlayers()) {
             //plot might be already deleted by team mate in TEAM game mode
             Plot plot = getPlotManager().getPlot(player);
+
             if(plot != null) {
               plot.fullyResetPlot();
             }
           }
-          giveRewards();
+
           clearPlayers();
           if(particleRefreshSched != null) {
             particleRefreshSched.task.cancel();
