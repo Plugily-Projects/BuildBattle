@@ -46,7 +46,7 @@ public class RewardsFactory {
 
   private final Set<Reward> rewards = new HashSet<>();
   private final FileConfiguration config;
-  private final boolean enabled;
+  private boolean enabled;
 
   public RewardsFactory(Main plugin) {
     enabled = plugin.getConfigPreferences().getOption(ConfigPreferences.Option.REWARDS);
@@ -67,10 +67,7 @@ public class RewardsFactory {
     if(!enabled) {
       return;
     }
-    if(!config.contains("rewards")) {
-      Debugger.debug(Debugger.Level.WARN, "[RewardsFactory] Rewards section not found in the file. Rewards won't be loaded.");
-      return;
-    }
+
     BaseArena arena = ArenaRegistry.getArena(player);
     if(arena == null) {
       return;
@@ -110,10 +107,6 @@ public class RewardsFactory {
   }
 
   private String formatCommandPlaceholders(String command, BaseArena arena, int place) {
-    if(arena == null) {
-      return command;
-    }
-
     String formatted = command;
     formatted = StringUtils.replace(formatted, "%ARENA-ID%", arena.getID());
     formatted = StringUtils.replace(formatted, "%MAPNAME%", arena.getMapName());
@@ -139,7 +132,12 @@ public class RewardsFactory {
         }
         for(String key : section.getKeys(false)) {
           for(String reward : section.getStringList(key)) {
-            rewards.add(new Reward(rewardType, reward, Integer.parseInt(key)));
+            try {
+              rewards.add(new Reward(rewardType, reward, Integer.parseInt(key)));
+            } catch (NumberFormatException e) {
+              continue;
+            }
+
             registeredRewards.put(rewardType, registeredRewards.getOrDefault(rewardType, 0) + 1);
           }
         }
@@ -150,6 +148,13 @@ public class RewardsFactory {
         registeredRewards.put(rewardType, registeredRewards.getOrDefault(rewardType, 0) + 1);
       }
     }
+
+    if (registeredRewards.isEmpty()) {
+      Debugger.debug(Debugger.Level.WARN, "[RewardsFactory] No rewards was loaded. Maybe the section was removed?");
+      enabled = false;
+      return;
+    }
+
     for(Map.Entry<Reward.RewardType, Integer> entry : registeredRewards.entrySet()) {
       Debugger.debug("[RewardsFactory] Registered " + entry.getValue() + " " + entry.getKey().name() + " rewards!");
     }
