@@ -71,15 +71,15 @@ public class VoteItems {
       if(config.getBoolean(key + ".report-item-function")) {
         reportItem = stack;
       }
+
       Sound sound = null;
       try {
         sound = Sound.valueOf(config.getString(key + ".sound", ""));
       } catch(IllegalArgumentException ignored) {
       }
+
       int s = Integer.parseInt(key);
-      VoteItem voteItem = new VoteItem(stack, s, s + 1, sound);
-      reportVoteItem = voteItem;
-      voteItems.add(voteItem);
+      voteItems.add(reportVoteItem = new VoteItem(stack, s, s + 1, sound));
     }
   }
 

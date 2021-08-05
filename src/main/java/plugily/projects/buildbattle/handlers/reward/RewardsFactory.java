@@ -64,12 +64,11 @@ public class RewardsFactory {
   }
 
   public void performReward(Player player, Reward.RewardType type, int place) {
-    if(!enabled) {
-      return;
-    }
+    performReward(player, ArenaRegistry.getArena(player), type, place);
+  }
 
-    BaseArena arena = ArenaRegistry.getArena(player);
-    if(arena == null) {
+  public void performReward(Player player, BaseArena arena, Reward.RewardType type, int place) {
+    if(!enabled || arena == null) {
       return;
     }
 

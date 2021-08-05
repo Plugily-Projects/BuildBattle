@@ -10,7 +10,8 @@ deploy webhooks to print changelog successfully
 That's all, matcher will stop when detects next line started with `###` match
 ### 4.5.3 Release (04.08.2021 - xx.xx.2021)
 * Fixed when players didn't got rewards after plot reset
-* Now you can configure the notification of the remaining build time 
+* Now you can configure the notification of the remaining build time
+* Fixed issue when player's inventories did not get cleared before teleport
 
 ### 4.5.2 Release (02.08.2021 - 03.08.2021)
 * Fixed issues with spectators get added multiple times to the players list

@@ -193,7 +193,7 @@ public class SoloArena extends BaseArena {
             player.getInventory().setItem(8, getPlugin().getOptionsRegistry().getMenuItem());
             //to prevent Multiverse changing gamemode bug
             Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setGameMode(GameMode.CREATIVE), 40);
-            getPlugin().getRewardsHandler().performReward(player, Reward.RewardType.START_GAME, -1);
+            getPlugin().getRewardsHandler().performReward(player, this, Reward.RewardType.START_GAME, -1);
           }
         }
         if(isForceStart()) {
@@ -358,23 +358,31 @@ public class SoloArena extends BaseArena {
         if(getTimer() <= 0) {
           for(Player player : getAllArenaPlayers()) {
             User user = plugin.getUserManager().getUser(player);
+
             user.removeScoreboard(this);
             user.setSpectator(false);
-            teleportToEndLocation(player);
-            doBarAction(BarAction.REMOVE, player);
             player.getInventory().clear();
+            player.getInventory().setArmorContents(null);
             player.setGameMode(GameMode.SURVIVAL);
             player.setFlying(false);
             player.setAllowFlight(false);
-            player.getInventory().setArmorContents(null);
+            doBarAction(BarAction.REMOVE, player);
+
+            teleportToEndLocation(player);
             player.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("Commands.Teleported-To-The-Lobby"));
+
             user.addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
+
             if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
               InventorySerializer.loadInventory(getPlugin(), player);
             }
           }
 
-          giveRewards();
+          // do it in the main thread to prevent async catch from bukkit
+          Bukkit.getScheduler().callSyncMethod(getPlugin(), () -> {
+            giveRewards();
+            return 1;
+          });
 
           for (Player player : getAllArenaPlayers()) {
             //plot might be already deleted by team mate in TEAM game mode
@@ -686,7 +694,7 @@ public class SoloArena extends BaseArena {
       List<Player> list = topList.get(i);
       if(list != null) {
         for(Player player : list) {
-          getPlugin().getRewardsHandler().performReward(player, Reward.RewardType.PLACE, i);
+          getPlugin().getRewardsHandler().performReward(player, this, Reward.RewardType.PLACE, i);
         }
       }
     }
