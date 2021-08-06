@@ -54,53 +54,97 @@ public class RewardsFactory {
     registerRewards();
   }
 
-  public void performReward(BaseArena arena, Reward.RewardType type) {
+  public void performReward(Player player, BaseArena arena, Reward.RewardType type, int place, boolean wasPerformed) {
     if(!enabled) {
       return;
     }
-    for(Player p : arena.getPlayers()) {
-      performReward(p, type, -1);
+
+    if (arena != null && !wasPerformed) {
+      performRewardForConsole(arena, type, place);
+    }
+
+    if (player != null) {
+      performReward(player, type, place);
+    } else if (arena != null) {
+      for(Player p : arena.getPlayers()) {
+        pr(p, arena, type, place);
+      }
+    }
+  }
+
+  private void performRewardForConsole(BaseArena arena, Reward.RewardType type, int place) {
+    if(!enabled) {
+      return;
+    }
+
+    for(Reward reward : rewards) {
+      if(reward.getType() != type || reward.getExecutor() != Reward.RewardExecutor.CONSOLE) {
+        continue;
+      }
+
+      if(reward.getPlace() != -1 && reward.getPlace() != place) {
+        continue;
+      }
+
+      //cannot execute if chance wasn't met
+      if(reward.getChance() != -1 && ThreadLocalRandom.current().nextInt(0, 100) > reward.getChance()) {
+        continue;
+      }
+
+      String command = reward.getExecutableCode();
+      command = formatCommandPlaceholders(command, arena, place);
+
+      Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), command);
     }
   }
 
   public void performReward(Player player, Reward.RewardType type, int place) {
-    performReward(player, ArenaRegistry.getArena(player), type, place);
+    if (enabled) {
+      BaseArena arena = ArenaRegistry.getArena(player);
+
+      if (arena != null) {
+        performRewardForConsole(arena, type, place);
+        pr(player, arena, type, place);
+      }
+    }
   }
 
-  public void performReward(Player player, BaseArena arena, Reward.RewardType type, int place) {
+  private void pr(Player player, BaseArena arena, Reward.RewardType type, int place) {
     if(!enabled || arena == null) {
       return;
     }
 
     for(Reward reward : rewards) {
-      if(reward.getType() == type) {
-        if(reward.getPlace() != -1 && reward.getPlace() != place) {
-          continue;
-        }
-        //cannot execute if chance wasn't met
-        if(reward.getChance() != -1 && ThreadLocalRandom.current().nextInt(0, 100) > reward.getChance()) {
-          continue;
-        }
-        String command = reward.getExecutableCode();
-        command = StringUtils.replace(command, "%PLAYER%", player.getName());
-        command = formatCommandPlaceholders(command, arena, place);
-        switch(reward.getExecutor()) {
-          case CONSOLE:
-            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
-            break;
-          case PLAYER:
-            player.performCommand(command);
-            break;
-          case SCRIPT:
-            ScriptEngine engine = new ScriptEngine();
-            engine.setValue("player", player);
-            engine.setValue("server", Bukkit.getServer());
-            engine.setValue("arena", arena);
-            engine.execute(command);
-            break;
-          default:
-            break;
-        }
+      if(reward.getType() != type) {
+        continue;
+      }
+
+      if(reward.getPlace() != -1 && reward.getPlace() != place) {
+        continue;
+      }
+
+      //cannot execute if chance wasn't met
+      if(reward.getChance() != -1 && ThreadLocalRandom.current().nextInt(0, 100) > reward.getChance()) {
+        continue;
+      }
+
+      String command = reward.getExecutableCode();
+      command = StringUtils.replace(command, "%PLAYER%", player.getName());
+      command = formatCommandPlaceholders(command, arena, place);
+
+      switch(reward.getExecutor()) {
+        case PLAYER:
+          player.performCommand(command);
+          break;
+        case SCRIPT:
+          ScriptEngine engine = new ScriptEngine();
+          engine.setValue("player", player);
+          engine.setValue("server", Bukkit.getServer());
+          engine.setValue("arena", arena);
+          engine.execute(command);
+          break;
+        default:
+          break;
       }
     }
   }

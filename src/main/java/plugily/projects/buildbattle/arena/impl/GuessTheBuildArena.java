@@ -166,9 +166,12 @@ public class GuessTheBuildArena extends BaseArena {
           Plot plot = getPlotManager().getPlot(getPlayers().get(round - 1));
           org.bukkit.Location plotLoc = plot == null ? null : plot.getTeleportLocation();
           if(plotLoc != null) {
+            boolean performed = false;
+
             for(Player p : getPlayers()) {
               p.teleport(plotLoc);
-              getPlugin().getRewardsHandler().performReward(p, this, Reward.RewardType.START_GAME, -1);
+              getPlugin().getRewardsHandler().performReward(p, this, Reward.RewardType.START_GAME, -1, performed);
+              performed = true;
             }
           }
           nextRoundCooldown = true;
@@ -225,10 +228,13 @@ public class GuessTheBuildArena extends BaseArena {
           setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, this));
           break;
         }
-        if(getTimer() <= 90 && currentTheme != null) {
+
+        int gameTimer = getTimer();
+
+        if(gameTimer <= 90 && currentTheme != null) {
           int themeLength = currentTheme.getTheme().length();
 
-          if(getTimer() == 90) {
+          if(gameTimer == 90) {
             getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Is-Long")
                 .replace("%NUM%", Integer.toString(themeLength)));
           }
@@ -274,7 +280,7 @@ public class GuessTheBuildArena extends BaseArena {
             VersionUtils.sendActionBar(player, actionbar.toString());
           }
         }
-        if(getTimer() <= 0 && themeSet) {
+        if(themeSet && gameTimer <= 0) {
           getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Was-Name").replace("%THEME%", currentTheme.getTheme()));
 
           String themeTitle = getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Was-Title");
@@ -522,13 +528,15 @@ public class GuessTheBuildArena extends BaseArena {
   public void giveRewards() {
     List<Player> list = new ArrayList<>(playersPoints.keySet());
     int size = list.size();
+    boolean performed = false;
     for(int i = 0; i <= size; i++) {
       if(size - 1 < i) {
         continue;
       }
-      getPlugin().getRewardsHandler().performReward(list.get(i), this, Reward.RewardType.PLACE, i + 1);
+      getPlugin().getRewardsHandler().performReward(list.get(i), this, Reward.RewardType.PLACE, i + 1, performed);
+      performed = true;
     }
-    getPlugin().getRewardsHandler().performReward(this, Reward.RewardType.END_GAME);
+    getPlugin().getRewardsHandler().performReward(null, this, Reward.RewardType.END_GAME, -1, false);
   }
 
   @Override
@@ -600,7 +608,7 @@ public class GuessTheBuildArena extends BaseArena {
 
   public void addWhoGuessed(Player player) {
     whoGuessed.add(player);
-    getPlugin().getRewardsHandler().performReward(player, this, Reward.RewardType.GTB_GUESS, -1);
+    getPlugin().getRewardsHandler().performReward(player, this, Reward.RewardType.GTB_GUESS, -1, false);
 
     int timer = getTimer();
 
@@ -615,9 +623,12 @@ public class GuessTheBuildArena extends BaseArena {
 
       String themeGuessed = getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Guessed");
 
+      boolean performed = false;
+
       for(Player players : getPlayers()) {
         players.sendMessage(themeGuessed);
-        getPlugin().getRewardsHandler().performReward(players, this, Reward.RewardType.GTB_ALL_GUESSED, -1);
+        getPlugin().getRewardsHandler().performReward(players, this, Reward.RewardType.GTB_ALL_GUESSED, -1, performed);
+        performed = true;
       }
     }
   }

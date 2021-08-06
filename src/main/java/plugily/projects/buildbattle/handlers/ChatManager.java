@@ -60,7 +60,7 @@ public class ChatManager {
       return "";
     }
 
-    if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1) && msg.contains("#")) {
+    if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1) && msg.indexOf('#') >= 0) {
       msg = MiscUtils.matchColorRegex(msg);
     }
 

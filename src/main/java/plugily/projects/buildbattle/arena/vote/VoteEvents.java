@@ -86,7 +86,7 @@ public class VoteEvents implements Listener {
                 .replace("%reported%", player.getName()).replace("%reporter%", e.getPlayer().getName())));
         e.getPlayer().getInventory().remove(e.getItem());
         e.getPlayer().updateInventory();
-        plugin.getRewardsHandler().performReward(e.getPlayer(), Reward.RewardType.REPORT, -1);
+        plugin.getRewardsHandler().performReward(e.getPlayer(), arena, Reward.RewardType.REPORT, -1, false);
       }
 
       e.setCancelled(true);
