@@ -60,6 +60,8 @@ public class MysqlManager implements UserDatabase {
                 + "  `blocksbroken` int(11) NOT NULL DEFAULT '0',\n"
                 + "  `blocksplaced` int(11) NOT NULL DEFAULT '0',\n"
                 + "  `supervotes` int(11) NOT NULL DEFAULT '0',\n"
+                + "  `higestpoints` int(11) NOT NULL DEFAULT '0',\n"
+                + "  `totalpointsearned` int(11) NOT NULL DEFAULT '0',\n"
                 + "  `particles` int(11) NOT NULL DEFAULT '0');");
 
         //temporary workaround
