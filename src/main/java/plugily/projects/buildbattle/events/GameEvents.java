@@ -210,8 +210,8 @@ public class GameEvents implements Listener {
     if(event.getEntity().getType() != EntityType.PLAYER) {
       return;
     }
-    BaseArena arena = ArenaRegistry.getArena((Player) event.getEntity());
-    if(arena != null) {
+
+    if(ArenaRegistry.getArena((Player) event.getEntity()) != null) {
       event.setCancelled(true);
     }
   }

@@ -152,14 +152,16 @@ public class PlotMenuHandler implements Listener {
     if(!(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
       return;
     }
-    ItemStack stack = VersionUtils.getItemInHand(e.getPlayer());
-    if(!stack.equals(baseItem.getItemStack())) {
+
+    if(!VersionUtils.getItemInHand(e.getPlayer()).equals(baseItem.getItemStack())) {
       return;
     }
+
     BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
     if(arena == null) {
       return;
     }
+
     e.setCancelled(true);
     createMenu(e.getPlayer(), arena);
   }

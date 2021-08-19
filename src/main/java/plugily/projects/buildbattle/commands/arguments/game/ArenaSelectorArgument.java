@@ -131,9 +131,12 @@ public class ArenaSelectorArgument implements Listener {
     if(!ComplementAccessor.getComplement().getTitle(e.getView()).equals(plugin.getChatManager().colorMessage("Arena-Selector.Inv-Title"))) {
       return;
     }
-    if(e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {
+
+    ItemStack currentItem = e.getCurrentItem();
+    if(currentItem == null || !currentItem.hasItemMeta()) {
       return;
     }
+
     Player player = (Player) e.getWhoClicked();
     player.closeInventory();
 

@@ -74,10 +74,15 @@ public class Utils {
     return (i % 9) == 0 ? i : (i + 9 - 1) / 9 * 9;
   }
 
+  private static ItemBuilder backButton;
+
   public static ItemStack getGoBackItem() {
-    return new ItemBuilder(XMaterial.STONE_BUTTON.parseItem())
-        .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Go-Back-Button.Item-Name"))
-        .lore(plugin.getChatManager().colorMessage("Menus.Option-Menu.Go-Back-Button.Item-Lore")).build();
+    if (backButton == null)
+      backButton = new ItemBuilder(XMaterial.STONE_BUTTON.parseItem())
+          .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Go-Back-Button.Item-Name"))
+          .lore(plugin.getChatManager().colorMessage("Menus.Option-Menu.Go-Back-Button.Item-Lore"));
+
+    return backButton.build();
   }
 
   public static void sendMapChunk(Player player, Chunk chunk) {

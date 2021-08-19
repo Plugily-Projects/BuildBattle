@@ -20,6 +20,7 @@
 
 package plugily.projects.buildbattle.events.spectator;
 
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -130,11 +131,11 @@ public class SpectatorEvents implements Listener {
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onFoodLevelChange(FoodLevelChangeEvent event) {
-    if(!(event.getEntity() instanceof Player)) {
+    if(event.getEntityType() != EntityType.PLAYER) {
       return;
     }
-    Player player = (Player) event.getEntity();
-    if(plugin.getUserManager().getUser(player).isSpectator()) {
+
+    if(plugin.getUserManager().getUser((Player) event.getEntity()).isSpectator()) {
       event.setFoodLevel(20);
       event.setCancelled(true);
     }
@@ -142,7 +143,7 @@ public class SpectatorEvents implements Listener {
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onDamage(EntityDamageEvent event) {
-    if(!(event.getEntity() instanceof Player)) {
+    if(event.getEntityType() != EntityType.PLAYER) {
       return;
     }
     Player player = (Player) event.getEntity();
@@ -150,14 +151,14 @@ public class SpectatorEvents implements Listener {
     if(!user.isSpectator()) {
       return;
     }
-    if(user.getArena() == null) {
+
+    BaseArena arena = ArenaRegistry.getArena(player);
+    if(arena == null) {
       return;
     }
+
     if(player.getLocation().getY() < 1) {
-      BaseArena arena = ArenaRegistry.getArena(player);
-      if(arena != null) {
-        player.teleport(arena.getPlotManager().getPlots().get(0).getTeleportLocation());
-      }
+      player.teleport(arena.getPlotManager().getPlots().get(0).getTeleportLocation());
       event.setDamage(0);
     }
     event.setCancelled(true);
@@ -165,11 +166,11 @@ public class SpectatorEvents implements Listener {
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onDamageByBlock(EntityDamageByBlockEvent event) {
-    if(!(event.getEntity() instanceof Player)) {
+    if(event.getEntityType() != EntityType.PLAYER) {
       return;
     }
-    Player player = (Player) event.getEntity();
-    if(plugin.getUserManager().getUser(player).isSpectator()) {
+
+    if(plugin.getUserManager().getUser((Player) event.getEntity()).isSpectator()) {
       event.setCancelled(true);
     }
   }
@@ -179,8 +180,8 @@ public class SpectatorEvents implements Listener {
     if(!(event.getDamager() instanceof Player)) {
       return;
     }
-    Player player = (Player) event.getDamager();
-    if(plugin.getUserManager().getUser(player).isSpectator()) {
+
+    if(plugin.getUserManager().getUser((Player) event.getDamager()).isSpectator()) {
       event.setCancelled(true);
     }
   }

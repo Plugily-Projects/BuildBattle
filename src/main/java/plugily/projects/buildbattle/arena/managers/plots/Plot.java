@@ -200,11 +200,12 @@ public class Plot {
     World centerWorld = cuboid.getCenter().getWorld();
 
     if(centerWorld != null) {
+      boolean isCitizensEnabled = plugin.getServer().getPluginManager().isPluginEnabled("Citizens");
+
       for(Entity entity : centerWorld.getEntities()) {
         if(cuboid.isInWithMarge(entity.getLocation(), 5)) {
           //deprecated seems not to work with latest builds of citizens
-          if(plugin.getServer().getPluginManager().isPluginEnabled("Citizens") && CitizensAPI.getNPCRegistry() != null
-              && CitizensAPI.getNPCRegistry().isNPC(entity)) {
+          if(isCitizensEnabled && CitizensAPI.getNPCRegistry() != null && CitizensAPI.getNPCRegistry().isNPC(entity)) {
             continue;
           }
           //citizens also uses metadata, see https://wiki.citizensnpcs.co/API
@@ -324,7 +325,9 @@ public class Plot {
     int counter = 0;
     Location location = tploc.clone();
     while(counter != 10) {
-      if(!(location.getBlock().getType() == Material.BARRIER || location.getBlock().getType() == Material.AIR)) {
+      Material type = location.getBlock().getType();
+
+      if(!(type == Material.BARRIER || type == Material.AIR)) {
         enclosed = true;
         tploc = location;
         counter = 9;

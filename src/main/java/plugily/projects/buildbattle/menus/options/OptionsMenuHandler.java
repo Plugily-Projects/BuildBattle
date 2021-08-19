@@ -76,7 +76,9 @@ public class OptionsMenuHandler implements Listener {
 
   @EventHandler
   public void onRegisteredMenuOptionsClick(InventoryClickEvent e) {
-    if(!(e.getWhoClicked() instanceof Player)) {
+    org.bukkit.entity.HumanEntity human = e.getWhoClicked();
+
+    if(!(human instanceof Player)) {
       return;
     }
 
@@ -88,13 +90,15 @@ public class OptionsMenuHandler implements Listener {
     if(ComplementAccessor.getComplement().getDisplayName(Utils.getGoBackItem().getItemMeta())
         .equalsIgnoreCase(ComplementAccessor.getComplement().getDisplayName(currentItem.getItemMeta()))) {
       e.setCancelled(true);
-      e.getWhoClicked().closeInventory();
-      e.getWhoClicked().openInventory(plugin.getOptionsRegistry().formatInventory());
+      human.closeInventory();
+      human.openInventory(plugin.getOptionsRegistry().formatInventory());
       return;
     }
 
+    String viewTitle = ComplementAccessor.getComplement().getTitle(e.getView());
+
     for(MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
-      if(ComplementAccessor.getComplement().getTitle(e.getView()).equals(option.getInventoryName())) {
+      if(viewTitle.equals(option.getInventoryName())) {
         e.setCancelled(true);
         option.onTargetClick(e);
         return;

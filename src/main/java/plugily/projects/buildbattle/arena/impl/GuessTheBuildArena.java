@@ -401,8 +401,6 @@ public class GuessTheBuildArena extends BaseArena {
           }
         }
         if(getTimer() <= 0) {
-          scoreboardManager.stopAllScoreboards();
-
           for(Player player : getAllArenaPlayers()) {
             if(getGameBar() != null) {
               getGameBar().removePlayer(player);

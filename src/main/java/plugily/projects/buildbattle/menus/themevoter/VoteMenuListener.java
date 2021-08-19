@@ -137,19 +137,28 @@ public class VoteMenuListener implements Listener {
 
   @EventHandler
   public void onInventoryClickOnGuessTheBuild(InventoryClickEvent e) {
-    if(e.getCurrentItem() == null) {
+    org.bukkit.inventory.ItemStack currentItem = e.getCurrentItem();
+
+    if(currentItem == null) {
       return;
     }
-    BaseArena arena = ArenaRegistry.getArena((Player) e.getWhoClicked());
+
+    Player player = (Player) e.getWhoClicked();
+
+    BaseArena arena = ArenaRegistry.getArena(player);
     if(!(arena instanceof GuessTheBuildArena)) {
       return;
     }
+
     if(ComplementAccessor.getComplement().getTitle(e.getView()).equals(plugin.getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Inventory-Name"))) {
       e.setCancelled(true);
-      if(e.getCurrentItem().getType() == Material.PAPER) {
+
+      if(currentItem.getType() == Material.PAPER) {
         BBTheme theme;
-        String displayName = ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta());
+        String displayName = ComplementAccessor.getComplement().getDisplayName(currentItem.getItemMeta());
+
         displayName = ChatColor.stripColor(displayName);
+
         switch(e.getSlot()) {
           case 11:
             theme = new BBTheme(displayName, BBTheme.Difficulty.EASY);
@@ -163,19 +172,23 @@ public class VoteMenuListener implements Listener {
           default:
             return;
         }
+
         GuessTheBuildArena gtb = (GuessTheBuildArena) arena;
         gtb.setCurrentTheme(theme);
         gtb.setThemeSet(true);
         arena.setTimer(plugin.getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, arena));
-        VersionUtils.sendActionBar(((Player) e.getWhoClicked()), plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Is-Name")
+
+        VersionUtils.sendActionBar(player, plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Is-Name")
             .replace("%THEME%", theme.getTheme()));
-        e.getWhoClicked().closeInventory();
+        player.closeInventory();
 
         String roundMessage = plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Current-Round")
             .replace("%ROUND%", Integer.toString(gtb.getRound()))
             .replace("%MAXPLAYERS%", Integer.toString(arena.getPlayers().size()));
+        String guessingTitle = plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Start-Guessing-Title");
+
         for(Player p : arena.getPlayers()) {
-          VersionUtils.sendTitle(p, plugin.getChatManager().colorMessage("In-Game.Guess-The-Build.Start-Guessing-Title"), 5, 25, 5);
+          VersionUtils.sendTitle(p, guessingTitle, 5, 25, 5);
           p.sendMessage(roundMessage);
         }
       }

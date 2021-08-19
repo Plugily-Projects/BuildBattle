@@ -75,12 +75,11 @@ public class LobbyEvents implements Listener {
 
   @EventHandler
   public void onItemFrameRotate(PlayerInteractEntityEvent event) {
-    Player player = event.getPlayer();
-    BaseArena arena = ArenaRegistry.getArena(player);
+    BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
     if(arena == null || arena.getArenaState() == ArenaState.IN_GAME) {
       return;
     }
-    if(event.getRightClicked() instanceof ItemFrame && !((ItemFrame) event.getRightClicked()).getItem().getType().equals(Material.AIR)) {
+    if(event.getRightClicked().getType() == EntityType.ITEM_FRAME && ((ItemFrame) event.getRightClicked()).getItem().getType() != Material.AIR) {
       event.setCancelled(true);
     }
   }
@@ -90,8 +89,8 @@ public class LobbyEvents implements Listener {
     if(event.getEntity().getType() != EntityType.PLAYER) {
       return;
     }
-    Player player = (Player) event.getEntity();
-    BaseArena arena = ArenaRegistry.getArena(player);
+
+    BaseArena arena = ArenaRegistry.getArena((Player) event.getEntity());
     if(arena == null || arena.getArenaState() == ArenaState.IN_GAME) {
       return;
     }
