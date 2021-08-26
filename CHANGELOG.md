@@ -14,6 +14,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Fixed issue when player's inventories did not get cleared before teleport
 * An attempt to fix executing console reward commands multiple times
 * Fixed mysql create table statement
+* Added %ARENATYPE% as placeholder for messages
 
 ### 4.5.2 Release (02.08.2021 - 03.08.2021)
 * Fixed issues with spectators get added multiple times to the players list
