@@ -92,6 +92,7 @@ public class ChatManager {
   private static String formatPlaceholders(String message, BaseArena arena) {
     String returnString = message;
     returnString = StringUtils.replace(returnString, "%ARENANAME%", arena.getMapName());
+    returnString = StringUtils.replace(returnString, "%ARENATYPE%", arena.getArenaType().getPrefix());
 
     int timer = arena.getTimer();
 
