@@ -193,7 +193,7 @@ public class GuessTheBuildArena extends BaseArena {
           setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.THEME_SELECTION, this));
           break;
         }
-        if(!themeSet && getTimer() <= 0 && currentBuilder != null) {
+        if(!themeSet && currentBuilder != null && getTimer() <= 0) {
           Random r = new Random();
           String type = "EASY";
           switch(r.nextInt(2 + 1)) {
@@ -629,6 +629,45 @@ public class GuessTheBuildArena extends BaseArena {
         performed = true;
       }
     }
+  }
+
+  public void broadcastPlayerQuessed(Player player) {
+    getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Chat.Guessed-The-Theme").replace("%player%", player.getName()));
+
+    player.sendMessage(getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Plus-Points")
+        .replace("%pts%", Integer.toString(currentTheme.getDifficulty().getPointsReward())));
+
+    playersPoints.put(player, playersPoints.getOrDefault(player, 0) + currentTheme.getDifficulty().getPointsReward());
+
+    int guessers = whoGuessed.size();
+    int amount = -1;
+
+    // TODO use switch statement when users need more points
+
+    if(guessers == 0) {
+      if ((amount = getPlugin().getConfig().getInt("Guessing-Points.first")) < 0) {
+        amount = 0; // The first guesser should receive the difficulty reward
+      }
+    } else if (guessers == 1) {
+      if ((amount = getPlugin().getConfig().getInt("Guessing-Points.second")) == 0) {
+        amount = -1;
+      }
+    } else if (guessers == 2) {
+      if ((amount = getPlugin().getConfig().getInt("Guessing-Points.third")) == 0) {
+        amount = -1;
+      }
+    }
+
+    if (amount > -1) {
+      playersPoints.put(currentBuilder, playersPoints.getOrDefault(player, 0) + currentTheme.getDifficulty().getPointsReward() + amount);
+    }
+
+    getPlugin().getServer().getScheduler().runTaskLater(getPlugin(), () -> {
+      addWhoGuessed(player);
+      recalculateLeaderboard();
+    }, 1L);
+
+    //todo add api event for successful guess
   }
 
   @Override

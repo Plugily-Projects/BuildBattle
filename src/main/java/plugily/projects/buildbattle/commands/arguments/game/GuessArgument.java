@@ -42,42 +42,36 @@ public class GuessArgument {
     registry.mapArgument("buildbattle", new CommandArgument("guess", "", CommandArgument.ExecutorType.PLAYER) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        Player player = (Player) sender;
-        BaseArena arena = ArenaRegistry.getArena(player);
         if(args.length < 2) {
           sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Invalid-Args"));
           return;
         }
+
+        Player player = (Player) sender;
+        BaseArena arena = ArenaRegistry.getArena(player);
+
         if(arena == null || arena.getArenaType() != BaseArena.ArenaType.GUESS_THE_BUILD || arena.getArenaState() != ArenaState.IN_GAME) {
           player.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Playing"));
           return;
         }
+
         GuessTheBuildArena gameArena = (GuessTheBuildArena) arena;
+
         if(gameArena.getWhoGuessed().contains(player)) {
           player.sendMessage(registry.getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Chat.Cant-Talk-When-Guessed"));
           return;
         }
+
         if(player == gameArena.getCurrentBuilder()) {
           player.sendMessage(registry.getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Chat.Cant-Talk-When-Building"));
           return;
         }
+
         if(gameArena.getCurrentTheme() == null || !gameArena.getCurrentTheme().getTheme().equalsIgnoreCase(Arrays.toString(args).split(" ", 2)[1].replace(",", "").replace("]", ""))) {
           return;
         }
-        registry.getPlugin().getChatManager().broadcast(arena, registry.getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Chat.Guessed-The-Theme").replace("%player%", player.getName()));
 
-        player.sendMessage(registry.getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Plus-Points")
-            .replace("%pts%", Integer.toString(gameArena.getCurrentTheme().getDifficulty().getPointsReward())));
-        gameArena.getPlayersPoints().put(player, gameArena.getPlayersPoints().getOrDefault(player, 0)
-            + gameArena.getCurrentTheme().getDifficulty().getPointsReward());
-        if(gameArena.getWhoGuessed().isEmpty()) {
-          gameArena.getPlayersPoints().put(gameArena.getCurrentBuilder(), gameArena.getPlayersPoints().getOrDefault(player, 0)
-              + gameArena.getCurrentTheme().getDifficulty().getPointsReward());
-        }
-        org.bukkit.Bukkit.getScheduler().runTaskLater(registry.getPlugin(), () -> {
-          gameArena.addWhoGuessed(player);
-          gameArena.recalculateLeaderboard();
-        }, 1L);
+        gameArena.broadcastPlayerQuessed(player);
       }
     });
   }

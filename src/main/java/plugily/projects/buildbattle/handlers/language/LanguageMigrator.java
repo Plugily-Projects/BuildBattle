@@ -252,6 +252,12 @@ public class LanguageMigrator {
           MigratorUtils.addNewLines(file, "\r\n" +
               "# At what intervals should players be notified of the remaining build time?\r\n"
               + "Build-Left-Time-Message-Intervals: [15, 30, 60, 300, 240, 180, 120]\r\n");
+          MigratorUtils.addNewLines(file, "\r\n" +
+              "# How many more points will the first 3 guessers get?\r\n"
+              + "Guessing-Points:\r\n"
+              + "  first: 0\r\n"
+              + "  second: 0\r\n"
+              + "  third: 0\r\n");
           break;
         default:
           return;

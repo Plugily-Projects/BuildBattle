@@ -107,6 +107,12 @@ Particle-Refresh-Per-Tick: 10
 # Max amount of mobs to spawn per plot
 Mobs-Max-Amount-Per-Plot: 20
 
+# How many more points will the first 3 guessers get?
+Guessing-Points:
+  first: 0
+  second: 0
+  third: 0
+
 # All game themes players will build.
 Themes:
   # Solo themes.
