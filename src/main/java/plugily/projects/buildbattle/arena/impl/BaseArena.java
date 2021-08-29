@@ -140,7 +140,7 @@ public class BaseArena extends BukkitRunnable {
    * @param p      player
    */
   public void doBarAction(@NotNull BarAction action, Player p) {
-    if(p == null || gameBar == null || !ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1) || !plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+    if(p == null || gameBar == null) {
       return;
     }
     if(action == BarAction.ADD) {

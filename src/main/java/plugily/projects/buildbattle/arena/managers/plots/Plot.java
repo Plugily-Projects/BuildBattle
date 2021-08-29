@@ -356,7 +356,7 @@ public class Plot {
     }
 
     public static long format(Time time, long currTime) {
-      return time == Time.WORLD_TIME ? currTime : time.getTicks();
+      return time == Time.WORLD_TIME ? currTime : time.ticks;
     }
 
     public long getTicks() {

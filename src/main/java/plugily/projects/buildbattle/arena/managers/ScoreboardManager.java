@@ -148,18 +148,22 @@ public class ScoreboardManager {
     } else {
       returnString = StringUtils.replace(returnString, "%THEME%", arena.getTheme());
 
-      Plot plot = arena.getPlotManager().getPlot(player);
-      if(arena.getArenaType() == BaseArena.ArenaType.TEAM && plot != null) {
-        if(plot.getMembers().size() > 1) {
-          StringBuilder members = new StringBuilder();
-          plot.getMembers().forEach(p -> members.append(p.getName()).append(" & "));
-          members.deleteCharAt(members.length() - 2);
-          returnString = StringUtils.replace(returnString, "%TEAMMATE%", members.toString());
-        } else {
-          returnString = StringUtils.replace(returnString, "%TEAMMATE%", plugin.getChatManager().colorMessage("In-Game.Nobody"));
+      if(arena.getArenaType() == BaseArena.ArenaType.TEAM) {
+        Plot plot = arena.getPlotManager().getPlot(player);
+
+        if(plot != null) {
+          if(plot.getMembers().size() > 1) {
+            StringBuilder members = new StringBuilder();
+            plot.getMembers().forEach(p -> members.append(p.getName()).append(" & "));
+            members.deleteCharAt(members.length() - 2);
+            returnString = StringUtils.replace(returnString, "%TEAMMATE%", members.toString());
+          } else {
+            returnString = StringUtils.replace(returnString, "%TEAMMATE%", plugin.getChatManager().colorMessage("In-Game.Nobody"));
+          }
         }
       }
     }
+
     if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       returnString = PlaceholderAPI.setPlaceholders(player, returnString);
     }

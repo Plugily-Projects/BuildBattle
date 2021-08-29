@@ -15,6 +15,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * An attempt to fix executing console reward commands multiple times
 * Fixed mysql create table statement
 * Added %ARENATYPE% as placeholder for messages
+* Fixed NPE when player's plot was invalid after NPC click
 
 ### 4.5.2 Release (02.08.2021 - 03.08.2021)
 * Fixed issues with spectators get added multiple times to the players list

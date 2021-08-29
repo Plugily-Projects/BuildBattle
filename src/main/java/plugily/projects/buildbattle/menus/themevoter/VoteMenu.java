@@ -89,6 +89,8 @@ public class VoteMenu {
 
     this.inventory = ComplementAccessor.getComplement().createInventory(null, 9 * (randomThemesSize > 5 ? 5 : randomThemesSize), plugin.getChatManager().colorMessage("Menus.Theme-Voting.Inventory-Name"));
 
+    String timeLeft = Integer.toString(arena.getTimer());
+
     for(int i = 0; i < randomThemesSize; i++) {
       String theme = randomThemes.get(i);
       ItemStack item = new ItemStack(XMaterial.OAK_SIGN.parseMaterial());
@@ -96,7 +98,7 @@ public class VoteMenu {
       setItem(new ItemBuilder(item)
           .name(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Theme-Item-Name").replace("%theme%", theme))
           .lore(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Theme-Item-Lore").replace("%theme%", theme)
-              .replace("%percent%", "0.0").replace("%time-left%", Integer.toString(arena.getTimer())).split(";"))
+              .replace("%percent%", "0.0").replace("%time-left%", timeLeft).split(";"))
           .build(), i * 9);
       setItem(new ItemBuilder(XMaterial.IRON_BARS.parseItem()).build(), (i * 9) + 1);
 
@@ -130,6 +132,8 @@ public class VoteMenu {
 
     User user = plugin.getUserManager().getUser(player);
     String arenaTimer = Integer.toString(arena.getTimer());
+    String pVote = votePoll.getPlayerVote().get(player);
+    String ownedVotes = Integer.toString(user.getStat(StatsStorage.StatisticType.SUPER_VOTES));
 
     for(Entry<String, Integer> map : votePoll.getVotedThemes().entrySet()) {
       int voted = map.getValue();
@@ -148,7 +152,6 @@ public class VoteMenu {
               .replace("%percent%", Double.toString(NumberUtils.round(percent, 2))).replace("%time-left%", arenaTimer).split(";"))
           .build();
 
-      String pVote = votePoll.getPlayerVote().get(player);
       if(theme.equals(pVote)) {
         ItemMeta meta = stack.getItemMeta();
         meta.addEnchant(Enchantment.DAMAGE_ALL, 1, true);
@@ -164,7 +167,7 @@ public class VoteMenu {
       setItem(new ItemBuilder(new ItemStack(Material.PAPER))
           .name(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Super-Vote-Item-Name").replace("%theme%", theme))
           .lore(plugin.getChatManager().colorMessage("Menus.Theme-Voting.Super-Vote-Item-Lore").replace("%theme%", theme)
-              .replace("%owned%", Integer.toString(user.getStat(StatsStorage.StatisticType.SUPER_VOTES))).split(";"))
+              .replace("%owned%", ownedVotes).split(";"))
           .build(), (i * 9) + 8);
 
       if(voted > 0) {
