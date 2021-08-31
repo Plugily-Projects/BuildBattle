@@ -420,11 +420,6 @@ public class GameEvents implements Listener {
       return;
     }
 
-    if(event.getEntity().getType() == EntityType.WITHER || plugin.getConfig().getBoolean("Disable-Mob-Spawning-Completely", true)) {
-      event.setCancelled(true);
-      return;
-    }
-
     int maxMobPerPlot = plugin.getConfig().getInt("Mobs-Max-Amount-Per-Plot", 20);
     Location entityLoc = event.getEntity().getLocation();
 
@@ -436,6 +431,11 @@ public class GameEvents implements Listener {
       Plot first = arena.getPlotManager().getPlots().get(0);
       if (first == null || (first.getCuboid() != null && !entityLoc.getWorld().equals(first.getCuboid().getCenter().getWorld()))) {
         continue;
+      }
+
+      if(event.getEntity().getType() == EntityType.WITHER || plugin.getConfig().getBoolean("Disable-Mob-Spawning-Completely", true)) {
+        event.setCancelled(true);
+        return;
       }
 
       for(Plot plot : arena.getPlotManager().getPlots()) {
