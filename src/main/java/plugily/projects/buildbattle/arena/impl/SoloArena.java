@@ -166,18 +166,21 @@ public class SoloArena extends BaseArena {
 
         int minPlayers = getMinimumPlayers();
 
-        if(getPlayers().size() < minPlayers && !isForceStart()) {
+        if(!isForceStart() && getPlayers().size() < minPlayers) {
           getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", Integer.toString(minPlayers)));
           setArenaState(ArenaState.WAITING_FOR_PLAYERS);
           Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));
           setTimer(lobbyTimer);
+
           for(Player player : getPlayers()) {
             player.setExp(1);
             player.setLevel(0);
           }
+
           break;
         }
-        if(getTimer() == 0 || isForceStart()) {
+
+        if(isForceStart() || getTimer() == 0) {
           particleRefreshSched = new ParticleRefreshScheduler(getPlugin());
           if(!getPlotManager().isPlotsCleared()) {
             getPlotManager().resetQueuedPlots();
@@ -200,6 +203,7 @@ public class SoloArena extends BaseArena {
             performed = true;
           }
         }
+
         if(isForceStart()) {
           setForceStart(false);
         }

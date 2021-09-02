@@ -61,8 +61,7 @@ public class TeamArena extends SoloArena {
       }
       // fallback
       if(playerPlot == null) {
-        Plot firstPlot = getPlotManager().getPlots().get(0);
-        firstPlot.addMember(player, this, true);
+        getPlotManager().getPlots().get(0).addMember(player, this, true);
       }
     }
     //check if not only one plot got players

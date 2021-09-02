@@ -26,10 +26,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
 import plugily.projects.commonsbox.minecraft.misc.stuff.ComplementAccessor;
@@ -47,41 +47,74 @@ import plugily.projects.buildbattle.utils.Utils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+public class ArenaSelectorArgument {
 
-/**
- * @author 2Wild4You
- * <p>
- * Created at 09.08.2020
- */
-public class ArenaSelectorArgument implements Listener {
-
-  private final Map<Integer, BaseArena> arenas = new HashMap<>();
+  // Temporary solution until there is no better inventory creator
+  private final Map<UUID, Map<Integer, BaseArena>> arenas = new HashMap<>();
 
   public ArenaSelectorArgument(ArgumentsRegistry registry) {
-    registry.getPlugin().getServer().getPluginManager().registerEvents(this, registry.getPlugin());
+    registry.getPlugin().getServer().getPluginManager().registerEvents(new Listener() {
+     @EventHandler
+     public void onArenaSelectorMenuClick(InventoryClickEvent e) {
+       if(!ComplementAccessor.getComplement().getTitle(e.getView()).equals(registry.getPlugin().getChatManager().colorMessage("Arena-Selector.Inv-Title"))) {
+         return;
+       }
+
+       ItemStack currentItem = e.getCurrentItem();
+       if(currentItem == null || !currentItem.hasItemMeta()) {
+         return;
+       }
+
+       Player player = (Player) e.getWhoClicked();
+       player.closeInventory();
+
+       Map<Integer, BaseArena> map = arenas.remove(player.getUniqueId());
+       if(map != null) {
+         BaseArena arena = map.get(e.getRawSlot());
+
+         if (arena != null) {
+           ArenaManager.joinAttempt(player, arena);
+           return;
+         }
+       }
+
+       player.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Arena-Like-That"));
+     }
+
+     @EventHandler
+     public void onSelectorCloseEvent(InventoryCloseEvent event) {
+       arenas.remove(event.getPlayer().getUniqueId());
+     }
+    }, registry.getPlugin());
+
     registry.mapArgument("buildbattle", new LabeledCommandArgument("arenas", "buildbattle.arenas", CommandArgument.ExecutorType.PLAYER,
         new LabelData("/bb arenas", "/bb arenas", "&7Select an arena\n&6Permission: &7buildbattle.arenas")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        Player player = (Player) sender;
-
         int arenaSize = ArenaRegistry.getArenas().size();
+
         if(arenaSize == 0) {
-          player.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.No-Arena-Like-That"));
+          sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.No-Arena-Like-That"));
           return;
         }
 
+        Player player = (Player) sender;
         Inventory inventory = ComplementAccessor.getComplement().createInventory(player, Utils.serializeInt(arenaSize), registry.getPlugin().getChatManager().colorMessage("Arena-Selector.Inv-Title"));
 
         int slot = 0;
-        arenas.clear();
 
         for(BaseArena arena : ArenaRegistry.getArenas()) {
-          arenas.put(slot, arena);
           ItemStack itemStack = XMaterial.matchXMaterial(registry.getPlugin().getConfig().getString("Arena-Selector.State-Item." + arena.getArenaState().getFormattedName(), "YELLOW_WOOL").toUpperCase()).orElse(XMaterial.YELLOW_WOOL).parseItem();
+
           if(itemStack == null)
             continue;
+
+          Map<Integer, BaseArena> map = new HashMap<>();
+          map.put(slot, arena);
+
+          arenas.put(player.getUniqueId(), map);
 
           ItemMeta itemMeta = itemStack.getItemMeta();
           if(itemMeta != null) {
@@ -95,13 +128,14 @@ public class ArenaSelectorArgument implements Listener {
             ComplementAccessor.getComplement().setLore(itemMeta, lore);
             itemStack.setItemMeta(itemMeta);
           }
+
           inventory.addItem(itemStack);
           slot++;
         }
+
         player.openInventory(inventory);
       }
     });
-
   }
 
   private String formatItem(String string, BaseArena arena, Main plugin) {
@@ -123,29 +157,4 @@ public class ArenaSelectorArgument implements Listener {
     formatted = plugin.getChatManager().colorRawMessage(formatted);
     return formatted;
   }
-
-  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
-
-  @EventHandler
-  public void onArenaSelectorMenuClick(InventoryClickEvent e) {
-    if(!ComplementAccessor.getComplement().getTitle(e.getView()).equals(plugin.getChatManager().colorMessage("Arena-Selector.Inv-Title"))) {
-      return;
-    }
-
-    ItemStack currentItem = e.getCurrentItem();
-    if(currentItem == null || !currentItem.hasItemMeta()) {
-      return;
-    }
-
-    Player player = (Player) e.getWhoClicked();
-    player.closeInventory();
-
-    BaseArena arena = arenas.get(e.getRawSlot());
-    if(arena != null) {
-      ArenaManager.joinAttempt(player, arena);
-    } else {
-      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.No-Arena-Like-That"));
-    }
-  }
-
 }

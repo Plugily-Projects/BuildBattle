@@ -652,10 +652,8 @@ public class GuessTheBuildArena extends BaseArena {
       if ((amount = getPlugin().getConfig().getInt("Guessing-Points.second")) == 0) {
         amount = -1;
       }
-    } else if (guessers == 2) {
-      if ((amount = getPlugin().getConfig().getInt("Guessing-Points.third")) == 0) {
-        amount = -1;
-      }
+    } else if (guessers == 2 && (amount = getPlugin().getConfig().getInt("Guessing-Points.third")) == 0) {
+      amount = -1;
     }
 
     if (amount > -1) {
