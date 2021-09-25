@@ -23,12 +23,10 @@ package plugily.projects.buildbattle.menus.options.registry.playerheads;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.plugin.java.JavaPlugin;
 import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.commonsbox.minecraft.item.ItemUtils;
 import plugily.projects.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.buildbattle.ConfigPreferences;
-import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.menus.options.MenuOption;
 import plugily.projects.buildbattle.menus.options.OptionsRegistry;
 import plugily.projects.buildbattle.utils.Utils;
@@ -39,7 +37,6 @@ import plugily.projects.buildbattle.utils.Utils;
  * Created at 23.12.2018
  */
 public class PlayerHeadsOption {
-  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
   public PlayerHeadsOption(OptionsRegistry registry) {
     registry.registerOption(new MenuOption(10, "PLAYER_HEADS", new ItemBuilder(ItemUtils.PLAYER_HEAD_ITEM.clone())
@@ -50,9 +47,9 @@ public class PlayerHeadsOption {
       @Override
       public void onClick(InventoryClickEvent e) {
         e.getWhoClicked().closeInventory();
-        if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.HEADS_COMMAND)) {
+        if(registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.HEADS_COMMAND)) {
           if(e.getWhoClicked() instanceof Player) {
-            ((Player) e.getWhoClicked()).performCommand(plugin.getConfig().getString("Command-Instead-Of-Head-Menu.Command", "heads"));
+            ((Player) e.getWhoClicked()).performCommand(registry.getPlugin().getConfig().getString("Command-Instead-Of-Head-Menu.Command", "heads"));
           }
           return;
         }

@@ -164,9 +164,8 @@ public class SoloArena extends BaseArena {
           player.setLevel(timer);
         }
 
-        int minPlayers = getMinimumPlayers();
-
-        if(!isForceStart() && getPlayers().size() < minPlayers) {
+        int minPlayers;
+        if(!isForceStart() && getPlayers().size() < (minPlayers = getMinimumPlayers())) {
           getPlugin().getChatManager().broadcast(this, getPlugin().getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", Integer.toString(minPlayers)));
           setArenaState(ArenaState.WAITING_FOR_PLAYERS);
           Bukkit.getPluginManager().callEvent(new BBGameStartEvent(this));

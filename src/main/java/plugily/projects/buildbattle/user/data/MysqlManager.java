@@ -97,15 +97,21 @@ public class MysqlManager implements UserDatabase {
   @Override
   public void saveAllStatistic(User user) {
     StringBuilder update = new StringBuilder(" SET ");
+
     for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
       if(!stat.isPersistent()) {
         continue;
       }
+
+      int userStat = user.getStat(stat);
+
       if(update.toString().equalsIgnoreCase(" SET ")) {
-        update.append(stat.getName()).append('=').append(user.getStat(stat));
+        update.append(stat.getName()).append('=').append(userStat);
       }
-      update.append(", ").append(stat.getName()).append('=').append(user.getStat(stat));
+
+      update.append(", ").append(stat.getName()).append('=').append(userStat);
     }
+
     String finalUpdate = update.toString();
 
     Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
@@ -116,22 +122,25 @@ public class MysqlManager implements UserDatabase {
   public void loadStatistics(User user) {
     Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
       String uuid = user.getUniqueId().toString();
+
       try(Connection connection = database.getConnection();
-          Statement statement = connection.createStatement()) {
-        ResultSet rs = statement.executeQuery("SELECT * from " + getTableName() + " WHERE UUID='" + uuid + "'");
+          Statement statement = connection.createStatement();
+          ResultSet rs = statement.executeQuery("SELECT * from " + getTableName() + " WHERE UUID='" + uuid + "'")) {
         if(rs.next()) {
           //player already exists - get the stats
           for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-            if(!stat.isPersistent()) continue;
-
-            user.setStat(stat, rs.getInt(stat.getName()));
+            if(stat.isPersistent()) {
+              user.setStat(stat, rs.getInt(stat.getName()));
+            }
           }
         } else {
           //player doesn't exist - make a new record
           statement.executeUpdate("INSERT INTO " + getTableName() + " (UUID,name) VALUES ('" + uuid + "','" + user.getPlayer().getName() + "')");
+
           for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-            if(!stat.isPersistent()) continue;
-            user.setStat(stat, 0);
+            if(stat.isPersistent()) {
+              user.setStat(stat, 0);
+            }
           }
         }
       } catch(SQLException e) {

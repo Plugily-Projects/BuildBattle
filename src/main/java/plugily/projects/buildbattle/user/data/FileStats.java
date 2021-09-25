@@ -63,7 +63,7 @@ public class FileStats implements UserDatabase {
     String stringId = user.getUniqueId().toString();
 
     for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-      user.setStat(stat, config.getInt(stringId + "." + stat.getName(), 0));
+      user.setStat(stat, config.getInt(stringId + "." + stat.getName()));
     }
   }
 }

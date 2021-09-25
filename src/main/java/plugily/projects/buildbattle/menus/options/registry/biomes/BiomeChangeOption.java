@@ -42,14 +42,11 @@ import plugily.projects.buildbattle.utils.Utils;
  */
 public class BiomeChangeOption {
 
-  private final Main plugin;
-
   public BiomeChangeOption(OptionsRegistry registry) {
-    this.plugin = registry.getPlugin();
     registry.registerOption(new MenuOption(32, "BIOME", new ItemBuilder(XMaterial.MYCELIUM.parseItem())
-        .name(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Biome.Item-Name"))
-        .lore(plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Biome.Item-Lore"))
-        .build(), plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Biome.Inventory-Name")) {
+        .name(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Biome.Item-Name"))
+        .lore(registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Biome.Item-Lore"))
+        .build(), registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Biome.Inventory-Name")) {
 
       @Override
       public void onClick(InventoryClickEvent e) {
@@ -72,22 +69,31 @@ public class BiomeChangeOption {
           who.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("In-Game.No-Permission-For-Biome"));
           return;
         }
+
         Plot plot = arena.getPlotManager().getPlot(who);
-        Biome biome = item.getBiome().getBiome();
-        if(biome != null) {
-          for(Block block : plot.getCuboid().blockList()) {
-            block.setBiome(biome);
+        if (plot == null)
+          return;
+
+        if (plot.getCuboid() != null) {
+          Biome biome = item.getBiome().getBiome();
+
+          if(biome != null) {
+            for(Block block : plot.getCuboid().blockList()) {
+              block.setBiome(biome);
+            }
           }
-        }
-        for(Chunk chunk : plot.getCuboid().chunkList()) {
-          for(Player p : plugin.getServer().getOnlinePlayers()) {
-            if(p.getWorld().equals(chunk.getWorld())) {
-              Utils.sendMapChunk(p, chunk);
+
+          for(Chunk chunk : plot.getCuboid().chunkList()) {
+            for(Player p : registry.getPlugin().getServer().getOnlinePlayers()) {
+              if(p.getWorld().equals(chunk.getWorld())) {
+                Utils.sendMapChunk(p, chunk);
+              }
             }
           }
         }
+
         for(Player p : plot.getMembers()) {
-          p.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Menus.Option-Menu.Items.Biome.Biome-Set"));
+          p.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Menus.Option-Menu.Items.Biome.Biome-Set"));
         }
       }
     });

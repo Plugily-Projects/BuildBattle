@@ -85,13 +85,7 @@ public class User {
   }
 
   public int getStat(StatsStorage.StatisticType stat) {
-    Integer statis = stats.get(stat);
-    if(statis == null) {
-      stats.put(stat, 0);
-      return 0;
-    }
-
-    return statis;
+    return stats.computeIfAbsent(stat, t -> 0);
   }
 
   public void removeScoreboard(BaseArena arena) {
