@@ -57,6 +57,8 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
+
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
 import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
 import plugily.projects.commonsbox.minecraft.compat.events.api.CBPlayerInteractEntityEvent;
 import plugily.projects.commonsbox.minecraft.compat.events.api.CBPlayerInteractEvent;
@@ -460,7 +462,10 @@ public class GameEvents implements Listener {
 
           plot.addEntity();
           event.setCancelled(false);
-          event.getEntity().setAI(false);
+
+          if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+            event.getEntity().setAI(false);
+          }
         }
       }
     }
