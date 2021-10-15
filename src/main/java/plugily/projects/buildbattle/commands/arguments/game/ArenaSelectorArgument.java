@@ -68,14 +68,14 @@ public class ArenaSelectorArgument {
        }
 
        Player player = (Player) e.getWhoClicked();
-       player.closeInventory();
-
        Map<Integer, BaseArena> map = arenas.remove(player.getUniqueId());
+
        if(map != null) {
          BaseArena arena = map.get(e.getRawSlot());
 
          if (arena != null) {
            ArenaManager.joinAttempt(player, arena);
+           player.closeInventory();
            return;
          }
        }
