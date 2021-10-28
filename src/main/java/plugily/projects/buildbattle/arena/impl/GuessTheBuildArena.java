@@ -76,6 +76,8 @@ public class GuessTheBuildArena extends BaseArena {
   private Map<Player, Integer> playersPoints = new HashMap<>();
   private List<Integer> removedCharsAt = new ArrayList<>();
 
+  private final Random random = new Random();
+
   public GuessTheBuildArena(String id, Main plugin) {
     super(id, plugin);
     scoreboardManager = new GuessTheBuildScoreboardManager(this);
@@ -194,9 +196,8 @@ public class GuessTheBuildArena extends BaseArena {
           break;
         }
         if(!themeSet && currentBuilder != null && getTimer() <= 0) {
-          Random r = new Random();
           String type = "EASY";
-          switch(r.nextInt(2 + 1)) {
+          switch(random.nextInt(2 + 1)) {
             case 1:
               type = "MEDIUM";
               break;
@@ -208,7 +209,7 @@ public class GuessTheBuildArena extends BaseArena {
           }
           List<String> themes = getPlugin().getConfigPreferences().getThemes(BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_" + type);
           if(!themes.isEmpty()) {
-            BBTheme theme = new BBTheme(themes.get(themes.size() == 1 ? 0 : r.nextInt(themes.size())), BBTheme.Difficulty.valueOf(type));
+            BBTheme theme = new BBTheme(themes.get(themes.size() == 1 ? 0 : random.nextInt(themes.size())), BBTheme.Difficulty.valueOf(type));
             setCurrentTheme(theme);
             setThemeSet(true);
             VersionUtils.sendActionBar(currentBuilder, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Is-Name")
@@ -259,7 +260,7 @@ public class GuessTheBuildArena extends BaseArena {
               int t = getTimer();
 
               if(t % 10 == 0 && t <= 70) {
-                int removeCharAt = charsAt.get(charsAt.size() == 1 ? 0 : new Random().nextInt(charsAt.size()));
+                int removeCharAt = charsAt.get(charsAt.size() == 1 ? 0 : random.nextInt(charsAt.size()));
                 removedCharsAt.add(removeCharAt);
                 continue;
               }
@@ -489,15 +490,13 @@ public class GuessTheBuildArena extends BaseArena {
     if(currentBuilder == null)
       return;
 
-    Random r = new Random();
-
     List<String> themes = getPlugin().getConfigPreferences().getThemes(BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_EASY");
     String itemLore = getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Lore");
     String themeItemName = getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Theme-Item-Name");
 
     Inventory inv = ComplementAccessor.getComplement().createInventory(null, 27, getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Inventory-Name"));
     inv.setItem(11, new ItemBuilder(Material.PAPER).name(themeItemName
-            .replace("%theme%", !themes.isEmpty() ? themes.get(themes.size() == 1 ? 0 : r.nextInt(themes.size())) : ""))
+            .replace("%theme%", !themes.isEmpty() ? themes.get(themes.size() == 1 ? 0 : random.nextInt(themes.size())) : ""))
         .lore(itemLore
             .replace("%difficulty%", getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Difficulties.Easy"))
             .replace("%points%", "1").split(";")).build());
@@ -505,7 +504,7 @@ public class GuessTheBuildArena extends BaseArena {
     themes = getPlugin().getConfigPreferences().getThemes(BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_MEDIUM");
 
     inv.setItem(13, new ItemBuilder(Material.PAPER).name(themeItemName
-            .replace("%theme%", !themes.isEmpty() ? themes.get(themes.size() == 1 ? 0 : r.nextInt(themes.size())) : ""))
+            .replace("%theme%", !themes.isEmpty() ? themes.get(themes.size() == 1 ? 0 : random.nextInt(themes.size())) : ""))
         .lore(itemLore
             .replace("%difficulty%", getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Difficulties.Medium"))
             .replace("%points%", "2").split(";")).build());
@@ -513,7 +512,7 @@ public class GuessTheBuildArena extends BaseArena {
     themes = getPlugin().getConfigPreferences().getThemes(BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_HARD");
 
     inv.setItem(15, new ItemBuilder(Material.PAPER).name(themeItemName
-            .replace("%theme%", !themes.isEmpty() ? themes.get(themes.size() == 1 ? 0 : r.nextInt(themes.size())) : ""))
+            .replace("%theme%", !themes.isEmpty() ? themes.get(themes.size() == 1 ? 0 : random.nextInt(themes.size())) : ""))
         .lore(itemLore
             .replace("%difficulty%", getPlugin().getChatManager().colorMessage("Menus.Guess-The-Build-Theme-Selector.Difficulties.Hard"))
             .replace("%points%", "3").split(";")).build());
