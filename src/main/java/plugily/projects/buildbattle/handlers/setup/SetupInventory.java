@@ -137,7 +137,7 @@ public class SetupInventory {
         .lore(ChatColor.GRAY + "It will validate and register arena.")
         .build());
     int plotSize = config.getInt("instances." + arena.getID() + ".plotSize", 2);
-    if(plotSize <= 2) {
+    if(plotSize < 2) {
       plotSize = 2;
       config.set("instances." + arena.getID() + ".plotSize", 2);
     }

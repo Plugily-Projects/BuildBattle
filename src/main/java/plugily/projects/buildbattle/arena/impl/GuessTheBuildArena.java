@@ -307,7 +307,14 @@ public class GuessTheBuildArena extends BaseArena {
           nextRoundCooldown = true;
           Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
             nextRoundCooldown = false;
-            currentBuilder = getPlayers().get(round - 1);
+
+            int size = getPlayers().size();
+            int rp = round - 1;
+            if (rp > size) {
+              currentBuilder = getPlayers().get(rp);
+            } else if (size != 0) {
+              currentBuilder = getPlayers().get(0);
+            }
 
             Plot plot = getPlotManager().getPlot(currentBuilder);
             org.bukkit.Location plotLoc = plot == null ? null : plot.getTeleportLocation();

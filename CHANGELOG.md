@@ -17,6 +17,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Added %ARENATYPE% as placeholder for messages
 * Fixed NPE when player's plot was invalid after NPC click
 * Added option for the third first guessers to receive more points
+* Fixed IndexOutOfBoundsException when retrieving currentBuilder at next round
 
 ### 4.5.2 Release (02.08.2021 - 03.08.2021)
 * Fixed issues with spectators get added multiple times to the players list
