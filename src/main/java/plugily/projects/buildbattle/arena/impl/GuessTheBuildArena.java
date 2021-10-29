@@ -189,32 +189,38 @@ public class GuessTheBuildArena extends BaseArena {
         if(getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           getPlugin().getServer().setWhitelist(getMaximumPlayers() <= getPlayers().size());
         }
+
         if(currentBuilder == null && !nextRoundCooldown) {
           currentBuilder = getPlayers().get(round - 1);
           openThemeSelectionInventoryToCurrentBuilder();
           setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.THEME_SELECTION, this));
           break;
         }
+
         if(!themeSet && currentBuilder != null && getTimer() <= 0) {
-          String type = "EASY";
+          BBTheme.Difficulty difficulty = BBTheme.Difficulty.EASY;
+
           switch(random.nextInt(2 + 1)) {
             case 1:
-              type = "MEDIUM";
+              difficulty = BBTheme.Difficulty.MEDIUM;
               break;
             case 2:
-              type = "HARD";
+              difficulty = BBTheme.Difficulty.HARD;
               break;
             default:
               break;
           }
-          List<String> themes = getPlugin().getConfigPreferences().getThemes(BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_" + type);
+
+          List<String> themes = getPlugin().getConfigPreferences().getThemes(BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_" + difficulty.name());
+
           if(!themes.isEmpty()) {
-            BBTheme theme = new BBTheme(themes.get(themes.size() == 1 ? 0 : random.nextInt(themes.size())), BBTheme.Difficulty.valueOf(type));
+            BBTheme theme = new BBTheme(themes.get(themes.size() == 1 ? 0 : random.nextInt(themes.size())), difficulty);
             setCurrentTheme(theme);
             setThemeSet(true);
             VersionUtils.sendActionBar(currentBuilder, getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Is-Name")
                 .replace("%THEME%", theme.getTheme()));
           }
+
           currentBuilder.closeInventory();
 
           String roundMessage = getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Current-Round")
@@ -226,6 +232,7 @@ public class GuessTheBuildArena extends BaseArena {
             VersionUtils.sendTitle(p, title, 5, 25, 5);
             p.sendMessage(roundMessage);
           }
+
           setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, this));
           break;
         }
@@ -248,23 +255,25 @@ public class GuessTheBuildArena extends BaseArena {
               VersionUtils.sendActionBar(player, currentTheme.getTheme());
             }
 
-            StringBuilder actionbar = new StringBuilder();
-            List<Integer> charsAt = new ArrayList<>();
+            List<Integer> charsAt = new ArrayList<>(themeLength);
 
             for(int i = 0; i < themeLength; i++) {
               if(!removedCharsAt.contains(i)) {
                 charsAt.add(i);
               }
             }
+
             if(themeLength - removedCharsAt.size() > 2) {
               int t = getTimer();
 
               if(t % 10 == 0 && t <= 70) {
-                int removeCharAt = charsAt.get(charsAt.size() == 1 ? 0 : random.nextInt(charsAt.size()));
-                removedCharsAt.add(removeCharAt);
+                removedCharsAt.add(charsAt.get(charsAt.size() == 1 ? 0 : random.nextInt(charsAt.size())));
                 continue;
               }
             }
+
+            StringBuilder actionbar = new StringBuilder();
+
             for(int i = 0; i < themeLength; i++) {
               char charAt = currentTheme.getTheme().charAt(i);
 
@@ -278,6 +287,7 @@ public class GuessTheBuildArena extends BaseArena {
               }
               actionbar.append("_ ");
             }
+
             VersionUtils.sendActionBar(player, actionbar.toString());
           }
         }
