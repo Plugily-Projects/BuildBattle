@@ -198,9 +198,16 @@ public class SignManager implements Listener {
 
     for(String path : section.getKeys(false)) {
       for(String sign : section.getStringList(path + ".signs")) {
+        BaseArena arena = ArenaRegistry.getArena(path);
+
+        if (arena == null)
+          continue;
+
         Location loc = LocationSerializer.getLocation(sign);
-        if(loc.getBlock().getState() instanceof Sign) {
-          arenaSigns.add(new ArenaSign((Sign) loc.getBlock().getState(), ArenaRegistry.getArena(path)));
+        org.bukkit.block.BlockState state = loc.getBlock().getState();
+
+        if(state instanceof Sign) {
+          arenaSigns.add(new ArenaSign((Sign) state, arena));
         } else {
           Debugger.debug(Debugger.Level.WARN, "Block at loc " + loc + " for arena " + path + " not a sign");
         }
@@ -211,11 +218,14 @@ public class SignManager implements Listener {
   public void updateSigns() {
     for(ArenaSign arenaSign : arenaSigns) {
       Sign sign = arenaSign.getSign();
+
       for(int i = 0; i < signLines.size(); i++) {
         ComplementAccessor.getComplement().setLine(sign, i, formatSign(signLines.get(i), arenaSign.getArena()));
       }
-      if(plugin.getConfig().getBoolean("Signs-Block-States-Enabled", true) && arenaSign.getBehind() != null) {
-        Block behind = arenaSign.getBehind();
+
+      Block behind = arenaSign.getBehind();
+
+      if(behind != null && plugin.getConfig().getBoolean("Signs-Block-States-Enabled", true)) {
         try {
           switch(arenaSign.getArena().getArenaState()) {
             case WAITING_FOR_PLAYERS:

@@ -131,7 +131,7 @@ public class ArenaRegistry {
 
       BaseArena.ArenaType arenaType;
       try {
-        arenaType = BaseArena.ArenaType.valueOf(section.getString(id + ".gametype", "solo").toUpperCase());
+        arenaType = BaseArena.ArenaType.valueOf(section.getString(id + ".gametype", "solo").toUpperCase(java.util.Locale.ENGLISH));
       } catch(IllegalArgumentException e) {
         arenaType = BaseArena.ArenaType.SOLO;
       }
