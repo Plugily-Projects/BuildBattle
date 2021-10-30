@@ -165,8 +165,10 @@ public class GuessTheBuildArena extends BaseArena {
               player.setFlying(true);
             }, 20);
           }
-          Plot plot = getPlotManager().getPlot(getPlayers().get(round - 1));
+
+          Plot plot = getPlotManager().getPlot(getNextPlayerByRound());
           org.bukkit.Location plotLoc = plot == null ? null : plot.getTeleportLocation();
+
           if(plotLoc != null) {
             boolean performed = false;
 
@@ -191,7 +193,12 @@ public class GuessTheBuildArena extends BaseArena {
         }
 
         if(currentBuilder == null && !nextRoundCooldown) {
-          currentBuilder = getPlayers().get(round - 1);
+          Player nextPlayer = getNextPlayerByRound();
+
+          if (nextPlayer != null) {
+            currentBuilder = nextPlayer;
+          }
+
           openThemeSelectionInventoryToCurrentBuilder();
           setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.THEME_SELECTION, this));
           break;
@@ -319,12 +326,9 @@ public class GuessTheBuildArena extends BaseArena {
           Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
             nextRoundCooldown = false;
 
-            int size = getPlayers().size();
-            int rp = round - 1;
-            if (rp > size) {
-              currentBuilder = getPlayers().get(rp);
-            } else if (size != 0) {
-              currentBuilder = getPlayers().get(0);
+            Player nextPlayer = getNextPlayerByRound();
+            if (nextPlayer != null) {
+              currentBuilder = nextPlayer;
             }
 
             Plot plot = getPlotManager().getPlot(currentBuilder);
@@ -494,6 +498,17 @@ public class GuessTheBuildArena extends BaseArena {
         }
         break;
     }
+  }
+
+  private Player getNextPlayerByRound() {
+    int size = getPlayers().size();
+    int rp = round - 1;
+
+    if (rp > size) {
+      return getPlayers().get(rp);
+    }
+
+    return size != 0 ? getPlayers().get(0) : null;
   }
 
   private void openThemeSelectionInventoryToCurrentBuilder() {
