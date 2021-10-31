@@ -502,13 +502,17 @@ public class GuessTheBuildArena extends BaseArena {
 
   private Player getNextPlayerByRound() {
     int size = getPlayers().size();
-    int rp = round - 1;
 
-    if (rp > size) {
-      return getPlayers().get(rp);
+    if (size == 0) {
+      return null;
     }
 
-    return size != 0 ? getPlayers().get(0) : null;
+    int rp = round - 1;
+    if (rp >= size) {
+      rp = size - 1;
+    }
+
+    return getPlayers().get(rp);
   }
 
   private void openThemeSelectionInventoryToCurrentBuilder() {
