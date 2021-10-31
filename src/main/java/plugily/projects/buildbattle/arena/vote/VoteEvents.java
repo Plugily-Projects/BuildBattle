@@ -63,7 +63,7 @@ public class VoteEvents implements Listener {
     }
 
     BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
-    if(arena == null || arena instanceof GuessTheBuildArena || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME || arena instanceof GuessTheBuildArena) {
       return;
     }
 

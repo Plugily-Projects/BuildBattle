@@ -67,18 +67,25 @@ public class SpectatorItemEvents implements Listener {
     if(e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK || e.getAction() == Action.PHYSICAL) {
       return;
     }
+
     BaseArena arena = ArenaRegistry.getArena(e.getPlayer());
+    if (arena == null)
+      return;
+
     ItemStack stack = VersionUtils.getItemInHand(e.getPlayer());
-    if(arena == null || !ItemUtils.isItemStackNamed(stack)) {
+    if(!ItemUtils.isItemStackNamed(stack)) {
       return;
     }
-    if(plugin.getSpecialItemsManager().getRelatedSpecialItem(stack).getName().equals(SpecialItemsManager.SpecialItems.PLAYERS_LIST.getName())) {
+
+    String specialItemName = plugin.getSpecialItemsManager().getRelatedSpecialItem(stack).getName();
+
+    if(specialItemName.equals(SpecialItemsManager.SpecialItems.PLAYERS_LIST.getName())) {
       e.setCancelled(true);
       openSpectatorMenu(arena, e.getPlayer());
-    } else if(plugin.getSpecialItemsManager().getRelatedSpecialItem(stack).getName().equals(SpecialItemsManager.SpecialItems.SPECTATOR_OPTIONS.getName())) {
+    } else if(specialItemName.equals(SpecialItemsManager.SpecialItems.SPECTATOR_OPTIONS.getName())) {
       e.setCancelled(true);
       spectatorSettingsMenu.openSpectatorSettingsMenu(e.getPlayer());
-    } else if(plugin.getSpecialItemsManager().getRelatedSpecialItem(stack).getName().equals(SpecialItemsManager.SpecialItems.SPECTATOR_LEAVE_ITEM.getName())) {
+    } else if(specialItemName.equals(SpecialItemsManager.SpecialItems.SPECTATOR_LEAVE_ITEM.getName())) {
       e.setCancelled(true);
       ArenaManager.leaveAttempt(e.getPlayer(), arena);
     }

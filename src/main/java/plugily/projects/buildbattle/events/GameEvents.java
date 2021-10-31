@@ -635,16 +635,15 @@ public class GameEvents implements Listener {
 
   @EventHandler
   public void onEnderchestClick(CBPlayerInteractEvent event) {
+    if (event.getClickedBlock() == null)
+      return;
+
     BaseArena arena = ArenaRegistry.getArena(event.getPlayer());
     if(arena == null) {
       return;
     }
-    if(arena.getArenaState() != ArenaState.IN_GAME) {
-      event.setCancelled(true);
-      return;
-    }
-    Block block = event.getClickedBlock();
-    if(block != null && block.getType() == XMaterial.ENDER_CHEST.parseMaterial()) {
+
+    if(arena.getArenaState() != ArenaState.IN_GAME || event.getClickedBlock().getType() == XMaterial.ENDER_CHEST.parseMaterial()) {
       event.setCancelled(true);
     }
   }

@@ -76,11 +76,14 @@ public class CuboidSelector implements Listener {
         e.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&eNow select top corner using right click!"));
         break;
       case RIGHT_CLICK_BLOCK:
-        if(!selections.containsKey(e.getPlayer())) {
+        Selection selection = getSelection(e.getPlayer());
+
+        if(selection == null) {
           e.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&cPlease select bottom corner using left click first!"));
           break;
         }
-        selections.put(e.getPlayer(), new Selection(getSelection(e.getPlayer()).getFirstPos(), e.getClickedBlock().getLocation()));
+
+        selections.put(e.getPlayer(), new Selection(selection.firstPos, e.getClickedBlock().getLocation()));
         e.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&eNow you can add plot via setup menu!"));
         break;
       case LEFT_CLICK_AIR:
