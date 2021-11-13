@@ -219,7 +219,7 @@ public class Main extends JavaPlugin {
     signManager.loadSigns();
     signManager.updateSigns();
     specialItemsManager = new SpecialItemsManager(this);
-    voteItems = new VoteItems();
+    voteItems = new VoteItems(this);
     new VoteEvents(this);
     new LobbyEvents(this);
     new ChatEvents(this);

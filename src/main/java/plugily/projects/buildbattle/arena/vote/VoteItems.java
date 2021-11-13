@@ -45,12 +45,13 @@ public class VoteItems {
 
   private final Set<VoteItem> voteItems = new HashSet<>();
   private final FileConfiguration config;
-  private final Main plugin = JavaPlugin.getPlugin(Main.class);
+  private final Main plugin;
 
   private ItemStack reportItem = new ItemStack(Material.BEDROCK, 32);
   private VoteItem reportVoteItem = new VoteItem(new ItemStack(Material.BEDROCK, 32), 8, 8 + 1, XSound.ENTITY_ARROW_HIT.parseSound());
 
-  public VoteItems() {
+  public VoteItems(Main plugin) {
+    this.plugin = plugin;
     config = ConfigUtils.getConfig(plugin, "voteItems");
 
     updateVoteItemsConfig();
@@ -59,16 +60,18 @@ public class VoteItems {
 
   private void loadVoteItems() {
     for(String key : config.getKeys(false)) {
-      if(!config.isSet(key + ".displayname")) {
+      String displayName = config.getString(key + ".displayname", null);
+
+      if(displayName == null) {
         continue;
       }
 
       ItemStack stack = new ItemBuilder(XMaterial.matchXMaterial(config.getString(key + ".material-name", "BEDROCK")
-          .toUpperCase()).orElse(XMaterial.BEDROCK).parseItem())
-          .name(plugin.getChatManager().colorRawMessage(config.getString(key + ".displayname")))
+          .toUpperCase(java.util.Locale.ENGLISH)).orElse(XMaterial.BEDROCK).parseItem())
+          .name(plugin.getChatManager().colorRawMessage(displayName))
           .build();
 
-      if(config.getBoolean(key + ".report-item-function")) {
+      if(config.getBoolean(key + ".report-item-function", false)) {
         reportItem = stack;
       }
 
@@ -78,7 +81,13 @@ public class VoteItems {
       } catch(IllegalArgumentException ignored) {
       }
 
-      int s = Integer.parseInt(key);
+      int s;
+      try {
+        s = Integer.parseInt(key);
+      } catch (NumberFormatException e) {
+        continue;
+      }
+
       voteItems.add(reportVoteItem = new VoteItem(stack, s, s + 1, sound));
     }
   }
@@ -96,18 +105,18 @@ public class VoteItems {
 
   public void giveVoteItems(Player player) {
     for(VoteItem voteItem : voteItems) {
-      player.getInventory().setItem(voteItem.getSlot(), voteItem.getItemStack());
+      player.getInventory().setItem(voteItem.slot, voteItem.itemStack);
     }
     player.updateInventory();
   }
 
   public void playVoteSound(Player player, ItemStack itemStack) {
     for(VoteItem item : voteItems) {
-      if(item.getItemStack().isSimilar(itemStack)) {
-        if(item.getSound() == null) {
+      if(item.itemStack.isSimilar(itemStack)) {
+        if(item.sound == null) {
           return;
         }
-        player.playSound(player.getLocation(), item.getSound(), 1, 1);
+        player.playSound(player.getLocation(), item.sound, 1, 1);
       }
     }
   }
@@ -120,10 +129,25 @@ public class VoteItems {
    */
   public int getPoints(ItemStack itemStack) {
     for(VoteItem item : voteItems) {
-      if(item.getItemStack().isSimilar(itemStack)) {
-        return item.getPoints();
+      if(item.itemStack.isSimilar(itemStack)) {
+        return item.points;
       }
     }
+    return 1;
+  }
+
+  public int getPointsAndPlayVoteSound(Player player, ItemStack itemStack) {
+    for(VoteItem item : voteItems) {
+      if(item.itemStack.isSimilar(itemStack)) {
+        if(item.sound == null) {
+          return item.points;
+        }
+
+        player.playSound(player.getLocation(), item.sound, 1, 1);
+        return item.points;
+      }
+    }
+
     return 1;
   }
 

@@ -77,17 +77,24 @@ public class VoteEvents implements Listener {
     if(plugin.getVoteItems().getReportItem().equals(e.getItem())) {
       user.setStat(StatsStorage.StatisticType.REPORTS, user.getStat(StatsStorage.StatisticType.REPORTS) + 1);
 
-      int reportsAmountNeeded = plugin.getConfig().getInt("Run-Command-On-Report.Reports-Amount-To-Run", -1);
+      if(plot != null && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.RUN_COMMAND_ON_REPORT)) {
+        int reportsAmountNeeded = plugin.getConfig().getInt("Run-Command-On-Report.Reports-Amount-To-Run", -1);
 
-      if(plot != null && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.RUN_COMMAND_ON_REPORT)
-          && (reportsAmountNeeded == -1 || user.getStat(StatsStorage.StatisticType.REPORTS) >= reportsAmountNeeded)) {
-        plot.getMembers().forEach(player -> plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),
-            plugin.getConfig().getString("Run-Command-On-Report.Command", "kick %reported%")
-                .replace("%reported%", player.getName()).replace("%reporter%", e.getPlayer().getName())));
-        e.getPlayer().getInventory().remove(e.getItem());
-        e.getPlayer().updateInventory();
-        plugin.getRewardsHandler().performReward(e.getPlayer(), arena, Reward.RewardType.REPORT, -1);
-        plugin.getRewardsHandler().lastCode = null;
+        if(reportsAmountNeeded == -1 || user.getStat(StatsStorage.StatisticType.REPORTS) >= reportsAmountNeeded) {
+          String reportCommand = plugin.getConfig().getString("Run-Command-On-Report.Command", "kick %reported%");
+          reportCommand = reportCommand.replace("%reporter%", e.getPlayer().getName());
+
+          for (org.bukkit.entity.Player player : plot.getMembers()) {
+            plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),
+                reportCommand.replace("%reported%", player.getName()));
+          }
+
+          e.getPlayer().getInventory().remove(e.getItem());
+          e.getPlayer().updateInventory();
+
+          plugin.getRewardsHandler().performReward(e.getPlayer(), arena, Reward.RewardType.REPORT, -1);
+          plugin.getRewardsHandler().lastCode = null;
+        }
       }
 
       e.setCancelled(true);
@@ -100,8 +107,8 @@ public class VoteEvents implements Listener {
       return;
     }
 
-    user.setStat(StatsStorage.StatisticType.LOCAL_POINTS, plugin.getVoteItems().getPoints(e.getItem()));
-    plugin.getVoteItems().playVoteSound(e.getPlayer(), e.getItem());
+    user.setStat(StatsStorage.StatisticType.LOCAL_POINTS, plugin.getVoteItems().getPointsAndPlayVoteSound(e.getPlayer(), e.getItem()));
+
     e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Messages.Voting-Messages.Vote-Successful"));
     e.setCancelled(true);
   }
