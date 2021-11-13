@@ -51,8 +51,6 @@ import java.util.Map;
  */
 public class Plot {
 
-  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
-
   private final Map<Location, String> particles = new HashMap<>();
   private final XMaterial defaultFloor;
 
@@ -68,8 +66,8 @@ public class Plot {
   public Plot(BaseArena arena, Biome biome) {
     this.arena = arena;
     plotDefaultBiome = biome;
-    defaultFloor = XMaterial.matchXMaterial(plugin.getConfig().getString("Default-Floor-Material-Name", "LOG")
-        .toUpperCase()).orElse(XMaterial.OAK_LOG);
+    defaultFloor = XMaterial.matchXMaterial(arena.getPlugin().getConfig().getString("Default-Floor-Material-Name", "LOG")
+        .toUpperCase(java.util.Locale.ENGLISH)).orElse(XMaterial.OAK_LOG);
   }
 
   public int getEntities() {
@@ -99,7 +97,9 @@ public class Plot {
   }
 
   public void setWeatherType(WeatherType weatherType) {
-    this.weatherType = weatherType;
+    if (weatherType != null) {
+      this.weatherType = weatherType;
+    }
   }
 
   public Time getTime() {
@@ -144,12 +144,12 @@ public class Plot {
     }
 
     if(members.contains(player)) {
-      if(!silent) player.sendMessage(plugin.getChatManager().colorMessage("Plots.Team.Member"));
+      if(!silent) player.sendMessage(arena.getPlugin().getChatManager().colorMessage("Plots.Team.Member"));
       return false;
     }
 
     if(members.size() >= playerArena.getPlotSize()) {
-      if(!silent) player.sendMessage(plugin.getChatManager().colorMessage("Plots.Team.Full"));
+      if(!silent) player.sendMessage(arena.getPlugin().getChatManager().colorMessage("Plots.Team.Full"));
       return false;
     }
 
@@ -158,7 +158,7 @@ public class Plot {
       plot.removeMember(player);
     }
     members.add(player);
-    plugin.getUserManager().getUser(player).setCurrentPlot(this);
+    arena.getPlugin().getUserManager().getUser(player).setCurrentPlot(this);
     return true;
   }
 
@@ -170,7 +170,7 @@ public class Plot {
     resetPlot();
 
     for(Player p : members) {
-      plugin.getUserManager().getUser(p).setCurrentPlot(null);
+      arena.getPlugin().getUserManager().getUser(p).setCurrentPlot(null);
     }
 
     setPoints(0);
@@ -200,7 +200,7 @@ public class Plot {
     World centerWorld = cuboid.getCenter().getWorld();
 
     if(centerWorld != null) {
-      boolean isCitizensEnabled = plugin.getServer().getPluginManager().isPluginEnabled("Citizens");
+      boolean isCitizensEnabled = arena.getPlugin().getServer().getPluginManager().isPluginEnabled("Citizens");
 
       for(Entity entity : centerWorld.getEntities()) {
         if(cuboid.isInWithMarge(entity.getLocation(), 5)) {
@@ -225,8 +225,10 @@ public class Plot {
     }
 
     for(Chunk chunk : cuboid.chunkList()) {
-      for(Player p : plugin.getServer().getOnlinePlayers()) {
-        if(p.getWorld().equals(chunk.getWorld())) {
+      World chunkWorld = chunk.getWorld();
+
+      for(Player p : arena.getPlugin().getServer().getOnlinePlayers()) {
+        if(p.getWorld().equals(chunkWorld)) {
           Utils.sendMapChunk(p, chunk);
         }
       }
@@ -239,15 +241,13 @@ public class Plot {
         Location min = cuboid.getMinPoint();
         Location max = cuboid.getMaxPoint();
 
-        int y = Math.min(min.getBlockY(), max.getBlockY());
-
-        centerWorld.setBiome(min.getBlockX(), y, max.getBlockZ(), plotDefaultBiome);
+        centerWorld.setBiome(min.getBlockX(), Math.min(min.getBlockY(), max.getBlockY()), max.getBlockZ(), plotDefaultBiome);
       } else {
         centerWorld.setBiome(cuboid.getMinPoint().getBlockX(), cuboid.getMaxPoint().getBlockZ(), plotDefaultBiome);
       }
     }
 
-    plugin.getServer().getPluginManager().callEvent(new BBPlotResetEvent(arena, this));
+    arena.getPlugin().getServer().getPluginManager().callEvent(new BBPlotResetEvent(arena, this));
   }
 
   public int getPoints() {

@@ -61,7 +61,7 @@ public class SetThemeArgument {
           return;
         }
         if(arena.getArenaState() == ArenaState.IN_GAME && registry.getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, arena) - arena.getTimer() <= 20) {
-          if(registry.getPlugin().getConfigPreferences().isThemeBlacklisted(args[1].toLowerCase())) {
+          if(registry.getPlugin().getConfigPreferences().isThemeBlacklisted(args[1])) {
             sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Admin-Commands.Theme-Blacklisted"));
             return;
           }

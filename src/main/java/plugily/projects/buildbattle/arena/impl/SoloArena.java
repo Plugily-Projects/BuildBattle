@@ -39,6 +39,7 @@ import plugily.projects.buildbattle.arena.options.ArenaOption;
 import plugily.projects.buildbattle.handlers.HolidayManager;
 import plugily.projects.buildbattle.handlers.language.LanguageManager;
 import plugily.projects.buildbattle.handlers.reward.Reward;
+import plugily.projects.buildbattle.handlers.reward.RewardsFactory;
 import plugily.projects.buildbattle.menus.options.registry.particles.ParticleRefreshScheduler;
 import plugily.projects.buildbattle.menus.themevoter.VoteMenu;
 import plugily.projects.buildbattle.menus.themevoter.VotePoll;
@@ -188,8 +189,6 @@ public class SoloArena extends BaseArena {
           distributePlots();
           setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.THEME_VOTE, this));
 
-          boolean performed = false;
-
           for(Player player : getPlayers()) {
             player.getInventory().clear();
             player.setGameMode(GameMode.CREATIVE);
@@ -198,9 +197,11 @@ public class SoloArena extends BaseArena {
             player.getInventory().setItem(8, getPlugin().getOptionsRegistry().getMenuItem());
             //to prevent Multiverse changing gamemode bug
             Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setGameMode(GameMode.CREATIVE), 40);
-            getPlugin().getRewardsHandler().performReward(player, this, Reward.RewardType.START_GAME, -1, performed);
-            performed = true;
+
+            getPlugin().getRewardsHandler().performReward(player, this, Reward.RewardType.START_GAME, -1);
           }
+
+          getPlugin().getRewardsHandler().lastCode = null;
         }
 
         if(isForceStart()) {
@@ -697,19 +698,21 @@ public class SoloArena extends BaseArena {
 
   @Override
   public void giveRewards() {
-    boolean performed = false;
+    RewardsFactory rewards = getPlugin().getRewardsHandler();
 
     for(int i = 1; i <= topList.size(); i++) {
       List<Player> list = topList.get(i);
 
       if(list != null) {
         for(Player player : list) {
-          getPlugin().getRewardsHandler().performReward(player, this, Reward.RewardType.PLACE, i, performed);
-          performed = true;
+          rewards.performReward(player, this, Reward.RewardType.PLACE, i);
         }
       }
     }
-    getPlugin().getRewardsHandler().performReward(null, this, Reward.RewardType.END_GAME, -1, false);
+
+    rewards.lastCode = null;
+    rewards.performReward(null, this, Reward.RewardType.END_GAME, -1);
+    rewards.lastCode = null;
   }
 
   public boolean isThemeVoteTime() {

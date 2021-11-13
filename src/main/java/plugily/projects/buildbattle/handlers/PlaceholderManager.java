@@ -21,6 +21,9 @@
 package plugily.projects.buildbattle.handlers;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+
+import java.util.Locale;
+
 import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.api.StatsStorage;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
@@ -58,7 +61,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
     if(player == null) {
       return null;
     }
-    switch(id.toLowerCase()) {
+    switch(id.toLowerCase(Locale.ENGLISH)) {
       case "blocks_broken":
         return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.BLOCKS_BROKEN));
       case "blocks_placed":
@@ -95,19 +98,19 @@ public class PlaceholderManager extends PlaceholderExpansion {
     if(arena == null) {
       return null;
     }
-    switch(data[1].toLowerCase()) {
+    switch(data[1].toLowerCase(Locale.ENGLISH)) {
       case "players":
         return Integer.toString(arena.getPlayers().size());
       case "max_players":
         return Integer.toString(arena.getMaximumPlayers());
       case "state":
-        return arena.getArenaState().toString().toLowerCase();
+        return arena.getArenaState().toString().toLowerCase(Locale.ENGLISH);
       case "state_pretty":
         return arena.getArenaState().getPlaceholder();
       case "mapname":
         return arena.getMapName();
       case "arenatype":
-        return arena.getArenaType().toString().toLowerCase();
+        return arena.getArenaType().toString().toLowerCase(Locale.ENGLISH);
       case "arenatype_pretty":
         return arena.getArenaType().getPrefix();
       default:

@@ -51,7 +51,7 @@ import plugily.projects.commonsbox.minecraft.misc.MiscUtils;
 import plugily.projects.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.commonsbox.minecraft.serialization.InventorySerializer;
 
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.Random;
 
 /**
  * @author Plajer
@@ -61,6 +61,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ArenaManager {
 
   private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final Random random = new Random();
 
   private ArenaManager() {
   }
@@ -93,26 +94,34 @@ public class ArenaManager {
       player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Already-Playing"));
       return;
     }
+
     Plot partyPlot = null;
+    GameParty party = plugin.getPartyHandler().getParty(player);
+
     //check if player is in party and send party members to the game
-    if(plugin.getPartyHandler().isPlayerInParty(player)) {
+    if(party != null) {
       Debugger.debug("[Party] Initialized party check " + player.getName());
-      GameParty party = plugin.getPartyHandler().getParty(player);
+
       if(party.getLeader() == player) {
         if(arena.getMaximumPlayers() - arena.getPlayers().size() >= party.getPlayers().size()) {
-          partyPlot = arena.getPlotManager().getPlots().get(ThreadLocalRandom.current().nextInt(arena.getPlotManager().getPlots().size()));
+          partyPlot = arena.getPlotManager().getPlots().get(random.nextInt(arena.getPlotManager().getPlots().size()));
+
           for(Player partyPlayer : party.getPlayers()) {
             if(partyPlayer == player) {
               continue;
             }
+
             BaseArena partyPlayerArena = ArenaRegistry.getArena(partyPlayer);
+
             if(partyPlayerArena != null) {
               if(partyPlayerArena.getArenaState() == ArenaState.IN_GAME) {
                 continue;
               }
+
               Debugger.debug("[Party] Remove party member " + partyPlayer.getName() + " from other not ingame arena " + player.getName());
               leaveAttempt(partyPlayer, partyPlayerArena);
             }
+
             partyPlayer.sendMessage(chatManager.getPrefix() + chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Join-As-Party-Member"), partyPlayer));
             joinAttempt(partyPlayer, arena);
             Debugger.debug("[Party] Added party member " + partyPlayer.getName() + " to arena of " + player.getName());
@@ -123,6 +132,7 @@ public class ArenaManager {
           return;
         }
       }
+
       Player partyLeader = party.getLeader();
       if(arena.getPlayers().contains(partyLeader)) {
         Plot partyLeaderPlot = arena.getPlotManager().getPlot(partyLeader);
@@ -313,12 +323,11 @@ public class ArenaManager {
       user.setSpectator(false);
       return;
     }
+
     Plot plot = arena.getPlotManager().getPlot(player);
-    if(plot != null) {
+    if(plot != null && plot.getMembers().size() <= 1) {
       if(arena instanceof SoloArena) {
-        if(plot.getMembers().size() <= 1) {
-          ((SoloArena) arena).getQueue().remove(plot);
-        }
+        ((SoloArena) arena).getQueue().remove(plot);
       }
     }
 

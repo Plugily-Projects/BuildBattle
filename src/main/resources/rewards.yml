@@ -26,6 +26,10 @@
 #    - script:player.getInventory().addItem(new org.bukkit.inventory.ItemStack(org.bukkit.Material.DIRT));
 #         ^ Gives player dirt item (you must always use direct package names for not provided objects)
 #
+#   You can specify that the console command should only perform only once with the "once" tag:
+#     startgame:
+#     - once:say This broadcast only performed only once at start of the game
+#
 #                               All script provided objects:
 #            player - Player object (API methods https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/Player.html)
 #    arena - BuildBattle BaseArena (API methods https://jd.plugily.xyz/apidocs/minecraft/buildbattle/plugily/projects/buildbattle/arena/impl/BaseArena.html)

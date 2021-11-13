@@ -20,7 +20,6 @@
 
 package plugily.projects.buildbattle.handlers.party;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.ConfigPreferences;
 import plugily.projects.buildbattle.Main;
@@ -34,20 +33,26 @@ import plugily.projects.buildbattle.utils.Debugger;
 public class PartySupportInitializer {
 
   public PartyHandler initialize(Main plugin) {
-    PartyHandler partyHandler;
     if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_PARTIES)) {
-      if(Bukkit.getServer().getPluginManager().getPlugin("Parties") != null) {
+      org.bukkit.plugin.PluginManager pm = plugin.getServer().getPluginManager();
+
+      if(pm.isPluginEnabled("Parties")) {
         Debugger.debug(Debugger.Level.INFO, "[Party] Enabled support for Parties");
         return new PartiesPartyHandlerImpl();
-      } else if(Bukkit.getServer().getPluginManager().getPlugin("Spigot-Party-API-PAF") != null) {
+      }
+
+      if(pm.isPluginEnabled("Spigot-Party-API-PAF")) {
         Debugger.debug(Debugger.Level.INFO, "[Party] Enabled support for Spigot-Party-API-PAF (Bungeecord)");
         return new PAFBPartyHandlerImpl();
-      } else if(Bukkit.getServer().getPluginManager().getPlugin("PartyAndFriends") != null) {
+      }
+
+      if(pm.isPluginEnabled("PartyAndFriends")) {
         Debugger.debug(Debugger.Level.INFO, "[Party] Enabled support for PartyAndFriends (Spigot)");
         return new PAFSPartyHandlerImpl();
       }
     }
-    partyHandler = new PartyHandler() {
+
+    return new PartyHandler() {
       @Override
       public boolean isPlayerInParty(Player player) {
         return false;
@@ -68,7 +73,6 @@ public class PartySupportInitializer {
         return PartyPluginType.NONE;
       }
     };
-    return partyHandler;
   }
 
 }

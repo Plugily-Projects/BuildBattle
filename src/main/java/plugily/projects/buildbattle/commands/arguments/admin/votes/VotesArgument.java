@@ -72,18 +72,23 @@ public class VotesArgument {
           sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Player-Not-Found"));
           return;
         }
-        if(NumberUtils.isInteger(args[2])) {
+
+        java.util.Optional<Integer> opt = NumberUtils.parseInt(args[2]);
+
+        if(opt.isPresent()) {
           User user = registry.getPlugin().getUserManager().getUser(target);
           String successMessage;
+
           if(args[1].equalsIgnoreCase("add")) {
-            user.addStat(StatsStorage.StatisticType.SUPER_VOTES, Integer.parseInt(args[2]));
+            user.addStat(StatsStorage.StatisticType.SUPER_VOTES, opt.get());
             successMessage = registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Arguments.Super-Votes-Added");
             successMessage = StringUtils.replace(successMessage, "%amount%", args[2]);
           } else {
-            user.setStat(StatsStorage.StatisticType.SUPER_VOTES, Integer.parseInt(args[2]));
+            user.setStat(StatsStorage.StatisticType.SUPER_VOTES, opt.get());
             successMessage = registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Arguments.Super-Votes-Set");
             successMessage = StringUtils.replace(successMessage, "%amount%", args[2]);
           }
+
           //todo translatable?
           sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorRawMessage("&aSuper votes amount modified!"));
           target.sendMessage(successMessage);

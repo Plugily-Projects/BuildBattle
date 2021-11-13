@@ -46,11 +46,14 @@ public class MysqlManager implements UserDatabase {
   public MysqlManager(Main plugin) {
     this.plugin = plugin;
     database = plugin.getMysqlDatabase();
+
     Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+      String tableName = getTableName();
+
       try(Connection connection = database.getConnection();
           Statement statement = connection.createStatement()) {
         statement.executeUpdate(
-            "CREATE TABLE IF NOT EXISTS `" + getTableName() + "` (\n"
+            "CREATE TABLE IF NOT EXISTS `" + tableName + "` (\n"
                 + "  `UUID` char(36) NOT NULL PRIMARY KEY,\n"
                 + "  `name` varchar(32) NOT NULL,\n"
                 + "  `loses` int(11) NOT NULL DEFAULT '0',\n"
@@ -66,14 +69,14 @@ public class MysqlManager implements UserDatabase {
 
         //temporary workaround
         try {
-          statement.executeUpdate("ALTER TABLE " + getTableName() + " ADD supervotes int(11) NOT NULL DEFAULT '0'");
+          statement.executeUpdate("ALTER TABLE " + tableName + " ADD supervotes int(11) NOT NULL DEFAULT '0'");
         } catch(SQLException e) {
           if(!e.getMessage().contains("Duplicate column name")) {
             e.printStackTrace();
           }
         }
         try {
-          statement.executeUpdate("ALTER TABLE " + getTableName() + " ADD name text NOT NULL");
+          statement.executeUpdate("ALTER TABLE " + tableName + " ADD name text NOT NULL");
         } catch(SQLException e) {
           if(!e.getMessage().contains("Duplicate column name")) {
             e.printStackTrace();
@@ -122,10 +125,11 @@ public class MysqlManager implements UserDatabase {
   public void loadStatistics(User user) {
     Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
       String uuid = user.getUniqueId().toString();
+      String tableName = getTableName();
 
       try(Connection connection = database.getConnection();
           Statement statement = connection.createStatement();
-          ResultSet rs = statement.executeQuery("SELECT * from " + getTableName() + " WHERE UUID='" + uuid + "'")) {
+          ResultSet rs = statement.executeQuery("SELECT * from " + tableName + " WHERE UUID='" + uuid + "'")) {
         if(rs.next()) {
           //player already exists - get the stats
           for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
@@ -135,7 +139,7 @@ public class MysqlManager implements UserDatabase {
           }
         } else {
           //player doesn't exist - make a new record
-          statement.executeUpdate("INSERT INTO " + getTableName() + " (UUID,name) VALUES ('" + uuid + "','" + user.getPlayer().getName() + "')");
+          statement.executeUpdate("INSERT INTO " + tableName + " (UUID,name) VALUES ('" + uuid + "','" + user.getPlayer().getName() + "')");
 
           for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
             if(stat.isPersistent()) {

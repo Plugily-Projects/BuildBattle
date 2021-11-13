@@ -39,6 +39,7 @@ public class Reward {
   private String executableCode;
   private final double chance;
   private int place = -1;
+  private final boolean performOnce;
 
   public Reward(RewardType type, String rawCode, int place) {
     this(type, rawCode);
@@ -51,13 +52,18 @@ public class Reward {
 
     //set reward executor based on provided code
     if(rawCode.contains("p:")) {
-      this.executor = RewardExecutor.PLAYER;
+      executor = RewardExecutor.PLAYER;
       processedCode = StringUtils.replace(processedCode, "p:", "");
     } else if(rawCode.contains("script:")) {
-      this.executor = RewardExecutor.SCRIPT;
+      executor = RewardExecutor.SCRIPT;
       processedCode = StringUtils.replace(processedCode, "script:", "");
     } else {
-      this.executor = RewardExecutor.CONSOLE;
+      executor = RewardExecutor.CONSOLE;
+    }
+
+    performOnce = executor == RewardExecutor.CONSOLE && processedCode.indexOf("once:") >= 0;
+    if (performOnce) {
+      processedCode = StringUtils.replace(processedCode, "once:", "");
     }
 
     //search for chance modifier
@@ -82,6 +88,10 @@ public class Reward {
 
   public RewardExecutor getExecutor() {
     return executor;
+  }
+
+  public boolean isPerformOnce() {
+    return performOnce;
   }
 
   public String getExecutableCode() {

@@ -57,7 +57,7 @@ public class TeleportArgument {
         Player player = (Player) sender;
         LocationType type;
         try {
-          type = LocationType.valueOf(args[2].toUpperCase());
+          type = LocationType.valueOf(args[2].toUpperCase(java.util.Locale.ENGLISH));
         } catch(IllegalArgumentException e) {
           sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + ChatColor.RED + "Please type location type: " + Arrays.toString(LocationType.values()).replace("[", "").replace("]", ""));
           return;

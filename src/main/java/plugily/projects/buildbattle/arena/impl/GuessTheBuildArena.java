@@ -39,6 +39,7 @@ import plugily.projects.buildbattle.arena.managers.GuessTheBuildScoreboardManage
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.arena.options.ArenaOption;
 import plugily.projects.buildbattle.handlers.reward.Reward;
+import plugily.projects.buildbattle.handlers.reward.RewardsFactory;
 import plugily.projects.buildbattle.menus.options.registry.particles.ParticleRefreshScheduler;
 import plugily.projects.buildbattle.menus.themevoter.BBTheme;
 import plugily.projects.buildbattle.user.User;
@@ -170,13 +171,12 @@ public class GuessTheBuildArena extends BaseArena {
           org.bukkit.Location plotLoc = plot == null ? null : plot.getTeleportLocation();
 
           if(plotLoc != null) {
-            boolean performed = false;
-
             for(Player p : getPlayers()) {
               p.teleport(plotLoc);
-              getPlugin().getRewardsHandler().performReward(p, this, Reward.RewardType.START_GAME, -1, performed);
-              performed = true;
+              getPlugin().getRewardsHandler().performReward(p, this, Reward.RewardType.START_GAME, -1);
             }
+
+            getPlugin().getRewardsHandler().lastCode = null;
           }
           nextRoundCooldown = true;
           Bukkit.getScheduler().runTaskLater(getPlugin(), () -> nextRoundCooldown = false, 20L * getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.DELAYED_TASK, this));
@@ -559,17 +559,21 @@ public class GuessTheBuildArena extends BaseArena {
 
   @Override
   public void giveRewards() {
+    RewardsFactory rewards = getPlugin().getRewardsHandler();
     List<Player> list = new ArrayList<>(playersPoints.keySet());
     int size = list.size();
-    boolean performed = false;
+
     for(int i = 0; i <= size; i++) {
       if(size - 1 < i) {
         continue;
       }
-      getPlugin().getRewardsHandler().performReward(list.get(i), this, Reward.RewardType.PLACE, i + 1, performed);
-      performed = true;
+
+      rewards.performReward(list.get(i), this, Reward.RewardType.PLACE, i + 1);
     }
-    getPlugin().getRewardsHandler().performReward(null, this, Reward.RewardType.END_GAME, -1, false);
+
+    rewards.lastCode = null;
+    rewards.performReward(null, this, Reward.RewardType.END_GAME, -1);
+    rewards.lastCode = null;
   }
 
   @Override
@@ -641,7 +645,8 @@ public class GuessTheBuildArena extends BaseArena {
 
   public void addWhoGuessed(Player player) {
     whoGuessed.add(player);
-    getPlugin().getRewardsHandler().performReward(player, this, Reward.RewardType.GTB_GUESS, -1, false);
+    getPlugin().getRewardsHandler().performReward(player, this, Reward.RewardType.GTB_GUESS, -1);
+    getPlugin().getRewardsHandler().lastCode = null;
 
     int timer = getTimer();
 
@@ -656,13 +661,12 @@ public class GuessTheBuildArena extends BaseArena {
 
       String themeGuessed = getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("In-Game.Guess-The-Build.Theme-Guessed");
 
-      boolean performed = false;
-
       for(Player players : getPlayers()) {
         players.sendMessage(themeGuessed);
-        getPlugin().getRewardsHandler().performReward(players, this, Reward.RewardType.GTB_ALL_GUESSED, -1, performed);
-        performed = true;
+        getPlugin().getRewardsHandler().performReward(players, this, Reward.RewardType.GTB_ALL_GUESSED, -1);
       }
+
+      getPlugin().getRewardsHandler().lastCode = null;
     }
   }
 
