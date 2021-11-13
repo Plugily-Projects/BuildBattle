@@ -37,9 +37,9 @@ public class Reward {
   private final RewardType type;
   private final RewardExecutor executor;
   private String executableCode;
-  private final double chance;
+  private double chance;
   private int place = -1;
-  private final boolean performOnce;
+  private boolean performOnce = false;
 
   public Reward(RewardType type, String rawCode, int place) {
     this(type, rawCode);
@@ -59,31 +59,39 @@ public class Reward {
       processedCode = StringUtils.replace(processedCode, "script:", "");
     } else {
       executor = RewardExecutor.CONSOLE;
-    }
 
-    performOnce = executor == RewardExecutor.CONSOLE && processedCode.indexOf("once:") >= 0;
-    if (performOnce) {
-      processedCode = StringUtils.replace(processedCode, "once:", "");
+      if (processedCode.indexOf("once:") >= 0) {
+        performOnce = true;
+        processedCode = StringUtils.replace(processedCode, "once:", "");
+      }
     }
 
     //search for chance modifier
     if(processedCode.contains("chance(")) {
       int loc = processedCode.indexOf(')');
+
       //modifier is invalid
       if(loc == -1) {
         Bukkit.getLogger().log(Level.WARNING, "[Build Battle] rewards.yml configuration is broken! Make sure you did not forget using ) character in chance condition! Command: {0}", rawCode);
         //invalid code, 0% chance to execute
-        this.chance = 0.0;
+        chance = 0.0;
         return;
       }
+
       String chanceStr = processedCode;
       chanceStr = chanceStr.substring(0, loc).replaceAll("[^0-9]+", "");
       processedCode = StringUtils.replace(processedCode, "chance(" + chanceStr + "):", "");
-      this.chance = Double.parseDouble(chanceStr);
+
+      try {
+        chance = Double.parseDouble(chanceStr);
+      } catch (NumberFormatException e) {
+        chance = 0.0;
+      }
     } else {
-      this.chance = 100.0;
+      chance = 100.0;
     }
-    this.executableCode = processedCode;
+
+    executableCode = processedCode;
   }
 
   public RewardExecutor getExecutor() {
