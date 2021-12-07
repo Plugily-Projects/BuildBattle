@@ -44,11 +44,11 @@
         </repository>
         <repository>
             <id>citizens-repo</id>
-            <url>http://repo.citizensnpcs.co/</url>
+            <url>https://repo.citizensnpcs.co/</url>
         </repository>
         <repository>
             <id>papi-repo</id>
-            <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
         <repository>
             <id>plugily-repo</id>
@@ -68,7 +68,7 @@
         </repository>
         <repository>
             <id>simonsators-repo</id>
-            <url>http://simonsator.de/repo/</url>
+            <url>https://simonsator.de/repo/</url>
         </repository>
         <repository>
             <id>placeholderapi</id>
