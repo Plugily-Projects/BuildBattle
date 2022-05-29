@@ -38,7 +38,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Added new message In-Game.Floor-Item-Blacklisted
 * Added /bb guess <word> argument (useful for servers with bungee handled chat)
 * Added placeholder arena_players_online
-* Added /bb join maxplayers type which tries to get the arena with the highest amount of players
+* Added /bb join maxplayers type which tries to get the baseArena with the highest amount of players
 * Added special_items.yml
 * Added changeable options menu item
 * Changed randomjoin mechanics -> Searches for starting -> random join -> Searches for waiting -> random join
@@ -60,12 +60,12 @@ That's all, matcher will stop when detects next line started with `###` match
 
 ### 4.5.0 Release (21.03.2021 - 13.04.2021)
 * Automatically disable bossbar support on 1.8 to prevent issue if bossbar is enabled on config.yml
-* Fix when arena selector GUI does not opened
+* Fix when baseArena selector GUI does not opened
 * Fixed HolidayManager that crashes themes on Teams and GTB mode
 * Fixed NPE on ArrowEvents and other version improvements
 
 ### 4.4.9 Release (19.03.2021)
-* Added configurable arena selector items (per state)
+* Added configurable baseArena selector items (per state)
 * Fixed particle issues on some versions
 
 ### 4.4.8 Release (08.02.2021 - 17.03.2021)
@@ -75,7 +75,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Added super_votes papi placeholder
 * Added TeleportArgument (/bba tp)
 * Added new RewardType scoreboard_remove
-* Added modifiable arena state names to language
+* Added modifiable baseArena state names to language
 * Fix when sign instances section is null in some cases
 * Fix when some inventory can't be opened in game
 * Moved statistic save method inside onDisable
@@ -97,7 +97,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Fixed some reported NPEs about setup inventory
 * Added start game reward action
 * Added join title and subtitle
-* Added customizable item name in arena selector gui (by ajgeiss0702)
+* Added customizable item name in baseArena selector gui (by ajgeiss0702)
 * Fixed asynchronous issue when performing commands from async chat
 * Optimized plot particle refresh scheduler, now it only runs when a game is running
 * Only add points to plot that do not have points already
@@ -118,7 +118,7 @@ That's all, matcher will stop when detects next line started with `###` match
 
 ### 4.4.2 Release (02.10.2020 - 12.11.2020)
 * Fixed spectators are able to damage entities
-* Fixed NPE related to arenas config not loaded correctly
+* Fixed NPE related to baseArenas config not loaded correctly
 * Fixed for 1.11 player heads
 * Fixed particles can't activate again after they got removed
 * Fixed spectators can't fly after changing world
@@ -135,7 +135,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * (Developer Alert - Class rename)
 * Added spectator mode
 * Added GTB to the SetUp inventory
-* Added arena selector
+* Added baseArena selector
 * Added support for 1.16 hex colors
 * Fixed NPE when teleporting players to plots
 * Fixed IllegalArgumentException when some particles have "custom class data"
@@ -152,7 +152,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Fixed async catch from bukkit when performing commands
 * Fixed IllegalPluginAccessException on plugin disable
 * Fixed NPE on Plotreset (GTB)
-* Fixed player being kicked when trying to join an in-game arena
+* Fixed player being kicked when trying to join an in-game baseArena
 * Fixed NPE when trying to teleport players to lobby location 
 * Fixed PlaceholderAPI placeholders not works on scoreboard in guessTheBuild mode
 * Fixed problems with materials 
@@ -176,7 +176,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Added 1.16.x compatibility 
 * Added adjustable floor blacklist
 * Added bungeemode Arena shuffler
-* Added players will get kicked on bungeemode when arena is full and has no rights
+* Added players will get kicked on bungeemode when baseArena is full and has no rights
 * Added an event to cancel fire spread on the plot
 * Added option to announce plot owner after voting
 * Fixed force start command when setting forced theme didn't set build time properly
@@ -192,7 +192,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Tried to fix Server crash on 1.15 
 * Migrator for new config file as there are some more changes
 * Update setup tips Feedback page link
-* Randomjoin command will now longer send proper message when no arena is available
+* Randomjoin command will now longer send proper message when no baseArena is available
 * Changed mysql updates to do only one instead of more than 10 (should improve performance)
 * Updated particles.yml (Thanks Fabian Adrian #6234)
 * Changed increased npc finder to radius of 5 to the plot
@@ -206,20 +206,20 @@ That's all, matcher will stop when detects next line started with `###` match
 ### 4.3.1 Release (31.03.2020)
 * Fixed Heads in lower version than 1.15.X
 * Fixed bungee value Shutdown-When-Game-Ends
-* Fixed automatic bungee arena restart (Now scoreboard and Bossbar applies)
+* Fixed automatic bungee baseArena restart (Now scoreboard and Bossbar applies)
 * Tried to fix parties compatibility 
 * Fixed broken language migrator
 
 ### 4.3.0 Release (17.03.2020)
 * PlaceholderAPI placeholders are no longer case sensitive
-* Added arena state placeholders for PlaceholderAPI:
-   * %buildbattle_{arena id}:{data}% where data types are:
-      * players - amount of players in arena
-      * max_players - max players in arena
+* Added baseArena state placeholders for PlaceholderAPI:
+   * %buildbattle_{baseArena id}:{data}% where data types are:
+      * players - amount of players in baseArena
+      * max_players - max players in baseArena
       * state - current state raw enum name eg. STARTING
       * state_pretty - prettified name of enum eg. Waiting (instead WAITING_FOR_PLAYERS)
-      * mapname - name of arena map
-      * arenatype - raw enum name of arena (SOLO, TEAM etc)
+      * mapname - name of baseArena map
+      * arenatype - raw enum name of baseArena (SOLO, TEAM etc)
       * arenatype_pretty - prettified name of enum eg. Classic (instead SOLO)
 * Fixed VoteMenu NullPointerException
 * Added Parties support for PAF and Parties
@@ -231,7 +231,7 @@ That's all, matcher will stop when detects next line started with `###` match
 
 
 ### 4.2.0 Release (16.11.2019 - 13.12.2019) (by Tigerpanzer)
-* Fixed arena deletion
+* Fixed baseArena deletion
 * Added a item to go to main options page
 * Fixed Holiday themes
 * Added a new MOTD Manager in the bungee.yml (Now you can define the message on your self) 
@@ -246,9 +246,9 @@ That's all, matcher will stop when detects next line started with `###` match
 * Fixed issue that you could join full games before they started now proper full game
 permission check will occur and do the thing to allow or disallow you to join
 * Fixed file creating for bungee.yml
-* /bb randomjoin will now really join random arena not first one it find good to join
+* /bb randomjoin will now really join random baseArena not first one it find good to join
 * Added a new option to block commands ingame
-* Fixed the NoSuchMethodException on arena sign load when the sign isn´t a wallsign  
+* Fixed the NoSuchMethodException on baseArena sign load when the sign isn´t a wallsign  
 * Added Chinese (Traditional) locale (zh_tw prefix)
 * Changed Chinese (Simplified) locale prefix from zh to cn
 * Added 1.14 support
@@ -279,12 +279,12 @@ when player left game before he was removed from the plot
 * Teams game mode require now to have at least 3 minimum players to play, it will set it to 3 if
 it's set lower
 * Improved faster and more efficient scoreboard library (thanks to TigerHix)
-* Reload and arena delete commands now require confirmation to execute, you must type the command twice to confirm the action
+* Reload and baseArena delete commands now require confirmation to execute, you must type the command twice to confirm the action
 * Implemented faster Hikari database connection pool library instead of BoneCP, jar is now 3 times smaller
 * First time database creation is now made async not in main server thread
 * Apache Commons-io library is shaded into the jar now, 1.14 removed it
 * You cannot set non occluding blocks as a floor block
-* **CRITICAL** Players received packets that would break their chunks nearby them due to wrong arena plot reset check, now it's fixed
+* **CRITICAL** Players received packets that would break their chunks nearby them due to wrong baseArena plot reset check, now it's fixed
 * Debug in config is no longer visible by default, no one need it
 * Removed hiding/showing players in-game and outside game thing, it was bugged and better to avoid problems with it
 * Fixed game ending message was never showed when using any of the locales (accessor was broken)
@@ -298,18 +298,18 @@ it's set lower
    * Removed locale suggester, it will no longer spam console when English (default) locale is used
    * Fixed issue with plot adding via setup menu
    > RC 1
-   * Fixed animals couldn't spawn and breed outside arenas
-   * Fixed spawning animals on arena even if option for disable-spawning was false
+   * Fixed animals couldn't spawn and breed outside baseArenas
+   * Fixed spawning animals on baseArena even if option for disable-spawning was false
    * Fixed /bba addnpc didn't work
    * Fixed setup GUI didn't work properly
-   * Fixed [#612 exception when registering arenas](https://www.plajer.xyz/errorservice/viewer.php?id=612) when arenas.yml file was empty
+   * Fixed [#612 exception when registering baseArenas](https://www.plajer.xyz/errorservice/viewer.php?id=612) when baseArenas.yml file was empty
    * Fixed [#610 exception when special item didn't have material-name section set](https://www.plajer.xyz/errorservice/viewer.php?id=610) now by default
    it will have BEDROCK value if absent
    * Added pro tips about user voice and /bba votes executable from console too
    > Pre 15
-   * Fixed [#595 /bb randomjoin command exception](https://www.plajer.xyz/errorservice/viewer.php?id=595) when no arena type
+   * Fixed [#595 /bb randomjoin command exception](https://www.plajer.xyz/errorservice/viewer.php?id=595) when no baseArena type
    args were specified
-   * Fixed [#592 /bba addplot command exception](https://www.plajer.xyz/errorservice/viewer.php?id=592) when no arena name
+   * Fixed [#592 /bba addplot command exception](https://www.plajer.xyz/errorservice/viewer.php?id=592) when no baseArena name
    was typed
    * Fixed [#589 options menu click exceptions](https://plajer.xyz/errorservice/viewer.php?id=589) when click was on
    air or outside inventoryView slots
@@ -323,7 +323,7 @@ it's set lower
    * Made particles.yml particle items more user friendly (lores and names looks now better)
    * Fixed bba addplot command didn't work properly
    * Added fully configurable biomes in biomes.yml
-   * Fixed biomes are now properly reset in plot reset option and after arena reset
+   * Fixed biomes are now properly reset in plot reset option and after baseArena reset
    * Added "Go Back" button in particles remove menu
    > Pre 13
    * Added GuessTheBuild game mode (alpha)
@@ -348,10 +348,10 @@ it's set lower
    * Added biomes in Options menu
    * Added time in Options menu
    * Code improvements and changes
-   * Fixed arena signs were incorrectly saved via setup menu (4.0.0 pre issue)
+   * Fixed baseArena signs were incorrectly saved via setup menu (4.0.0 pre issue)
    > Pre 10
    * Added setup tutorial link to setup menu
-   * Added tip about downloadable maps when no arenas are set up while typing /bba list
+   * Added tip about downloadable maps when no baseArenas are set up while typing /bba list
    * Fixed exp not saving properly with InventoryManager
    > Pre 9
    * Fixed NPE when player was null (https://plajer.xyz/errorservice/viewer.php?id=347)
@@ -378,7 +378,7 @@ it's set lower
    > Pre 3
    * Removed annoying "Please enable bStats" message
    * Code improvements
-   * Added PR0 TIPS when editing arena
+   * Added PR0 TIPS when editing baseArena
 
 ### 4.0.0 Release (20.08.2018 - 28.09.2018)
 * Fixed NullPointerException for users who where no longer online
@@ -403,7 +403,7 @@ it's set lower
 * Head blocks textures are now loading instantly and do not cause server to freeze at the start now
 * Fixed /bb top was reversed while MySQL was enabled
 * Disabled game end rewards by default because they were confusing for users
-* Fixed server was stopped using Shutdown-When-Game-Ends option but player just left not started arena
+* Fixed server was stopped using Shutdown-When-Game-Ends option but player just left not started baseArena
 * Player will be given now survival gamemode on server stop
 * Removed unused code for entities
 
@@ -420,8 +420,8 @@ it's set lower
 * Built against PLCore API
 * Hooked code with Error reporter service
 * Fixed MySQL error
-* Removed WorldEdit from arena usages
-* Added ability to edit floor in game (requires arenas.yml edit or new setup!)
+* Removed WorldEdit from baseArena usages
+* Added ability to edit floor in game (requires baseArenas.yml edit or new setup!)
 * Added joints when users have same points in voting time
 * Fixed small problem when game was started and voting for theme started, timer was set for build time instead of voting time and it
 could be seen in scoreboard for a second
@@ -469,7 +469,7 @@ we will keep that for a while as an temporary workaround)
 * Fixed migration error
 
 ### 3.2.0 Release (06/12.07.2018)
-* Added video tutorial link while creating new arena
+* Added video tutorial link while creating new baseArena
 * Added new game mode: TEAM
 * Fixed error on disabling caused by disabled boss bar feature
 * Item rewards at the end of the game now will be properly given after clearing in-game inventoryView of players
@@ -491,9 +491,9 @@ we will keep that for a while as an temporary workaround)
 * Added game sign block states
 * /bb command is now translatable via language.yml
 * Admin commands (/bba) are now better with hover and click event (JSON messages)
-* Default map name when creating new arena is arena ID not "0" now
+* Default map name when creating new baseArena is baseArena ID not "0" now
 * Now warning message "can't save language.yml because already exists!" won't occur anymore
-* Fixed error in console when player left the arena and his plot was cleared even if he didn't have it
+* Fixed error in console when player left the baseArena and his plot was cleared even if he didn't have it
 * Now you can't change your floor by NPC during the voting time
 
 ### 3.0.4 Release (04.06.2018)

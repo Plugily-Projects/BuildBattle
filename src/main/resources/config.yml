@@ -1,3 +1,4 @@
+## Thanks for using our plugins! ~Tigerpanzer_02 from Plugily Projects
 #
 #         Build Battle configuration file
 #               Edit it by yourself
@@ -7,7 +8,7 @@
 
 # Locale of BuildBattle language. By default it's english.
 # Available localizations:
-#   default - uses messages from 'language.yml' file.
+#   default - uses messages from 'old_language.yml' file.
 #   de - Deutsche sprache          pl - Jezyk polski
 #   es - Idioma español            fr - Langue française
 #   zh - 简体中文                   vn - Tiếng Việt
@@ -22,192 +23,92 @@
 #   eu - Basque                    el - Greek
 locale: default
 
-# Enable boss bar for the game?
-Boss-Bar-Enabled: false
+# Should we display a boss bar with additional arena information?
+Bossbar:
+  Display: true
+  # Interval in seconds between messages
+  Interval: 10
 
-# Should we hook into bungee cord? (If you wanna use arena per server option)
+
+# Should we hook into bungeecord? (If you wanna use arena per server option)
+# This option will let you access bungee.yml and its options.
 # You STILL need to use external addon for HUB server game signs
-# Check here for more info: https://wiki.plugily.xyz/buildbattle/support/servertips#bungeecord-lobby-signs
-BungeeActivated: false
+# Check here for more info: https://wiki.plugily.xyz/
+Bungee-Mode: false
+
 
 # Enable Inventory Manager for your games? (VERY USEFUL feature for MULTI ARENA)
 # This saves inventory of players and restores it after player leaves arena.
 # Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions
-InventoryManager: true
+Inventory-Manager: true
 
-# Basic permissions for game, permissions explained here: https://wiki.plugily.xyz/buildbattle/setup/cmdsandperms#basic-permissions
-Basic-Permissions:
-  Full-Games-Permission: "buildbattle.fullgames"
-  # Permissions to edit/create arenas
-  Arena-Edit-Permission: "buildbattle.editgames"
-  # <arena> represents arena name (NOT MAP NAME!), for example: 'buildbattle.join.Build1'
-  # use 'buildbattle.join.*' to enable access to all arenas
-  Join-Permission: "buildbattle.join.<arena>"
 
-# Should /bb leave command be disabled?
-Disable-Leave-Command: false
+Commands:
+  # Commands which can be used in game, remove all of them to disable (only works if Block.In-Game.Commands = true)
+  Whitelist:
+    - me
+    - help
+  # Enable and Disable predefined shortened commands or add your own
+  Shorter:
+    '1':
+      Short: "start"
+      Executes: "plugilyprojectsadmin forcestart"
+      Enabled: true
+    '2':
+      Short: "leave"
+      Executes: "plugilyprojects leave"
+      Enabled: true
+    '3':
+      Short: "kit"
+      Executes: "plugilyprojects selectkit"
+      Enabled: false
+    '4':
+      Short: "stats"
+      Executes: "plugilyprojects stats"
+      Enabled: false
+    '5':
+      Short: "top"
+      Executes: "plugilyprojects top"
+      Enabled: true
 
-# Configure the time of the phases
-Time-Manager:
-  Guess-The-Build:
-    # Total time of theme selection
-    Theme-Selection-Time-In-Seconds: 15
-    # Total time of delay between rounds
-    Delay-Between-Rounds-In-Seconds: 5
-    # After guessing the time will be shortened by
-    Time-Shortener-In-Seconds: 10
-    # Total time of waiting before Delay-Between-Rounds-In-Seconds will come
-    # Will be triggered after all players guessed the theme
-    All-Guessed-In-Seconds: 5
-    # Total build time
-    Build-Time: 120
-    # Time in lobby to wait before start
-    Lobby-Starting-Time: 60
-  Classic:
-    # Total time of voting per player plot
-    Voting-Time-In-Seconds: 20
-    # Total time of voting for themes before starting
-    Theme-Voting-Time-In-Seconds: 25
-    # Total build time
-    Build-Time: 480
-    # Time in lobby to wait before start
-    Lobby-Starting-Time: 60
-  Teams:
-    # Total time of voting per player plot
-    Voting-Time-In-Seconds: 20
-    # Total time of voting for themes before starting
-    Theme-Voting-Time-In-Seconds: 25
-    # Total build time
-    Build-Time: 540
-    # Time in lobby to wait before start
-    Lobby-Starting-Time: 60
 
-# Should we fire some cool fireworks at location of every player after the game ends?
-Firework-When-Game-Ends: true
+# Block some functions of your players
+Block:
+  In-Game:
+    # Should we block every not plugin associated commands in game?
+    Commands: true
+    # Should the leave command be blocked inside arena?
+    Leave: false
+    # Cancels Item Movement into player crafting, enchantment tables, anvils ...
+    Item-Move: true
 
-# Default floor material name
-Default-Floor-Material-Name: log
 
-# Should mob spawning on arenas be disabled?
-Disable-Mob-Spawning-Completely: true
+# Enable this option when you're using MySQL, otherwise it won't work.
+# Be careful when changing this because there is NO migrator between
+# flat file and MySQL for player stats.
+# If this option is disabled it means all stats will be saved as flat file!
+Database: false
 
-# The list of restricted entities that can't be spawned in game
-Restricted-Entities-Spawn:
-#- zombie
 
-# How many particle effects should have one spawned particle
-Amount-One-Particle-Effect-Contains: 20
+# Should we enable in game rewards? See rewards.yml for more...
+# You should also check out our script engine tutorial for rewards! https://tutorial.plugily.xyz
+Rewards: true
 
-# Max amount of particles to spawn
-Max-Amount-Particles: 25
 
-# Time of refreshing particles
-Particle-Refresh-Per-Tick: 10
+# Enable in game (eg. '[KIT][LEVEL] Tigerpanzer_02: hey') special formatting?
+# Formatting is configurable in old_language.yml
+# You can use PlaceholderAPI placeholders in chat format!
+Plugin-Chat-Format: true
 
-# Max amount of mobs to spawn per plot
-Mobs-Max-Amount-Per-Plot: 20
 
-# How many more points will the first 3 guessers get?
-Guessing-Points:
-  first: 0
-  second: 0
-  third: 0
+# Should we enable a separate arena chat for players inside a arena
+# Useful on multi arena servers that don't want the same chat for all players on the server
+Separate-Arena-Chat: true
 
-# All game themes players will build.
-Themes:
-  # Solo themes.
-  Classic:
-    - Heart
-    - Castle
-    - Emoji
-    - House
-    - Flower
-  # Team mode themes.
-  Teams:
-    - Well
-    - Car
-    - Rainbow
-    - Arcade Machine
-  # Guess the build themes.
-  Guess-The-Build:
-    Easy:
-      - Apple
-      - Sun
-      - Bread
-      - Book
-      - Dollar
-    Medium:
-      - School Bus
-      - Horse
-      - Fountain
-      - Sumo
-      - Bicycle
-    Hard:
-      - Soccer
-      - Birthday Cake
-      - Typewriter
-      - Solar System
 
-# Should holiday events for Build Battle be enabled?
-# Eg. 4 days before and 4 days after Halloween
-# special themes will be applied!
-# USING THIS ALL THEMES FOR SOLO/TEAM WHEN SPECIAL DAY
-# OCCURS WILL BE REPLACED WITH HOLIDAY THEMES ONLY
-Holidays-Enabled: true
+# Should we fire some cool fireworks at locations of every player at special events such as the game end?
+Firework: true
 
-# Special holiday themes ONLY FOR solo and teams
-# that will be used during holiday events if enabled.
-Holiday-Themes:
-  April-Fools:
-    - Hypercube
-    - Nothing
-    - Void
-    - Minecraft
-    - Mojang
-  Valentines-Day:
-    - Heart
-    - Love
-    - Cupid
-    - Chocolate Box
-  Halloween:
-    - Pumpkin
-    - Skeleton
-    - Jack'o'Lantern
-    - Candies
-  Christmas:
-    - Santa
-    - Presents
-    - Snowman
-    - Stocking
-
-# Theme names that are blacklisted.
-Blacklisted-Themes:
-  - Fuck
-
-# Blacklisted item names, you can't use them while building.
-Blacklisted-Item-Names:
-  - tnt
-  - water
-
-# Blacklisted floor materials, you can't use them for the floor.
-Blacklisted-Floor-Materials:
-  - MOB_SPAWNER
-  - TNT
-  - AIR
-
-# Should we block every not Build Battle associated commands in game?
-Block-Commands-In-Game: true
-
-# Commands which can be executed while being in game
-Whitelisted-Commands:
-  - me
-  - help
-
-# At what intervals should players be notified of the remaining build time?
-Build-Left-Time-Message-Intervals: [15, 30, 60, 300, 240, 180, 120]
-
-# Should we enable short commands such as /start and /leave
-Enable-Short-Commands: false
 
 # Should blocks behind game signs change their color based on game state?
 # They will change color to:
@@ -216,14 +117,155 @@ Enable-Short-Commands: false
 # - orange (in game) stained glass
 # - gray (ending) stained glass
 # - black (restarting) stained glass
-Signs-Block-States-Enabled: true
+# or define your own at signs.yml!
+Sign-Block-States: true
 
-# Should we disable all chat related stuff?
-# It will disable the separated chat, for example
-Disable-Separate-Chat: false
 
-# With this true, players couldn't join to the game and can't switch to spectator.
-Disable-Spectators: false
+# Should holiday events for the plugin be enabled?
+# Eg. 4 days before and 4 days after Halloween special effects
+# for death, spooky! There are more holiday events! Check wiki!
+# Wiki: -
+Holidays: true
+
+
+# Should we create leaderboards out of the stats?
+Leaderboard: true
+
+
+Parties:
+  # Should we try to hook into your current party plugin? (Supports well know party plugins, see wiki!)
+  # It will group up all players with the party leader. The party leader can join with the whole party!
+  External: true
+  # Should we enable our own party system that can be only used for this plugin?
+  # Check the wiki for commands
+  Own: false
+
+
+Damage:
+  # Should players get fall damage?
+  Fall: false
+  # Should players get drowning damage?
+  Drowning: false
+  # Should players get fire damage?
+  Fire: false
+
+
+Cycle:
+  # Should we make permanent clear weather on all worlds where our arenas are?
+  Weather: false
+  # Should the time on the world your arenas are modified to stay at the same time?
+  Daylight:
+    Enable: false
+    Time: 10000
+
+
+# Configure the time of the phases
+Time-Manager:
+  # At what intervals should players be notified of the remaining build time?
+  Time-Left-Intervals: [ 15, 30, 60, 300, 240, 180, 120 ]
+  Waiting: 20
+  Starting: 60
+  Shorten-Waiting-Full: 15
+  Shorten-Waiting-Force: 5
+  Ending: 10
+  Restarting: 5
+  Guess-The-Build:
+    Voting:
+      # Total time of voting for themes before starting
+      Theme: 25
+      # Total time of voting per player plot
+      Plot: 20
+    # Total time of delay between rounds
+    Round-Delay: 5
+    # Total time of waiting before Round-Delay will come
+    # Will be triggered after all players guessed the theme
+    All-Guessed: 5
+    # After guessing the time will be shortened by
+    Guess: 10
+    # Total build time
+    In-Game: 480
+  Classic:
+    Voting:
+      # Total time of voting for themes before starting
+      Theme: 25
+      # Total time of voting per player plot
+      Plot: 20
+    # Total build time
+    In-Game: 480
+  Teams:
+    Voting:
+      # Total time of voting for themes before starting
+      Theme: 25
+      # Total time of voting per player plot
+      Plot: 20
+    # Total build time
+    In-Game: 540
+
+
+Mob:
+  # Should mob spawning on arenas be enabled?
+  Spawn: false
+  # The list of restricted entities that can't be spawned in game
+  Restricted:
+  #- zombie
+  # Max amount of mobs to spawn per plot
+  Max-Amount: 20
+
+
+Particle:
+  # How many particle effects should have one spawned particle
+  Effects: 20
+  # Max amount of particles to spawn
+  Max-Amount: 25
+  # Time of refreshing particles
+  Refresh-Rate: 10
+
+
+# How many more points will the first 3 guessers get?
+Guessing-Points:
+  First: 0
+  Second: 0
+  Third: 0
+
+
+Floor:
+  # Default floor material name
+  Material: log
+  # Blacklisted floor materials, you can't use them for the floor.
+  Blacklist:
+    - MOB_SPAWNER
+    - TNT
+    - AIR
+
+
+# Blacklisted item names, you can't use them while building.
+Items:
+  Blacklist:
+    - tnt
+    - water
+
+
+# Enable another Head menu instead of our
+Head-Menu:
+  Custom: false
+  # The command that should be executed on the player
+  Command: heads
+
+
+# Enable a command on report item click
+Report:
+  Commands: false
+  # The amount of reports that the target needs to execute this command.
+  # Leave it -1 to perform this command immediately.
+  Amount: 3
+  # The command that should be executed - Placeholder: %reported%, %reporter%
+  Execute: kick %reported%
+
+
+#Announce the plot owner after voting stage, so it's hidden while on voting
+#default false - plot owner will be announced at the beginning
+Hide-Plot-Owner: false
+
 
 Update-Notifier:
   # Should we check for updates on plugin start/after admin join?
@@ -233,44 +275,10 @@ Update-Notifier:
   # BETA IS NOT ALWAYS AS STABLE AS NORMAL RELEASE!
   Notify-Beta-Versions: true
 
-# Disable or enable MySQL database here, see mysql.yml for more
-DatabaseActivated: false
 
-# Enable in game rewards? See rewards.yml for more...
-Rewards-Enabled: false
-
-# Enable another Head menu instead of our
-Command-Instead-Of-Head-Menu:
-  Enabled: false
-  # The command that should be executed
-  Command: heads
-
-# Enable an command on report item click
-Run-Command-On-Report:
-  Enabled: false
-  # The amount of reports that the target needs to execute this command.
-  # Leave it -1 to perform this command immediately.
-  Reports-Amount-To-Run: -1
-  # The command that should be executed - Placeholder: %reported%, %reporter%
-  Command: kick %reported%
-
-#Disable Party features of external party plugins (such as PAF, Parties ...)
-Disable-Parties: true
-
-#Announce the plot owner after voting stage
-#default false - plot owner will be announced at the beginning
-Announce-PlotOwner-Later: false
-
-Arena-Selector:
-  # Change items of arena selector
-  State-Item:
-    Waiting: LIME_wool
-    Starting: YELLOW_wool
-    In-Game: RED_wool
-    Ending: RED_wool
-    Restarting: RED_wool
-
-# Don't modify.
-Version: 19
-
-# No way! You've reached the end! But... where's the dragon!?
+# Don't edit it. But who's stopping you? It's your server!
+# Really, don't edit ;p
+# You edited it, huh? Next time hurt yourself!
+Do-Not-Edit:
+  File-Version: 1
+  Core-Version: 1

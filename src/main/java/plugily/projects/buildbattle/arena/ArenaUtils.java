@@ -20,49 +20,19 @@
 
 package plugily.projects.buildbattle.arena;
 
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-import plugily.projects.buildbattle.ConfigPreferences;
-import plugily.projects.buildbattle.Main;
-import plugily.projects.buildbattle.arena.impl.BaseArena;
-import plugily.projects.buildbattle.arena.impl.SoloArena;
-
+import plugily.projects.minigamesbox.classic.arena.PluginArenaUtils;
 
 /**
- * @author Tigerpanzer_02
- * <p>
- * Created at 18.06.2021
+ * @author Plajer
+ *     <p>Created at 13.03.2018
  */
-public class ArenaUtils {
+public class ArenaUtils extends PluginArenaUtils {
 
-  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
-
-  public static void arenaForceStart(Player player, String theme) {
-    if(!plugin.getArgumentsRegistry().hasPermission(player, "buildbattle.admin.forcestart")) {
-      return;
-    }
-    BaseArena arena = ArenaRegistry.getArena(player);
-    if(arena == null) {
-      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.No-Playing"));
-      return;
-    }
-
-    int minPlayers = arena.getMinimumPlayers();
-    if(arena.getPlayers().size() < minPlayers) {
-      plugin.getChatManager().broadcast(arena, plugin.getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players").replace("%MINPLAYERS%", Integer.toString(minPlayers)));
-      return;
-    }
-    if(arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) {
-      arena.setArenaState(ArenaState.STARTING);
-      arena.setForceStart(true);
-      arena.setTimer(0);
-      if(!theme.isEmpty() && arena instanceof SoloArena) {
-        ((SoloArena) arena).setThemeVoteTime(false);
-        arena.setTimer(plugin.getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, arena));
-        arena.setTheme(theme);
-      }
-      plugin.getChatManager().broadcast(arena, plugin.getChatManager().colorMessage("In-Game.Messages.Admin-Messages.Set-Starting-In-To-0"));
-    }
+  private ArenaUtils() {
+    super();
   }
 
+  public static int emptyBases(BaseArena baseArena) {
+    return (int) baseArena.getBases().stream().filter(base -> base.getPlayersSize() == 0).count();
+  }
 }

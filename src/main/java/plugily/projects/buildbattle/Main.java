@@ -20,314 +20,185 @@
 
 package plugily.projects.buildbattle;
 
-import me.tigerhix.lib.scoreboard.ScoreboardLib;
-import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-import plugily.projects.buildbattle.api.StatsStorage;
-import plugily.projects.buildbattle.arena.ArenaRegistry;
-import plugily.projects.buildbattle.arena.impl.BaseArena;
-import plugily.projects.buildbattle.arena.managers.plots.Plot;
-import plugily.projects.buildbattle.arena.managers.plots.PlotMenuHandler;
-import plugily.projects.buildbattle.arena.vote.VoteEvents;
-import plugily.projects.buildbattle.arena.vote.VoteItems;
-import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
-import plugily.projects.buildbattle.events.ChatEvents;
-import plugily.projects.buildbattle.events.GameEvents;
-import plugily.projects.buildbattle.events.JoinEvents;
-import plugily.projects.buildbattle.events.LobbyEvents;
-import plugily.projects.buildbattle.events.QuitEvents;
-import plugily.projects.buildbattle.events.spectator.SpectatorEvents;
-import plugily.projects.buildbattle.events.spectator.SpectatorItemEvents;
-import plugily.projects.buildbattle.handlers.BungeeManager;
-import plugily.projects.buildbattle.handlers.ChatManager;
-import plugily.projects.buildbattle.handlers.HolidayManager;
-import plugily.projects.buildbattle.handlers.PermissionManager;
-import plugily.projects.buildbattle.handlers.PlaceholderManager;
-import plugily.projects.buildbattle.handlers.items.SpecialItemsManager;
-import plugily.projects.buildbattle.handlers.language.LanguageManager;
-import plugily.projects.buildbattle.handlers.party.PartyHandler;
-import plugily.projects.buildbattle.handlers.party.PartySupportInitializer;
-import plugily.projects.buildbattle.handlers.reward.RewardsFactory;
-import plugily.projects.buildbattle.handlers.setup.SetupInventoryEvents;
-import plugily.projects.buildbattle.handlers.sign.SignManager;
-import plugily.projects.buildbattle.menus.options.OptionsMenuHandler;
-import plugily.projects.buildbattle.menus.options.OptionsRegistry;
-import plugily.projects.buildbattle.menus.options.registry.banner.BannerMenu;
-import plugily.projects.buildbattle.menus.themevoter.VoteMenuListener;
-import plugily.projects.buildbattle.user.User;
-import plugily.projects.buildbattle.user.UserManager;
-import plugily.projects.buildbattle.user.data.MysqlManager;
-import plugily.projects.buildbattle.utils.CuboidSelector;
-import plugily.projects.buildbattle.utils.Debugger;
-import plugily.projects.buildbattle.utils.ExceptionLogHandler;
-import plugily.projects.buildbattle.utils.LegacyDataFixer;
-import plugily.projects.buildbattle.utils.MessageUtils;
-import plugily.projects.buildbattle.utils.UpdateChecker;
-import plugily.projects.buildbattle.utils.services.ServiceRegistry;
-import plugily.projects.commonsbox.database.MysqlDatabase;
-import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
-import plugily.projects.commonsbox.minecraft.compat.events.EventsInitializer;
-import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
-import plugily.projects.commonsbox.minecraft.misc.MiscUtils;
-import plugily.projects.commonsbox.minecraft.serialization.InventorySerializer;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.java.JavaPluginLoader;
+import org.jetbrains.annotations.TestOnly;
+import plugily.projects.minigamesbox.classic.PluginMain;
+import plugily.projects.minigamesbox.classic.api.StatisticType;
+import plugily.projects.minigamesbox.classic.arena.options.ArenaOption;
+import plugily.projects.minigamesbox.classic.handlers.language.Message;
+import plugily.projects.minigamesbox.classic.handlers.permissions.Permission;
+import plugily.projects.minigamesbox.classic.handlers.permissions.PermissionCategory;
+import plugily.projects.minigamesbox.classic.handlers.reward.RewardType;
+import plugily.projects.minigamesbox.classic.preferences.ConfigOption;
+import plugily.projects.minigamesbox.classic.utils.services.locale.Locale;
+import plugily.projects.minigamesbox.classic.utils.services.locale.LocaleRegistry;
 
+import java.io.File;
 import java.util.Arrays;
 
 /**
  * Created by Tom on 17/08/2015.
+ * Updated by Tigerpanzer_02 on 03.12.2021
  */
-//todo setup handler recode
-//todo arenas handler recode
-//todo inventoryframework
-public class Main extends JavaPlugin {
+public class Main extends PluginMain {
 
-  private ArgumentsRegistry registry;
-  private ExceptionLogHandler exceptionLogHandler;
-  private ChatManager chatManager;
-  private ConfigPreferences configPreferences;
-  private MysqlDatabase database;
-  private UserManager userManager;
-  private BungeeManager bungeeManager;
-  private SignManager signManager;
-  private CuboidSelector cuboidSelector;
-  private VoteItems voteItems;
-  private OptionsRegistry optionsRegistry;
-  private SpecialItemsManager specialItemsManager;
-  private boolean forceDisable = false;
-  private PartyHandler partyHandler;
-  private RewardsFactory rewardsHandler;
-  private PlotMenuHandler plotMenuHandler;
+  private FileConfiguration entityUpgradesConfig;
+  private ArenaRegistry arenaRegistry;
+  private ArenaManager arenaManager;
+  private ArgumentsRegistry argumentsRegistry;
 
-  public CuboidSelector getCuboidSelector() {
-    return cuboidSelector;
+
+  @TestOnly
+  public Main() {
+    super();
   }
 
-  public VoteItems getVoteItems() {
-    return voteItems;
-  }
-
-  public OptionsRegistry getOptionsRegistry() {
-    return optionsRegistry;
-  }
-
-  public BungeeManager getBungeeManager() {
-    return bungeeManager;
-  }
-
-  public SignManager getSignManager() {
-    return signManager;
-  }
-
-  public ConfigPreferences getConfigPreferences() {
-    return configPreferences;
-  }
-
-  public SpecialItemsManager getSpecialItemsManager() {
-    return specialItemsManager;
-  }
-
-  public ArgumentsRegistry getArgumentsRegistry() {
-    return registry;
+  @TestOnly
+  protected Main(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
+    super(loader, description, dataFolder, file);
   }
 
   @Override
   public void onEnable() {
-    if(!validateIfPluginShouldStart()) {
-      return;
-    }
-
-    ServiceRegistry.registerService(this);
-    exceptionLogHandler = new ExceptionLogHandler(this);
-    Debugger.setEnabled(getDescription().getVersion().contains("debug") || getConfig().getBoolean("Debug"));
-    Debugger.debug("Main setup started");
-    saveDefaultConfig();
-    for(String s : Arrays.asList("arenas", "particles", "special_items", "stats", "voteItems", "mysql", "biomes", "bungee", "rewards")) {
-      ConfigUtils.getConfig(this, s);
-    }
-    LanguageManager.init(this);
-    chatManager = new ChatManager(this);
-    configPreferences = new ConfigPreferences(this);
-    new LegacyDataFixer(this);
-    initializeClasses();
+    long start = System.currentTimeMillis();
+    registerLocales();
+    super.onEnable();
+    getDebugger().debug("[System] [Plugin] Initialization start");
+    registerPlaceholders();
+    addMessages();
+    addAdditionalValues();
+    initializePluginClasses();
+    getDebugger().debug("Full {0} plugin enabled", getName());
+    getDebugger().debug("[System] [Plugin] Initialization finished took {0}ms", System.currentTimeMillis() - start);
   }
 
-  private void checkUpdate() {
-    if(!getConfig().getBoolean("Update-Notifier.Enabled", true)) {
-      return;
-    }
-    UpdateChecker.init(this, 44703).requestUpdateCheck().whenComplete((result, exception) -> {
-      if(!result.requiresUpdate()) {
-        return;
-      }
-      if(result.getNewestVersion().contains("b")) {
-        if(getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
-          Debugger.sendConsoleMsg("&c[Build Battle] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
-          Debugger.sendConsoleMsg("&c[Build Battle] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
-              result.getNewestVersion()));
-        }
-        return;
-      }
-      MessageUtils.updateIsHere();
-      Debugger.sendConsoleMsg("&aYour Build Battle plugin is outdated! Download it to keep with latest changes and fixes.");
-      Debugger.sendConsoleMsg("&aDisable this option in config.yml if you wish.");
-      Debugger.sendConsoleMsg("&eCurrent version: &c" + getDescription().getVersion() + " &eLatest version: &a" + result.getNewestVersion());
-    });
+  public void initializePluginClasses() {
+    addFileName("themes");
+    addArenaOptions();
+    Arena.init(this);
+    ArenaUtils.init(this);
+    new ArenaEvents(this);
+    arenaManager = new ArenaManager(this);
+    arenaRegistry = new ArenaRegistry(this);
+    arenaRegistry.registerArenas();
+    getSignManager().loadSigns();
+    getSignManager().updateSigns();
+    argumentsRegistry = new ArgumentsRegistry(this);
+
+    new PluginEvents(this);
+    addPluginMetrics();
   }
 
-  private boolean validateIfPluginShouldStart() {
-    try {
-      Class.forName("org.spigotmc.SpigotConfig");
-    } catch(Exception e) {
-      MessageUtils.thisVersionIsNotSupported();
-      Debugger.sendConsoleMsg("&cYour server software is not supported by Build Battle!");
-      Debugger.sendConsoleMsg("&cWe support only Spigot and Spigot forks only! Shutting off...");
-      forceDisable = true;
-      getServer().getPluginManager().disablePlugin(this);
-      return false;
-    }
-    if(ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_8_R1)) {
-      MessageUtils.thisVersionIsNotSupported();
-      Debugger.sendConsoleMsg("&cYour server version is not supported by Build Battle!");
-      Debugger.sendConsoleMsg("&cSadly, we must shut off. Maybe you consider updating your server version?");
-      forceDisable = true;
-      getServer().getPluginManager().disablePlugin(this);
-      return false;
-    }
-    return true;
+  public void addAdditionalValues() {
+    getConfigPreferences().registerOption("MOB_SPAWN", new ConfigOption("Mob.Spawn", false));
+    getConfigPreferences().registerOption("HEAD_MENU_CUSTOM", new ConfigOption("Head-Menu.Custom", false));
+    getConfigPreferences().registerOption("REPORT_COMMANDS", new ConfigOption("Report.Commands", false));
+    getConfigPreferences().registerOption("HIDE_PLOT_OWNER", new ConfigOption("Hide-Plot-Owner", false));
+
+    getArenaOptionManager().registerArenaOption("IN_PLOT_CHECKER", new ArenaOption("null", 0, true));
+    getArenaOptionManager().registerArenaOption("PLOT_MEMBER_SIZE", new ArenaOption("plotmembersize", 1, true));
+
+    getStatsStorage().registerStatistic("BLOCKS_PLACED", new StatisticType("blocks_placed", true, "int(11) NOT NULL DEFAULT '0'"));
+    getStatsStorage().registerStatistic("BLOCKS_BROKEN", new StatisticType("blocks_broken", true, "int(11) NOT NULL DEFAULT '0'"));
+    getStatsStorage().registerStatistic("POINTS_HIGHEST", new StatisticType("points_highest", true, "int(11) NOT NULL DEFAULT '0'"));
+    getStatsStorage().registerStatistic("POINTS_HIGHEST_WIN", new StatisticType("points_highest_win", true, "int(11) NOT NULL DEFAULT '0'"));
+    getStatsStorage().registerStatistic("POINTS_TOTAL", new StatisticType("points_total", true, "int(11) NOT NULL DEFAULT '0'"));
+    getStatsStorage().registerStatistic("PARTICLES_USED", new StatisticType("particles_used", true, "int(11) NOT NULL DEFAULT '0'"));
+    getStatsStorage().registerStatistic("SUPER_VOTES", new StatisticType("super_votes", true, "int(11) NOT NULL DEFAULT '0'"));
+    getStatsStorage().registerStatistic("LOCAL_POINTS", new StatisticType("local_points", false, "int(11) NOT NULL DEFAULT '0'"));
+    getStatsStorage().registerStatistic("LOCAL_POINTS_GTB", new StatisticType("local_points_gtb", false, "int(11) NOT NULL DEFAULT '0'"));
+    getStatsStorage().registerStatistic("REPORTS_TRIGGERED", new StatisticType("reports_triggered", false, "int(11) NOT NULL DEFAULT '0'"));
+
+    getPermissionsManager().registerPermissionCategory("POINTS_BOOSTER", new PermissionCategory("Points-Boost", null));
+    getPermissionsManager().registerPermissionCategory("VOTING_BOOSTER", new PermissionCategory("Voting-Boost", null));
+
+    getRewardsHandler().registerRewardType("GUESS", new RewardType("guessed"));
+    getRewardsHandler().registerRewardType("GUESS_ALL", new RewardType("guessed-all"));
+    getRewardsHandler().registerRewardType("VOTE", new RewardType("voted"));
+    getRewardsHandler().registerRewardType("VOTE_ALL", new RewardType("voted-all"));
+    getRewardsHandler().registerRewardType("REPORT", new RewardType("report"));
+    getRewardsHandler().registerRewardType("PLACE", new RewardType("place"));
+
+    getSpecialItemManager().registerSpecialItem("OPTIONS_MENU", "Options-Menu");
+    getSpecialItemManager().registerSpecialItem("PLOT_SELECTOR", "Plot-Selector");
   }
 
-  //order matters
-  private void initializeClasses() {
-    ScoreboardLib.setPluginInstance(this);
-    if(getConfig().getBoolean("BungeeActivated")) {
-      bungeeManager = new BungeeManager(this);
-    }
-    if(configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
-      database = new MysqlDatabase(config.getString("user"), config.getString("password"), config.getString("address"), config.getLong("maxLifeTime", 1800000));
-    }
-    registry = new ArgumentsRegistry(this);
-    userManager = new UserManager(this);
-    PermissionManager.init();
-    new SetupInventoryEvents(this);
-    signManager = new SignManager(this);
-    ArenaRegistry.registerArenas();
-    signManager.loadSigns();
-    signManager.updateSigns();
-    specialItemsManager = new SpecialItemsManager(this);
-    voteItems = new VoteItems(this);
-    new VoteEvents(this);
-    new LobbyEvents(this);
-    new ChatEvents(this);
-    optionsRegistry = new OptionsRegistry(this);
-    new OptionsMenuHandler(this);
-    Metrics metrics = new Metrics(this, 2491);
-    metrics.addCustomChart(new org.bstats.charts.SimplePie("bungeecord_hooked", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.BUNGEE_ENABLED))));
-    metrics.addCustomChart(new org.bstats.charts.SimplePie("locale_used", LanguageManager.getPluginLocale()::getPrefix));
-    metrics.addCustomChart(new org.bstats.charts.SimplePie("update_notifier", () -> {
-      if(getConfig().getBoolean("Update-Notifier.Enabled", true)) {
-        return getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true) ? "Enabled with beta notifier" : "Enabled";
-      }
-      return getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true) ? "Beta notifier only" : "Disabled";
-    }));
-    new JoinEvents(this);
-    new QuitEvents(this);
-    if(getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-      new PlaceholderManager().register();
-    }
-    cuboidSelector = new CuboidSelector(this);
-    UpdateChecker.init(this, 44703);
-    checkUpdate();
-    new GameEvents(this);
-    new VoteMenuListener(this);
-    new HolidayManager(this);
-    new SpectatorEvents(this);
-    new SpectatorItemEvents(this);
-    BannerMenu.init(this);
-    partyHandler = new PartySupportInitializer().initialize(this);
-    rewardsHandler = new RewardsFactory(this);
-    plotMenuHandler = new PlotMenuHandler(this);
-    new EventsInitializer().initialize(this);
-    MiscUtils.sendStartUpMessage(this, "BuildBattle", getDescription(), true, true);
+  public void registerLocales() {
+    Arrays.asList(new Locale("Chinese (Traditional)", "简体中文", "zh_HK", "POEditor contributors", Arrays.asList("中文(傳統)", "中國傳統", "chinese_traditional", "zh")),
+            new Locale("Chinese (Simplified)", "简体中文", "zh_CN", "POEditor contributors", Arrays.asList("简体中文", "中文", "chinese", "chinese_simplified", "cn")),
+            new Locale("Czech", "Český", "cs_CZ", "POEditor contributors", Arrays.asList("czech", "cesky", "český", "cs")),
+            new Locale("Dutch", "Nederlands", "nl_NL", "POEditor contributors", Arrays.asList("dutch", "nederlands", "nl")),
+            new Locale("English", "English", "en_GB", "Tigerpanzer_02", Arrays.asList("default", "english", "en")),
+            new Locale("French", "Français", "fr_FR", "POEditor contributors", Arrays.asList("french", "francais", "français", "fr")),
+            new Locale("German", "Deutsch", "de_DE", "Tigerkatze and POEditor contributors", Arrays.asList("deutsch", "german", "de")),
+            new Locale("Hungarian", "Magyar", "hu_HU", "POEditor contributors", Arrays.asList("hungarian", "magyar", "hu")),
+            new Locale("Indonesian", "Indonesia", "id_ID", "POEditor contributors", Arrays.asList("indonesian", "indonesia", "id")),
+            new Locale("Italian", "Italiano", "it_IT", "POEditor contributors", Arrays.asList("italian", "italiano", "it")),
+            new Locale("Korean", "한국의", "ko_KR", "POEditor contributors", Arrays.asList("korean", "한국의", "kr")),
+            new Locale("Lithuanian", "Lietuviešu", "lt_LT", "POEditor contributors", Arrays.asList("lithuanian", "lietuviešu", "lietuviesu", "lt")),
+            new Locale("Polish", "Polski", "pl_PL", "Plajer", Arrays.asList("polish", "polski", "pl")),
+            new Locale("Portuguese (BR)", "Português Brasileiro", "pt_BR", "POEditor contributors", Arrays.asList("brazilian", "brasil", "brasileiro", "pt-br", "pt_br")),
+            new Locale("Romanian", "Românesc", "ro_RO", "POEditor contributors", Arrays.asList("romanian", "romanesc", "românesc", "ro")),
+            new Locale("Russian", "Pусский", "ru_RU", "POEditor contributors", Arrays.asList("russian", "pусский", "pyccknn", "russkiy", "ru")),
+            new Locale("Spanish", "Español", "es_ES", "POEditor contributors", Arrays.asList("spanish", "espanol", "español", "es")),
+            new Locale("Thai", "Thai", "th_TH", "POEditor contributors", Arrays.asList("thai", "th")),
+            new Locale("Turkish", "Türk", "tr_TR", "POEditor contributors", Arrays.asList("turkish", "turk", "türk", "tr")),
+            new Locale("Vietnamese", "Việt", "vn_VN", "POEditor contributors", Arrays.asList("vietnamese", "viet", "việt", "vn")))
+        .forEach(LocaleRegistry::registerLocale);
   }
+  public void addMessages() {
+    getMessageManager().registerMessage("COMMANDS_THEME_BLACKLISTED", new Message("Commands.Theme-Blacklisted", ""));
+    getMessageManager().registerMessage("COMMANDS_ADMIN_ADDED_PLOT", new Message("Commands.Admin.Added-Plot", ""));
+    getMessageManager().registerMessage("COMMANDS_ADMIN_ADDED_PLOT", new Message("Commands.Admin.Added-Plot", ""));
+    getMessageManager().registerMessage("SCOREBOARD_THEME_UNKNOWN", new Message("Scoreboard.Theme-Unknown", ""));
+    // scoreboard ingame classic/teams/guess-the-build/guess-the-build-waiting | ending classic/guess-the-build
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_PLACE", new Message("In-Game.Messages.Game-End.Placeholders.Place", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_OWN", new Message("In-Game.Messages.Game-End.Placeholders.Own", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_ADMIN_CHANGED_THEME", new Message("In-Game.Messages.Admin.Changed-Theme", ""));
 
-  @Override
-  public void onDisable() {
-    if(forceDisable) return;
-
-    Debugger.debug("System disabling...");
-    Bukkit.getLogger().removeHandler(exceptionLogHandler);
-    for(BaseArena arena : ArenaRegistry.getArenas()) {
-      for(Player player : arena.getPlayers()) {
-        arena.getScoreboardManager().stopAllScoreboards();
-        arena.doBarAction(BaseArena.BarAction.REMOVE, player);
-        arena.teleportToEndLocation(player);
-        player.setGameMode(GameMode.SURVIVAL);
-        player.getInventory().clear();
-        player.getInventory().setArmorContents(null);
-        player.getActivePotionEffects().forEach(pe -> player.removePotionEffect(pe.getType()));
-        if(configPreferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-          InventorySerializer.loadInventory(this, player);
-        }
-      }
-      arena.getPlotManager().getPlots().forEach(Plot::fullyResetPlot);
-    }
-    for(Player player : getServer().getOnlinePlayers()) {
-      User user = userManager.getUser(player);
-      if(userManager.getDatabase() instanceof MysqlManager) {
-        StringBuilder update = new StringBuilder(" SET ");
-        for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-          if(!stat.isPersistent()) continue;
-
-          int userStat = user.getStat(stat);
-
-          if(update.toString().equalsIgnoreCase(" SET ")) {
-            update.append(stat.getName()).append('=').append(userStat);
-          }
-
-          update.append(", ").append(stat.getName()).append('=').append(userStat);
-        }
-
-        MysqlManager db = (MysqlManager) userManager.getDatabase();
-        //copy of userManager#saveStatistic but without async database call that's not allowed in onDisable method.
-        db.getDatabase().executeUpdate("UPDATE " + db.getTableName()
-            + update.toString() + " WHERE UUID='" + user.getUniqueId().toString() + "';");
-        continue;
-      }
-      for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-        userManager.getDatabase().saveStatistic(user, stat);
-      }
-    }
-    if(configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      getMysqlDatabase().shutdownConnPool();
-    }
-  }
-
-  public ChatManager getChatManager() {
-    return chatManager;
-  }
-
-  public MysqlDatabase getMysqlDatabase() {
-    return database;
-  }
-
-  public UserManager getUserManager() {
-    return userManager;
-  }
-
-  public PartyHandler getPartyHandler() {
-    return partyHandler;
-  }
-
-  public RewardsFactory getRewardsHandler() {
-    return rewardsHandler;
-  }
-
-  public PlotMenuHandler getPlotMenuHandler() {
-    return plotMenuHandler;
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_", new Message("In-Game.Messages.Plot.", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_PARTICLE_ADDED", new Message("In-Game.Messages.Plot.Added-Particle", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_NOBODY", new Message("In-Game.Messages.Plot.Nobody", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_TIME_LEFT_TITLE", new Message("In-Game.Messages.Plot.Time-Left.Title", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_TIME_LEFT_CHAT", new Message("In-Game.Messages.Plot.Time-Left.Chat", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_LIMIT_ENTITIES", new Message("In-Game.Messages.Plot.Limit.Entities", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_LIMIT_PARTICLES", new Message("In-Game.Messages.Plot.Limit.Particles", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_PERMISSION_PARTICLE", new Message("In-Game.Messages.Plot.Permission.Particle", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_PERMISSION_BIOME", new Message("In-Game.Messages.Plot.Permission.Biome", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_PERMISSION_OUTSIDE", new Message("In-Game.Messages.Plot.Permission.Outside", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_PERMISSION_FLOOR_ITEM", new Message("In-Game.Messages.Plot.Permission.Floor-Item", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_SELECTOR_FULL", new Message("In-Game.Messages.Plot.Selector.Full", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_SELECTOR_EMPTY", new Message("In-Game.Messages.Plot.Selector.Empty", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_SELECTOR_INSIDE", new Message("In-Game.Messages.Plot.Selector.Inside", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_SELECTOR_NAME", new Message("In-Game.Messages.Plot.Selector.Name", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_SELECTOR_MENU_NAME", new Message("In-Game.Messages.Plot.Selector.Menu-Name", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_SELECTOR_PLOT_CHOOSE", new Message("In-Game.Messages.Plot.Selector.Plot-Choose", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_SELECTOR_MEMBER", new Message("In-Game.Messages.Plot.Selector.Member", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_VOTING_NAME", new Message("In-Game.Messages.Plot.Voting.Name", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_CHAT", new Message("In-Game.Messages.Plot.Voting.Plot-Owner.Chat", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_TITLE", new Message("In-Game.Messages.Plot.Voting.Plot-Owner.Title", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_NEXT", new Message("In-Game.Messages.Plot.Voting.Plot-Owner.Next", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_WAS", new Message("In-Game.Messages.Plot.Voting.Plot-Owner.Was", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_OWN", new Message("In-Game.Messages.Plot.Voting.Plot-Owner.Own", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_VOTING_SUCCESS", new Message("In-Game.Messages.Plot.Voting.Success", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_VOTING_WINNER", new Message("In-Game.Messages.Plot.Voting.Winner", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_GTB_BUILDER", new Message("In-Game.Messages.Plot.Guess-The-Build.Builder", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_GTB_ROUND", new Message("In-Game.Messages.Plot.Guess-The-Build.Round", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_GTB_THEME_CHARS", new Message("In-Game.Messages.Plot.Guess-The-Build.Theme.Chars", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_GTB_THEME_NAME", new Message("In-Game.Messages.Plot.Guess-The-Build.Theme.Name", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_GTB_THEME_WAS", new Message("In-Game.Messages.Plot.Guess-The-Build.Theme.Was", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_GTB_THEME_TITLE", new Message("In-Game.Messages.Plot.Guess-The-Build.Theme.Title", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_GTB_THEME_GUESSED", new Message("In-Game.Messages.Plot.Guess-The-Build.Theme.Guessed", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_GTB_THEME_BEING_SELECTED", new Message("In-Game.Messages.Plot.Guess-The-Build.Theme.Being-Selected", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_GTB_THEME_GUESS_TITLE", new Message("In-Game.Messages.Plot.Guess-The-Build.Theme.Guess.Title", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_GTB_THEME_GUESS_POINTS", new Message("In-Game.Messages.Plot.Guess-The-Build.Theme.Guess.Points", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_GTB_THEME_GUESS_GUESSED", new Message("In-Game.Messages.Plot.Guess-The-Build.Theme.Guess.Guessed", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_GTB_THEME_GUESS_CANT_TALK", new Message("In-Game.Messages.Plot.Guess-The-Build.Theme.Guess.Cant-Talk", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_GTB_THEME_GUESS_BUILDER", new Message("In-Game.Messages.Plot.Guess-The-Build.Theme.Guess.Builder", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_NPC_NAME", new Message("In-Game.Messages.Plot.NPC.Name", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_NPC_CREATED", new Message("In-Game.Messages.Plot.NPC.Created", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_NPC_CITIZENS", new Message("In-Game.Messages.Plot.NPC.Install-Citizens", ""));
   }
 }

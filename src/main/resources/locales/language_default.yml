@@ -347,7 +347,7 @@ Signs:
     - "&5[%playersize%/%maxplayers%]"
 
 Arena-Selector:
-  Inv-Title: "Arena selector"
+  Inv-Title: "BaseArena selector"
   Item:
     Name: "&f%mapname%"
     Lore:

@@ -1,381 +1,572 @@
-#     You can translate Build Battle messages here.
+#    You can translate BuildBattle messages here.
 #             Color codes (&) supported.
 #
+#             Use \n to make new line
+#             Some messages like item
+#        descriptions don't support new lines
+# they are wrapped every 40 characters automatically
+#
 #     Some messages support their own placeholders
-#               like %player% etc.
+#            like %player%, %kit% etc.
 
+#
+# Color scheme
+#
+Color:
+  Placeholder:
+    Value: "&a"
+    Number: "&a"
+    Player: "&b"
+    Other: "&a"
+  Chat:
+    Issue: "&c"
+    Messages: "&7"
+    Special-Char:
+      Contains: "[,],(,),{,},■,/,|,▸"
+      Before: "&8"
+
+
+#
+# Command messages
+#
 Commands:
-  Did-You-Mean: "&6Did you mean &e/%command%&6?"
-  Only-By-Player: "&cYou can execute this command only as player!"
-  Teleported-To-The-Lobby: "&aYou've been teleported to the lobby!"
-  No-Permission: "&cYou don't have permission to use this command!"
-  No-Arena-Like-That: "&cNo arena with that ID!"
-  Type-Arena-Name: "&cPlease type arena ID!"
-  Arena-Is-Full: "&cThis arena is full, sorry!"
-  Arena-Restarting: "&cThis arena is currently restarting!"
-  No-Playing: "&cYou're not playing!"
-  Wait-For-Start: "&cYou must wait for arena start!"
-  Added-Plot: "&aAdded plot for arena &7%ARENA%"
-  Plugin-Reloaded: "&aPlugin and configuration reloaded!"
-  Player-Not-Found: "&cPlayer not found!"
-  Invalid-Args: "&cInvalid arguments! Make sure you typed the command correctly!"
-  No-Free-Arenas: "&cThere are no free arenas!"
-  Statistics:
-    Type-Name: "&cPlease type statistic name to view!"
-    Invalid-Name: "&cName of statistic is invalid! Type: loses, wins, games_played, blocks_broken, blocks_placed, super_votes"
-    Header: "&8&m-------------------[&6 Top 10 &8&m]-------------------"
-    Format: "&e#%position% %name% - %value% &7%statistic%"
-  Admin-Commands:
-    Teleported-To-Player: "&aTeleported to player!"
-    List-Command:
-      Header: "&bBuildBattle &7arenas:"
-      Format: "&b%arena% &e%status% &7%players%/%maxplayers%"
-      No-Arenas: "&cThere are no game instances!"
-    Theme-Blacklisted: "&cThis theme cannot be used in game!"
-  Stats-Command:
-    Header: "&l-----YOUR STATS-----"
-    Header-Other: "&l-----STATS FOR %player%-----"
-    Footer: "&l--------------------"
-    Wins: "&aWins: &e"
-    Loses: "&aLoses: &e"
-    Games-Played: "&aGames played: &e"
-    Highest-Win: "&aHighest win (points): &e"
-    Highest-Points: "&aHighest points: &e"
-    Total-Points-Earned: "&aTotal points earned: &e"
-    Blocks-Placed: "&aBlocks placed: &e"
-    Blocks-Broken: "&aBlocks broken: &e"
-    Particles-Placed: "&aParticles placed: &e"
-    Super-Votes: "&aSuper votes: &e"
-  Main-Command:
-    Header: "&6----------------{BuildBattle commands}----------"
-    Description: "&aGame commands:\n
-    &b/bb stats: &7Shows your stats!\n
-    &b/bb leave: &7Quits current arena!\n
-    &b/bb join <arena>: &7Joins specified arena!\n
-    &b/bb randomjoin <solo/team>: &7Randomly joins free arena!"
-    Admin-Bonus-Description: "\n&b/bba help: &7Shows all the admin commands"
+  Did-You-Mean: "%plugin_prefix% Did you mean /%value%?"
+  Command-Executed: "%plugin_prefix% Command successfully executed!"
+  Teleported-To-Lobby: "%plugin_prefix% Teleported to lobby!"
+  Removed-Game-Instance: "%color_chat_issue%%plugin_prefix% Successfully removed game instance!"
+  No-Arena-Like-That: "%color_chat_issue%%plugin_prefix% No arena with that ID!"
+  Look-At-Sign: "%color_chat_issue%%plugin_prefix% You have to look at a sign to perform this command!"
+  Type-Arena-Name: "%color_chat_issue%%plugin_prefix% Please type arena ID!"
+  Hold-Any-Item: "%color_chat_issue%%plugin_prefix% You must hold any item!"
+  No-Free-Arenas: "%color_chat_issue%%plugin_prefix% There are no free arenas!"
+  Only-By-Player: "%color_chat_issue%%plugin_prefix% You can execute this command only as player!"
+  Not-Playing: "%color_chat_issue%%plugin_prefix% You must play to execute this command!"
+  No-Permission: "%color_chat_issue%%plugin_prefix% You don't have permission to use this command!"
+  Player-Not-Found: "%color_chat_issue%%plugin_prefix% Target player %player% doesn't exist!"
+  Invalid-Location-Teleport: "%color_chat_issue%%plugin_prefix% Location to teleport is invalid!"
+  Wrong-Usage: "%color_chat_issue%%plugin_prefix% Wrong usage. Do %value%"
+  Theme-Blacklisted: "%color_chat_issue%%plugin_prefix% This theme cannot be used in game!"
+  Admin:
+    Adjust-Statistic: "%plugin_prefix% Statistic %value% of %player% is now %number%!"
+    Reload-Success: "%plugin_prefix% Arenas reloaded!"
+    Added-Plot: "%plugin_prefix% Added plot for arena %arena_name%"
+    List:
+      Header: "%plugin_name% arenas: Name State Players"
+      Format: "%arena_name% %arena_state_placeholder% %arena_players_size%/%arena_max_players%"
+      No-Arenas: "%color_chat_issue%%plugin_prefix% There are no game instances!"
+    Spychat:
+      Toggled: "%plugin_prefix% Game spy chat toggled to %value%"
+  Main:
+    Header: "&6----------------{%plugin_name% commands}----------"
+    Description:
+      - "&aGame commands:"
+      - "&b/%plugin_short_command% stats: Shows your stats!"
+      - "&b/%plugin_short_command% leave: Quits current arena!"
+      - "&b/%plugin_short_command% join <arena>: Joins specified arena!"
+      - "&b/%plugin_short_command% top <statistic>: Shows top 10 players!"
+      - "&b/%plugin_short_command% randomjoin <solo/team>: Join random arena!"
+    Admin-Bonus-Description: "&b/%plugin_short_command%: Shows all the admin commands"
     Footer: "&6-------------------------------------------------"
-  Arguments:
-    Super-Votes-Added: "&aYou received &b%amount% Super Votes&a!"
-    Super-Votes-Set: "&aYour &bSuper Votes &aamount was set to &b%amount%&a!"
-    Success: "&aCommand executed successfully!"
 
-Bossbar:
-  Waiting-For-Players: "&4&lWaiting for more players..."
-  Starting-In: "&f&lStarting in: &e&l%time%"
-  Time-Left: "&f&lTime left: &e&l%time%"
-  Vote-Time-Left: "&e&lVote time left: &f&e%time%"
 
+#
+# In-Game scoreboard messages
+#
+# Please do not use more chars than the scoreboard can handle!
+# Scoreboard supports up to 122 chars for 1.14+ and 48 chars for 1.13- (COLOR CODES INCLUDED.)
+# Placeholders:
+# https://wiki.plugily.xyz/REPLACEWITHPROJECTNAME/placeholders/language
 Scoreboard:
-  Title: "&b&lBuildBattle"
+  Title: "&a&l%plugin_name%"
   Theme-Unknown: "&c???"
-  GTB-Current-Timer:
-    Build-Time: "&fTime: &e%FORMATTED_TIME_LEFT%"
-    Starts-In: "&fStarts In: &e%FORMATTED_TIME_LEFT%"
   Content:
-    Playing-States:
-      Classic:
-        - "&fTime Left: &e%FORMATTED_TIME_LEFT%"
-        - ""
-        - "&fPlayers: &e%PLAYERS%/%MAX_PLAYERS%"
-        - ""
-        - "&fTheme: &e%THEME%"
-        - ""
-        - "&fArena: &e%ARENA_ID%"
-        - ""
-        - "&ewww.plugily.xyz"
-      Teams:
-        - "&7Teams Mode"
-        - "&fTime Left: &e%FORMATTED_TIME_LEFT%"
-        - ""
-        - "&fTheme: &e%THEME%"
-        - ""
-        - "&fArena: &e%ARENA_ID%"
-        - ""
-        - "&fTeammate:"
-        - "&e%TEAMMATE%"
-        - ""
-        - "&ewww.plugily.xyz"
-      Guess-The-Build:
-        - "&7Guess The Build Mode"
-        - "&fBuilder:"
-        - "&7%BUILDER%"
-        - ""
-        - "&e&lLeaders:"
-        - "&6%1%&e: %1_PTS%"
-        - "&7%2%&e: %2_PTS%"
-        - "&7%3%&e: %3_PTS%"
-        - ""
-        - "%CURRENT_TIMER%"
-        - ""
-        - "&fTheme:"
-        - "&c%THEME%"
-        - ""
-        - "&ewww.plugily.xyz"
-    Starting:
-      - "&fPlayers: &e%PLAYERS%"
-      - ""
-      - "&fPlayers Needed: &e%MIN_PLAYERS%"
-      - ""
-      - "&fStarting In: &e%TIMER%"
-      - ""
-      - "&ewww.plugily.xyz"
-    Ending-States:
-      Classic:
-        - "&e&lGAME ENDED"
-        - ""
-        - "&ewww.plugily.xyz"
-      Teams:
-        - "&7Teams Mode"
-        - "&e&lGAME ENDED"
-        - ""
-        - "&ewww.plugily.xyz"
-      Guess-The-Build:
-        - "&7Guess The Build Mode"
-        - ""
-        - "&e1. &f%1%: &e%1_PTS%"
-        - "&e2. &f%2%: &e%2_PTS%"
-        - "&e3. &f%3%: &e%3_PTS%"
-        - "&e4. &f%4%: &e%4_PTS%"
-        - "&e5. &f%5%: &e%5_PTS%"
-        - "&e6. &f%6%: &e%6_PTS%"
-        - "&e7. &f%7%: &e%7_PTS%"
-        - "&e8. &f%8%: &e%8_PTS%"
-        - "&e9. &f%9%: &e%9_PTS%"
-        - "&e10. &f%10%: &e%10_PTS%"
-        - ""
-        - "&ewww.plugily.xyz"
     Waiting:
-      - "&fPlayers: &e%PLAYERS%"
+      - "■ Mode | %arena_mode%"
       - ""
-      - "&fPlayers Needed: &e%MIN_PLAYERS%"
+      - "■ Players | %arena_players_size%"
       - ""
-      - "&ewww.plugily.xyz"
-
-In-Game:
-  Plugin-Prefix: "&6[&bBuildBattle&6] "
-  Only-Command-Ingame-Is-Leave: "&cYou have to leave the game first to perform commands. The only command that works is /bb leave!"
-  Max-Entities-Limit-Reached: "&cYou can't spawn more entities!"
-  Max-Particles-Limit-Reached: "&cYou can't spawn more particles!"
-  No-Permission-For-Particle: "&cYou don't have permission for this particle!"
-  No-Permission-For-Biome: "&cYou don't have permission for this biome!"
-  Particle-Added: "&aParticle successfully added!"
-  Join-No-Permission: "&cYou don't have &6%permission% &cpermission to join this arena!"
-  Full-Game-No-Permission: "&cYou don't have the permission to join full games!"
-  No-Slots-For-Premium: "&cThis game is already full of premium players! Sorry"
-  Arena-Not-Configured: "&cArena is not configured yet! Contact staff!"
-  # Join cancelled via external plugin that uses BuildBattle API.
-  Join-Cancelled-Via-API: "&cYou can't join this game!"
-  Join-As-Party-Member: "&cYou joined %ARENANAME% because the party leader joined it!"
-  Nobody: "&eNobody"
-  No-Theme-Yet: "&cVoting"
-  Floor-Item-Blacklisted: "&cThe item on your hand is not allowed to be set as floor!"
-  Spectator:
-    You-Are-Spectator: "&eYou're now a spectator! You can fly now!"
-    Spectator-Menu-Name: "Players list"
-    Settings-Menu:
-      Inventory-Name: "&7Spectator settings"
-      Speed-Name: "&aSpeed"
-  Guess-The-Build:
-    Current-Builder: "&eBuilder: &7%BUILDER%"
-    Current-Round: "&eRound: &7%ROUND%/%MAXPLAYERS%"
-    Theme-Is-Long: "&eThe theme is &7%NUM% &echaracters long"
-    Theme-Is-Name: "&eThe theme is a &e%THEME%"
-    Theme-Was-Name: "&eThe theme was: &a%THEME%&e!"
-    Theme-Was-Title: "&eThe theme was"
-    Theme-Was-Subtitle: "&a%THEME%!"
-    Theme-Guessed: "&eAll players guessed the theme!"
-    Theme-Being-Selected: "&eTheme is being selected..."
-    Start-Guessing-Title: "&eStart Guessing!"
-    Plus-Points: "&a+%pts% points!"
-    Chat:
-      Guessed-The-Theme: "&7%player% &ecorrectly guessed the theme!"
-      Cant-Talk-When-Guessed: "&cYou can't talk if you already guessed!"
-      Cant-Talk-When-Building: "&cYou can't talk when you're building!"
-  NPC:
-    Floor-Change-NPC-Name: "&aChange floor NPC"
-    NPC-Created: "&aFloor NPC created successfully!"
-    Install-Citizens: "&cPlease install Citizens plugin first to create NPC's!"
-  Messages:
-    Time-Left-Subtitle: "&c%FORMATTEDTIME% seconds left"
-    Time-Left-To-Build: "&6%FORMATTEDTIME% &7time left to build!"
-    Plot-Leave-Error: "&cYou can't fly out of the plot!"
-    Already-Playing: "&cYou're playing already!"
-    Cant-Fly-Outside-Plot: "&cYou can't fly outside your plot!"
-    Join: "&b%PLAYER%&7 joined the game (%PLAYERSIZE%/%MAXPLAYERS%)!"
-    Join-Title: ""
-    Join-SubTitle: "&e%ARENANAME%"
-    Leave: "&b%PLAYER% &7left the game (%PLAYERSIZE%/%MAXPLAYERS%)!"
-    Lobby-Messages:
-      Waiting-For-Players: "&7Waiting for players... We need at least &b%MINPLAYERS%&7 players to start."
-      Enough-Players-To-Start: "&7We now have enough players. The game is starting soon!"
-      Not-Enough-Space-For-Party: "&cYour party is bigger than free places on the arena %ARENANAME%"
-      Game-Started: "&7The game has started! Build best you can!"
-      Kicked-For-Premium-Slot: "&c%PLAYER% got removed from the game to make a place for premium players!"
-      You-Were-Kicked-For-Premium-Slot: "&cYou got kicked out of the game to make a place for a premium player!"
-    Voting-Messages:
-      Plot-Owner-Title: "&aPlot owner: &7%player%"
-      Voting-For-Player-Plot: "&7Now voting for &e&l%PLAYER%'s &7plot!"
-      Voted-For-Player-Plot: "&7The plot owner was &e&l%PLAYER%&7!"
-      Vote-For-Next-Plot: "&7You can now vote for this plot!"
-      Cant-Vote-Own-Plot: "&cYou can't vote for your plot!"
-      Vote-Successful: "&aVoted successfully!"
-      Winner-Title: "&eWINNER: &a%player%"
-      Summary:
-        - "&a&l&m-------------------------------------------"
-        - "&f&lBuildBattle"
+      - "■ Minimum Players | %arena_min_players%"
+      - ""
+      - "   www.plugily.xyz"
+    Starting:
+      - "■ Mode | %arena_mode%"
+      - ""
+      - "■ Starting In | %arena_time%"
+      - ""
+      - "■ Players | %arena_players_size%"
+      - ""
+      - "■ Minimum Players | %arena_min_players%"
+      - ""
+      - "   www.plugily.xyz"
+    # Contents of scoreboard while ingame
+    In-Game:
+      Classic:
+        - "■ Theme | %arena_theme%"
+        - "&f"
+        - "■ Mode | %arena_mode%"
+        - "&f"
+        - "■ Time Left | %arena_time%"
         - ""
-        - "%place_one%"
-        - "%place_two%"
-        - "%place_three%"
-        - "&a&l&m-------------------------------------------"
-      Place-One: "&e&l1st Winner &7- %player% (%number% points)"
-      Place-Two: "&6&l2nd Winner &7- %player% (%number% points)"
-      Place-Three: "&c&l3rd Winner &7- %player% (%number% points)"
-      Summary-Other-Place: "&aYou became &7%number%th"
-    Game-End-Messages:
-      Only-You-Playing: "&7You're the only player left. You'll be teleported to the lobby."
-    Admin-Messages:
-      Set-Starting-In-To-0: "&bAn admin set waiting time to 0. The game starts now!"
-      Changed-Theme: "&bAdmin has changed theme to %THEME%"
+        - "■ Players | %arena_players_size%"
+        - "&f"
+        - "■ BaseArena | %arena_name%"
+        - ""
+        - "   www.plugily.xyz"
+      Teams:
+        - "■ Theme | %arena_theme%"
+        - "&f"
+        - "■ Mode | %arena_mode%"
+        - "&f"
+        - "■ Time Left | %arena_time%"
+        - ""
+        - "■ Teammate | %arena_teammates%"
+        - "&f"
+        - "■ BaseArena | %arena_name%"
+        - ""
+        - "   www.plugily.xyz"
+      Guess-The-Build:
+        - "■ Mode | %arena_mode%"
+        - "&f"
+        - "■ Builder | %arena_builder%"
+        - ""
+        - "■ Leaders |"
+        - "%1% | %1_PTS%"
+        - "%2% | %2_PTS%"
+        - "%3% | %3_PTS%"
+        - ""
+        - "■ Time Left | %arena_time%"
+        - ""
+        - "■ Theme | %arena_theme%"
+        - ""
+        - "   www.plugily.xyz"
+      Guess-The-Build-Waiting:
+        - "■ Mode | %arena_mode%"
+        - "&f"
+        - "■ Leaders |"
+        - "%1% | %1_PTS%"
+        - "%2% | %2_PTS%"
+        - "%3% | %3_PTS%"
+        - ""
+        - "■ Start in | %arena_time%"
+        - ""
+        - "   www.plugily.xyz"
+    # Contents of scoreboard while state is ending
+    Ending:
+      Classic:
+        - "■ Mode | %arena_mode%"
+        - "&f"
+        - "&cGAME ENDED"
+        - ""
+        - "&f"
+        - "&f"
+        - ""
+        - "   www.plugily.xyz"
+      Guess-The-Build:
+        - "■ Mode | %arena_mode%"
+        - "&f"
+        - "■ 1. %1% | %1_PTS%"
+        - "■ 2. %2% | %2_PTS%"
+        - "■ 3. %3% | %3_PTS%"
+        - "■ 4. %4% | %4_PTS%"
+        - "■ 5. %5% | %5_PTS%"
+        - "■ 6. %6% | %6_PTS%"
+        - "■ 7. %7% | %7_PTS%"
+        - "■ 8. %8% | %8_PTS%"
+        - "■ 9. %9% | %9_PTS%"
+        - "■ 10. %10% | %10_PTS%"
+        - "&f"
+        - "   www.plugily.xyz"
+    # Contents of scoreboard while state is restarting
+    Restarting:
+      - "■ Mode | %arena_mode%"
+      - "&f"
+      - "&cRESTARTING GAME"
+      - ""
+      - "&f"
+      - "&f"
+      - ""
+      - "   www.plugily.xyz"
 
-Menus:
-  Location-Message: "&aLocation: "
-  Option-Menu:
-    Inventory-Name: "&aOptions menu"
-    Go-Back-Button:
-      Item-Name: "&aGo to Options Page"
-      Item-Lore: "&7Click to go to main options page"
-    Items:
-      Particle:
-        Inventory-Name: "&aParticles menu"
-        Item-Name: "&aChoose particles"
-        Item-Lore: "&7Click to get particles"
-        In-Inventory-Item-Name: "&cRemove particles"
-        In-Inventory-Item-Lore: "&7Right click to open menu"
-        Particle-Removed: "&cParticle successfully removed!"
-      Players-Heads:
-        Inventory-Name: "&aPlayers heads menu"
-        Item-Name: "&aGet player heads"
-        Item-Lore: "&7Click to get heads"
-        No-Permission: "&cYou don't have permission!"
-      Floor:
-        Item-Name: "&aChange floor material"
-        Item-Lore: "&7Drag block here to change floor"
-        Floor-Changed: "&aFloor material changed!"
-      Time:
-        Inventory-Name: "&aSet time"
-        Item-Name: "&aChange plot time"
-        Item-Lore: "&7Right click to open menu"
-        Time-Type:
-          World-Time: "&eWorld time"
-          Day: "&eDay (1000 ticks)"
-          Noon: "&eNoon (6000 ticks)"
-          Sunset: "&eSunset (12000 ticks)"
-          Night: "&eNight (13000 ticks)"
-          MidNight: "&eMidNight (18000 ticks)"
-          Sunrise: "&eSunrise (23000 ticks)"
-        Time-Set: "&eTime has been changed"
-      Biome:
-        Inventory-Name: "&aSet biome"
-        Item-Name: "&aChange plot biome"
-        Item-Lore: "&7Right click to open menu"
-        Biome-Set: "&eBiome has been changed"
-      Weather:
-        Inventory-Name: "&aSet weather"
-        Item-Name: "&aChange plot weather"
-        Item-Lore: "&7Right click to open menu"
-        Weather-Type:
-          Downfall: "&eDownfall"
-          Clear: "&eClear"
-        Weather-Set: "&eWeather has been changed"
-      Banner-Creator:
-        Inventories:
-          Color-Choose: "&aSelect color"
-          Add-Layer: "&aAdd layer"
-          Add-Layer-Color: "&aAdd layer color"
-        Item-Name: "&aBanner creator"
-        Item-Lore: "&7Right click to open menu"
-        Create-Banner-Item:
-          Name: "&aCreate final banner"
-          Lore: "&7Right click to create this banner"
-      Reset:
-        Item-Name: "&cReset plot"
-        Item-Lore: "&7Fully reset plot, &c&lcan't be undone!"
-        Plot-Reset: "&cPlot fully reset!"
-  Theme-Voting:
-    Inventory-Name: "What theme?"
-    Theme-Item-Name: "&6%theme%"
-    #use ; to move to next line
-    Theme-Item-Lore: "&7Vote for theme &b%theme%;;&7Time remaining: &c%time-left%;&7Current votes: &c%percent%%!;;&8&oLive vote percentages;&8&oare shown on the right in;&8&obar form.;;&eClick to vote &b%theme%&e!"
-    Voted-Successfully: "&aVoted successfully!"
-    Already-Voted: "&cYou've already voted for this theme!"
-    Super-Vote-Item-Name: "&bSuper vote"
-    Super-Vote-Item-Lore: "&7You have &b%owned% super votes;;&eClick to super vote &b%theme%&e!"
-    Super-Vote-Used: "&7Player &e%player% &7has used &bSuper vote &7for theme &b%theme%&7! Starting now..."
-  Guess-The-Build-Theme-Selector:
-    Inventory-Name: "Select a theme to build!"
-    Theme-Item-Name: "&b%theme%"
-    Theme-Item-Lore: "%difficulty%;;&b+%points% &7points if player's guess it correctly;;&eClick to select!"
-    Difficulties:
-      Easy: "&aEASY"
-      Medium: "&eMEDIUM"
-      Hard: "&cHARD"
+#
+# Bossbar messages
+#
+# Bossbar needs to be enabled on config.yml
+Bossbar:
+  Title: "%plugin_name% - www.plugily.xyz"
+  Content:
+    Waiting:
+      - "Waiting for more players..."
+    Starting:
+      - "Starting in: %arena_time%"
+    In-Game:
+      - "Playing %plugin_name_uppercase% on PLUGILY.XYZ"
+      - "Check the plugin creator out on PLUGILY.XYZ"
+      - "Time left - %arena_time%"
+    Guess-The-Build:
+      - "%arena_guess_word%"
+    Guess-The-Build-Waiting:
+      - "Wait while the next word is chosen!"
+    Voting:
+      - "Vote time left - %arena_time%"
+    Ending:
+      - "Game has ended! You were playing on PLUGILY.XYZ"
+    Restarting:
+      - "Restarting the arena. You will be moved soon!"
+
+#
+# In-Game Messages
+#
+In-Game:
+  #Used in most game messages.
+  Plugin-Prefix: "(%plugin_name%)"
+  Game-Chat-Format: "[%user_statistic_level%][%kit%] %player% | %message%"
+  You-Leveled-Up: "%plugin_prefix% You leveled up! You're now level %number%!"
+  Commands-Blocked: "%color_chat_issue%%plugin_prefix% You have to leave the game first to perform commands. The only command that works is /%plugin_short_command% leave!"
+  Join:
+    Already-Playing: "%color_chat_issue%%plugin_prefix% You are already queued for a game! You can leave a game with /%plugin_short_command% leave."
+    No-Permission: "%color_chat_issue%%plugin_prefix% You don't have %value% permission to join this arena!"
+    Full-Game: "%color_chat_issue%%plugin_prefix% You don't have the permission to join full games!"
+    No-Slots-For-Premium: "%color_chat_issue%%plugin_prefix% This game is already full of premium players! Sorry"
+    # Join cancelled via external plugin that uses the API of our plugin.
+    Cancelled-Via-API: "%color_chat_issue%%plugin_prefix% You can't join this game!"
+    As-Party-Member: "%color_chat_issue%%plugin_prefix% You joined %arena_name% because the party leader joined it!"
+    Arena-Not-Configured: "%color_chat_issue%%plugin_prefix% BaseArena is not configured yet! Contact staff!"
+    Title: "20,30,20;%arena_name%;%arena_players_size%/%arena_max_players%"
+  Death:
+    Tag: "&8Dead"
+    Screen: "%color_chat_issue%You died!"
+  Spectator:
+    Blocked: "%color_chat_issue%%plugin_prefix% Spectators are disabled for this arena"
+    You-Are-Spectator: "%plugin_prefix% You're now a spectator! You can fly now!"
+    Spectator-Menu-Name: "%color_chat_issue%Alive players list"
+    Target-Player-Health: "%color_chat_issue%Health: %number%"
+    Spectator-Warning: "%plugin_prefix% You are a spectator!"
+    Teleport: "%plugin_prefix% Teleported to %player%"
+    Menu:
+      Settings:
+        Status:
+          Enabled: "Enabled"
+          Disabled: "Disabled"
+        Changed-Speed: "Changed Speed to %number%"
+        Auto-Teleport: "%value% auto teleport"
+        Target-Player:
+          Action-Bar: "%number% blocks away | Target %player%"
+        Night-Vision: "%value% night vision"
+        First-Person-Mode:
+          Action-Bar: "&eSNEAK &cto leave! | Target %player%"
+          Title: "&eSNEAK &cto leave!"
+        Visibility: "%value% other spectator players"
+  Messages:
+    Join: "%plugin_prefix% %player% joined the game (%arena_players_size%/%arena_max_players%)!"
+    Leave: "%plugin_prefix% %player% left the game (%arena_players_size%/%arena_max_players%)!"
+    Death: "%plugin_prefix% %player% died!"
+    Lobby:
+      Start-In: "%plugin_prefix% The game starts in %arena_time% seconds!"
+      Waiting-For-Players: "%plugin_prefix% Waiting for players... We need at least %arena_min_players% players to start."
+      Enough-Players-To-Start: "%plugin_prefix% We now have enough players. The game is starting soon!"
+      Reduced-Time: "%plugin_prefix% The time got reduced to %number% seconds"
+      Max-Players: "%plugin_prefix% We reached max players for this round. Let's shorten the time!"
+      Game-Started: "%plugin_prefix% The game has started! Build best you can!"
+      Kicked-For-Premium-Slot: "%color_chat_issue%%plugin_prefix% %player% got removed from the game to make a place for premium players!"
+      You-Were-Kicked-For-Premium-Slot: "%color_chat_issue%%plugin_prefix% You got kicked out of the game to make a place for a premium player!"
+      Not-Enough-Space-For-Party: "%color_chat_issue%%plugin_prefix% Your party is bigger than free places on the arena %arena_name%"
+    Game-End:
+      Summary:
+        - "&a&m--------------------------------------------------"
+        - "%plugin_name%"
+        - ""
+        - "%arena_summary%"
+        - "%arena_summary_player%"
+        - ""
+        - ""
+        - "%place_list%"
+        - ""
+        - ""
+        - "&a&m--------------------------------------------------"
+      Placeholders:
+        Win: "&aYou won the game"
+        Lose: "%color_chat_issue%You lost the game"
+        Players: "&cThere are not enough players anymore. BaseArena got force stopped!"
+        Place: "%value% Place - %player% (%number% points)"
+        Own: "&aYou became %number%"
+    Admin:
+      Set-Starting-In-To-0: "%plugin_prefix% An admin set waiting time to 0. The game starts now!"
+      Changed-Theme: "%plugin_prefix% Admin has changed theme to %THEME%"
+    Plot:
+      Added-Particle: "%plugin_prefix% Particle successfully added!"
+      Nobody: "%color_chat_issue%Nobody"
+      Time-Left:
+        Title: "5,20,5;;%color_chat_issue%%arena_time% seconds left"
+        Chat: "%plugin_prefix% %arena_time% time left to build!"
+      Limit:
+        Entities: "%color_chat_issue%%plugin_prefix% You can't spawn more entities!"
+        Particles: "%color_chat_issue%%plugin_prefix% You can't spawn more particles!"
+      Permission:
+        Particle: "%color_chat_issue%%plugin_prefix% You don't have permission for this particle!"
+        Biome: "%color_chat_issue%%plugin_prefix% You don't have permission for this biome!"
+        Outside: "%color_chat_issue%%plugin_prefix% You can't fly outside your plot!"
+        Floor-Item: "%color_chat_issue%%plugin_prefix% The item on your hand is not allowed to be set as floor!"
+      Selector:
+        Full: "Team is full"
+        Empty: "You can join this team"
+        Inside: "Your team"
+        Name: "Plot - %plot%"
+        Menu-Name: "Plot Menu"
+        Plot-Choose: "You are now on plot %plot%"
+        Member: "You are already member of it!"
+      Voting:
+        Name: "%color_chat_issue%Voting"
+        Plot-Owner:
+          Chat: "%plugin_prefix% Plot owner: %player%"
+          Title: "5,20,5;;Plot owner: %player%"
+          Next: "%plugin_prefix% Now voting for %player%'s plot!"
+          Was: "%plugin_prefix% The plot owner was %player%!"
+          Own: "%color_chat_issue%%plugin_prefix% You can't vote for your plot!"
+        Success: "%plugin_prefix% Voted successfully!"
+        Winner: "%plugin_prefix% WINNER: %player%"
+      Guess-The-Build:
+        Builder: "Builder: %BUILDER%"
+        Round: "Round: %ROUND%/%MAXPLAYERS%"
+        Theme:
+          Chars: "%plugin_prefix% The theme is %NUM% characters long"
+          Name: "%plugin_prefix% The theme is %THEME%"
+          Was: "%plugin_prefix% The theme was: %THEME%!"
+          Title: "20,30,20;The theme was;%THEME%!"
+          Guessed: "%plugin_prefix% All players guessed the theme!"
+          Being-Selected: "%plugin_prefix% Theme is being selected..."
+          Guess:
+            Title: "5,20,5;Start Guessing!"
+            Points: "%plugin_prefix% +%pts% points!"
+            Guessed: "%plugin_prefix% %player% correctly guessed the theme!"
+            Cant-Talk: "%color_chat_issue%%plugin_prefix% You can't talk if you already guessed!"
+            Builder: "%color_chat_issue%%plugin_prefix% You can't talk when you're building!"
+      NPC:
+        Name: "&aChange floor NPC"
+        Created: "%plugin_prefix% Floor NPC created successfully!"
+        Install-Citizens: "%color_chat_issue%%plugin_prefix% Please install Citizens plugin first to create NPC's!"
+
+
+#
+# Menu messages
+#
+Menu:
+  Permission: "%color_chat_issue%%plugin_prefix% You don't have permission to use this menu!"
   Buttons:
     Back-Button:
-      Name: "&cGo Back"
-      Lore: "&7Click to go back."
+      Item:
+        Name: "%color_chat_issue%Go Back"
+        Lore: "Click to go back."
+  Location: "Location: "
+  Option:
+    Inventory: "&bOptions menu"
+    Content:
+      Particle:
+        Inventory: "&bParticles menu"
+        Item:
+          Name: "&bChoose particles"
+          Lore: "Click to get particles"
+          Remove:
+            Name: "%color_chat_issue%Remove particles"
+            Lore: "Right click to open menu"
+        Removed: "%color_chat_issue%%plugin_prefix% Particle successfully removed!"
+      Heads:
+        Inventory: "&bPlayers heads menu"
+        Item:
+          Name: "&bGet player heads"
+          Lore: "Click to get heads"
+      Floor:
+        Item:
+          Name: "&bChange floor material"
+          Lore: "Drag block here to change floor"
+        Changed: "%plugin_prefix% Floor material changed!"
+      Time:
+        Inventory: "&bSet time"
+        Item:
+          Name: "&bChange plot time"
+          Lore: "Right click to open menu"
+        Type:
+          World: "&eWorld time"
+          Day: "Day (1000 ticks)"
+          Noon: "Noon (6000 ticks)"
+          Sunset: "Sunset (12000 ticks)"
+          Night: "Night (13000 ticks)"
+          MidNight: "MidNight (18000 ticks)"
+          Sunrise: "Sunrise (23000 ticks)"
+        Changed: "%plugin_prefix% Time has been changed to %value%"
+      Biome:
+        Inventory: "&bSet biome"
+        Item:
+          Name: "&bChange plot biome"
+          Lore: "Right click to open menu"
+        Changed: "%plugin_prefix% Biome has been changed"
+      Weather:
+        Inventory: "&bSet weather"
+        Item:
+          Name: "&bChange plot weather"
+          Lore: "Right click to open menu"
+        Type:
+          Downfall: "Downfall"
+          Clear: "Clear"
+        Changed: "%plugin_prefix% Weather has been changed"
+      Banner:
+        Inventory:
+          Color: "&bSelect color"
+          Layer: "&bAdd layer"
+          Layer-Color: "&bAdd layer color"
+        Item:
+          Name: "&bBanner creator"
+          Lore: "Right click to open menu"
+          Create:
+            Name: "&bCreate final banner"
+            Lore: "Right click to create this banner"
+      Reset:
+        Item:
+          Name: "&cReset plot"
+          Lore: "&7Fully reset plot, &c&lcan't be undone!"
+        Chat: "%color_chat_issue%%plugin_prefix% Plot fully reset!"
+  Theme:
+    Inventory: "Choose the theme?"
+    Item:
+      Name: "%theme%"
+      #use ; to move to next line
+      Lore: "Vote for theme %theme%;;Time remaining: %time-left%;Current votes: %percent%%!;;Live vote percentages;are shown on the right in;bar form.;;Click to vote %theme%!"
+    Vote:
+      Success: "%plugin_prefix% You vote %theme% successfully!"
+      Already: "%color_chat_issue%%plugin_prefix% You've already voted for this theme!"
+      Super:
+        Item:
+          Name: "&bSuper vote"
+          Lore: "You have %owned% super votes;;Click to super vote %theme%!"
+        Used: "%plugin_prefix% Player %player% has used Super vote for theme %theme%! Starting now..."
+    Guess-The-Build:
+      Inventory: "Select a theme to build!"
+      Item:
+        Name: "%theme%"
+        Lore: "%difficulty%;;+%points% points if player's guess it correctly;;Click to select!"
+      Difficulties:
+        Easy: "&aEASY"
+        Medium: "&eMEDIUM"
+        Hard: "&cHARD"
 
+
+
+#
+# Sign messages
+#
 Signs:
-  Please-Type-Arena-Name: "&cPlease type arena name in second line!"
-  Arena-Doesnt-Exists: "&cArena with that name doesn't exists!"
-  Sign-Created: "&aSign created successfully!"
-  Sign-Removed: "&aSign successfully removed!"
-  Game-States:
-    Inactive: "&lInactive..."
-    In-Game: "&lIn-game"
-    Starting: "&e&lStarting"
-    Full-Game: "&4&lFULL"
-    Ending: "&lEnding"
-    Restarting: "&c&lRestarting"
+  Please-Type-Arena-Name: "%color_chat_issue%%plugin_prefix% Please type arena name in second line!"
+  Arena-Doesnt-Exists: "%color_chat_issue%%plugin_prefix% BaseArena with that name doesn't exists!"
+  Created: "%plugin_prefix% Sign created successfully!"
+  Removed: "%plugin_prefix% Sign successfully removed!"
   Lines:
-    - "&b&lBuildBattle"
-    - "%state%"
-    - "%mapname%"
-    - "&5[%playersize%/%maxplayers%]"
+    - "%plugin_prefix%"
+    - "%arena_state_placeholder%"
+    - "%arena_name%"
+    - "[%arena_players_size%/%arena_max_players%]"
 
+
+#
+# BaseArena Selector messages
+#
 Arena-Selector:
-  Inv-Title: "Arena selector"
+  Inventory-Title: "%plugin_short_command% ▸ BaseArena selector"
   Item:
-    Name: "&f%mapname%"
+    Name: "%arena_name%"
     Lore:
-      - "&bBuildBattle &f- &e%mapname%"
+      - "%plugin_name% - %arena_name%"
       - " "
       - " "
-      - "  &fOnline: %playersize%/%maxplayers%"
-      - "  &fState: %state%"
-      - "  &fType: %type%"
+      - "  Online: %arena_players_size%/%arena_max_players%"
+      - "  State: %arena_state_placeholder%"
       - " "
       - " "
-      - "&eClick to join this arena"
+      - "&aClick to join this arena"
 
+#
+# Validator messages
+#
+Validator:
+  Invalid-Arena-Configuration: "BaseArena %arena_name% has invalid configuration! Missing node: %value%"
+  Instance-Started: "BaseArena %arena_name% instance successfully started!"
+  No-Instances-Created: "There are no arena instances created in configuration!"
+
+
+#
+# Placeholder messages inside plugin
+#
 Placeholders:
   Game-States:
     Waiting: "&lWaiting for players..."
     Starting: "&e&lStarting"
-    In-Game: "&lPlaying"
+    Full-Game: "&4&lFULL"
+    In-Game: "&lIn-game"
     Ending: "&lEnding"
     Restarting: "&c&lRestarting"
+  Motd:
+    Waiting: "&lYou can join this game..."
+    Starting: "&e&lStarting"
+    Full-Game: "&4&lFULL | Use another Server"
+    In-Game: "&lIn-game | Click to spectate"
+    Ending: "&lEnding | Server is closing"
+    Restarting: "&c&lRestarting"
 
-Plots:
-  Team:
-    Full: "Team is full"
-    Empty: "You can join this team"
-    Inside: "Your team"
-    Name: "Plot - %plot%"
-    Menu-Name: "Plot Menu"
-    Plot-Choose: "You are now on plot %plot%"
-    Member: "You are already member of it!"
 
-# Do not modify!
-File-Version-Do-Not-Edit: 25
+#
+# Kit messages
+#
+Kit:
+  Not-Unlocked: "%color_chat_issue%%plugin_prefix% You haven't unlocked %value% yet!"
+  Choose: "%plugin_prefix% You have chosen: %value%!"
+  Cooldown: "%color_chat_issue%%plugin_prefix% Kit ability still on cooldown (%number%)!"
+  Menu:
+    Title: "Kit Menu"
+    Lore:
+      Unlocked: "&aUNLOCKED!"
+      Locked: "&cLOCKED!"
+      Unlock-At-Level: "Unlocks at level %number%"
+      Unlock-In-Store: "&bUnlock this in the store!"
+
+
+#
+# Leaderboard messages
+#
+# Hologram function need to be enabled on config.yml
+Leaderboard:
+  Type:
+    Hologram:
+      Header: "&6&lTop %number% in %value%"
+      Format: "&e%number%. %player% (%value%)"
+      Empty-Format: "&e%number%. Empty (0)"
+    Chat:
+      Header: "&8+-------+ &a&lYOUR STATS &8+-------+"
+      Header-Other: "&8+---------+ &aSTATS FOR &b%player% &8+---------+"
+      Footer: "&8+-----------------------------+"
+      Format: "%value% ▸ &a%number%"
+      Top:
+        Type-Name: "%color_chat_issue%Please type statistic name to view!"
+        Header: "&8&m+----------------+ [&6 Top 10 &8&m] +----------------+"
+        Format: "&e#%number% %player% - %value% %user_statistic%"
+  Statistics:
+    Wins: "Wins ▸ %number%"
+    Loses: "Loses ▸ %number%"
+    Games-Played: "Games Played ▸ %number%"
+    Level: "Level ▸ %number%"
+    Exp: "Experience ▸ %number%"
+    Next-Level-Exp: "Exp to Level Up ▸ %number%"
+    Highest-Win: "Highest win (points) ▸ %number%"
+    Highest-Points: "Highest points ▸ %number%"
+    Total-Points-Earned: "Total points earned ▸ %number%"
+    Blocks-Placed: "Blocks placed ▸ %number%"
+    Blocks-Broken: "Blocks broken ▸ %number%"
+    Particles-Placed: "Particles placed ▸ %number%"
+    Super-Votes: "Super votes ▸ %number%"
+  Invalid-Name: "%color_chat_issue%Name of statistic is invalid! Type: %value%"
+  Unknown-Player: "%color_chat_issue%Unknown Player"
+
+
+# Don't edit it. But who's stopping you? It's your server!
+# Really, don't edit ;p
+# You edited it, huh? Next time hurt yourself!
+Do-Not-Edit:
+  File-Version: 1
+  Core-Version: 1

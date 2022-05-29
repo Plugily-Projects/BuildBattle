@@ -1,10 +1,11 @@
 instances:
   default:
     lobbylocation: world,-1.0,80.0,7.0,0.0,0.0
-    Startlocation: world,-1.0,80.0,7.0,0.0,0.0
-    Endlocation: world,-1.0,80.0,7.0,0.0,0.0
+    startlocation: world,-1.0,80.0,7.0,0.0,0.0
+    endlocation: world,-1.0,80.0,7.0,0.0,0.0
     minimumplayers: 2
     maximumplayers: 10
+    plotmembersize: 1
     mapname: mapname
     world: worldname
     gametype: solo

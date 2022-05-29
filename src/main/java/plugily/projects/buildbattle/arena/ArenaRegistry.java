@@ -20,216 +20,137 @@
 
 package plugily.projects.buildbattle.arena;
 
-import org.bukkit.Location;
-import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import plugily.projects.buildbattle.ConfigPreferences;
-import plugily.projects.buildbattle.Main;
-import plugily.projects.buildbattle.arena.impl.BaseArena;
-import plugily.projects.buildbattle.arena.impl.GuessTheBuildArena;
-import plugily.projects.buildbattle.arena.impl.SoloArena;
-import plugily.projects.buildbattle.arena.impl.TeamArena;
-import plugily.projects.buildbattle.arena.managers.plots.Plot;
-import plugily.projects.buildbattle.utils.Debugger;
-import plugily.projects.commonsbox.minecraft.compat.ServerVersion.Version;
-import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
-import plugily.projects.commonsbox.minecraft.dimensional.Cuboid;
-import plugily.projects.commonsbox.minecraft.serialization.LocationSerializer;
+import plugily.projects.minigamesbox.classic.arena.PluginArena;
+import plugily.projects.minigamesbox.classic.arena.PluginArenaRegistry;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.utils.dimensional.Cuboid;
+import plugily.projects.minigamesbox.classic.utils.hologram.ArmorStandHologram;
+import plugily.projects.minigamesbox.classic.utils.serialization.LocationSerializer;
+import plugily.projects.thebridge.Main;
+import plugily.projects.thebridge.arena.base.Base;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by Tom on 27/07/2014.
  */
-public class ArenaRegistry {
+public class ArenaRegistry extends PluginArenaRegistry {
 
-  private static final List<BaseArena> ARENAS = new ArrayList<>();
-  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+  private final Main plugin;
 
-  private static int bungeeArena = -999;
-
-  public static List<BaseArena> getArenas() {
-    return ARENAS;
+  public ArenaRegistry(Main plugin) {
+    super(plugin);
+    this.plugin = plugin;
   }
 
-  /**
-   * Returns arena where the player is
-   *
-   * @param p target player
-   * @return Arena or null if not playing
-   */
-  @Nullable
-  public static BaseArena getArena(Player p) {
-    if(p == null) {
-      return null;
+
+  @Override
+  public PluginArena getNewArena(String id) {
+    return new BaseArena(id);
+  }
+
+  @Override
+  public boolean additionalValidatorChecks(ConfigurationSection section, PluginArena arena, String id) {
+    boolean checks = super.additionalValidatorChecks(section, arena, id);
+    if(!checks) return false;
+
+    if(!section.getBoolean(id + ".isdone")) {
+      plugin.getDebugger().sendConsoleMsg(new MessageBuilder("VALIDATOR_INVALID_ARENA_CONFIGURATION").asKey().value("NOT VALIDATED").arena(arena).build());
+      return false;
     }
 
-    java.util.UUID playerId = p.getUniqueId();
-
-    for(BaseArena arena : ARENAS) {
-      for(Player player : arena.getPlayers()) {
-        if(playerId.equals(player.getUniqueId())) return arena;
-      }
-      for(Player player : arena.getSpectators()) {
-        if(playerId.equals(player.getUniqueId())) return arena;
-      }
-    }
-    return null;
-  }
-
-  public static void registerArena(BaseArena arena) {
-    Debugger.debug("Registering new game instance, " + arena.getID());
-    ARENAS.add(arena);
-  }
-
-  public static void unregisterArena(BaseArena arena) {
-    Debugger.debug("Unegistering game instance, " + arena.getID());
-    ARENAS.remove(arena);
-  }
-
-  /**
-   * Returns arena based by ID
-   *
-   * @param id name of arena
-   * @return Arena or null if not found
-   */
-  public static BaseArena getArena(String id) {
-    for(BaseArena arena : ARENAS) {
-      if(arena.getID().equalsIgnoreCase(id)) {
-        return arena;
-      }
-    }
-    return null;
-  }
-
-  public static int getArenaPlayersOnline() {
-    int players = 0;
-    for(BaseArena arena : ARENAS) {
-      players += arena.getPlayers().size();
-    }
-    return players;
-  }
-
-  public static void registerArenas() {
-    Debugger.debug("Initial arenas registration");
-    ArenaRegistry.getArenas().clear();
-
-    ConfigurationSection section = ConfigUtils.getConfig(plugin, "arenas").getConfigurationSection("instances");
-    if(section == null) {
-      Debugger.debug(Debugger.Level.WARN, "No instances configuration section in arenas.yml, skipping registration process! Was it manually edited?");
-      return;
-    }
-
-    for(String id : section.getKeys(false)) {
-      if(id.equalsIgnoreCase("default")) {
-        continue;
-      }
-
-      BaseArena.ArenaType arenaType;
-      try {
-        arenaType = BaseArena.ArenaType.valueOf(section.getString(id + ".gametype", "solo").toUpperCase(java.util.Locale.ENGLISH));
-      } catch(IllegalArgumentException e) {
-        arenaType = BaseArena.ArenaType.SOLO;
-      }
-
-      BaseArena arena;
-      switch(arenaType) {
-        case TEAM:
-          arena = new TeamArena(id, plugin);
-          break;
-        case GUESS_THE_BUILD:
-          arena = new GuessTheBuildArena(id, plugin);
-          break;
-        case SOLO:
-        default:
-          arena = new SoloArena(id, plugin);
-          break;
-      }
-
-      arena.setMinimumPlayers(section.getInt(id + ".minimumplayers", section.getInt("instances.default.minimumplayers")));
-      arena.setMaximumPlayers(section.getInt(id + ".maximumplayers", section.getInt("instances.default.maximumplayers")));
-      arena.setMapName(section.getString(id + ".mapname", section.getString("instances.default.mapname", "mapname")));
-
-      Location lobbyLoc = LocationSerializer.getLocation(section.getString(id + ".lobbylocation", null));
-      if(lobbyLoc == null || lobbyLoc.getWorld() == null) {
-        arena.setReady(false);
-        continue;
-      }
-
-      arena.setLobbyLocation(lobbyLoc);
-
-      String endLoc = section.getString(id + ".Endlocation", null);
-      if(endLoc != null) {
-        arena.setEndLocation(LocationSerializer.getLocation(endLoc));
-      } else if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-        System.out.print(id + " doesn't contains an end location!");
-        arena.setReady(false);
-        ArenaRegistry.registerArena(arena);
-        continue;
-      }
-
-      arena.setArenaType(arenaType);
-      arena.setPlotSize(section.getInt(id + ".plotSize", 2));
-
-      ConfigurationSection plotSection = section.getConfigurationSection(id + ".plots");
-
-      if(plotSection != null) {
-        for(String plotName : plotSection.getKeys(false)) {
-          String minPointString = plotSection.getString(plotName + ".minpoint");
-          String maxPointString;
-
-          if(minPointString != null && (maxPointString = plotSection.getString(plotName + ".maxpoint")) != null) {
-            Location minPoint = LocationSerializer.getLocation(minPointString);
-            Location maxPoint;
-
-            if(minPoint != null && (maxPoint = LocationSerializer.getLocation(maxPointString)) != null) {
-              org.bukkit.World minWorld = minPoint.getWorld();
-
-              if(minWorld != null) {
-                Biome biome = Version.isCurrentHigher(Version.v1_15_R1) ?
-                    minWorld.getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
-                    : minWorld.getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
-
-                Plot buildPlot = new Plot(arena, biome);
-
-                buildPlot.setCuboid(new Cuboid(minPoint, maxPoint));
-                buildPlot.fullyResetPlot();
-
-                arena.getPlotManager().addBuildPlot(buildPlot);
-              }
+    ((BaseArena) arena).setMidLocation(LocationSerializer.getLocation(section.getString(id + ".midlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
+    ((BaseArena) arena).setArenaBorder(new Cuboid(LocationSerializer.getLocation(section.getString(id + ".arenalocation1", "world,364.0,63.0,-72.0,0.0,0.0")), LocationSerializer.getLocation(section.getString(id + ".arenalocation2", "world,364.0,63.0,-72.0,0.0,0.0"))));
+    int bases = 0;
+    if(section.contains(id + ".bases")) {
+      if(section.isConfigurationSection(id + ".bases")) {
+        for(String baseID : section.getConfigurationSection(id + ".bases").getKeys(false)) {
+          if(section.isSet(id + ".bases." + baseID + ".isdone")) {
+            Base base = new Base(
+                section.getString(id + ".bases." + baseID + ".color"),
+                LocationSerializer.getLocation(section.getString(id+ ".bases." + baseID + ".baselocation1")),
+                LocationSerializer.getLocation(section.getString(id+ ".bases." + baseID + ".baselocation2")),
+                LocationSerializer.getLocation(section.getString(id + ".bases." + baseID + ".spawnpoint")),
+                LocationSerializer.getLocation(section.getString(id + ".bases." + baseID + ".respawnpoint")),
+                LocationSerializer.getLocation(section.getString(id + ".bases." + baseID + ".portallocation1")),
+                LocationSerializer.getLocation(section.getString(id + ".bases." + baseID + ".portallocation2")),
+                section.getInt(id + ".maximumsize")
+            );
+            ((BaseArena) arena).addBase(base);
+            if(section.getString(id + ".bases." + baseID + ".cagelocation1") != null)
+              base.setCageCuboid(new Cuboid(LocationSerializer.getLocation(section.getString(id + ".bases." + baseID + ".cagelocation1")), LocationSerializer.getLocation(section.getString(id + ".bases." + baseID + ".cagelocation2"))));
+            ArmorStandHologram portal = new ArmorStandHologram(plugin.getBukkitHelper().getBlockCenter(LocationSerializer.getLocation(section.getString(id + ".bases." + baseID + ".portalhologram"))));
+            for(String str : plugin.getLanguageManager().getLanguageMessage(plugin.getMessageManager().getPath("IN_GAME_MESSAGES_ARENA_PORTAL_HOLOGRAM")).split(";")) {
+              portal.appendLine(str.replace("%arena_base_color_formatted%", base.getFormattedColor()));
             }
+            base.setArmorStandHologram(portal);
+            bases++;
           } else {
-            System.out.println("Non configured plot instances found for arena " + id);
-            arena.setReady(false);
+            plugin.getDebugger().sendConsoleMsg(new MessageBuilder("VALIDATOR_INVALID_ARENA_CONFIGURATION").asKey().value("NO BASES CONFIGURED").arena(arena).build());
+            return false;
           }
         }
       } else {
-        System.out.println("Non configured plots in arena " + id);
-        arena.setReady(false);
+        plugin.getDebugger().sendConsoleMsg(new MessageBuilder("VALIDATOR_INVALID_ARENA_CONFIGURATION").asKey().value("BASES NOT FOUND").arena(arena).build());
+        return false;
       }
-      arena.setReady(section.getBoolean(id + ".isdone", false));
-      if(arena instanceof SoloArena) {
-        ((SoloArena) arena).initPoll();
-      }
-      ArenaRegistry.registerArena(arena);
-      arena.start();
+    } else {
+      plugin.getDebugger().sendConsoleMsg(new MessageBuilder("VALIDATOR_INVALID_ARENA_CONFIGURATION").asKey().value("BASE NOT FOUND").arena(arena).build());
+      return false;
     }
-    Debugger.debug("Arenas registration completed");
+    if(bases < 2) {
+      plugin.getDebugger().sendConsoleMsg(new MessageBuilder("VALIDATOR_INVALID_ARENA_CONFIGURATION").asKey().value("NOT ENOUGH BASES").arena(arena).build());
+      return false;
+    }
+    arena.setArenaOption("BASE_PLAYER_SIZE", section.getInt(id + ".maximumsize", 3));
+    arena.setMaximumPlayers(bases * arena.getArenaOption("BASE_PLAYER_SIZE"));
+    if(section.contains(id + ".mode")) {
+      ((BaseArena) arena).setMode(BaseArena.Mode.valueOf(section.getString(id + ".mode").toUpperCase()));
+    } else {
+      ((BaseArena) arena).setMode(BaseArena.Mode.POINTS);
+    }
+    arena.setArenaOption("MODE_VALUE", section.getInt(id + ".modevalue", 5));
+    arena.setArenaOption("RESET_BLOCKS", section.getInt(id + ".resetblocks", 0));
+    arena.setArenaOption("RESET_TIME", section.getInt(id + ".resettime", 5));
+    for(Base base : ((BaseArena) arena).getBases()) {
+      if(!((BaseArena) arena).getArenaBorder().isIn(base.getBaseCuboid().getCenter())) {
+        plugin.getDebugger().sendConsoleMsg(new MessageBuilder("VALIDATOR_INVALID_ARENA_CONFIGURATION").asKey().arena(arena).value("YOUR BASE CUBOIDS ARE NOT INSIDE ARENA CUBOID").build());
+        return false;
+      }
+    }
+    return true;
   }
 
-  public static void shuffleBungeeArena() {
-    bungeeArena = new Random().nextInt(ARENAS.size());
+  @Override
+  public @Nullable BaseArena getArena(Player player) {
+    PluginArena pluginArena = super.getArena(player);
+    if(pluginArena instanceof BaseArena) {
+      return (BaseArena) pluginArena;
+    }
+    return null;
   }
 
-  public static int getBungeeArena() {
-    if(bungeeArena == -999) {
-      bungeeArena = new Random().nextInt(ARENAS.size());
+  @Override
+  public @Nullable BaseArena getArena(String id) {
+    PluginArena pluginArena = super.getArena(id);
+    if(pluginArena instanceof BaseArena) {
+      return (BaseArena) pluginArena;
     }
-    return bungeeArena;
+    return null;
+  }
+
+  public @NotNull List<BaseArena> getPluginArenas() {
+    List<BaseArena> baseArenas = new ArrayList<>();
+    for(PluginArena pluginArena : super.getArenas()) {
+      if(pluginArena instanceof BaseArena) {
+        baseArenas.add((BaseArena) pluginArena);
+      }
+    }
+    return baseArenas;
   }
 }

@@ -1,17 +1,19 @@
-main: plugily.projects.buildbattle.Main
-version: ${project.version}
 name: BuildBattle
-softdepend: [Vault, PlaceholderAPI, Citizens, Parties, Spigot-Party-API-PAF, PartyAndFriends]
-authors: [Tigerpanzer, 2Wild4You, Plajer, TomTheDeveloper]
+main: plugily.projects.buildbattle.old.Main
+authors: [ PlugilyProjects, Tigerpanzer_02, Tigerpanzer, Plajer, TomTheDeveloper ]
+version: ${project.version}
+softdepend: [ Vault,Citizens,  PlaceholderAPI, Parties, Spigot-Party-API-PAF, PartyAndFriends, ViaVersion, ProtocolSupport ]
 api-version: 1.13
 
 commands:
   buildbattle:
-    usage: /buildbattle
-    description: The main command
-    aliases: [buildb, bb]
+    description: BuildBattle Commands
+    usage: "\u00A76Correct usage: /bb [option]"
+    aliases: [ bb, buildb ]
   buildbattleadmin:
-    aliases: [buildba, bba]
+    description: BuildBattle Admin Commands
+    usage: "\u00A76Correct usage: /bba [option]"
+    aliases: [ bba, buildbadmin ]
 
 permissions:
   buildbattle.admin.*:
