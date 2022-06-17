@@ -23,13 +23,17 @@ package plugily.projects.buildbattle.arena.states.guess;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
+import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.BuildArena;
+import plugily.projects.buildbattle.arena.GuessArena;
 import plugily.projects.buildbattle.old.ConfigPreferences;
+import plugily.projects.buildbattle.old.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.old.handlers.HolidayManager;
 import plugily.projects.buildbattle.old.handlers.reward.Reward;
 import plugily.projects.buildbattle.old.menus.options.registry.particles.ParticleRefreshScheduler;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.states.PluginStartingState;
+import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 
 /**
  * @author Plajer
@@ -40,33 +44,25 @@ public class StartingState extends PluginStartingState {
   @Override
   public void handleCall(PluginArena arena) {
     super.handleCall(arena);
-    BuildArena pluginArena = (BuildArena) getPlugin().getArenaRegistry().getArena(arena.getId());
+    GuessArena pluginArena = (GuessArena) getPlugin().getArenaRegistry().getArena(arena.getId());
     if (pluginArena == null) {
       return;
     }
-    /*
-           //reset local variables to be 100% sure
-           //
-    */
     if (arena.getTimer() == 0 || arena.isForceStart()) {
       //getPlotManager().resetPlotsGradually();
       if(HolidayManager.getCurrentHoliday() != HolidayManager.HolidayType.NONE) {
         initPoll();
       }
       pluginArena.setParticleRefreshScheduler(new ParticleRefreshScheduler(getPlugin()));
-      if(!getPlotManager().isPlotsCleared()) {
-        getPlotManager().resetQueuedPlots();
+      if(!pluginArena.getPlotManager().isPlotsCleared()) {
+        pluginArena.getPlotManager().resetQueuedPlots();
       }
+      //todo may removeable?
       pluginArena.distributePlots();
-      setTimer(getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.THEME_VOTE, this));
-      for (Player player : arena.getPlayers()) {
-        player.getInventory().setItem(8, getPlugin().getOptionsRegistry().getMenuItem());
-        //to prevent Multiverse changing gamemode bug
-        Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setGameMode(GameMode.CREATIVE), 40);
+      pluginArena.getPlotManager().teleportToPlots();
 
-        getPlugin().getRewardsHandler().performReward(player, this, Reward.RewardType.START_GAME, -1);
-      }
-
+      setArenaTimer(getPlugin().getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".Voting.Theme"));
+      pluginArena.setArenaInGameStage(BaseArena.ArenaInGameStage.THEME_VOTING);
     }
   }
 

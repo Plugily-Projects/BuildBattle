@@ -352,7 +352,7 @@ In-Game:
 Menu:
   Permission: "%color_chat_issue%%plugin_prefix% You don't have permission to use this menu!"
   Buttons:
-    Back-Button:
+    Back:
       Item:
         Name: "%color_chat_issue%Go Back"
         Lore: "Click to go back."

@@ -124,10 +124,6 @@ public class InGameState extends PluginInGameState {
     if(arena.getTimer() <= 0) {
       getPlugin().getArenaManager().stopGame(false, arena);
     }
-    if(arena.getTimer() == 30 || arena.getTimer() == 60 || arena.getTimer() == 120) {
-      new TitleBuilder("IN_GAME_MESSAGES_ARENA_TIME_LEFT").asKey().arena(pluginArena).sendArena();
-    }
-
     // no players - stop game
     if(pluginArena.enoughPlayersToContinue()) {
       getPlugin().getArenaManager().stopGame(false, pluginArena);

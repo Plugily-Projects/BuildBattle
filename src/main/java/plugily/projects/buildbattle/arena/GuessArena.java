@@ -22,23 +22,29 @@ package plugily.projects.buildbattle.arena;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import plugily.projects.buildbattle.api.event.guess.PlayerThemeGuessEvent;
 import plugily.projects.buildbattle.arena.states.guess.InGameState;
 import plugily.projects.buildbattle.arena.states.guess.StartingState;
+import plugily.projects.buildbattle.old.ConfigPreferences;
 import plugily.projects.buildbattle.old.arena.managers.plots.Plot;
+import plugily.projects.buildbattle.old.handlers.reward.Reward;
 import plugily.projects.buildbattle.old.menus.themevoter.BBTheme;
 import plugily.projects.buildbattle.old.menus.themevoter.VoteMenu;
 import plugily.projects.buildbattle.old.menus.themevoter.VotePoll;
 import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.user.User;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * @author Tigerpanzer_02
@@ -65,55 +71,17 @@ public class GuessArena extends BaseArena {
     addGameStateHandler(ArenaState.STARTING, new StartingState());
   }
 
-  /**
-   * Initiates voting poll
-   */
-  public void initPoll() {
-    voteMenu = new VoteMenu(this);
-    voteMenu.resetPoll();
-  }
-
   @Override
   public void cleanUpArena() {
-    winnerPlot = null;
-    votingPlot = null;
-    topList.clear();
-    voteMenu.resetPoll();
+    currentBuilder = null;
+    currentTheme = null;
+    round = 1;
+    whoGuessed.clear();
+    playersPoints.clear();
     plotList.clear();
+    removedCharsAt.clear();
+    winner = null;
     super.cleanUpArena();
-  }
-
-  public VotePoll getVotePoll() {
-    return voteMenu.getVotePoll();
-  }
-
-  public VoteMenu getVoteMenu() {
-    return voteMenu;
-  }
-
-  public void setVotingPlot(Plot votingPlot) {
-    this.votingPlot = votingPlot;
-  }
-
-  public Plot getWinnerPlot() {
-    return winnerPlot;
-  }
-
-  public void setWinnerPlot(Plot winnerPlot) {
-    this.winnerPlot = winnerPlot;
-  }
-
-  public Map<Integer, List<Player>> getTopList() {
-    return topList;
-  }
-
-  public Plot getVotingPlot() {
-    return votingPlot;
-  }
-
-  @NotNull
-  public Queue<Plot> getQueue() {
-    return queue;
   }
 
 
@@ -126,49 +94,21 @@ public class GuessArena extends BaseArena {
       getPlugin().getDebugger().sendConsoleMsg("&c[PLOT WARNING] Instance was stopped!");
       getPlugin().getArenaManager().stopGame(false, this);
     }
-    switch(getArenaType()) {
-      case SOLO:
-        List<Player> players = new ArrayList<>(getPlayersLeft());
-        for(Plot plot : getPlotManager().getPlots()) {
-          if(players.isEmpty()) {
-            break;
-          }
-
-          Player first = players.get(0);
-          User user = getPlugin().getUserManager().getUser(first);
-          if(user.isSpectator()) {
-            continue;
-          }
-
-          plot.addMember(first, this, true);
-
-          players.remove(0);
-        }
+    List<Player> players = new ArrayList<>(getPlayersLeft());
+    for(Plot plot : getPlotManager().getPlots()) {
+      if(players.isEmpty()) {
         break;
-      case TEAM:
-        for(Player player : getPlayers()) {
-          // get base with min players
-          Plot minPlayers = getPlotManager().getPlots().stream().min(Comparator.comparing(Plot::getMembersSize)).get();
-          // add player to min base if he got no base
-          Plot playerPlot = getPlotManager().getPlot(player);
-          if(playerPlot == null) {
-            minPlayers.addMember(player, this, true);
-          }
-          // fallback
-          if(playerPlot == null) {
-            getPlotManager().getPlots().get(0).addMember(player, this, true);
-          }
-        }
-        //check if not only one plot got players
-        Plot maxPlayers = getPlotManager().getPlots().stream().max(Comparator.comparing(Plot::getMembersSize)).get();
-        Plot minPlayers = getPlotManager().getPlots().stream().min(Comparator.comparing(Plot::getMembersSize)).get();
-        if(maxPlayers.getMembersSize() == getPlayers().size()) {
-          for(int i = 0; i < maxPlayers.getMembersSize() / 2; i++) {
-            Player move = maxPlayers.getMembers().get(i);
-            minPlayers.addMember(move, this, true);
-            maxPlayers.removeMember(move);
-          }
-        }
+      }
+
+      Player first = players.get(0);
+      User user = getPlugin().getUserManager().getUser(first);
+      if(user.isSpectator()) {
+        continue;
+      }
+
+      plot.addMember(first, this, true);
+
+      players.remove(0);
     }
     for(Plot plot : getPlotManager().getPlots()) {
       for(Player member : plot.getMembers()) {
@@ -191,6 +131,21 @@ public class GuessArena extends BaseArena {
     return false;
   }
 
+  public Player getNextPlayerByRound() {
+    int size = getPlayersLeft().size();
+
+    if(size == 0) {
+      return null;
+    }
+
+    int part = round - 1;
+    if(part >= size) {
+      part = size - 1;
+    }
+
+    return getPlayersLeft().get(part);
+  }
+
   @Override
   public void setMinimumPlayers(int amount) {
     if(amount <= getArenaOption("PLOT_MEMBER_SIZE")) {
@@ -201,8 +156,99 @@ public class GuessArena extends BaseArena {
     super.setMinimumPlayers(amount);
   }
 
+  public void recalculateLeaderboard() {
+    playersPoints = playersPoints.entrySet()
+        .stream()
+        .sorted((Map.Entry.<Player, Integer>comparingByValue().reversed()))
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+  }
+
+  public void addWhoGuessed(Player player) {
+    whoGuessed.add(player);
+    getPlugin().getRewardsHandler().performReward(player, this, getPlugin().getRewardsHandler().getRewardType("GUESS"), -1);
+
+    int timer = getTimer();
+
+    //decrease game time by guessed theme
+    if(timer >= 15) {
+      setTimer(timer - getPlugin().getConfig().getInt("Time-Manager." + getArenaType().getPrefix() + ".Guess"));
+    }
+
+    //-1 because builder can´t guess
+    if(whoGuessed.size() >= getPlayers().size() - 1) {
+      setTimer(getPlugin().getConfig().getInt("Time-Manager." + getArenaType().getPrefix() + ".Round-Delay"));
+      setArenaInGameStage(ArenaInGameStage.PLOT_VOTING);
+
+      new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_GUESSED").asKey().arena(this).sendArena();
+
+      getPlugin().getRewardsHandler().performReward(this, getPlugin().getRewardsHandler().getRewardType("GUESS_ALL"));
+    }
+  }
+
+  public void broadcastPlayerGuessed(Player player) {
+    new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_GUESS_GUESSED").asKey().arena(this).player(player).sendArena();
+
+    new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_GUESS_POINTS").asKey().arena(this).player(player).sendPlayer();
+
+    int bonusAmount = getPlugin().getConfig().getInt("Guessing-Points." + (whoGuessed.size() + 1), 0);
+
+    playersPoints.put(player, playersPoints.getOrDefault(player, 0) + currentTheme.getDifficulty().getPointsReward() + bonusAmount);
+
+    playersPoints.put(currentBuilder, playersPoints.getOrDefault(currentBuilder, 0) + getPlugin().getConfig().getInt("Guessing-Points.Builder", 1));
+
+    getPlugin().getServer().getScheduler().runTask(getPlugin(), () -> {
+      addWhoGuessed(player);
+      new PlayerThemeGuessEvent(this, currentTheme);
+      recalculateLeaderboard();
+    });
+  }
+
+  public BBTheme getCurrentTheme() {
+    return currentTheme;
+  }
+
+  public boolean isCurrentThemeSet() {
+    return currentTheme != null;
+  }
+
+  public Player getCurrentBuilder() {
+    return currentBuilder;
+  }
+
+  public int getRound() {
+    return round;
+  }
+
+  public void setCurrentBuilder(Player currentBuilder) {
+    this.currentBuilder = currentBuilder;
+  }
+
+  public void setCurrentTheme(BBTheme currentTheme) {
+    this.currentTheme = currentTheme;
+  }
+
+  public List<Player> getWhoGuessed() {
+    return whoGuessed;
+  }
+
+  public Player getWinner() {
+    return winner;
+  }
+
+  public void setWinner(Player winner) {
+    this.winner = winner;
+  }
+
+  public List<Integer> getRemovedCharsAt() {
+    return removedCharsAt;
+  }
+
   public Map<Player, Plot> getPlotList() {
     return plotList;
+  }
+
+  public Map<Player, Integer> getPlayersPoints() {
+    return playersPoints;
   }
 
   public Plot getPlotFromPlayer(Player player) {

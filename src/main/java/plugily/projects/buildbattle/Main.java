@@ -148,6 +148,7 @@ public class Main extends PluginMain {
             new Locale("Vietnamese", "Việt", "vn_VN", "POEditor contributors", Arrays.asList("vietnamese", "viet", "việt", "vn")))
         .forEach(LocaleRegistry::registerLocale);
   }
+
   public void addMessages() {
     getMessageManager().registerMessage("COMMANDS_THEME_BLACKLISTED", new Message("Commands.Theme-Blacklisted", ""));
     getMessageManager().registerMessage("COMMANDS_ADMIN_ADDED_PLOT", new Message("Commands.Admin.Added-Plot", ""));
@@ -200,5 +201,73 @@ public class Main extends PluginMain {
     getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_NPC_NAME", new Message("In-Game.Messages.Plot.NPC.Name", ""));
     getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_NPC_CREATED", new Message("In-Game.Messages.Plot.NPC.Created", ""));
     getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_NPC_CITIZENS", new Message("In-Game.Messages.Plot.NPC.Install-Citizens", ""));
+
+
+    getMessageManager().registerMessage("MENU_PERMISSION", new Message("Menu.Permission", ""));
+    getMessageManager().registerMessage("MENU_BUTTONS_BACK_ITEM_NAME", new Message("Menu.Buttons.Back.Item.Name", ""));
+    getMessageManager().registerMessage("MENU_BUTTONS_BACK_ITEM_LORE", new Message("Menu.Buttons.Back.Item.Lore", ""));
+    getMessageManager().registerMessage("MENU_LOCATION", new Message("Menu.Location", ""));
+    getMessageManager().registerMessage("MENU_OPTION_INVENTORY", new Message("Menu.Option.Inventory", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_PARTICLE_INVENTORY", new Message("Menu.Option.Content.Particle.Inventory", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_PARTICLE_ITEM_NAME", new Message("Menu.Option.Content.Particle.Item.Name", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_PARTICLE_ITEM_LORE", new Message("Menu.Option.Content.Particle.Item.Lore", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_PARTICLE_ITEM_REMOVE_NAME", new Message("Menu.Option.Content.Particle.Item.Remove.Name", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_PARTICLE_ITEM_REMOVE_LORE", new Message("Menu.Option.Content.Particle.Item.Remove.LORE", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_PARTICLE_REMOVED", new Message("Menu.Option.Content.Particle.Removed", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_HEADS_INVENTORY", new Message("Menu.Option.Content.Heads.Inventory", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_HEADS_ITEM_NAME", new Message("Menu.Option.Content.Heads.Item.Name", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_HEADS_ITEM_LORE", new Message("Menu.Option.Content.Heads.Item.Lore", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_FLOOR_ITEM_NAME", new Message("Menu.Option.Content.Floor.Item.Name", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_FLOOR_ITEM_LORE", new Message("Menu.Option.Content.Floor.Item.Lore", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_FLOOR_CHANGED", new Message("Menu.Option.Content.Floor.Changed", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_TIME_INVENTORY", new Message("Menu.Option.Content.Time.Inventory", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_TIME_ITEM_NAME", new Message("Menu.Option.Content.Time.Item.Name", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_TIME_ITEM_LORE", new Message("Menu.Option.Content.Time.Item.Lore", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_TIME_TYPE_WORLD", new Message("Menu.Option.Content.Time.Type.World", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_TIME_TYPE_DAY", new Message("Menu.Option.Content.Time.Type.Day", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_TIME_TYPE_NOON", new Message("Menu.Option.Content.Time.Type.Noon", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_TIME_TYPE_SUNSET", new Message("Menu.Option.Content.Time.Type.Sunset", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_TIME_TYPE_NIGHT", new Message("Menu.Option.Content.Time.Type.NIGHt", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_TIME_TYPE_MIDNIGHT", new Message("Menu.Option.Content.Time.Type.MidNight", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_TIME_TYPE_SUNRISE", new Message("Menu.Option.Content.Time.Type.Sunrise", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_TIME_CHANGED", new Message("Menu.Option.Content.Time.Changed", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_BIOME_INVENTORY", new Message("Menu.Option.Content.Biome.Inventory", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_BIOME_ITEM_NAME", new Message("Menu.Option.Content.Biome.Item.Name", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_BIOME_ITEM_LORE", new Message("Menu.Option.Content.Biome.Item.Lore", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_BIOME_CHANGED", new Message("Menu.Option.Content.Biome.Changed", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_WEATHER_INVENTORY", new Message("Menu.Option.Content.Weather.Inventory", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_WEATHER_ITEM_NAME", new Message("Menu.Option.Content.Weather.Item.Name", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_WEATHER_ITEM_LORE", new Message("Menu.Option.Content.Weather.Item.Lore", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_WEATHER_TYPE_DOWNFALL", new Message("Menu.Option.Content.Weather.Type.Downfall", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_WEATHER_TYPE_CLEAR", new Message("Menu.Option.Content.Weather.Type.Clear", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_WEATHER_CHANGED", new Message("Menu.Option.Content.Weather.Changed", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_BANNER_INVENTORY_COLOR", new Message("Menu.Option.Content.Banner.Inventory.Color", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_BANNER_INVENTORY_LAYER", new Message("Menu.Option.Content.Banner.Inventory.Layer", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_BANNER_INVENTORY_LAYER_COLOR", new Message("Menu.Option.Content.Banner.Inventory.Layer-Color", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_BANNER_ITEM_NAME", new Message("Menu.Option.Content.Banner.Item.Name", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_BANNER_ITEM_LORE", new Message("Menu.Option.Content.Banner.Item.Lore", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_BANNER_ITEM_CREATE_NAME", new Message("Menu.Option.Content.Banner.Item.Create.Name", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_BANNER_ITEM_CREATE_LORE", new Message("Menu.Option.Content.Banner.Item.Create.Lore", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_BANNER_CHANGED", new Message("Menu.Option.Content.Banner.Changed", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_RESET_ITEM_NAME", new Message("Menu.Option.Content.Reset.Item.Name", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_RESET_ITEM_LORE", new Message("Menu.Option.Content.Reset.Item.Lore", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_RESET_CHAT", new Message("Menu.Option.Content.Reset.Chat", ""));
+    getMessageManager().registerMessage("MENU_THEME_INVENTORY", new Message("Menu.Theme.Inventory", ""));
+    getMessageManager().registerMessage("MENU_THEME_ITEM_NAME", new Message("Menu.Theme.Item.Name", ""));
+    getMessageManager().registerMessage("MENU_THEME_ITEM_LORE", new Message("Menu.Theme.Item.Lore", ""));
+    getMessageManager().registerMessage("MENU_THEME_VOTE_SUCCESS", new Message("Menu.Theme.Vote.Success", ""));
+    getMessageManager().registerMessage("MENU_THEME_VOTE_ALREADY", new Message("Menu.Theme.Vote.Already", ""));
+    getMessageManager().registerMessage("MENU_THEME_VOTE_SUPER_ITEM_NAME", new Message("Menu.Theme.Vote.Super.Item.Name", ""));
+    getMessageManager().registerMessage("MENU_THEME_VOTE_SUPER_ITEM_LORE", new Message("Menu.Theme.Vote.Super.Item.Lore", ""));
+    getMessageManager().registerMessage("MENU_THEME_VOTE_SUPER_USED", new Message("Menu.Theme.Vote.Super.Used", ""));
+    getMessageManager().registerMessage("MENU_THEME_GTB_INVENTORY", new Message("Menu.Theme.Guess-The-Build.Inventory", ""));
+    getMessageManager().registerMessage("MENU_THEME_GTB_ITEM_NAME", new Message("Menu.Theme.Guess-The-Build.Item.Name", ""));
+    getMessageManager().registerMessage("MENU_THEME_GTB_ITEM_LORE", new Message("Menu.Theme.Guess-The-Build.Item.Lore", ""));
+    getMessageManager().registerMessage("MENU_THEME_GTB_DIFFICULTIES_EASY", new Message("Menu.Theme.Guess-The-Build.Difficulties.Easy", ""));
+    getMessageManager().registerMessage("MENU_THEME_GTB_DIFFICULTIES_MEDIUM", new Message("Menu.Theme.Guess-The-Build.Difficulties.Medium", ""));
+    getMessageManager().registerMessage("MENU_THEME_GTB_DIFFICULTIES_HARD", new Message("Menu.Theme.Guess-The-Build.Difficulties.Hard", ""));
+
   }
+
+  //todo Placeholders difficutly gtb, difficutly points reward, theme,
 }

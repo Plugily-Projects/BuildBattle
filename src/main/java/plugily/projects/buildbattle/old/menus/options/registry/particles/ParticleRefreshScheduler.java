@@ -26,7 +26,6 @@ import org.bukkit.scheduler.BukkitTask;
 import plugily.projects.buildbattle.old.Main;
 import plugily.projects.buildbattle.old.arena.ArenaRegistry;
 import plugily.projects.buildbattle.old.arena.managers.plots.Plot;
-import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
 
 import java.util.HashSet;
 import java.util.Map.Entry;

@@ -37,6 +37,7 @@ import plugily.projects.buildbattle.old.utils.Utils;
 import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
 import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
 import plugily.projects.commonsbox.minecraft.dimensional.Cuboid;
+import plugily.projects.minigamesbox.classic.utils.dimensional.Cuboid;
 
 import java.util.ArrayList;
 import java.util.HashMap;

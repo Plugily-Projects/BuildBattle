@@ -22,17 +22,16 @@ package plugily.projects.buildbattle.arena;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import plugily.projects.buildbattle.Main;
 import plugily.projects.minigamesbox.classic.arena.ArenaState;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.PluginArenaManager;
-import plugily.projects.thebridge.Main;
-import plugily.projects.thebridge.arena.base.Base;
 
 import java.util.Comparator;
 
 /**
  * @author Plajer
- *     <p>Created at 13.05.2018
+ * <p>Created at 13.05.2018
  */
 public class ArenaManager extends PluginArenaManager {
 
@@ -46,16 +45,16 @@ public class ArenaManager extends PluginArenaManager {
   @Override
   public void additionalPartyJoin(Player player, PluginArena arena, Player partyLeader) {
     BaseArena pluginBaseArena = (BaseArena) plugin.getArenaRegistry().getArena(arena.getId());
-    if (pluginBaseArena == null) {
+    if(pluginBaseArena == null) {
       return;
     }
     Base partyBase = null;
-    if (arena.getPlayers().contains(partyLeader)) {
-      if (pluginBaseArena.inBase(partyLeader)) {
+    if(arena.getPlayers().contains(partyLeader)) {
+      if(pluginBaseArena.inBase(partyLeader)) {
         partyBase = pluginBaseArena.getBase(partyLeader);
       }
     }
-    if (partyBase != null) {
+    if(partyBase != null) {
       partyBase.addPlayer(player);
     }
   }
@@ -63,37 +62,32 @@ public class ArenaManager extends PluginArenaManager {
   @Override
   public void leaveAttempt(@NotNull Player player, @NotNull PluginArena arena) {
     BaseArena pluginBaseArena = (BaseArena) plugin.getArenaRegistry().getArena(arena.getId());
-    if (pluginBaseArena == null) {
+    if(pluginBaseArena == null) {
       return;
     }
     super.leaveAttempt(player, arena);
-    if (pluginBaseArena.isDeathPlayer(player)) {
-      pluginBaseArena.removeDeathPlayer(player);
-    }
-    if (arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS
-        && arena.getArenaState() != ArenaState.STARTING
-        && (arena.getPlayers().size() <= 1
-            || (arena.getPlayers().size() <= arena.getArenaOption("BASE_PLAYER_SIZE")
-                && pluginBaseArena.getBases().stream()
-                        .max(Comparator.comparing(Base::getPlayersSize))
-                        .get()
-                        .getAlivePlayersSize()
-                    == arena.getPlayers().size()))) {
-      stopGame(true, arena);
+    if(arena instanceof GuessArena) {
+      if(player == ((GuessArena) arena).getCurrentBuilder()) {
+        ((GuessArena) arena).setCurrentBuilder(null);
+        if(arena.getArenaState() == ArenaState.IN_GAME) {
+          ((GuessArena) arena).setTimer(plugin.getConfig().getInt("Time-Manager." + pluginBaseArena.getArenaType().getPrefix() + ".Round-Delay"));
+          ((GuessArena) arena).setArenaInGameStage(BaseArena.ArenaInGameStage.PLOT_VOTING);
+        }
+      }
     }
   }
 
   @Override
   public void stopGame(boolean quickStop, @NotNull PluginArena arena) {
     BaseArena pluginBaseArena = (BaseArena) plugin.getArenaRegistry().getArena(arena.getId());
-    if (pluginBaseArena == null) {
+    if(pluginBaseArena == null) {
       return;
     }
-    for (Player player : arena.getPlayers()) {
-      if (!quickStop) {
-        switch (pluginBaseArena.getMode()) {
+    for(Player player : arena.getPlayers()) {
+      if(!quickStop) {
+        switch(pluginBaseArena.getMode()) {
           case HEARTS:
-            if (pluginBaseArena.isDeathPlayer(player)) {
+            if(pluginBaseArena.isDeathPlayer(player)) {
               plugin
                   .getUserManager()
                   .addStat(player, plugin.getStatsStorage().getStatisticType("LOSES"));
@@ -111,7 +105,7 @@ public class ArenaManager extends PluginArenaManager {
             }
             break;
           case POINTS:
-            if (pluginBaseArena.getWinner().getPlayers().contains(player)) {
+            if(pluginBaseArena.getWinner().getPlayers().contains(player)) {
               plugin
                   .getUserManager()
                   .addStat(player, plugin.getStatsStorage().getStatisticType("WINS"));

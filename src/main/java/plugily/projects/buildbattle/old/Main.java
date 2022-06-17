@@ -67,6 +67,7 @@ import plugily.projects.commonsbox.minecraft.compat.events.EventsInitializer;
 import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.commonsbox.minecraft.misc.MiscUtils;
 import plugily.projects.commonsbox.minecraft.serialization.InventorySerializer;
+import plugily.projects.minigamesbox.classic.utils.services.exception.ExceptionLogHandler;
 
 import java.util.Arrays;
 
