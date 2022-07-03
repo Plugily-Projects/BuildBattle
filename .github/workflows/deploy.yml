@@ -54,9 +54,9 @@ jobs:
         with:
           servers: |
             [{
-                "id": "${{ secrets.PLUGILY_MAVEN }}",
-                "username": "${{ secrets.PLUGILY_MAVEN_USERNAME }}",
-                "password": "${{ secrets.PLUGILY_MAVEN_PASSWORD }}"
+                "id": "${{ secrets.PLUGILY_REPO_ID }}",
+                "username": "${{ secrets.PLUGILY_REPO_USERNAME }}",
+                "password": "${{ secrets.PLUGILY_REPO_PASSWORD }}"
             }]
             
       - run: mvn clean verify compile package site:site deploy -f pom.xml
