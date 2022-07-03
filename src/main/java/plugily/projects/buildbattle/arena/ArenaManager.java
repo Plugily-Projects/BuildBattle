@@ -23,9 +23,11 @@ package plugily.projects.buildbattle.arena;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import plugily.projects.buildbattle.Main;
+import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.minigamesbox.classic.arena.ArenaState;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.PluginArenaManager;
+import plugily.projects.minigamesbox.classic.user.User;
 
 import java.util.Comparator;
 
@@ -44,89 +46,50 @@ public class ArenaManager extends PluginArenaManager {
 
   @Override
   public void additionalPartyJoin(Player player, PluginArena arena, Player partyLeader) {
-    BaseArena pluginBaseArena = (BaseArena) plugin.getArenaRegistry().getArena(arena.getId());
-    if(pluginBaseArena == null) {
+    BaseArena pluginArena = (BaseArena) plugin.getArenaRegistry().getArena(arena.getId());
+    if(pluginArena == null) {
       return;
     }
-    Base partyBase = null;
+    Plot partyPlot = pluginArena.getPlotManager().getPlots().get(plugin.getRandom().nextInt(pluginArena.getPlotManager().getPlots().size()));
+
     if(arena.getPlayers().contains(partyLeader)) {
-      if(pluginBaseArena.inBase(partyLeader)) {
-        partyBase = pluginBaseArena.getBase(partyLeader);
+      Plot partyLeaderPlot = pluginArena.getPlotManager().getPlot(partyLeader);
+      if(partyLeaderPlot != null) {
+        partyPlot = partyLeaderPlot;
       }
     }
-    if(partyBase != null) {
-      partyBase.addPlayer(player);
+    if(partyPlot != null) {
+      partyPlot.addMember(player, pluginArena, false);
     }
+
   }
 
   @Override
   public void leaveAttempt(@NotNull Player player, @NotNull PluginArena arena) {
-    BaseArena pluginBaseArena = (BaseArena) plugin.getArenaRegistry().getArena(arena.getId());
-    if(pluginBaseArena == null) {
+    BaseArena pluginArena = (BaseArena) plugin.getArenaRegistry().getArena(arena.getId());
+    if(pluginArena == null) {
       return;
     }
     super.leaveAttempt(player, arena);
+    User user = plugin.getUserManager().getUser(player);
+    user.setStatistic("LOCAL_POINTS", 0);
+    user.setStatistic("LOCAL_POINTS_GTB", 0);
+    if(arena instanceof BuildArena) {
+      Plot plot = pluginArena.getPlotManager().getPlot(player);
+      if(plot != null && plot.getMembers().size() <= 1) {
+        ((BuildArena) arena).getQueue().remove(plot);
+      }
+    }
     if(arena instanceof GuessArena) {
-      if(player == ((GuessArena) arena).getCurrentBuilder()) {
-        ((GuessArena) arena).setCurrentBuilder(null);
+      ((GuessArena) arena).getWhoGuessed().remove(player);
+      if(player == ((GuessArena) pluginArena).getCurrentBuilder()) {
+        ((GuessArena) pluginArena).setCurrentBuilder(null);
         if(arena.getArenaState() == ArenaState.IN_GAME) {
-          ((GuessArena) arena).setTimer(plugin.getConfig().getInt("Time-Manager." + pluginBaseArena.getArenaType().getPrefix() + ".Round-Delay"));
-          ((GuessArena) arena).setArenaInGameStage(BaseArena.ArenaInGameStage.PLOT_VOTING);
+          pluginArena.setTimer(plugin.getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".Round-Delay"));
+          pluginArena.setArenaInGameStage(BaseArena.ArenaInGameStage.PLOT_VOTING);
         }
       }
     }
   }
 
-  @Override
-  public void stopGame(boolean quickStop, @NotNull PluginArena arena) {
-    BaseArena pluginBaseArena = (BaseArena) plugin.getArenaRegistry().getArena(arena.getId());
-    if(pluginBaseArena == null) {
-      return;
-    }
-    for(Player player : arena.getPlayers()) {
-      if(!quickStop) {
-        switch(pluginBaseArena.getMode()) {
-          case HEARTS:
-            if(pluginBaseArena.isDeathPlayer(player)) {
-              plugin
-                  .getUserManager()
-                  .addStat(player, plugin.getStatsStorage().getStatisticType("LOSES"));
-              plugin
-                  .getRewardsHandler()
-                  .performReward(player, arena, plugin.getRewardsHandler().getRewardType("LOSE"));
-            } else {
-              plugin
-                  .getUserManager()
-                  .addStat(player, plugin.getStatsStorage().getStatisticType("WINS"));
-              plugin
-                  .getRewardsHandler()
-                  .performReward(player, arena, plugin.getRewardsHandler().getRewardType("WIN"));
-              plugin.getUserManager().addExperience(player, 5);
-            }
-            break;
-          case POINTS:
-            if(pluginBaseArena.getWinner().getPlayers().contains(player)) {
-              plugin
-                  .getUserManager()
-                  .addStat(player, plugin.getStatsStorage().getStatisticType("WINS"));
-              plugin.getUserManager().addExperience(player, 5);
-              plugin
-                  .getRewardsHandler()
-                  .performReward(player, arena, plugin.getRewardsHandler().getRewardType("WIN"));
-            } else {
-              plugin
-                  .getUserManager()
-                  .addStat(player, plugin.getStatsStorage().getStatisticType("LOSES"));
-              plugin
-                  .getRewardsHandler()
-                  .performReward(player, arena, plugin.getRewardsHandler().getRewardType("LOSE"));
-            }
-            break;
-          default:
-            break;
-        }
-      }
-    }
-    super.stopGame(quickStop, arena);
-  }
 }

@@ -20,29 +20,22 @@
 
 package plugily.projects.buildbattle.arena;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 import plugily.projects.buildbattle.api.event.guess.PlayerThemeGuessEvent;
+import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.arena.states.guess.InGameState;
 import plugily.projects.buildbattle.arena.states.guess.StartingState;
-import plugily.projects.buildbattle.old.ConfigPreferences;
-import plugily.projects.buildbattle.old.arena.managers.plots.Plot;
-import plugily.projects.buildbattle.old.handlers.reward.Reward;
-import plugily.projects.buildbattle.old.menus.themevoter.BBTheme;
-import plugily.projects.buildbattle.old.menus.themevoter.VoteMenu;
-import plugily.projects.buildbattle.old.menus.themevoter.VotePoll;
+import plugily.projects.buildbattle.handlers.themes.BBTheme;
 import plugily.projects.minigamesbox.classic.arena.ArenaState;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.user.User;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -55,14 +48,12 @@ public class GuessArena extends BaseArena {
 
   private final List<Player> whoGuessed = new ArrayList<>();
   private int round = 1;
-  private BBTheme currentTheme;
+  private BBTheme currentTheme = null;
   private Map<Player, Plot> plotList = new HashMap<>();
-  private Player winner;
-  private Player currentBuilder;
+  private Player winner = null;
+  private Player currentBuilder = null;
   private Map<Player, Integer> playersPoints = new HashMap<>();
   private List<Integer> removedCharsAt = new ArrayList<>();
-
-  private final Random random = new Random();
 
   public GuessArena(String id) {
     super(id);
@@ -198,7 +189,7 @@ public class GuessArena extends BaseArena {
 
     getPlugin().getServer().getScheduler().runTask(getPlugin(), () -> {
       addWhoGuessed(player);
-      new PlayerThemeGuessEvent(this, currentTheme);
+      Bukkit.getPluginManager().callEvent(new PlayerThemeGuessEvent(this, currentTheme));
       recalculateLeaderboard();
     });
   }

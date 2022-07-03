@@ -20,18 +20,23 @@
 
 package plugily.projects.buildbattle.arena;
 
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import plugily.projects.buildbattle.Main;
+import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.PluginArenaRegistry;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
 import plugily.projects.minigamesbox.classic.utils.dimensional.Cuboid;
 import plugily.projects.minigamesbox.classic.utils.hologram.ArmorStandHologram;
 import plugily.projects.minigamesbox.classic.utils.serialization.LocationSerializer;
-import plugily.projects.thebridge.Main;
-import plugily.projects.thebridge.arena.base.Base;
+import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +56,18 @@ public class ArenaRegistry extends PluginArenaRegistry {
 
   @Override
   public PluginArena getNewArena(String id) {
-    return new BaseArena(id);
+    String gameType = ConfigUtils.getConfig(plugin, "arenas").getString("instances." + id + "gametype", "classic");
+    switch(gameType.toLowerCase()) {
+      case "gtb":
+      case "guessthebuild":
+      case "guess_the_build":
+        return new GuessArena(id);
+      case "classic":
+      case "solo":
+      case "team":
+      default:
+        return new BuildArena(id);
+    }
   }
 
   @Override
@@ -63,65 +79,48 @@ public class ArenaRegistry extends PluginArenaRegistry {
       plugin.getDebugger().sendConsoleMsg(new MessageBuilder("VALIDATOR_INVALID_ARENA_CONFIGURATION").asKey().value("NOT VALIDATED").arena(arena).build());
       return false;
     }
+    if(arena instanceof BuildArena && !section.contains(id + ".plotmembersize")) {
+      plugin.getDebugger().sendConsoleMsg(new MessageBuilder("VALIDATOR_INVALID_ARENA_CONFIGURATION").asKey().value("PLOT MEMBER SIZE MISSING!").arena(arena).build());
+      return false;
+    }
+    arena.setArenaOption("PLOT_MEMBER_SIZE", arena instanceof BuildArena ? section.getInt(id + ".plotmembersize", 1) : 1);
 
-    ((BaseArena) arena).setMidLocation(LocationSerializer.getLocation(section.getString(id + ".midlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
-    ((BaseArena) arena).setArenaBorder(new Cuboid(LocationSerializer.getLocation(section.getString(id + ".arenalocation1", "world,364.0,63.0,-72.0,0.0,0.0")), LocationSerializer.getLocation(section.getString(id + ".arenalocation2", "world,364.0,63.0,-72.0,0.0,0.0"))));
-    int bases = 0;
-    if(section.contains(id + ".bases")) {
-      if(section.isConfigurationSection(id + ".bases")) {
-        for(String baseID : section.getConfigurationSection(id + ".bases").getKeys(false)) {
-          if(section.isSet(id + ".bases." + baseID + ".isdone")) {
-            Base base = new Base(
-                section.getString(id + ".bases." + baseID + ".color"),
-                LocationSerializer.getLocation(section.getString(id+ ".bases." + baseID + ".baselocation1")),
-                LocationSerializer.getLocation(section.getString(id+ ".bases." + baseID + ".baselocation2")),
-                LocationSerializer.getLocation(section.getString(id + ".bases." + baseID + ".spawnpoint")),
-                LocationSerializer.getLocation(section.getString(id + ".bases." + baseID + ".respawnpoint")),
-                LocationSerializer.getLocation(section.getString(id + ".bases." + baseID + ".portallocation1")),
-                LocationSerializer.getLocation(section.getString(id + ".bases." + baseID + ".portallocation2")),
-                section.getInt(id + ".maximumsize")
-            );
-            ((BaseArena) arena).addBase(base);
-            if(section.getString(id + ".bases." + baseID + ".cagelocation1") != null)
-              base.setCageCuboid(new Cuboid(LocationSerializer.getLocation(section.getString(id + ".bases." + baseID + ".cagelocation1")), LocationSerializer.getLocation(section.getString(id + ".bases." + baseID + ".cagelocation2"))));
-            ArmorStandHologram portal = new ArmorStandHologram(plugin.getBukkitHelper().getBlockCenter(LocationSerializer.getLocation(section.getString(id + ".bases." + baseID + ".portalhologram"))));
-            for(String str : plugin.getLanguageManager().getLanguageMessage(plugin.getMessageManager().getPath("IN_GAME_MESSAGES_ARENA_PORTAL_HOLOGRAM")).split(";")) {
-              portal.appendLine(str.replace("%arena_base_color_formatted%", base.getFormattedColor()));
-            }
-            base.setArmorStandHologram(portal);
-            bases++;
-          } else {
-            plugin.getDebugger().sendConsoleMsg(new MessageBuilder("VALIDATOR_INVALID_ARENA_CONFIGURATION").asKey().value("NO BASES CONFIGURED").arena(arena).build());
-            return false;
+    ConfigurationSection plotSection = section.getConfigurationSection(id + ".plots");
+    if(plotSection == null) {
+      plugin.getDebugger().sendConsoleMsg(new MessageBuilder("VALIDATOR_INVALID_ARENA_CONFIGURATION").asKey().value("PLOTS SETUP MISSING!").arena(arena).build());
+      return false;
+    }
+    for(String plotName : plotSection.getKeys(false)) {
+      String minPointString = plotSection.getString(plotName + ".minpoint");
+      String maxPointString = plotSection.getString(plotName + ".maxpoint");
+
+      if(minPointString != null && maxPointString != null) {
+        Location minPoint = LocationSerializer.getLocation(minPointString);
+        Location maxPoint = LocationSerializer.getLocation(maxPointString);
+
+        if(minPoint != null && maxPoint != null) {
+          World minWorld = minPoint.getWorld();
+
+          if(minWorld != null) {
+            Biome biome = ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_15_R1) ?
+                minWorld.getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
+                : minWorld.getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
+
+            Plot buildPlot = new Plot((BaseArena) arena, biome);
+
+            buildPlot.setCuboid(new Cuboid(minPoint, maxPoint));
+            buildPlot.fullyResetPlot();
+
+            ((BaseArena) arena).getPlotManager().addBuildPlot(buildPlot);
           }
         }
       } else {
-        plugin.getDebugger().sendConsoleMsg(new MessageBuilder("VALIDATOR_INVALID_ARENA_CONFIGURATION").asKey().value("BASES NOT FOUND").arena(arena).build());
+        plugin.getDebugger().sendConsoleMsg(new MessageBuilder("VALIDATOR_INVALID_ARENA_CONFIGURATION").asKey().value("PLOT NOT CONFIGURED!").arena(arena).build());
         return false;
       }
-    } else {
-      plugin.getDebugger().sendConsoleMsg(new MessageBuilder("VALIDATOR_INVALID_ARENA_CONFIGURATION").asKey().value("BASE NOT FOUND").arena(arena).build());
-      return false;
     }
-    if(bases < 2) {
-      plugin.getDebugger().sendConsoleMsg(new MessageBuilder("VALIDATOR_INVALID_ARENA_CONFIGURATION").asKey().value("NOT ENOUGH BASES").arena(arena).build());
-      return false;
-    }
-    arena.setArenaOption("BASE_PLAYER_SIZE", section.getInt(id + ".maximumsize", 3));
-    arena.setMaximumPlayers(bases * arena.getArenaOption("BASE_PLAYER_SIZE"));
-    if(section.contains(id + ".mode")) {
-      ((BaseArena) arena).setMode(BaseArena.Mode.valueOf(section.getString(id + ".mode").toUpperCase()));
-    } else {
-      ((BaseArena) arena).setMode(BaseArena.Mode.POINTS);
-    }
-    arena.setArenaOption("MODE_VALUE", section.getInt(id + ".modevalue", 5));
-    arena.setArenaOption("RESET_BLOCKS", section.getInt(id + ".resetblocks", 0));
-    arena.setArenaOption("RESET_TIME", section.getInt(id + ".resettime", 5));
-    for(Base base : ((BaseArena) arena).getBases()) {
-      if(!((BaseArena) arena).getArenaBorder().isIn(base.getBaseCuboid().getCenter())) {
-        plugin.getDebugger().sendConsoleMsg(new MessageBuilder("VALIDATOR_INVALID_ARENA_CONFIGURATION").asKey().arena(arena).value("YOUR BASE CUBOIDS ARE NOT INSIDE ARENA CUBOID").build());
-        return false;
-      }
+    if(arena instanceof BuildArena) {
+      ((BuildArena) arena).initPoll();
     }
     return true;
   }

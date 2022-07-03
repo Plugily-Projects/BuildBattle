@@ -8,6 +8,8 @@ instances:
     plotmembersize: 1
     mapname: mapname
     world: worldname
-    gametype: solo
+    # classic (deprecated: solo), guess_the_build
+    gametype: classic
     isdone: false
     signs: {}
+    plots: {}

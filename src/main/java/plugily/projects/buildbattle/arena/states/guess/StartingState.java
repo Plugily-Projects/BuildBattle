@@ -20,20 +20,11 @@
 
 package plugily.projects.buildbattle.arena.states.guess;
 
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.arena.BaseArena;
-import plugily.projects.buildbattle.arena.BuildArena;
 import plugily.projects.buildbattle.arena.GuessArena;
-import plugily.projects.buildbattle.old.ConfigPreferences;
-import plugily.projects.buildbattle.old.arena.managers.plots.Plot;
-import plugily.projects.buildbattle.old.handlers.HolidayManager;
-import plugily.projects.buildbattle.old.handlers.reward.Reward;
-import plugily.projects.buildbattle.old.menus.options.registry.particles.ParticleRefreshScheduler;
+import plugily.projects.buildbattle.handlers.menu.registry.particles.ParticleRefreshScheduler;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.states.PluginStartingState;
-import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 
 /**
  * @author Plajer
@@ -50,9 +41,6 @@ public class StartingState extends PluginStartingState {
     }
     if (arena.getTimer() == 0 || arena.isForceStart()) {
       //getPlotManager().resetPlotsGradually();
-      if(HolidayManager.getCurrentHoliday() != HolidayManager.HolidayType.NONE) {
-        initPoll();
-      }
       pluginArena.setParticleRefreshScheduler(new ParticleRefreshScheduler(getPlugin()));
       if(!pluginArena.getPlotManager().isPlotsCleared()) {
         pluginArena.getPlotManager().resetQueuedPlots();

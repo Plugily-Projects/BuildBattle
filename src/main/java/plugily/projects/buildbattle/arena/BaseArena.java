@@ -25,19 +25,12 @@ import org.jetbrains.annotations.NotNull;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.managers.MapRestorerManager;
 import plugily.projects.buildbattle.arena.managers.ScoreboardManager;
-import plugily.projects.buildbattle.old.arena.managers.plots.PlotManager;
-import plugily.projects.buildbattle.old.menus.options.registry.particles.ParticleRefreshScheduler;
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.buildbattle.arena.managers.plots.PlotManager;
+import plugily.projects.buildbattle.handlers.menu.registry.particles.ParticleRefreshScheduler;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
-import plugily.projects.thebridge.Main;
-import plugily.projects.thebridge.api.events.game.TBRoundResetEvent;
-import plugily.projects.thebridge.arena.base.Base;
-import plugily.projects.thebridge.arena.managers.MapRestorerManager;
-import plugily.projects.thebridge.arena.managers.ScoreboardManager;
-import plugily.projects.thebridge.arena.states.InGameState;
-import plugily.projects.thebridge.arena.states.RestartingState;
-import plugily.projects.thebridge.arena.states.StartingState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,9 +59,6 @@ public class BaseArena extends PluginArena {
     mapRestorerManager = new MapRestorerManager(this);
     plotManager = new PlotManager(this);
     setMapRestorerManager(mapRestorerManager);
-    addGameStateHandler(ArenaState.IN_GAME, new InGameState());
-    addGameStateHandler(ArenaState.RESTARTING, new RestartingState());
-    addGameStateHandler(ArenaState.STARTING, new StartingState());
   }
 
   public static void init(Main plugin) {
@@ -155,13 +145,11 @@ public class BaseArena extends PluginArena {
   }
 
   public void sendBuildLeftTimeMessage() {
-    int timer = getTimer();
-    String message = plugin.getChatManager().colorMessage("In-Game.Messages.Time-Left-To-Build").replace("%FORMATTEDTIME%", StringFormatUtils.formatIntoMMSS(timer));
-    String subtitle = plugin.getChatManager().colorMessage("In-Game.Messages.Time-Left-Subtitle").replace("%FORMATTEDTIME%", Integer.toString(timer));
-    for(Player p : players) {
+    new TitleBuilder("IN_GAME_MESSAGES_PLOT_TIME_LEFT_TITLE").asKey().arena(this).sendArena();
+    String message = new MessageBuilder("IN_GAME_MESSAGES_PLOT_TIME_LEFT_CHAT").asKey().arena(this).build();
+    for(Player p : getPlayers()) {
       VersionUtils.sendActionBar(p, message);
-      p.sendMessage(plugin.getChatManager().getPrefix() + message);
-      VersionUtils.sendSubTitle(p, subtitle, 5, 30, 5);
+      p.sendMessage(message);
     }
   }
 

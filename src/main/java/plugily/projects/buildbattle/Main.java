@@ -21,33 +21,69 @@
 package plugily.projects.buildbattle;
 
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPluginLoader;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import plugily.projects.buildbattle.arena.ArenaEvents;
+import plugily.projects.buildbattle.arena.ArenaManager;
+import plugily.projects.buildbattle.arena.ArenaRegistry;
+import plugily.projects.buildbattle.arena.BaseArena;
+import plugily.projects.buildbattle.arena.BuildArena;
+import plugily.projects.buildbattle.arena.GuessArena;
+import plugily.projects.buildbattle.arena.managers.plots.Plot;
+import plugily.projects.buildbattle.arena.managers.plots.PlotMenuHandler;
+import plugily.projects.buildbattle.arena.vote.VoteEvents;
+import plugily.projects.buildbattle.arena.vote.VoteItems;
+import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
+import plugily.projects.buildbattle.events.OptionMenuEvents;
+import plugily.projects.buildbattle.handlers.menu.OptionsMenuHandler;
+import plugily.projects.buildbattle.handlers.menu.OptionsRegistry;
+import plugily.projects.buildbattle.handlers.setup.SetupCategoryManager;
+import plugily.projects.buildbattle.handlers.themes.ThemeManager;
+import plugily.projects.buildbattle.handlers.misc.BlacklistManager;
 import plugily.projects.minigamesbox.classic.PluginMain;
 import plugily.projects.minigamesbox.classic.api.StatisticType;
+import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.options.ArenaOption;
 import plugily.projects.minigamesbox.classic.handlers.language.Message;
-import plugily.projects.minigamesbox.classic.handlers.permissions.Permission;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.permissions.PermissionCategory;
+import plugily.projects.minigamesbox.classic.handlers.placeholder.Placeholder;
 import plugily.projects.minigamesbox.classic.handlers.reward.RewardType;
+import plugily.projects.minigamesbox.classic.handlers.setup.SetupInventory;
+import plugily.projects.minigamesbox.classic.handlers.setup.categories.PluginSetupCategoryManager;
 import plugily.projects.minigamesbox.classic.preferences.ConfigOption;
 import plugily.projects.minigamesbox.classic.utils.services.locale.Locale;
 import plugily.projects.minigamesbox.classic.utils.services.locale.LocaleRegistry;
+import plugily.projects.minigamesbox.classic.utils.services.metrics.Metrics;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by Tom on 17/08/2015.
  * Updated by Tigerpanzer_02 on 03.12.2021
  */
+//TODO OptionMenu change to InventoryLibrary
 public class Main extends PluginMain {
 
   private FileConfiguration entityUpgradesConfig;
+  private VoteItems voteItems;
+  private ThemeManager themeManager;
+  private BlacklistManager blacklistManager;
+  private OptionsRegistry optionsRegistry;
   private ArenaRegistry arenaRegistry;
   private ArenaManager arenaManager;
   private ArgumentsRegistry argumentsRegistry;
+  private PlotMenuHandler plotMenuHandler;
 
 
   @TestOnly
@@ -76,9 +112,13 @@ public class Main extends PluginMain {
 
   public void initializePluginClasses() {
     addFileName("themes");
+    addFileName("vote_items");
+    blacklistManager = new BlacklistManager(this);
+    optionsRegistry = new OptionsRegistry(this);
+    new OptionsMenuHandler(this);
+    new OptionMenuEvents(this);
     addArenaOptions();
-    Arena.init(this);
-    ArenaUtils.init(this);
+    BaseArena.init(this);
     new ArenaEvents(this);
     arenaManager = new ArenaManager(this);
     arenaRegistry = new ArenaRegistry(this);
@@ -86,9 +126,25 @@ public class Main extends PluginMain {
     getSignManager().loadSigns();
     getSignManager().updateSigns();
     argumentsRegistry = new ArgumentsRegistry(this);
-
-    new PluginEvents(this);
+    voteItems = new VoteItems(this);
+    new VoteEvents(this);
+    themeManager = new ThemeManager(this);
+    plotMenuHandler = new PlotMenuHandler(this);
     addPluginMetrics();
+  }
+
+  private void addPluginMetrics() {
+    getMetrics().addCustomChart(new Metrics.SimplePie("hooked_addons", () -> {
+      if(getServer().getPluginManager().getPlugin("BuildBattle-Extras") != null) {
+        return "Extras";
+      }
+      return "None";
+    }));
+  }
+
+  private void addArenaOptions() {
+    getArenaOptionManager().registerArenaOption("IN_PLOT_CHECKER", new ArenaOption("null", 0, true));
+    getArenaOptionManager().registerArenaOption("PLOT_MEMBER_SIZE", new ArenaOption("plotmembersize", 1, true));
   }
 
   public void addAdditionalValues() {
@@ -96,9 +152,6 @@ public class Main extends PluginMain {
     getConfigPreferences().registerOption("HEAD_MENU_CUSTOM", new ConfigOption("Head-Menu.Custom", false));
     getConfigPreferences().registerOption("REPORT_COMMANDS", new ConfigOption("Report.Commands", false));
     getConfigPreferences().registerOption("HIDE_PLOT_OWNER", new ConfigOption("Hide-Plot-Owner", false));
-
-    getArenaOptionManager().registerArenaOption("IN_PLOT_CHECKER", new ArenaOption("null", 0, true));
-    getArenaOptionManager().registerArenaOption("PLOT_MEMBER_SIZE", new ArenaOption("plotmembersize", 1, true));
 
     getStatsStorage().registerStatistic("BLOCKS_PLACED", new StatisticType("blocks_placed", true, "int(11) NOT NULL DEFAULT '0'"));
     getStatsStorage().registerStatistic("BLOCKS_BROKEN", new StatisticType("blocks_broken", true, "int(11) NOT NULL DEFAULT '0'"));
@@ -123,6 +176,449 @@ public class Main extends PluginMain {
 
     getSpecialItemManager().registerSpecialItem("OPTIONS_MENU", "Options-Menu");
     getSpecialItemManager().registerSpecialItem("PLOT_SELECTOR", "Plot-Selector");
+  }
+
+  public void registerPlaceholders() {
+    getPlaceholderManager().registerPlaceholder(new Placeholder("theme", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+      @Override
+      public String getValue(Player player, PluginArena arena) {
+        return getTheme(arena);
+      }
+
+      @Override
+      public String getValue(PluginArena arena) {
+        return getTheme(arena);
+      }
+
+      @Nullable
+      private String getTheme(PluginArena arena) {
+        BaseArena pluginArena = (BaseArena) getArenaRegistry().getArena(arena.getId());
+        if(pluginArena == null) {
+          return null;
+        }
+        String theme = pluginArena.getTheme();
+        if(theme.equalsIgnoreCase("theme")) {
+          theme = new MessageBuilder("SCOREBOARD_THEME_UNKNOWN").asKey().build();
+        }
+        return theme;
+      }
+    });
+
+    getPlaceholderManager().registerPlaceholder(new Placeholder("difficulty", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+      @Override
+      public String getValue(Player player, PluginArena arena) {
+        return getTheme(arena);
+      }
+
+      @Override
+      public String getValue(PluginArena arena) {
+        return getTheme(arena);
+      }
+
+      @Nullable
+      private String getTheme(PluginArena arena) {
+        BaseArena pluginArena = (BaseArena) getArenaRegistry().getArena(arena.getId());
+        if(pluginArena == null) {
+          return null;
+        }
+        if(pluginArena instanceof GuessArena) {
+          return ((GuessArena) pluginArena).getCurrentTheme().getDifficulty().name();
+        }
+        return null;
+      }
+    });
+
+    getPlaceholderManager().registerPlaceholder(new Placeholder("difficulty_pointsreward", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+      @Override
+      public String getValue(Player player, PluginArena arena) {
+        return getTheme(arena);
+      }
+
+      @Override
+      public String getValue(PluginArena arena) {
+        return getTheme(arena);
+      }
+
+      @Nullable
+      private String getTheme(PluginArena arena) {
+        BaseArena pluginArena = (BaseArena) getArenaRegistry().getArena(arena.getId());
+        if(pluginArena == null) {
+          return null;
+        }
+        if(pluginArena instanceof GuessArena) {
+          return String.valueOf(((GuessArena) pluginArena).getCurrentTheme().getDifficulty().getPointsReward());
+        }
+        return null;
+      }
+    });
+
+    getPlaceholderManager().registerPlaceholder(new Placeholder("builder", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+      @Override
+      public String getValue(Player player, PluginArena arena) {
+        return getBuilder(arena);
+      }
+
+      @Override
+      public String getValue(PluginArena arena) {
+        return getBuilder(arena);
+      }
+
+      @Nullable
+      private String getBuilder(PluginArena arena) {
+        BaseArena pluginArena = (BaseArena) getArenaRegistry().getArena(arena.getId());
+        if(pluginArena == null) {
+          return null;
+        }
+        if(!(pluginArena instanceof GuessArena)) {
+          return null;
+        }
+        return ((GuessArena) pluginArena).getCurrentBuilder().getName();
+      }
+    });
+
+    getPlaceholderManager().registerPlaceholder(new Placeholder("type", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+      @Override
+      public String getValue(Player player, PluginArena arena) {
+        return getType(arena);
+      }
+
+      @Override
+      public String getValue(PluginArena arena) {
+        return getType(arena);
+      }
+
+      @Nullable
+      private String getType(PluginArena arena) {
+        BaseArena pluginArena = (BaseArena) getArenaRegistry().getArena(arena.getId());
+        if(pluginArena == null) {
+          return null;
+        }
+        return pluginArena.getArenaType().toString();
+      }
+    });
+    getPlaceholderManager().registerPlaceholder(new Placeholder("type_pretty", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+      @Override
+      public String getValue(Player player, PluginArena arena) {
+        return getType(arena);
+      }
+
+      @Override
+      public String getValue(PluginArena arena) {
+        return getType(arena);
+      }
+
+      @Nullable
+      private String getType(PluginArena arena) {
+        BaseArena pluginArena = (BaseArena) getArenaRegistry().getArena(arena.getId());
+        if(pluginArena == null) {
+          return null;
+        }
+        return pluginArena.getArenaType().getPrefix();
+      }
+    });
+    for(int i = 0; i <= 32; i++) {
+      int number = i;
+      getPlaceholderManager().registerPlaceholder(new Placeholder("place_member_" + number, Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+        @Override
+        public String getValue(Player player, PluginArena arena) {
+          return getPlace(arena);
+        }
+
+        @Override
+        public String getValue(PluginArena arena) {
+          return getPlace(arena);
+        }
+
+        @Nullable
+        private String getPlace(PluginArena arena) {
+          BaseArena pluginArena = (BaseArena) getArenaRegistry().getArena(arena.getId());
+          if(pluginArena == null) {
+            return null;
+          }
+          if(pluginArena instanceof BuildArena) {
+            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() == ArenaState.ENDING && pluginArena.getArenaState() == ArenaState.RESTARTING) {
+              return null;
+            }
+            return ((BuildArena) pluginArena).getTopList().get(number).toString();
+          }
+          if(pluginArena instanceof GuessArena) {
+            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() == ArenaState.ENDING && pluginArena.getArenaState() == ArenaState.RESTARTING) {
+              return null;
+            }
+            List<Map.Entry<Player, Integer>> list = new ArrayList<>(((GuessArena) pluginArena).getPlayersPoints().entrySet());
+            Map.Entry<Player, Integer> entry = list.get(number);
+            return entry.getKey().getName();
+          }
+          return pluginArena.getArenaInGameStage().toString();
+        }
+      });
+
+      getPlaceholderManager().registerPlaceholder(new Placeholder("place_points_" + number, Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+        @Override
+        public String getValue(Player player, PluginArena arena) {
+          return getPlace(arena);
+        }
+
+        @Override
+        public String getValue(PluginArena arena) {
+          return getPlace(arena);
+        }
+
+        @Nullable
+        private String getPlace(PluginArena arena) {
+          BaseArena pluginArena = (BaseArena) getArenaRegistry().getArena(arena.getId());
+          if(pluginArena == null) {
+            return null;
+          }
+          if(pluginArena instanceof BuildArena) {
+            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() == ArenaState.ENDING && pluginArena.getArenaState() == ArenaState.RESTARTING) {
+              return null;
+            }
+            return ((BuildArena) pluginArena).getTopList().get(number).toString();
+          }
+          if(pluginArena instanceof GuessArena) {
+            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() == ArenaState.ENDING && pluginArena.getArenaState() == ArenaState.RESTARTING) {
+              return null;
+            }
+            List<Map.Entry<Player, Integer>> list = new ArrayList<>(((GuessArena) pluginArena).getPlayersPoints().entrySet());
+            Map.Entry<Player, Integer> entry = list.get(number);
+            return String.valueOf(entry.getValue());
+          }
+          return pluginArena.getArenaInGameStage().toString();
+        }
+      });
+    }
+    getPlaceholderManager().registerPlaceholder(new Placeholder("ingame_stage", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+      @Override
+      public String getValue(Player player, PluginArena arena) {
+        return getStage(arena);
+      }
+
+      @Override
+      public String getValue(PluginArena arena) {
+        return getStage(arena);
+      }
+
+      @Nullable
+      private String getStage(PluginArena arena) {
+        BaseArena pluginArena = (BaseArena) getArenaRegistry().getArena(arena.getId());
+        if(pluginArena == null) {
+          return null;
+        }
+        return pluginArena.getArenaInGameStage().toString();
+      }
+    });
+
+    getPlaceholderManager().registerPlaceholder(new Placeholder("ingame_stage", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+      @Override
+      public String getValue(Player player, PluginArena arena) {
+        return getStage(arena);
+      }
+
+      @Override
+      public String getValue(PluginArena arena) {
+        return getStage(arena);
+      }
+
+      @Nullable
+      private String getStage(PluginArena arena) {
+        BaseArena pluginArena = (BaseArena) getArenaRegistry().getArena(arena.getId());
+        if(pluginArena == null) {
+          return null;
+        }
+        return pluginArena.getArenaInGameStage().toString();
+      }
+    });
+
+    getPlaceholderManager().registerPlaceholder(new Placeholder("ingame_stage_pretty", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+      @Override
+      public String getValue(Player player, PluginArena arena) {
+        return getStage(arena);
+      }
+
+      @Override
+      public String getValue(PluginArena arena) {
+        return getStage(arena);
+      }
+
+      @Nullable
+      private String getStage(PluginArena arena) {
+        BaseArena pluginArena = (BaseArena) getArenaRegistry().getArena(arena.getId());
+        if(pluginArena == null) {
+          return null;
+        }
+        return pluginArena.getArenaInGameStage().getPrefix();
+      }
+    });
+
+
+    getPlaceholderManager().registerPlaceholder(new Placeholder("team", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+      @Override
+      public String getValue(Player player, PluginArena arena) {
+        return getMembers(player, arena);
+      }
+
+      @Nullable
+      private String getMembers(Player player, PluginArena arena) {
+        BaseArena pluginArena = (BaseArena) getArenaRegistry().getArena(arena.getId());
+        if(pluginArena == null) {
+          return null;
+        }
+        if(!(pluginArena instanceof BuildArena)) {
+          return new MessageBuilder("IN_GAME_MESSAGES_PLOT_NOBODY").asKey().build();
+        }
+        Plot plot = pluginArena.getPlotManager().getPlot(player);
+
+        if(plot != null) {
+          if(plot.getMembers().size() > 1) {
+            StringBuilder members = new StringBuilder();
+            plot.getMembers().forEach(p -> members.append(p.getName()).append(" & "));
+            members.deleteCharAt(members.length() - 2);
+            return new MessageBuilder(members.toString()).build();
+          }
+        }
+        return new MessageBuilder("IN_GAME_MESSAGES_PLOT_NOBODY").asKey().build();
+      }
+    });
+
+    getPlaceholderManager().registerPlaceholder(new Placeholder("summary_player", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+      @Override
+      public String getValue(Player player, PluginArena arena) {
+        return getSummary(arena, player);
+      }
+
+      @Override
+      public String getValue(PluginArena arena) {
+        return "";
+      }
+
+      @Nullable
+      private String getSummary(PluginArena arena, Player player) {
+        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
+        if(pluginArena == null) {
+          return null;
+        }
+        if(pluginArena instanceof BuildArena) {
+          Plot plot = ((BuildArena) pluginArena).getWinnerPlot();
+          if(plot != null && !plot.getMembers().isEmpty() && plot.getMembers().contains(player)) {
+            return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_WIN").asKey().arena(pluginArena).build();
+          }
+        }
+        if(pluginArena instanceof GuessArena) {
+          Player winner = ((GuessArena) pluginArena).getWinner();
+          if(winner == player) {
+            return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_WIN").asKey().arena(pluginArena).build();
+          }
+        }
+        return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_LOSE").asKey().arena(pluginArena).build();
+      }
+    });
+
+    getPlaceholderManager().registerPlaceholder(new Placeholder("summary_place_own", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+      @Override
+      public String getValue(Player player, PluginArena arena) {
+        return getSummary(arena, player);
+      }
+
+      @Override
+      public String getValue(PluginArena arena) {
+        return "";
+      }
+
+      @Nullable
+      private String getSummary(PluginArena arena, Player player) {
+        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
+        if(pluginArena == null) {
+          return null;
+        }
+        if(pluginArena instanceof BuildArena) {
+          if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() == ArenaState.ENDING && pluginArena.getArenaState() == ArenaState.RESTARTING) {
+            return null;
+          }
+          List<List<Player>> playerList = new ArrayList<>(((BuildArena) pluginArena).getTopList().values());
+          for(List<Player> players : playerList) {
+            if(players.contains(player)) {
+              return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_OWN").asKey().integer(playerList.indexOf(players)).arena(pluginArena).build();
+            }
+          }
+        }
+        if(pluginArena instanceof GuessArena) {
+          if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() == ArenaState.ENDING && pluginArena.getArenaState() == ArenaState.RESTARTING) {
+            return null;
+          }
+          List<Player> playerList = new ArrayList<>(((GuessArena) pluginArena).getPlayersPoints().keySet());
+          if(playerList.contains(player)) {
+            return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_OWN").asKey().integer(playerList.indexOf(player)).arena(pluginArena).build();
+          }
+        }
+        return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_OWN").asKey().integer(0).arena(pluginArena).build();
+      }
+    });
+
+
+    getPlaceholderManager().registerPlaceholder(new Placeholder("summary", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+      @Override
+      public String getValue(Player player, PluginArena arena) {
+        return getSummary(arena);
+      }
+
+      @Override
+      public String getValue(PluginArena arena) {
+        return getSummary(arena);
+      }
+
+      @Nullable
+      private String getSummary(PluginArena arena) {
+        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
+        if(pluginArena == null) {
+          return null;
+        }
+        if(pluginArena instanceof BuildArena) {
+          Plot plot = ((BuildArena) pluginArena).getWinnerPlot();
+          if(plot != null && !plot.getMembers().isEmpty()) {
+            return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_WINNER").asKey().arena(pluginArena).build();
+          }
+        }
+        if(pluginArena instanceof GuessArena) {
+          Player winner = ((GuessArena) pluginArena).getWinner();
+          if(winner != null) {
+            return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_WINNER").asKey().arena(pluginArena).build();
+          }
+        }
+        return null;
+      }
+    });
+    getPlaceholderManager().registerPlaceholder(new Placeholder("summary_place_list", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+      @Override
+      public String getValue(Player player, PluginArena arena) {
+        return getSummary(arena);
+      }
+
+      @Override
+      public String getValue(PluginArena arena) {
+        return getSummary(arena);
+      }
+
+      @Nullable
+      private String getSummary(PluginArena arena) {
+        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
+        if(pluginArena == null) {
+          return null;
+        }
+        int places = pluginArena.getPlayersLeft().size();
+        if(places > 16) {
+          places = 16;
+        }
+        StringBuilder placeSummary = new StringBuilder();
+        for(int i = 1; i < places; i++) {
+          //number = place, value = members + points
+          placeSummary.append("\n").append(new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_PLACE").asKey().integer(i).value("%arena_place_members_" + i + "% (%arena_place_points_" + i + "%)").arena(pluginArena).build());
+        }
+        return placeSummary.toString();
+      }
+    });
+
+
   }
 
   public void registerLocales() {
@@ -155,6 +651,7 @@ public class Main extends PluginMain {
     getMessageManager().registerMessage("COMMANDS_ADMIN_ADDED_PLOT", new Message("Commands.Admin.Added-Plot", ""));
     getMessageManager().registerMessage("SCOREBOARD_THEME_UNKNOWN", new Message("Scoreboard.Theme-Unknown", ""));
     // scoreboard ingame classic/teams/guess-the-build/guess-the-build-waiting | ending classic/guess-the-build
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_WINNER", new Message("In-Game.Messages.Game-End.Placeholders.Winner", ""));
     getMessageManager().registerMessage("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_PLACE", new Message("In-Game.Messages.Game-End.Placeholders.Place", ""));
     getMessageManager().registerMessage("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_OWN", new Message("In-Game.Messages.Game-End.Placeholders.Own", ""));
     getMessageManager().registerMessage("IN_GAME_MESSAGES_ADMIN_CHANGED_THEME", new Message("In-Game.Messages.Admin.Changed-Theme", ""));
@@ -166,6 +663,7 @@ public class Main extends PluginMain {
     getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_TIME_LEFT_CHAT", new Message("In-Game.Messages.Plot.Time-Left.Chat", ""));
     getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_LIMIT_ENTITIES", new Message("In-Game.Messages.Plot.Limit.Entities", ""));
     getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_LIMIT_PARTICLES", new Message("In-Game.Messages.Plot.Limit.Particles", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_PERMISSION_HEAD", new Message("In-Game.Messages.Plot.Permission.Head", ""));
     getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_PERMISSION_PARTICLE", new Message("In-Game.Messages.Plot.Permission.Particle", ""));
     getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_PERMISSION_BIOME", new Message("In-Game.Messages.Plot.Permission.Biome", ""));
     getMessageManager().registerMessage("IN_GAME_MESSAGES_PLOT_PERMISSION_OUTSIDE", new Message("In-Game.Messages.Plot.Permission.Outside", ""));
@@ -213,6 +711,7 @@ public class Main extends PluginMain {
     getMessageManager().registerMessage("MENU_OPTION_CONTENT_PARTICLE_ITEM_LORE", new Message("Menu.Option.Content.Particle.Item.Lore", ""));
     getMessageManager().registerMessage("MENU_OPTION_CONTENT_PARTICLE_ITEM_REMOVE_NAME", new Message("Menu.Option.Content.Particle.Item.Remove.Name", ""));
     getMessageManager().registerMessage("MENU_OPTION_CONTENT_PARTICLE_ITEM_REMOVE_LORE", new Message("Menu.Option.Content.Particle.Item.Remove.LORE", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_PARTICLE_ADDED", new Message("Menu.Option.Content.Particle.Added", ""));
     getMessageManager().registerMessage("MENU_OPTION_CONTENT_PARTICLE_REMOVED", new Message("Menu.Option.Content.Particle.Removed", ""));
     getMessageManager().registerMessage("MENU_OPTION_CONTENT_HEADS_INVENTORY", new Message("Menu.Option.Content.Heads.Inventory", ""));
     getMessageManager().registerMessage("MENU_OPTION_CONTENT_HEADS_ITEM_NAME", new Message("Menu.Option.Content.Heads.Item.Name", ""));
@@ -269,5 +768,44 @@ public class Main extends PluginMain {
 
   }
 
-  //todo Placeholders difficutly gtb, difficutly points reward, theme,
+  public VoteItems getVoteItems() {
+    return voteItems;
+  }
+
+  public ThemeManager getThemeManager() {
+    return themeManager;
+  }
+
+  public BlacklistManager getBlacklistManager() {
+    return blacklistManager;
+  }
+
+  public OptionsRegistry getOptionsRegistry() {
+    return optionsRegistry;
+  }
+
+  public PlotMenuHandler getPlotMenuHandler() {
+    return plotMenuHandler;
+  }
+
+
+  @Override
+  public ArenaRegistry getArenaRegistry() {
+    return arenaRegistry;
+  }
+
+  @Override
+  public ArenaManager getArenaManager() {
+    return arenaManager;
+  }
+
+  @Override
+  public ArgumentsRegistry getArgumentsRegistry() {
+    return argumentsRegistry;
+  }
+
+  @Override
+  public PluginSetupCategoryManager getSetupCategoryManager(SetupInventory setupInventory) {
+    return new SetupCategoryManager(setupInventory);
+  }
 }

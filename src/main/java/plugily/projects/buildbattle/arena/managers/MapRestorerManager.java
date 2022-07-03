@@ -22,7 +22,7 @@ package plugily.projects.buildbattle.arena.managers;
 
 import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.arena.BaseArena;
-import plugily.projects.buildbattle.old.arena.managers.plots.Plot;
+import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.minigamesbox.classic.arena.managers.PluginMapRestorerManager;
 
 public class MapRestorerManager extends PluginMapRestorerManager {
@@ -44,21 +44,15 @@ public class MapRestorerManager extends PluginMapRestorerManager {
   }
 
   private void clearPlots() {
-    for (Player player : arena.getPlayers()) {
-      //plot might be already deleted by team mate in TEAM game mode
-      Plot plot = arena.getPlotManager().getPlot(player);
-      if(plot != null) {
-        plot.fullyResetPlot();
-      }
-    }
     for(Plot plot : arena.getPlotManager().getPlots()) {
+      plot.fullyResetPlot();
       plot.getMembers().clear();
     }
   }
 
   private void cancelParticleRefresh() {
     if(arena.getParticleRefreshScheduler() != null) {
-      arena.getParticleRefreshScheduler().task.cancel();
+      arena.getParticleRefreshScheduler().getTask().cancel();
     }
   }
 }

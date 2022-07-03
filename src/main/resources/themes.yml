@@ -39,13 +39,13 @@ Themes:
 # Special holiday themes
 # that will be used during holiday events if enabled.
 Holiday:
-  April-Fools:
+  AprilFools:
     - Hypercube
     - Nothing
     - Void
     - Minecraft
     - Mojang
-  Valentines-Day:
+  Valentine:
     - Heart
     - Love
     - Cupid
@@ -60,6 +60,12 @@ Holiday:
     - Presents
     - Snowman
     - Stocking
+  NewYear:
+    - Rocket
+    - Firework
+    - Party
+    - Firecracker
+    - Champagne
 
 # Theme names that are blacklisted.
 Blacklisted:

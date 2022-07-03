@@ -202,7 +202,7 @@ Mob:
   Spawn: false
   # The list of restricted entities that can't be spawned in game
   Restricted:
-  #- zombie
+    - wither
   # Max amount of mobs to spawn per plot
   Max-Amount: 20
 

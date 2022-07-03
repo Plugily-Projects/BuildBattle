@@ -23,25 +23,50 @@ package plugily.projects.buildbattle.arena;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ItemFrame;
+import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Vehicle;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDispenseEvent;
+import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.BlockSpreadEvent;
+import org.bukkit.event.block.LeavesDecayEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.vehicle.VehicleMoveEvent;
+import org.bukkit.event.world.StructureGrowEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.event.entity.EntityDismountEvent;
+import plugily.projects.buildbattle.Main;
+import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.minigamesbox.classic.arena.ArenaState;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.PluginArenaEvents;
@@ -49,15 +74,14 @@ import plugily.projects.minigamesbox.classic.handlers.items.SpecialItem;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
 import plugily.projects.minigamesbox.classic.user.User;
+import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyEntityPickupItemEvent;
+import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerInteractEntityEvent;
+import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerInteractEvent;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerPickupArrow;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XSound;
-import plugily.projects.thebridge.Main;
-import plugily.projects.thebridge.arena.base.Base;
-import plugily.projects.thebridge.arena.managers.ScoreboardManager;
-import plugily.projects.thebridge.kits.level.ArcherKit;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -66,7 +90,7 @@ import java.util.logging.Level;
 
 /**
  * @author Plajer
- *     <p>Created at 13.03.2018
+ * <p>Created at 13.03.2018
  */
 public class ArenaEvents extends PluginArenaEvents {
 
@@ -80,309 +104,447 @@ public class ArenaEvents extends PluginArenaEvents {
 
   @EventHandler
   public void onArmorStandEject(EntityDismountEvent e) {
-    if (!(e.getEntity() instanceof ArmorStand)
-        || !"TheBridgeArmorStand".equals(e.getEntity().getCustomName())) {
+    if(!(e.getEntity() instanceof ArmorStand)
+        || !"BuildBattleArmorStand".equals(e.getEntity().getCustomName())) {
       return;
     }
-    if (!(e.getDismounted() instanceof Player)) {
+    if(!(e.getDismounted() instanceof Player)) {
       return;
     }
-    if (e.getDismounted().isDead()) {
+    if(e.getDismounted().isDead()) {
       e.getEntity().remove();
     }
     // we could use setCancelled here but for 1.12 support we cannot (no api)
     e.getDismounted().addPassenger(e.getEntity());
   }
 
-  @EventHandler(priority = EventPriority.HIGHEST)
-  public void onBlockBreakEvent(BlockBreakEvent event) {
-    Player player = event.getPlayer();
-    BaseArena baseArena = plugin.getArenaRegistry().getArena(player);
-    if (baseArena == null || baseArena.getArenaState() != ArenaState.IN_GAME) {
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onBreak(BlockBreakEvent event) {
+    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena(event.getPlayer());
+    if(arena == null) {
       return;
     }
-    if (!canBuild(baseArena, player, event.getBlock().getLocation())) {
+    if(arena.getArenaState() != ArenaState.IN_GAME || (arena instanceof BuildArena && arena.getArenaInGameStage() == BaseArena.ArenaInGameStage.PLOT_VOTING)
+        || plugin.getBlacklistManager().getItemList().contains(event.getBlock().getType())) {
       event.setCancelled(true);
       return;
     }
-    if (baseArena.getPlacedBlocks().contains(event.getBlock())) {
-      baseArena.removePlacedBlock(event.getBlock());
-      // Does not work?
-      event.getBlock().getDrops().clear();
-      // Alternative
-      event.getBlock().setType(XMaterial.AIR.parseMaterial());
+    User user = plugin.getUserManager().getUser(event.getPlayer());
+    Plot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
+
+    if(buildPlot != null && buildPlot.getCuboid() != null && buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
+      user.adjustStatistic("BLOCKS_BROKEN", 1);
+      return;
+    }
+    event.setCancelled(true);
+  }
+
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onPlace(BlockPlaceEvent event) {
+    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena(event.getPlayer());
+    if(arena == null) {
+      return;
+    }
+    if(arena.getArenaState() != ArenaState.IN_GAME || plugin.getBlacklistManager().getItemList().contains(event.getBlock().getType())
+        || (arena instanceof BuildArena && arena.getArenaInGameStage() == BaseArena.ArenaInGameStage.PLOT_VOTING)) {
+      event.setCancelled(true);
+      return;
+    }
+    if(arena instanceof GuessArena && !event.getPlayer().equals(((GuessArena) arena).getCurrentBuilder())) {
+      event.setCancelled(true);
+      return;
+    }
+    User user = plugin.getUserManager().getUser(event.getPlayer());
+    Plot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
+
+    if(buildPlot != null && buildPlot.getCuboid() != null && buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
+      user.adjustStatistic("BLOCKS_PLACED", 1);
+      return;
     }
     event.setCancelled(true);
   }
 
   @EventHandler
-  public void onBuild(BlockPlaceEvent event) {
-    Player player = event.getPlayer();
-    BaseArena baseArena = plugin.getArenaRegistry().getArena(player);
-    if (baseArena == null || baseArena.getArenaState() != ArenaState.IN_GAME) {
-      return;
-    }
-    if (!canBuild(baseArena, player, event.getBlock().getLocation())) {
-      event.setCancelled(true);
-      return;
-    }
-    baseArena.addPlacedBlock(event.getBlock());
-  }
-
-  public boolean canBuild(BaseArena baseArena, Player player, Location location) {
-    if (!baseArena.getArenaBorder().isIn(location)) {
-      new MessageBuilder("IN_GAME_MESSAGES_ARENA_BUILD_BREAK")
-          .asKey()
-          .player(player)
-          .arena(baseArena)
-          .sendPlayer();
-      return false;
-    }
-    for (Base base : baseArena.getBases()) {
-      if (base.getBaseCuboid().isIn(location)) {
-        new MessageBuilder("IN_GAME_MESSAGES_ARENA_BUILD_BREAK")
-            .asKey()
-            .player(player)
-            .arena(baseArena)
-            .sendPlayer();
-        return false;
-      }
-    }
-    return true;
-  }
-
-  private void rewardLastAttacker(BaseArena baseArena, Player victim) {
-    if (baseArena.getHits().containsKey(victim)) {
-      Player attacker = baseArena.getHits().get(victim);
-      baseArena.removeHits(victim);
-      plugin
-          .getRewardsHandler()
-          .performReward(attacker, plugin.getRewardsHandler().getRewardType("KILL"));
-      plugin.getUserManager().addStat(attacker, plugin.getStatsStorage().getStatisticType("KILLS"));
-      plugin.getUserManager().addExperience(attacker, 2);
-      plugin.getUserManager().getUser(attacker).adjustStatistic("LOCAL_KILLS", 1);
-      new MessageBuilder("IN_GAME_MESSAGES_ARENA_KILLED")
-          .asKey()
-          .player(victim)
-          .arena(baseArena)
-          .send(attacker);
-      new MessageBuilder("IN_GAME_MESSAGES_ARENA_DEATH")
-          .asKey()
-          .player(victim)
-          .value(attacker.getName())
-          .arena(baseArena)
-          .sendArena();
-    }
-  }
-
-  @EventHandler(priority = EventPriority.HIGHEST)
-  public void onHit(EntityDamageByEntityEvent e) {
-    if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
-      Player victim = (Player) e.getEntity();
-      Player attack = (Player) e.getDamager();
-      if (!ArenaUtils.areInSameArena(victim, attack)) {
-        return;
-      }
-      BaseArena baseArena = plugin.getArenaRegistry().getArena(victim);
-      if (baseArena == null || baseArena.getArenaState() != ArenaState.IN_GAME) {
-        return;
-      }
-      if (plugin.getUserManager().getUser(attack).isSpectator()) {
-        e.setCancelled(true);
-        return;
-      }
-      if (baseArena.isTeammate(attack, victim)) {
-        e.setCancelled(true);
-        return;
-      }
-      baseArena.addHits(victim, attack);
-    }
-  }
-
-  private final HashMap<Player, Long> cooldownPortal = new HashMap<>();
-  private final HashMap<Player, Long> cooldownOutside = new HashMap<>();
-
-  @EventHandler(priority = EventPriority.HIGHEST)
-  public void onPlayerMove(PlayerMoveEvent event) {
-    Player player = event.getPlayer();
-    BaseArena baseArena = plugin.getArenaRegistry().getArena(player);
-    if (baseArena == null || baseArena.getArenaState() != ArenaState.IN_GAME) {
-      return;
-    }
-    if (baseArena.isResetRound() && !plugin.getUserManager().getUser(player).isSpectator()) {
-      if (baseArena.getBase(event.getPlayer()).getCageCuboid() != null) {
-        return;
-      }
-      if (event.getFrom().getZ() != event.getTo().getZ()
-          && event.getFrom().getX() != event.getTo().getX()) {
-        event.setCancelled(true);
-        return;
-      }
-      return;
-    }
-    if (!baseArena.inBase(player)) {
-      return;
-    }
-    if (!baseArena.getArenaBorder().isInWithMarge(player.getLocation(), 5)) {
-      if (cooldownOutside.containsKey(player)
-          && cooldownOutside.get(player) <= System.currentTimeMillis() - 1500) {
-        cooldownOutside.remove(player);
-        return;
-      }
-      player.damage(100);
-      plugin
-          .getDebugger()
-          .debug(
-              Level.INFO,
-              "Killed "
-                  + player.getName()
-                  + " because he is more than 5 blocks outside baseArena location, Location: "
-                  + player.getLocation()
-                  + "; ArenaBorder: "
-                  + baseArena.getArenaBorder().getMinPoint()
-                  + ";"
-                  + baseArena.getArenaBorder().getMaxPoint()
-                  + ";"
-                  + baseArena.getArenaBorder().getCenter());
-      return;
-    }
-    if (cooldownPortal.containsKey(player)) {
-      if (cooldownPortal.get(player) <= System.currentTimeMillis() - 5000)
-        cooldownPortal.remove(player);
-      return;
-    }
-    if (baseArena.getBase(player).getPortalCuboid().isIn(player)) {
-      cooldownPortal.put(player, System.currentTimeMillis());
-      new MessageBuilder("IN_GAME_MESSAGES_ARENA_PORTAL_OWN").asKey().player(player).sendPlayer();
-      // prevent players being stuck on portal location
-      Bukkit.getScheduler()
-          .runTaskLater(
-              plugin,
-              () -> {
-                if (player != null) {
-                  if (baseArena
-                      .getBase(player)
-                      .getPortalCuboid()
-                      .isInWithMarge(player.getLocation(), 1)) {
-                    player.damage(100);
-                    plugin
-                        .getDebugger()
-                        .debug(
-                            Level.INFO,
-                            "Killed "
-                                + player.getName()
-                                + " because he is more than 3 seconds on own portal (seems to stuck)");
-                  }
-                }
-              },
-              20 * 3 /* 3 seconds as cooldown to prevent instant respawning */);
-      return;
-    }
-    for (Base base : baseArena.getBases()) {
-      if (base.getPortalCuboid().isIn(player)) {
-        if (base.getPoints() >= baseArena.getArenaOption("MODE_VALUE")) {
-          cooldownPortal.put(player, System.currentTimeMillis());
-          new MessageBuilder("IN_GAME_MESSAGES_ARENA_PORTAL_OUT")
-              .asKey()
-              .player(player)
-              .sendPlayer();
-          return;
-        }
-        cooldownPortal.put(player, System.currentTimeMillis());
-        if (base.getAlivePlayersSize() == 0) {
+  public void onItemFrameRotate(PlayerInteractEntityEvent event) {
+    if(event.getRightClicked().getType() == EntityType.ITEM_FRAME && ((ItemFrame) event.getRightClicked()).getItem().getType() != Material.AIR) {
+      for(PluginArena arena : plugin.getArenaRegistry().getArenas()) {
+        if(!(arena instanceof BaseArena)) {
           continue;
         }
-        baseArena.resetRound();
-        player.teleport(baseArena.getBase(player).getPlayerSpawnPoint());
-        if (baseArena.getMode() == BaseArena.Mode.HEARTS) {
-          base.addPoint();
-        } else if (baseArena.getMode() == BaseArena.Mode.POINTS) {
-          baseArena.getBase(player).addPoint();
+        for(Plot buildPlot : ((BaseArena) arena).getPlotManager().getPlots()) {
+          if(buildPlot.getCuboid() != null && !buildPlot.getCuboid().isInWithMarge(event.getRightClicked().getLocation(), -1) && buildPlot.getCuboid().isIn(event.getRightClicked().getLocation())) {
+            event.setCancelled(true);
+          }
         }
-        new TitleBuilder("IN_GAME_MESSAGES_ARENA_PORTAL_SCORED_TITLE")
-            .asKey()
-            .arena(baseArena)
-            .player(player)
-            .value(base.getFormattedColor())
-            .sendArena();
-        new MessageBuilder("IN_GAME_MESSAGES_ARENA_PORTAL_OPPONENT")
-            .asKey()
-            .player(player)
-            .arena(baseArena)
-            .value(base.getFormattedColor())
-            .sendArena();
-        ((ScoreboardManager) baseArena.getScoreboardManager()).resetBaseCache();
-        plugin
-            .getUserManager()
-            .addStat(player, plugin.getStatsStorage().getStatisticType("SCORED_POINTS"));
-        plugin.getUserManager().addExperience(player, 10);
-        plugin
-            .getUserManager()
-            .addStat(player, plugin.getStatsStorage().getStatisticType("LOCAL_SCORED_POINTS"));
-        return;
       }
     }
-  }
-
-  @Override
-  public boolean additionalFallDamageRules(
-      Player victim, PluginArena arena, EntityDamageEvent event) {
-    BaseArena pluginBaseArena = (BaseArena) plugin.getArenaRegistry().getArena(arena.getId());
-    if (pluginBaseArena == null) {
-      return false;
-    }
-    if (pluginBaseArena.getBase(victim) != null) {
-      if (pluginBaseArena.getBase(victim).isDamageCooldown()) {
-        event.setCancelled(true);
-        return true;
-      }
-    }
-    return false;
-  }
-
-  @Override
-  public void handleIngameVoidDeath(Player victim, PluginArena arena) {
-    BaseArena pluginBaseArena = (BaseArena) plugin.getArenaRegistry().getArena(arena.getId());
-    if (pluginBaseArena == null) {
-      return;
-    }
-    victim.damage(1000.0);
-    victim.teleport(pluginBaseArena.getBase(victim).getPlayerRespawnPoint());
   }
 
   @EventHandler
-  public void onBowShot(EntityShootBowEvent e) {
-    if (!(e.getEntity() instanceof Player)) {
+  public void onNPCClick(PlugilyPlayerInteractEntityEvent event) {
+    if(VersionUtils.checkOffHand(event.getHand()) || event.getRightClicked().getType() != EntityType.VILLAGER) {
       return;
     }
-    User user = plugin.getUserManager().getUser((Player) e.getEntity());
-    BaseArena pluginBaseArena = (BaseArena) plugin.getArenaRegistry().getArena(user.getPlayer());
-    if (pluginBaseArena == null) {
+
+    ItemStack hand = VersionUtils.getItemInHand(event.getPlayer());
+
+    if(hand.getType() == Material.AIR || plugin.getUserManager().getUser(event.getPlayer()).isSpectator()) {
       return;
     }
-    if (pluginBaseArena.isResetRound()) {
-      e.setCancelled(true);
-      return;
-    }
-    if (user.getCooldown("bow_shot") == 0) {
-      int cooldown = 5;
-      if ((user.getKit() instanceof ArcherKit)) {
-        cooldown = 3;
+
+    String customName = event.getRightClicked().getCustomName();
+
+    if(customName != null && customName.equalsIgnoreCase(new MessageBuilder("IN_GAME_MESSAGES_PLOT_NPC_NAME").asKey().build())) {
+      BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena(event.getPlayer());
+
+      if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+        return;
       }
-      user.setCooldown("bow_shot", plugin.getConfig().getInt("Bow-Cooldown", cooldown));
-      Player player = (Player) e.getEntity();
-      plugin
-          .getBukkitHelper()
-          .applyActionBarCooldown(player, plugin.getConfig().getInt("Bow-Cooldown", cooldown));
-      VersionUtils.setDurability(e.getBow(), (short) 0);
-    } else {
-      e.setCancelled(true);
+
+      if(arena instanceof BuildArena && arena.getArenaInGameStage() == BaseArena.ArenaInGameStage.PLOT_VOTING) {
+        return;
+      }
+
+      Material material = hand.getType();
+
+      if(material != XMaterial.WATER_BUCKET.parseMaterial() && material != XMaterial.LAVA_BUCKET.parseMaterial()
+          && !(material.isBlock() && material.isSolid() && material.isOccluding())) {
+        new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_FLOOR_ITEM").asKey().player(event.getPlayer()).sendPlayer();
+        return;
+      }
+
+      if(plugin.getBlacklistManager().getFloorList().contains(material)) {
+        new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_FLOOR_ITEM").asKey().player(event.getPlayer()).sendPlayer();
+        return;
+      }
+
+      Plot playerPlot = arena.getPlotManager().getPlot(event.getPlayer());
+
+      if(playerPlot != null) {
+        playerPlot.changeFloor(material, hand.getData().getData());
+        new MessageBuilder("MENU_OPTION_CONTENT_FLOOR_CHANGED").asKey().player(event.getPlayer()).sendPlayer();
+      }
     }
   }
+
+  @EventHandler
+  public void onEnderchestClick(PlugilyPlayerInteractEvent event) {
+    if(event.getClickedBlock() == null)
+      return;
+
+    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena(event.getPlayer());
+    if(arena == null) {
+      return;
+    }
+
+    if(arena.getArenaState() != ArenaState.IN_GAME || event.getClickedBlock().getType() == XMaterial.ENDER_CHEST.parseMaterial()) {
+      event.setCancelled(true);
+    }
+  }
+
+  @EventHandler
+  public void onMinecartMove(VehicleMoveEvent event) {
+    Vehicle vehicle = event.getVehicle();
+    if(vehicle.getType() != EntityType.MINECART) {
+      return;
+    }
+    for(PluginArena arena : plugin.getArenaRegistry().getArenas()) {
+      if(!(arena instanceof BaseArena)) {
+        continue;
+      }
+      for(Plot buildPlot : ((BaseArena) arena).getPlotManager().getPlots()) {
+        if(buildPlot.getCuboid() != null && !buildPlot.getCuboid().isInWithMarge(event.getTo(), -1) && buildPlot.getCuboid().isIn(event.getTo())) {
+          ((Minecart) vehicle).setMaxSpeed(0);
+          vehicle.setVelocity(vehicle.getVelocity().zero());
+        }
+      }
+    }
+  }
+
+  @EventHandler
+  public void onIgniteEvent(BlockIgniteEvent event) {
+    for(PluginArena arena : plugin.getArenaRegistry().getArenas()) {
+      if(!(arena instanceof BaseArena)) {
+        continue;
+      }
+      for(Plot buildPlot : ((BaseArena) arena).getPlotManager().getPlots()) {
+        if(buildPlot.getCuboid() != null && buildPlot.getCuboid().isInWithMarge(event.getBlock().getLocation(), 5)) {
+          event.setCancelled(true);
+        }
+      }
+    }
+  }
+
+  @EventHandler
+  public void onPistonRetractEvent(BlockPistonRetractEvent event) {
+    for(PluginArena arena : plugin.getArenaRegistry().getArenas()) {
+      if(!(arena instanceof BaseArena)) {
+        continue;
+      }
+      for(Plot buildPlot : ((BaseArena) arena).getPlotManager().getPlots()) {
+        for(Block block : event.getBlocks()) {
+          if(buildPlot.getCuboid() != null && !buildPlot.getCuboid().isInWithMarge(block.getLocation(), -1) && buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
+            event.setCancelled(true);
+          }
+        }
+      }
+    }
+  }
+
+  @EventHandler
+  public void onLeavesDecay(LeavesDecayEvent event) {
+    for(PluginArena arena : plugin.getArenaRegistry().getArenas()) {
+      if(!(arena instanceof BaseArena)) {
+        continue;
+      }
+      for(Plot buildPlot : ((BaseArena) arena).getPlotManager().getPlots()) {
+        if(buildPlot.getCuboid() != null && buildPlot.getCuboid().isInWithMarge(event.getBlock().getLocation(), 5)) {
+          event.setCancelled(true);
+        }
+      }
+    }
+  }
+
+  @EventHandler
+  public void onBucketEmpty(PlayerBucketEmptyEvent event) {
+    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena(event.getPlayer());
+    if(arena == null) {
+      return;
+    }
+
+    Plot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
+
+    if(buildPlot != null && buildPlot.getCuboid() != null && !buildPlot.getCuboid().isIn(event.getBlockClicked().getRelative(event.getBlockFace()).getLocation())) {
+      event.setCancelled(true);
+    }
+  }
+
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void onCreatureSpawn(CreatureSpawnEvent event) {
+    if(event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) {
+      return;
+    }
+
+    int maxMobPerPlot = plugin.getConfig().getInt("Mob.Max-Amount", 20);
+    Location entityLoc = event.getEntity().getLocation();
+
+    for(PluginArena arena : plugin.getArenaRegistry().getArenas()) {
+      if(!(arena instanceof BaseArena)) {
+        continue;
+      }
+      if(((BaseArena) arena).getPlotManager().getPlots().isEmpty()) {
+        continue;
+      }
+
+      Plot first = ((BaseArena) arena).getPlotManager().getPlots().get(0);
+      if(first == null || (first.getCuboid() != null && !entityLoc.getWorld().equals(first.getCuboid().getCenter().getWorld()))) {
+        continue;
+      }
+
+      if(event.getEntity().getType() == EntityType.WITHER || !plugin.getConfigPreferences().getOption("MOB_SPAWN")) {
+        event.setCancelled(true);
+        return;
+      }
+
+      for(Plot plot : ((BaseArena) arena).getPlotManager().getPlots()) {
+        if(plot.getCuboid() != null && plot.getCuboid().isInWithMarge(entityLoc, 1)) {
+          if(plot.getEntities() >= maxMobPerPlot) {
+            plot.getMembers().forEach(player -> new MessageBuilder("IN_GAME_MESSAGES_PLOT_LIMIT_ENTITIES").asKey().arena(arena).player(player).sendPlayer());
+            event.setCancelled(true);
+            return;
+          }
+
+          for(String entityNames : plugin.getConfig().getStringList("Mob.Restricted")) {
+            if(event.getEntity().getType().name().equalsIgnoreCase(entityNames)) {
+              event.setCancelled(true);
+              return;
+            }
+          }
+
+          plot.addEntity();
+          event.setCancelled(false);
+
+          if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+            event.getEntity().setAI(false);
+          }
+        }
+      }
+    }
+  }
+
+  @EventHandler
+  public void onBlockSpread(BlockSpreadEvent event) {
+    if(event.getSource().getType() != Material.FIRE)
+      return;
+
+    for(PluginArena arena : plugin.getArenaRegistry().getArenas()) {
+      if(!(arena instanceof BaseArena)) {
+        continue;
+      }
+      if(!((BaseArena) arena).getPlotManager().getPlots().isEmpty()) {
+        Plot plot = ((BaseArena) arena).getPlotManager().getPlots().get(0);
+
+        if(plot != null && plot.getCuboid() != null
+            && event.getBlock().getWorld().equals(plot.getCuboid().getCenter().getWorld())) {
+          event.setCancelled(true);
+        }
+      }
+    }
+  }
+
+  @EventHandler
+  public void onDispense(BlockDispenseEvent event) {
+    Location blockLoc = event.getBlock().getLocation();
+
+    for(PluginArena arena : plugin.getArenaRegistry().getArenas()) {
+      if(!(arena instanceof BaseArena)) {
+        continue;
+      }
+      for(Plot buildPlot : ((BaseArena) arena).getPlotManager().getPlots()) {
+        if(buildPlot.getCuboid() != null && !buildPlot.getCuboid().isInWithMarge(blockLoc, -1) && buildPlot.getCuboid().isInWithMarge(blockLoc, 5)) {
+          event.setCancelled(true);
+        }
+      }
+    }
+  }
+
+  @EventHandler
+  public void onTreeGrow(StructureGrowEvent event) {
+    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena(event.getPlayer());
+    if(arena == null) {
+      return;
+    }
+    Plot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
+    if(buildPlot == null || buildPlot.getCuboid() == null) {
+      return;
+    }
+    for(BlockState blockState : event.getBlocks()) {
+      if(!buildPlot.getCuboid().isIn(blockState.getLocation())) {
+        blockState.setType(Material.AIR);
+      }
+    }
+  }
+
+
+  @EventHandler
+  public void onEntityDamageEntity(EntityDamageByEntityEvent event) {
+    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena((Player) event.getEntity());
+    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+      return;
+    }
+    if(event.getEntity().getType() != EntityType.PLAYER) {
+      return;
+    }
+    event.setCancelled(true);
+  }
+
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onDamage(EntityDamageEvent event) {
+    if(event.getEntity().getType() != EntityType.PLAYER) {
+      return;
+    }
+    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena((Player) event.getEntity());
+    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+      return;
+    }
+    event.setCancelled(true);
+    Player player = (Player) event.getEntity();
+    if(player.getLocation().getY() < 1) {
+      Plot plot = arena.getPlotManager().getPlot(player);
+      if(plot != null) {
+        player.teleport(plot.getTeleportLocation());
+      }
+    }
+  }
+
+  @EventHandler
+  public void onTNTInteract(PlugilyPlayerInteractEvent event) {
+    if(event.getClickedBlock() == null || VersionUtils.checkOffHand(event.getHand())) {
+      return;
+    }
+    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena(event.getPlayer());
+    if(arena == null || VersionUtils.getItemInHand(event.getPlayer()).getType() != Material.FLINT_AND_STEEL) {
+      return;
+    }
+    if(event.getClickedBlock().getType() == Material.TNT) {
+      event.setCancelled(true);
+    }
+  }
+
+  @EventHandler
+  public void onTNTExplode(EntityExplodeEvent event) {
+    for(PluginArena arena : plugin.getArenaRegistry().getArenas()) {
+      if(!(arena instanceof BaseArena)) {
+        continue;
+      }
+      for(Plot buildPlot : ((BaseArena) arena).getPlotManager().getPlots()) {
+        if(buildPlot.getCuboid() != null && buildPlot.getCuboid().isInWithMarge(event.getEntity().getLocation(), 5)) {
+          event.blockList().clear();
+          event.setCancelled(true);
+        }
+      }
+    }
+  }
+
+  @EventHandler
+  public void onWaterFlowEvent(BlockFromToEvent event) {
+    Location toBlock = event.getToBlock().getLocation();
+    Location blockLoc = event.getBlock().getLocation();
+
+    for(PluginArena arena : plugin.getArenaRegistry().getArenas()) {
+      if(!(arena instanceof BaseArena)) {
+        continue;
+      }
+      for(Plot buildPlot : ((BaseArena) arena).getPlotManager().getPlots()) {
+        if(buildPlot.getCuboid() != null) {
+          if(!buildPlot.getCuboid().isIn(toBlock) && buildPlot.getCuboid().isIn(blockLoc)) {
+            event.setCancelled(true);
+          }
+          if(!buildPlot.getCuboid().isInWithMarge(toBlock, -1) && buildPlot.getCuboid().isIn(toBlock)) {
+            event.setCancelled(true);
+          }
+        }
+      }
+    }
+  }
+
+  @EventHandler
+  public void onFoodChange(FoodLevelChangeEvent event) {
+    if(event.getEntity().getType() != EntityType.PLAYER) {
+      return;
+    }
+    Player player = (Player) event.getEntity();
+    if(plugin.getArenaRegistry().getArena(player) == null) {
+      return;
+    }
+    event.setCancelled(true);
+    player.setFoodLevel(20);
+  }
+
+
+  @EventHandler
+  public void onPistonExtendEvent(BlockPistonExtendEvent event) {
+    Location blockLoc = event.getBlock().getLocation();
+    for(PluginArena arena : plugin.getArenaRegistry().getArenas()) {
+      if(!(arena instanceof BaseArena)) {
+        continue;
+      }
+      for(Plot buildPlot : ((BaseArena) arena).getPlotManager().getPlots()) {
+        if(buildPlot.getCuboid() != null && buildPlot.getCuboid().isIn(blockLoc)) {
+          for(Block block : event.getBlocks()) {
+            if(!buildPlot.getCuboid().isInWithMarge(block.getLocation(), -1)) {
+              event.setCancelled(true);
+            }
+          }
+        }
+      }
+    }
+  }
+
 
   @EventHandler
   public void onArrowPickup(PlugilyPlayerPickupArrow e) {
-    if (plugin.getArenaRegistry().isInArena(e.getPlayer())) {
+    if(plugin.getArenaRegistry().isInArena(e.getPlayer())) {
       e.getItem().remove();
       e.setCancelled(true);
     }
@@ -390,12 +552,12 @@ public class ArenaEvents extends PluginArenaEvents {
 
   @EventHandler
   public void onItemPickup(PlugilyEntityPickupItemEvent e) {
-    if (!(e.getEntity() instanceof Player)) {
+    if(!(e.getEntity() instanceof Player)) {
       return;
     }
     Player player = (Player) e.getEntity();
     BaseArena pluginBaseArena = (BaseArena) plugin.getArenaRegistry().getArena(player);
-    if (pluginBaseArena == null) {
+    if(pluginBaseArena == null) {
       return;
     }
     e.setCancelled(true);
@@ -406,190 +568,15 @@ public class ArenaEvents extends PluginArenaEvents {
     // }
   }
 
-  @EventHandler
-  public void onArrowDamage(EntityDamageByEntityEvent e) {
-    if (!(e.getDamager() instanceof Arrow)) {
-      return;
-    }
-    if (!(((Arrow) e.getDamager()).getShooter() instanceof Player)) {
-      return;
-    }
-    Player attacker = (Player) ((Arrow) e.getDamager()).getShooter();
-    if (!(e.getEntity() instanceof Player)) {
-      return;
-    }
-    Player victim = (Player) e.getEntity();
-    if (!ArenaUtils.areInSameArena(attacker, victim)) {
-      return;
-    }
-    // we won't allow to suicide
-    if (attacker == victim) {
-      e.setCancelled(true);
-      return;
-    }
-    BaseArena baseArena = plugin.getArenaRegistry().getArena(attacker);
-    if (plugin.getUserManager().getUser(attacker).isSpectator()) {
-      e.setCancelled(true);
-      return;
-    }
-    if (baseArena.isTeammate(attacker, victim)) {
-      e.setCancelled(true);
-      return;
-    }
-    baseArena.addHits(victim, attacker);
-
-    XSound.ENTITY_PLAYER_DEATH.play(victim.getLocation(), 50, 1);
-
-    if (victim.getHealth() - e.getDamage() < 0) {
-      return;
-    }
-    DecimalFormat df = new DecimalFormat("##.##");
-    new MessageBuilder("IN_GAME_MESSAGES_ARENA_BOW_DAMAGE")
-        .asKey()
-        .player(victim)
-        .value(df.format(victim.getHealth() - e.getDamage()))
-        .send(attacker);
-  }
-
-  // todo fast die -> just teleporting the player instead of death and respawn
-  @EventHandler(priority = EventPriority.HIGH)
-  public void onPlayerDie(PlayerDeathEvent e) {
-    BaseArena baseArena = plugin.getArenaRegistry().getArena(e.getEntity());
-    if (baseArena == null) {
-      return;
-    }
-    e.setDeathMessage("");
-    e.getDrops().clear();
-    e.setDroppedExp(0);
-    // plugin.getCorpseHandler().spawnCorpse(e.getEntity(), baseArena);
-    e.getEntity().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 7 * 20, 0));
-    Player player = e.getEntity();
-    if (baseArena.getArenaState() == ArenaState.STARTING) {
-      return;
-    } else if (baseArena.getArenaState() == ArenaState.ENDING
-        || baseArena.getArenaState() == ArenaState.RESTARTING) {
-      player.getInventory().clear();
-      player.setFlying(false);
-      player.setAllowFlight(false);
-      return;
-    }
-    if (baseArena.getBase(player) == null) {
-      return;
-    }
-    // if mode hearts and they are out it should set spec mode for them
-    if (baseArena.getMode() == BaseArena.Mode.HEARTS
-        && baseArena.getBase(player).getPoints() >= baseArena.getArenaOption("MODE_VALUE")) {
-      User user = plugin.getUserManager().getUser(player);
-      user.setSpectator(true);
-      ArenaUtils.hidePlayer(player, baseArena);
-      player.getInventory().clear();
-      if (baseArena.getArenaState() != ArenaState.ENDING
-          && baseArena.getArenaState() != ArenaState.RESTARTING) {
-        baseArena.addDeathPlayer(player);
-      }
-      List<Player> players = baseArena.getBase(player).getPlayers();
-      if (players.stream().allMatch(baseArena::isDeathPlayer)) {
-        baseArena.addOut();
-      }
-    } else {
-      player.setGameMode(GameMode.SURVIVAL);
-      ArenaUtils.hidePlayersOutsideTheGame(player, baseArena);
-      player.getInventory().clear();
-    }
-    // we must call it ticks later due to instant respawn bug
-    Bukkit.getScheduler()
-        .runTaskLater(
-            plugin,
-            () -> {
-              e.getEntity().spigot().respawn();
-            },
-            5);
-  }
-
-  @EventHandler(priority = EventPriority.HIGH)
-  public void onRespawn(PlayerRespawnEvent e) {
-    Player player = e.getPlayer();
-    BaseArena baseArena = plugin.getArenaRegistry().getArena(player);
-    if (baseArena == null) {
-      return;
-    }
-    if (baseArena.getArenaState() == ArenaState.STARTING
-        || baseArena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
-      e.setRespawnLocation(baseArena.getLobbyLocation());
-      return;
-    } else if (baseArena.getArenaState() == ArenaState.ENDING
-        || baseArena.getArenaState() == ArenaState.RESTARTING) {
-      e.setRespawnLocation(baseArena.getSpectatorLocation());
-      return;
-    }
-    if (baseArena.getPlayers().contains(player)) {
-      User user = plugin.getUserManager().getUser(player);
-      if (baseArena.inBase(player) && !user.isSpectator()) {
-        cooldownOutside.put(player, System.currentTimeMillis());
-        if (e.getPlayer().getLastDamageCause() != null
-            && e.getPlayer().getLastDamageCause().getCause()
-                != EntityDamageEvent.DamageCause.VOID) {
-          player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 3 * 20, 0));
-        }
-        e.setRespawnLocation(baseArena.getBase(player).getPlayerRespawnPoint());
-        player.setAllowFlight(false);
-        player.setFlying(false);
-        ArenaUtils.hidePlayersOutsideTheGame(player, baseArena);
-        player.setGameMode(GameMode.SURVIVAL);
-        player.removePotionEffect(PotionEffectType.NIGHT_VISION);
-        plugin
-            .getRewardsHandler()
-            .performReward(player, plugin.getRewardsHandler().getRewardType("DEATH"));
-        // Restock or give KitItems makes no difference? if using restock we need to save inventory
-        // as items are lost on dead
-        // todo Maybe change it after fast dead is implemented (teleporting instead of dying)
-        plugin.getUserManager().getUser(player).getKit().giveKitItems(player);
-        if (!baseArena.getHits().containsKey(player)) {
-          new MessageBuilder(MessageBuilder.ActionType.DEATH).arena(baseArena).player(player).sendArena();
-        }
-        plugin.getUserManager().addStat(player, plugin.getStatsStorage().getStatisticType("DEATHS"));
-        user.adjustStatistic("LOCAL_DEATHS", 1);
-        rewardLastAttacker(baseArena, player);
-        Bukkit.getScheduler()
-            .runTaskLater(
-                plugin,
-                () -> {
-                  if (player != null) {
-                    if (!baseArena
-                        .getBase(player)
-                        .getPortalCuboid()
-                        .isInWithMarge(player.getLocation(), 5)) {
-                      player.teleport(baseArena.getBase(player).getPlayerRespawnPoint());
-                      player.getInventory().clear();
-                      plugin.getUserManager().getUser(player).getKit().giveKitItems(player);
-                      player.updateInventory();
-                    }
-                  }
-                },
-                5 /* 1/4 of a second as cooldown to prevent respawn from other plugins */);
-      } else {
-        e.setRespawnLocation(baseArena.getSpectatorLocation());
-        player.setAllowFlight(true);
-        player.setFlying(true);
-        user.setSpectator(true);
-        ArenaUtils.hidePlayer(player, baseArena);
-        VersionUtils.setCollidable(player, false);
-        player.setGameMode(GameMode.SURVIVAL);
-        player.removePotionEffect(PotionEffectType.NIGHT_VISION);
-        plugin.getUserManager().addStat(player, plugin.getStatsStorage().getStatisticType("DEATHS"));
-        plugin.getSpecialItemManager().addSpecialItemsOfStage(player, SpecialItem.DisplayStage.SPECTATOR);
-      }
-    }
-  }
 
   @EventHandler
   public void onItemMove(InventoryClickEvent e) {
-    if (e.getWhoClicked() instanceof Player
+    if(e.getWhoClicked() instanceof Player
         && plugin.getArenaRegistry().isInArena((Player) e.getWhoClicked())) {
-      if (plugin.getArenaRegistry().getArena(((Player) e.getWhoClicked())).getArenaState()
+      if(plugin.getArenaRegistry().getArena(((Player) e.getWhoClicked())).getArenaState()
           != ArenaState.IN_GAME) {
-        if (e.getClickedInventory() == e.getWhoClicked().getInventory()) {
-          if (e.getView().getType() == InventoryType.CRAFTING
+        if(e.getClickedInventory() == e.getWhoClicked().getInventory()) {
+          if(e.getView().getType() == InventoryType.CRAFTING
               || e.getView().getType() == InventoryType.PLAYER) {
             e.setResult(Event.Result.DENY);
           }
@@ -597,4 +584,30 @@ public class ArenaEvents extends PluginArenaEvents {
       }
     }
   }
+
+  @EventHandler
+  public void onGTBGuessChat(AsyncPlayerChatEvent event) {
+    Player player = event.getPlayer();
+    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena(player);
+    if(!(arena instanceof GuessArena)) {
+      return;
+    }
+    GuessArena gameArena = (GuessArena) arena;
+    if(gameArena.getWhoGuessed().contains(player)) {
+      event.setCancelled(true);
+      new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_GUESS_CANT_TALK").asKey().arena(gameArena).player(player).sendPlayer();
+      return;
+    }
+    if(player == gameArena.getCurrentBuilder()) {
+      event.setCancelled(true);
+      new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_GUESS_BUILDER").asKey().arena(gameArena).player(player).sendPlayer();
+      return;
+    }
+    if(gameArena.getCurrentTheme() == null || !gameArena.getCurrentTheme().getTheme().equalsIgnoreCase(event.getMessage())) {
+      return;
+    }
+    event.setCancelled(true);
+    gameArena.broadcastPlayerGuessed(player);
+  }
+
 }

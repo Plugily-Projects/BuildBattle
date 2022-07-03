@@ -7,19 +7,6 @@
 # nodes as they are hardcoded in code!
 #
 # Also see the wiki for further reference!
-Kit-Menu:
-  permission: ""
-  execute:
-    - ""
-  displayname: "&b&lKit Menu &7(Right Click)"
-  lore:
-    - "&7Right-click to select in-game kit"
-  material: NETHER_STAR
-  slot: 0
-  stage: LOBBY
-  force: true
-  move: false
-
 # Uses bungee.yml configuration - if enabled it tries to connect to your hub
 Lobby-Leave:
   permission: ""

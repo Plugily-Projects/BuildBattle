@@ -24,7 +24,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import plugily.projects.buildbattle.arena.BaseArena;
-import plugily.projects.buildbattle.old.arena.managers.plots.Plot;
+import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.minigamesbox.classic.api.event.PlugilyEvent;
 
 public class PlotPlayerChooseEvent extends PlugilyEvent implements Cancellable {

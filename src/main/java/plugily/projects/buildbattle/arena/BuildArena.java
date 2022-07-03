@@ -24,10 +24,9 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import plugily.projects.buildbattle.arena.states.build.InGameState;
 import plugily.projects.buildbattle.arena.states.build.StartingState;
-import plugily.projects.buildbattle.old.arena.managers.plots.Plot;
-import plugily.projects.buildbattle.old.arena.options.ArenaOption;
-import plugily.projects.buildbattle.old.menus.themevoter.VoteMenu;
-import plugily.projects.buildbattle.old.menus.themevoter.VotePoll;
+import plugily.projects.buildbattle.arena.managers.plots.Plot;
+import plugily.projects.buildbattle.handlers.themes.vote.VoteMenu;
+import plugily.projects.buildbattle.handlers.themes.vote.VotePoll;
 import plugily.projects.minigamesbox.classic.arena.ArenaState;
 import plugily.projects.minigamesbox.classic.user.User;
 

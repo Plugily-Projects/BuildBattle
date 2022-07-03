@@ -277,17 +277,18 @@ In-Game:
         - ""
         - "%arena_summary%"
         - "%arena_summary_player%"
+        - "%arena_summary_place_own%"
         - ""
-        - ""
-        - "%place_list%"
+        - "%arena_summary_place_list%"
         - ""
         - ""
         - "&a&m--------------------------------------------------"
       Placeholders:
+        Winner: "&aPlot with %arena_place_member_1% won!"
         Win: "&aYou won the game"
         Lose: "%color_chat_issue%You lost the game"
         Players: "&cThere are not enough players anymore. BaseArena got force stopped!"
-        Place: "%value% Place - %player% (%number% points)"
+        Place: "%number% Place - %value%"
         Own: "&aYou became %number%"
     Admin:
       Set-Starting-In-To-0: "%plugin_prefix% An admin set waiting time to 0. The game starts now!"
@@ -302,6 +303,7 @@ In-Game:
         Entities: "%color_chat_issue%%plugin_prefix% You can't spawn more entities!"
         Particles: "%color_chat_issue%%plugin_prefix% You can't spawn more particles!"
       Permission:
+        Head: "%color_chat_issue%%plugin_prefix% You don't have permission for this head!"
         Particle: "%color_chat_issue%%plugin_prefix% You don't have permission for this particle!"
         Biome: "%color_chat_issue%%plugin_prefix% You don't have permission for this biome!"
         Outside: "%color_chat_issue%%plugin_prefix% You can't fly outside your plot!"
@@ -317,21 +319,21 @@ In-Game:
       Voting:
         Name: "%color_chat_issue%Voting"
         Plot-Owner:
-          Chat: "%plugin_prefix% Plot owner: %player%"
-          Title: "5,20,5;;Plot owner: %player%"
-          Next: "%plugin_prefix% Now voting for %player%'s plot!"
-          Was: "%plugin_prefix% The plot owner was %player%!"
+          Chat: "%plugin_prefix% Plot owner: %value%"
+          Title: "5,20,5;;Plot owner: %value%"
+          Next: "%plugin_prefix% Now voting for %value%'s plot!"
+          Was: "%plugin_prefix% The plot owner was %value%!"
           Own: "%color_chat_issue%%plugin_prefix% You can't vote for your plot!"
         Success: "%plugin_prefix% Voted successfully!"
-        Winner: "%plugin_prefix% WINNER: %player%"
+        Winner: "5,20,5;%plugin_prefix% WINNER: %value%"
       Guess-The-Build:
         Builder: "Builder: %BUILDER%"
-        Round: "Round: %ROUND%/%MAXPLAYERS%"
+        Round: "Round: %number%/%arena_max_players%"
         Theme:
           Chars: "%plugin_prefix% The theme is %NUM% characters long"
-          Name: "%plugin_prefix% The theme is %THEME%"
-          Was: "%plugin_prefix% The theme was: %THEME%!"
-          Title: "20,30,20;The theme was;%THEME%!"
+          Name: "%plugin_prefix% The theme is %arena_theme%"
+          Was: "%plugin_prefix% The theme was: %arena_theme%!"
+          Title: "20,30,20;The theme was;%arena_theme%!"
           Guessed: "%plugin_prefix% All players guessed the theme!"
           Being-Selected: "%plugin_prefix% Theme is being selected..."
           Guess:
@@ -368,6 +370,7 @@ Menu:
           Remove:
             Name: "%color_chat_issue%Remove particles"
             Lore: "Right click to open menu"
+        Added: "%color_chat_issue%%plugin_prefix% Particle successfully added!"
         Removed: "%color_chat_issue%%plugin_prefix% Particle successfully removed!"
       Heads:
         Inventory: "&bPlayers heads menu"
@@ -427,7 +430,7 @@ Menu:
   Theme:
     Inventory: "Choose the theme?"
     Item:
-      Name: "%theme%"
+      Name: "%arena_theme%"
       #use ; to move to next line
       Lore: "Vote for theme %theme%;;Time remaining: %time-left%;Current votes: %percent%%!;;Live vote percentages;are shown on the right in;bar form.;;Click to vote %theme%!"
     Vote:
