@@ -60,10 +60,9 @@ public class OptionsRegistry {
   public OptionsRegistry(Main plugin) {
     this.plugin = plugin;
     this.menuItem = plugin.getSpecialItemManager().getSpecialItemStack("OPTIONS_MENU");
-    registerOptions();
   }
 
-  private void registerOptions() {
+  public void registerOptions() {
     biomesRegistry = new BiomesRegistry(this);
     new BiomeChangeOption(this);
 

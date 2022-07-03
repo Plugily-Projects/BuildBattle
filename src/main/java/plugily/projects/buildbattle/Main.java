@@ -113,11 +113,8 @@ public class Main extends PluginMain {
   public void initializePluginClasses() {
     addFileName("themes");
     addFileName("vote_items");
-    blacklistManager = new BlacklistManager(this);
-    optionsRegistry = new OptionsRegistry(this);
-    new OptionsMenuHandler(this);
-    new OptionMenuEvents(this);
     addArenaOptions();
+    blacklistManager = new BlacklistManager(this);
     BaseArena.init(this);
     new ArenaEvents(this);
     arenaManager = new ArenaManager(this);
@@ -130,6 +127,10 @@ public class Main extends PluginMain {
     new VoteEvents(this);
     themeManager = new ThemeManager(this);
     plotMenuHandler = new PlotMenuHandler(this);
+    optionsRegistry = new OptionsRegistry(this);
+    optionsRegistry.registerOptions();
+    new OptionsMenuHandler(this);
+    new OptionMenuEvents(this);
     addPluginMetrics();
   }
 
@@ -648,7 +649,6 @@ public class Main extends PluginMain {
   public void addMessages() {
     getMessageManager().registerMessage("COMMANDS_THEME_BLACKLISTED", new Message("Commands.Theme-Blacklisted", ""));
     getMessageManager().registerMessage("COMMANDS_ADMIN_ADDED_PLOT", new Message("Commands.Admin.Added-Plot", ""));
-    getMessageManager().registerMessage("COMMANDS_ADMIN_ADDED_PLOT", new Message("Commands.Admin.Added-Plot", ""));
     getMessageManager().registerMessage("SCOREBOARD_THEME_UNKNOWN", new Message("Scoreboard.Theme-Unknown", ""));
     // scoreboard ingame classic/teams/guess-the-build/guess-the-build-waiting | ending classic/guess-the-build
     getMessageManager().registerMessage("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_WINNER", new Message("In-Game.Messages.Game-End.Placeholders.Winner", ""));
@@ -710,7 +710,7 @@ public class Main extends PluginMain {
     getMessageManager().registerMessage("MENU_OPTION_CONTENT_PARTICLE_ITEM_NAME", new Message("Menu.Option.Content.Particle.Item.Name", ""));
     getMessageManager().registerMessage("MENU_OPTION_CONTENT_PARTICLE_ITEM_LORE", new Message("Menu.Option.Content.Particle.Item.Lore", ""));
     getMessageManager().registerMessage("MENU_OPTION_CONTENT_PARTICLE_ITEM_REMOVE_NAME", new Message("Menu.Option.Content.Particle.Item.Remove.Name", ""));
-    getMessageManager().registerMessage("MENU_OPTION_CONTENT_PARTICLE_ITEM_REMOVE_LORE", new Message("Menu.Option.Content.Particle.Item.Remove.LORE", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_PARTICLE_ITEM_REMOVE_LORE", new Message("Menu.Option.Content.Particle.Item.Remove.Lore", ""));
     getMessageManager().registerMessage("MENU_OPTION_CONTENT_PARTICLE_ADDED", new Message("Menu.Option.Content.Particle.Added", ""));
     getMessageManager().registerMessage("MENU_OPTION_CONTENT_PARTICLE_REMOVED", new Message("Menu.Option.Content.Particle.Removed", ""));
     getMessageManager().registerMessage("MENU_OPTION_CONTENT_HEADS_INVENTORY", new Message("Menu.Option.Content.Heads.Inventory", ""));
