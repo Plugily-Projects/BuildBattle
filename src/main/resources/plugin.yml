@@ -1,5 +1,5 @@
 name: BuildBattle
-main: plugily.projects.buildbattle.old.Main
+main: plugily.projects.buildbattle.Main
 authors: [ PlugilyProjects, Tigerpanzer_02, Tigerpanzer, Plajer, TomTheDeveloper ]
 version: ${project.version}
 softdepend: [ Vault,Citizens,  PlaceholderAPI, Parties, Spigot-Party-API-PAF, PartyAndFriends, ViaVersion, ProtocolSupport ]
