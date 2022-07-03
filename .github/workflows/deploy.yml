@@ -59,4 +59,4 @@ jobs:
                 "password": "${{ secrets.PLUGILY_REPO_PASSWORD }}"
             }]
             
-      - run: mvn clean verify compile package site:site deploy -f pom.xml
+      - run: mvn clean verify compile package site:site javadoc:javadoc javadoc:jar deploy -f pom.xml
