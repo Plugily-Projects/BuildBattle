@@ -22,9 +22,12 @@ package plugily.projects.buildbattle.handlers.menu.registry;
 
 import org.bukkit.Material;
 import org.bukkit.WeatherType;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.menu.MenuOption;
@@ -47,28 +50,36 @@ public class WeatherChangeOption {
         .build(), new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_INVENTORY").asKey().build()) {
 
       @Override
-      public void onClick(InventoryClickEvent e) {
-        e.getWhoClicked().closeInventory();
+      public void onClick(InventoryClickEvent event) {
+        HumanEntity humanEntity = event.getWhoClicked();
+        humanEntity.closeInventory();
 
         Inventory weatherInv = ComplementAccessor.getComplement().createInventory(null, 9, new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_INVENTORY").asKey().build());
         weatherInv.addItem(new ItemBuilder(Material.BUCKET).name(new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_TYPE_CLEAR").asKey().build()).build());
         weatherInv.addItem(new ItemBuilder(Material.WATER_BUCKET).name(new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_TYPE_DOWNFALL").asKey().build()).build());
         weatherInv.addItem(registry.getGoBackItem());
-        e.getWhoClicked().openInventory(weatherInv);
+        humanEntity.openInventory(weatherInv);
       }
 
       @Override
-      public void onTargetClick(InventoryClickEvent e) {
-        org.bukkit.inventory.ItemStack item = e.getCurrentItem();
+      public void onTargetClick(InventoryClickEvent event) {
+        ItemStack item = event.getCurrentItem();
         if(item == null)
           return;
 
-        BaseArena arena = (BaseArena) registry.getPlugin().getArenaRegistry().getArena((Player) e.getWhoClicked());
+        HumanEntity humanEntity = event.getWhoClicked();
+
+        if (!(humanEntity instanceof Player))
+          return;
+
+        Player player = (Player) humanEntity;
+
+        BaseArena arena = registry.getPlugin().getArenaRegistry().getArena(player);
         if(arena == null) {
           return;
         }
 
-        Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());
+        Plot plot = arena.getPlotManager().getPlot(player);
         if(plot == null) {
           return;
         }

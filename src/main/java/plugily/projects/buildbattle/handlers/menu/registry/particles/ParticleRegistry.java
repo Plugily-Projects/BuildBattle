@@ -22,6 +22,7 @@ package plugily.projects.buildbattle.handlers.menu.registry.particles;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -87,9 +88,7 @@ public class ParticleRegistry {
         continue;
       }
       List<String> lore = config.getStringList(particle + ".lore");
-      for(int a = 0; a < lore.size(); a++) {
-        lore.set(a, new MessageBuilder(lore.get(a)).build());
-      }
+      lore.replaceAll(line -> new MessageBuilder(line).build());
 
       ParticleItem particleItem = new ParticleItem();
       particleItem.setItemStack(new ItemBuilder(XMaterial.matchXMaterial(config
@@ -164,38 +163,48 @@ public class ParticleRegistry {
         .name(new MessageBuilder("MENU_OPTION_CONTENT_PARTICLE_ITEM_REMOVE_NAME").asKey().build())
         .lore(Collections.singletonList(new MessageBuilder("MENU_OPTION_CONTENT_PARTICLE_ITEM_REMOVE_LORE").asKey().build()))
         .build(), event -> {
-      Player who = (Player) event.getWhoClicked();
-      BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena(who);
+      HumanEntity humanEntity = event.getWhoClicked();
+
+      if (!(humanEntity instanceof Player))
+        return;
+
+      Player player = (Player) humanEntity;
+      BaseArena arena = plugin.getArenaRegistry().getArena(player);
       if(arena == null) {
         return;
       }
       event.setCancelled(false);
-      who.closeInventory();
-      ParticleRemoveMenu.openMenu(who, arena.getPlotManager().getPlot(who));
+      player.closeInventory();
+      ParticleRemoveMenu.openMenu(player, arena.getPlotManager().getPlot(player));
     }));
   }
 
   private void addParticles(ItemMap itemMap, Set<ParticleItem> particleItems) {
     for(ParticleItem item : particleItems) {
       itemMap.addItem(new SimpleClickableItem(item.getItemStack(), event -> {
-        Player who = (Player) event.getWhoClicked();
-        BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena(who);
+        HumanEntity humanEntity = event.getWhoClicked();
+
+        if (!(humanEntity instanceof Player))
+          return;
+
+        Player player = (Player) humanEntity;
+        BaseArena arena = plugin.getArenaRegistry().getArena(player);
         if(arena == null) {
           return;
         }
-        Plot plot = arena.getPlotManager().getPlot(who);
-        if(!who.hasPermission(item.getPermission())) {
-          new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_PARTICLE").asKey().player(who).sendPlayer();
+        if(!player.hasPermission(item.getPermission())) {
+          new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_PARTICLE").asKey().player(player).sendPlayer();
           return;
         }
+        Plot plot = arena.getPlotManager().getPlot(player);
         if(plot.getParticles().size() >= plugin.getConfig().getInt("Particle.Max-Amount", 25)) {
-          new MessageBuilder("IN_GAME_MESSAGES_PLOT_LIMIT_PARTICLES").asKey().player(who).sendPlayer();
+          new MessageBuilder("IN_GAME_MESSAGES_PLOT_LIMIT_PARTICLES").asKey().player(player).sendPlayer();
           return;
         }
-        plot.getParticles().put(who.getLocation(), item.getEffect());
-        plugin.getUserManager().getUser(who)
+        plot.getParticles().put(player.getLocation(), item.getEffect());
+        plugin.getUserManager().getUser(player)
             .adjustStatistic("PARTICLES_USED", 1);
-        new MessageBuilder("MENU_OPTION_CONTENT_PARTICLE_ADDED").asKey().player(who).sendPlayer();
+        new MessageBuilder("MENU_OPTION_CONTENT_PARTICLE_ADDED").asKey().player(player).sendPlayer();
       }));
     }
   }

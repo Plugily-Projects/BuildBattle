@@ -20,7 +20,6 @@
 
 package plugily.projects.buildbattle.arena.managers;
 
-import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.minigamesbox.classic.arena.managers.PluginMapRestorerManager;

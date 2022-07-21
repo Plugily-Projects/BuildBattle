@@ -34,12 +34,12 @@ import plugily.projects.minigamesbox.classic.arena.PluginArenaRegistry;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
 import plugily.projects.minigamesbox.classic.utils.dimensional.Cuboid;
-import plugily.projects.minigamesbox.classic.utils.hologram.ArmorStandHologram;
 import plugily.projects.minigamesbox.classic.utils.serialization.LocationSerializer;
 import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Tom on 27/07/2014.
@@ -56,8 +56,7 @@ public class ArenaRegistry extends PluginArenaRegistry {
 
   @Override
   public PluginArena getNewArena(String id) {
-    String gameType = ConfigUtils.getConfig(plugin, "arenas").getString("instances." + id + "gametype", "classic");
-    switch(gameType.toLowerCase()) {
+    switch(ConfigUtils.getConfig(plugin, "arenas").getString("instances." + id + "gametype", "classic").toLowerCase(Locale.ENGLISH)) {
       case "gtb":
       case "guessthebuild":
       case "guess_the_build":
@@ -72,27 +71,35 @@ public class ArenaRegistry extends PluginArenaRegistry {
 
   @Override
   public boolean additionalValidatorChecks(ConfigurationSection section, PluginArena arena, String id) {
-    boolean checks = super.additionalValidatorChecks(section, arena, id);
-    if(!checks) return false;
+    if(!super.additionalValidatorChecks(section, arena, id)) return false;
 
-    if(!section.getBoolean(id + ".isdone")) {
-      plugin.getDebugger().sendConsoleMsg(new MessageBuilder("VALIDATOR_INVALID_ARENA_CONFIGURATION").asKey().value("NOT VALIDATED").arena(arena).build());
-      return false;
+    boolean isBuildArena = arena instanceof BuildArena;
+
+    if(isBuildArena) {
+      int plotMemberSize = section.getInt(id + ".plotmembersize", 0);
+
+      // Member size can not be less than 1
+      if (plotMemberSize < 1) {
+        plugin.getDebugger().sendConsoleMsg(new MessageBuilder("VALIDATOR_INVALID_ARENA_CONFIGURATION").asKey().value("INVALID PLOT MEMBER SIZE!").arena(arena).build());
+        return false;
+      }
+
+      arena.setArenaOption("PLOT_MEMBER_SIZE", plotMemberSize);
+    } else {
+      arena.setArenaOption("PLOT_MEMBER_SIZE", 1);
     }
-    if(arena instanceof BuildArena && !section.contains(id + ".plotmembersize")) {
-      plugin.getDebugger().sendConsoleMsg(new MessageBuilder("VALIDATOR_INVALID_ARENA_CONFIGURATION").asKey().value("PLOT MEMBER SIZE MISSING!").arena(arena).build());
-      return false;
-    }
-    arena.setArenaOption("PLOT_MEMBER_SIZE", arena instanceof BuildArena ? section.getInt(id + ".plotmembersize", 1) : 1);
 
     ConfigurationSection plotSection = section.getConfigurationSection(id + ".plots");
     if(plotSection == null) {
       plugin.getDebugger().sendConsoleMsg(new MessageBuilder("VALIDATOR_INVALID_ARENA_CONFIGURATION").asKey().value("PLOTS SETUP MISSING!").arena(arena).build());
       return false;
     }
+
+    BaseArena baseArena = (BaseArena) arena;
+
     for(String plotName : plotSection.getKeys(false)) {
-      String minPointString = plotSection.getString(plotName + ".minpoint");
-      String maxPointString = plotSection.getString(plotName + ".maxpoint");
+      String minPointString = plotSection.getString(plotName + ".minpoint", null);
+      String maxPointString = plotSection.getString(plotName + ".maxpoint", null);
 
       if(minPointString != null && maxPointString != null) {
         Location minPoint = LocationSerializer.getLocation(minPointString);
@@ -106,12 +113,12 @@ public class ArenaRegistry extends PluginArenaRegistry {
                 minWorld.getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
                 : minWorld.getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
 
-            Plot buildPlot = new Plot((BaseArena) arena, biome);
+            Plot buildPlot = new Plot(baseArena, biome);
 
             buildPlot.setCuboid(new Cuboid(minPoint, maxPoint));
             buildPlot.fullyResetPlot();
 
-            ((BaseArena) arena).getPlotManager().addBuildPlot(buildPlot);
+            baseArena.getPlotManager().addBuildPlot(buildPlot);
           }
         }
       } else {
@@ -119,7 +126,7 @@ public class ArenaRegistry extends PluginArenaRegistry {
         return false;
       }
     }
-    if(arena instanceof BuildArena) {
+    if(isBuildArena) {
       ((BuildArena) arena).initPoll();
     }
     return true;
@@ -144,7 +151,7 @@ public class ArenaRegistry extends PluginArenaRegistry {
   }
 
   public @NotNull List<BaseArena> getPluginArenas() {
-    List<BaseArena> baseArenas = new ArrayList<>();
+    List<BaseArena> baseArenas = new ArrayList<>(super.getArenas().size());
     for(PluginArena pluginArena : super.getArenas()) {
       if(pluginArena instanceof BaseArena) {
         baseArenas.add((BaseArena) pluginArena);

@@ -25,7 +25,6 @@ import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.BuildArena;
 import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
 import plugily.projects.minigamesbox.classic.commands.arguments.data.CommandArgument;
 import plugily.projects.minigamesbox.classic.commands.arguments.data.LabelData;
 import plugily.projects.minigamesbox.classic.commands.arguments.data.LabeledCommandArgument;
@@ -60,12 +59,14 @@ public class SetThemeArgument {
           return;
         }
         if(arena.getArenaInGameStage() == BaseArena.ArenaInGameStage.THEME_VOTING) {
-          if(arena.getPlugin().getThemeManager().isThemeBlacklisted(args[1])) {
+          String themeName = args[1];
+
+          if(arena.getPlugin().getThemeManager().isThemeBlacklisted(themeName)) {
             new MessageBuilder("COMMANDS_THEME_BLACKLISTED").asKey().prefix().send(sender);
             return;
           }
-          arena.setTheme(args[1]);
-          new MessageBuilder("IN_GAME_MESSAGES_ADMIN_CHANGED_THEME").asKey().prefix().value(args[1]).arena(arena).sendArena();
+          arena.setTheme(themeName);
+          new MessageBuilder("IN_GAME_MESSAGES_ADMIN_CHANGED_THEME").asKey().prefix().value(themeName).arena(arena).sendArena();
         } else {
           new MessageBuilder("&cWrong stage to force theme!").prefix().send(sender);
         }

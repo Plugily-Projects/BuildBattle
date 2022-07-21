@@ -38,12 +38,11 @@ public class SelectPlotArgument {
     registry.mapArgument("buildbattle", new CommandArgument("selectplot", "buildbattle.command.selectplot", CommandArgument.ExecutorType.PLAYER) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        BaseArena arena = (BaseArena) registry.getPlugin().getArenaRegistry().getArena((Player) sender);
-        if(arena == null) {
-          return;
-        }
-        if(arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING)
-          arena.getPlugin().getPlotMenuHandler().createMenu((Player) sender, arena);
+        Player player = (Player) sender;
+        BaseArena arena = (BaseArena) registry.getPlugin().getArenaRegistry().getArena(player);
+
+        if(arena != null && arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING)
+          arena.getPlugin().getPlotMenuHandler().createMenu(player, arena);
       }
     });
   }

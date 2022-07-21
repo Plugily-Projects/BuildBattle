@@ -20,6 +20,7 @@
 
 package plugily.projects.buildbattle.handlers.menu.registry.playerheads;
 
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -44,11 +45,13 @@ public class PlayerHeadsOption {
         .build(), new MessageBuilder("MENU_OPTION_CONTENT_HEADS_INVENTORY").asKey().build()) {
 
       @Override
-      public void onClick(InventoryClickEvent e) {
-        e.getWhoClicked().closeInventory();
+      public void onClick(InventoryClickEvent event) {
+        HumanEntity humanEntity = event.getWhoClicked();
+
+        humanEntity.closeInventory();
         if(registry.getPlugin().getConfigPreferences().getOption("HEAD_MENU_CUSTOM")) {
-          if(e.getWhoClicked() instanceof Player) {
-            ((Player) e.getWhoClicked()).performCommand(registry.getPlugin().getConfig().getString("Head-Menu.Command", "heads"));
+          if(humanEntity instanceof Player) {
+            ((Player) humanEntity).performCommand(registry.getPlugin().getConfig().getString("Head-Menu.Command", "heads"));
           }
           return;
         }
@@ -59,22 +62,24 @@ public class PlayerHeadsOption {
           inventory.addItem(categoryItem.getItemStack());
         }
         inventory.addItem(registry.getGoBackItem());
-        e.getWhoClicked().openInventory(inventory);
+        humanEntity.openInventory(inventory);
       }
 
       @Override
-      public void onTargetClick(InventoryClickEvent e) {
-        e.getWhoClicked().closeInventory();
+      public void onTargetClick(InventoryClickEvent event) {
+        HumanEntity humanEntity = event.getWhoClicked();
+        String currentItemDisplayName = ComplementAccessor.getComplement().getDisplayName(event.getCurrentItem().getItemMeta());
+
+        humanEntity.closeInventory();
         for(HeadsCategory category : registry.getPlayerHeadsRegistry().getCategories().keySet()) {
-          if(!ComplementAccessor.getComplement().getDisplayName(category.getItemStack().getItemMeta())
-              .equals(ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta()))) {
+          if(!ComplementAccessor.getComplement().getDisplayName(category.getItemStack().getItemMeta()).equals(currentItemDisplayName)) {
             continue;
           }
-          if(e.getWhoClicked().hasPermission(category.getPermission())) {
-            e.getWhoClicked().openInventory(category.getInventory());
+          if(humanEntity.hasPermission(category.getPermission())) {
+            humanEntity.openInventory(category.getInventory());
             return;
           }
-          new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_HEAD").asKey().player((Player) e.getWhoClicked()).sendPlayer();
+          new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_HEAD").asKey().player((Player) humanEntity).sendPlayer();
           return;
         }
       }

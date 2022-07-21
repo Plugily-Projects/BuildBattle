@@ -20,7 +20,6 @@
 
 package plugily.projects.buildbattle.arena.states.build;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.arena.BaseArena;
@@ -32,7 +31,6 @@ import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
 import plugily.projects.minigamesbox.classic.handlers.reward.RewardsFactory;
 import plugily.projects.minigamesbox.classic.user.User;
-import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,8 +80,9 @@ public class InGameState extends PluginInGameState {
 
             if(user.isSpectator()) continue;
 
-            if(!pluginArena.getQueue().contains(pluginArena.getPlotFromPlayer(player))) {
-              pluginArena.getQueue().add(pluginArena.getPlotFromPlayer(player));
+            Plot playerPlot = pluginArena.getPlotFromPlayer(player);
+            if(!pluginArena.getQueue().contains(playerPlot)) {
+              pluginArena.getQueue().add(playerPlot);
             }
             player.getInventory().clear();
             pluginArena.getPlugin().getVoteItems().giveVoteItems(player);
@@ -155,8 +154,10 @@ public class InGameState extends PluginInGameState {
     if(pluginArena.getVotingPlot().getPoints() == 0) {
       for(Player player : pluginArena.getPlayersLeft()) {
         if(getPlugin().getConfigPreferences().getOption("HIDE_PLOT_OWNER")) {
-          new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_WAS").asKey().arena(pluginArena).player(player).value(pluginArena.getVotingPlot().getFormattedMembers()).sendArena();
-          new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_TITLE").asKey().arena(pluginArena).player(player).value(pluginArena.getVotingPlot().getFormattedMembers()).sendArena();
+          String formattedMembers = pluginArena.getVotingPlot().getFormattedMembers();
+
+          new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_WAS").asKey().arena(pluginArena).player(player).value(formattedMembers).sendArena();
+          new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_TITLE").asKey().arena(pluginArena).player(player).value(formattedMembers).sendArena();
         }
         User user = getPlugin().getUserManager().getUser(player);
         int points = user.getStatistic("LOCAL_POINTS");
@@ -230,22 +231,6 @@ public class InGameState extends PluginInGameState {
     }
   }
 
-  private String formatWinners(final List<Player> winners) {
-    List<Player> players = new ArrayList<>(winners);
-    StringBuilder builder = new StringBuilder(players.get(0).getName());
-    if(players.size() == 1) {
-      return builder.toString();
-    }
-
-    players.remove(0);
-
-    for(Player p : players) {
-      builder.append(" & ").append(p.getName());
-    }
-
-    return builder.toString();
-  }
-
   private void handleThemeVoting(BuildArena pluginArena) {
     for(Player player : pluginArena.getPlayers()) {
       pluginArena.getVoteMenu().updateInventory(player);
@@ -254,8 +239,9 @@ public class InGameState extends PluginInGameState {
   }
 
   private void handleBuildTime(BuildArena pluginArena) {
+    int timer = pluginArena.getTimer();
     for(int timers : getPlugin().getConfig().getIntegerList("Time-Manager.Time-Left-Intervals")) {
-      if(timers == pluginArena.getTimer()) {
+      if(timers == timer) {
         pluginArena.sendBuildLeftTimeMessage();
         break;
       }
@@ -282,8 +268,10 @@ public class InGameState extends PluginInGameState {
         }
       }
       if(!pluginArena.getVotingPlot().getMembers().isEmpty() && getPlugin().getConfigPreferences().getOption("HIDE_PLOT_OWNER")) {
-        new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_WAS").asKey().arena(pluginArena).value(pluginArena.getVotingPlot().getFormattedMembers()).sendArena();
-        new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_TITLE").asKey().arena(pluginArena).value(pluginArena.getVotingPlot().getFormattedMembers()).sendArena();
+        String formattedMembers = pluginArena.getVotingPlot().getFormattedMembers();
+
+        new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_WAS").asKey().arena(pluginArena).value(formattedMembers).sendArena();
+        new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_TITLE").asKey().arena(pluginArena).value(formattedMembers).sendArena();
       }
     }
     voteRoutine(pluginArena);
@@ -308,16 +296,17 @@ public class InGameState extends PluginInGameState {
 
 
       Location teleportLoc = pluginArena.getVotingPlot().getTeleportLocation();
+      String formattedMembers = pluginArena.getVotingPlot().getFormattedMembers();
 
-      for(Player p : pluginArena.getPlayers()) {
-        p.teleport(teleportLoc);
-        p.setPlayerWeather(pluginArena.getVotingPlot().getWeatherType());
-        p.setPlayerTime(Plot.Time.format(pluginArena.getVotingPlot().getTime(), p.getWorld().getTime()), false);
+      for(Player player : pluginArena.getPlayers()) {
+        player.teleport(teleportLoc);
+        player.setPlayerWeather(pluginArena.getVotingPlot().getWeatherType());
+        player.setPlayerTime(Plot.Time.format(pluginArena.getVotingPlot().getTime(), player.getWorld().getTime()), false);
         if(getPlugin().getConfigPreferences().getOption("HIDE_PLOT_OWNER")) {
-          new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_NEXT").asKey().arena(pluginArena).value("???").player(p).sendPlayer();
+          new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_NEXT").asKey().arena(pluginArena).value("???").player(player).sendPlayer();
         } else {
-          new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_TITLE").asKey().arena(pluginArena).value(pluginArena.getVotingPlot().getFormattedMembers()).player(p).sendPlayer();
-          new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_NEXT").asKey().arena(pluginArena).value(pluginArena.getVotingPlot().getFormattedMembers()).player(p).sendPlayer();
+          new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_TITLE").asKey().arena(pluginArena).value(formattedMembers).player(player).sendPlayer();
+          new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_NEXT").asKey().arena(pluginArena).value(formattedMembers).player(player).sendPlayer();
         }
       }
 
@@ -325,8 +314,9 @@ public class InGameState extends PluginInGameState {
         spectator.teleport(teleportLoc);
         spectator.setPlayerWeather(pluginArena.getVotingPlot().getWeatherType());
         spectator.setPlayerTime(Plot.Time.format(pluginArena.getVotingPlot().getTime(), spectator.getWorld().getTime()), false);
-        new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_TITLE").asKey().arena(pluginArena).value(pluginArena.getVotingPlot().getFormattedMembers()).player(spectator).sendPlayer();
-        new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_NEXT").asKey().arena(pluginArena).value(pluginArena.getVotingPlot().getFormattedMembers()).player(spectator).sendPlayer();
+
+        new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_TITLE").asKey().arena(pluginArena).value(formattedMembers).player(spectator).sendPlayer();
+        new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_NEXT").asKey().arena(pluginArena).value(formattedMembers).player(spectator).sendPlayer();
       }
     }
   }
@@ -335,7 +325,6 @@ public class InGameState extends PluginInGameState {
     if(pluginArena.getArenaOption("IN_PLOT_CHECKER") >= 3) {
       pluginArena.setArenaOption("IN_PLOT_CHECKER", 0);
       for(Player player : pluginArena.getPlayersLeft()) {
-        User user = getPlugin().getUserManager().getUser(player);
         Plot buildPlot = pluginArena.getPlotFromPlayer(player);
         if(buildPlot != null && buildPlot.getCuboid() != null && !buildPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
           player.teleport(buildPlot.getTeleportLocation());
