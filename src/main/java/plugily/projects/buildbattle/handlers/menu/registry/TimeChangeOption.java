@@ -74,7 +74,7 @@ public class TimeChangeOption {
 
       @Override
       public void onTargetClick(InventoryClickEvent e) {
-        BaseArena arena = (BaseArena) registry.getPlugin().getArenaRegistry().getArena((Player) e.getWhoClicked());
+        BaseArena arena = registry.getPlugin().getArenaRegistry().getArena((Player) e.getWhoClicked());
         if(arena == null) {
           return;
         }

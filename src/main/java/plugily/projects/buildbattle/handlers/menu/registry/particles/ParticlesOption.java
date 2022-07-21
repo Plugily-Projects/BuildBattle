@@ -22,7 +22,6 @@ package plugily.projects.buildbattle.handlers.menu.registry.particles;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.handlers.menu.MenuOption;
 import plugily.projects.buildbattle.handlers.menu.OptionsRegistry;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
@@ -46,11 +45,12 @@ public class ParticlesOption {
       @Override
       public void onClick(InventoryClickEvent event) {
         event.getWhoClicked().closeInventory();
-        BaseArena arena = (BaseArena) registry.getPlugin().getArenaRegistry().getArena((Player) event.getWhoClicked());
-        if(arena == null) {
+
+        org.bukkit.entity.HumanEntity who = event.getWhoClicked();
+        if(registry.getPlugin().getArenaRegistry().getArena((Player) who) == null) {
           return;
         }
-        registry.getPlugin().getOptionsRegistry().getParticleRegistry().getParticles().open(event.getWhoClicked());
+        registry.getPlugin().getOptionsRegistry().getParticleRegistry().getParticles().open(who);
       }
     });
   }

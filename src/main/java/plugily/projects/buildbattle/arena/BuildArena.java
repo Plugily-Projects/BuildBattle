@@ -115,7 +115,7 @@ public class BuildArena extends BaseArena {
     return queue;
   }
 
-
+  @Override
   public void distributePlots() {
     int neededPlots = (getPlayers().size() / getArenaOption("PLOT_MEMBER_SIZE"));
     if(getPlotManager().getPlots().size() < neededPlots) {

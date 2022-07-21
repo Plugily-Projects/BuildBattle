@@ -56,7 +56,7 @@ public class BiomeChangeOption {
       @Override
       public void onTargetClick(InventoryClickEvent e) {
         Player who = (Player) e.getWhoClicked();
-        BaseArena arena = (BaseArena) registry.getPlugin().getArenaRegistry().getArena(who);
+        BaseArena arena = registry.getPlugin().getArenaRegistry().getArena(who);
         if(arena == null) {
           return;
         }

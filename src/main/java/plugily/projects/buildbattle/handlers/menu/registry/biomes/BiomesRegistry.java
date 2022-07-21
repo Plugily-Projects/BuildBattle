@@ -63,15 +63,13 @@ public class BiomesRegistry {
         break;
       }
       java.util.List<String> lore = config.getStringList(biome + ".lore");
-      for(int b = 0; b < lore.size(); b++) {
-        lore.set(b, new MessageBuilder(lore.get(b)).build());
-      }
-      BiomeItem biomeItem = new BiomeItem(new ItemBuilder(XMaterial.matchXMaterial(config
-          .getString(biome + ".material-name", "bedrock").toUpperCase()).orElse(XMaterial.BEDROCK).parseItem())
-          .name(new MessageBuilder(config.getString(biome + ".displayname")).build())
-          .lore(lore)
-          .build(), config.getString(biome + ".permission"), XBiome.matchXBiome(biome).orElse(XBiome.BADLANDS));
-      biomes.add(biomeItem);
+      lore.replaceAll(l -> new MessageBuilder(l).build());
+
+      biomes.add(new BiomeItem(new ItemBuilder(XMaterial.matchXMaterial(config
+              .getString(biome + ".material-name", "bedrock").toUpperCase()).orElse(XMaterial.BEDROCK).parseItem())
+              .name(new MessageBuilder(config.getString(biome + ".displayname")).build())
+              .lore(lore)
+              .build(), config.getString(biome + ".permission"), XBiome.matchXBiome(biome).orElse(XBiome.BADLANDS)));
       i++;
     }
     plugin.getDebugger().debug("Registered in total " + i + " biomes!");

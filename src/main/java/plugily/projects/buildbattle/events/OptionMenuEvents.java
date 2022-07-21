@@ -21,12 +21,10 @@
 package plugily.projects.buildbattle.events;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 import plugily.projects.buildbattle.Main;
@@ -39,8 +37,6 @@ import plugily.projects.minigamesbox.classic.utils.helper.ItemUtils;
 import plugily.projects.minigamesbox.classic.utils.misc.complement.ComplementAccessor;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerInteractEvent;
-
-import java.lang.reflect.Member;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -63,7 +59,7 @@ public class OptionMenuEvents implements Listener {
     if(!ItemUtils.isItemStackNamed(event.getItem())) {
       return;
     }
-    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena(event.getPlayer());
+    BaseArena arena = plugin.getArenaRegistry().getArena(event.getPlayer());
     if(arena == null || arena.getArenaState() != ArenaState.IN_GAME || arena instanceof BuildArena && arena.getArenaInGameStage() != BaseArena.ArenaInGameStage.BUILD_TIME) {
       return;
     }
@@ -81,7 +77,7 @@ public class OptionMenuEvents implements Listener {
     if(!ItemUtils.isItemStackNamed(event.getCurrentItem()) || !(event.getWhoClicked() instanceof Player)) {
       return;
     }
-    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena((Player) event.getWhoClicked());
+    BaseArena arena = plugin.getArenaRegistry().getArena((Player) event.getWhoClicked());
     if(arena == null) {
       return;
     }
@@ -97,7 +93,7 @@ public class OptionMenuEvents implements Listener {
 
   @EventHandler
   public void onPlayerDropItem(PlayerDropItemEvent event) {
-    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena(event.getPlayer());
+    BaseArena arena = plugin.getArenaRegistry().getArena(event.getPlayer());
     if(arena == null) {
       return;
     }
@@ -112,7 +108,7 @@ public class OptionMenuEvents implements Listener {
 
   @EventHandler
   public void onInventoryClick(InventoryClickEvent event) {
-    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena((Player) event.getWhoClicked());
+    BaseArena arena = plugin.getArenaRegistry().getArena((Player) event.getWhoClicked());
     if(arena == null) {
       return;
     }

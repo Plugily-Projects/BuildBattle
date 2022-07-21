@@ -49,7 +49,9 @@ public class OptionsMenuHandler implements Listener {
 
   @EventHandler
   public void onOptionsMenuClick(InventoryClickEvent e) {
-    if(!(e.getWhoClicked() instanceof Player)) {
+    org.bukkit.entity.HumanEntity clicked = e.getWhoClicked();
+
+    if(!(clicked instanceof Player)) {
       return;
     }
 
@@ -59,7 +61,7 @@ public class OptionsMenuHandler implements Listener {
         || !ComplementAccessor.getComplement().getTitle(e.getView()).equals(new MessageBuilder("MENU_OPTION_INVENTORY").asKey().build())) {
       return;
     }
-    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena((Player) e.getWhoClicked());
+    BaseArena arena = plugin.getArenaRegistry().getArena((Player) clicked);
     if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }

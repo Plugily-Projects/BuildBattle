@@ -29,8 +29,6 @@ import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.PluginArenaManager;
 import plugily.projects.minigamesbox.classic.user.User;
 
-import java.util.Comparator;
-
 /**
  * @author Plajer
  * <p>Created at 13.05.2018
@@ -46,7 +44,7 @@ public class ArenaManager extends PluginArenaManager {
 
   @Override
   public void additionalPartyJoin(Player player, PluginArena arena, Player partyLeader) {
-    BaseArena pluginArena = (BaseArena) plugin.getArenaRegistry().getArena(arena.getId());
+    BaseArena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
     if(pluginArena == null) {
       return;
     }
@@ -66,7 +64,7 @@ public class ArenaManager extends PluginArenaManager {
 
   @Override
   public void leaveAttempt(@NotNull Player player, @NotNull PluginArena arena) {
-    BaseArena pluginArena = (BaseArena) plugin.getArenaRegistry().getArena(arena.getId());
+    BaseArena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
     if(pluginArena == null) {
       return;
     }
@@ -81,9 +79,11 @@ public class ArenaManager extends PluginArenaManager {
       }
     }
     if(arena instanceof GuessArena) {
+      GuessArena guess = (GuessArena) pluginArena;
+
       ((GuessArena) arena).getWhoGuessed().remove(player);
-      if(player == ((GuessArena) pluginArena).getCurrentBuilder()) {
-        ((GuessArena) pluginArena).setCurrentBuilder(null);
+      if(player == guess.getCurrentBuilder()) {
+        guess.setCurrentBuilder(null);
         if(arena.getArenaState() == ArenaState.IN_GAME) {
           pluginArena.setTimer(plugin.getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".Round-Delay"));
           pluginArena.setArenaInGameStage(BaseArena.ArenaInGameStage.PLOT_VOTING);

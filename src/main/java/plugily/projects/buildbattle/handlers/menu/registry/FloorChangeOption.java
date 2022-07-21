@@ -55,7 +55,7 @@ public class FloorChangeOption {
           return;
 
         Player who = (Player) e.getWhoClicked();
-        BaseArena arena = (BaseArena) registry.getPlugin().getArenaRegistry().getArena((Player) e.getWhoClicked());
+        BaseArena arena = registry.getPlugin().getArenaRegistry().getArena(who);
         if(arena == null) {
           return;
         }

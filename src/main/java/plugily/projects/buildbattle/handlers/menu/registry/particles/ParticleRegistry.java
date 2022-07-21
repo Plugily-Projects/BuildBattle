@@ -87,9 +87,7 @@ public class ParticleRegistry {
         continue;
       }
       List<String> lore = config.getStringList(particle + ".lore");
-      for(int a = 0; a < lore.size(); a++) {
-        lore.set(a, new MessageBuilder(lore.get(a)).build());
-      }
+      lore.replaceAll(a -> new MessageBuilder(a).build());
 
       ParticleItem particleItem = new ParticleItem();
       particleItem.setItemStack(new ItemBuilder(XMaterial.matchXMaterial(config
@@ -165,7 +163,7 @@ public class ParticleRegistry {
         .lore(Collections.singletonList(new MessageBuilder("MENU_OPTION_CONTENT_PARTICLE_ITEM_REMOVE_LORE").asKey().build()))
         .build(), event -> {
       Player who = (Player) event.getWhoClicked();
-      BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena(who);
+      BaseArena arena = plugin.getArenaRegistry().getArena(who);
       if(arena == null) {
         return;
       }
@@ -179,15 +177,15 @@ public class ParticleRegistry {
     for(ParticleItem item : particleItems) {
       itemMap.addItem(new SimpleClickableItem(item.getItemStack(), event -> {
         Player who = (Player) event.getWhoClicked();
-        BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena(who);
+        BaseArena arena = plugin.getArenaRegistry().getArena(who);
         if(arena == null) {
           return;
         }
-        Plot plot = arena.getPlotManager().getPlot(who);
         if(!who.hasPermission(item.getPermission())) {
           new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_PARTICLE").asKey().player(who).sendPlayer();
           return;
         }
+        Plot plot = arena.getPlotManager().getPlot(who);
         if(plot.getParticles().size() >= plugin.getConfig().getInt("Particle.Max-Amount", 25)) {
           new MessageBuilder("IN_GAME_MESSAGES_PLOT_LIMIT_PARTICLES").asKey().player(who).sendPlayer();
           return;

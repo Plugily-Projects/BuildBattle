@@ -137,7 +137,7 @@ public class PlotMenuHandler implements Listener {
       return;
     }
 
-    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena(e.getPlayer());
+    BaseArena arena = plugin.getArenaRegistry().getArena(e.getPlayer());
     if(arena == null) {
       return;
     }

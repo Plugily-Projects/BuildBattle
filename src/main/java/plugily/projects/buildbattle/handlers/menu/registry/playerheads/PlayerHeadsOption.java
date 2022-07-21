@@ -45,10 +45,12 @@ public class PlayerHeadsOption {
 
       @Override
       public void onClick(InventoryClickEvent e) {
-        e.getWhoClicked().closeInventory();
+        org.bukkit.entity.HumanEntity who = e.getWhoClicked();
+
+        who.closeInventory();
         if(registry.getPlugin().getConfigPreferences().getOption("HEAD_MENU_CUSTOM")) {
-          if(e.getWhoClicked() instanceof Player) {
-            ((Player) e.getWhoClicked()).performCommand(registry.getPlugin().getConfig().getString("Head-Menu.Command", "heads"));
+          if(who instanceof Player) {
+            ((Player) who).performCommand(registry.getPlugin().getConfig().getString("Head-Menu.Command", "heads"));
           }
           return;
         }
@@ -59,22 +61,24 @@ public class PlayerHeadsOption {
           inventory.addItem(categoryItem.getItemStack());
         }
         inventory.addItem(registry.getGoBackItem());
-        e.getWhoClicked().openInventory(inventory);
+        who.openInventory(inventory);
       }
 
       @Override
       public void onTargetClick(InventoryClickEvent e) {
-        e.getWhoClicked().closeInventory();
+        org.bukkit.entity.HumanEntity who = e.getWhoClicked();
+
+        who.closeInventory();
         for(HeadsCategory category : registry.getPlayerHeadsRegistry().getCategories().keySet()) {
           if(!ComplementAccessor.getComplement().getDisplayName(category.getItemStack().getItemMeta())
               .equals(ComplementAccessor.getComplement().getDisplayName(e.getCurrentItem().getItemMeta()))) {
             continue;
           }
-          if(e.getWhoClicked().hasPermission(category.getPermission())) {
-            e.getWhoClicked().openInventory(category.getInventory());
+          if(who.hasPermission(category.getPermission())) {
+            who.openInventory(category.getInventory());
             return;
           }
-          new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_HEAD").asKey().player((Player) e.getWhoClicked()).sendPlayer();
+          new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_HEAD").asKey().player((Player) who).sendPlayer();
           return;
         }
       }

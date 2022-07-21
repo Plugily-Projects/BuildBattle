@@ -36,7 +36,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
@@ -75,7 +74,7 @@ public class GuessArena extends BaseArena {
     super.cleanUpArena();
   }
 
-
+  @Override
   public void distributePlots() {
     int neededPlots = (getPlayers().size() / getArenaOption("PLOT_MEMBER_SIZE"));
     if(getPlotManager().getPlots().size() < neededPlots) {
@@ -123,7 +122,8 @@ public class GuessArena extends BaseArena {
   }
 
   public Player getNextPlayerByRound() {
-    int size = getPlayersLeft().size();
+    List<Player> playersLeft = getPlayersLeft();
+    int size = playersLeft.size();
 
     if(size == 0) {
       return null;
@@ -134,7 +134,7 @@ public class GuessArena extends BaseArena {
       part = size - 1;
     }
 
-    return getPlayersLeft().get(part);
+    return playersLeft.get(part);
   }
 
   @Override

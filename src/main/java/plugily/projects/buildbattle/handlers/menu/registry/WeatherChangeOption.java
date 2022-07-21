@@ -48,13 +48,14 @@ public class WeatherChangeOption {
 
       @Override
       public void onClick(InventoryClickEvent e) {
-        e.getWhoClicked().closeInventory();
+        org.bukkit.entity.HumanEntity who = e.getWhoClicked();
+        who.closeInventory();
 
         Inventory weatherInv = ComplementAccessor.getComplement().createInventory(null, 9, new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_INVENTORY").asKey().build());
         weatherInv.addItem(new ItemBuilder(Material.BUCKET).name(new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_TYPE_CLEAR").asKey().build()).build());
         weatherInv.addItem(new ItemBuilder(Material.WATER_BUCKET).name(new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_TYPE_DOWNFALL").asKey().build()).build());
         weatherInv.addItem(registry.getGoBackItem());
-        e.getWhoClicked().openInventory(weatherInv);
+        who.openInventory(weatherInv);
       }
 
       @Override
@@ -63,12 +64,14 @@ public class WeatherChangeOption {
         if(item == null)
           return;
 
-        BaseArena arena = (BaseArena) registry.getPlugin().getArenaRegistry().getArena((Player) e.getWhoClicked());
+        Player who = (Player) e.getWhoClicked();
+
+        BaseArena arena = registry.getPlugin().getArenaRegistry().getArena(who);
         if(arena == null) {
           return;
         }
 
-        Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());
+        Plot plot = arena.getPlotManager().getPlot(who);
         if(plot == null) {
           return;
         }

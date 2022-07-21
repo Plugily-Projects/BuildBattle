@@ -34,7 +34,6 @@ import plugily.projects.minigamesbox.classic.arena.PluginArenaRegistry;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
 import plugily.projects.minigamesbox.classic.utils.dimensional.Cuboid;
-import plugily.projects.minigamesbox.classic.utils.hologram.ArmorStandHologram;
 import plugily.projects.minigamesbox.classic.utils.serialization.LocationSerializer;
 import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
 
@@ -56,8 +55,7 @@ public class ArenaRegistry extends PluginArenaRegistry {
 
   @Override
   public PluginArena getNewArena(String id) {
-    String gameType = ConfigUtils.getConfig(plugin, "arenas").getString("instances." + id + "gametype", "classic");
-    switch(gameType.toLowerCase()) {
+    switch(ConfigUtils.getConfig(plugin, "arenas").getString("instances." + id + "gametype", "classic").toLowerCase()) {
       case "gtb":
       case "guessthebuild":
       case "guess_the_build":
@@ -72,10 +70,9 @@ public class ArenaRegistry extends PluginArenaRegistry {
 
   @Override
   public boolean additionalValidatorChecks(ConfigurationSection section, PluginArena arena, String id) {
-    boolean checks = super.additionalValidatorChecks(section, arena, id);
-    if(!checks) return false;
+    if(!super.additionalValidatorChecks(section, arena, id)) return false;
 
-    if(!section.getBoolean(id + ".isdone")) {
+    if(!section.getBoolean(id + ".isdone", false)) {
       plugin.getDebugger().sendConsoleMsg(new MessageBuilder("VALIDATOR_INVALID_ARENA_CONFIGURATION").asKey().value("NOT VALIDATED").arena(arena).build());
       return false;
     }
@@ -90,6 +87,9 @@ public class ArenaRegistry extends PluginArenaRegistry {
       plugin.getDebugger().sendConsoleMsg(new MessageBuilder("VALIDATOR_INVALID_ARENA_CONFIGURATION").asKey().value("PLOTS SETUP MISSING!").arena(arena).build());
       return false;
     }
+
+    BaseArena base = (BaseArena) arena;
+
     for(String plotName : plotSection.getKeys(false)) {
       String minPointString = plotSection.getString(plotName + ".minpoint");
       String maxPointString = plotSection.getString(plotName + ".maxpoint");
@@ -106,12 +106,12 @@ public class ArenaRegistry extends PluginArenaRegistry {
                 minWorld.getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
                 : minWorld.getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
 
-            Plot buildPlot = new Plot((BaseArena) arena, biome);
+            Plot buildPlot = new Plot(base, biome);
 
             buildPlot.setCuboid(new Cuboid(minPoint, maxPoint));
             buildPlot.fullyResetPlot();
 
-            ((BaseArena) arena).getPlotManager().addBuildPlot(buildPlot);
+            base.getPlotManager().addBuildPlot(buildPlot);
           }
         }
       } else {
@@ -144,7 +144,7 @@ public class ArenaRegistry extends PluginArenaRegistry {
   }
 
   public @NotNull List<BaseArena> getPluginArenas() {
-    List<BaseArena> baseArenas = new ArrayList<>();
+    List<BaseArena> baseArenas = new ArrayList<>(super.getArenas().size());
     for(PluginArena pluginArena : super.getArenas()) {
       if(pluginArena instanceof BaseArena) {
         baseArenas.add((BaseArena) pluginArena);
