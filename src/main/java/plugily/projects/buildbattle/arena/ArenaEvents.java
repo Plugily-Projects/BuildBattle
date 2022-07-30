@@ -20,59 +20,31 @@
 
 package plugily.projects.buildbattle.arena;
 
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.ItemFrame;
-import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Vehicle;
+import org.bukkit.entity.*;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockDispenseEvent;
-import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.block.BlockIgniteEvent;
-import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPistonRetractEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.BlockSpreadEvent;
-import org.bukkit.event.block.LeavesDecayEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.block.*;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.event.entity.EntityDismountEvent;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.minigamesbox.classic.arena.ArenaState;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.PluginArenaEvents;
-import plugily.projects.minigamesbox.classic.handlers.items.SpecialItem;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
-import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
 import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
@@ -81,12 +53,6 @@ import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPla
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerInteractEvent;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerPickupArrow;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
-import plugily.projects.minigamesbox.classic.utils.version.xseries.XSound;
-
-import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.logging.Level;
 
 /**
  * @author Plajer
@@ -120,7 +86,7 @@ public class ArenaEvents extends PluginArenaEvents {
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onBreak(BlockBreakEvent event) {
-    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena(event.getPlayer());
+    BaseArena arena = plugin.getArenaRegistry().getArena(event.getPlayer());
     if(arena == null) {
       return;
     }
@@ -141,7 +107,7 @@ public class ArenaEvents extends PluginArenaEvents {
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onPlace(BlockPlaceEvent event) {
-    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena(event.getPlayer());
+    BaseArena arena = plugin.getArenaRegistry().getArena(event.getPlayer());
     if(arena == null) {
       return;
     }
@@ -195,7 +161,7 @@ public class ArenaEvents extends PluginArenaEvents {
     String customName = event.getRightClicked().getCustomName();
 
     if(customName != null && customName.equalsIgnoreCase(new MessageBuilder("IN_GAME_MESSAGES_PLOT_NPC_NAME").asKey().build())) {
-      BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena(event.getPlayer());
+      BaseArena arena = plugin.getArenaRegistry().getArena(event.getPlayer());
 
       if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
         return;
@@ -232,7 +198,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(event.getClickedBlock() == null)
       return;
 
-    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena(event.getPlayer());
+    BaseArena arena = plugin.getArenaRegistry().getArena(event.getPlayer());
     if(arena == null) {
       return;
     }
@@ -307,7 +273,7 @@ public class ArenaEvents extends PluginArenaEvents {
 
   @EventHandler
   public void onBucketEmpty(PlayerBucketEmptyEvent event) {
-    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena(event.getPlayer());
+    BaseArena arena = plugin.getArenaRegistry().getArena(event.getPlayer());
     if(arena == null) {
       return;
     }
@@ -410,7 +376,7 @@ public class ArenaEvents extends PluginArenaEvents {
 
   @EventHandler
   public void onTreeGrow(StructureGrowEvent event) {
-    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena(event.getPlayer());
+    BaseArena arena = plugin.getArenaRegistry().getArena(event.getPlayer());
     if(arena == null) {
       return;
     }
@@ -428,7 +394,7 @@ public class ArenaEvents extends PluginArenaEvents {
 
   @EventHandler
   public void onEntityDamageEntity(EntityDamageByEntityEvent event) {
-    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena((Player) event.getEntity());
+    BaseArena arena = plugin.getArenaRegistry().getArena((Player) event.getEntity());
     if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
@@ -443,7 +409,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(event.getEntity().getType() != EntityType.PLAYER) {
       return;
     }
-    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena((Player) event.getEntity());
+    BaseArena arena = plugin.getArenaRegistry().getArena((Player) event.getEntity());
     if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
@@ -452,7 +418,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(player.getLocation().getY() < 1) {
       Plot plot = arena.getPlotManager().getPlot(player);
       if(plot != null) {
-        player.teleport(plot.getTeleportLocation());
+        VersionUtils.teleport(player, plot.getTeleportLocation());
       }
     }
   }
@@ -462,7 +428,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(event.getClickedBlock() == null || VersionUtils.checkOffHand(event.getHand())) {
       return;
     }
-    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena(event.getPlayer());
+    BaseArena arena = plugin.getArenaRegistry().getArena(event.getPlayer());
     if(arena == null || VersionUtils.getItemInHand(event.getPlayer()).getType() != Material.FLINT_AND_STEEL) {
       return;
     }
@@ -556,7 +522,7 @@ public class ArenaEvents extends PluginArenaEvents {
       return;
     }
     Player player = (Player) e.getEntity();
-    BaseArena pluginBaseArena = (BaseArena) plugin.getArenaRegistry().getArena(player);
+    BaseArena pluginBaseArena = plugin.getArenaRegistry().getArena(player);
     if(pluginBaseArena == null) {
       return;
     }
@@ -588,7 +554,7 @@ public class ArenaEvents extends PluginArenaEvents {
   @EventHandler
   public void onGTBGuessChat(AsyncPlayerChatEvent event) {
     Player player = event.getPlayer();
-    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena(player);
+    BaseArena arena = plugin.getArenaRegistry().getArena(player);
     if(!(arena instanceof GuessArena)) {
       return;
     }

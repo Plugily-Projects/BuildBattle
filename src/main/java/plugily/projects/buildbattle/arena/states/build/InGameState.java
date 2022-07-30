@@ -20,7 +20,6 @@
 
 package plugily.projects.buildbattle.arena.states.build;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.arena.BaseArena;
@@ -103,7 +102,7 @@ public class InGameState extends PluginInGameState {
             Location winnerLocation = pluginArena.getWinnerPlot().getTeleportLocation();
 
             for(Player player : pluginArena.getPlayers()) {
-              player.teleport(winnerLocation);
+              VersionUtils.teleport(player, winnerLocation);
               new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_WINNER").asKey().player(player).value(pluginArena.getWinnerPlot().getFormattedMembers()).sendPlayer();
             }
             givePlaceRewards(pluginArena);
@@ -310,7 +309,7 @@ public class InGameState extends PluginInGameState {
       Location teleportLoc = pluginArena.getVotingPlot().getTeleportLocation();
 
       for(Player p : pluginArena.getPlayers()) {
-        p.teleport(teleportLoc);
+        VersionUtils.teleport(p, teleportLoc);
         p.setPlayerWeather(pluginArena.getVotingPlot().getWeatherType());
         p.setPlayerTime(Plot.Time.format(pluginArena.getVotingPlot().getTime(), p.getWorld().getTime()), false);
         if(getPlugin().getConfigPreferences().getOption("HIDE_PLOT_OWNER")) {
@@ -322,7 +321,7 @@ public class InGameState extends PluginInGameState {
       }
 
       for(Player spectator : pluginArena.getSpectators()) {
-        spectator.teleport(teleportLoc);
+        VersionUtils.teleport(spectator, teleportLoc);
         spectator.setPlayerWeather(pluginArena.getVotingPlot().getWeatherType());
         spectator.setPlayerTime(Plot.Time.format(pluginArena.getVotingPlot().getTime(), spectator.getWorld().getTime()), false);
         new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_TITLE").asKey().arena(pluginArena).value(pluginArena.getVotingPlot().getFormattedMembers()).player(spectator).sendPlayer();
@@ -338,7 +337,7 @@ public class InGameState extends PluginInGameState {
         User user = getPlugin().getUserManager().getUser(player);
         Plot buildPlot = pluginArena.getPlotFromPlayer(player);
         if(buildPlot != null && buildPlot.getCuboid() != null && !buildPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
-          player.teleport(buildPlot.getTeleportLocation());
+          VersionUtils.teleport(player, buildPlot.getTeleportLocation());
           new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_OUTSIDE").asKey().arena(pluginArena).player(player).sendPlayer();
         }
       }

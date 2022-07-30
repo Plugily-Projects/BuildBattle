@@ -30,6 +30,7 @@ import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.minigamesbox.classic.arena.ArenaState;
 import plugily.projects.minigamesbox.classic.utils.dimensional.Cuboid;
 import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
+import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,7 +116,7 @@ public class PlotManager {
           }
 
           for(Player p : buildPlot.getMembers()) {
-            p.teleport(cuboid.getCenter());
+            VersionUtils.teleport(p, cuboid.getCenter());
           }
         } else {
           // Should do this in async thread to do not cause dead for the main thread
@@ -136,7 +137,7 @@ public class PlotManager {
             return loc;
           }).thenAccept(loc -> {
             for(Player p : buildPlot.getMembers()) {
-              p.teleport(cuboid.getCenter());
+              VersionUtils.teleport(p, cuboid.getCenter());
               //apply creative again to prevent multiverse default gamemode on world switch
               p.setGameMode(GameMode.CREATIVE);
             }
