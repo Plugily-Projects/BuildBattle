@@ -452,7 +452,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(player.getLocation().getY() < 1) {
       Plot plot = arena.getPlotManager().getPlot(player);
       if(plot != null) {
-        player.teleport(plot.getTeleportLocation());
+        VersionUtils.teleport(player, plot.getTeleportLocation());
       }
     }
   }
