@@ -110,6 +110,7 @@ public class Main extends PluginMain {
     addFileName("vote_items");
     addArenaOptions();
     blacklistManager = new BlacklistManager(this);
+    themeManager = new ThemeManager(this);
     BaseArena.init(this);
     new ArenaEvents(this);
     arenaManager = new ArenaManager(this);
@@ -120,7 +121,6 @@ public class Main extends PluginMain {
     argumentsRegistry = new ArgumentsRegistry(this);
     voteItems = new VoteItems(this);
     new VoteEvents(this);
-    themeManager = new ThemeManager(this);
     plotMenuHandler = new PlotMenuHandler(this);
     optionsRegistry = new OptionsRegistry(this);
     optionsRegistry.registerOptions();
@@ -215,7 +215,7 @@ public class Main extends PluginMain {
       private String getTheme(PluginArena arena) {
         BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena instanceof GuessArena) {
-          return ((GuessArena) pluginArena).getCurrentTheme().getDifficulty().name();
+          return ((GuessArena) pluginArena).getCurrentBBTheme().getDifficulty().name();
         }
         return null;
       }
@@ -236,7 +236,7 @@ public class Main extends PluginMain {
       private String getTheme(PluginArena arena) {
         BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena instanceof GuessArena) {
-          return Integer.toString(((GuessArena) pluginArena).getCurrentTheme().getDifficulty().getPointsReward());
+          return Integer.toString(((GuessArena) pluginArena).getCurrentBBTheme().getDifficulty().getPointsReward());
         }
         return null;
       }
@@ -323,13 +323,13 @@ public class Main extends PluginMain {
             return null;
           }
           if(pluginArena instanceof BuildArena) {
-            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() == ArenaState.ENDING && pluginArena.getArenaState() == ArenaState.RESTARTING) {
+            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING || pluginArena.getArenaState() != ArenaState.ENDING) {
               return null;
             }
             return ((BuildArena) pluginArena).getTopList().get(number).toString();
           }
           if(pluginArena instanceof GuessArena) {
-            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() == ArenaState.ENDING && pluginArena.getArenaState() == ArenaState.RESTARTING) {
+            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING || pluginArena.getArenaState() != ArenaState.ENDING) {
               return null;
             }
             return new ArrayList<>(((GuessArena) pluginArena).getPlayersPoints().entrySet()).get(number).getKey().getName();
@@ -356,18 +356,18 @@ public class Main extends PluginMain {
             return null;
           }
           if(pluginArena instanceof BuildArena) {
-            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() == ArenaState.ENDING && pluginArena.getArenaState() == ArenaState.RESTARTING) {
+            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING || pluginArena.getArenaState() != ArenaState.ENDING) {
               return null;
             }
             return ((BuildArena) pluginArena).getTopList().get(number).toString();
           }
           if(pluginArena instanceof GuessArena) {
-            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() == ArenaState.ENDING && pluginArena.getArenaState() == ArenaState.RESTARTING) {
+            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING || pluginArena.getArenaState() != ArenaState.ENDING) {
               return null;
             }
             return String.valueOf(new ArrayList<>(((GuessArena) pluginArena).getPlayersPoints().entrySet()).get(number).getValue());
           }
-          return pluginArena.getArenaInGameStage().toString();
+          return null;
         }
       });
     }
@@ -388,25 +388,7 @@ public class Main extends PluginMain {
         if(pluginArena == null) {
           return null;
         }
-        return pluginArena.getArenaInGameStage().toString();
-      }
-    });
-
-    getPlaceholderManager().registerPlaceholder(new Placeholder("ingame_stage", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
-      @Override
-      public String getValue(Player player, PluginArena arena) {
-        return getStage(arena);
-      }
-
-      @Override
-      public String getValue(PluginArena arena) {
-        return getStage(arena);
-      }
-
-      @Nullable
-      private String getStage(PluginArena arena) {
-        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
-        if(pluginArena == null) {
+        if(pluginArena.getArenaInGameStage() == null) {
           return null;
         }
         return pluginArena.getArenaInGameStage().toString();
@@ -428,6 +410,9 @@ public class Main extends PluginMain {
       private String getStage(PluginArena arena) {
         BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
+          return null;
+        }
+        if(pluginArena.getArenaInGameStage() == null) {
           return null;
         }
         return pluginArena.getArenaInGameStage().getPrefix();
@@ -514,7 +499,7 @@ public class Main extends PluginMain {
           return null;
         }
         if(pluginArena instanceof BuildArena) {
-          if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() == ArenaState.ENDING && pluginArena.getArenaState() == ArenaState.RESTARTING) {
+          if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING || pluginArena.getArenaState() != ArenaState.ENDING) {
             return null;
           }
           List<List<Player>> playerList = new ArrayList<>(((BuildArena) pluginArena).getTopList().values());
@@ -525,7 +510,7 @@ public class Main extends PluginMain {
           }
         }
         if(pluginArena instanceof GuessArena) {
-          if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() == ArenaState.ENDING && pluginArena.getArenaState() == ArenaState.RESTARTING) {
+          if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING || pluginArena.getArenaState() != ArenaState.ENDING) {
             return null;
           }
           int playerPlace = new ArrayList<>(((GuessArena) pluginArena).getPlayersPoints().keySet()).indexOf(player);
@@ -584,6 +569,9 @@ public class Main extends PluginMain {
       private String getSummary(PluginArena arena) {
         BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
+          return null;
+        }
+        if(pluginArena.getArenaState() != ArenaState.ENDING) {
           return null;
         }
         int places = pluginArena.getPlayersLeft().size();
@@ -745,6 +733,14 @@ public class Main extends PluginMain {
     getMessageManager().registerMessage("MENU_THEME_GTB_DIFFICULTIES_EASY", new Message("Menu.Theme.Guess-The-Build.Difficulties.Easy", ""));
     getMessageManager().registerMessage("MENU_THEME_GTB_DIFFICULTIES_MEDIUM", new Message("Menu.Theme.Guess-The-Build.Difficulties.Medium", ""));
     getMessageManager().registerMessage("MENU_THEME_GTB_DIFFICULTIES_HARD", new Message("Menu.Theme.Guess-The-Build.Difficulties.Hard", ""));
+
+    getMessageManager().registerMessage("LEADERBOARD_STATISTICS_POINTS_HIGHEST_WIN", new Message("Leaderboard.Statistics.Highest-Win", ""));
+    getMessageManager().registerMessage("LEADERBOARD_STATISTICS_POINTS_HIGHEST", new Message("Leaderboard.Statistics.Highest-Points", ""));
+    getMessageManager().registerMessage("LEADERBOARD_STATISTICS_POINTS_TOTAL", new Message("Leaderboard.Statistics.Total-Points-Earned", ""));
+    getMessageManager().registerMessage("LEADERBOARD_STATISTICS_BLOCKS_PLACED", new Message("Leaderboard.Statistics.Blocks-Placed", ""));
+    getMessageManager().registerMessage("LEADERBOARD_STATISTICS_BLOCKS_BROKEN", new Message("Leaderboard.Statistics.Blocks-Broken", ""));
+    getMessageManager().registerMessage("LEADERBOARD_STATISTICS_PARTICLES_USED", new Message("Leaderboard.Statistics.Particles-Placed", ""));
+    getMessageManager().registerMessage("LEADERBOARD_STATISTICS_SUPER_VOTES", new Message("Leaderboard.Statistics.Super-Votes", ""));
 
   }
 

@@ -21,7 +21,6 @@
 package plugily.projects.buildbattle.arena.states.guess;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -30,6 +29,7 @@ import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.GuessArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.themes.BBTheme;
+import plugily.projects.buildbattle.handlers.themes.ThemeManager;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.states.PluginInGameState;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
@@ -71,7 +71,7 @@ public class InGameState extends PluginInGameState {
             for(Player player : arena.getPlayers()) {
               if(plot != null) {
                 if(plotLoc != null) {
-                  player.teleport(plotLoc);
+                  VersionUtils.teleport(player, plotLoc);
                 }
                 player.setPlayerWeather(plot.getWeatherType());
                 player.setPlayerTime(Plot.Time.format(plot.getTime(), player.getWorld().getTime()), false);
@@ -139,7 +139,7 @@ public class InGameState extends PluginInGameState {
           Location winnerLocation = pluginArena.getPlotList().get(pluginArena.getWinner()).getTeleportLocation();
 
           for(Player player : pluginArena.getPlayers()) {
-            player.teleport(winnerLocation);
+            VersionUtils.teleport(player, winnerLocation);
             new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_WINNER").asKey().player(player).value(pluginArena.getWinner().getName()).sendPlayer();
           }
           getPlugin().getArenaManager().stopGame(false, arena);
@@ -175,7 +175,7 @@ public class InGameState extends PluginInGameState {
         VersionUtils.sendActionBar(player, pluginArena.getTheme());
         continue;
       }
-      int themeLength = pluginArena.getCurrentTheme().getTheme().length();
+      int themeLength = pluginArena.getCurrentBBTheme().getTheme().length();
       List<Integer> charsAt = new ArrayList<>(themeLength);
 
       for(int i = 0; i < themeLength; i++) {
@@ -195,7 +195,7 @@ public class InGameState extends PluginInGameState {
 
       StringBuilder actionbar = new StringBuilder();
       for(int i = 0; i < themeLength; i++) {
-        char charAt = pluginArena.getCurrentTheme().getTheme().charAt(i);
+        char charAt = pluginArena.getCurrentBBTheme().getTheme().charAt(i);
 
         if(Character.isWhitespace(charAt)) {
           actionbar.append("  ");
@@ -225,14 +225,10 @@ public class InGameState extends PluginInGameState {
         default:
           break;
       }
-      List<String> themes = pluginArena.getPlugin().getThemeManager().getThemes(BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_" + difficulty.name());
 
-      if(!themes.isEmpty()) {
-        BBTheme theme = new BBTheme(themes.get(themes.size() == 1 ? 0 : random.nextInt(themes.size())), difficulty);
-        pluginArena.setCurrentTheme(theme);
+      if (setTheme(pluginArena, difficulty)) {
         VersionUtils.sendActionBar(pluginArena.getCurrentBuilder(), new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_NAME").asKey().arena(pluginArena).build());
       }
-      pluginArena.getCurrentBuilder().closeInventory();
     }
   }
 
@@ -248,11 +244,12 @@ public class InGameState extends PluginInGameState {
         Bukkit.getScheduler().runTask(getPlugin(), () -> event.getPlayer().openInventory(event.getInventory()));
       }
     });
-    List<String> themes = pluginArena.getPlugin().getThemeManager().getThemes(BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_EASY");
+
     String itemLore = new MessageBuilder("MENU_THEME_GTB_ITEM_LORE").asKey().arena(pluginArena).build();
     String themeItemName = new MessageBuilder("MENU_THEME_GTB_ITEM_NAME").asKey().arena(pluginArena).build();
-    String themeNameEasy = !themes.isEmpty() ? themes.get(themes.size() == 1 ? 0 : random.nextInt(themes.size())) : "";
-    setTheme(pluginArena, themeNameEasy, BBTheme.Difficulty.EASY);
+
+    setTheme(pluginArena, BBTheme.Difficulty.EASY);
+
     gui.setItem(11, new SimpleClickableItem(new ItemBuilder(Material.PAPER).name(themeItemName)
         .lore(itemLore
             .replace("%difficulty%", new MessageBuilder("MENU_THEME_GTB_DIFFICULTIES_EASY").asKey().build())
@@ -260,10 +257,7 @@ public class InGameState extends PluginInGameState {
 
     }));
 
-
-    themes = pluginArena.getPlugin().getThemeManager().getThemes(BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_MEDIUM");
-    String themeNameMedium = !themes.isEmpty() ? themes.get(themes.size() == 1 ? 0 : random.nextInt(themes.size())) : "";
-    setTheme(pluginArena, themeNameMedium, BBTheme.Difficulty.MEDIUM);
+    setTheme(pluginArena, BBTheme.Difficulty.MEDIUM);
     gui.setItem(13, new SimpleClickableItem(new ItemBuilder(Material.PAPER).name(themeItemName)
         .lore(itemLore
             .replace("%difficulty%", new MessageBuilder("MENU_THEME_GTB_DIFFICULTIES_MEDIUM").asKey().build())
@@ -271,40 +265,39 @@ public class InGameState extends PluginInGameState {
 
     }));
 
-    themes = pluginArena.getPlugin().getThemeManager().getThemes(BaseArena.ArenaType.GUESS_THE_BUILD.getPrefix() + "_HARD");
-    String themeNameHard = !themes.isEmpty() ? themes.get(themes.size() == 1 ? 0 : random.nextInt(themes.size())) : "";
-    setTheme(pluginArena, themeNameHard, BBTheme.Difficulty.HARD);
+    setTheme(pluginArena, BBTheme.Difficulty.HARD);
+
     gui.setItem(15, new SimpleClickableItem(new ItemBuilder(Material.PAPER).name(themeItemName)
         .lore(itemLore
             .replace("%difficulty%", new MessageBuilder("MENU_THEME_GTB_DIFFICULTIES_HARD").asKey().build())
             .replace("%points%", "3").split(";")).build(), event -> {
 
     }));
+
     gui.open(pluginArena.getCurrentBuilder());
-
   }
 
-  private void setTheme(GuessArena pluginArena, String themeName, BBTheme.Difficulty difficulty) {
-    BBTheme theme = new BBTheme(ChatColor.stripColor(themeName), difficulty);
-    pluginArena.setCurrentTheme(theme);
+  private boolean setTheme(GuessArena pluginArena, BBTheme.Difficulty difficulty) {
+    List<String> themes = pluginArena.getPlugin().getThemeManager().getThemes(ThemeManager.GameThemes.getByDifficulty(difficulty));
+    boolean isThemeListEmpty = themes.isEmpty();
+
+    if (!isThemeListEmpty) {
+      pluginArena.setCurrentTheme(new BBTheme(themes.get(themes.size() == 1 ? 0 : random.nextInt(themes.size())), difficulty));
+    }
+
     pluginArena.getCurrentBuilder().closeInventory();
+    return isThemeListEmpty;
   }
-
 
   private void calculateResults(GuessArena pluginArena) {
     pluginArena.recalculateLeaderboard();
     List<Player> list = new ArrayList<>(pluginArena.getPlayersPoints().keySet());
-    setWinner(pluginArena, list);
+    pluginArena.setWinner(list.get(0));
     for(int i = 1; i <= list.size(); i++) {
       getPlugin().getRewardsHandler().performReward(list.get(i - 1), pluginArena, getPlugin().getRewardsHandler().getRewardType("PLACE"), i);
     }
     getPlugin().getRewardsHandler().performReward(pluginArena, getPlugin().getRewardsHandler().getRewardType("END_GAME"));
   }
-
-  private void setWinner(GuessArena pluginArena, List<Player> players) {
-    pluginArena.setWinner(players.get(0));
-  }
-
 
   private void announceResults(GuessArena pluginArena) {
     List<Player> list = new ArrayList<>(pluginArena.getPlayersPoints().keySet());
@@ -345,7 +338,7 @@ public class InGameState extends PluginInGameState {
         player.setPlayerWeather(playerPlot.getWeatherType());
         player.setPlayerTime(Plot.Time.format(playerPlot.getTime(), player.getWorld().getTime()), false);
         if(playerPlot.getCuboid() != null && !playerPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
-          player.teleport(playerPlot.getTeleportLocation());
+          VersionUtils.teleport(player, playerPlot.getTeleportLocation());
           new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_OUTSIDE").asKey().arena(pluginArena).player(player).sendPlayer();
         }
       }

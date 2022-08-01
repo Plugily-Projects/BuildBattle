@@ -28,7 +28,6 @@ import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.themes.vote.VoteMenu;
 import plugily.projects.buildbattle.handlers.themes.vote.VotePoll;
 import plugily.projects.minigamesbox.classic.arena.ArenaState;
-import plugily.projects.minigamesbox.classic.user.User;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -55,11 +54,7 @@ public class BuildArena extends BaseArena {
 
   public BuildArena(String id) {
     super(id);
-    if(getArenaOption("PLOT_MEMBER_SIZE") <= 1) {
-      setArenaType(ArenaType.SOLO);
-    } else {
-      setArenaType(ArenaType.TEAM);
-    }
+    setArenaType(ArenaType.SOLO);
     addGameStateHandler(ArenaState.IN_GAME, new InGameState());
     addGameStateHandler(ArenaState.STARTING, new StartingState());
   }
@@ -77,7 +72,9 @@ public class BuildArena extends BaseArena {
     winnerPlot = null;
     votingPlot = null;
     topList.clear();
-    voteMenu.resetPoll();
+    if(voteMenu != null) {
+      voteMenu.resetPoll();
+    }
     plotList.clear();
     super.cleanUpArena();
   }
@@ -188,12 +185,20 @@ public class BuildArena extends BaseArena {
 
   @Override
   public void setMinimumPlayers(int amount) {
-    if(amount <= getArenaOption("PLOT_MEMBER_SIZE")) {
+    if(getArenaType() == ArenaType.TEAM && amount <= getArenaOption("PLOT_MEMBER_SIZE")) {
       getPlugin().getDebugger().debug("Minimum players amount for TEAM game mode arena cannot be less than 3! Setting amount to 3!");
-      setArenaOption("MINIMUM_PLAYERS", 3);
+      super.setMinimumPlayers(3);
       return;
     }
     super.setMinimumPlayers(amount);
+  }
+
+  public void setArenaType() {
+    if(getArenaOption("PLOT_MEMBER_SIZE") <= 1) {
+      setArenaType(ArenaType.SOLO);
+    } else {
+      setArenaType(ArenaType.TEAM);
+    }
   }
 
   public Map<Player, Plot> getPlotList() {
