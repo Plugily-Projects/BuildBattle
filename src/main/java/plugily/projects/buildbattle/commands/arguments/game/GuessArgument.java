@@ -67,7 +67,7 @@ public class GuessArgument {
           return;
         }
 
-        if(gameArena.getCurrentTheme() == null || !gameArena.getCurrentTheme().getTheme().equalsIgnoreCase(Arrays.toString(args).split(" ", 2)[1].replace(",", "").replace("]", ""))) {
+        if(gameArena.getCurrentTheme() == null || !gameArena.getCurrentTheme().theme.equalsIgnoreCase(Arrays.toString(args).split(" ", 2)[1].replace(",", "").replace("]", ""))) {
           return;
         }
 

@@ -22,20 +22,12 @@ package plugily.projects.buildbattle.handlers.themes;
 
 public class BBTheme {
 
-  private String theme = "";
-  private final Difficulty difficulty;
+  public final String theme;
+  public final Difficulty difficulty;
 
   public BBTheme(String theme, Difficulty difficulty) {
     this.theme = theme == null ? "" : theme;
     this.difficulty = difficulty;
-  }
-
-  public String getTheme() {
-    return theme;
-  }
-
-  public Difficulty getDifficulty() {
-    return difficulty;
   }
 
   public enum Difficulty {

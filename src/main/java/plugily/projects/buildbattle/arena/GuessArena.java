@@ -178,7 +178,7 @@ public class GuessArena extends BaseArena {
 
     int bonusAmount = getPlugin().getConfig().getInt("Guessing-Points." + (whoGuessed.size() + 1), 0);
 
-    playersPoints.put(player, playersPoints.getOrDefault(player, 0) + currentTheme.getDifficulty().getPointsReward() + bonusAmount);
+    playersPoints.put(player, playersPoints.getOrDefault(player, 0) + currentTheme.difficulty.getPointsReward() + bonusAmount);
 
     playersPoints.put(currentBuilder, playersPoints.getOrDefault(currentBuilder, 0) + getPlugin().getConfig().getInt("Guessing-Points.Builder", 1));
 

@@ -603,7 +603,7 @@ public class ArenaEvents extends PluginArenaEvents {
       new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_GUESS_BUILDER").asKey().arena(gameArena).player(player).sendPlayer();
       return;
     }
-    if(gameArena.getCurrentTheme() == null || !gameArena.getCurrentTheme().getTheme().equalsIgnoreCase(event.getMessage())) {
+    if(gameArena.getCurrentTheme() == null || !gameArena.getCurrentTheme().theme.equalsIgnoreCase(event.getMessage())) {
       return;
     }
     event.setCancelled(true);
