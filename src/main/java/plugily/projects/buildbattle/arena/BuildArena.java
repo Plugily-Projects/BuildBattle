@@ -115,9 +115,9 @@ public class BuildArena extends BaseArena {
     return queue;
   }
 
-
+  @Override
   public void distributePlots() {
-    int neededPlots = (getPlayers().size() / getArenaOption("PLOT_MEMBER_SIZE"));
+    int neededPlots = getPlayers().size() / getArenaOption("PLOT_MEMBER_SIZE");
     if(getPlotManager().getPlots().size() < neededPlots) {
       getPlugin().getMessageUtils().errorOccurred();
       getPlugin().getDebugger().sendConsoleMsg("&c[Build Battle] [PLOT WARNING] Not enough plots in arena " + getId() + "! Lacks " + (neededPlots - getPlotManager().getPlots().size()) + " plots");
@@ -133,15 +133,9 @@ public class BuildArena extends BaseArena {
             break;
           }
 
-          Player first = players.get(0);
-          User user = getPlugin().getUserManager().getUser(first);
-          if(user.isSpectator()) {
-            continue;
+          if(!getPlugin().getUserManager().getUser(players.get(0)).isSpectator()) {
+            plot.addMember(players.remove(0), this, true);
           }
-
-          plot.addMember(first, this, true);
-
-          players.remove(0);
         }
         break;
       case TEAM:
@@ -181,10 +175,12 @@ public class BuildArena extends BaseArena {
   @Override
   public boolean enoughPlayersToContinue() {
     int size = getPlayers().size();
-    if(size > getArenaOption("PLOT_MEMBER_SIZE")) {
+    int memberSize = getArenaOption("PLOT_MEMBER_SIZE");
+
+    if(size > memberSize) {
       return true;
     }
-    if(size == getArenaOption("PLOT_MEMBER_SIZE")) {
+    if(size == memberSize) {
       return !getPlotManager().getPlot(getPlayersLeft().get(0)).getMembers().containsAll(getPlayers());
     }
     return false;

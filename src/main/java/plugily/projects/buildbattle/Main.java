@@ -20,7 +20,6 @@
 
 package plugily.projects.buildbattle;
 
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPluginLoader;
@@ -64,9 +63,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -75,7 +71,6 @@ import java.util.stream.Collectors;
 //TODO OptionMenu change to InventoryLibrary
 public class Main extends PluginMain {
 
-  private FileConfiguration entityUpgradesConfig;
   private VoteItems voteItems;
   private ThemeManager themeManager;
   private BlacklistManager blacklistManager;
@@ -193,7 +188,7 @@ public class Main extends PluginMain {
 
       @Nullable
       private String getTheme(PluginArena arena) {
-        BaseArena pluginArena = (BaseArena) getArenaRegistry().getArena(arena.getId());
+        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
@@ -218,10 +213,7 @@ public class Main extends PluginMain {
 
       @Nullable
       private String getTheme(PluginArena arena) {
-        BaseArena pluginArena = (BaseArena) getArenaRegistry().getArena(arena.getId());
-        if(pluginArena == null) {
-          return null;
-        }
+        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena instanceof GuessArena) {
           return ((GuessArena) pluginArena).getCurrentTheme().getDifficulty().name();
         }
@@ -242,12 +234,9 @@ public class Main extends PluginMain {
 
       @Nullable
       private String getTheme(PluginArena arena) {
-        BaseArena pluginArena = (BaseArena) getArenaRegistry().getArena(arena.getId());
-        if(pluginArena == null) {
-          return null;
-        }
+        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena instanceof GuessArena) {
-          return String.valueOf(((GuessArena) pluginArena).getCurrentTheme().getDifficulty().getPointsReward());
+          return Integer.toString(((GuessArena) pluginArena).getCurrentTheme().getDifficulty().getPointsReward());
         }
         return null;
       }
@@ -266,10 +255,7 @@ public class Main extends PluginMain {
 
       @Nullable
       private String getBuilder(PluginArena arena) {
-        BaseArena pluginArena = (BaseArena) getArenaRegistry().getArena(arena.getId());
-        if(pluginArena == null) {
-          return null;
-        }
+        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(!(pluginArena instanceof GuessArena)) {
           return null;
         }
@@ -290,7 +276,7 @@ public class Main extends PluginMain {
 
       @Nullable
       private String getType(PluginArena arena) {
-        BaseArena pluginArena = (BaseArena) getArenaRegistry().getArena(arena.getId());
+        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
@@ -310,7 +296,7 @@ public class Main extends PluginMain {
 
       @Nullable
       private String getType(PluginArena arena) {
-        BaseArena pluginArena = (BaseArena) getArenaRegistry().getArena(arena.getId());
+        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
@@ -318,7 +304,7 @@ public class Main extends PluginMain {
       }
     });
     for(int i = 0; i <= 32; i++) {
-      int number = i;
+      final int number = i;
       getPlaceholderManager().registerPlaceholder(new Placeholder("place_member_" + number, Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
         @Override
         public String getValue(Player player, PluginArena arena) {
@@ -332,7 +318,7 @@ public class Main extends PluginMain {
 
         @Nullable
         private String getPlace(PluginArena arena) {
-          BaseArena pluginArena = (BaseArena) getArenaRegistry().getArena(arena.getId());
+          BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
           if(pluginArena == null) {
             return null;
           }
@@ -346,9 +332,7 @@ public class Main extends PluginMain {
             if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() == ArenaState.ENDING && pluginArena.getArenaState() == ArenaState.RESTARTING) {
               return null;
             }
-            List<Map.Entry<Player, Integer>> list = new ArrayList<>(((GuessArena) pluginArena).getPlayersPoints().entrySet());
-            Map.Entry<Player, Integer> entry = list.get(number);
-            return entry.getKey().getName();
+            return new ArrayList<>(((GuessArena) pluginArena).getPlayersPoints().entrySet()).get(number).getKey().getName();
           }
           return pluginArena.getArenaInGameStage().toString();
         }
@@ -367,7 +351,7 @@ public class Main extends PluginMain {
 
         @Nullable
         private String getPlace(PluginArena arena) {
-          BaseArena pluginArena = (BaseArena) getArenaRegistry().getArena(arena.getId());
+          BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
           if(pluginArena == null) {
             return null;
           }
@@ -381,9 +365,7 @@ public class Main extends PluginMain {
             if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() == ArenaState.ENDING && pluginArena.getArenaState() == ArenaState.RESTARTING) {
               return null;
             }
-            List<Map.Entry<Player, Integer>> list = new ArrayList<>(((GuessArena) pluginArena).getPlayersPoints().entrySet());
-            Map.Entry<Player, Integer> entry = list.get(number);
-            return String.valueOf(entry.getValue());
+            return String.valueOf(new ArrayList<>(((GuessArena) pluginArena).getPlayersPoints().entrySet()).get(number).getValue());
           }
           return pluginArena.getArenaInGameStage().toString();
         }
@@ -402,7 +384,7 @@ public class Main extends PluginMain {
 
       @Nullable
       private String getStage(PluginArena arena) {
-        BaseArena pluginArena = (BaseArena) getArenaRegistry().getArena(arena.getId());
+        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
@@ -423,7 +405,7 @@ public class Main extends PluginMain {
 
       @Nullable
       private String getStage(PluginArena arena) {
-        BaseArena pluginArena = (BaseArena) getArenaRegistry().getArena(arena.getId());
+        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
@@ -444,7 +426,7 @@ public class Main extends PluginMain {
 
       @Nullable
       private String getStage(PluginArena arena) {
-        BaseArena pluginArena = (BaseArena) getArenaRegistry().getArena(arena.getId());
+        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
@@ -461,7 +443,7 @@ public class Main extends PluginMain {
 
       @Nullable
       private String getMembers(Player player, PluginArena arena) {
-        BaseArena pluginArena = (BaseArena) getArenaRegistry().getArena(arena.getId());
+        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
@@ -506,8 +488,7 @@ public class Main extends PluginMain {
           }
         }
         if(pluginArena instanceof GuessArena) {
-          Player winner = ((GuessArena) pluginArena).getWinner();
-          if(winner == player) {
+          if(((GuessArena) pluginArena).getWinner() == player) {
             return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_WIN").asKey().arena(pluginArena).build();
           }
         }
@@ -537,9 +518,9 @@ public class Main extends PluginMain {
             return null;
           }
           List<List<Player>> playerList = new ArrayList<>(((BuildArena) pluginArena).getTopList().values());
-          for(List<Player> players : playerList) {
-            if(players.contains(player)) {
-              return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_OWN").asKey().integer(playerList.indexOf(players)).arena(pluginArena).build();
+          for(int playerPlace = 0; playerPlace < playerList.size(); playerPlace++) {
+            if(playerList.get(playerPlace).contains(player)) {
+              return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_OWN").asKey().integer(playerPlace).arena(pluginArena).build();
             }
           }
         }
@@ -547,9 +528,9 @@ public class Main extends PluginMain {
           if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() == ArenaState.ENDING && pluginArena.getArenaState() == ArenaState.RESTARTING) {
             return null;
           }
-          List<Player> playerList = new ArrayList<>(((GuessArena) pluginArena).getPlayersPoints().keySet());
-          if(playerList.contains(player)) {
-            return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_OWN").asKey().integer(playerList.indexOf(player)).arena(pluginArena).build();
+          int playerPlace = new ArrayList<>(((GuessArena) pluginArena).getPlayersPoints().keySet()).indexOf(player);
+          if(playerPlace != -1) {
+            return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_OWN").asKey().integer(playerPlace).arena(pluginArena).build();
           }
         }
         return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_OWN").asKey().integer(0).arena(pluginArena).build();
@@ -581,8 +562,7 @@ public class Main extends PluginMain {
           }
         }
         if(pluginArena instanceof GuessArena) {
-          Player winner = ((GuessArena) pluginArena).getWinner();
-          if(winner != null) {
+          if(((GuessArena) pluginArena).getWinner() != null) {
             return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_WINNER").asKey().arena(pluginArena).build();
           }
         }

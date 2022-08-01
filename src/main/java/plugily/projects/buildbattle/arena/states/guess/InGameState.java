@@ -20,7 +20,6 @@
 
 package plugily.projects.buildbattle.arena.states.guess;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -37,7 +36,6 @@ import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
 import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
-import plugily.projects.minigamesbox.classic.utils.misc.MiscUtils;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
 import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
@@ -114,13 +112,15 @@ public class InGameState extends PluginInGameState {
       case BUILD_TIME:
         // check not needed anymore
         // if(pluginArena.isCurrentThemeSet()) {
-        if(arena.getTimer() <= 90) {
-          if(arena.getTimer() == 90) {
+        int timer = arena.getTimer();
+
+        if(timer <= 90) {
+          if(timer == 90) {
             new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_CHARS").asKey().arena(pluginArena).integer(pluginArena.getTheme().length()).sendArena();
           }
           sendThemeHints(arena, pluginArena);
         }
-        if(arena.getTimer() <= 0) {
+        if(timer <= 0) {
           //not all guessed
           new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_WAS").asKey().arena(pluginArena).sendArena();
           new TitleBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_TITLE").asKey().arena(pluginArena).sendArena();
@@ -135,8 +135,8 @@ public class InGameState extends PluginInGameState {
         if(pluginArena.getRound() + 1 > pluginArena.getPlayersLeft().size()) {
           calculateResults(pluginArena);
           announceResults(pluginArena);
-          Plot winnerPlot = pluginArena.getPlotList().get(pluginArena.getWinner());
-          Location winnerLocation = winnerPlot.getTeleportLocation();
+
+          Location winnerLocation = pluginArena.getPlotList().get(pluginArena.getWinner()).getTeleportLocation();
 
           for(Player player : pluginArena.getPlayers()) {
             VersionUtils.teleport(player, winnerLocation);
@@ -185,7 +185,9 @@ public class InGameState extends PluginInGameState {
       }
 
       if(themeLength - pluginArena.getRemovedCharsAt().size() > 2) {
-        if(arena.getTimer() % 10 == 0 && arena.getTimer() <= 70) {
+        int timer = arena.getTimer();
+
+        if(timer % 10 == 0 && timer <= 70) {
           pluginArena.getRemovedCharsAt().add(charsAt.get(charsAt.size() == 1 ? 0 : random.nextInt(charsAt.size())));
           continue;
         }
@@ -320,8 +322,10 @@ public class InGameState extends PluginInGameState {
   }
 
   private void handleBuildTime(GuessArena pluginArena) {
+    int timer = pluginArena.getTimer();
+
     for(int timers : getPlugin().getConfig().getIntegerList("Time-Manager.Time-Left-Intervals")) {
-      if(timers == pluginArena.getTimer()) {
+      if(timers == timer) {
         pluginArena.sendBuildLeftTimeMessage();
         break;
       }
@@ -333,11 +337,14 @@ public class InGameState extends PluginInGameState {
     if(pluginArena.getArenaOption("IN_PLOT_CHECKER") >= 3) {
       pluginArena.setArenaOption("IN_PLOT_CHECKER", 0);
       for(Player player : pluginArena.getPlayersLeft()) {
-        User user = getPlugin().getUserManager().getUser(player);
-        Plot buildPlot = pluginArena.getPlotFromPlayer(player);
-        player.setPlayerWeather(buildPlot.getWeatherType());
-        player.setPlayerTime(Plot.Time.format(buildPlot.getTime(), player.getWorld().getTime()), false);
-        if(buildPlot != null && buildPlot.getCuboid() != null && !buildPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
+        Plot playerPlot = pluginArena.getPlotFromPlayer(player);
+        if (playerPlot == null) {
+          continue;
+        }
+
+        player.setPlayerWeather(playerPlot.getWeatherType());
+        player.setPlayerTime(Plot.Time.format(playerPlot.getTime(), player.getWorld().getTime()), false);
+        if(playerPlot.getCuboid() != null && !playerPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
           VersionUtils.teleport(player, buildPlot.getTeleportLocation());
           new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_OUTSIDE").asKey().arena(pluginArena).player(player).sendPlayer();
         }

@@ -27,6 +27,7 @@ import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 /**
@@ -37,8 +38,8 @@ import java.util.Optional;
 public class BlacklistManager {
 
   private final Main plugin;
-  private final List<Material> itemList = new ArrayList<>();
-  private final List<Material> floorList = new ArrayList<>();
+  private List<Material> itemList;
+  private List<Material> floorList;
 
   public BlacklistManager(Main plugin) {
     this.plugin = plugin;
@@ -46,16 +47,19 @@ public class BlacklistManager {
   }
 
   public List<Material> getItemList() {
-    return Collections.unmodifiableList(itemList);
+    return itemList;
   }
 
   public List<Material> getFloorList() {
-    return Collections.unmodifiableList(floorList);
+    return floorList;
   }
 
   private void loadBlackList() {
+    floorList = new ArrayList<>();
+    itemList = new ArrayList<>();
+
     for(String item : plugin.getConfig().getStringList("Items.BlacklistManager")) {
-      Optional<XMaterial> opt = XMaterial.matchXMaterial(item.toUpperCase());
+      Optional<XMaterial> opt = XMaterial.matchXMaterial(item.toUpperCase(Locale.ENGLISH));
       if(!opt.isPresent()) {
         plugin.getDebugger().sendConsoleMsg("&c[Build Battle] Invalid black listed item! " + item + " doesn't exist, are you sure it's properly named?");
         continue;
@@ -63,14 +67,18 @@ public class BlacklistManager {
       itemList.add(opt.get().parseMaterial());
     }
 
+    itemList = Collections.unmodifiableList(itemList);
+
     for(String item : plugin.getConfig().getStringList("Floor.BlacklistManager")) {
-      Optional<XMaterial> opt = XMaterial.matchXMaterial(item.toUpperCase());
+      Optional<XMaterial> opt = XMaterial.matchXMaterial(item.toUpperCase(Locale.ENGLISH));
       if(!opt.isPresent()) {
         plugin.getDebugger().sendConsoleMsg("&c[Build Battle] Invalid black listed item! " + item + " doesn't exist, are you sure it's properly named?");
         continue;
       }
       floorList.add(opt.get().parseMaterial());
     }
+
+    floorList = Collections.unmodifiableList(floorList);
   }
 
 }

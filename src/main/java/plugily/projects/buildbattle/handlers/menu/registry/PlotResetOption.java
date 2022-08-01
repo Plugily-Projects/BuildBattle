@@ -21,6 +21,7 @@
 package plugily.projects.buildbattle.handlers.menu.registry;
 
 import org.bukkit.Material;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import plugily.projects.buildbattle.arena.BaseArena;
@@ -44,20 +45,25 @@ public class PlotResetOption {
         .build()) {
       @Override
       public void onClick(InventoryClickEvent e) {
-        Player who = (Player) e.getWhoClicked();
+        HumanEntity humanEntity = e.getWhoClicked();
 
-        who.closeInventory();
+        if (!(humanEntity instanceof Player))
+          return;
 
-        BaseArena arena = (BaseArena) registry.getPlugin().getArenaRegistry().getArena((Player) e.getWhoClicked());
+        Player player = (Player) humanEntity;
+
+        player.closeInventory();
+
+        BaseArena arena = registry.getPlugin().getArenaRegistry().getArena(player);
         if(arena == null) {
           return;
         }
 
-        Plot plot = arena.getPlotManager().getPlot(who);
+        Plot plot = arena.getPlotManager().getPlot(player);
 
         if (plot != null) {
           plot.resetPlot();
-          new MessageBuilder("MENU_OPTION_CONTENT_RESET_ITEM_LORE").asKey().player(who).sendPlayer();
+          new MessageBuilder("MENU_OPTION_CONTENT_RESET_ITEM_LORE").asKey().player(player).sendPlayer();
         }
       }
     });
