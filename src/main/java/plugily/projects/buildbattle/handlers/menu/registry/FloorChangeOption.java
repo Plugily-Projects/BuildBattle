@@ -23,6 +23,7 @@ package plugily.projects.buildbattle.handlers.menu.registry;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -49,13 +50,18 @@ public class FloorChangeOption {
         .lore(new MessageBuilder("MENU_OPTION_CONTENT_FLOOR_ITEM_LORE").asKey().build())
         .build()) {
       @Override
-      public void onClick(InventoryClickEvent e) {
-        ItemStack itemStack = e.getCursor();
+      public void onClick(InventoryClickEvent event) {
+        ItemStack itemStack = event.getCursor();
         if (itemStack == null)
           return;
 
-        Player who = (Player) e.getWhoClicked();
-        BaseArena arena = (BaseArena) registry.getPlugin().getArenaRegistry().getArena((Player) e.getWhoClicked());
+        HumanEntity humanEntity = event.getWhoClicked();
+
+        if(!(humanEntity instanceof Player))
+          return;
+
+        Player player = (Player) humanEntity;
+        BaseArena arena = registry.getPlugin().getArenaRegistry().getArena(player);
         if(arena == null) {
           return;
         }
@@ -63,28 +69,28 @@ public class FloorChangeOption {
         Material material = itemStack.getType();
         if(material != XMaterial.WATER_BUCKET.parseMaterial() && material != XMaterial.LAVA_BUCKET.parseMaterial()
             && !(material.isBlock() && material.isSolid() && material.isOccluding())) {
-          new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_FLOOR_ITEM").asKey().player(who).sendPlayer();
+          new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_FLOOR_ITEM").asKey().player(player).sendPlayer();
           return;
         }
 
         if(registry.getPlugin().getBlacklistManager().getFloorList().contains(material)) {
-          new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_FLOOR_ITEM").asKey().player(who).sendPlayer();
+          new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_FLOOR_ITEM").asKey().player(player).sendPlayer();
           return;
         }
 
-        Plot plot = arena.getPlotManager().getPlot(who);
+        Plot plot = arena.getPlotManager().getPlot(player);
         if (plot == null)
           return;
 
         plot.changeFloor(material, XMaterial.matchXMaterial(itemStack).getData());
-        new MessageBuilder("MENU_OPTION_CONTENT_FLOOR_CHANGED").asKey().player(who).sendPlayer();
+        new MessageBuilder("MENU_OPTION_CONTENT_FLOOR_CHANGED").asKey().player(player).sendPlayer();
 
         itemStack.setAmount(0);
         itemStack.setType(Material.AIR);
-        e.getCurrentItem().setType(Material.AIR);
-        who.closeInventory();
+        event.getCurrentItem().setType(Material.AIR);
+        player.closeInventory();
 
-        who.getNearbyEntities(5, 5, 5).stream().filter(entity -> entity.getType() == EntityType.DROPPED_ITEM)
+        player.getNearbyEntities(5, 5, 5).stream().filter(entity -> entity.getType() == EntityType.DROPPED_ITEM)
             .forEach(Entity::remove);
       }
     });

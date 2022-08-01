@@ -20,6 +20,7 @@
 
 package plugily.projects.buildbattle.handlers.menu;
 
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -48,18 +49,20 @@ public class OptionsMenuHandler implements Listener {
   }
 
   @EventHandler
-  public void onOptionsMenuClick(InventoryClickEvent e) {
-    if(!(e.getWhoClicked() instanceof Player)) {
+  public void onOptionsMenuClick(InventoryClickEvent event) {
+    HumanEntity humanEntity = event.getWhoClicked();
+
+    if(!(humanEntity instanceof Player)) {
       return;
     }
 
-    ItemStack currentItem = e.getCurrentItem();
+    ItemStack currentItem = event.getCurrentItem();
 
     if(!ItemUtils.isItemStackNamed(currentItem)
-        || !ComplementAccessor.getComplement().getTitle(e.getView()).equals(new MessageBuilder("MENU_OPTION_INVENTORY").asKey().build())) {
+        || !ComplementAccessor.getComplement().getTitle(event.getView()).equals(new MessageBuilder("MENU_OPTION_INVENTORY").asKey().build())) {
       return;
     }
-    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena((Player) e.getWhoClicked());
+    BaseArena arena = plugin.getArenaRegistry().getArena((Player) humanEntity);
     if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
@@ -67,39 +70,39 @@ public class OptionsMenuHandler implements Listener {
       if(!option.getItemStack().isSimilar(currentItem)) {
         continue;
       }
-      e.setCancelled(true);
-      option.onClick(e);
+      event.setCancelled(true);
+      option.onClick(event);
       return;
     }
   }
 
   @EventHandler
-  public void onRegisteredMenuOptionsClick(InventoryClickEvent e) {
-    org.bukkit.entity.HumanEntity human = e.getWhoClicked();
+  public void onRegisteredMenuOptionsClick(InventoryClickEvent event) {
+    HumanEntity human = event.getWhoClicked();
 
     if(!(human instanceof Player)) {
       return;
     }
 
-    ItemStack currentItem = e.getCurrentItem();
+    ItemStack currentItem = event.getCurrentItem();
 
     if (!ItemUtils.isItemStackNamed(currentItem))
       return;
 
     if(ComplementAccessor.getComplement().getDisplayName(plugin.getOptionsRegistry().getGoBackItem().getItemMeta())
         .equalsIgnoreCase(ComplementAccessor.getComplement().getDisplayName(currentItem.getItemMeta()))) {
-      e.setCancelled(true);
+      event.setCancelled(true);
       human.closeInventory();
       human.openInventory(plugin.getOptionsRegistry().formatInventory());
       return;
     }
 
-    String viewTitle = ComplementAccessor.getComplement().getTitle(e.getView());
+    String viewTitle = ComplementAccessor.getComplement().getTitle(event.getView());
 
     for(MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
       if(viewTitle.equals(option.getInventoryName())) {
-        e.setCancelled(true);
-        option.onTargetClick(e);
+        event.setCancelled(true);
+        option.onTargetClick(event);
         return;
       }
     }

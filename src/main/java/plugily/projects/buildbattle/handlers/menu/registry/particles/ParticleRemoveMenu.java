@@ -23,7 +23,6 @@ package plugily.projects.buildbattle.handlers.menu.registry.particles;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;

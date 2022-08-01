@@ -86,16 +86,21 @@ public class PlotMenuHandler implements Listener {
   public void createMenu(Player player, BaseArena arena) {
     NormalFastInv gui = new NormalFastInv(plugin.getBukkitHelper().serializeInt(arena.getPlotManager().getPlots().size()) / 9, new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_MENU_NAME").asKey().build());
     int plots = 0;
+    int arenaPlotMemberSize = arena.getArenaOption("PLOT_MEMBER_SIZE");
+
     for(Plot plot : arena.getPlotManager().getPlots()) {
-      ItemStack itemStack = getItemStack(plot, arena.getArenaOption("PLOT_MEMBER_SIZE"), player);
-      itemStack.setAmount(plot.getMembers().isEmpty() ? 1 : plot.getMembers().size());
-      if(plot.getMembers().size() >= arena.getArenaOption("PLOT_MEMBER_SIZE")) {
+      ItemStack itemStack = getItemStack(plot, arenaPlotMemberSize, player);
+      int plotMemberSize = plot.getMembersSize();
+
+      itemStack.setAmount(plotMemberSize == 0 ? 1 : plotMemberSize);
+
+      if(plotMemberSize >= arenaPlotMemberSize) {
         itemStack = new ItemBuilder(itemStack).lore(new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_FULL").asKey().build()).build();
       } else {
         itemStack = new ItemBuilder(itemStack).lore(new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_EMPTY").asKey().build()).build();
       }
-      if(!plot.getMembers().isEmpty()) {
-        List<String> players = new ArrayList<>();
+      if(plotMemberSize != 0) {
+        List<String> players = new ArrayList<>(plotMemberSize);
         for(Player plotMembers : plot.getMembers()) {
           players.add("- " + plotMembers.getName());
         }
@@ -137,7 +142,7 @@ public class PlotMenuHandler implements Listener {
       return;
     }
 
-    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena(e.getPlayer());
+    BaseArena arena = plugin.getArenaRegistry().getArena(e.getPlayer());
     if(arena == null) {
       return;
     }

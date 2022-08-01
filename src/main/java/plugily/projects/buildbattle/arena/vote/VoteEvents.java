@@ -59,7 +59,7 @@ public class VoteEvents implements Listener {
       return;
     }
 
-    BaseArena arena = (BaseArena) plugin.getArenaRegistry().getArena(event.getPlayer());
+    BaseArena arena = plugin.getArenaRegistry().getArena(event.getPlayer());
     if(arena == null || arena.getArenaState() != ArenaState.IN_GAME || arena instanceof GuessArena) {
       return;
     }
@@ -68,10 +68,12 @@ public class VoteEvents implements Listener {
     if(solo.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING) {
       return;
     }
-    User user = plugin.getUserManager().getUser(event.getPlayer());
+
     Plot plot = solo.getVotingPlot();
 
     if(plugin.getVoteItems().getReportItem().equals(event.getItem())) {
+      User user = plugin.getUserManager().getUser(event.getPlayer());
+
       user.adjustStatistic("REPORTS", 1);
 
       if(plot != null && plugin.getConfigPreferences().getOption("REPORT_COMMANDS")) {
@@ -103,7 +105,7 @@ public class VoteEvents implements Listener {
       return;
     }
 
-    user.setStatistic("LOCAL_POINTS", plugin.getVoteItems().getPointsAndPlayVoteSound(event.getPlayer(), event.getItem()));
+    plugin.getUserManager().getUser(event.getPlayer()).setStatistic("LOCAL_POINTS", plugin.getVoteItems().getPointsAndPlayVoteSound(event.getPlayer(), event.getItem()));
 
     new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_SUCCESS").asKey().arena(arena).player(event.getPlayer()).sendPlayer();
     event.setCancelled(true);

@@ -29,14 +29,12 @@ import plugily.projects.buildbattle.arena.states.guess.StartingState;
 import plugily.projects.buildbattle.handlers.themes.BBTheme;
 import plugily.projects.minigamesbox.classic.arena.ArenaState;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
-import plugily.projects.minigamesbox.classic.user.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
@@ -75,9 +73,9 @@ public class GuessArena extends BaseArena {
     super.cleanUpArena();
   }
 
-
+  @Override
   public void distributePlots() {
-    int neededPlots = (getPlayers().size() / getArenaOption("PLOT_MEMBER_SIZE"));
+    int neededPlots = getPlayers().size() / getArenaOption("PLOT_MEMBER_SIZE");
     if(getPlotManager().getPlots().size() < neededPlots) {
       getPlugin().getMessageUtils().errorOccurred();
       getPlugin().getDebugger().sendConsoleMsg("&c[Build Battle] [PLOT WARNING] Not enough plots in arena " + getId() + "! Lacks " + (neededPlots - getPlotManager().getPlots().size()) + " plots");
@@ -91,15 +89,9 @@ public class GuessArena extends BaseArena {
         break;
       }
 
-      Player first = players.get(0);
-      User user = getPlugin().getUserManager().getUser(first);
-      if(user.isSpectator()) {
-        continue;
+      if(!getPlugin().getUserManager().getUser(players.get(0)).isSpectator()) {
+        plot.addMember(players.remove(0), this, true);
       }
-
-      plot.addMember(first, this, true);
-
-      players.remove(0);
     }
     for(Plot plot : getPlotManager().getPlots()) {
       for(Player member : plot.getMembers()) {
@@ -113,17 +105,20 @@ public class GuessArena extends BaseArena {
   @Override
   public boolean enoughPlayersToContinue() {
     int size = getPlayers().size();
-    if(size > getArenaOption("PLOT_MEMBER_SIZE")) {
+    int plotMemberSize = getArenaOption("PLOT_MEMBER_SIZE");
+
+    if(size > plotMemberSize) {
       return true;
     }
-    if(size == getArenaOption("PLOT_MEMBER_SIZE")) {
+    if(size == plotMemberSize) {
       return !getPlotManager().getPlot(getPlayersLeft().get(0)).getMembers().containsAll(getPlayers());
     }
     return false;
   }
 
   public Player getNextPlayerByRound() {
-    int size = getPlayersLeft().size();
+    List<Player> playersLeft = getPlayersLeft();
+    int size = playersLeft.size();
 
     if(size == 0) {
       return null;
@@ -134,7 +129,7 @@ public class GuessArena extends BaseArena {
       part = size - 1;
     }
 
-    return getPlayersLeft().get(part);
+    return playersLeft.get(part);
   }
 
   @Override

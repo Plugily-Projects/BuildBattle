@@ -21,6 +21,7 @@
 package plugily.projects.buildbattle.commands.arguments.admin.plot;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.arena.BaseArena;
@@ -46,7 +47,6 @@ public class AddPlotArgument {
             "&7Add new game plot to the arena\n&6Permission: &7buildbattle.admin.addplot")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        Player player = (Player) sender;
         if(args.length == 1) {
           new MessageBuilder("COMMANDS_TYPE_ARENA_NAME").asKey().send(sender);
           return;
@@ -56,6 +56,7 @@ public class AddPlotArgument {
           new MessageBuilder("COMMANDS_NO_ARENA_LIKE_THAT").asKey().send(sender);
           return;
         }
+        Player player = (Player) sender;
         CuboidSelector.Selection selection = registry.getPlugin().getCuboidSelector().getSelection(player);
         if(selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
           new MessageBuilder("&cPlease select both corners before adding a plot!").send(sender);
@@ -63,8 +64,9 @@ public class AddPlotArgument {
         }
         FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
         int id = 0;
-        if(config.isConfigurationSection("instances." + arena.getId() + ".plots")) {
-          id = config.getConfigurationSection("instances." + arena.getId() + ".plots").getKeys(false).size() + 1;
+        ConfigurationSection section = config.getConfigurationSection("instances." + arena.getId() + ".plots");
+        if(section != null) {
+          id = section.getKeys(false).size() + 1;
         }
         LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", "instances." + arena.getId() + ".plots." + id + ".minpoint", selection.getFirstPos());
         LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", "instances." + arena.getId() + ".plots." + id + ".maxpoint", selection.getSecondPos());

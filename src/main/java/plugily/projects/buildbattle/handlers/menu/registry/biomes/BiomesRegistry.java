@@ -63,9 +63,7 @@ public class BiomesRegistry {
         break;
       }
       java.util.List<String> lore = config.getStringList(biome + ".lore");
-      for(int b = 0; b < lore.size(); b++) {
-        lore.set(b, new MessageBuilder(lore.get(b)).build());
-      }
+      lore.replaceAll(line -> new MessageBuilder(line).build());
       BiomeItem biomeItem = new BiomeItem(new ItemBuilder(XMaterial.matchXMaterial(config
           .getString(biome + ".material-name", "bedrock").toUpperCase()).orElse(XMaterial.BEDROCK).parseItem())
           .name(new MessageBuilder(config.getString(biome + ".displayname")).build())

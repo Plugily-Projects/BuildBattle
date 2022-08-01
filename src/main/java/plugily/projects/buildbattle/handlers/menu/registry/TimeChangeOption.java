@@ -20,9 +20,11 @@
 
 package plugily.projects.buildbattle.handlers.menu.registry;
 
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
@@ -43,15 +45,17 @@ import static plugily.projects.buildbattle.handlers.menu.registry.TimeChangeOpti
 public class TimeChangeOption {
 
   public TimeChangeOption(OptionsRegistry registry) {
-    final org.bukkit.inventory.ItemStack clock = XMaterial.CLOCK.parseItem();
+    final ItemStack clock = XMaterial.CLOCK.parseItem();
     registry.registerOption(new MenuOption(30, "TIME", new ItemBuilder(clock)
         .name(new MessageBuilder("MENU_OPTION_CONTENT_TIME_ITEM_NAME").asKey().build())
         .lore(new MessageBuilder("MENU_OPTION_CONTENT_TIME_ITEM_LORE").asKey().build())
         .build(), new MessageBuilder("MENU_OPTION_CONTENT_TIME_INVENTORY").asKey().build()) {
 
       @Override
-      public void onClick(InventoryClickEvent e) {
-        e.getWhoClicked().closeInventory();
+      public void onClick(InventoryClickEvent event) {
+        HumanEntity humanEntity = event.getWhoClicked();
+
+        humanEntity.closeInventory();
 
         Inventory timeInv = ComplementAccessor.getComplement().createInventory(null, 9, new MessageBuilder("MENU_OPTION_CONTENT_TIME_INVENTORY").asKey().build());
         timeInv.setItem(0, new ItemBuilder(clock)
@@ -69,21 +73,28 @@ public class TimeChangeOption {
         timeInv.setItem(6, new ItemBuilder(clock)
             .name(new MessageBuilder("MENU_OPTION_CONTENT_TIME_TYPE_SUNRISE").asKey().build()).build());
         timeInv.addItem(registry.getGoBackItem());
-        e.getWhoClicked().openInventory(timeInv);
+        humanEntity.openInventory(timeInv);
       }
 
       @Override
-      public void onTargetClick(InventoryClickEvent e) {
-        BaseArena arena = (BaseArena) registry.getPlugin().getArenaRegistry().getArena((Player) e.getWhoClicked());
+      public void onTargetClick(InventoryClickEvent event) {
+        HumanEntity humanEntity = event.getWhoClicked();
+
+        if (!(humanEntity instanceof Player))
+          return;
+
+        Player player = (Player) humanEntity;
+
+        BaseArena arena = registry.getPlugin().getArenaRegistry().getArena(player);
         if(arena == null) {
           return;
         }
 
-        Plot plot = arena.getPlotManager().getPlot((Player) e.getWhoClicked());
+        Plot plot = arena.getPlotManager().getPlot(player);
         if(plot == null)
           return;
 
-        plot.setTime(Plot.Time.valueOf(getByPosition(e.getSlot()).toString()));
+        plot.setTime(Plot.Time.valueOf(getByPosition(event.getSlot()).toString()));
 
         for(Player p : plot.getMembers()) {
           p.setPlayerTime(Plot.Time.format(plot.getTime(), p.getWorld().getTime()), false);
