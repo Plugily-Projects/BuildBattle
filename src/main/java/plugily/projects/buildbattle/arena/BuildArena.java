@@ -77,7 +77,9 @@ public class BuildArena extends BaseArena {
     winnerPlot = null;
     votingPlot = null;
     topList.clear();
-    voteMenu.resetPoll();
+    if(voteMenu != null) {
+      voteMenu.resetPoll();
+    }
     plotList.clear();
     super.cleanUpArena();
   }

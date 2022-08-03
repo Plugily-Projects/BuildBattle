@@ -323,13 +323,13 @@ public class Main extends PluginMain {
             return null;
           }
           if(pluginArena instanceof BuildArena) {
-            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() == ArenaState.ENDING && pluginArena.getArenaState() == ArenaState.RESTARTING) {
+            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING || pluginArena.getArenaState() != ArenaState.ENDING) {
               return null;
             }
             return ((BuildArena) pluginArena).getTopList().get(number).toString();
           }
           if(pluginArena instanceof GuessArena) {
-            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() == ArenaState.ENDING && pluginArena.getArenaState() == ArenaState.RESTARTING) {
+            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING || pluginArena.getArenaState() != ArenaState.ENDING) {
               return null;
             }
             return new ArrayList<>(((GuessArena) pluginArena).getPlayersPoints().entrySet()).get(number).getKey().getName();
@@ -356,13 +356,13 @@ public class Main extends PluginMain {
             return null;
           }
           if(pluginArena instanceof BuildArena) {
-            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() == ArenaState.ENDING && pluginArena.getArenaState() == ArenaState.RESTARTING) {
+            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING || pluginArena.getArenaState() != ArenaState.ENDING) {
               return null;
             }
             return ((BuildArena) pluginArena).getTopList().get(number).toString();
           }
           if(pluginArena instanceof GuessArena) {
-            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() == ArenaState.ENDING && pluginArena.getArenaState() == ArenaState.RESTARTING) {
+            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING || pluginArena.getArenaState() != ArenaState.ENDING) {
               return null;
             }
             return String.valueOf(new ArrayList<>(((GuessArena) pluginArena).getPlayersPoints().entrySet()).get(number).getValue());
@@ -514,7 +514,7 @@ public class Main extends PluginMain {
           return null;
         }
         if(pluginArena instanceof BuildArena) {
-          if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() == ArenaState.ENDING && pluginArena.getArenaState() == ArenaState.RESTARTING) {
+          if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING || pluginArena.getArenaState() != ArenaState.ENDING) {
             return null;
           }
           List<List<Player>> playerList = new ArrayList<>(((BuildArena) pluginArena).getTopList().values());
@@ -525,7 +525,7 @@ public class Main extends PluginMain {
           }
         }
         if(pluginArena instanceof GuessArena) {
-          if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() == ArenaState.ENDING && pluginArena.getArenaState() == ArenaState.RESTARTING) {
+          if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING || pluginArena.getArenaState() != ArenaState.ENDING) {
             return null;
           }
           int playerPlace = new ArrayList<>(((GuessArena) pluginArena).getPlayersPoints().keySet()).indexOf(player);

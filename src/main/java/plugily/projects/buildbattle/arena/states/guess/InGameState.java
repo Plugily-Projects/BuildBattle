@@ -345,7 +345,7 @@ public class InGameState extends PluginInGameState {
         player.setPlayerWeather(playerPlot.getWeatherType());
         player.setPlayerTime(Plot.Time.format(playerPlot.getTime(), player.getWorld().getTime()), false);
         if(playerPlot.getCuboid() != null && !playerPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
-          VersionUtils.teleport(player, buildPlot.getTeleportLocation());
+          VersionUtils.teleport(player, playerPlot.getTeleportLocation());
           new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_OUTSIDE").asKey().arena(pluginArena).player(player).sendPlayer();
         }
       }
