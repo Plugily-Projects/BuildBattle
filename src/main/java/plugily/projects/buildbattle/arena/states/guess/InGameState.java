@@ -71,7 +71,7 @@ public class InGameState extends PluginInGameState {
             for(Player player : arena.getPlayers()) {
               if(plot != null) {
                 if(plotLoc != null) {
-                  player.teleport(plotLoc);
+                  VersionUtils.teleport(player, plotLoc);
                 }
                 player.setPlayerWeather(plot.getWeatherType());
                 player.setPlayerTime(Plot.Time.format(plot.getTime(), player.getWorld().getTime()), false);
@@ -139,7 +139,7 @@ public class InGameState extends PluginInGameState {
           Location winnerLocation = pluginArena.getPlotList().get(pluginArena.getWinner()).getTeleportLocation();
 
           for(Player player : pluginArena.getPlayers()) {
-            player.teleport(winnerLocation);
+            VersionUtils.teleport(player, winnerLocation);
             new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_WINNER").asKey().player(player).value(pluginArena.getWinner().getName()).sendPlayer();
           }
           getPlugin().getArenaManager().stopGame(false, arena);
@@ -345,7 +345,7 @@ public class InGameState extends PluginInGameState {
         player.setPlayerWeather(playerPlot.getWeatherType());
         player.setPlayerTime(Plot.Time.format(playerPlot.getTime(), player.getWorld().getTime()), false);
         if(playerPlot.getCuboid() != null && !playerPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
-          player.teleport(playerPlot.getTeleportLocation());
+          VersionUtils.teleport(player, buildPlot.getTeleportLocation());
           new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_OUTSIDE").asKey().arena(pluginArena).player(player).sendPlayer();
         }
       }

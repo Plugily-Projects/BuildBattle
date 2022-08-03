@@ -102,7 +102,7 @@ public class InGameState extends PluginInGameState {
             Location winnerLocation = pluginArena.getWinnerPlot().getTeleportLocation();
 
             for(Player player : pluginArena.getPlayers()) {
-              player.teleport(winnerLocation);
+              VersionUtils.teleport(player, winnerLocation);
               new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_WINNER").asKey().player(player).value(pluginArena.getWinnerPlot().getFormattedMembers()).sendPlayer();
             }
             givePlaceRewards(pluginArena);
@@ -299,7 +299,7 @@ public class InGameState extends PluginInGameState {
       String formattedMembers = pluginArena.getVotingPlot().getFormattedMembers();
 
       for(Player player : pluginArena.getPlayers()) {
-        player.teleport(teleportLoc);
+        VersionUtils.teleport(player, teleportLoc);
         player.setPlayerWeather(pluginArena.getVotingPlot().getWeatherType());
         player.setPlayerTime(Plot.Time.format(pluginArena.getVotingPlot().getTime(), player.getWorld().getTime()), false);
         if(getPlugin().getConfigPreferences().getOption("HIDE_PLOT_OWNER")) {
@@ -311,7 +311,7 @@ public class InGameState extends PluginInGameState {
       }
 
       for(Player spectator : pluginArena.getSpectators()) {
-        spectator.teleport(teleportLoc);
+        VersionUtils.teleport(spectator, teleportLoc);
         spectator.setPlayerWeather(pluginArena.getVotingPlot().getWeatherType());
         spectator.setPlayerTime(Plot.Time.format(pluginArena.getVotingPlot().getTime(), spectator.getWorld().getTime()), false);
 
@@ -327,7 +327,7 @@ public class InGameState extends PluginInGameState {
       for(Player player : pluginArena.getPlayersLeft()) {
         Plot buildPlot = pluginArena.getPlotFromPlayer(player);
         if(buildPlot != null && buildPlot.getCuboid() != null && !buildPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
-          player.teleport(buildPlot.getTeleportLocation());
+          VersionUtils.teleport(player, buildPlot.getTeleportLocation());
           new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_OUTSIDE").asKey().arena(pluginArena).player(player).sendPlayer();
         }
       }
