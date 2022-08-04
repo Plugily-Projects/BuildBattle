@@ -746,12 +746,12 @@ public class Main extends PluginMain {
     getMessageManager().registerMessage("MENU_THEME_GTB_DIFFICULTIES_MEDIUM", new Message("Menu.Theme.Guess-The-Build.Difficulties.Medium", ""));
     getMessageManager().registerMessage("MENU_THEME_GTB_DIFFICULTIES_HARD", new Message("Menu.Theme.Guess-The-Build.Difficulties.Hard", ""));
 
-    getMessageManager().registerMessage("LEADERBOARD_STATISTICS_HIGHEST_WIN", new Message("Leaderboard.Statistics.Highest-Win", ""));
-    getMessageManager().registerMessage("LEADERBOARD_STATISTICS_HIGHEST_POINTS", new Message("Leaderboard.Statistics.Highest-Points", ""));
-    getMessageManager().registerMessage("LEADERBOARD_STATISTICS_TOTAL_POINTS_EARNED", new Message("Leaderboard.Statistics.Total-Points-Earned", ""));
+    getMessageManager().registerMessage("LEADERBOARD_STATISTICS_POINTS_HIGHEST_WIN", new Message("Leaderboard.Statistics.Highest-Win", ""));
+    getMessageManager().registerMessage("LEADERBOARD_STATISTICS_POINTS_HIGHEST", new Message("Leaderboard.Statistics.Highest-Points", ""));
+    getMessageManager().registerMessage("LEADERBOARD_STATISTICS_POINTS_TOTAL", new Message("Leaderboard.Statistics.Total-Points-Earned", ""));
     getMessageManager().registerMessage("LEADERBOARD_STATISTICS_BLOCKS_PLACED", new Message("Leaderboard.Statistics.Blocks-Placed", ""));
     getMessageManager().registerMessage("LEADERBOARD_STATISTICS_BLOCKS_BROKEN", new Message("Leaderboard.Statistics.Blocks-Broken", ""));
-    getMessageManager().registerMessage("LEADERBOARD_STATISTICS_PARTICLES_PLACED", new Message("Leaderboard.Statistics.Particles-Placed", ""));
+    getMessageManager().registerMessage("LEADERBOARD_STATISTICS_PARTICLES_USED", new Message("Leaderboard.Statistics.Particles-Placed", ""));
     getMessageManager().registerMessage("LEADERBOARD_STATISTICS_SUPER_VOTES", new Message("Leaderboard.Statistics.Super-Votes", ""));
 
   }
