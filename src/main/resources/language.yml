@@ -14,10 +14,10 @@
 #
 Color:
   Placeholder:
-    Value: "&a"
-    Number: "&a"
-    Player: "&b"
-    Other: "&a"
+    Value: "&b"
+    Number: "&b"
+    Player: "&a"
+    Other: "&b"
   Chat:
     Issue: "&c"
     Messages: "&7"
@@ -541,8 +541,8 @@ Leaderboard:
       Format: "&e%number%. %player% (%value%)"
       Empty-Format: "&e%number%. Empty (0)"
     Chat:
-      Header: "&8+-------+ &a&lYOUR STATS &8+-------+"
-      Header-Other: "&8+---------+ &aSTATS FOR &b%player% &8+---------+"
+      Header: "&8+-------+ &b&lYOUR STATS &8+-------+"
+      Header-Other: "&8+---------+ &bSTATS FOR &b%player% &8+---------+"
       Footer: "&8+-----------------------------+"
       Format: "%value% ▸ &a%number%"
       Top:

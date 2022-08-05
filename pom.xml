@@ -191,7 +191,7 @@
                             <relocations>
                                 <relocation>
                                     <pattern>plugily.projects.minigamesbox</pattern>
-                                    <shadedPattern>plugily.projects.villagedefense.minigamesbox</shadedPattern>
+                                    <shadedPattern>plugily.projects.buildbattle.minigamesbox</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>com.zaxxer.hikari</pattern>
