@@ -110,6 +110,7 @@ public class Main extends PluginMain {
     addFileName("vote_items");
     addArenaOptions();
     blacklistManager = new BlacklistManager(this);
+    themeManager = new ThemeManager(this);
     BaseArena.init(this);
     new ArenaEvents(this);
     arenaManager = new ArenaManager(this);
@@ -120,7 +121,6 @@ public class Main extends PluginMain {
     argumentsRegistry = new ArgumentsRegistry(this);
     voteItems = new VoteItems(this);
     new VoteEvents(this);
-    themeManager = new ThemeManager(this);
     plotMenuHandler = new PlotMenuHandler(this);
     optionsRegistry = new OptionsRegistry(this);
     optionsRegistry.registerOptions();
