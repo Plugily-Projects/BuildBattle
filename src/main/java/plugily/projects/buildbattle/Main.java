@@ -367,7 +367,7 @@ public class Main extends PluginMain {
             }
             return String.valueOf(new ArrayList<>(((GuessArena) pluginArena).getPlayersPoints().entrySet()).get(number).getValue());
           }
-          return pluginArena.getArenaInGameStage().toString();
+          return null;
         }
       });
     }
@@ -388,25 +388,7 @@ public class Main extends PluginMain {
         if(pluginArena == null) {
           return null;
         }
-        return pluginArena.getArenaInGameStage().toString();
-      }
-    });
-
-    getPlaceholderManager().registerPlaceholder(new Placeholder("ingame_stage", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
-      @Override
-      public String getValue(Player player, PluginArena arena) {
-        return getStage(arena);
-      }
-
-      @Override
-      public String getValue(PluginArena arena) {
-        return getStage(arena);
-      }
-
-      @Nullable
-      private String getStage(PluginArena arena) {
-        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
-        if(pluginArena == null) {
+        if(pluginArena.getArenaInGameStage() == null) {
           return null;
         }
         return pluginArena.getArenaInGameStage().toString();
@@ -428,6 +410,9 @@ public class Main extends PluginMain {
       private String getStage(PluginArena arena) {
         BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
+          return null;
+        }
+        if(pluginArena.getArenaInGameStage() == null) {
           return null;
         }
         return pluginArena.getArenaInGameStage().getPrefix();
@@ -584,6 +569,9 @@ public class Main extends PluginMain {
       private String getSummary(PluginArena arena) {
         BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
+          return null;
+        }
+        if(pluginArena.getArenaState() != ArenaState.ENDING) {
           return null;
         }
         int places = pluginArena.getPlayersLeft().size();
