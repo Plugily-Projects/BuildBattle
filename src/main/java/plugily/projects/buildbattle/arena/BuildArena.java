@@ -190,9 +190,9 @@ public class BuildArena extends BaseArena {
 
   @Override
   public void setMinimumPlayers(int amount) {
-    if(amount <= getArenaOption("PLOT_MEMBER_SIZE")) {
+    if(getArenaType() == ArenaType.TEAM && amount <= getArenaOption("PLOT_MEMBER_SIZE")) {
       getPlugin().getDebugger().debug("Minimum players amount for TEAM game mode arena cannot be less than 3! Setting amount to 3!");
-      setArenaOption("MINIMUM_PLAYERS", 3);
+      super.setMinimumPlayers(3);
       return;
     }
     super.setMinimumPlayers(amount);
