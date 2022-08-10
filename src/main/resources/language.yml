@@ -81,7 +81,7 @@ Scoreboard:
   Theme-Unknown: "&c???"
   Content:
     Waiting:
-      - "■ Mode | %arena_mode%"
+      - "■ Mode | %arena_type%"
       - ""
       - "■ Players | %arena_players_size%"
       - ""
@@ -89,7 +89,7 @@ Scoreboard:
       - ""
       - "   www.plugily.xyz"
     Starting:
-      - "■ Mode | %arena_mode%"
+      - "■ Mode | %arena_type%"
       - ""
       - "■ Starting In | %arena_time%"
       - ""
@@ -103,7 +103,7 @@ Scoreboard:
       Classic:
         - "■ Theme | %arena_theme%"
         - "&f"
-        - "■ Mode | %arena_mode%"
+        - "■ Mode | %arena_type%"
         - "&f"
         - "■ Time Left | %arena_time%"
         - ""
@@ -115,7 +115,7 @@ Scoreboard:
       Teams:
         - "■ Theme | %arena_theme%"
         - "&f"
-        - "■ Mode | %arena_mode%"
+        - "■ Mode | %arena_type%"
         - "&f"
         - "■ Time Left | %arena_time%"
         - ""
@@ -125,7 +125,7 @@ Scoreboard:
         - ""
         - "   www.plugily.xyz"
       Guess-The-Build:
-        - "■ Mode | %arena_mode%"
+        - "■ Mode | %arena_type%"
         - "&f"
         - "■ Builder | %arena_builder%"
         - ""
@@ -140,7 +140,7 @@ Scoreboard:
         - ""
         - "   www.plugily.xyz"
       Guess-The-Build-Waiting:
-        - "■ Mode | %arena_mode%"
+        - "■ Mode | %arena_type%"
         - "&f"
         - "■ Leaders |"
         - "%1% | %1_PTS%"
@@ -153,7 +153,7 @@ Scoreboard:
     # Contents of scoreboard while state is ending
     Ending:
       Classic:
-        - "■ Mode | %arena_mode%"
+        - "■ Mode | %arena_type%"
         - "&f"
         - "&cGAME ENDED"
         - ""
@@ -162,7 +162,7 @@ Scoreboard:
         - ""
         - "   www.plugily.xyz"
       Guess-The-Build:
-        - "■ Mode | %arena_mode%"
+        - "■ Mode | %arena_type%"
         - "&f"
         - "■ 1. %1% | %1_PTS%"
         - "■ 2. %2% | %2_PTS%"
@@ -178,7 +178,7 @@ Scoreboard:
         - "   www.plugily.xyz"
     # Contents of scoreboard while state is restarting
     Restarting:
-      - "■ Mode | %arena_mode%"
+      - "■ Mode | %arena_type%"
       - "&f"
       - "&cRESTARTING GAME"
       - ""
