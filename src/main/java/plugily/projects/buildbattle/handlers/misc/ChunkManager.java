@@ -43,20 +43,26 @@ public class ChunkManager {
     packetPlayOutMapChunk = PacketUtils.classByName("net.minecraft.network.protocol.game", ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_18_R1) ? "ClientboundLevelChunkPacketData" : "PacketPlayOutMapChunk");
     chunkClass = PacketUtils.classByName("net.minecraft.world.level.chunk", "Chunk");
 
+    try {
+      chunkHandleMethod = Chunk.class.getMethod("getHandle");
+    } catch(NoSuchMethodException exc) {
+    }
+
     if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_17_R1)) {
       try {
-        mapChunkConstructor = packetPlayOutMapChunk.getConstructor(chunkClass);
+        mapChunkConstructor = packetPlayOutMapChunk.getConstructor(PacketUtils.classByName("net.minecraft.world.level.chunk", "LevelChunk"));
       } catch(NoSuchMethodException e) {
-        e.printStackTrace();
+        try {
+          mapChunkConstructor = packetPlayOutMapChunk.getConstructor(chunkClass);
+        } catch(NoSuchMethodException ex) {
+          ex.printStackTrace();
+        }
       }
     }
   }
 
   public static void sendMapChunk(Player player, Chunk chunk) {
     try {
-      if(chunkHandleMethod == null)
-        chunkHandleMethod = chunk.getClass().getMethod("getHandle");
-
       if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_17_R1)) {
         PacketUtils.sendPacket(player, mapChunkConstructor.newInstance(chunkHandleMethod.invoke(chunk)));
         return;
