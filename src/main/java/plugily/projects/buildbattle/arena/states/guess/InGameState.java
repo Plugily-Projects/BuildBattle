@@ -229,6 +229,8 @@ public class InGameState extends PluginInGameState {
       if (setTheme(pluginArena, difficulty)) {
         VersionUtils.sendActionBar(pluginArena.getCurrentBuilder(), new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_NAME").asKey().arena(pluginArena).build());
       }
+
+      pluginArena.getCurrentBuilder().closeInventory();
     }
   }
 
@@ -236,6 +238,8 @@ public class InGameState extends PluginInGameState {
     if(pluginArena.getCurrentBuilder() == null) {
       return;
     }
+
+    pluginArena.getCurrentBuilder().closeInventory();
 
     NormalFastInv gui = new NormalFastInv(9 * 3, new MessageBuilder("MENU_THEME_GTB_INVENTORY").asKey().build());
     gui.addClickHandler(inventoryClickEvent -> inventoryClickEvent.setCancelled(true));
@@ -285,7 +289,6 @@ public class InGameState extends PluginInGameState {
       pluginArena.setCurrentTheme(new BBTheme(themes.get(themes.size() == 1 ? 0 : random.nextInt(themes.size())), difficulty));
     }
 
-    pluginArena.getCurrentBuilder().closeInventory();
     return isThemeListEmpty;
   }
 
