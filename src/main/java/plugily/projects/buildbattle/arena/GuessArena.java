@@ -46,10 +46,10 @@ public class GuessArena extends BaseArena {
 
   private final List<Player> whoGuessed = new ArrayList<>();
   private int round = 1;
-  private BBTheme currentTheme = null;
+  private BBTheme currentTheme;
   private Map<Player, Plot> plotList = new HashMap<>();
-  private Player winner = null;
-  private Player currentBuilder = null;
+  private Player winner;
+  private Player currentBuilder;
   private Map<Player, Integer> playersPoints = new HashMap<>();
   private List<Integer> removedCharsAt = new ArrayList<>();
 
@@ -189,7 +189,7 @@ public class GuessArena extends BaseArena {
     });
   }
 
-  public BBTheme getCurrentTheme() {
+  public BBTheme getCurrentBBTheme() {
     return currentTheme;
   }
 
