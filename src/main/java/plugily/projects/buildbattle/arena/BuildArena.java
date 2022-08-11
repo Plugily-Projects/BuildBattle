@@ -55,11 +55,7 @@ public class BuildArena extends BaseArena {
 
   public BuildArena(String id) {
     super(id);
-    if(getArenaOption("PLOT_MEMBER_SIZE") <= 1) {
-      setArenaType(ArenaType.SOLO);
-    } else {
-      setArenaType(ArenaType.TEAM);
-    }
+    setArenaType(ArenaType.SOLO);
     addGameStateHandler(ArenaState.IN_GAME, new InGameState());
     addGameStateHandler(ArenaState.STARTING, new StartingState());
   }
@@ -196,6 +192,14 @@ public class BuildArena extends BaseArena {
       return;
     }
     super.setMinimumPlayers(amount);
+  }
+
+  public void setArenaType() {
+    if(getArenaOption("PLOT_MEMBER_SIZE") <= 1) {
+      setArenaType(ArenaType.SOLO);
+    } else {
+      setArenaType(ArenaType.TEAM);
+    }
   }
 
   public Map<Player, Plot> getPlotList() {
