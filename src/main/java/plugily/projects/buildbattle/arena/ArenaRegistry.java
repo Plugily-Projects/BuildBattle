@@ -22,7 +22,6 @@ package plugily.projects.buildbattle.arena;
 
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -110,11 +109,9 @@ public class ArenaRegistry extends PluginArenaRegistry {
           World minWorld = minPoint.getWorld();
 
           if(minWorld != null) {
-            Biome biome = ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_15_R1) ?
+            Plot buildPlot = new Plot(baseArena, ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_15_R1) ?
                 minWorld.getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
-                : minWorld.getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
-
-            Plot buildPlot = new Plot(baseArena, biome);
+                : minWorld.getBiome(minPoint.getBlockX(), minPoint.getBlockZ()));
 
             buildPlot.setCuboid(new Cuboid(minPoint, maxPoint));
             buildPlot.fullyResetPlot();

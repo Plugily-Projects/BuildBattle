@@ -28,7 +28,6 @@ import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.themes.vote.VoteMenu;
 import plugily.projects.buildbattle.handlers.themes.vote.VotePoll;
 import plugily.projects.minigamesbox.classic.arena.ArenaState;
-import plugily.projects.minigamesbox.classic.user.User;
 
 import java.util.ArrayList;
 import java.util.Comparator;
