@@ -35,7 +35,7 @@ import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 
 public final class ThemeArgument {
 
-  private String join(String separator) {
+  private String printGameTypes(String separator) {
     StringBuilder stringBuilder = new StringBuilder();
     int length = ThemeManager.GameThemes.VALUES.length;
 
@@ -68,7 +68,7 @@ public final class ThemeArgument {
         }
 
         if(theme == null) {
-          new MessageBuilder("&cThere is no game type with this name. Possible types: " + join(", ")).prefix().send(sender);
+          new MessageBuilder("&cThere is no game type with this name. Possible types: " + printGameTypes(", ")).prefix().send(sender);
           return;
         }
 
