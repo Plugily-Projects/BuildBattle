@@ -23,6 +23,7 @@ package plugily.projects.buildbattle.commands.arguments;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.BuildArena;
 import plugily.projects.buildbattle.arena.GuessArena;
+import plugily.projects.buildbattle.commands.arguments.admin.ThemeArgument;
 import plugily.projects.buildbattle.commands.arguments.admin.arena.AddNpcArgument;
 import plugily.projects.buildbattle.commands.arguments.admin.arena.SetThemeArgument;
 import plugily.projects.buildbattle.commands.arguments.admin.plot.AddPlotArgument;
@@ -33,6 +34,7 @@ import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.commands.arguments.PluginArgumentsRegistry;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
@@ -49,11 +51,12 @@ public class ArgumentsRegistry extends PluginArgumentsRegistry {
     new RemovePlotArgument(this);
     new SelectPlotArgument(this);
     new GuessArgument(this);
+    new ThemeArgument(this);
   }
 
   @Override
   public List<PluginArena> getSpecificFilteredArenas(List<PluginArena> arenas, String filter) {
-    switch(filter.toLowerCase()) {
+    switch(filter.toLowerCase(Locale.ENGLISH)) {
       case "gtb":
       case "guessthebuild":
       case "guess_the_build":

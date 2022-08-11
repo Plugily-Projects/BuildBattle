@@ -22,7 +22,7 @@ package plugily.projects.buildbattle.handlers.themes;
 
 public class BBTheme {
 
-  private String theme = "";
+  private final String theme;
   private final Difficulty difficulty;
 
   public BBTheme(String theme, Difficulty difficulty) {
