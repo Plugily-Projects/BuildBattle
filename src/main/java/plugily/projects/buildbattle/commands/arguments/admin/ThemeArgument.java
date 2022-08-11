@@ -24,7 +24,6 @@ import java.util.Locale;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
@@ -36,37 +35,28 @@ import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 
 public final class ThemeArgument {
 
+  private String join(String separator, Object[] arr) {
+    StringBuilder stringBuilder = new StringBuilder();
+
+    for (int i = 0; i < arr.length; i++) {
+      stringBuilder.append(arr[i] + (i + 1 < arr.length ? separator : ""));
+    }
+
+    return stringBuilder.toString();
+  }
+
   public ThemeArgument(ArgumentsRegistry registry) {
     registry.mapArgument("buildbattleadmin", new LabeledCommandArgument("theme", "buildbattle.admin.theme", CommandArgument.ExecutorType.PLAYER,
-        new LabelData("/bba theme &6add/remove <theme> <gameType>", "/bba theme",
+        new LabelData("/bba theme &c[add/remove] [gameType] [theme]", "/bba theme",
         "&7Theme commands to add or remove themes for the specified game type\n&6Permission: &7buildbattle.admin.theme")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        if(registry.getPlugin().getArenaRegistry().isInArena((Player) sender)) {
-          // TODO translatable
-          new MessageBuilder("&cYou are currently playing in an arena. You can not add a new theme while the game is running.").prefix().send(sender);
-          return;
-        }
-
-        if(args.length == 1) {
-          // TODO translatable
-          new MessageBuilder("&c/bba theme &6add/remove <theme> <gameType>").prefix().send(sender);
-          return;
-        }
-
-        if(args.length == 2) {
-          // TODO translatable
-          new MessageBuilder("&cPlease type a theme name!").prefix().send(sender);
-          return;
-        }
-
         if(args.length < 4) {
-          // TODO translatable
-          new MessageBuilder("&cPlease type a valid game type!").prefix().send(sender);
+          new MessageBuilder("COMMANDS_WRONG_USAGE").asKey().value("/" + registry.getPlugin().getCommandAdminPrefix() + " &c[add/remove] [gameType] [theme]").send(sender);
           return;
         }
 
-        String gameType = args[3];
+        String gameType = args[2];
         ThemeManager.GameThemes theme = null;
 
         for(ThemeManager.GameThemes gameTheme : ThemeManager.GameThemes.VALUES) {
@@ -78,11 +68,11 @@ public final class ThemeArgument {
 
         if(theme == null) {
           // TODO translatable
-          new MessageBuilder("&cThere is no any game type with this name.").prefix().send(sender);
+          new MessageBuilder("&cThere is no any game type with this name. Possible types: " + join(", ", ThemeManager.GameThemes.VALUES)).prefix().send(sender);
           return;
         }
 
-        String themeName = ChatColor.stripColor(args[2]);
+        String themeName = ChatColor.stripColor(args[3]);
         ThemeManager themeManager = ((Main) registry.getPlugin()).getThemeManager();
 
         switch(args[1].toLowerCase(Locale.ENGLISH)) {
@@ -150,7 +140,7 @@ public final class ThemeArgument {
 
           if(!contained) {
             // TODO translatable
-            new MessageBuilder("&cThe given theme is not exists.").prefix().send(sender);
+            new MessageBuilder("&cThe given theme doesn't exists.").prefix().send(sender);
             return;
           }
 

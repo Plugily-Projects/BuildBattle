@@ -63,7 +63,6 @@ import plugily.projects.minigamesbox.classic.arena.ArenaState;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.PluginArenaEvents;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
-import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyEntityPickupItemEvent;
@@ -606,7 +605,7 @@ public class ArenaEvents extends PluginArenaEvents {
       new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_GUESS_BUILDER").asKey().arena(gameArena).player(player).sendPlayer();
       return;
     }
-    if(gameArena.getCurrentTheme() == null || !gameArena.getCurrentTheme().theme.equalsIgnoreCase(event.getMessage())) {
+    if(gameArena.getCurrentBBTheme() == null || !gameArena.getCurrentBBTheme().getTheme().equalsIgnoreCase(event.getMessage())) {
       return;
     }
     event.setCancelled(true);

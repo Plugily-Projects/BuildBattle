@@ -110,7 +110,6 @@ public class ThemeManager {
 
       gameThemes.put(GameThemes.CLASSIC, Collections.unmodifiableList(themeList));
       gameThemes.put(GameThemes.TEAMS, Collections.unmodifiableList(themeList));
-      gameThemes.put(GameThemes.GUESS_THE_BUILD, Collections.unmodifiableList(themeList));
     }
   }
 
@@ -131,7 +130,7 @@ public class ThemeManager {
 
     SOLO("Classic"), TEAM("Teams"),
     GUESS_THE_BUILD_EASY("Guess-The-Build_EASY"), GUESS_THE_BUILD_MEDIUM("Guess-The-Build_MEDIUM"), GUESS_THE_BUILD_HARD("Guess-The-Build_HARD"),
-    CLASSIC, TEAMS, GUESS_THE_BUILD("Guess-The-Build");
+    CLASSIC, TEAMS;
 
     public final String strippedName;
 
@@ -148,8 +147,6 @@ public class ThemeManager {
     @Nullable
     public static GameThemes getByArenaType(BaseArena.ArenaType arenaType) {
       switch(arenaType) {
-      case GUESS_THE_BUILD:
-        return GUESS_THE_BUILD;
       case SOLO:
         return SOLO;
       case TEAM:

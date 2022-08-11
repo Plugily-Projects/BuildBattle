@@ -175,7 +175,7 @@ public class InGameState extends PluginInGameState {
         VersionUtils.sendActionBar(player, pluginArena.getTheme());
         continue;
       }
-      int themeLength = pluginArena.getCurrentTheme().theme.length();
+      int themeLength = pluginArena.getCurrentBBTheme().getTheme().length();
       List<Integer> charsAt = new ArrayList<>(themeLength);
 
       for(int i = 0; i < themeLength; i++) {
@@ -195,7 +195,7 @@ public class InGameState extends PluginInGameState {
 
       StringBuilder actionbar = new StringBuilder();
       for(int i = 0; i < themeLength; i++) {
-        char charAt = pluginArena.getCurrentTheme().theme.charAt(i);
+        char charAt = pluginArena.getCurrentBBTheme().getTheme().charAt(i);
 
         if(Character.isWhitespace(charAt)) {
           actionbar.append("  ");
@@ -279,15 +279,14 @@ public class InGameState extends PluginInGameState {
 
   private boolean setTheme(GuessArena pluginArena, BBTheme.Difficulty difficulty) {
     List<String> themes = pluginArena.getPlugin().getThemeManager().getThemes(ThemeManager.GameThemes.getByDifficulty(difficulty));
-    String themeName = !themes.isEmpty() ? themes.get(themes.size() == 1 ? 0 : random.nextInt(themes.size())) : "";
-    boolean isNotEmpty = !themeName.isEmpty();
+    boolean isThemeListEmpty = themes.isEmpty();
 
-    if (isNotEmpty) {
-      pluginArena.setCurrentTheme(new BBTheme(themeName, difficulty));
+    if (!isThemeListEmpty) {
+      pluginArena.setCurrentTheme(new BBTheme(themes.get(themes.size() == 1 ? 0 : random.nextInt(themes.size())), difficulty));
     }
 
     pluginArena.getCurrentBuilder().closeInventory();
-    return isNotEmpty;
+    return isThemeListEmpty;
   }
 
   private void calculateResults(GuessArena pluginArena) {

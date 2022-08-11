@@ -215,7 +215,7 @@ public class Main extends PluginMain {
       private String getTheme(PluginArena arena) {
         BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena instanceof GuessArena) {
-          return ((GuessArena) pluginArena).getCurrentTheme().difficulty.name();
+          return ((GuessArena) pluginArena).getCurrentBBTheme().getDifficulty().name();
         }
         return null;
       }
@@ -236,7 +236,7 @@ public class Main extends PluginMain {
       private String getTheme(PluginArena arena) {
         BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena instanceof GuessArena) {
-          return Integer.toString(((GuessArena) pluginArena).getCurrentTheme().difficulty.getPointsReward());
+          return Integer.toString(((GuessArena) pluginArena).getCurrentBBTheme().getDifficulty().getPointsReward());
         }
         return null;
       }
