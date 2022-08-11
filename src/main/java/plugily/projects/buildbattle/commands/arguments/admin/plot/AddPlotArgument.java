@@ -68,8 +68,8 @@ public class AddPlotArgument {
         if(section != null) {
           id = section.getKeys(false).size() + 1;
         }
-        LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", "instances." + arena.getId() + ".plots." + id + ".minpoint", selection.getFirstPos());
-        LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", "instances." + arena.getId() + ".plots." + id + ".maxpoint", selection.getSecondPos());
+        LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", "instances." + arena.getId() + ".plots." + id + ".1", selection.getFirstPos());
+        LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", "instances." + arena.getId() + ".plots." + id + ".2", selection.getSecondPos());
         new MessageBuilder("&aPlot with ID &e" + id + "&a added to arena instance &e" + arena.getId()).send(sender);
         registry.getPlugin().getCuboidSelector().removeSelection(player);
       }
