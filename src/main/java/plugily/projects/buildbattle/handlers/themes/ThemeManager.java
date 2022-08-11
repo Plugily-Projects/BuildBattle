@@ -110,6 +110,9 @@ public class ThemeManager {
 
       gameThemes.put(GameThemes.CLASSIC, Collections.unmodifiableList(themeList));
       gameThemes.put(GameThemes.TEAMS, Collections.unmodifiableList(themeList));
+      gameThemes.put(GameThemes.GUESS_THE_BUILD_EASY, Collections.unmodifiableList(themeList));
+      gameThemes.put(GameThemes.GUESS_THE_BUILD_MEDIUM, Collections.unmodifiableList(themeList));
+      gameThemes.put(GameThemes.GUESS_THE_BUILD_HARD, Collections.unmodifiableList(themeList));
     }
   }
 

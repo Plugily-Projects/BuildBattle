@@ -67,8 +67,7 @@ public final class ThemeArgument {
         }
 
         if(theme == null) {
-          // TODO translatable
-          new MessageBuilder("&cThere is no any game type with this name. Possible types: " + join(", ", ThemeManager.GameThemes.VALUES)).prefix().send(sender);
+          new MessageBuilder("&cThere is no game type with this name. Possible types: " + join(", ", ThemeManager.GameThemes.VALUES)).prefix().send(sender);
           return;
         }
 
@@ -83,8 +82,7 @@ public final class ThemeArgument {
           }
 
           if(themeManager.getThemes(theme).contains(themeName)) {
-            // TODO translatable
-            new MessageBuilder("&cThe given theme is already exists.").prefix().send(sender);
+            new MessageBuilder("&cThe given theme already exists.").prefix().send(sender);
             return;
           }
 
@@ -139,7 +137,6 @@ public final class ThemeArgument {
           }
 
           if(!contained) {
-            // TODO translatable
             new MessageBuilder("&cThe given theme doesn't exists.").prefix().send(sender);
             return;
           }
