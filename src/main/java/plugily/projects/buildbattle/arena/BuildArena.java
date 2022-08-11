@@ -193,12 +193,8 @@ public class BuildArena extends BaseArena {
     super.setMinimumPlayers(amount);
   }
 
-  public void setArenaType() {
-    if(getArenaOption("PLOT_MEMBER_SIZE") <= 1) {
-      setArenaType(ArenaType.SOLO);
-    } else {
-      setArenaType(ArenaType.TEAM);
-    }
+  protected void setTypeByPlotMembers() {
+    setArenaType(getArenaOption("PLOT_MEMBER_SIZE") <= 1 ? ArenaType.SOLO : ArenaType.TEAM);
   }
 
   public Map<Player, Plot> getPlotList() {
