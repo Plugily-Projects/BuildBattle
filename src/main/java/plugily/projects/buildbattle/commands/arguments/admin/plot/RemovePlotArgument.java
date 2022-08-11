@@ -34,6 +34,7 @@ import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
  * @author Plajer
  * <p>
  * Created at 11.01.2019
+ * @deprecated should remove arena directly from game arena too
  */
 public class RemovePlotArgument {
 
@@ -48,20 +49,16 @@ public class RemovePlotArgument {
           new MessageBuilder("COMMANDS_WRONG_USAGE").asKey().value("/bba removeplot <arena> <plot ID>").send(sender);
           return;
         }
-
         BaseArena arena = (BaseArena) registry.getPlugin().getArenaRegistry().getArena(args[1]);
         if(arena == null) {
           new MessageBuilder("COMMANDS_NO_ARENA_LIKE_THAT").asKey().send(sender);
           return;
         }
-
-        String plot = args[2];
         FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
-
-        if(config.contains("instances." + arena.getId() + ".plots." + plot)) {
-          config.set("instances." + arena.getId() + ".plots." + plot, null);
+        if(config.contains("instances." + arena.getId() + ".plots." + args[2])) {
+          config.set("instances." + arena.getId() + ".plots." + args[2], null);
           ConfigUtils.saveConfig(registry.getPlugin(), config, "arenas");
-          new MessageBuilder("&aPlot with ID &e" + plot + "&a removed from arena &e" + arena.getId()).send(sender);
+          new MessageBuilder("&aPlot with ID &e" + args[2] + "&a removed from arena &e" + arena.getId()).send(sender);
         } else {
           new MessageBuilder("&cPlot with that ID doesn't exist!").send(sender);
         }

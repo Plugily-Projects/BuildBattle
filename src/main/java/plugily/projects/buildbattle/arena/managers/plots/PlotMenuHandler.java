@@ -21,7 +21,6 @@
 package plugily.projects.buildbattle.arena.managers.plots;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -58,29 +57,30 @@ public class PlotMenuHandler implements Listener {
   public PlotMenuHandler(Main plugin) {
     this.plugin = plugin;
     this.baseItem = plugin.getSpecialItemManager().getSpecialItem("PLOT_SELECTOR");
-
-    empty = XMaterial.GREEN_WOOL.parseItem().clone();
-    waiting = XMaterial.YELLOW_WOOL.parseItem().clone();
-    full = XMaterial.RED_WOOL.parseItem().clone();
-    inside = XMaterial.PINK_WOOL.parseItem().clone();
+    empty = XMaterial.GREEN_WOOL.parseItem();
+    waiting = XMaterial.YELLOW_WOOL.parseItem();
+    full = XMaterial.RED_WOOL.parseItem();
+    inside = XMaterial.PINK_WOOL.parseItem();
 
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
   private ItemStack getItemStack(Plot plot, int maxPlotMembers, Player player) {
-    if(plot.getMembers().isEmpty()) {
-      return empty;
+    int plotMembers = plot.getMembers().size();
+
+    if(plotMembers == 0) {
+      return empty.clone();
     }
 
     if(plot.getMembers().contains(player)) {
-      return inside;
+      return inside.clone();
     }
 
-    if(plot.getMembers().size() == maxPlotMembers) {
-      return full;
+    if(plotMembers == maxPlotMembers) {
+      return full.clone();
     }
 
-    return waiting;
+    return waiting.clone();
   }
 
   public void createMenu(Player player, BaseArena arena) {
@@ -111,34 +111,24 @@ public class PlotMenuHandler implements Listener {
       }
       itemStack = new ItemBuilder(itemStack).name(new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_NAME").asKey().integer(plots).build()).build();
       int finalPlots = plots;
-      gui.addItem(new SimpleClickableItem(itemStack, event -> {
-        event.setCancelled(true);
-
-        if(!(event.isLeftClick() || event.isRightClick())) {
+      gui.addItem(new SimpleClickableItem(itemStack, e -> {
+        e.setCancelled(true);
+        if(!(e.getWhoClicked() instanceof Player) || !(e.isLeftClick() || e.isRightClick())) {
           return;
         }
-
-        HumanEntity humanEntity = event.getWhoClicked();
-
-        if (!(humanEntity instanceof Player)) {
+        PlotPlayerChooseEvent event = new PlotPlayerChooseEvent(player, plot, arena);
+        Bukkit.getPluginManager().callEvent(event);
+        if(event.isCancelled()) {
           return;
         }
-
-        PlotPlayerChooseEvent plotChooseEvent = new PlotPlayerChooseEvent(player, plot, arena);
-        Bukkit.getPluginManager().callEvent(plotChooseEvent);
-
-        if(plotChooseEvent.isCancelled() || !plot.addMember(player, arena, false)) {
+        if(!plot.addMember(player, arena, false)) {
           return;
         }
-
         new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_PLOT_CHOOSE").asKey().player(player).integer(finalPlots).sendPlayer();
-        humanEntity.closeInventory();
+        e.getWhoClicked().closeInventory();
       }));
-
       plots++;
     }
-
-    gui.refresh();
     gui.open(player);
   }
 
