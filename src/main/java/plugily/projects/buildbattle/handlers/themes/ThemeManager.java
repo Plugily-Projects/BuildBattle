@@ -135,16 +135,16 @@ public class ThemeManager {
     GUESS_THE_BUILD_EASY("Guess-The-Build_EASY"), GUESS_THE_BUILD_MEDIUM("Guess-The-Build_MEDIUM"), GUESS_THE_BUILD_HARD("Guess-The-Build_HARD"),
     CLASSIC, TEAMS;
 
-    public final String strippedName;
+    public final String strip;
 
     public static final GameThemes[] VALUES = GameThemes.values();
 
     GameThemes() {
-      strippedName = name();
+      strip = name();
     }
 
     GameThemes(String name) {
-      strippedName = name.replace("-", "").replace("_", "");
+      strip = name.replace("-", "").replace("_", "");
     }
 
     @Nullable
