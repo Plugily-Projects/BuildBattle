@@ -85,6 +85,7 @@ public class ArenaRegistry extends PluginArenaRegistry {
       }
 
       arena.setArenaOption("PLOT_MEMBER_SIZE", plotMemberSize);
+      ((BuildArena) arena).setArenaType();
     } else {
       arena.setArenaOption("PLOT_MEMBER_SIZE", 1);
     }
@@ -98,8 +99,8 @@ public class ArenaRegistry extends PluginArenaRegistry {
     BaseArena baseArena = (BaseArena) arena;
 
     for(String plotName : plotSection.getKeys(false)) {
-      String minPointString = plotSection.getString(plotName + ".minpoint", null);
-      String maxPointString = plotSection.getString(plotName + ".maxpoint", null);
+      String minPointString = plotSection.getString(plotName + ".1", null);
+      String maxPointString = plotSection.getString(plotName + ".2", null);
 
       if(minPointString != null && maxPointString != null) {
         Location minPoint = LocationSerializer.getLocation(minPointString);

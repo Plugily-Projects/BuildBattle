@@ -38,7 +38,7 @@ public class SwitchCategory extends PluginSwitchCategory {
   public void addItems(NormalFastInv gui) {
     super.addItems(gui);
     SwitchItem gameType = new SwitchItem(getSetupInventory(), new ItemBuilder(XMaterial.CLOCK.parseMaterial()), "Game Type", "Set game mode of build battle arena. \n CLASSIC - default game mode \n GUESS_THE_BUILD - arcade guessing mode", "gametype", Arrays.asList("classic", "guess_the_build"));
-    gui.setItem(1, gameType);
+    gui.setItem((getInventoryLine()*9)+1, gameType);
     getItemList().add(gameType);
   }
 

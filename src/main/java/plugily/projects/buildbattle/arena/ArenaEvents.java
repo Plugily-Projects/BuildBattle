@@ -424,6 +424,9 @@ public class ArenaEvents extends PluginArenaEvents {
 
   @EventHandler
   public void onEntityDamageEntity(EntityDamageByEntityEvent event) {
+    if(event.getEntity().getType() != EntityType.PLAYER) {
+      return;
+    }
     BaseArena arena = plugin.getArenaRegistry().getArena((Player) event.getEntity());
     if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
@@ -448,7 +451,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(player.getLocation().getY() < 1) {
       Plot plot = arena.getPlotManager().getPlot(player);
       if(plot != null) {
-        player.teleport(plot.getTeleportLocation());
+        VersionUtils.teleport(player, plot.getTeleportLocation());
       }
     }
   }

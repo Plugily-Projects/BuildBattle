@@ -41,7 +41,7 @@ public class ChunkManager {
 
   static {
     packetPlayOutMapChunk = PacketUtils.classByName("net.minecraft.network.protocol.game", ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_18_R1) ? "ClientboundLevelChunkPacketData" : "PacketPlayOutMapChunk");
-    chunkClass = PacketUtils.classByName("net.minecraft.world.level.chunk", ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_18_R1) ? "LevelChunk" : "Chunk");
+    chunkClass = PacketUtils.classByName("net.minecraft.world.level.chunk", "Chunk");
 
     if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_17_R1)) {
       try {

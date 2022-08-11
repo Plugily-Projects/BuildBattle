@@ -78,7 +78,7 @@ Forcestart:
 Arena-Selector:
   permission: ""
   execute:
-    - "p:vd arenas"
+    - "p:bb arenas"
   displayname: "&c&lArena selector &7(Right Click)"
   lore:
     - "&7Right-click to see all arenas"
@@ -91,7 +91,7 @@ Arena-Selector:
 Stats:
   permission: ""
   execute:
-    - "p:vd stats"
+    - "p:bb stats"
   displayname: "&c&lStats &7(Right Click)"
   lore:
     - "&7Right-click to see your Stats"

@@ -40,18 +40,18 @@ public class SpecificCategory extends PluginSpecificCategory {
   public void addItems(NormalFastInv gui) {
     super.addItems(gui);
     MultiLocationSelectorItem gamePlot = new MultiLocationSelectorItem(getSetupInventory(), new ItemBuilder(XMaterial.DIAMOND.parseMaterial()), "Game Plot", "Select one plot with our built-in \n selector (select minimum and maximum \n plot opposite selections with built-in wand) \n INCLUDE the plot floor!", "plots", 2);
-    gui.setItem(1, gamePlot);
+    gui.setItem((getInventoryLine() * 9) + 1, gamePlot);
     getItemList().add(gamePlot);
 
     MultiLocationItem floorNPC = new MultiLocationItem(getSetupInventory(), new ItemBuilder(XMaterial.VILLAGER_SPAWN_EGG.parseMaterial()), "Floor Changer NPC", "Add floor changer NPC to your plot.\nRequires Citizens plugin! Runs addnpc command", "floornpc", 0, event -> {
       ((Player) event.getWhoClicked()).performCommand("bba addnpc");
     }, interactEvent -> {
     });
-    gui.setItem(2, floorNPC);
+    gui.setItem((getInventoryLine() * 9) + 2, floorNPC);
     getItemList().add(floorNPC);
 
     CountItem plotSize = new CountItem(getSetupInventory(), new ItemBuilder(XMaterial.CAKE.parseMaterial()), "Plot Member Size", "Choose how many players can play on one plot", "plotmembersize");
-    gui.setItem(3, plotSize);
+    gui.setItem((getInventoryLine() * 9) + 3, plotSize);
     getItemList().add(plotSize);
   }
 
