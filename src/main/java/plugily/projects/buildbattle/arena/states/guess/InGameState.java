@@ -283,13 +283,13 @@ public class InGameState extends PluginInGameState {
 
   private boolean setTheme(GuessArena pluginArena, BBTheme.Difficulty difficulty) {
     List<String> themes = pluginArena.getPlugin().getThemeManager().getThemes(ThemeManager.GameThemes.getByDifficulty(difficulty));
-    boolean isThemeListEmpty = themes.isEmpty();
 
-    if (!isThemeListEmpty) {
+    if (!themes.isEmpty()) {
       pluginArena.setCurrentTheme(new BBTheme(themes.get(themes.size() == 1 ? 0 : random.nextInt(themes.size())), difficulty));
+      return true;
     }
 
-    return isThemeListEmpty;
+    return false;
   }
 
   private void calculateResults(GuessArena pluginArena) {
