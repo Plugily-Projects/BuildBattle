@@ -35,12 +35,12 @@ import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 
 public final class ThemeArgument {
 
-  private String printGameTypes(String separator) {
+  private String printGameTypes() {
     StringBuilder stringBuilder = new StringBuilder();
     int length = ThemeManager.GameThemes.VALUES.length;
 
     for (int i = 0; i < length; i++) {
-      stringBuilder.append(ThemeManager.GameThemes.VALUES[i].strip.toLowerCase(Locale.ENGLISH) + (i + 1 < length ? separator : ""));
+      stringBuilder.append(ThemeManager.GameThemes.VALUES[i].strip.toLowerCase(Locale.ENGLISH) + (i + 1 < length ? ", " : ""));
     }
 
     return stringBuilder.toString();
@@ -68,7 +68,7 @@ public final class ThemeArgument {
         }
 
         if(theme == null) {
-          new MessageBuilder("&cThere is no game type with this name. Possible types: " + printGameTypes(", ")).prefix().send(sender);
+          new MessageBuilder("&cThere is no game type with this name. Possible types: " + printGameTypes()).prefix().send(sender);
           return;
         }
 
