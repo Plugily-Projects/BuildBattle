@@ -54,12 +54,16 @@ public class InGameState extends PluginInGameState {
     }
     switch(pluginArena.getArenaInGameStage()) {
       case THEME_VOTING:
-        handleThemeVoting(pluginArena);
         if(arena.getTimer() <= 0) {
+          // may consider start to build message...
+          pluginArena.setArenaInGameStage(BaseArena.ArenaInGameStage.BUILD_TIME);
+
           setArenaTimer(getPlugin().getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".In-Game"));
+
           if(pluginArena.getVotePoll() != null && !pluginArena.getTheme().equals("Theme")) {
             pluginArena.setTheme(pluginArena.getVotePoll().getVotedTheme());
           }
+
           for(Player player : pluginArena.getPlayers()) {
             player.closeInventory();
             /*Teleports on Starting Stage already
@@ -68,9 +72,10 @@ public class InGameState extends PluginInGameState {
               p.teleport(plot.getTeleportLocation());
             }*/
           }
-          // may consider start to build message...
-          pluginArena.setArenaInGameStage(BaseArena.ArenaInGameStage.BUILD_TIME);
+        } else {
+          handleThemeVoting(pluginArena);
         }
+
         break;
       case BUILD_TIME:
         handleBuildTime(pluginArena);

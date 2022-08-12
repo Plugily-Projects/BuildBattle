@@ -85,7 +85,7 @@ public class ArenaRegistry extends PluginArenaRegistry {
       }
 
       arena.setArenaOption("PLOT_MEMBER_SIZE", plotMemberSize);
-      ((BuildArena) arena).setArenaType();
+      ((BuildArena) arena).setTypeByPlotMembers();
     } else {
       arena.setArenaOption("PLOT_MEMBER_SIZE", 1);
     }
