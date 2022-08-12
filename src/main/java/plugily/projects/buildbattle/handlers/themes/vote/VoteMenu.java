@@ -20,7 +20,6 @@
 
 package plugily.projects.buildbattle.handlers.themes.vote;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
@@ -104,7 +103,7 @@ public class VoteMenu {
 
     gui.addCloseHandler(event -> {
       if(arena.getArenaInGameStage() == BaseArena.ArenaInGameStage.THEME_VOTING) {
-        Bukkit.getScheduler().runTask(plugin, () -> event.getPlayer().openInventory(event.getInventory()));
+        event.getPlayer().openInventory(event.getInventory());
       }
     });
 
@@ -211,7 +210,6 @@ public class VoteMenu {
 
     if(gui != null) {
       updatePlayerGui(player, gui);
-      gui.open(player);
       return;
     }
 
