@@ -157,9 +157,6 @@ public class InGameState extends PluginInGameState {
       default:
         break;
     }
-    if(arena.getTimer() <= 0) {
-      getPlugin().getArenaManager().stopGame(false, arena);
-    }
     // no players - stop game
     if(pluginArena.enoughPlayersToContinue()) {
       getPlugin().getArenaManager().stopGame(false, pluginArena);
