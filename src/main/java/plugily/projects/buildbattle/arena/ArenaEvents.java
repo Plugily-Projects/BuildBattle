@@ -65,7 +65,6 @@ import plugily.projects.minigamesbox.classic.arena.PluginArenaEvents;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
-import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyEntityPickupItemEvent;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerInteractEntityEvent;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerInteractEvent;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerPickupArrow;
@@ -82,7 +81,6 @@ public class ArenaEvents extends PluginArenaEvents {
   public ArenaEvents(Main plugin) {
     super(plugin);
     this.plugin = plugin;
-    plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
   @EventHandler
@@ -514,7 +512,7 @@ public class ArenaEvents extends PluginArenaEvents {
       return;
     }
     Player player = (Player) event.getEntity();
-    if(plugin.getArenaRegistry().getArena(player) == null) {
+    if(!plugin.getArenaRegistry().isInArena(player)) {
       return;
     }
     event.setCancelled(true);
@@ -548,24 +546,6 @@ public class ArenaEvents extends PluginArenaEvents {
       e.getItem().remove();
       e.setCancelled(true);
     }
-  }
-
-  @EventHandler
-  public void onItemPickup(PlugilyEntityPickupItemEvent e) {
-    if(!(e.getEntity() instanceof Player)) {
-      return;
-    }
-    Player player = (Player) e.getEntity();
-    BaseArena pluginBaseArena = plugin.getArenaRegistry().getArena(player);
-    if(pluginBaseArena == null) {
-      return;
-    }
-    e.setCancelled(true);
-
-    // User user = plugin.getUserManager().getUser(player);
-    // if(user.isSpectator() || pluginBaseArena.getArenaState() != ArenaState.IN_GAME) {
-    //  return;
-    // }
   }
 
 

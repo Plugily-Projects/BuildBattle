@@ -45,7 +45,6 @@ public class OptionsMenuHandler implements Listener {
 
   public OptionsMenuHandler(Main plugin) {
     this.plugin = plugin;
-    plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
   @EventHandler
@@ -56,16 +55,18 @@ public class OptionsMenuHandler implements Listener {
       return;
     }
 
+    BaseArena arena = plugin.getArenaRegistry().getArena((Player) humanEntity);
+    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+      return;
+    }
+
     ItemStack currentItem = event.getCurrentItem();
 
     if(!ItemUtils.isItemStackNamed(currentItem)
         || !ComplementAccessor.getComplement().getTitle(event.getView()).equals(new MessageBuilder("MENU_OPTION_INVENTORY").asKey().build())) {
       return;
     }
-    BaseArena arena = plugin.getArenaRegistry().getArena((Player) humanEntity);
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
-      return;
-    }
+
     for(MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
       if(!option.getItemStack().isSimilar(currentItem)) {
         continue;

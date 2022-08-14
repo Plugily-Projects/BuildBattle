@@ -21,7 +21,6 @@
 package plugily.projects.buildbattle.arena.managers.plots;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -46,7 +45,7 @@ import java.util.List;
  * Created by Tigerpanzer_02 on 26/Jul/2021.
  */
 
-public class PlotMenuHandler implements Listener {
+public final class PlotMenuHandler {
 
   private final Main plugin;
   private final ItemStack empty;
@@ -59,28 +58,26 @@ public class PlotMenuHandler implements Listener {
     this.plugin = plugin;
     this.baseItem = plugin.getSpecialItemManager().getSpecialItem("PLOT_SELECTOR");
 
-    empty = XMaterial.GREEN_WOOL.parseItem().clone();
-    waiting = XMaterial.YELLOW_WOOL.parseItem().clone();
-    full = XMaterial.RED_WOOL.parseItem().clone();
-    inside = XMaterial.PINK_WOOL.parseItem().clone();
-
-    plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    empty = XMaterial.GREEN_WOOL.parseItem();
+    waiting = XMaterial.YELLOW_WOOL.parseItem();
+    full = XMaterial.RED_WOOL.parseItem();
+    inside = XMaterial.PINK_WOOL.parseItem();
   }
 
   private ItemStack getItemStack(Plot plot, int maxPlotMembers, Player player) {
     if(plot.getMembers().isEmpty()) {
-      return empty;
+      return empty.clone();
     }
 
     if(plot.getMembers().contains(player)) {
-      return inside;
+      return inside.clone();
     }
 
-    if(plot.getMembers().size() == maxPlotMembers) {
-      return full;
+    if(plot.getMembersSize() == maxPlotMembers) {
+      return full.clone();
     }
 
-    return waiting;
+    return waiting.clone();
   }
 
   public void createMenu(Player player, BaseArena arena) {
@@ -94,33 +91,36 @@ public class PlotMenuHandler implements Listener {
 
       itemStack.setAmount(plotMemberSize == 0 ? 1 : plotMemberSize);
 
-      if(plotMemberSize >= arenaPlotMemberSize) {
-        itemStack = new ItemBuilder(itemStack).lore(new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_FULL").asKey().build()).build();
-      } else {
-        itemStack = new ItemBuilder(itemStack).lore(new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_EMPTY").asKey().build()).build();
-      }
+      itemStack = new ItemBuilder(itemStack).lore(new MessageBuilder(plotMemberSize >= arenaPlotMemberSize ? "IN_GAME_MESSAGES_PLOT_SELECTOR_FULL"
+          : "IN_GAME_MESSAGES_PLOT_SELECTOR_EMPTY").asKey().build()).build();
+
+      boolean foundPlayer = false;
+
       if(plotMemberSize != 0) {
         List<String> players = new ArrayList<>(plotMemberSize);
-        for(Player plotMembers : plot.getMembers()) {
-          players.add("- " + plotMembers.getName());
+
+        for(Player plotMember : plot.getMembers()) {
+          if (plotMember == player) {
+            foundPlayer = true;
+          }
+
+          players.add("- " + plotMember.getName());
         }
+
         itemStack = new ItemBuilder(itemStack).lore(players).build();
       }
-      if(plot.getMembers().contains(player)) {
+
+      if(foundPlayer) {
         itemStack = new ItemBuilder(itemStack).lore(new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_INSIDE").asKey().build()).build();
       }
+
       itemStack = new ItemBuilder(itemStack).name(new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_NAME").asKey().integer(plots).build()).build();
+
       int finalPlots = plots;
       gui.addItem(new SimpleClickableItem(itemStack, event -> {
         event.setCancelled(true);
 
         if(!(event.isLeftClick() || event.isRightClick())) {
-          return;
-        }
-
-        HumanEntity humanEntity = event.getWhoClicked();
-
-        if (!(humanEntity instanceof Player)) {
           return;
         }
 
@@ -132,7 +132,7 @@ public class PlotMenuHandler implements Listener {
         }
 
         new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_PLOT_CHOOSE").asKey().player(player).integer(finalPlots).sendPlayer();
-        humanEntity.closeInventory();
+        event.getWhoClicked().closeInventory();
       }));
 
       plots++;
@@ -142,23 +142,26 @@ public class PlotMenuHandler implements Listener {
     gui.open(player);
   }
 
-  @EventHandler
-  public void onPlotMenuItemClick(PlayerInteractEvent e) {
-    if(!(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
-      return;
-    }
+  public final class PlotMenuEvents implements Listener {
 
-    if(!VersionUtils.getItemInHand(e.getPlayer()).equals(baseItem.getItemStack())) {
-      return;
-    }
+    @EventHandler
+    public void onPlotMenuItemClick(PlayerInteractEvent e) {
+      if(!(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
+        return;
+      }
 
-    BaseArena arena = plugin.getArenaRegistry().getArena(e.getPlayer());
-    if(arena == null) {
-      return;
-    }
+      if(!VersionUtils.getItemInHand(e.getPlayer()).equals(baseItem.getItemStack())) {
+        return;
+      }
 
-    e.setCancelled(true);
-    createMenu(e.getPlayer(), arena);
+      BaseArena arena = plugin.getArenaRegistry().getArena(e.getPlayer());
+      if(arena == null) {
+        return;
+      }
+
+      e.setCancelled(true);
+      createMenu(e.getPlayer(), arena);
+    }
   }
 
 }

@@ -61,13 +61,9 @@ public class ArgumentsRegistry extends PluginArgumentsRegistry {
       case "guessthebuild":
       case "guess_the_build":
         return arenas.stream().filter(GuessArena.class::isInstance).collect(Collectors.toList());
-      case "classic":
-      case "solo":
-      case "team":
       default:
         return arenas.stream().filter(BuildArena.class::isInstance).collect(Collectors.toList());
     }
   }
 
-  
 }

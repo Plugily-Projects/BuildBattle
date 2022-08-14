@@ -46,16 +46,15 @@ public class VoteEvents implements Listener {
 
   public VoteEvents(Main plugin) {
     this.plugin = plugin;
-    plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
   @EventHandler
   public void onVote(PlugilyPlayerInteractEvent event) {
-    if(VersionUtils.checkOffHand(event.getHand()) || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) {
+    if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) {
       return;
     }
 
-    if(!ItemUtils.isItemStackNamed(event.getItem())) {
+    if(VersionUtils.checkOffHand(event.getHand()) || !ItemUtils.isItemStackNamed(event.getItem())) {
       return;
     }
 

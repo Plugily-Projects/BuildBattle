@@ -23,6 +23,7 @@ package plugily.projects.buildbattle.handlers.menu.registry.biomes;
 import org.bukkit.Chunk;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import plugily.projects.buildbattle.arena.BaseArena;
@@ -48,45 +49,53 @@ public class BiomeChangeOption {
         .build(), new MessageBuilder("MENU_OPTION_CONTENT_BIOME_INVENTORY").asKey().build()) {
 
       @Override
-      public void onClick(InventoryClickEvent e) {
-        e.getWhoClicked().closeInventory();
-        e.getWhoClicked().openInventory(registry.getBiomesRegistry().getInventory());
+      public void onClick(InventoryClickEvent event) {
+        HumanEntity humanEntity = event.getWhoClicked();
+
+        humanEntity.closeInventory();
+        humanEntity.openInventory(registry.getBiomesRegistry().getInventory());
       }
 
       @Override
-      public void onTargetClick(InventoryClickEvent e) {
-        Player who = (Player) e.getWhoClicked();
-        BaseArena arena = registry.getPlugin().getArenaRegistry().getArena(who);
+      public void onTargetClick(InventoryClickEvent event) {
+        HumanEntity humanEntity = event.getWhoClicked();
+
+        if (!(humanEntity instanceof Player))
+          return;
+
+        Player player = (Player) humanEntity;
+        BaseArena arena = registry.getPlugin().getArenaRegistry().getArena(player);
+
         if(arena == null) {
           return;
         }
-        BiomeItem item = registry.getBiomesRegistry().getByItem(e.getCurrentItem());
+
+        BiomeItem item = registry.getBiomesRegistry().getByItem(event.getCurrentItem());
         if(item == BiomeItem.INVALID_BIOME) {
           return;
         }
-        if(!who.hasPermission(item.getPermission())) {
-          new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_BIOME").asKey().player(who).sendPlayer();
+
+        Plot plot = arena.getPlotManager().getPlot(player);
+        if(plot == null || plot.getCuboid() == null)
+          return;
+
+        if(!player.hasPermission(item.getPermission())) {
+          new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_BIOME").asKey().player(player).sendPlayer();
           return;
         }
 
-        Plot plot = arena.getPlotManager().getPlot(who);
-        if(plot == null)
-          return;
+        Biome biome = item.getBiome().getBiome();
 
-        if(plot.getCuboid() != null) {
-          Biome biome = item.getBiome().getBiome();
-
-          if(biome != null) {
-            for(Block block : plot.getCuboid().blockList()) {
-              block.setBiome(biome);
-            }
+        if(biome != null) {
+          for(Block block : plot.getCuboid().blockList()) {
+            block.setBiome(biome);
           }
+        }
 
-          for(Chunk chunk : plot.getCuboid().chunkList()) {
-            for(Player p : registry.getPlugin().getServer().getOnlinePlayers()) {
-              if(p.getWorld().equals(chunk.getWorld())) {
-                ChunkManager.sendMapChunk(p, chunk);
-              }
+        for(Chunk chunk : plot.getCuboid().chunkList()) {
+          for(Player p : registry.getPlugin().getServer().getOnlinePlayers()) {
+            if(p.getWorld().equals(chunk.getWorld())) {
+              ChunkManager.sendMapChunk(p, chunk);
             }
           }
         }

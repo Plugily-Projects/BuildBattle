@@ -20,6 +20,7 @@
 
 package plugily.projects.buildbattle.events;
 
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,47 +28,40 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
+
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.BuildArena;
 import plugily.projects.buildbattle.arena.GuessArena;
 import plugily.projects.minigamesbox.classic.arena.ArenaState;
-import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemUtils;
-import plugily.projects.minigamesbox.classic.utils.misc.complement.ComplementAccessor;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerInteractEvent;
 
 /**
  * Created by Tom on 17/08/2015.
  */
-public class OptionMenuEvents implements Listener {
+final class OptionMenuEvents implements Listener {
 
   private final Main plugin;
 
   public OptionMenuEvents(Main plugin) {
     this.plugin = plugin;
-    plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
-  //TODO OPTIONS MENU TRANFER
   @EventHandler
   public void onOpenOptionMenu(PlugilyPlayerInteractEvent event) {
-    if(VersionUtils.checkOffHand(event.getHand()) || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) {
+    if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL || VersionUtils.checkOffHand(event.getHand())) {
       return;
     }
-    if(!ItemUtils.isItemStackNamed(event.getItem())) {
-      return;
-    }
+
     BaseArena arena = plugin.getArenaRegistry().getArena(event.getPlayer());
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME || arena instanceof BuildArena && arena.getArenaInGameStage() != BaseArena.ArenaInGameStage.BUILD_TIME) {
+    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME || (arena instanceof BuildArena && arena.getArenaInGameStage() != BaseArena.ArenaInGameStage.BUILD_TIME)) {
       return;
     }
-    if(!ComplementAccessor.getComplement().getDisplayName(plugin.getOptionsRegistry().getMenuItem().getItemMeta())
-        .equalsIgnoreCase(ComplementAccessor.getComplement().getDisplayName(event.getItem().getItemMeta()))) {
-      return;
-    }
-    event.getPlayer().openInventory(plugin.getOptionsRegistry().formatInventory());
+
+    if(plugin.getOptionsRegistry().getMenuItem().isSimilar(event.getItem()))
+      event.getPlayer().openInventory(plugin.getOptionsRegistry().formatInventory());
   }
 
   @Deprecated
@@ -93,22 +87,25 @@ public class OptionMenuEvents implements Listener {
 
   @EventHandler
   public void onPlayerDropItem(PlayerDropItemEvent event) {
-    BaseArena arena = plugin.getArenaRegistry().getArena(event.getPlayer());
-    if(arena == null) {
+    if(!plugin.getArenaRegistry().isInArena(event.getPlayer())) {
       return;
     }
+
     ItemStack drop = event.getItemDrop().getItemStack();
-    if(!ItemUtils.isItemStackNamed(drop)) {
-      return;
-    }
-    if(ComplementAccessor.getComplement().getDisplayName(drop.getItemMeta()).equals(new MessageBuilder("MENU_OPTION_INVENTORY").asKey().build()) || plugin.getVoteItems().getPoints(drop) != 0) {
+
+    if(drop.isSimilar(plugin.getOptionsRegistry().getMenuItem()) || plugin.getVoteItems().getPoints(drop) != 0) {
       event.setCancelled(true);
     }
   }
 
   @EventHandler
   public void onInventoryClick(InventoryClickEvent event) {
-    BaseArena arena = plugin.getArenaRegistry().getArena((Player) event.getWhoClicked());
+    HumanEntity humanEntity = event.getWhoClicked();
+
+    if (!(humanEntity instanceof Player))
+      return;
+
+    BaseArena arena = plugin.getArenaRegistry().getArena((Player) humanEntity);
     if(arena == null) {
       return;
     }
@@ -116,10 +113,10 @@ public class OptionMenuEvents implements Listener {
       event.setCancelled(true);
       return;
     }
-    if(arena instanceof BuildArena && arena.getArenaInGameStage() != BaseArena.ArenaInGameStage.BUILD_TIME) {
+    if(arena instanceof BuildArena && arena.getArenaInGameStage() == BaseArena.ArenaInGameStage.BUILD_TIME) {
       return;
     }
-    if(arena instanceof GuessArena && event.getWhoClicked().equals(((GuessArena) arena).getCurrentBuilder())) {
+    if(arena instanceof GuessArena && humanEntity.equals(((GuessArena) arena).getCurrentBuilder())) {
       return;
     }
     event.setCancelled(true);

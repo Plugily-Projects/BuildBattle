@@ -136,8 +136,7 @@ public class BaseArena extends PluginArena {
    */
   @NotNull
   public String getTheme() {
-    //make sure to have no NPE
-    return theme == null ? "Theme" : theme;
+    return theme;
   }
 
   public void setTheme(String theme) {
