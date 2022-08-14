@@ -24,6 +24,7 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -103,7 +104,14 @@ public class VoteMenu {
 
     gui.addCloseHandler(event -> {
       if(arena.getArenaInGameStage() == BaseArena.ArenaInGameStage.THEME_VOTING) {
-        event.getPlayer().openInventory(event.getInventory());
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+          HumanEntity humanEntity = event.getPlayer();
+          Inventory inventory = event.getInventory();
+
+          if (humanEntity.getOpenInventory().getTopInventory() != inventory) {
+            humanEntity.openInventory(inventory);
+          }
+        }, 3); // Delay operation to make sure the top inventory is closed before opening again
       }
     });
 

@@ -30,8 +30,6 @@ import org.bukkit.inventory.ItemStack;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.minigamesbox.classic.arena.ArenaState;
-import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
-import plugily.projects.minigamesbox.classic.utils.helper.ItemUtils;
 import plugily.projects.minigamesbox.classic.utils.misc.complement.ComplementAccessor;
 
 /**
@@ -56,20 +54,22 @@ public class OptionsMenuHandler implements Listener {
       return;
     }
 
-    ItemStack currentItem = event.getCurrentItem();
-
-    if(!ItemUtils.isItemStackNamed(currentItem)
-        || !ComplementAccessor.getComplement().getTitle(event.getView()).equals(new MessageBuilder("MENU_OPTION_INVENTORY").asKey().build())) {
-      return;
-    }
     BaseArena arena = plugin.getArenaRegistry().getArena((Player) humanEntity);
     if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
+
+    if(event.getInventory() != plugin.getOptionsRegistry().formatInventory()) {
+      return;
+    }
+
+    ItemStack currentItem = event.getCurrentItem();
+
     for(MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
       if(!option.getItemStack().isSimilar(currentItem)) {
         continue;
       }
+
       event.setCancelled(true);
       option.onClick(event);
       return;
@@ -84,13 +84,7 @@ public class OptionsMenuHandler implements Listener {
       return;
     }
 
-    ItemStack currentItem = event.getCurrentItem();
-
-    if (!ItemUtils.isItemStackNamed(currentItem))
-      return;
-
-    if(ComplementAccessor.getComplement().getDisplayName(plugin.getOptionsRegistry().getGoBackItem().getItemMeta())
-        .equalsIgnoreCase(ComplementAccessor.getComplement().getDisplayName(currentItem.getItemMeta()))) {
+    if(plugin.getOptionsRegistry().getGoBackItem().isSimilar(event.getCurrentItem())) {
       event.setCancelled(true);
       human.closeInventory();
       human.openInventory(plugin.getOptionsRegistry().formatInventory());

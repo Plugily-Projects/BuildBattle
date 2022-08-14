@@ -35,6 +35,7 @@ import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
 import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
 
 import java.util.EnumMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -80,7 +81,7 @@ public class BannerMenu {
         }
         item.setItemMeta(meta);
       } else {
-        item = XMaterial.matchXMaterial(color.toString().toUpperCase() + "_BANNER").get().parseItem();
+        item = XMaterial.matchXMaterial(color.toString().toUpperCase(Locale.ENGLISH) + "_BANNER").get().parseItem();
       }
       gui.addItem(new SimpleClickableItem(item, e -> {
         e.setCancelled(true);
