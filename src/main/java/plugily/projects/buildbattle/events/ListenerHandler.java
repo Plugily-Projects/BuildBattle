@@ -40,7 +40,6 @@ public abstract class ListenerHandler {
 	public static final Listener ARENA_EVENTS = add(new PluginListener(new ArenaEvents(BB)));
 	public static final Listener VOTE_EVENTS = add(new PluginListener(new VoteEvents(BB)));
 	public static final Listener OPTION_MENU_EVENTS = add(new PluginListener(new OptionMenuEvents(BB)));
-	public static final Listener PLOT_MENU_EVENTS = add(new PluginListener(BB.getPlotMenuHandler().new PlotMenuEvents()));
 	public static final Listener OPTIONS_MENU_HANDLER = add(new PluginListener(new OptionsMenuHandler(BB)));
 
 	static {

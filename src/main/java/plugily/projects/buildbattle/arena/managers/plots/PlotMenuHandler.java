@@ -22,10 +22,7 @@ package plugily.projects.buildbattle.arena.managers.plots;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.api.event.plot.PlotPlayerChooseEvent;
@@ -33,6 +30,7 @@ import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.minigamesbox.classic.handlers.items.SpecialItem;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
+import plugily.projects.minigamesbox.classic.utils.items.HandlerItem;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
@@ -116,6 +114,24 @@ public final class PlotMenuHandler {
 
       itemStack = new ItemBuilder(itemStack).name(new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_NAME").asKey().integer(plots).build()).build();
 
+      new HandlerItem(itemStack).addInteractHandler(event -> {
+        if(!(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
+          return;
+        }
+
+        if(!VersionUtils.getItemInHand(event.getPlayer()).equals(baseItem.getItemStack())) {
+          return;
+        }
+
+        BaseArena baseArena = plugin.getArenaRegistry().getArena(event.getPlayer());
+        if(baseArena == null) {
+          return;
+        }
+
+        event.setCancelled(true);
+        createMenu(event.getPlayer(), baseArena);
+      });
+
       int finalPlots = plots;
       gui.addItem(new SimpleClickableItem(itemStack, event -> {
         event.setCancelled(true);
@@ -140,28 +156,6 @@ public final class PlotMenuHandler {
 
     gui.refresh();
     gui.open(player);
-  }
-
-  public final class PlotMenuEvents implements Listener {
-
-    @EventHandler
-    public void onPlotMenuItemClick(PlayerInteractEvent e) {
-      if(!(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
-        return;
-      }
-
-      if(!VersionUtils.getItemInHand(e.getPlayer()).equals(baseItem.getItemStack())) {
-        return;
-      }
-
-      BaseArena arena = plugin.getArenaRegistry().getArena(e.getPlayer());
-      if(arena == null) {
-        return;
-      }
-
-      e.setCancelled(true);
-      createMenu(e.getPlayer(), arena);
-    }
   }
 
 }
