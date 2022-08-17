@@ -61,6 +61,9 @@ public class ArenaRegistry extends PluginArenaRegistry {
       case "guessthebuild":
       case "guess_the_build":
         return new GuessArena(id);
+      case "classic":
+      case "solo":
+      case "team":
       default:
         return new BuildArena(id);
     }

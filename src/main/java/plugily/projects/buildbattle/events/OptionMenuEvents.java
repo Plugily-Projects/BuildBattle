@@ -41,12 +41,13 @@ import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPla
 /**
  * Created by Tom on 17/08/2015.
  */
-final class OptionMenuEvents implements Listener {
+public final class OptionMenuEvents implements Listener {
 
   private final Main plugin;
 
   public OptionMenuEvents(Main plugin) {
     this.plugin = plugin;
+    plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
   @EventHandler
@@ -68,20 +69,28 @@ final class OptionMenuEvents implements Listener {
   //only a temporary code
   @EventHandler
   public void onPlayerHeadsClick(InventoryClickEvent event) {
-    if(!ItemUtils.isItemStackNamed(event.getCurrentItem()) || !(event.getWhoClicked() instanceof Player)) {
+    HumanEntity humanEntity = event.getWhoClicked();
+
+    if(!(humanEntity instanceof Player)) {
       return;
     }
-    BaseArena arena = plugin.getArenaRegistry().getArena((Player) event.getWhoClicked());
-    if(arena == null) {
+
+    if(!plugin.getArenaRegistry().isInArena((Player) humanEntity)) {
       return;
     }
-    if(plugin.getOptionsRegistry().getPlayerHeadsRegistry().isHeadsMenu(event.getInventory())) {
-      if(event.getCurrentItem().getType() != ItemUtils.PLAYER_HEAD_ITEM.getType()) {
-        return;
-      }
-      event.getWhoClicked().getInventory().addItem(event.getCurrentItem().clone());
-      event.setCancelled(true);
+
+    if(!plugin.getOptionsRegistry().getPlayerHeadsRegistry().isHeadsMenu(event.getInventory())) {
+      return;
     }
+
+    ItemStack currentItem = event.getCurrentItem();
+
+    if(currentItem == null || currentItem.getType() != ItemUtils.PLAYER_HEAD_ITEM.getType()) {
+      return;
+    }
+
+    humanEntity.getInventory().addItem(currentItem.clone());
+    event.setCancelled(true);
   }
 
 

@@ -81,6 +81,7 @@ public class ArenaEvents extends PluginArenaEvents {
   public ArenaEvents(Main plugin) {
     super(plugin);
     this.plugin = plugin;
+    plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
   @EventHandler

@@ -46,6 +46,7 @@ public class VoteEvents implements Listener {
 
   public VoteEvents(Main plugin) {
     this.plugin = plugin;
+    plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
   @EventHandler

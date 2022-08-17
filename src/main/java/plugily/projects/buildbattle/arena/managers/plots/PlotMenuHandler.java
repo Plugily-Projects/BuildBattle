@@ -67,7 +67,7 @@ public final class PlotMenuHandler {
       return empty.clone();
     }
 
-    if(plot.getMembers().contains(player)) {
+    if(plot.getMembers().indexOf(player) != -1) {
       return inside.clone();
     }
 
@@ -92,23 +92,17 @@ public final class PlotMenuHandler {
       itemStack = new ItemBuilder(itemStack).lore(new MessageBuilder(plotMemberSize >= arenaPlotMemberSize ? "IN_GAME_MESSAGES_PLOT_SELECTOR_FULL"
           : "IN_GAME_MESSAGES_PLOT_SELECTOR_EMPTY").asKey().build()).build();
 
-      boolean foundPlayer = false;
-
       if(plotMemberSize != 0) {
         List<String> players = new ArrayList<>(plotMemberSize);
 
         for(Player plotMember : plot.getMembers()) {
-          if (plotMember == player) {
-            foundPlayer = true;
-          }
-
           players.add("- " + plotMember.getName());
         }
 
         itemStack = new ItemBuilder(itemStack).lore(players).build();
       }
 
-      if(foundPlayer) {
+      if(plot.getMembers().indexOf(player) != -1) {
         itemStack = new ItemBuilder(itemStack).lore(new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_INSIDE").asKey().build()).build();
       }
 

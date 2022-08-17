@@ -25,6 +25,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPluginLoader;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import plugily.projects.buildbattle.arena.ArenaEvents;
 import plugily.projects.buildbattle.arena.ArenaManager;
 import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.BaseArena;
@@ -32,9 +33,11 @@ import plugily.projects.buildbattle.arena.BuildArena;
 import plugily.projects.buildbattle.arena.GuessArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.arena.managers.plots.PlotMenuHandler;
+import plugily.projects.buildbattle.arena.vote.VoteEvents;
 import plugily.projects.buildbattle.arena.vote.VoteItems;
 import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
-import plugily.projects.buildbattle.events.ListenerHandler;
+import plugily.projects.buildbattle.events.OptionMenuEvents;
+import plugily.projects.buildbattle.handlers.menu.OptionsMenuHandler;
 import plugily.projects.buildbattle.handlers.menu.OptionsRegistry;
 import plugily.projects.buildbattle.handlers.setup.SetupCategoryManager;
 import plugily.projects.buildbattle.handlers.themes.ThemeManager;
@@ -109,6 +112,7 @@ public class Main extends PluginMain {
     blacklistManager = new BlacklistManager(this);
     themeManager = new ThemeManager(this);
     BaseArena.init(this);
+    new ArenaEvents(this);
     arenaManager = new ArenaManager(this);
     arenaRegistry = new ArenaRegistry(this);
     arenaRegistry.registerArenas();
@@ -116,10 +120,12 @@ public class Main extends PluginMain {
     getSignManager().updateSigns();
     argumentsRegistry = new ArgumentsRegistry(this);
     voteItems = new VoteItems(this);
+    new VoteEvents(this);
     plotMenuHandler = new PlotMenuHandler(this);
     optionsRegistry = new OptionsRegistry(this);
     optionsRegistry.registerOptions();
-    ListenerHandler.ARENA_EVENTS.getClass(); // Initialise all event classes
+    new OptionsMenuHandler(this);
+    new OptionMenuEvents(this);
     addPluginMetrics();
   }
 
