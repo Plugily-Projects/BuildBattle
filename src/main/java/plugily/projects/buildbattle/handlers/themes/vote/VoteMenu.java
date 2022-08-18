@@ -104,14 +104,14 @@ public class VoteMenu {
 
     gui.addCloseHandler(event -> {
       if(arena.getArenaInGameStage() == BaseArena.ArenaInGameStage.THEME_VOTING) {
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+        plugin.getServer().getScheduler().runTask(plugin, () -> {
           HumanEntity humanEntity = event.getPlayer();
           Inventory inventory = event.getInventory();
 
           if (humanEntity.getOpenInventory().getTopInventory() != inventory) {
             humanEntity.openInventory(inventory);
           }
-        }, 3); // Delay operation to make sure the top inventory is closed before opening again
+        });
       }
     });
 
