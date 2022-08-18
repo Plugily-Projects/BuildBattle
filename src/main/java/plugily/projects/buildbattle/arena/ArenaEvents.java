@@ -20,6 +20,7 @@
 
 package plugily.projects.buildbattle.arena;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -172,42 +173,57 @@ public class ArenaEvents extends PluginArenaEvents {
 
     ItemStack hand = VersionUtils.getItemInHand(event.getPlayer());
 
-    if(hand.getType() == Material.AIR || plugin.getUserManager().getUser(event.getPlayer()).isSpectator()) {
+    if(hand.getType() == Material.AIR) {
+      return;
+    }
+
+    BaseArena arena = plugin.getArenaRegistry().getArena(event.getPlayer());
+
+    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+      return;
+    }
+
+    if(arena instanceof BuildArena && arena.getArenaInGameStage() == BaseArena.ArenaInGameStage.PLOT_VOTING) {
+      return;
+    }
+
+    if(plugin.getUserManager().getUser(event.getPlayer()).isSpectator()) {
       return;
     }
 
     String customName = event.getRightClicked().getCustomName();
 
-    if(customName != null && customName.equalsIgnoreCase(new MessageBuilder("IN_GAME_MESSAGES_PLOT_NPC_NAME").asKey().build())) {
-      BaseArena arena = plugin.getArenaRegistry().getArena(event.getPlayer());
+    if(customName == null) {
+      return;
+    }
 
-      if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
-        return;
-      }
+    // Citizens includes 1 more color before name so we removes all
+    customName = ChatColor.stripColor(customName);
 
-      if(arena instanceof BuildArena && arena.getArenaInGameStage() == BaseArena.ArenaInGameStage.PLOT_VOTING) {
-        return;
-      }
+    if(!customName.equalsIgnoreCase(ChatColor.stripColor(new MessageBuilder("IN_GAME_MESSAGES_PLOT_NPC_NAME").asKey().build()))) {
+      return;
+    }
 
-      Material material = hand.getType();
+    Material material = hand.getType();
 
-      if(material != XMaterial.WATER_BUCKET.parseMaterial() && material != XMaterial.LAVA_BUCKET.parseMaterial()
-          && !(material.isBlock() && material.isSolid() && material.isOccluding())) {
-        new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_FLOOR_ITEM").asKey().player(event.getPlayer()).sendPlayer();
-        return;
-      }
+    if(material != XMaterial.WATER_BUCKET.parseMaterial() && material != XMaterial.LAVA_BUCKET.parseMaterial()
+        && !(material.isBlock() && material.isSolid() && material.isOccluding())) {
+      new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_FLOOR_ITEM").asKey().player(event.getPlayer()).sendPlayer();
+      return;
+    }
 
-      if(plugin.getBlacklistManager().getFloorList().contains(material)) {
-        new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_FLOOR_ITEM").asKey().player(event.getPlayer()).sendPlayer();
-        return;
-      }
+    if(plugin.getBlacklistManager().getFloorList().contains(material)) {
+      new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_FLOOR_ITEM").asKey().player(event.getPlayer()).sendPlayer();
+      return;
+    }
 
-      Plot playerPlot = arena.getPlotManager().getPlot(event.getPlayer());
+    Plot playerPlot = arena.getPlotManager().getPlot(event.getPlayer());
 
-      if(playerPlot != null) {
-        playerPlot.changeFloor(material, hand.getData().getData());
-        new MessageBuilder("MENU_OPTION_CONTENT_FLOOR_CHANGED").asKey().player(event.getPlayer()).sendPlayer();
-      }
+    if(playerPlot != null) {
+
+      // Prevent "Legacy material support initialisation"
+      playerPlot.changeFloor(material, ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1) ? hand.getData().getData() : 0);
+      new MessageBuilder("MENU_OPTION_CONTENT_FLOOR_CHANGED").asKey().player(event.getPlayer()).sendPlayer();
     }
   }
 

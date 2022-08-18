@@ -54,12 +54,12 @@ public class OptionsMenuHandler implements Listener {
       return;
     }
 
-    BaseArena arena = plugin.getArenaRegistry().getArena((Player) humanEntity);
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(event.getInventory() != plugin.getOptionsRegistry().formatInventory()) {
       return;
     }
 
-    if(event.getInventory() != plugin.getOptionsRegistry().formatInventory()) {
+    BaseArena arena = plugin.getArenaRegistry().getArena((Player) humanEntity);
+    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
 
