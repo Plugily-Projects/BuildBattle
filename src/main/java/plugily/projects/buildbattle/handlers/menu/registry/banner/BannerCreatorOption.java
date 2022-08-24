@@ -20,6 +20,7 @@
 
 package plugily.projects.buildbattle.handlers.menu.registry.banner;
 
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
@@ -42,9 +43,14 @@ public class BannerCreatorOption {
         .lore(new MessageBuilder("MENU_OPTION_CONTENT_BANNER_ITEM_LORE").asKey().build())
         .build()) {
       @Override
-      public void onClick(InventoryClickEvent e) {
-        e.getWhoClicked().closeInventory();
-        new BannerMenu((Player) e.getWhoClicked()).openInventory(BannerMenu.PatternStage.BASE);
+      public void onClick(InventoryClickEvent event) {
+        HumanEntity humanEntity = event.getWhoClicked();
+
+        humanEntity.closeInventory();
+
+        if (humanEntity instanceof Player) {
+          new BannerMenu((Player) humanEntity).openInventory(BannerMenu.PatternStage.BASE);
+        }
       }
     });
   }

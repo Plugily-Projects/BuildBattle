@@ -49,10 +49,7 @@ public class ParticleRefreshScheduler {
 
     task = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
       for(PluginArena arena : plugin.getArenaRegistry().getArenas()) {
-        if(!(arena instanceof BaseArena)) {
-          continue;
-        }
-        if(!arena.getPlayers().isEmpty()) {
+        if(arena instanceof BaseArena && !arena.getPlayers().isEmpty()) {
           for(Plot buildPlot : ((BaseArena) arena).getPlotManager().getPlots()) {
             if(!buildPlot.getMembers().isEmpty()) {
               for(Entry<Location, String> map : buildPlot.getParticles().entrySet()) {

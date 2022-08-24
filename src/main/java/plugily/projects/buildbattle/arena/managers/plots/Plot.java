@@ -128,9 +128,9 @@ public class Plot {
       StringBuilder member = new StringBuilder();
       members.forEach(player -> member.append(player.getName()).append(" & "));
       return member.substring(0, member.length() - 3);
-    } else {
-      return "PLAYER_NOT_FOUND";
     }
+
+    return "PLAYER_NOT_FOUND";
   }
 
   public int getMembersSize() {
