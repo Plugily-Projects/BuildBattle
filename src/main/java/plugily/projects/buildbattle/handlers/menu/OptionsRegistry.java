@@ -57,6 +57,8 @@ public class OptionsRegistry {
   private final ItemStack menuItem;
   private final Main plugin;
 
+  private Inventory optionsInventory;
+
   public OptionsRegistry(Main plugin) {
     this.plugin = plugin;
     this.menuItem = plugin.getSpecialItemManager().getSpecialItemStack("OPTIONS_MENU");
@@ -128,11 +130,16 @@ public class OptionsRegistry {
    * @return options inventory
    */
   public Inventory formatInventory() {
+    if (optionsInventory != null)
+      return optionsInventory;
+
     Inventory inv = ComplementAccessor.getComplement().createInventory(null, inventorySize, new MessageBuilder("MENU_OPTION_INVENTORY").asKey().build());
+
     for(MenuOption option : registeredOptions) {
       inv.setItem(option.getSlot(), option.getItemStack());
     }
-    return inv;
+
+    return optionsInventory = inv;
   }
 
   public Set<MenuOption> getRegisteredOptions() {

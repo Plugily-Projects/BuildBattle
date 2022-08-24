@@ -26,7 +26,7 @@
 
     <groupId>plugily.projects</groupId>
     <artifactId>buildbattle</artifactId>
-    <version>4.5.2-dev53</version>
+    <version>4.5.2-dev54</version>
     <name>BuildBattle</name>
 
     <properties>
@@ -69,7 +69,7 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.17.1-R0.1-SNAPSHOT</version>
+            <version>1.19.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
             <exclusions>
             	<exclusion>
