@@ -218,10 +218,13 @@ public class Plot {
     }
 
     for(Chunk chunk : cuboid.chunkList()) {
-      World chunkWorld = chunk.getWorld();
+      if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_18_R1)) {
+        chunk.getWorld().refreshChunk(chunk.getX(), chunk.getZ());
+        continue;
+      }
 
       for(Player p : arena.getPlugin().getServer().getOnlinePlayers()) {
-        if(p.getWorld().equals(chunkWorld)) {
+        if(p.getWorld().equals(chunk.getWorld())) {
           ChunkManager.sendMapChunk(p, chunk);
         }
       }
