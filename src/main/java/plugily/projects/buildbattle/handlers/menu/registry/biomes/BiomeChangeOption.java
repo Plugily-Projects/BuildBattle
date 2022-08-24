@@ -34,7 +34,6 @@ import plugily.projects.buildbattle.handlers.misc.ChunkManager;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
 import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
-import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 
 /**
@@ -95,7 +94,7 @@ public class BiomeChangeOption {
         }
 
         for(Chunk chunk : plot.getCuboid().chunkList()) {
-          if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_18_R1) && VersionUtils.isPaper()) {
+          if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_18_R1)) {
             chunk.getWorld().refreshChunk(chunk.getX(), chunk.getZ());
             continue;
           }
