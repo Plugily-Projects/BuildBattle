@@ -218,7 +218,7 @@ public class Plot {
     }
 
     for(Chunk chunk : cuboid.chunkList()) {
-      if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_18_R1)) {
+      if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_15_R1)) {
         chunk.getWorld().refreshChunk(chunk.getX(), chunk.getZ());
         continue;
       }
