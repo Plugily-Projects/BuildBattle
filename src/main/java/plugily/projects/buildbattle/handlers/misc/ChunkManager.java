@@ -40,23 +40,35 @@ public class ChunkManager {
   private static Method chunkHandleMethod;
 
   static {
-    packetPlayOutMapChunk = PacketUtils.classByName("net.minecraft.network.protocol.game", ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_18_R1) ? "ClientboundLevelChunkPacketData" : "PacketPlayOutMapChunk");
-    chunkClass = PacketUtils.classByName("net.minecraft.world.level.chunk", "Chunk");
+    if(ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_18_R1)) {
+      packetPlayOutMapChunk = PacketUtils.classByName("net.minecraft.network.protocol.game", "PacketPlayOutMapChunk");
+      chunkClass = PacketUtils.classByName("net.minecraft.world.level.chunk", "Chunk");
 
-    if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_17_R1)) {
       try {
-        mapChunkConstructor = packetPlayOutMapChunk.getConstructor(chunkClass);
-      } catch(NoSuchMethodException e) {
-        e.printStackTrace();
+        chunkHandleMethod = Chunk.class.getMethod("getHandle");
+      } catch(NoSuchMethodException exc) {
+      }
+
+      if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_17_R1)) {
+        try {
+          mapChunkConstructor = packetPlayOutMapChunk.getConstructor(PacketUtils.classByName("net.minecraft.world.level.chunk", "LevelChunk"));
+        } catch(NoSuchMethodException e) {
+          try {
+            mapChunkConstructor = packetPlayOutMapChunk.getConstructor(chunkClass);
+          } catch(NoSuchMethodException ex) {
+            ex.printStackTrace();
+          }
+        }
       }
     }
   }
 
   public static void sendMapChunk(Player player, Chunk chunk) {
-    try {
-      if(chunkHandleMethod == null)
-        chunkHandleMethod = chunk.getClass().getMethod("getHandle");
+    if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_18_R1)) {
+      return; // Should just use World#refreshChunk instead
+    }
 
+    try {
       if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_17_R1)) {
         PacketUtils.sendPacket(player, mapChunkConstructor.newInstance(chunkHandleMethod.invoke(chunk)));
         return;
