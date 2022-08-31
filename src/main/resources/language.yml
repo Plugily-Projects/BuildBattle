@@ -109,7 +109,7 @@ Scoreboard:
         - ""
         - "■ Players | %arena_players_size%"
         - "&f"
-        - "■ BaseArena | %arena_name%"
+        - "■ Arena | %arena_name%"
         - ""
         - "   www.plugily.xyz"
       Teams:
@@ -121,7 +121,7 @@ Scoreboard:
         - ""
         - "■ Teammate | %arena_teammates%"
         - "&f"
-        - "■ BaseArena | %arena_name%"
+        - "■ Arena | %arena_name%"
         - ""
         - "   www.plugily.xyz"
       Guess-The-Build:
