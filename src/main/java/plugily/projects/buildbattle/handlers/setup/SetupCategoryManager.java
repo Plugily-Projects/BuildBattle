@@ -33,6 +33,7 @@ public class SetupCategoryManager extends PluginSetupCategoryManager {
 
   public SetupCategoryManager(SetupInventory setupInventory) {
     super(setupInventory);
+    getCategoryHandler().put(SetupCategory.LOCATIONS, new LocationCategory());
     getCategoryHandler().put(SetupCategory.SWITCH, new SwitchCategory());
     getCategoryHandler().put(SetupCategory.SPECIFIC, new SpecificCategory());
    super.init();
