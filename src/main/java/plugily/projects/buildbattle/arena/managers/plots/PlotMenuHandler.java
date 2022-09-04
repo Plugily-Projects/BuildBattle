@@ -31,7 +31,6 @@ import plugily.projects.minigamesbox.classic.handlers.items.SpecialItem;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
 import plugily.projects.minigamesbox.classic.utils.items.HandlerItem;
-import plugily.projects.minigamesbox.classic.utils.items.ItemManager;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
@@ -109,9 +108,7 @@ public final class PlotMenuHandler {
 
       itemStack = new ItemBuilder(itemStack).name(new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_NAME").asKey().integer(plots).build()).build();
 
-      HandlerItem handlerItem = new HandlerItem(itemStack);
-
-      handlerItem.addInteractHandler(event -> {
+      new HandlerItem(itemStack).addInteractHandler(event -> {
         if(!(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
           return;
         }
@@ -128,8 +125,6 @@ public final class PlotMenuHandler {
         event.setCancelled(true);
         createMenu(event.getPlayer(), baseArena);
       });
-
-      ItemManager.addItem(handlerItem);
 
       int finalPlots = plots;
       gui.addItem(new SimpleClickableItem(itemStack, event -> {
