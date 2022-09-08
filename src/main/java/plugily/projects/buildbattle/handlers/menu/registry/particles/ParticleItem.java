@@ -22,8 +22,6 @@ package plugily.projects.buildbattle.handlers.menu.registry.particles;
 
 import org.bukkit.inventory.ItemStack;
 
-import plugily.projects.minigamesbox.classic.utils.misc.complement.ComplementAccessor;
-
 /**
  * Created by Tom on 23/08/2015.
  */
@@ -39,10 +37,6 @@ public class ParticleItem {
 
   public void setPermission(String permission) {
     this.permission = permission;
-  }
-
-  public String getDisplayName() {
-    return ComplementAccessor.getComplement().getDisplayName(itemStack.getItemMeta());
   }
 
   public String getEffect() {
