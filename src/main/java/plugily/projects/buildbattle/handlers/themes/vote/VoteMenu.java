@@ -32,6 +32,7 @@ import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.BuildArena;
 import plugily.projects.buildbattle.handlers.themes.ThemeManager;
+import plugily.projects.minigamesbox.classic.arena.ArenaState;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
@@ -103,7 +104,7 @@ public class VoteMenu {
     gui.addClickHandler(inventoryClickEvent -> inventoryClickEvent.setCancelled(true));
 
     gui.addCloseHandler(event -> {
-      if(arena.getArenaInGameStage() == BaseArena.ArenaInGameStage.THEME_VOTING) {
+      if(arena.getArenaState() == ArenaState.IN_GAME && arena.getArenaInGameStage() == BaseArena.ArenaInGameStage.THEME_VOTING) {
         plugin.getServer().getScheduler().runTask(plugin, () -> {
           HumanEntity humanEntity = event.getPlayer();
           Inventory inventory = event.getInventory();
