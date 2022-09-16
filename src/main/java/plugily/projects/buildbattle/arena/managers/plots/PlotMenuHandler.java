@@ -67,7 +67,7 @@ public final class PlotMenuHandler {
       return empty.clone();
     }
 
-    if(plot.getMembers().indexOf(player) != -1) {
+    if(plot.getMembers().contains(player)) {
       return inside.clone();
     }
 
@@ -102,7 +102,7 @@ public final class PlotMenuHandler {
         itemStack = new ItemBuilder(itemStack).lore(players).build();
       }
 
-      if(plot.getMembers().indexOf(player) != -1) {
+      if(plot.getMembers().contains(player)) {
         itemStack = new ItemBuilder(itemStack).lore(new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_INSIDE").asKey().build()).build();
       }
 

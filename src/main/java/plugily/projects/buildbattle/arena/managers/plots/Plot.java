@@ -143,12 +143,12 @@ public class Plot {
     }
 
     if(members.contains(player)) {
-      if(!silent) new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_MEMBER").arena(arena).player(player).sendPlayer();
+      if(!silent) new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_MEMBER").asKey().arena(arena).player(player).sendPlayer();
       return false;
     }
 
     if(members.size() >= arena.getArenaOption("PLOT_MEMBER_SIZE")) {
-      if(!silent) new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_FULL").arena(arena).player(player).sendPlayer();
+      if(!silent) new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_FULL").asKey().arena(arena).player(player).sendPlayer();
       return false;
     }
 

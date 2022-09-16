@@ -312,9 +312,9 @@ In-Game:
         Full: "Team is full"
         Empty: "You can join this team"
         Inside: "Your team"
-        Name: "Plot - %plot%"
+        Name: "Plot - %number%"
         Menu-Name: "Plot Menu"
-        Plot-Choose: "You are now on plot %plot%"
+        Plot-Choose: "You are now on plot %number%"
         Member: "You are already member of it!"
       Voting:
         Name: "%color_chat_issue%Voting"
