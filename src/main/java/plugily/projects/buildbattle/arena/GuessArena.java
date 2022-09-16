@@ -32,6 +32,7 @@ import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +53,8 @@ public class GuessArena extends BaseArena {
   private Player currentBuilder;
   private Map<Player, Integer> playersPoints = new HashMap<>();
   private List<Integer> removedCharsAt = new ArrayList<>();
+
+  private final int plotMemberSize = getArenaOption("PLOT_MEMBER_SIZE");
 
   public GuessArena(String id) {
     super(id);
@@ -75,7 +78,7 @@ public class GuessArena extends BaseArena {
 
   @Override
   public void distributePlots() {
-    int neededPlots = getPlayers().size() / getArenaOption("PLOT_MEMBER_SIZE");
+    int neededPlots = getPlayers().size() / plotMemberSize;
     if(getPlotManager().getPlots().size() < neededPlots) {
       getPlugin().getMessageUtils().errorOccurred();
       getPlugin().getDebugger().sendConsoleMsg("&c[Build Battle] [PLOT WARNING] Not enough plots in arena " + getId() + "! Lacks " + (neededPlots - getPlotManager().getPlots().size()) + " plots");
@@ -105,13 +108,12 @@ public class GuessArena extends BaseArena {
   @Override
   public boolean enoughPlayersToContinue() {
     int size = getPlayers().size();
-    int plotMemberSize = getArenaOption("PLOT_MEMBER_SIZE");
 
     if(size > plotMemberSize) {
       return true;
     }
     if(size == plotMemberSize) {
-      return !getPlotManager().getPlot(getPlayersLeft().get(0)).getMembers().containsAll(getPlayers());
+      return !new HashSet<>(getPlotManager().getPlot(getPlayersLeft().get(0)).getMembers()).containsAll(getPlayers());
     }
     return false;
   }
@@ -134,7 +136,7 @@ public class GuessArena extends BaseArena {
 
   @Override
   public void setMinimumPlayers(int amount) {
-    if(amount <= getArenaOption("PLOT_MEMBER_SIZE")) {
+    if(amount <= plotMemberSize) {
       getPlugin().getDebugger().debug("Minimum players amount for TEAM game mode arena cannot be less than 3! Setting amount to 3!");
       setArenaOption("MINIMUM_PLAYERS", 3);
       return;
