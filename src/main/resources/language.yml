@@ -430,17 +430,17 @@ Menu:
   Theme:
     Inventory: "Choose the theme?"
     Item:
-      Name: "%arena_theme%"
+      Name: "%value% - %number%%"
       #use ; to move to next line
-      Lore: "Vote for theme %theme%;;Time remaining: %time-left%;Current votes: %percent%%!;;Live vote percentages;are shown on the right in;bar form.;;Click to vote %theme%!"
+      Lore: "Vote for theme %value%;;Time remaining: %arena_time%;Current votes: %number%%!;;Live vote percentages;are shown on the right in;bar form.;;Click to vote %value%!"
     Vote:
-      Success: "%plugin_prefix% You vote %theme% successfully!"
+      Success: "%plugin_prefix% You vote %value% successfully!"
       Already: "%color_chat_issue%%plugin_prefix% You've already voted for this theme!"
       Super:
         Item:
           Name: "&bSuper vote"
-          Lore: "You have %owned% super votes;;Click to super vote %theme%!"
-        Used: "%plugin_prefix% Player %player% has used Super vote for theme %theme%! Starting now..."
+          Lore: "You have %user_statistic_super_votes% super votes;;Click to super vote %value%!"
+        Used: "%plugin_prefix% Player %player% has used Super vote for theme %value%! Starting now..."
     Guess-The-Build:
       Inventory: "Select a theme to build!"
       Item:

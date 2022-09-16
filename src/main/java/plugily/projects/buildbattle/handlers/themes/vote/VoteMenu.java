@@ -144,7 +144,7 @@ public class VoteMenu {
         new MessageBuilder(votePoll.addVote(player, theme) ? "MENU_THEME_VOTE_SUCCESS" : "MENU_THEME_VOTE_ALREADY").asKey().player(player).value(theme).sendPlayer();
       }));
 
-      gui.setItem(multiplied + 1, new ItemBuilder(XMaterial.IRON_BARS.parseItem()).build());
+      gui.setItem(multiplied + 1, new ItemBuilder(XMaterial.IRON_BARS.parseItem()).name("&7->").colorizeItem().build());
 
       double vote = 0;
 
@@ -152,10 +152,10 @@ public class VoteMenu {
         int slot = multiplied + 2 + j;
 
         if(vote > percent) {
-          gui.setItem(slot, new ItemBuilder(XMaterial.RED_STAINED_GLASS_PANE.parseItem()).build());
+          gui.setItem(slot, new ItemBuilder(XMaterial.RED_STAINED_GLASS_PANE.parseItem()).name("").build());
         }
 
-        gui.setItem(slot, new ItemBuilder(XMaterial.LIME_STAINED_GLASS_PANE.parseItem()).build());
+        gui.setItem(slot, new ItemBuilder(XMaterial.LIME_STAINED_GLASS_PANE.parseItem()).name("").build());
         vote += 16.7;
       }
 
