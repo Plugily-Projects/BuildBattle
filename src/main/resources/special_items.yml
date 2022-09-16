@@ -131,7 +131,7 @@ Options-Menu:
 Plot-Selector:
   permission: ""
   execute:
-    - ""
+    - "p:bb selectplot"
   displayname: "&b&lSelect Plot"
   lore:
     - "&7Right-click to select your plot"
