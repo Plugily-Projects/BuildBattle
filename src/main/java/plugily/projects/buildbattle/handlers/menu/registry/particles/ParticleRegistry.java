@@ -43,6 +43,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 
@@ -66,48 +67,42 @@ public class ParticleRegistry {
   }
 
   private void registerParticles() {
-    FileConfiguration config = ConfigUtils.getConfig(plugin, "particles");
     plugin.getDebugger().debug("Registering particles!");
+
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "particles");
     int i = 0;
-    for(String particle : VersionUtils.getParticleValues()) {
+
+    for(String particle : VersionUtils.PARTICLE_VALUES) {
       if(i >= 100) {
         plugin.getDebugger().debug("There are too many particles to register! Menu can't hold any more!");
         break;
       }
-      boolean blacklisted = false;
-      for(String blackList : blackListedParticles) {
-        if(particle.contains(blackList)) {
-          blacklisted = true;
-          break;
-        }
-      }
-      if(config.getBoolean(particle + ".disabled")) {
-        blacklisted = true;
-      }
-      if(blacklisted) {
+
+      if(blackListedParticles.contains(particle) || config.getBoolean(particle + ".disabled", false)) {
         continue;
       }
+
       List<String> lore = config.getStringList(particle + ".lore");
       lore.replaceAll(line -> new MessageBuilder(line).build());
 
       ParticleItem particleItem = new ParticleItem();
       particleItem.setItemStack(new ItemBuilder(XMaterial.matchXMaterial(config
-          .getString(particle + ".material-name", "bedrock").toUpperCase()).orElse(XMaterial.BEDROCK).parseItem())
+          .getString(particle + ".material-name", "bedrock").toUpperCase(Locale.ENGLISH)).orElse(XMaterial.BEDROCK).parseItem())
           .name(new MessageBuilder(config.getString(particle + ".displayname")).build())
           .lore(lore)
           .build());
-      particleItem.setPermission(config.getString(particle + ".permission"));
+      particleItem.setPermission(config.getString(particle + ".permission", ""));
       particleItem.setEffect(particle);
       registeredParticles.add(particleItem);
       i++;
     }
+
     plugin.getDebugger().debug("Registered in total " + i + " particles!");
-    ConfigUtils.saveConfig(plugin, config, "particles");
   }
 
   private void updateParticlesFile() {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "particles");
-    for(String particle : VersionUtils.getParticleValues()) {
+    for(String particle : VersionUtils.PARTICLE_VALUES) {
       if(!config.isSet(particle)) {
         config.set(particle + ".displayname", "&6" + particle);
         config.set(particle + ".lore", Arrays.asList("&7Click to activate", "&7on your location"));
@@ -125,14 +120,15 @@ public class ParticleRegistry {
 
   private void registerInventory() {
     int i = 0;
-    Set<ParticleItem> particleItemsPage1 = new HashSet<>();
+    Set<ParticleItem> particleItemsPage1 = new HashSet<>(registeredParticles.size());
     Set<ParticleItem> particleItemsPage2 = new HashSet<>();
+
     for(ParticleItem item : registeredParticles) {
       (i >= 45 ? particleItemsPage2 : particleItemsPage1).add(item);
       i++;
     }
 
-    PagedFastInv gui = new PagedFastInv(5 * 9, new MessageBuilder("MENU_OPTION_CONTENT_PARTICLE_INVENTORY").asKey().build());
+    PagedFastInv gui = new PagedFastInv(45, new MessageBuilder("MENU_OPTION_CONTENT_PARTICLE_INVENTORY").asKey().build());
 
     gui.setForceRefresh(true);
 
@@ -147,15 +143,18 @@ public class ParticleRegistry {
       gui.setCurrentPage(2);
       gui.refresh();
     }));
+
     addParticles(page1, particleItemsPage1);
     addParticles(page2, particleItemsPage2);
+
     addRemoveItem(page1);
-
     addRemoveItem(page2);
-
     setParticles(gui);
+
     page1.setItem(46, new SimpleClickableItem(plugin.getOptionsRegistry().getGoBackItem(), null));
     page2.setItem(46, new SimpleClickableItem(plugin.getOptionsRegistry().getGoBackItem(), null));
+
+    gui.refresh();
   }
 
   private void addRemoveItem(ItemMap itemMap) {
@@ -202,8 +201,7 @@ public class ParticleRegistry {
           return;
         }
         plot.getParticles().put(player.getLocation(), item.getEffect());
-        plugin.getUserManager().getUser(player)
-            .adjustStatistic("PARTICLES_USED", 1);
+        plugin.getUserManager().getUser(player).adjustStatistic("PARTICLES_USED", 1);
         new MessageBuilder("MENU_OPTION_CONTENT_PARTICLE_ADDED").asKey().player(player).sendPlayer();
       }));
     }

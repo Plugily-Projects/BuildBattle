@@ -45,13 +45,13 @@ public class ParticlesOption {
 
       @Override
       public void onClick(InventoryClickEvent event) {
-        event.getWhoClicked().closeInventory();
-
         HumanEntity humanEntity = event.getWhoClicked();
 
-        if(!(humanEntity instanceof Player) || registry.getPlugin().getArenaRegistry().getArena((Player) humanEntity) == null) {
+        if(!(humanEntity instanceof Player) || !registry.getPlugin().getArenaRegistry().isInArena((Player) humanEntity)) {
           return;
         }
+
+        humanEntity.closeInventory();
         registry.getPlugin().getOptionsRegistry().getParticleRegistry().getParticles().open(humanEntity);
       }
     });
