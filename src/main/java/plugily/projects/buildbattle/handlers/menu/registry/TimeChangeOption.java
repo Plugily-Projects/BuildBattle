@@ -59,7 +59,7 @@ public class TimeChangeOption {
 
         Inventory timeInv = ComplementAccessor.getComplement().createInventory(null, 9, new MessageBuilder("MENU_OPTION_CONTENT_TIME_INVENTORY").asKey().build());
         timeInv.setItem(0, new ItemBuilder(clock)
-            .name(new MessageBuilder("MENU_OPTION_CONTENT_TIME_TYPE_WORLD").asKey().build()).build());
+            .name(new MessageBuilder("MENU_OPTION_CONTENT_TIME_TYPE_WORLD").asKey().build()).lore(registry.getPlugin().getArenaRegistry().getArena((Player) humanEntity).getPlotManager().getPlot((Player) humanEntity).getTime().name()).build());
         timeInv.setItem(1, new ItemBuilder(clock)
             .name(new MessageBuilder("MENU_OPTION_CONTENT_TIME_TYPE_DAY").asKey().build()).build());
         timeInv.setItem(2, new ItemBuilder(clock)
@@ -80,7 +80,7 @@ public class TimeChangeOption {
       public void onTargetClick(InventoryClickEvent event) {
         HumanEntity humanEntity = event.getWhoClicked();
 
-        if (!(humanEntity instanceof Player))
+        if(!(humanEntity instanceof Player))
           return;
 
         Player player = (Player) humanEntity;
@@ -93,12 +93,12 @@ public class TimeChangeOption {
         Plot plot = arena.getPlotManager().getPlot(player);
         if(plot == null)
           return;
-
-        plot.setTime(Plot.Time.valueOf(getByPosition(event.getSlot()).toString()));
+        Plot.Time time = Plot.Time.valueOf(getByPosition(event.getSlot()).toString());
+        plot.setTime(time);
 
         for(Player p : plot.getMembers()) {
           p.setPlayerTime(Plot.Time.format(plot.getTime(), p.getWorld().getTime()), false);
-          new MessageBuilder("MENU_OPTION_CONTENT_TIME_CHANGED").asKey().player(p).sendPlayer();
+          new MessageBuilder("MENU_OPTION_CONTENT_TIME_CHANGED").asKey().player(p).value(time.name()).sendPlayer();
         }
       }
     });

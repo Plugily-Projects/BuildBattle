@@ -694,7 +694,7 @@ public class Main extends PluginMain {
     getMessageManager().registerMessage("MENU_OPTION_CONTENT_TIME_TYPE_DAY", new Message("Menu.Option.Content.Time.Type.Day", ""));
     getMessageManager().registerMessage("MENU_OPTION_CONTENT_TIME_TYPE_NOON", new Message("Menu.Option.Content.Time.Type.Noon", ""));
     getMessageManager().registerMessage("MENU_OPTION_CONTENT_TIME_TYPE_SUNSET", new Message("Menu.Option.Content.Time.Type.Sunset", ""));
-    getMessageManager().registerMessage("MENU_OPTION_CONTENT_TIME_TYPE_NIGHT", new Message("Menu.Option.Content.Time.Type.NIGHt", ""));
+    getMessageManager().registerMessage("MENU_OPTION_CONTENT_TIME_TYPE_NIGHT", new Message("Menu.Option.Content.Time.Type.Night", ""));
     getMessageManager().registerMessage("MENU_OPTION_CONTENT_TIME_TYPE_MIDNIGHT", new Message("Menu.Option.Content.Time.Type.MidNight", ""));
     getMessageManager().registerMessage("MENU_OPTION_CONTENT_TIME_TYPE_SUNRISE", new Message("Menu.Option.Content.Time.Type.Sunrise", ""));
     getMessageManager().registerMessage("MENU_OPTION_CONTENT_TIME_CHANGED", new Message("Menu.Option.Content.Time.Changed", ""));
