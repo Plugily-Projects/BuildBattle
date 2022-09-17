@@ -24,7 +24,6 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
@@ -45,8 +44,7 @@ import static plugily.projects.buildbattle.handlers.menu.registry.TimeChangeOpti
 public class TimeChangeOption {
 
   public TimeChangeOption(OptionsRegistry registry) {
-    final ItemStack clock = XMaterial.CLOCK.parseItem();
-    registry.registerOption(new MenuOption(30, "TIME", new ItemBuilder(clock)
+    registry.registerOption(new MenuOption(30, "TIME", new ItemBuilder(XMaterial.CLOCK.parseItem())
         .name(new MessageBuilder("MENU_OPTION_CONTENT_TIME_ITEM_NAME").asKey().build())
         .lore(new MessageBuilder("MENU_OPTION_CONTENT_TIME_ITEM_LORE").asKey().build())
         .build(), new MessageBuilder("MENU_OPTION_CONTENT_TIME_INVENTORY").asKey().build()) {
@@ -54,25 +52,33 @@ public class TimeChangeOption {
       @Override
       public void onClick(InventoryClickEvent event) {
         HumanEntity humanEntity = event.getWhoClicked();
-
         humanEntity.closeInventory();
 
         Inventory timeInv = ComplementAccessor.getComplement().createInventory(null, 9, new MessageBuilder("MENU_OPTION_CONTENT_TIME_INVENTORY").asKey().build());
-        timeInv.setItem(0, new ItemBuilder(clock)
-            .name(new MessageBuilder("MENU_OPTION_CONTENT_TIME_TYPE_WORLD").asKey().build()).lore(registry.getPlugin().getArenaRegistry().getArena((Player) humanEntity).getPlotManager().getPlot((Player) humanEntity).getTime().name()).build());
-        timeInv.setItem(1, new ItemBuilder(clock)
+        BaseArena arena = registry.getPlugin().getArenaRegistry().getArena((Player) humanEntity);
+
+        if (arena != null) {
+          Plot plot = arena.getPlotManager().getPlot((Player) humanEntity);
+
+          if (plot != null) {
+            timeInv.addItem(new ItemBuilder(XMaterial.CLOCK.parseItem()).name(new MessageBuilder("MENU_OPTION_CONTENT_TIME_TYPE_WORLD").asKey().build()).lore(plot.getTime().name()).build());
+          }
+        }
+
+        timeInv.addItem(new ItemBuilder(XMaterial.CLOCK.parseItem())
             .name(new MessageBuilder("MENU_OPTION_CONTENT_TIME_TYPE_DAY").asKey().build()).build());
-        timeInv.setItem(2, new ItemBuilder(clock)
+        timeInv.addItem(new ItemBuilder(XMaterial.CLOCK.parseItem())
             .name(new MessageBuilder("MENU_OPTION_CONTENT_TIME_TYPE_NOON").asKey().build()).build());
-        timeInv.setItem(3, new ItemBuilder(clock)
+        timeInv.addItem(new ItemBuilder(XMaterial.CLOCK.parseItem())
             .name(new MessageBuilder("MENU_OPTION_CONTENT_TIME_TYPE_SUNSET").asKey().build()).build());
-        timeInv.setItem(4, new ItemBuilder(clock)
+        timeInv.addItem(new ItemBuilder(XMaterial.CLOCK.parseItem())
             .name(new MessageBuilder("MENU_OPTION_CONTENT_TIME_TYPE_NIGHT").asKey().build()).build());
-        timeInv.setItem(5, new ItemBuilder(clock)
+        timeInv.addItem(new ItemBuilder(XMaterial.CLOCK.parseItem())
             .name(new MessageBuilder("MENU_OPTION_CONTENT_TIME_TYPE_MIDNIGHT").asKey().build()).build());
-        timeInv.setItem(6, new ItemBuilder(clock)
+        timeInv.addItem(new ItemBuilder(XMaterial.CLOCK.parseItem())
             .name(new MessageBuilder("MENU_OPTION_CONTENT_TIME_TYPE_SUNRISE").asKey().build()).build());
         timeInv.addItem(registry.getGoBackItem());
+
         humanEntity.openInventory(timeInv);
       }
 
@@ -84,8 +90,8 @@ public class TimeChangeOption {
           return;
 
         Player player = (Player) humanEntity;
-
         BaseArena arena = registry.getPlugin().getArenaRegistry().getArena(player);
+
         if(arena == null) {
           return;
         }
@@ -93,11 +99,12 @@ public class TimeChangeOption {
         Plot plot = arena.getPlotManager().getPlot(player);
         if(plot == null)
           return;
+
         Plot.Time time = Plot.Time.valueOf(getByPosition(event.getSlot()).toString());
         plot.setTime(time);
 
         for(Player p : plot.getMembers()) {
-          p.setPlayerTime(Plot.Time.format(plot.getTime(), p.getWorld().getTime()), false);
+          p.setPlayerTime(Plot.Time.format(time, p.getWorld().getTime()), false);
           new MessageBuilder("MENU_OPTION_CONTENT_TIME_CHANGED").asKey().player(p).value(time.name()).sendPlayer();
         }
       }
