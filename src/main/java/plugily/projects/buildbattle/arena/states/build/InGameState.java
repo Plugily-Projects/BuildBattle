@@ -25,10 +25,12 @@ import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.BuildArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
+import plugily.projects.buildbattle.arena.vote.VoteItems;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.states.PluginInGameState;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
+import plugily.projects.minigamesbox.classic.handlers.reward.RewardType;
 import plugily.projects.minigamesbox.classic.handlers.reward.RewardsFactory;
 import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
@@ -129,11 +131,18 @@ public class InGameState extends PluginInGameState {
 
   private void givePlaceRewards(BuildArena pluginArena) {
     RewardsFactory rewards = getPlugin().getRewardsHandler();
+    RewardType placeRewardType = null;
+
     for(int i = 1; i <= pluginArena.getTopList().size(); i++) {
       List<Player> list = pluginArena.getTopList().get(i);
+
       if(list != null) {
         for(Player player : list) {
-          rewards.performReward(player, pluginArena, getPlugin().getRewardsHandler().getRewardType("PLACE"), i);
+          if(placeRewardType == null) {
+            placeRewardType = rewards.getRewardType("PLACE");
+          }
+
+          rewards.performReward(player, pluginArena, placeRewardType, i);
         }
       }
     }
@@ -154,24 +163,38 @@ public class InGameState extends PluginInGameState {
   }
 
   private void calculatePlotResults(BuildArena pluginArena) {
-    if(pluginArena.getVotingPlot().getPoints() == 0) {
-      for(Player player : pluginArena.getPlayersLeft()) {
-        if(getPlugin().getConfigPreferences().getOption("HIDE_PLOT_OWNER")) {
-          String formattedMembers = pluginArena.getVotingPlot().getFormattedMembers();
+    Plot votingPlot = pluginArena.getVotingPlot();
 
-          new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_WAS").asKey().arena(pluginArena).player(player).value(formattedMembers).sendArena();
-          new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_TITLE").asKey().arena(pluginArena).player(player).value(formattedMembers).sendArena();
-        }
-        User user = getPlugin().getUserManager().getUser(player);
-        int points = user.getStatistic("LOCAL_POINTS");
-        //no vote made, in this case make it a good vote
-        if(points == 0) {
-          points = 3;
-        }
-        if(!pluginArena.getVotingPlot().getMembers().contains(player))
-          pluginArena.getVotingPlot().setPoints(pluginArena.getVotingPlot().getPoints() + points);
-        user.setStatistic("LOCAL_POINTS", 3);
+    if(votingPlot == null || votingPlot.getPoints() != 0) {
+      return;
+    }
+
+    boolean hidePlotOwner = getPlugin().getConfigPreferences().getOption("HIDE_PLOT_OWNER");
+    String formattedMembers = "";
+
+    if(hidePlotOwner) {
+      formattedMembers = votingPlot.getFormattedMembers();
+    }
+
+    for(Player player : pluginArena.getPlayersLeft()) {
+      if(hidePlotOwner) {
+        new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_WAS").asKey().arena(pluginArena).player(player).value(formattedMembers).sendArena();
+        new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_TITLE").asKey().arena(pluginArena).player(player).value(formattedMembers).sendArena();
       }
+
+      User user = getPlugin().getUserManager().getUser(player);
+      int points = user.getStatistic("LOCAL_POINTS");
+
+      //no vote made, in this case make it a good vote
+      if(points == 0) {
+        points = 3;
+      }
+
+      if(!votingPlot.getMembers().contains(player)) {
+        votingPlot.setPoints(votingPlot.getPoints() + points);
+      }
+
+      user.setStatistic("LOCAL_POINTS", 3);
     }
   }
 
@@ -257,70 +280,89 @@ public class InGameState extends PluginInGameState {
   }
 
   public void voteForNextPlot(BuildArena pluginArena) {
-    if(pluginArena.getVotingPlot() != null) {
-      if(pluginArena.getVotingPlot().getPoints() == 0) {
+    Plot votingPlot = pluginArena.getVotingPlot();
+
+    if(votingPlot != null) {
+      if(votingPlot.getPoints() == 0) {
         for(Player player : pluginArena.getPlayersLeft()) {
           User user = getPlugin().getUserManager().getUser(player);
-          if(!pluginArena.getVotingPlot().getMembers().contains(player))
-            pluginArena.getVotingPlot().setPoints(pluginArena.getVotingPlot().getPoints() + user.getStatistic("LOCAL_POINTS"));
+
+          if(!votingPlot.getMembers().contains(player))
+            votingPlot.setPoints(votingPlot.getPoints() + user.getStatistic("LOCAL_POINTS"));
+
           user.setStatistic("LOCAL_POINTS", 3);
-          if(!player.getInventory().contains(pluginArena.getPlugin().getVoteItems().getReportItem())) {
-            player.getInventory().setItem(pluginArena.getPlugin().getVoteItems().getReportVoteItem().getSlot(), pluginArena.getPlugin().getVoteItems().getReportVoteItem().getItemStack());
+
+          VoteItems voteItems = pluginArena.getPlugin().getVoteItems();
+
+          if(!player.getInventory().contains(voteItems.getReportItem())) {
+            player.getInventory().setItem(voteItems.getReportVoteItem().getSlot(), voteItems.getReportVoteItem().getItemStack());
             player.updateInventory();
           }
         }
       }
-      if(!pluginArena.getVotingPlot().getMembers().isEmpty() && getPlugin().getConfigPreferences().getOption("HIDE_PLOT_OWNER")) {
-        String formattedMembers = pluginArena.getVotingPlot().getFormattedMembers();
+
+      if(!votingPlot.getMembers().isEmpty() && getPlugin().getConfigPreferences().getOption("HIDE_PLOT_OWNER")) {
+        String formattedMembers = votingPlot.getFormattedMembers();
 
         new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_WAS").asKey().arena(pluginArena).value(formattedMembers).sendArena();
         new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_TITLE").asKey().arena(pluginArena).value(formattedMembers).sendArena();
       }
     }
+
     voteRoutine(pluginArena);
   }
 
   public void voteRoutine(BuildArena pluginArena) {
-    if(!pluginArena.getQueue().isEmpty()) {
-      setArenaTimer(getPlugin().getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".Voting.Plot"));
-      Plot plot = pluginArena.getQueue().poll();
-      while(plot == null && !pluginArena.getQueue().isEmpty()) {
-        // should not happen anymore... to be removed
-        System.out.print("A PLAYER HAS NO PLOT!");
-        plot = pluginArena.getQueue().poll();
+    if(pluginArena.getQueue().isEmpty()) {
+      return;
+    }
+
+    setArenaTimer(getPlugin().getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".Voting.Plot"));
+
+    Plot plot = pluginArena.getQueue().poll();
+
+    while(plot == null && !pluginArena.getQueue().isEmpty()) {
+      // should not happen anymore... to be removed
+      System.out.print("A PLAYER HAS NO PLOT!");
+      plot = pluginArena.getQueue().poll();
+    }
+
+    if(pluginArena.getQueue().isEmpty() && plot == null) {
+      pluginArena.setVotingPlot(null);
+      return;
+    }
+
+    // getPlotManager().teleportAllToPlot(plotManager.getPlot(player.getUniqueId()));
+    pluginArena.setVotingPlot(plot);
+
+    if(plot == null) {
+      return;
+    }
+
+    Location teleportLoc = plot.getTeleportLocation();
+    String formattedMembers = plot.getFormattedMembers();
+    boolean hidePlotOwner = getPlugin().getConfigPreferences().getOption("HIDE_PLOT_OWNER");
+
+    for(Player player : pluginArena.getPlayers()) {
+      VersionUtils.teleport(player, teleportLoc);
+      player.setPlayerWeather(plot.getWeatherType());
+      player.setPlayerTime(Plot.Time.format(plot.getTime(), player.getWorld().getTime()), false);
+
+      if(hidePlotOwner) {
+        new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_NEXT").asKey().arena(pluginArena).value("???").player(player).sendPlayer();
+      } else {
+        new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_TITLE").asKey().arena(pluginArena).value(formattedMembers).player(player).sendPlayer();
+        new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_NEXT").asKey().arena(pluginArena).value(formattedMembers).player(player).sendPlayer();
       }
-      if(pluginArena.getQueue().isEmpty() && plot == null) {
-        pluginArena.setVotingPlot(null);
-        return;
-      }
+    }
 
-      // getPlotManager().teleportAllToPlot(plotManager.getPlot(player.getUniqueId()));
-      pluginArena.setVotingPlot(plot);
+    for(Player spectator : pluginArena.getSpectators()) {
+      VersionUtils.teleport(spectator, teleportLoc);
+      spectator.setPlayerWeather(plot.getWeatherType());
+      spectator.setPlayerTime(Plot.Time.format(plot.getTime(), spectator.getWorld().getTime()), false);
 
-
-      Location teleportLoc = pluginArena.getVotingPlot().getTeleportLocation();
-      String formattedMembers = pluginArena.getVotingPlot().getFormattedMembers();
-
-      for(Player player : pluginArena.getPlayers()) {
-        VersionUtils.teleport(player, teleportLoc);
-        player.setPlayerWeather(pluginArena.getVotingPlot().getWeatherType());
-        player.setPlayerTime(Plot.Time.format(pluginArena.getVotingPlot().getTime(), player.getWorld().getTime()), false);
-        if(getPlugin().getConfigPreferences().getOption("HIDE_PLOT_OWNER")) {
-          new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_NEXT").asKey().arena(pluginArena).value("???").player(player).sendPlayer();
-        } else {
-          new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_TITLE").asKey().arena(pluginArena).value(formattedMembers).player(player).sendPlayer();
-          new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_NEXT").asKey().arena(pluginArena).value(formattedMembers).player(player).sendPlayer();
-        }
-      }
-
-      for(Player spectator : pluginArena.getSpectators()) {
-        VersionUtils.teleport(spectator, teleportLoc);
-        spectator.setPlayerWeather(pluginArena.getVotingPlot().getWeatherType());
-        spectator.setPlayerTime(Plot.Time.format(pluginArena.getVotingPlot().getTime(), spectator.getWorld().getTime()), false);
-
-        new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_TITLE").asKey().arena(pluginArena).value(formattedMembers).player(spectator).sendPlayer();
-        new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_NEXT").asKey().arena(pluginArena).value(formattedMembers).player(spectator).sendPlayer();
-      }
+      new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_TITLE").asKey().arena(pluginArena).value(formattedMembers).player(spectator).sendPlayer();
+      new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_NEXT").asKey().arena(pluginArena).value(formattedMembers).player(spectator).sendPlayer();
     }
   }
 
