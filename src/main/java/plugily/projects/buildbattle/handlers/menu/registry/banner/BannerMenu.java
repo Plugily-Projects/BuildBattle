@@ -80,8 +80,8 @@ public class BannerMenu {
         item = XMaterial.matchXMaterial(color.toString() + "_BANNER").orElse(XMaterial.WHITE_BANNER).parseItem();
       }
 
-      gui.addItem(new SimpleClickableItem(item, e -> {
-        e.setCancelled(true);
+      gui.addItem(new SimpleClickableItem(item, event -> {
+        event.setCancelled(true);
         banner.setBaseColor(color);
         new BannerMenu(player, banner).openInventory(PatternStage.LAYER);
       }));
@@ -104,8 +104,8 @@ public class BannerMenu {
       meta.addPattern(new Pattern(color, pattern));
       item.setItemMeta(meta);
 
-      gui.addItem(new SimpleClickableItem(item, e -> {
-        e.setCancelled(true);
+      gui.addItem(new SimpleClickableItem(item, event -> {
+        event.setCancelled(true);
         banner.addPattern(new BannerPattern(color, pattern));
         new BannerMenu(player, banner).openInventory(PatternStage.LAYER_COLOR);
       }));
@@ -127,8 +127,8 @@ public class BannerMenu {
       meta.addPattern(new Pattern(color, banner.getLastPattern().getPatternType()));
       item.setItemMeta(meta);
 
-      gui.addItem(new SimpleClickableItem(item, e -> {
-        e.setCancelled(true);
+      gui.addItem(new SimpleClickableItem(item, event -> {
+        event.setCancelled(true);
         banner.replaceLastPattern(new BannerPattern(color, banner.getLastPattern().getPatternType()));
         new BannerMenu(player, banner).openInventory(PatternStage.LAYER);
       }));
@@ -144,17 +144,17 @@ public class BannerMenu {
     gui.setItem(49, new SimpleClickableItem(new ItemBuilder(banner.buildBanner())
         .name(new MessageBuilder("MENU_OPTION_CONTENT_BANNER_ITEM_CREATE_NAME").asKey().build())
         .lore(new MessageBuilder("MENU_OPTION_CONTENT_BANNER_ITEM_CREATE_LORE").asKey().build())
-        .build(), e -> {
-      e.setCancelled(true);
-      e.getWhoClicked().closeInventory();
+        .build(), event -> {
+      event.setCancelled(true);
+      event.getWhoClicked().closeInventory();
       player.getInventory().addItem(banner.buildBanner());
     }));
   }
 
   private void addGoBackItem(NormalFastInv gui) {
-    gui.setItem(45, new SimpleClickableItem(plugin.getOptionsRegistry().getGoBackItem(), e -> {
-      e.setCancelled(true);
-      e.getWhoClicked().closeInventory();
+    gui.setItem(45, new SimpleClickableItem(plugin.getOptionsRegistry().getGoBackItem(), event -> {
+      event.setCancelled(true);
+      event.getWhoClicked().closeInventory();
       player.openInventory(plugin.getOptionsRegistry().formatInventory());
     }));
   }
