@@ -40,19 +40,19 @@ public class ParticleRefreshScheduler {
   private BukkitTask task;
 
   public ParticleRefreshScheduler(PluginMain plugin) {
-    int particleRefreshTick = plugin.getConfig().getInt("Particle-Refresh-Per-Tick", 10);
+    int particleRefreshTick = plugin.getConfig().getInt("Particle.Refresh-Rate", 10);
 
-    if (particleRefreshTick < 0) {
+    if(particleRefreshTick < 0) {
       particleRefreshTick = 20;
     }
 
-    int amountParticle = plugin.getConfig().getInt("Amount-One-Particle-Effect-Contains", 20);
+    int amountParticle = plugin.getConfig().getInt("Particle.Effects", 20);
 
-    if (amountParticle < 0) {
+    if(amountParticle < 0) {
       amountParticle = 20;
     }
 
-    final int ap = amountParticle;
+    final int particleAmount = amountParticle;
 
     task = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
       for(PluginArena arena : plugin.getArenaRegistry().getArenas()) {
@@ -60,7 +60,7 @@ public class ParticleRefreshScheduler {
           for(Plot buildPlot : ((BaseArena) arena).getPlotManager().getPlots()) {
             if(!buildPlot.getMembers().isEmpty()) {
               for(Entry<Location, String> map : buildPlot.getParticles().entrySet()) {
-                VersionUtils.sendParticles(map.getValue(), new HashSet<>(buildPlot.getMembers()), map.getKey(), ap);
+                VersionUtils.sendParticles(map.getValue(), new HashSet<>(buildPlot.getMembers()), map.getKey(), particleAmount);
               }
             }
           }

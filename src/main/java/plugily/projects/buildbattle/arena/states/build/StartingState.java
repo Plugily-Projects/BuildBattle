@@ -24,7 +24,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
-import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.BuildArena;
 import plugily.projects.buildbattle.handlers.menu.registry.particles.ParticleRefreshScheduler;
@@ -61,10 +60,8 @@ public class StartingState extends PluginStartingState {
 
       pluginArena.setArenaInGameStage(BaseArena.ArenaInGameStage.THEME_VOTING);
 
-      Main plugin = (Main) getPlugin();
-
       for (Player player : arena.getPlayers()) {
-        player.getInventory().setItem(8, plugin.getOptionsRegistry().getMenuItem());
+        player.getInventory().setItem(8, pluginArena.getPlugin().getOptionsRegistry().getMenuItem());
         //to prevent Multiverse changing gamemode bug
         Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setGameMode(GameMode.CREATIVE), 40);
       }
