@@ -22,14 +22,16 @@ package plugily.projects.buildbattle.handlers.menu;
 
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.EventExecutor;
 
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.BaseArena;
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.buildbattle.arena.BaseArena.ArenaInGameStage;
 import plugily.projects.minigamesbox.classic.utils.misc.complement.ComplementAccessor;
 
 /**
@@ -37,69 +39,59 @@ import plugily.projects.minigamesbox.classic.utils.misc.complement.ComplementAcc
  * <p>
  * Created at 23.12.2018
  */
-public class OptionsMenuHandler implements Listener {
-
-  private final Main plugin;
+public final class OptionsMenuHandler {
 
   public OptionsMenuHandler(Main plugin) {
-    this.plugin = plugin;
-    plugin.getServer().getPluginManager().registerEvents(this, plugin);
-  }
+    plugin.getServer().getPluginManager().registerEvent(InventoryClickEvent.class, new Listener() {
+    }, EventPriority.NORMAL, new EventExecutor() {
 
-  @EventHandler
-  public void onOptionsMenuClick(InventoryClickEvent event) {
-    HumanEntity humanEntity = event.getWhoClicked();
+      @Override
+      public void execute(Listener listener, Event e) {
+        InventoryClickEvent event = (InventoryClickEvent) e;
+        HumanEntity humanEntity = event.getWhoClicked();
 
-    if(!(humanEntity instanceof Player)) {
-      return;
-    }
+        if(!(humanEntity instanceof Player)) {
+          return;
+        }
 
-    if(event.getInventory() != plugin.getOptionsRegistry().formatInventory()) {
-      return;
-    }
+        BaseArena arena = plugin.getArenaRegistry().getArena((Player) humanEntity);
+        if(arena == null || arena.getArenaInGameStage() != ArenaInGameStage.BUILD_TIME) {
+          return;
+        }
 
-    BaseArena arena = plugin.getArenaRegistry().getArena((Player) humanEntity);
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
-      return;
-    }
+        ItemStack currentItem = event.getCurrentItem();
 
-    ItemStack currentItem = event.getCurrentItem();
+        if(plugin.getOptionsRegistry().getGoBackItem().isSimilar(currentItem)) {
+          event.setCancelled(true);
+          humanEntity.closeInventory();
+          humanEntity.openInventory(plugin.getOptionsRegistry().formatInventory());
+          return;
+        }
 
-    for(MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
-      if(!option.getItemStack().isSimilar(currentItem)) {
-        continue;
+        String viewTitle = ComplementAccessor.getComplement().getTitle(event.getView());
+
+        for(MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
+          if(viewTitle.equals(option.getInventoryName())) {
+            event.setCancelled(true);
+            option.onTargetClick(event);
+            return;
+          }
+        }
+
+        if(event.getInventory() != plugin.getOptionsRegistry().formatInventory()) {
+          return;
+        }
+
+        for(MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
+          if(!option.getItemStack().isSimilar(currentItem)) {
+            continue;
+          }
+
+          event.setCancelled(true);
+          option.onClick(event);
+          return;
+        }
       }
-
-      event.setCancelled(true);
-      option.onClick(event);
-      return;
-    }
+    }, plugin);
   }
-
-  @EventHandler
-  public void onRegisteredMenuOptionsClick(InventoryClickEvent event) {
-    HumanEntity human = event.getWhoClicked();
-
-    if(!(human instanceof Player)) {
-      return;
-    }
-
-    if(plugin.getOptionsRegistry().getGoBackItem().isSimilar(event.getCurrentItem())) {
-      event.setCancelled(true);
-      human.closeInventory();
-      human.openInventory(plugin.getOptionsRegistry().formatInventory());
-      return;
-    }
-
-    String viewTitle = ComplementAccessor.getComplement().getTitle(event.getView());
-
-    for(MenuOption option : plugin.getOptionsRegistry().getRegisteredOptions()) {
-      if(viewTitle.equals(option.getInventoryName())) {
-        event.setCancelled(true);
-        option.onTargetClick(event);
-        return;
-      }
-    }
-  }
-
 }

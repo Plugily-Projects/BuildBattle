@@ -73,8 +73,8 @@ public class WeatherChangeOption {
           return;
 
         Player player = (Player) humanEntity;
-
         BaseArena arena = registry.getPlugin().getArenaRegistry().getArena(player);
+
         if(arena == null) {
           return;
         }
@@ -83,15 +83,18 @@ public class WeatherChangeOption {
         if(plot == null) {
           return;
         }
-        if(ComplementAccessor.getComplement().getDisplayName(item.getItemMeta()).equalsIgnoreCase(new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_TYPE_DOWNFALL").asKey().build())) {
-          plot.setWeatherType(WeatherType.DOWNFALL);
-        } else if(ComplementAccessor.getComplement().getDisplayName(item.getItemMeta()).equalsIgnoreCase(new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_TYPE_CLEAR").asKey().build())) {
-          plot.setWeatherType(WeatherType.CLEAR);
+
+        boolean isDownfall = item.getType() == Material.WATER_BUCKET;
+
+        if (!isDownfall && item.getType() != Material.BUCKET) {
+          return;
         }
+
+        plot.setWeatherType(isDownfall ? WeatherType.DOWNFALL : WeatherType.CLEAR);
 
         for(Player p : plot.getMembers()) {
           p.setPlayerWeather(plot.getWeatherType());
-          new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_TYPE_DOWNFALL").asKey().player(p).sendPlayer();
+          new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_TYPE_" + (isDownfall ? "DOWNFALL" : "CLEAR")).asKey().player(p).sendPlayer();
         }
       }
     });
