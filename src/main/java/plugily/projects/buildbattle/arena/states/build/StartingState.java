@@ -23,6 +23,7 @@ package plugily.projects.buildbattle.arena.states.build;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
+
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.BuildArena;
 import plugily.projects.buildbattle.handlers.menu.registry.particles.ParticleRefreshScheduler;
@@ -49,22 +50,21 @@ public class StartingState extends PluginStartingState {
     if (arena.getTimer() == 0 || arena.isForceStart()) {
       //getPlotManager().resetPlotsGradually();
       pluginArena.setParticleRefreshScheduler(new ParticleRefreshScheduler(getPlugin()));
+
       if(!pluginArena.getPlotManager().isPlotsCleared()) {
         pluginArena.getPlotManager().resetQueuedPlots();
       }
+
       pluginArena.distributePlots();
       setArenaTimer(getPlugin().getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".Voting.Theme"));
+
       pluginArena.setArenaInGameStage(BaseArena.ArenaInGameStage.THEME_VOTING);
+
       for (Player player : arena.getPlayers()) {
-        player.getInventory().setItem(8, getPlugin().getSpecialItemManager().getSpecialItemStack("OPTIONS_MENU"));
+        player.getInventory().setItem(8, pluginArena.getPlugin().getOptionsRegistry().getMenuItem());
         //to prevent Multiverse changing gamemode bug
         Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setGameMode(GameMode.CREATIVE), 40);
-
       }
-
     }
   }
-
-
-
 }
