@@ -26,6 +26,8 @@ import org.bukkit.block.banner.PatternType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import plugily.projects.buildbattle.Main;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
@@ -35,7 +37,6 @@ import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
 import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
 
 import java.util.EnumMap;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -45,7 +46,7 @@ import java.util.Map;
  */
 public class BannerMenu {
 
-  private static Main plugin;
+  private final Main plugin = JavaPlugin.getPlugin(Main.class);
   private final Map<PatternStage, NormalFastInv> guiStages = new EnumMap<>(PatternStage.class);
   private final Banner banner;
   private final Player player;
@@ -62,91 +63,98 @@ public class BannerMenu {
     prepareLayerColorStageGui();
   }
 
-  public static void init(Main plugin) {
-    BannerMenu.plugin = plugin;
-  }
-
   @SuppressWarnings("deprecation")
   private void prepareBaseStageGui() {
     NormalFastInv gui = new NormalFastInv(6, new MessageBuilder("MENU_OPTION_CONTENT_BANNER_INVENTORY_COLOR").asKey().build());
+
     for(DyeColor color : DyeColor.values()) {
       ItemStack item;
+
       if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {
         item = XMaterial.WHITE_BANNER.parseItem();
         BannerMeta meta = (BannerMeta) item.getItemMeta();
-        if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {
-          meta.setBaseColor(color);
-        } else {
-          ((org.bukkit.block.Banner) item).setBaseColor(color);
-        }
+
+        meta.setBaseColor(color);
         item.setItemMeta(meta);
       } else {
-        item = XMaterial.matchXMaterial(color.toString().toUpperCase(Locale.ENGLISH) + "_BANNER").get().parseItem();
+        item = XMaterial.matchXMaterial(color.toString() + "_BANNER").orElse(XMaterial.WHITE_BANNER).parseItem();
       }
-      gui.addItem(new SimpleClickableItem(item, e -> {
-        e.setCancelled(true);
+
+      gui.addItem(new SimpleClickableItem(item, event -> {
+        event.setCancelled(true);
         banner.setBaseColor(color);
         new BannerMenu(player, banner).openInventory(PatternStage.LAYER);
       }));
     }
+
     addCreatorItem(gui);
     addGoBackItem(gui);
     guiStages.put(PatternStage.BASE, gui);
+    gui.refresh();
   }
 
   private void prepareLayerStageGui() {
     NormalFastInv gui = new NormalFastInv(6, new MessageBuilder("MENU_OPTION_CONTENT_BANNER_INVENTORY_LAYER").asKey().build());
+
     for(PatternType pattern : PatternType.values()) {
       ItemStack item = banner.buildBanner();
       BannerMeta meta = (BannerMeta) item.getItemMeta();
       DyeColor color = banner.getColor() == DyeColor.BLACK ? DyeColor.WHITE : DyeColor.BLACK;
+
       meta.addPattern(new Pattern(color, pattern));
       item.setItemMeta(meta);
-      gui.addItem(new SimpleClickableItem(item, e -> {
-        e.setCancelled(true);
+
+      gui.addItem(new SimpleClickableItem(item, event -> {
+        event.setCancelled(true);
         banner.addPattern(new BannerPattern(color, pattern));
         new BannerMenu(player, banner).openInventory(PatternStage.LAYER_COLOR);
       }));
     }
+
     addCreatorItem(gui);
     addGoBackItem(gui);
     guiStages.put(PatternStage.LAYER, gui);
+    gui.refresh();
   }
 
   private void prepareLayerColorStageGui() {
     NormalFastInv gui = new NormalFastInv(6, new MessageBuilder("MENU_OPTION_CONTENT_BANNER_INVENTORY_LAYER_COLOR").asKey().build());
+
     for(DyeColor color : DyeColor.values()) {
       ItemStack item = banner.buildBanner();
       BannerMeta meta = (BannerMeta) item.getItemMeta();
-      Pattern pattern = new Pattern(color, banner.getLastPattern().getPatternType());
-      meta.addPattern(pattern);
+
+      meta.addPattern(new Pattern(color, banner.getLastPattern().getPatternType()));
       item.setItemMeta(meta);
-      gui.addItem(new SimpleClickableItem(item, e -> {
-        e.setCancelled(true);
+
+      gui.addItem(new SimpleClickableItem(item, event -> {
+        event.setCancelled(true);
         banner.replaceLastPattern(new BannerPattern(color, banner.getLastPattern().getPatternType()));
         new BannerMenu(player, banner).openInventory(PatternStage.LAYER);
       }));
     }
+
     addCreatorItem(gui);
     addGoBackItem(gui);
     guiStages.put(PatternStage.LAYER_COLOR, gui);
+    gui.refresh();
   }
 
   private void addCreatorItem(NormalFastInv gui) {
     gui.setItem(49, new SimpleClickableItem(new ItemBuilder(banner.buildBanner())
         .name(new MessageBuilder("MENU_OPTION_CONTENT_BANNER_ITEM_CREATE_NAME").asKey().build())
         .lore(new MessageBuilder("MENU_OPTION_CONTENT_BANNER_ITEM_CREATE_LORE").asKey().build())
-        .build(), e -> {
-      e.setCancelled(true);
-      e.getWhoClicked().closeInventory();
+        .build(), event -> {
+      event.setCancelled(true);
+      event.getWhoClicked().closeInventory();
       player.getInventory().addItem(banner.buildBanner());
     }));
   }
 
   private void addGoBackItem(NormalFastInv gui) {
-    gui.setItem(45, new SimpleClickableItem(plugin.getOptionsRegistry().getGoBackItem(), e -> {
-      e.setCancelled(true);
-      e.getWhoClicked().closeInventory();
+    gui.setItem(45, new SimpleClickableItem(plugin.getOptionsRegistry().getGoBackItem(), event -> {
+      event.setCancelled(true);
+      event.getWhoClicked().closeInventory();
       player.openInventory(plugin.getOptionsRegistry().formatInventory());
     }));
   }

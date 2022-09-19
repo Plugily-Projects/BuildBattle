@@ -25,6 +25,8 @@ import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
+
+import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 
 import java.util.LinkedList;
@@ -64,14 +66,15 @@ public class Banner {
   public ItemStack buildBanner() {
     ItemStack item = XMaterial.WHITE_BANNER.parseItem();
     BannerMeta meta = (BannerMeta) item.getItemMeta();
-    if(item instanceof org.bukkit.block.Banner) {
-      ((org.bukkit.block.Banner) item).setBaseColor(this.color);
-    } else {
-      meta.setBaseColor(this.color);
+
+    if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {
+      meta.setBaseColor(color);
     }
+
     for(BannerPattern pattern : patterns) {
       meta.addPattern(new Pattern(pattern.getDyeColor(), pattern.getPatternType()));
     }
+
     item.setItemMeta(meta);
     return item;
   }
