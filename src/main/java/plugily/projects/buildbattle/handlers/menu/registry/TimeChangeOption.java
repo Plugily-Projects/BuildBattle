@@ -65,21 +65,19 @@ public class TimeChangeOption {
           }
         }
 
-        timeInv.addItem(new ItemBuilder(XMaterial.CLOCK.parseItem())
-            .name(new MessageBuilder("MENU_OPTION_CONTENT_TIME_TYPE_DAY").asKey().build()).build());
-        timeInv.addItem(new ItemBuilder(XMaterial.CLOCK.parseItem())
-            .name(new MessageBuilder("MENU_OPTION_CONTENT_TIME_TYPE_NOON").asKey().build()).build());
-        timeInv.addItem(new ItemBuilder(XMaterial.CLOCK.parseItem())
-            .name(new MessageBuilder("MENU_OPTION_CONTENT_TIME_TYPE_SUNSET").asKey().build()).build());
-        timeInv.addItem(new ItemBuilder(XMaterial.CLOCK.parseItem())
-            .name(new MessageBuilder("MENU_OPTION_CONTENT_TIME_TYPE_NIGHT").asKey().build()).build());
-        timeInv.addItem(new ItemBuilder(XMaterial.CLOCK.parseItem())
-            .name(new MessageBuilder("MENU_OPTION_CONTENT_TIME_TYPE_MIDNIGHT").asKey().build()).build());
-        timeInv.addItem(new ItemBuilder(XMaterial.CLOCK.parseItem())
-            .name(new MessageBuilder("MENU_OPTION_CONTENT_TIME_TYPE_SUNRISE").asKey().build()).build());
+        addClockItem(timeInv, "MENU_OPTION_CONTENT_TIME_TYPE_DAY");
+        addClockItem(timeInv, "MENU_OPTION_CONTENT_TIME_TYPE_NOON");
+        addClockItem(timeInv, "MENU_OPTION_CONTENT_TIME_TYPE_SUNSET");
+        addClockItem(timeInv, "MENU_OPTION_CONTENT_TIME_TYPE_NIGHT");
+        addClockItem(timeInv, "MENU_OPTION_CONTENT_TIME_TYPE_MIDNIGHT");
+        addClockItem(timeInv, "MENU_OPTION_CONTENT_TIME_TYPE_SUNRISE");
         timeInv.addItem(registry.getGoBackItem());
 
         humanEntity.openInventory(timeInv);
+      }
+
+      private void addClockItem(Inventory timeInv, String messageKey) {
+        timeInv.addItem(new ItemBuilder(XMaterial.CLOCK.parseItem()).name(new MessageBuilder(messageKey).asKey().build()).build());
       }
 
       @Override

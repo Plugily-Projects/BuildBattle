@@ -22,13 +22,16 @@ package plugily.projects.buildbattle.handlers.menu;
 
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.EventExecutor;
 
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.BaseArena;
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.buildbattle.arena.BaseArena.ArenaInGameStage;
 import plugily.projects.minigamesbox.classic.utils.misc.complement.ComplementAccessor;
 
 /**
@@ -40,10 +43,10 @@ public final class OptionsMenuHandler {
 
   public OptionsMenuHandler(Main plugin) {
     plugin.getServer().getPluginManager().registerEvent(InventoryClickEvent.class, new Listener() {
-    }, org.bukkit.event.EventPriority.NORMAL, new org.bukkit.plugin.EventExecutor() {
+    }, EventPriority.NORMAL, new EventExecutor() {
 
       @Override
-      public void execute(Listener listener, org.bukkit.event.Event e) {
+      public void execute(Listener listener, Event e) {
         InventoryClickEvent event = (InventoryClickEvent) e;
         HumanEntity humanEntity = event.getWhoClicked();
 
@@ -52,7 +55,7 @@ public final class OptionsMenuHandler {
         }
 
         BaseArena arena = plugin.getArenaRegistry().getArena((Player) humanEntity);
-        if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+        if(arena == null || arena.getArenaInGameStage() != ArenaInGameStage.BUILD_TIME) {
           return;
         }
 
