@@ -32,6 +32,7 @@ import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
 import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
 import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
 
+import java.util.HashMap;
 import java.util.Map.Entry;
 
 /**
@@ -45,9 +46,9 @@ public class ParticleRemoveMenu {
   }
 
   public static void openMenu(Player player, Plot buildPlot) {
-    NormalFastInv gui = new NormalFastInv(6, new MessageBuilder("MENU_OPTION_CONTENT_PARTICLE_INVENTORY").asKey().build());
+    NormalFastInv gui = new NormalFastInv(54, new MessageBuilder("MENU_OPTION_CONTENT_PARTICLE_INVENTORY").asKey().build());
 
-    for(Entry<Location, String> map : new java.util.HashMap<>(buildPlot.getParticles()).entrySet()) {
+    for(Entry<Location, String> map : new HashMap<>(buildPlot.getParticles()).entrySet()) {
       ParticleItem particleItem = plugin.getOptionsRegistry().getParticleRegistry().getItemByEffect(map.getValue());
       if(particleItem == null) {
         continue;

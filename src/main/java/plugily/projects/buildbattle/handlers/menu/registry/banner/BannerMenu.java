@@ -65,7 +65,7 @@ public class BannerMenu {
 
   @SuppressWarnings("deprecation")
   private void prepareBaseStageGui() {
-    NormalFastInv gui = new NormalFastInv(6, new MessageBuilder("MENU_OPTION_CONTENT_BANNER_INVENTORY_COLOR").asKey().build());
+    NormalFastInv gui = new NormalFastInv(54, new MessageBuilder("MENU_OPTION_CONTENT_BANNER_INVENTORY_COLOR").asKey().build());
 
     for(DyeColor color : DyeColor.values()) {
       ItemStack item;
@@ -94,7 +94,7 @@ public class BannerMenu {
   }
 
   private void prepareLayerStageGui() {
-    NormalFastInv gui = new NormalFastInv(6, new MessageBuilder("MENU_OPTION_CONTENT_BANNER_INVENTORY_LAYER").asKey().build());
+    NormalFastInv gui = new NormalFastInv(54, new MessageBuilder("MENU_OPTION_CONTENT_BANNER_INVENTORY_LAYER").asKey().build());
 
     for(PatternType pattern : PatternType.values()) {
       ItemStack item = banner.buildBanner();
@@ -118,7 +118,7 @@ public class BannerMenu {
   }
 
   private void prepareLayerColorStageGui() {
-    NormalFastInv gui = new NormalFastInv(6, new MessageBuilder("MENU_OPTION_CONTENT_BANNER_INVENTORY_LAYER_COLOR").asKey().build());
+    NormalFastInv gui = new NormalFastInv(54, new MessageBuilder("MENU_OPTION_CONTENT_BANNER_INVENTORY_LAYER_COLOR").asKey().build());
 
     for(DyeColor color : DyeColor.values()) {
       ItemStack item = banner.buildBanner();

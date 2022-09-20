@@ -128,19 +128,19 @@ public class ParticleRegistry {
       i++;
     }
 
-    PagedFastInv gui = new PagedFastInv(45, new MessageBuilder("MENU_OPTION_CONTENT_PARTICLE_INVENTORY").asKey().build());
+    PagedFastInv gui = new PagedFastInv(54, new MessageBuilder("MENU_OPTION_CONTENT_PARTICLE_INVENTORY").asKey().build());
 
     gui.setForceRefresh(true);
 
     ItemMap page1 = gui.createNewPage();
     ItemMap page2 = gui.createNewPage();
 
-    page2.setItem(45, new SimpleClickableItem(new ItemStack(Material.ARROW), event -> {
-      gui.setCurrentPage(1);
+    page2.setItem(45, new SimpleClickableItem(new ItemBuilder(new ItemStack(XMaterial.ARROW.parseMaterial())).name("<-").build(), event -> {
+      gui.setCurrentPage(0);
       gui.refresh();
     }));
-    page1.setItem(53, new SimpleClickableItem(new ItemStack(Material.ARROW), event -> {
-      gui.setCurrentPage(2);
+    page1.setItem(53, new SimpleClickableItem(new ItemBuilder(new ItemStack(XMaterial.ARROW.parseMaterial())).name("->").build(), event -> {
+      gui.setCurrentPage(1);
       gui.refresh();
     }));
 
@@ -151,8 +151,16 @@ public class ParticleRegistry {
     addRemoveItem(page2);
     setParticles(gui);
 
-    page1.setItem(46, new SimpleClickableItem(plugin.getOptionsRegistry().getGoBackItem(), null));
-    page2.setItem(46, new SimpleClickableItem(plugin.getOptionsRegistry().getGoBackItem(), null));
+    page1.setItem(46, new SimpleClickableItem(plugin.getOptionsRegistry().getGoBackItem(), event -> {
+      event.setCancelled(true);
+      event.getWhoClicked().closeInventory();
+      event.getWhoClicked().openInventory(plugin.getOptionsRegistry().formatInventory());
+    }));
+    page2.setItem(46, new SimpleClickableItem(plugin.getOptionsRegistry().getGoBackItem(), event -> {
+      event.setCancelled(true);
+      event.getWhoClicked().closeInventory();
+      event.getWhoClicked().openInventory(plugin.getOptionsRegistry().formatInventory());
+    }));
 
     gui.refresh();
   }
@@ -164,7 +172,7 @@ public class ParticleRegistry {
         .build(), event -> {
       HumanEntity humanEntity = event.getWhoClicked();
 
-      if (!(humanEntity instanceof Player))
+      if(!(humanEntity instanceof Player))
         return;
 
       Player player = (Player) humanEntity;
@@ -183,7 +191,7 @@ public class ParticleRegistry {
       itemMap.addItem(new SimpleClickableItem(item.getItemStack(), event -> {
         HumanEntity humanEntity = event.getWhoClicked();
 
-        if (!(humanEntity instanceof Player))
+        if(!(humanEntity instanceof Player))
           return;
 
         Player player = (Player) humanEntity;
