@@ -79,7 +79,7 @@ public class VoteEvents implements Listener {
       if(plot != null && plugin.getConfigPreferences().getOption("REPORT_COMMANDS")) {
         int reportsAmountNeeded = plugin.getConfig().getInt("Report.Amount", -1);
 
-        if(reportsAmountNeeded == -1 || user.getStatistic("REPORTS") >= reportsAmountNeeded) {
+        if(reportsAmountNeeded == -1 || user.getStatistic("REPORTS_TRIGGERED") >= reportsAmountNeeded) {
           String reportCommand = plugin.getConfig().getString("Report.Execute", "kick %reported%");
           reportCommand = reportCommand.replace("%reporter%", event.getPlayer().getName());
 

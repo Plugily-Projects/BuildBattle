@@ -239,10 +239,10 @@ public class InGameState extends PluginInGameState {
         User user = getPlugin().getUserManager().getUser(p);
         Plot plot = pluginArena.getPlotManager().getPlot(p);
         if(plot != null) {
-          if(plot.getPoints() > user.getStatistic("HIGHEST_POINTS")) {
-            user.setStatistic("HIGHEST_POINTS", plot.getPoints());
+          if(plot.getPoints() > user.getStatistic("POINTS_HIGHEST")) {
+            user.setStatistic("POINTS_HIGHEST", plot.getPoints());
           }
-          user.adjustStatistic("TOTAL_POINTS_EARNED", plot.getPoints());
+          user.adjustStatistic("POINTS_TOTAL", plot.getPoints());
         }
         if(map.getKey() != 1) {
           user.adjustStatistic("LOSES", 1);
@@ -250,8 +250,8 @@ public class InGameState extends PluginInGameState {
         }
         user.adjustStatistic("WINS", 1);
         getPlugin().getUserManager().addExperience(p, 5);
-        if(plot != null && plot.getPoints() > user.getStatistic("HIGHEST_WIN")) {
-          user.setStatistic("HIGHEST_WIN", plot.getPoints());
+        if(plot != null && plot.getPoints() > user.getStatistic("POINTS_HIGHEST_WIN")) {
+          user.setStatistic("POINTS_HIGHEST_WIN", plot.getPoints());
         }
       }
     }

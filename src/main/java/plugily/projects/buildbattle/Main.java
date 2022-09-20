@@ -455,11 +455,6 @@ public class Main extends PluginMain {
         return getSummary(arena, player);
       }
 
-      @Override
-      public String getValue(PluginArena arena) {
-        return "";
-      }
-
       @Nullable
       private String getSummary(PluginArena arena, Player player) {
         BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
@@ -485,11 +480,6 @@ public class Main extends PluginMain {
       @Override
       public String getValue(Player player, PluginArena arena) {
         return getSummary(arena, player);
-      }
-
-      @Override
-      public String getValue(PluginArena arena) {
-        return "";
       }
 
       @Nullable
