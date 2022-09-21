@@ -62,8 +62,9 @@ public class InGameState extends PluginInGameState {
 
           setArenaTimer(getPlugin().getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".In-Game"));
 
-          if(pluginArena.getVotePoll() != null && !pluginArena.getTheme().equals("Theme")) {
+          if(pluginArena.getVotePoll() != null && pluginArena.getTheme().equals("Theme")) {
             pluginArena.setTheme(pluginArena.getVotePoll().getVotedTheme());
+            new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_NAME").asKey().arena(pluginArena).sendArena();
           }
 
           for(Player player : pluginArena.getPlayers()) {
@@ -261,7 +262,6 @@ public class InGameState extends PluginInGameState {
     for(Player player : pluginArena.getPlayers()) {
       pluginArena.getVoteMenu().updateInventory(player);
     }
-
   }
 
   private void handleBuildTime(BuildArena pluginArena) {
