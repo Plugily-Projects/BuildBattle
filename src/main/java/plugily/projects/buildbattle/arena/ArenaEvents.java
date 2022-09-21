@@ -25,7 +25,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.ItemFrame;
@@ -57,7 +56,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
-import org.spigotmc.event.entity.EntityDismountEvent;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.minigamesbox.classic.arena.ArenaState;
@@ -83,22 +81,6 @@ public class ArenaEvents extends PluginArenaEvents {
     super(plugin);
     this.plugin = plugin;
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
-  }
-
-  @EventHandler
-  public void onArmorStandEject(EntityDismountEvent e) {
-    if(!(e.getEntity() instanceof ArmorStand)
-        || !"BuildBattleArmorStand".equals(e.getEntity().getCustomName())) {
-      return;
-    }
-    if(!(e.getDismounted() instanceof Player)) {
-      return;
-    }
-    if(e.getDismounted().isDead()) {
-      e.getEntity().remove();
-    }
-    // we could use setCancelled here but for 1.12 support we cannot (no api)
-    e.getDismounted().addPassenger(e.getEntity());
   }
 
   @EventHandler(priority = EventPriority.HIGH)
@@ -573,7 +555,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(humanEntity instanceof Player) {
       BaseArena baseArena = plugin.getArenaRegistry().getArena((Player) humanEntity);
 
-      if (baseArena != null && baseArena.getArenaState() != ArenaState.IN_GAME) {
+      if(baseArena != null && baseArena.getArenaState() != ArenaState.IN_GAME) {
         if(event.getClickedInventory() == humanEntity.getInventory()) {
           if(event.getView().getType() == InventoryType.CRAFTING
               || event.getView().getType() == InventoryType.PLAYER) {
