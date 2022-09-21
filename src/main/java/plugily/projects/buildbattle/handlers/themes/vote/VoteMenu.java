@@ -24,10 +24,11 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.BuildArena;
@@ -36,20 +37,18 @@ import plugily.projects.minigamesbox.classic.arena.ArenaState;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
-import plugily.projects.minigamesbox.classic.utils.misc.complement.ComplementAccessor;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.minigamesbox.inventory.common.item.ClickableItem;
 import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
 import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.function.Consumer;
 
 /**
  * @author Tigerpanzer_02
@@ -98,10 +97,8 @@ public class VoteMenu {
     votePoll = new VotePoll(arena, themeSelection);
   }
 
-  private NormalFastInv getGUI() {
+  private NormalFastInv getGUI(Player guiPlayer) {
     NormalFastInv gui = new NormalFastInv(9 * themeSelection.size(), new MessageBuilder("MENU_THEME_INVENTORY").asKey().build());
-
-    gui.addClickHandler(inventoryClickEvent -> inventoryClickEvent.setCancelled(true));
 
     gui.addCloseHandler(event -> {
       if(arena.getArenaState() == ArenaState.IN_GAME && arena.getArenaInGameStage() == BaseArena.ArenaInGameStage.THEME_VOTING) {
@@ -109,60 +106,32 @@ public class VoteMenu {
           HumanEntity humanEntity = event.getPlayer();
           Inventory inventory = event.getInventory();
 
-          if (humanEntity.getOpenInventory().getTopInventory() != inventory) {
+          if(humanEntity.getOpenInventory().getTopInventory() != inventory) {
             humanEntity.openInventory(inventory);
           }
         });
       }
     });
 
-    int totalVotes = votePoll.getPlayerVote().size();
     int i = 0;
 
     for(String theme : themeSelection) {
-      int themeVotes = votePoll.getVoteAmount(theme);
-      double percent;
-
-      if(themeVotes == 0) {
-        percent = 0.0;
-      } else {
-        percent = ((double) themeVotes / (double) totalVotes) * 100;
-      }
+      double percent = getPercent(theme);
 
       int multiplied = i * 9;
 
       gui.setItem(multiplied, new SimpleClickableItem(new ItemBuilder(new ItemStack(XMaterial.OAK_SIGN.parseMaterial()))
           .name(new MessageBuilder("MENU_THEME_ITEM_NAME").asKey().arena(arena).value(theme).integer((int) percent).build())
           .lore(new MessageBuilder("MENU_THEME_ITEM_LORE").asKey().arena(arena).value(theme).integer((int) percent).build().split(";"))
-          .build(), event -> {
-        HumanEntity humanEntity = event.getWhoClicked();
+          .build(), getSignClickEvent(theme)));
 
-        if(!(humanEntity instanceof Player))
-          return;
+      gui.setItem(multiplied + 1, ClickableItem.of(new ItemBuilder(XMaterial.IRON_BARS.parseItem()).name("&7->").colorizeItem().build()));
 
-        Player player = (Player) humanEntity;
-
-        new MessageBuilder(votePoll.addVote(player, theme) ? "MENU_THEME_VOTE_SUCCESS" : "MENU_THEME_VOTE_ALREADY").asKey().player(player).value(theme).sendPlayer();
-      }));
-
-      gui.setItem(multiplied + 1, new ItemBuilder(XMaterial.IRON_BARS.parseItem()).name("&7->").colorizeItem().build());
-
-      double vote = 0;
-
-      for(int j = 0; j < 6; j++) {
-        int slot = multiplied + 2 + j;
-
-        if(vote > percent) {
-          gui.setItem(slot, new ItemBuilder(XMaterial.RED_STAINED_GLASS_PANE.parseItem()).name("").build());
-        }
-
-        gui.setItem(slot, new ItemBuilder(XMaterial.LIME_STAINED_GLASS_PANE.parseItem()).name("").build());
-        vote += 16.7;
-      }
+      setGlassPanes(gui, multiplied, percent);
 
       gui.setItem(multiplied + 8, new SimpleClickableItem(new ItemBuilder(new ItemStack(Material.PAPER))
           .name(new MessageBuilder("MENU_THEME_VOTE_SUPER_ITEM_NAME").asKey().arena(arena).value(theme).build())
-          .lore(new MessageBuilder("MENU_THEME_VOTE_SUPER_ITEM_LORE").asKey().arena(arena).value(theme).build().split(";"))
+          .lore(new MessageBuilder("MENU_THEME_VOTE_SUPER_ITEM_LORE").asKey().player(guiPlayer).arena(arena).value(theme).build().split(";"))
           .build(), event -> {
         HumanEntity humanEntity = event.getWhoClicked();
 
@@ -185,33 +154,72 @@ public class VoteMenu {
     return gui;
   }
 
+  @NotNull
+  private Consumer<InventoryClickEvent> getSignClickEvent(String theme) {
+    return event -> {
+      HumanEntity humanEntity = event.getWhoClicked();
+
+      if(!(humanEntity instanceof Player)) {
+        return;
+      }
+      Player player = (Player) humanEntity;
+
+      new MessageBuilder(votePoll.addVote(player, theme) ? "MENU_THEME_VOTE_SUCCESS" : "MENU_THEME_VOTE_ALREADY").asKey().player(player).value(theme).sendPlayer();
+    };
+  }
+
   public void updatePlayerGui(Player player, NormalFastInv gui) {
     String playerVote = votePoll.getPlayerVote().get(player);
-    int userVotes = plugin.getUserManager().getUser(player).getStatistic("SUPER_VOTES");
-
-    for(int i = 0; i < 5; i++) {
+    int i = 0;
+    for(String theme : themeSelection) {
       int multiplied = i * 9;
-      ClickableItem clickableItem = gui.getItem(multiplied);
-
-      if (clickableItem == null)
+      ClickableItem clickableSignItem = gui.getItem(multiplied);
+      if(clickableSignItem == null) {
         continue;
-
-      ItemStack signItem = clickableItem.getItem();
-      ItemMeta signMeta = signItem.getItemMeta();
-
-      if(ComplementAccessor.getComplement().getDisplayName(signMeta).equals(playerVote)) {
-        signMeta.addEnchant(Enchantment.DAMAGE_ALL, 1, true);
-        signMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        signItem.setItemMeta(signMeta);
       }
+      double percent = getPercent(theme);
 
-      if ((clickableItem = gui.getItem(multiplied + 8)) == null)
-        continue;
+      ItemBuilder itemBuilder = new ItemBuilder(clickableSignItem.getItem()).removeLore();
+      itemBuilder.lore(new MessageBuilder("MENU_THEME_ITEM_LORE").asKey().arena(arena).value(theme).integer((int) percent).build().split(";"));
+      if(theme.equals(playerVote)) {
+        itemBuilder.enchantment(Enchantment.DAMAGE_ALL, 1).flags(ItemFlag.HIDE_ENCHANTS);
+      } else {
+        itemBuilder.removeEnchants().removeFlags();
+      }
+      gui.setItem(multiplied, new SimpleClickableItem(itemBuilder.colorizeItem().build(), getSignClickEvent(theme)));
 
-      ComplementAccessor.getComplement().setLore(clickableItem.getItem().getItemMeta(), Arrays.stream(new MessageBuilder("MENU_THEME_VOTE_SUPER_ITEM_LORE").asKey().arena(arena).integer(userVotes).build().split(";")).collect(Collectors.toList()));
+      setGlassPanes(gui, multiplied, percent);
+      i++;
     }
-
     gui.refresh();
+  }
+
+  private double getPercent(String theme) {
+    double percent;
+    int totalVotes = votePoll.getPlayerVote().size();
+    int themeVotes = votePoll.getVoteAmount(theme);
+
+    if(themeVotes == 0) {
+      percent = 0.0;
+    } else {
+      percent = ((double) themeVotes / (double) totalVotes) * 100;
+    }
+    return percent;
+  }
+
+  private static void setGlassPanes(NormalFastInv gui, int multiplied, double percent) {
+    double vote = 0;
+
+    for(int j = 0; j < 6; j++) {
+      int slot = multiplied + 2 + j;
+
+      if(vote > percent) {
+        gui.setItem(slot, ClickableItem.of(new ItemBuilder(XMaterial.RED_STAINED_GLASS_PANE.parseItem()).name("").build()));
+        continue;
+      }
+      gui.setItem(slot, ClickableItem.of(new ItemBuilder(XMaterial.LIME_STAINED_GLASS_PANE.parseItem()).name("").build()));
+      vote += 16.7;
+    }
   }
 
   public void updateInventory(Player player) {
@@ -222,10 +230,10 @@ public class VoteMenu {
       return;
     }
 
-    gui = getGUI();
+    gui = getGUI(player);
     gui.setForceRefresh(true);
     playerGuis.put(player, gui);
-    updatePlayerGui(player, gui);
+
     gui.open(player);
   }
 
