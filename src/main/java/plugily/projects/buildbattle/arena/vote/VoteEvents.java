@@ -31,7 +31,6 @@ import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.minigamesbox.classic.arena.ArenaState;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.user.User;
-import plugily.projects.minigamesbox.classic.utils.helper.ItemUtils;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerInteractEvent;
 
@@ -55,7 +54,7 @@ public class VoteEvents implements Listener {
       return;
     }
 
-    if(VersionUtils.checkOffHand(event.getHand()) || !ItemUtils.isItemStackNamed(event.getItem())) {
+    if(VersionUtils.checkOffHand(event.getHand())) {
       return;
     }
 
@@ -74,7 +73,7 @@ public class VoteEvents implements Listener {
     if(plugin.getVoteItems().getReportItem().equals(event.getItem())) {
       User user = plugin.getUserManager().getUser(event.getPlayer());
 
-      user.adjustStatistic("REPORTS", 1);
+      user.adjustStatistic("REPORTS_TRIGGERED", 1);
 
       if(plot != null && plugin.getConfigPreferences().getOption("REPORT_COMMANDS")) {
         int reportsAmountNeeded = plugin.getConfig().getInt("Report.Amount", -1);
