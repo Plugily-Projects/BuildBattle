@@ -83,7 +83,6 @@ public class InGameState extends PluginInGameState {
       case BUILD_TIME:
         handleBuildTime(pluginArena);
         if(arena.getTimer() <= 0) {
-          setArenaTimer(getPlugin().getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".Voting.Plot"));
           for(Player player : pluginArena.getPlayersLeft()) {
             User user = getPlugin().getUserManager().getUser(player);
 
@@ -97,7 +96,9 @@ public class InGameState extends PluginInGameState {
             pluginArena.getPlugin().getVoteItems().giveVoteItems(player);
             user.setStatistic("LOCAL_POINTS", 3);
           }
+
           pluginArena.setArenaInGameStage(BaseArena.ArenaInGameStage.PLOT_VOTING);
+          voteForNextPlot(pluginArena);
         }
         break;
       case PLOT_VOTING:
@@ -332,7 +333,6 @@ public class InGameState extends PluginInGameState {
       return;
     }
 
-    // getPlotManager().teleportAllToPlot(plotManager.getPlot(player.getUniqueId()));
     pluginArena.setVotingPlot(plot);
 
     if(plot == null) {

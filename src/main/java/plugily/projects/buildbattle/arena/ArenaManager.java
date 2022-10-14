@@ -20,6 +20,8 @@
 
 package plugily.projects.buildbattle.arena;
 
+import java.util.List;
+
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import plugily.projects.buildbattle.Main;
@@ -48,7 +50,9 @@ public class ArenaManager extends PluginArenaManager {
     if(pluginArena == null) {
       return;
     }
-    Plot partyPlot = pluginArena.getPlotManager().getPlots().get(plugin.getRandom().nextInt(pluginArena.getPlotManager().getPlots().size()));
+
+    List<Plot> plots = pluginArena.getPlotManager().getPlots();
+    Plot partyPlot = plots.get(plots.size() == 1 ? 0 : plugin.getRandom().nextInt(plots.size()));
 
     if(arena.getPlayers().contains(partyLeader)) {
       Plot partyLeaderPlot = pluginArena.getPlotManager().getPlot(partyLeader);
