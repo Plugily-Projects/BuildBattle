@@ -39,9 +39,9 @@ import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
 import plugily.projects.buildbattle.events.OptionMenuEvents;
 import plugily.projects.buildbattle.handlers.menu.OptionsMenuHandler;
 import plugily.projects.buildbattle.handlers.menu.OptionsRegistry;
+import plugily.projects.buildbattle.handlers.misc.BlacklistManager;
 import plugily.projects.buildbattle.handlers.setup.SetupCategoryManager;
 import plugily.projects.buildbattle.handlers.themes.ThemeManager;
-import plugily.projects.buildbattle.handlers.misc.BlacklistManager;
 import plugily.projects.minigamesbox.classic.PluginMain;
 import plugily.projects.minigamesbox.classic.api.StatisticType;
 import plugily.projects.minigamesbox.classic.arena.ArenaState;
@@ -323,13 +323,16 @@ public class Main extends PluginMain {
             return null;
           }
           if(pluginArena instanceof BuildArena) {
-            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING || pluginArena.getArenaState() != ArenaState.ENDING) {
+            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
               return null;
             }
-            return ((BuildArena) pluginArena).getTopList().get(number).toString();
+            StringBuilder members = new StringBuilder();
+            ((BuildArena) pluginArena).getTopList().get(number).forEach(p -> members.append(p.getName()).append(" & "));
+            members.delete(members.length() - 2, members.length());
+            return new MessageBuilder(members.toString()).build();
           }
           if(pluginArena instanceof GuessArena) {
-            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING || pluginArena.getArenaState() != ArenaState.ENDING) {
+            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
               return null;
             }
             return new ArrayList<>(((GuessArena) pluginArena).getPlayersPoints().entrySet()).get(number).getKey().getName();
@@ -356,13 +359,13 @@ public class Main extends PluginMain {
             return null;
           }
           if(pluginArena instanceof BuildArena) {
-            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING || pluginArena.getArenaState() != ArenaState.ENDING) {
+            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
               return null;
             }
-            return ((BuildArena) pluginArena).getTopList().get(number).toString();
+            return String.valueOf(((BuildArena) pluginArena).getPlotFromPlayer(((BuildArena) pluginArena).getTopList().get(number).get(0)).getPoints());
           }
           if(pluginArena instanceof GuessArena) {
-            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING || pluginArena.getArenaState() != ArenaState.ENDING) {
+            if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
               return null;
             }
             return String.valueOf(new ArrayList<>(((GuessArena) pluginArena).getPlayersPoints().entrySet()).get(number).getValue());
@@ -489,18 +492,18 @@ public class Main extends PluginMain {
           return null;
         }
         if(pluginArena instanceof BuildArena) {
-          if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING || pluginArena.getArenaState() != ArenaState.ENDING) {
+          if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
             return null;
           }
           List<List<Player>> playerList = new ArrayList<>(((BuildArena) pluginArena).getTopList().values());
           for(int playerPlace = 0; playerPlace < playerList.size(); playerPlace++) {
             if(playerList.get(playerPlace).contains(player)) {
-              return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_OWN").asKey().integer(playerPlace).arena(pluginArena).build();
+              return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_OWN").asKey().integer(playerPlace + 1).arena(pluginArena).build();
             }
           }
         }
         if(pluginArena instanceof GuessArena) {
-          if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING || pluginArena.getArenaState() != ArenaState.ENDING) {
+          if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
             return null;
           }
           int playerPlace = new ArrayList<>(((GuessArena) pluginArena).getPlayersPoints().keySet()).indexOf(player);
@@ -561,7 +564,7 @@ public class Main extends PluginMain {
         if(pluginArena == null) {
           return null;
         }
-        if(pluginArena.getArenaState() != ArenaState.ENDING) {
+        if(pluginArena.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
           return null;
         }
         int places = pluginArena.getPlayersLeft().size();
@@ -571,7 +574,7 @@ public class Main extends PluginMain {
         StringBuilder placeSummary = new StringBuilder();
         for(int i = 1; i < places; i++) {
           //number = place, value = members + points
-          placeSummary.append("\n").append(new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_PLACE").asKey().integer(i).value("%arena_place_members_" + i + "% (%arena_place_points_" + i + "%)").arena(pluginArena).build());
+          placeSummary.append("\n").append(new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_PLACE").asKey().integer(i).value("%arena_place_member_" + i + "% (%arena_place_points_" + i + "%)").arena(pluginArena).build());
         }
         return placeSummary.toString();
       }

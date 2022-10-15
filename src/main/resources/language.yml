@@ -284,7 +284,7 @@ In-Game:
         - ""
         - "&a&m--------------------------------------------------"
       Placeholders:
-        Winner: "&aPlot with %arena_place_member_1% won!"
+        Winner: "&aPlot with %arena_place_member_1%  (%arena_place_points_1%) won!"
         Win: "&aYou won the game"
         Lose: "%color_chat_issue%You lost the game"
         Players: "&cThere are not enough players anymore. BaseArena got force stopped!"
