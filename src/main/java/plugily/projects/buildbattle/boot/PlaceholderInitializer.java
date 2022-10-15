@@ -51,7 +51,7 @@ public class PlaceholderInitializer {
     registerPlaceholders();
   }
 
-  public void registerPlaceholders() {
+  private void registerPlaceholders() {
     getPlaceholderManager().registerPlaceholder(new Placeholder("theme", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
       public String getValue(Player player, PluginArena arena) {
