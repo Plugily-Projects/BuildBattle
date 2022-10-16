@@ -180,7 +180,7 @@ public class PlaceholderInitializer {
         return pluginArena.getArenaType().getPrefix();
       }
     });
-    for(int i = 0; i <= 32; i++) {
+    for(int i = 1; i <= 32; i++) {
       final int number = i;
       getPlaceholderManager().registerPlaceholder(new Placeholder("place_member_" + number, Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
         @Override
@@ -204,9 +204,13 @@ public class PlaceholderInitializer {
               return null;
             }
             StringBuilder members = new StringBuilder();
-            ((BuildArena) pluginArena).getTopList().get(number).forEach(p -> members.append(p.getName()).append(" & "));
-            members.delete(members.length() - 3, members.length());
-            return new MessageBuilder(members.toString()).build();
+            List<Player> players = ((BuildArena) pluginArena).getTopList().get(number);
+            if(players != null) {
+              players.forEach(p -> members.append(p.getName()).append(" & "));
+              members.delete(members.length() - 3, members.length());
+              return new MessageBuilder(members.toString()).build();
+            }
+            return null;
           }
           if(pluginArena instanceof GuessArena) {
             if(pluginArena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
@@ -321,7 +325,7 @@ public class PlaceholderInitializer {
           if(plot.getMembers().size() > 1) {
             StringBuilder members = new StringBuilder();
             plot.getMembers().forEach(p -> members.append(p.getName()).append(" & "));
-            members.deleteCharAt(members.length() - 2);
+            members.delete(members.length() - 3, members.length());
             return new MessageBuilder(members.toString()).build();
           }
         }
@@ -449,7 +453,7 @@ public class PlaceholderInitializer {
           places = 16;
         }
         StringBuilder placeSummary = new StringBuilder();
-        for(int i = 1; i < places; i++) {
+        for(int i = 1; i <= places; i++) {
           //number = place, value = members + points
           placeSummary.append("\n").append(new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_PLACE").asKey().integer(i).value("%arena_place_member_" + i + "% (%arena_place_points_" + i + "%)").arena(pluginArena).build());
         }
