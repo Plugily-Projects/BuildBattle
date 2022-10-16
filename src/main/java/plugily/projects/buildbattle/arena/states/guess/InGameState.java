@@ -59,7 +59,7 @@ public class InGameState extends PluginInGameState {
     if(pluginArena == null) {
       return;
     }
-    switch(pluginArena.getArenaInGameStage()) {
+    switch(pluginArena.getArenaInGameState()) {
       case THEME_VOTING:
         if(pluginArena.getCurrentBuilder() == null) {
           Player nextPlayer = pluginArena.getNextPlayerByRound();
@@ -100,7 +100,7 @@ public class InGameState extends PluginInGameState {
 
           pluginArena.getCurrentBuilder().getInventory().setItem(8, pluginArena.getPlugin().getSpecialItemManager().getSpecialItem("OPTIONS_MENU").getItemStack());
           setArenaTimer(getPlugin().getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".In-Game"));
-          pluginArena.setArenaInGameStage(BaseArena.ArenaInGameStage.BUILD_TIME);
+          pluginArena.setArenaInGameState(BaseArena.ArenaInGameState.BUILD_TIME);
           /* from build arena
           if(pluginArena.getVotePoll() != null) {
             pluginArena.setTheme(pluginArena.getVotePoll().getVotedTheme());
@@ -126,7 +126,7 @@ public class InGameState extends PluginInGameState {
           new TitleBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_TITLE").asKey().arena(pluginArena).sendArena();
 
           setArenaTimer(getPlugin().getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".Round-Delay"));
-          pluginArena.setArenaInGameStage(BaseArena.ArenaInGameStage.PLOT_VOTING);
+          pluginArena.setArenaInGameState(BaseArena.ArenaInGameState.PLOT_VOTING);
         }
         //}
         handleBuildTime(pluginArena);
@@ -151,7 +151,7 @@ public class InGameState extends PluginInGameState {
           pluginArena.setCurrentTheme(null);
           pluginArena.getWhoGuessed().clear();
           setArenaTimer(getPlugin().getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".Voting.Theme"));
-          pluginArena.setArenaInGameStage(BaseArena.ArenaInGameStage.THEME_VOTING);
+          pluginArena.setArenaInGameState(BaseArena.ArenaInGameState.THEME_VOTING);
         }
         break;
       default:

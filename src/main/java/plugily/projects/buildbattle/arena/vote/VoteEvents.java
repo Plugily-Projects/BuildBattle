@@ -64,7 +64,7 @@ public class VoteEvents implements Listener {
     }
 
     BuildArena solo = (BuildArena) arena;
-    if(solo.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING) {
+    if(solo.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING) {
       return;
     }
 

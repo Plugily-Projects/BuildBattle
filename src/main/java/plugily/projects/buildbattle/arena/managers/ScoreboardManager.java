@@ -20,6 +20,7 @@
 
 package plugily.projects.buildbattle.arena.managers;
 
+import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.GuessArena;
 import plugily.projects.minigamesbox.classic.arena.ArenaState;
@@ -29,9 +30,8 @@ import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.scoreboard.common.EntryBuilder;
 import plugily.projects.minigamesbox.classic.utils.scoreboard.type.Entry;
-import java.util.List;
 
-import org.bukkit.entity.Player;
+import java.util.List;
 
 /**
  * @author Tigerpanzer_02
@@ -56,7 +56,7 @@ public class ScoreboardManager extends PluginScoreboardManager {
       lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content.Starting");
     } else if(userArena.getArenaState() == ArenaState.IN_GAME) {
       if(userArena instanceof GuessArena) {
-        lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName() + ".Guess-The-Build" + (((GuessArena) userArena).getArenaInGameStage() == BaseArena.ArenaInGameStage.PLOT_VOTING ? "-Waiting" : ""));
+        lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName() + ".Guess-The-Build" + (((GuessArena) userArena).getArenaInGameState() == BaseArena.ArenaInGameState.PLOT_VOTING ? "-Waiting" : ""));
       } else {
         if(userArena.getArenaOption("PLOT_MEMBER_SIZE") <= 1) {
           lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName() + ".Classic");

@@ -102,7 +102,7 @@ public class VoteMenu {
     NormalFastInv gui = new NormalFastInv(9 * themeSelection.size(), new MessageBuilder("MENU_THEME_INVENTORY").asKey().build());
 
     gui.addCloseHandler(event -> {
-      if(arena.getArenaState() == ArenaState.IN_GAME && arena.getArenaInGameStage() == BaseArena.ArenaInGameStage.THEME_VOTING) {
+      if(arena.getArenaState() == ArenaState.IN_GAME && arena.getArenaInGameState() == BaseArena.ArenaInGameState.THEME_VOTING) {
         plugin.getServer().getScheduler().runTask(plugin, () -> {
           HumanEntity humanEntity = event.getPlayer();
           Inventory inventory = event.getInventory();

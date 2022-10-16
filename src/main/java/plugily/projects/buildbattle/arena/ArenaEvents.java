@@ -89,7 +89,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(arena == null) {
       return;
     }
-    if(arena.getArenaState() != ArenaState.IN_GAME || (arena instanceof BuildArena && arena.getArenaInGameStage() == BaseArena.ArenaInGameStage.PLOT_VOTING)
+    if(arena.getArenaState() != ArenaState.IN_GAME || (arena instanceof BuildArena && arena.getArenaInGameState() == BaseArena.ArenaInGameState.PLOT_VOTING)
         || plugin.getBlacklistManager().getItemList().contains(event.getBlock().getType())) {
       event.setCancelled(true);
       return;
@@ -111,7 +111,7 @@ public class ArenaEvents extends PluginArenaEvents {
       return;
     }
     if(arena.getArenaState() != ArenaState.IN_GAME || plugin.getBlacklistManager().getItemList().contains(event.getBlock().getType())
-        || (arena instanceof BuildArena && arena.getArenaInGameStage() == BaseArena.ArenaInGameStage.PLOT_VOTING)) {
+        || (arena instanceof BuildArena && arena.getArenaInGameState() == BaseArena.ArenaInGameState.PLOT_VOTING)) {
       event.setCancelled(true);
       return;
     }
@@ -165,7 +165,7 @@ public class ArenaEvents extends PluginArenaEvents {
       return;
     }
 
-    if(arena instanceof BuildArena && arena.getArenaInGameStage() == BaseArena.ArenaInGameStage.PLOT_VOTING) {
+    if(arena instanceof BuildArena && arena.getArenaInGameState() == BaseArena.ArenaInGameState.PLOT_VOTING) {
       return;
     }
 

@@ -28,7 +28,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
-
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.BuildArena;
@@ -57,7 +56,7 @@ public final class OptionMenuEvents implements Listener {
     }
 
     BaseArena arena = plugin.getArenaRegistry().getArena(event.getPlayer());
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME || (arena instanceof BuildArena && arena.getArenaInGameStage() != BaseArena.ArenaInGameStage.BUILD_TIME)) {
+    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME || (arena instanceof BuildArena && arena.getArenaInGameState() != BaseArena.ArenaInGameState.BUILD_TIME)) {
       return;
     }
 
@@ -122,7 +121,7 @@ public final class OptionMenuEvents implements Listener {
       event.setCancelled(true);
       return;
     }
-    if(arena instanceof BuildArena && arena.getArenaInGameStage() == BaseArena.ArenaInGameStage.BUILD_TIME) {
+    if(arena instanceof BuildArena && arena.getArenaInGameState() == BaseArena.ArenaInGameState.BUILD_TIME) {
       return;
     }
     if(arena instanceof GuessArena && humanEntity.equals(((GuessArena) arena).getCurrentBuilder())) {

@@ -28,10 +28,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.EventExecutor;
-
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.BaseArena;
-import plugily.projects.buildbattle.arena.BaseArena.ArenaInGameStage;
+import plugily.projects.buildbattle.arena.BaseArena.ArenaInGameState;
 import plugily.projects.minigamesbox.classic.utils.misc.complement.ComplementAccessor;
 
 /**
@@ -55,7 +54,7 @@ public final class OptionsMenuHandler {
         }
 
         BaseArena arena = plugin.getArenaRegistry().getArena((Player) humanEntity);
-        if(arena == null || arena.getArenaInGameStage() != ArenaInGameStage.BUILD_TIME) {
+        if(arena == null || arena.getArenaInGameState() != ArenaInGameState.BUILD_TIME) {
           return;
         }
 

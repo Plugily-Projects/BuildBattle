@@ -50,7 +50,7 @@ public class StartingState extends PluginStartingState {
       pluginArena.getPlotManager().teleportToPlots();
 
       setArenaTimer(getPlugin().getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".Voting.Theme"));
-      pluginArena.setArenaInGameStage(BaseArena.ArenaInGameStage.THEME_VOTING);
+      pluginArena.setArenaInGameState(BaseArena.ArenaInGameState.THEME_VOTING);
     }
   }
 
