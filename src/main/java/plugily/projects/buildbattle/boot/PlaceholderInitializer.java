@@ -205,7 +205,7 @@ public class PlaceholderInitializer {
             }
             StringBuilder members = new StringBuilder();
             ((BuildArena) pluginArena).getTopList().get(number).forEach(p -> members.append(p.getName()).append(" & "));
-            members.delete(members.length() - 2, members.length());
+            members.delete(members.length() - 3, members.length());
             return new MessageBuilder(members.toString()).build();
           }
           if(pluginArena instanceof GuessArena) {
