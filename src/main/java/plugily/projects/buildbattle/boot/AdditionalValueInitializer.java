@@ -53,71 +53,58 @@ public class AdditionalValueInitializer {
   }
 
   private void registerConfigOptions() {
-    getConfigPreferences().registerOption("MOB_SPAWN", new ConfigOption("Mob.Spawn", false));
-    getConfigPreferences().registerOption("HEAD_MENU_CUSTOM", new ConfigOption("Head-Menu.Custom", false));
-    getConfigPreferences().registerOption("REPORT_COMMANDS", new ConfigOption("Report.Commands", false));
-    getConfigPreferences().registerOption("HIDE_PLOT_OWNER", new ConfigOption("Hide-Plot-Owner", false));
+    ConfigPreferences configPreferences = plugin.getConfigPreferences();
+
+    configPreferences.registerOption("MOB_SPAWN", new ConfigOption("Mob.Spawn", false));
+    configPreferences.registerOption("HEAD_MENU_CUSTOM", new ConfigOption("Head-Menu.Custom", false));
+    configPreferences.registerOption("REPORT_COMMANDS", new ConfigOption("Report.Commands", false));
+    configPreferences.registerOption("HIDE_PLOT_OWNER", new ConfigOption("Hide-Plot-Owner", false));
   }
 
   private void registerStatistics() {
-    getStatsStorage().registerStatistic("BLOCKS_PLACED", new StatisticType("blocks_placed", true, "int(11) NOT NULL DEFAULT '0'"));
-    getStatsStorage().registerStatistic("BLOCKS_BROKEN", new StatisticType("blocks_broken", true, "int(11) NOT NULL DEFAULT '0'"));
-    getStatsStorage().registerStatistic("POINTS_HIGHEST", new StatisticType("points_highest", true, "int(11) NOT NULL DEFAULT '0'"));
-    getStatsStorage().registerStatistic("POINTS_HIGHEST_WIN", new StatisticType("points_highest_win", true, "int(11) NOT NULL DEFAULT '0'"));
-    getStatsStorage().registerStatistic("POINTS_TOTAL", new StatisticType("points_total", true, "int(11) NOT NULL DEFAULT '0'"));
-    getStatsStorage().registerStatistic("PARTICLES_USED", new StatisticType("particles_used", true, "int(11) NOT NULL DEFAULT '0'"));
-    getStatsStorage().registerStatistic("SUPER_VOTES", new StatisticType("super_votes", true, "int(11) NOT NULL DEFAULT '0'"));
-    getStatsStorage().registerStatistic("LOCAL_POINTS", new StatisticType("local_points", false, "int(11) NOT NULL DEFAULT '0'"));
-    getStatsStorage().registerStatistic("LOCAL_POINTS_GTB", new StatisticType("local_points_gtb", false, "int(11) NOT NULL DEFAULT '0'"));
-    getStatsStorage().registerStatistic("REPORTS_TRIGGERED", new StatisticType("reports_triggered", false, "int(11) NOT NULL DEFAULT '0'"));
+    StatsStorage statsStorage = plugin.getStatsStorage();
+
+    statsStorage.registerStatistic("BLOCKS_PLACED", new StatisticType("blocks_placed", true, "int(11) NOT NULL DEFAULT '0'"));
+    statsStorage.registerStatistic("BLOCKS_BROKEN", new StatisticType("blocks_broken", true, "int(11) NOT NULL DEFAULT '0'"));
+    statsStorage.registerStatistic("POINTS_HIGHEST", new StatisticType("points_highest", true, "int(11) NOT NULL DEFAULT '0'"));
+    statsStorage.registerStatistic("POINTS_HIGHEST_WIN", new StatisticType("points_highest_win", true, "int(11) NOT NULL DEFAULT '0'"));
+    statsStorage.registerStatistic("POINTS_TOTAL", new StatisticType("points_total", true, "int(11) NOT NULL DEFAULT '0'"));
+    statsStorage.registerStatistic("PARTICLES_USED", new StatisticType("particles_used", true, "int(11) NOT NULL DEFAULT '0'"));
+    statsStorage.registerStatistic("SUPER_VOTES", new StatisticType("super_votes", true, "int(11) NOT NULL DEFAULT '0'"));
+    statsStorage.registerStatistic("LOCAL_POINTS", new StatisticType("local_points", false, "int(11) NOT NULL DEFAULT '0'"));
+    statsStorage.registerStatistic("LOCAL_POINTS_GTB", new StatisticType("local_points_gtb", false, "int(11) NOT NULL DEFAULT '0'"));
+    statsStorage.registerStatistic("REPORTS_TRIGGERED", new StatisticType("reports_triggered", false, "int(11) NOT NULL DEFAULT '0'"));
   }
 
   private void registerPermission() {
-    getPermissionsManager().registerPermissionCategory("POINTS_BOOSTER", new PermissionCategory("Points-Boost", null));
-    getPermissionsManager().registerPermissionCategory("VOTING_BOOSTER", new PermissionCategory("Voting-Boost", null));
+    PermissionsManager permissionsManager = plugin.getPermissionsManager();
+
+    permissionsManager.registerPermissionCategory("POINTS_BOOSTER", new PermissionCategory("Points-Boost", null));
+    permissionsManager.registerPermissionCategory("VOTING_BOOSTER", new PermissionCategory("Voting-Boost", null));
   }
 
   private void registerRewards() {
-    getRewardsHandler().registerRewardType("GUESS", new RewardType("guessed"));
-    getRewardsHandler().registerRewardType("GUESS_ALL", new RewardType("guessed-all"));
-    getRewardsHandler().registerRewardType("VOTE", new RewardType("voted"));
-    getRewardsHandler().registerRewardType("VOTE_ALL", new RewardType("voted-all"));
-    getRewardsHandler().registerRewardType("REPORT", new RewardType("report"));
-    getRewardsHandler().registerRewardType("PLACE", new RewardType("place"));
+    RewardsFactory rewardsFactory = plugin.getRewardsHandler();
+
+    rewardsFactory.registerRewardType("GUESS", new RewardType("guessed"));
+    rewardsFactory.registerRewardType("GUESS_ALL", new RewardType("guessed-all"));
+    rewardsFactory.registerRewardType("VOTE", new RewardType("voted"));
+    rewardsFactory.registerRewardType("VOTE_ALL", new RewardType("voted-all"));
+    rewardsFactory.registerRewardType("REPORT", new RewardType("report"));
+    rewardsFactory.registerRewardType("PLACE", new RewardType("place"));
   }
 
   private void registerSpecialItems() {
-    getSpecialItemManager().registerSpecialItem("OPTIONS_MENU", "Options-Menu");
-    getSpecialItemManager().registerSpecialItem("PLOT_SELECTOR", "Plot-Selector");
+    SpecialItemManager specialItemManager = plugin.getSpecialItemManager();
+
+    specialItemManager.registerSpecialItem("OPTIONS_MENU", "Options-Menu");
+    specialItemManager.registerSpecialItem("PLOT_SELECTOR", "Plot-Selector");
   }
 
   private void registerArenaOptions() {
-    getArenaOptionManager().registerArenaOption("IN_PLOT_CHECKER", new ArenaOption("null", 0, true));
-    getArenaOptionManager().registerArenaOption("PLOT_MEMBER_SIZE", new ArenaOption("plotmembersize", 1, true));
-  }
+    ArenaOptionManager arenaOptionManager = plugin.getArenaOptionManager();
 
-  private ConfigPreferences getConfigPreferences() {
-    return plugin.getConfigPreferences();
+    arenaOptionManager.registerArenaOption("IN_PLOT_CHECKER", new ArenaOption("null", 0, true));
+    arenaOptionManager.registerArenaOption("PLOT_MEMBER_SIZE", new ArenaOption("plotmembersize", 1, true));
   }
-
-  private StatsStorage getStatsStorage() {
-    return plugin.getStatsStorage();
-  }
-
-  private PermissionsManager getPermissionsManager() {
-    return plugin.getPermissionsManager();
-  }
-
-  private RewardsFactory getRewardsHandler() {
-    return plugin.getRewardsHandler();
-  }
-
-  private SpecialItemManager getSpecialItemManager() {
-    return plugin.getSpecialItemManager();
-  }
-
-  private ArenaOptionManager getArenaOptionManager() {
-    return plugin.getArenaOptionManager();
-  }
-
 }
