@@ -1,7 +1,7 @@
 /*
  *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2022 Plugily Projects - maintained by Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -165,7 +165,7 @@ public class GuessArena extends BaseArena {
     //-1 because builder can´t guess
     if(whoGuessed.size() >= getPlayers().size() - 1) {
       setTimer(getPlugin().getConfig().getInt("Time-Manager." + getArenaType().getPrefix() + ".Round-Delay"));
-      setArenaInGameStage(ArenaInGameStage.PLOT_VOTING);
+      setArenaInGameState(ArenaInGameState.PLOT_VOTING);
 
       new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_GUESSED").asKey().arena(this).sendArena();
 

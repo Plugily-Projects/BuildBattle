@@ -1,7 +1,7 @@
 /*
  *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2022 Plugily Projects - maintained by Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,8 +20,6 @@
 
 package plugily.projects.buildbattle.arena;
 
-import java.util.List;
-
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import plugily.projects.buildbattle.Main;
@@ -30,6 +28,8 @@ import plugily.projects.minigamesbox.classic.arena.ArenaState;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.PluginArenaManager;
 import plugily.projects.minigamesbox.classic.user.User;
+
+import java.util.List;
 
 /**
  * @author Plajer
@@ -90,7 +90,7 @@ public class ArenaManager extends PluginArenaManager {
         guessArena.setCurrentBuilder(null);
         if(arena.getArenaState() == ArenaState.IN_GAME) {
           pluginArena.setTimer(plugin.getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".Round-Delay"));
-          pluginArena.setArenaInGameStage(BaseArena.ArenaInGameStage.PLOT_VOTING);
+          pluginArena.setArenaInGameState(BaseArena.ArenaInGameState.PLOT_VOTING);
         }
       }
     }

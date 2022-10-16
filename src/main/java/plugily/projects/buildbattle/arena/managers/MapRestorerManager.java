@@ -1,7 +1,7 @@
 /*
  *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2022 Plugily Projects - maintained by Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,6 +39,7 @@ public class MapRestorerManager extends PluginMapRestorerManager {
     clearPlots();
     cancelParticleRefresh();
     arena.setArenaOption("IN_PLOT_CHECKER", 0);
+    arena.setArenaInGameState(BaseArena.ArenaInGameState.NONE);
     super.fullyRestoreArena();
   }
 

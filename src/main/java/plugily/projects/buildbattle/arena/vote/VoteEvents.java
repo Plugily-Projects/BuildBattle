@@ -1,7 +1,7 @@
 /*
  *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2022 Plugily Projects - maintained by Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -64,7 +64,7 @@ public class VoteEvents implements Listener {
     }
 
     BuildArena solo = (BuildArena) arena;
-    if(solo.getArenaInGameStage() != BaseArena.ArenaInGameStage.PLOT_VOTING) {
+    if(solo.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING) {
       return;
     }
 

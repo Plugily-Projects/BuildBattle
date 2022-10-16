@@ -1,7 +1,7 @@
 /*
  *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2022 Plugily Projects - maintained by Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -94,6 +94,7 @@ public class VoteMenu {
 
   public void resetPoll() {
     randomizeThemes();
+    playerGuis.clear();
     votePoll = new VotePoll(arena, themeSelection);
   }
 
@@ -101,7 +102,7 @@ public class VoteMenu {
     NormalFastInv gui = new NormalFastInv(9 * themeSelection.size(), new MessageBuilder("MENU_THEME_INVENTORY").asKey().build());
 
     gui.addCloseHandler(event -> {
-      if(arena.getArenaState() == ArenaState.IN_GAME && arena.getArenaInGameStage() == BaseArena.ArenaInGameStage.THEME_VOTING) {
+      if(arena.getArenaState() == ArenaState.IN_GAME && arena.getArenaInGameState() == BaseArena.ArenaInGameState.THEME_VOTING) {
         plugin.getServer().getScheduler().runTask(plugin, () -> {
           HumanEntity humanEntity = event.getPlayer();
           Inventory inventory = event.getInventory();

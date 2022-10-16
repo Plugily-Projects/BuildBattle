@@ -1,7 +1,7 @@
 /*
  *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2022 Plugily Projects - maintained by Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,7 +58,7 @@ public class SetThemeArgument {
           new MessageBuilder("&cPlease type arena theme!").prefix().send(sender);
           return;
         }
-        if(arena.getArenaInGameStage() == BaseArena.ArenaInGameStage.THEME_VOTING) {
+        if(arena.getArenaInGameState() == BaseArena.ArenaInGameState.THEME_VOTING) {
           String themeName = args[1];
 
           if(arena.getPlugin().getThemeManager().isThemeBlacklisted(themeName)) {
@@ -68,7 +68,7 @@ public class SetThemeArgument {
           arena.setTheme(themeName);
           new MessageBuilder("IN_GAME_MESSAGES_ADMIN_CHANGED_THEME").asKey().prefix().value(themeName).arena(arena).sendArena();
         } else {
-          new MessageBuilder("&cWrong stage to force theme!").prefix().send(sender);
+          new MessageBuilder("&cWrong state to force theme!").prefix().send(sender);
         }
       }
     });

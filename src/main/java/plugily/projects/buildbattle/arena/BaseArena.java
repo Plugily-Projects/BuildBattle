@@ -1,7 +1,7 @@
 /*
  *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2022 Plugily Projects - maintained by Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@ public class BaseArena extends PluginArena {
   protected ParticleRefreshScheduler particleRefreshScheduler;
   private ArenaType arenaType;
 
-  private ArenaInGameStage arenaInGameStage;
+  private ArenaInGameState arenaInGameState;
 
   public BaseArena(String id) {
     super(id);
@@ -115,12 +115,12 @@ public class BaseArena extends PluginArena {
     }
   }
 
-  public enum ArenaInGameStage {
-    THEME_VOTING("Theme-Voting"), BUILD_TIME("Build-Time"), PLOT_VOTING("Plot-Voting");
+  public enum ArenaInGameState {
+    THEME_VOTING("Theme-Voting"), BUILD_TIME("Build-Time"), PLOT_VOTING("Plot-Voting"), NONE("NONE");
 
     private final String prefix;
 
-    ArenaInGameStage(String prefix) {
+    ArenaInGameState(String prefix) {
       this.prefix = prefix;
     }
 
@@ -164,12 +164,12 @@ public class BaseArena extends PluginArena {
     this.arenaType = arenaType;
   }
 
-  public ArenaInGameStage getArenaInGameStage() {
-    return arenaInGameStage;
+  public ArenaInGameState getArenaInGameState() {
+    return arenaInGameState;
   }
 
-  public void setArenaInGameStage(ArenaInGameStage arenaInGameStage) {
-    this.arenaInGameStage = arenaInGameStage;
+  public void setArenaInGameState(ArenaInGameState arenaInGameState) {
+    this.arenaInGameState = arenaInGameState;
   }
 
   public ParticleRefreshScheduler getParticleRefreshScheduler() {

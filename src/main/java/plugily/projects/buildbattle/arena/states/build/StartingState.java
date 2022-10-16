@@ -1,7 +1,7 @@
 /*
  *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2022 Plugily Projects - maintained by Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@ package plugily.projects.buildbattle.arena.states.build;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
-
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.BuildArena;
 import plugily.projects.buildbattle.handlers.menu.registry.particles.ParticleRefreshScheduler;
@@ -43,12 +42,8 @@ public class StartingState extends PluginStartingState {
     if (pluginArena == null) {
       return;
     }
-    /*
-           //reset local variables to be 100% sure
-           //
-    */
     if (arena.getTimer() == 0 || arena.isForceStart()) {
-      //getPlotManager().resetPlotsGradually();
+
       pluginArena.setParticleRefreshScheduler(new ParticleRefreshScheduler(getPlugin()));
 
       if(!pluginArena.getPlotManager().isPlotsCleared()) {
@@ -58,7 +53,7 @@ public class StartingState extends PluginStartingState {
       pluginArena.distributePlots();
       setArenaTimer(getPlugin().getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".Voting.Theme"));
 
-      pluginArena.setArenaInGameStage(BaseArena.ArenaInGameStage.THEME_VOTING);
+      pluginArena.setArenaInGameState(BaseArena.ArenaInGameState.THEME_VOTING);
 
       for (Player player : arena.getPlayers()) {
         player.getInventory().setItem(8, pluginArena.getPlugin().getOptionsRegistry().getMenuItem());

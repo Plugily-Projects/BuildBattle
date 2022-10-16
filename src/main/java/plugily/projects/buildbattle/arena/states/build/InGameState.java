@@ -1,7 +1,7 @@
 /*
  *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2022 Plugily Projects - maintained by Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,11 +54,11 @@ public class InGameState extends PluginInGameState {
     if(pluginArena == null) {
       return;
     }
-    switch(pluginArena.getArenaInGameStage()) {
+    switch(pluginArena.getArenaInGameState()) {
       case THEME_VOTING:
         if(arena.getTimer() <= 0) {
           // may consider start to build message...
-          pluginArena.setArenaInGameStage(BaseArena.ArenaInGameStage.BUILD_TIME);
+          pluginArena.setArenaInGameState(BaseArena.ArenaInGameState.BUILD_TIME);
 
           setArenaTimer(getPlugin().getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".In-Game"));
 
@@ -69,7 +69,7 @@ public class InGameState extends PluginInGameState {
 
           for(Player player : pluginArena.getPlayers()) {
             player.closeInventory();
-            /*Teleports on Starting Stage already
+            /*Teleports on Starting state already
             Plot plot = getPlotManager().getPlot(p);
             if(plot != null) {
               p.teleport(plot.getTeleportLocation());
@@ -97,7 +97,7 @@ public class InGameState extends PluginInGameState {
             user.setStatistic("LOCAL_POINTS", 3);
           }
 
-          pluginArena.setArenaInGameStage(BaseArena.ArenaInGameStage.PLOT_VOTING);
+          pluginArena.setArenaInGameState(BaseArena.ArenaInGameState.PLOT_VOTING);
           voteForNextPlot(pluginArena);
         }
         break;
