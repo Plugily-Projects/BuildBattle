@@ -94,6 +94,7 @@ public class VoteMenu {
 
   public void resetPoll() {
     randomizeThemes();
+    playerGuis.clear();
     votePoll = new VotePoll(arena, themeSelection);
   }
 

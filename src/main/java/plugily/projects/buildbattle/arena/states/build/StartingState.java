@@ -23,7 +23,6 @@ package plugily.projects.buildbattle.arena.states.build;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
-
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.BuildArena;
 import plugily.projects.buildbattle.handlers.menu.registry.particles.ParticleRefreshScheduler;
@@ -43,12 +42,8 @@ public class StartingState extends PluginStartingState {
     if (pluginArena == null) {
       return;
     }
-    /*
-           //reset local variables to be 100% sure
-           //
-    */
     if (arena.getTimer() == 0 || arena.isForceStart()) {
-      //getPlotManager().resetPlotsGradually();
+
       pluginArena.setParticleRefreshScheduler(new ParticleRefreshScheduler(getPlugin()));
 
       if(!pluginArena.getPlotManager().isPlotsCleared()) {
