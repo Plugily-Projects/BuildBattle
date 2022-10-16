@@ -116,7 +116,7 @@ public class BaseArena extends PluginArena {
   }
 
   public enum ArenaInGameStage {
-    THEME_VOTING("Theme-Voting"), BUILD_TIME("Build-Time"), PLOT_VOTING("Plot-Voting");
+    THEME_VOTING("Theme-Voting"), BUILD_TIME("Build-Time"), PLOT_VOTING("Plot-Voting"), NONE("NONE");
 
     private final String prefix;
 

@@ -39,6 +39,7 @@ public class MapRestorerManager extends PluginMapRestorerManager {
     clearPlots();
     cancelParticleRefresh();
     arena.setArenaOption("IN_PLOT_CHECKER", 0);
+    arena.setArenaInGameStage(BaseArena.ArenaInGameStage.NONE);
     super.fullyRestoreArena();
   }
 
