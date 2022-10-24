@@ -26,6 +26,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
+
 import plugily.projects.buildbattle.Main;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
@@ -69,16 +70,20 @@ public class VoteItems {
           .name(new MessageBuilder(displayName).build())
           .build();
 
-      Sound sound = XSound.matchXSound(config.getString(key + ".sound", "")).orElse(XSound.BLOCK_ANVIL_HIT).parseSound();
-
-      int slot;
+      Sound sound = null;
       try {
-        slot = Integer.parseInt(key);
+        sound = Sound.valueOf(config.getString(key + ".sound", ""));
+      } catch(IllegalArgumentException ignored) {
+      }
+
+      int s;
+      try {
+        s = Integer.parseInt(key);
       } catch(NumberFormatException e) {
         continue;
       }
 
-      VoteItem voteItem = new VoteItem(stack, slot, slot + 1, sound);
+      VoteItem voteItem = new VoteItem(stack, s, s + 1, sound);
 
       if(config.getBoolean(key + ".report-item-function", false)) {
         reportItem = stack;
@@ -133,21 +138,19 @@ public class VoteItems {
     return 1;
   }
 
-  public int getPointsAndPlayVoteSound(Player player, VoteItem voteItem) {
-    if(voteItem.sound == null) {
-      return voteItem.points;
-    }
-    player.playSound(player.getLocation(), voteItem.sound, 1, 1);
-    return voteItem.points;
-  }
-
-  public VoteItem getVoteItem(ItemStack itemStack) {
+  public int getPointsAndPlayVoteSound(Player player, ItemStack itemStack) {
     for(VoteItem item : voteItems) {
       if(item.itemStack.isSimilar(itemStack)) {
-        return item;
+        if(item.sound == null) {
+          return item.points;
+        }
+
+        player.playSound(player.getLocation(), item.sound, 1, 1);
+        return item.points;
       }
     }
-    return null;
+
+    return 1;
   }
 
   /**
