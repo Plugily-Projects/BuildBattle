@@ -323,26 +323,6 @@ public class InGameState extends PluginInGameState {
         break;
       }
     }
-    checkPlayerOutSidePlot(pluginArena);
-  }
-
-  private void checkPlayerOutSidePlot(GuessArena pluginArena) {
-    if(pluginArena.getArenaOption("IN_PLOT_CHECKER") >= 3) {
-      pluginArena.setArenaOption("IN_PLOT_CHECKER", 0);
-      for(Player player : pluginArena.getPlayersLeft()) {
-        Plot playerPlot = pluginArena.getPlotFromPlayer(player);
-        if (playerPlot == null) {
-          continue;
-        }
-
-        player.setPlayerWeather(playerPlot.getWeatherType());
-        player.setPlayerTime(Plot.Time.format(playerPlot.getTime(), player.getWorld().getTime()), false);
-        if(playerPlot.getCuboid() != null && !playerPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
-          VersionUtils.teleport(player, playerPlot.getTeleportLocation());
-          new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_OUTSIDE").asKey().arena(pluginArena).player(player).sendPlayer();
-        }
-      }
-    }
-    pluginArena.changeArenaOptionBy("IN_PLOT_CHECKER", 1);
+    pluginArena.checkPlayerOutSidePlot();
   }
 }

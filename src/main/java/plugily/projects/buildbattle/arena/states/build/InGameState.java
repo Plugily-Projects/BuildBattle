@@ -273,7 +273,7 @@ public class InGameState extends PluginInGameState {
         break;
       }
     }
-    checkPlayerOutSidePlot(pluginArena);
+    pluginArena.checkPlayerOutSidePlot();
   }
 
   private void handlePlotVoting(BuildArena pluginArena) {
@@ -364,19 +364,5 @@ public class InGameState extends PluginInGameState {
       new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_TITLE").asKey().arena(pluginArena).value(formattedMembers).player(spectator).sendPlayer();
       new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_NEXT").asKey().arena(pluginArena).value(formattedMembers).player(spectator).sendPlayer();
     }
-  }
-
-  private void checkPlayerOutSidePlot(BuildArena pluginArena) {
-    if(pluginArena.getArenaOption("IN_PLOT_CHECKER") >= 3) {
-      pluginArena.setArenaOption("IN_PLOT_CHECKER", 0);
-      for(Player player : pluginArena.getPlayersLeft()) {
-        Plot buildPlot = pluginArena.getPlotFromPlayer(player);
-        if(buildPlot != null && buildPlot.getCuboid() != null && !buildPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
-          VersionUtils.teleport(player, buildPlot.getTeleportLocation());
-          new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_OUTSIDE").asKey().arena(pluginArena).player(player).sendPlayer();
-        }
-      }
-    }
-    pluginArena.changeArenaOptionBy("IN_PLOT_CHECKER", 1);
   }
 }
