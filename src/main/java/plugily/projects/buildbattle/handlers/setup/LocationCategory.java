@@ -22,9 +22,7 @@ package plugily.projects.buildbattle.handlers.setup;
 
 import plugily.projects.minigamesbox.classic.handlers.setup.categories.PluginLocationCategory;
 import plugily.projects.minigamesbox.classic.handlers.setup.items.category.LocationItem;
-import plugily.projects.minigamesbox.classic.handlers.setup.items.category.MultiLocationItem;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
-import plugily.projects.minigamesbox.classic.utils.serialization.LocationSerializer;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
 
@@ -39,10 +37,7 @@ public class LocationCategory extends PluginLocationCategory {
   public void addItems(NormalFastInv gui) {
     super.addItems(gui);
 
-    LocationItem starting = new LocationItem(getSetupInventory(), new ItemBuilder(XMaterial.EMERALD_BLOCK.parseMaterial()), "Start World", "Set the location to \nvalidate the world with your plots!", "", inventoryClickEvent -> {
-      LocationSerializer.saveLoc(getSetupInventory().getPlugin(), getSetupInventory().getConfig(), "arenas", "instances." + getSetupInventory().getArenaKey() + "." + "startlocation", inventoryClickEvent.getWhoClicked().getLocation());
-    }, (emptyConsumer) -> {
-    }, false, false, false);
+    LocationItem starting = new LocationItem(getSetupInventory(), new ItemBuilder(XMaterial.EMERALD_BLOCK.parseMaterial()), "Plot World", "Set the location to \nvalidate the world with your plots! Make sure to use a location in the mid of all the plots!", "startlocation");
     getItemList().add(starting);
     gui.setItem((getInventoryLine() * 9) + 2, starting);
   }
