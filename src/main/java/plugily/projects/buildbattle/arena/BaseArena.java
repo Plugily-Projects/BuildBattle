@@ -154,7 +154,7 @@ public class BaseArena extends PluginArena {
   }
 
   public final void checkPlayerOutSidePlot() {
-    if (plugin.getConfig().getBoolean("Allow-Players-Moving-Outside-Of-Arena", false)) {
+    if(plugin.getConfigPreferences().getOption("PLOT_MOVE_OUTSIDE")) {
       return;
     }
 
@@ -164,9 +164,9 @@ public class BaseArena extends PluginArena {
       for(Player player : getPlayersLeft()) {
         Plot buildPlot = null;
 
-        if (this instanceof BuildArena) {
+        if(this instanceof BuildArena) {
           buildPlot = ((BuildArena) this).getPlotFromPlayer(player);
-        } else if (this instanceof GuessArena && (buildPlot = ((GuessArena) this).getPlotFromPlayer(player)) != null) {
+        } else if(this instanceof GuessArena && (buildPlot = ((GuessArena) this).getPlotFromPlayer(player)) != null) {
           player.setPlayerWeather(buildPlot.getWeatherType());
           player.setPlayerTime(Plot.Time.format(buildPlot.getTime(), player.getWorld().getTime()), false);
         }

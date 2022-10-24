@@ -171,7 +171,7 @@ public class InGameState extends PluginInGameState {
       return;
     }
 
-    boolean hidePlotOwner = getPlugin().getConfigPreferences().getOption("HIDE_PLOT_OWNER");
+    boolean hidePlotOwner = getPlugin().getConfigPreferences().getOption("PLOT_HIDE_OWNER");
     String formattedMembers = "";
 
     if(hidePlotOwner) {
@@ -302,7 +302,7 @@ public class InGameState extends PluginInGameState {
         }
       }
 
-      if(!votingPlot.getMembers().isEmpty() && getPlugin().getConfigPreferences().getOption("HIDE_PLOT_OWNER")) {
+      if(!votingPlot.getMembers().isEmpty() && getPlugin().getConfigPreferences().getOption("PLOT_HIDE_OWNER")) {
         String formattedMembers = votingPlot.getFormattedMembers();
 
         new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_WAS").asKey().arena(pluginArena).value(formattedMembers).sendArena();
@@ -341,7 +341,7 @@ public class InGameState extends PluginInGameState {
 
     Location teleportLoc = plot.getTeleportLocation();
     String formattedMembers = plot.getFormattedMembers();
-    boolean hidePlotOwner = getPlugin().getConfigPreferences().getOption("HIDE_PLOT_OWNER");
+    boolean hidePlotOwner = getPlugin().getConfigPreferences().getOption("PLOT_HIDE_OWNER");
 
     for(Player player : pluginArena.getPlayers()) {
       VersionUtils.teleport(player, teleportLoc);
