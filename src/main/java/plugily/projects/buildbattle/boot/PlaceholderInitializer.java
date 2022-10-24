@@ -208,12 +208,12 @@ public class PlaceholderInitializer {
             }
             StringBuilder members = new StringBuilder();
             List<Player> players = ((BuildArena) pluginArena).getTopList().get(number);
-            if(players != null) {
+            if(!players.isEmpty()) {
               players.forEach(p -> members.append(p.getName()).append(" & "));
               members.delete(members.length() - 3, members.length());
               return new MessageBuilder(members.toString()).build();
             }
-            return null;
+            return "-";
           }
           if(pluginArena instanceof GuessArena) {
             if(pluginArena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
@@ -246,7 +246,12 @@ public class PlaceholderInitializer {
             if(pluginArena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
               return null;
             }
-            return Integer.toString(((BuildArena) pluginArena).getPlotFromPlayer(((BuildArena) pluginArena).getTopList().get(number).get(0)).getPoints());
+            BuildArena buildArena = (BuildArena) pluginArena;
+            List<Player> players = buildArena.getTopList().get(number);
+            if(!players.isEmpty()) {
+              return String.valueOf(buildArena.getPlotFromPlayer(players.get(0)).getPoints());
+            }
+            return "-";
           }
           if(pluginArena instanceof GuessArena) {
             if(pluginArena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
@@ -452,6 +457,9 @@ public class PlaceholderInitializer {
           return null;
         }
         int places = pluginArena.getPlayersLeft().size();
+        if(pluginArena instanceof BuildArena) {
+          places = ((BuildArena) pluginArena).getTopList().size();
+        }
         if(places > 16) {
           places = 16;
         }

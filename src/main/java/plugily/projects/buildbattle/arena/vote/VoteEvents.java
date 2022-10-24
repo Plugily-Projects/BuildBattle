@@ -103,11 +103,12 @@ public class VoteEvents implements Listener {
       event.setCancelled(true);
       return;
     }
-
-    plugin.getUserManager().getUser(event.getPlayer()).setStatistic("LOCAL_POINTS", plugin.getVoteItems().getPointsAndPlayVoteSound(event.getPlayer(), event.getItem()));
-
-    new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_SUCCESS").asKey().arena(arena).player(event.getPlayer()).sendPlayer();
-    event.setCancelled(true);
+    VoteItems.VoteItem voteItem = plugin.getVoteItems().getVoteItem(event.getItem());
+    if(voteItem != null) {
+      plugin.getUserManager().getUser(event.getPlayer()).setStatistic("LOCAL_POINTS", plugin.getVoteItems().getPointsAndPlayVoteSound(event.getPlayer(), voteItem));
+      new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_SUCCESS").asKey().arena(arena).player(event.getPlayer()).sendPlayer();
+      event.setCancelled(true);
+    }
   }
 
 }
