@@ -58,7 +58,8 @@ public class AdditionalValueInitializer {
     configPreferences.registerOption("MOB_SPAWN", new ConfigOption("Mob.Spawn", false));
     configPreferences.registerOption("HEAD_MENU_CUSTOM", new ConfigOption("Head-Menu.Custom", false));
     configPreferences.registerOption("REPORT_COMMANDS", new ConfigOption("Report.Commands", false));
-    configPreferences.registerOption("HIDE_PLOT_OWNER", new ConfigOption("Hide-Plot-Owner", false));
+    configPreferences.registerOption("PLOT_HIDE_OWNER", new ConfigOption("Plot.Hide-Owner", false));
+    configPreferences.registerOption("PLOT_MOVE_OUTSIDE", new ConfigOption("Plot.Move-Outside", false));
   }
 
   private void registerStatistics() {

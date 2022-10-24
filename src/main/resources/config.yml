@@ -258,10 +258,13 @@ Report:
   # The command that should be executed - Placeholder: %reported%, %reporter%
   Execute: kick %reported%
 
-
-#Announce the plot owner after voting stage, so it's hidden while on voting
-#default false - plot owner will be announced at the beginning
-Hide-Plot-Owner: false
+Plot:
+  #Announce the plot owner after voting stage, so it's hidden while on voting
+  #default false - plot owner will be announced at the beginning
+  Hide-Owner: false
+  # Allows players to move outside an arena while building.
+  # default false - moving outside plot will teleport back
+  Move-Outside: false
 
 
 Update-Notifier:
