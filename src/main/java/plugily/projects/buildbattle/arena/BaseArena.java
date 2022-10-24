@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.managers.MapRestorerManager;
 import plugily.projects.buildbattle.arena.managers.ScoreboardManager;
+import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.arena.managers.plots.PlotManager;
 import plugily.projects.buildbattle.handlers.menu.registry.particles.ParticleRefreshScheduler;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
@@ -150,6 +151,34 @@ public class BaseArena extends PluginArena {
       VersionUtils.sendActionBar(p, message);
       p.sendMessage(message);
     }
+  }
+
+  public final void checkPlayerOutSidePlot() {
+    if (plugin.getConfig().getBoolean("Allow-Players-Moving-Outside-Of-Arena", false)) {
+      return;
+    }
+
+    if(getArenaOption("IN_PLOT_CHECKER") >= 3) {
+      setArenaOption("IN_PLOT_CHECKER", 0);
+
+      for(Player player : getPlayersLeft()) {
+        Plot buildPlot = null;
+
+        if (this instanceof BuildArena) {
+          buildPlot = ((BuildArena) this).getPlotFromPlayer(player);
+        } else if (this instanceof GuessArena && (buildPlot = ((GuessArena) this).getPlotFromPlayer(player)) != null) {
+          player.setPlayerWeather(buildPlot.getWeatherType());
+          player.setPlayerTime(Plot.Time.format(buildPlot.getTime(), player.getWorld().getTime()), false);
+        }
+
+        if(buildPlot != null && buildPlot.getCuboid() != null && !buildPlot.getCuboid().isInWithMarge(player.getLocation(), 5)) {
+          VersionUtils.teleport(player, buildPlot.getTeleportLocation());
+          new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_OUTSIDE").asKey().arena(this).player(player).sendPlayer();
+        }
+      }
+    }
+
+    changeArenaOptionBy("IN_PLOT_CHECKER", 1);
   }
 
   public PlotManager getPlotManager() {

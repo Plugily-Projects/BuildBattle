@@ -263,6 +263,9 @@ Report:
 #default false - plot owner will be announced at the beginning
 Hide-Plot-Owner: false
 
+# Allows for players to move outside of an arena while building.
+# By default it is disabled
+Allow-Players-Moving-Outside-Of-Arena: false
 
 Update-Notifier:
   # Should we check for updates on plugin start/after admin join?
