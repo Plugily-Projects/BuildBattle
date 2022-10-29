@@ -22,9 +22,9 @@ package plugily.projects.buildbattle.arena;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.arena.states.build.InGameState;
 import plugily.projects.buildbattle.arena.states.build.StartingState;
-import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.themes.vote.VoteMenu;
 import plugily.projects.buildbattle.handlers.themes.vote.VotePoll;
 import plugily.projects.minigamesbox.classic.arena.ArenaState;
@@ -57,6 +57,7 @@ public class BuildArena extends BaseArena {
     setArenaType(ArenaType.SOLO);
     addGameStateHandler(ArenaState.IN_GAME, new InGameState());
     addGameStateHandler(ArenaState.STARTING, new StartingState());
+    getPlugin().getDebugger().debug("Init Arena {0} with ArenaType {1}", getId(), getArenaType());
   }
 
   /**

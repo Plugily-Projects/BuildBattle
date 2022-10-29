@@ -61,6 +61,7 @@ public class GuessArena extends BaseArena {
     setArenaType(ArenaType.GUESS_THE_BUILD);
     addGameStateHandler(ArenaState.IN_GAME, new InGameState());
     addGameStateHandler(ArenaState.STARTING, new StartingState());
+    getPlugin().getDebugger().debug("Init Arena {0} with ArenaType {1}", getId(), getArenaType());
   }
 
   @Override
