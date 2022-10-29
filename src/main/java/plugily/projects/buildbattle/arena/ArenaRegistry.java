@@ -56,7 +56,7 @@ public class ArenaRegistry extends PluginArenaRegistry {
 
   @Override
   public PluginArena getNewArena(String id) {
-    switch(ConfigUtils.getConfig(plugin, "arenas").getString("instances." + id + "gametype", "classic").toLowerCase(Locale.ENGLISH)) {
+    switch(ConfigUtils.getConfig(plugin, "arenas").getString("instances." + id + ".gametype", "classic").toLowerCase(Locale.ENGLISH)) {
       case "gtb":
       case "guessthebuild":
       case "guess_the_build":
