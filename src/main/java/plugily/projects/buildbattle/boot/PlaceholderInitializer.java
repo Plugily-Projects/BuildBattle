@@ -52,7 +52,10 @@ public class PlaceholderInitializer {
   }
 
   private void registerPlaceholders() {
-    getPlaceholderManager().registerPlaceholder(new Placeholder("theme", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+    PlaceholderManager placeholderManager = plugin.getPlaceholderManager();
+    ArenaRegistry arenaRegistry = plugin.getArenaRegistry();
+
+    placeholderManager.registerPlaceholder(new Placeholder("theme", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
       public String getValue(Player player, PluginArena arena) {
         return getTheme(arena);
@@ -65,7 +68,7 @@ public class PlaceholderInitializer {
 
       @Nullable
       private String getTheme(PluginArena arena) {
-        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
+        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
@@ -77,7 +80,7 @@ public class PlaceholderInitializer {
       }
     });
 
-    getPlaceholderManager().registerPlaceholder(new Placeholder("difficulty", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+    placeholderManager.registerPlaceholder(new Placeholder("difficulty", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
       public String getValue(Player player, PluginArena arena) {
         return getTheme(arena);
@@ -90,7 +93,7 @@ public class PlaceholderInitializer {
 
       @Nullable
       private String getTheme(PluginArena arena) {
-        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
+        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena instanceof GuessArena) {
           return ((GuessArena) pluginArena).getCurrentBBTheme().getDifficulty().name();
         }
@@ -98,7 +101,7 @@ public class PlaceholderInitializer {
       }
     });
 
-    getPlaceholderManager().registerPlaceholder(new Placeholder("difficulty_pointsreward", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+    placeholderManager.registerPlaceholder(new Placeholder("difficulty_pointsreward", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
       public String getValue(Player player, PluginArena arena) {
         return getTheme(arena);
@@ -111,7 +114,7 @@ public class PlaceholderInitializer {
 
       @Nullable
       private String getTheme(PluginArena arena) {
-        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
+        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena instanceof GuessArena) {
           return Integer.toString(((GuessArena) pluginArena).getCurrentBBTheme().getDifficulty().getPointsReward());
         }
@@ -119,7 +122,7 @@ public class PlaceholderInitializer {
       }
     });
 
-    getPlaceholderManager().registerPlaceholder(new Placeholder("builder", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+    placeholderManager.registerPlaceholder(new Placeholder("builder", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
       public String getValue(Player player, PluginArena arena) {
         return getBuilder(arena);
@@ -132,7 +135,7 @@ public class PlaceholderInitializer {
 
       @Nullable
       private String getBuilder(PluginArena arena) {
-        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
+        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(!(pluginArena instanceof GuessArena)) {
           return null;
         }
@@ -140,7 +143,7 @@ public class PlaceholderInitializer {
       }
     });
 
-    getPlaceholderManager().registerPlaceholder(new Placeholder("type", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+    placeholderManager.registerPlaceholder(new Placeholder("type", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
       public String getValue(Player player, PluginArena arena) {
         return getType(arena);
@@ -153,14 +156,14 @@ public class PlaceholderInitializer {
 
       @Nullable
       private String getType(PluginArena arena) {
-        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
+        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
         return pluginArena.getArenaType().toString();
       }
     });
-    getPlaceholderManager().registerPlaceholder(new Placeholder("type_pretty", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+    placeholderManager.registerPlaceholder(new Placeholder("type_pretty", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
       public String getValue(Player player, PluginArena arena) {
         return getType(arena);
@@ -173,7 +176,7 @@ public class PlaceholderInitializer {
 
       @Nullable
       private String getType(PluginArena arena) {
-        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
+        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
@@ -182,7 +185,7 @@ public class PlaceholderInitializer {
     });
     for(int i = 1; i <= 32; i++) {
       final int number = i;
-      getPlaceholderManager().registerPlaceholder(new Placeholder("place_member_" + number, Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+      placeholderManager.registerPlaceholder(new Placeholder("place_member_" + number, Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
         @Override
         public String getValue(Player player, PluginArena arena) {
           return getPlace(arena);
@@ -195,7 +198,7 @@ public class PlaceholderInitializer {
 
         @Nullable
         private String getPlace(PluginArena arena) {
-          BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
+          BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
           if(pluginArena == null) {
             return null;
           }
@@ -222,7 +225,7 @@ public class PlaceholderInitializer {
         }
       });
 
-      getPlaceholderManager().registerPlaceholder(new Placeholder("place_points_" + number, Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+      placeholderManager.registerPlaceholder(new Placeholder("place_points_" + number, Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
         @Override
         public String getValue(Player player, PluginArena arena) {
           return getPlace(arena);
@@ -235,7 +238,7 @@ public class PlaceholderInitializer {
 
         @Nullable
         private String getPlace(PluginArena arena) {
-          BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
+          BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
           if(pluginArena == null) {
             return null;
           }
@@ -243,9 +246,10 @@ public class PlaceholderInitializer {
             if(pluginArena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
               return null;
             }
-            List<Player> players = ((BuildArena) pluginArena).getTopList().get(number);
+            BuildArena buildArena = (BuildArena) pluginArena;
+            List<Player> players = buildArena.getTopList().get(number);
             if(!players.isEmpty()) {
-              return String.valueOf(((BuildArena) pluginArena).getPlotFromPlayer(players.get(0)).getPoints());
+              return String.valueOf(buildArena.getPlotFromPlayer(players.get(0)).getPoints());
             }
             return "-";
           }
@@ -259,7 +263,7 @@ public class PlaceholderInitializer {
         }
       });
     }
-    getPlaceholderManager().registerPlaceholder(new Placeholder("ingame_state", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+    placeholderManager.registerPlaceholder(new Placeholder("ingame_state", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
       public String getValue(Player player, PluginArena arena) {
         return getState(arena);
@@ -272,7 +276,7 @@ public class PlaceholderInitializer {
 
       @Nullable
       private String getState(PluginArena arena) {
-        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
+        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
@@ -283,7 +287,7 @@ public class PlaceholderInitializer {
       }
     });
 
-    getPlaceholderManager().registerPlaceholder(new Placeholder("ingame_state_pretty", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+    placeholderManager.registerPlaceholder(new Placeholder("ingame_state_pretty", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
       public String getValue(Player player, PluginArena arena) {
         return getState(arena);
@@ -296,7 +300,7 @@ public class PlaceholderInitializer {
 
       @Nullable
       private String getState(PluginArena arena) {
-        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
+        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
@@ -308,7 +312,7 @@ public class PlaceholderInitializer {
     });
 
 
-    getPlaceholderManager().registerPlaceholder(new Placeholder("team", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+    placeholderManager.registerPlaceholder(new Placeholder("team", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
       public String getValue(Player player, PluginArena arena) {
         return getMembers(player, arena);
@@ -316,7 +320,7 @@ public class PlaceholderInitializer {
 
       @Nullable
       private String getMembers(Player player, PluginArena arena) {
-        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
+        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
@@ -337,7 +341,7 @@ public class PlaceholderInitializer {
       }
     });
 
-    getPlaceholderManager().registerPlaceholder(new Placeholder("summary_player", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+    placeholderManager.registerPlaceholder(new Placeholder("summary_player", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
       public String getValue(Player player, PluginArena arena) {
         return getSummary(arena, player);
@@ -345,7 +349,7 @@ public class PlaceholderInitializer {
 
       @Nullable
       private String getSummary(PluginArena arena, Player player) {
-        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
+        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
@@ -364,7 +368,7 @@ public class PlaceholderInitializer {
       }
     });
 
-    getPlaceholderManager().registerPlaceholder(new Placeholder("summary_place_own", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+    placeholderManager.registerPlaceholder(new Placeholder("summary_place_own", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
       public String getValue(Player player, PluginArena arena) {
         return getSummary(arena, player);
@@ -372,7 +376,7 @@ public class PlaceholderInitializer {
 
       @Nullable
       private String getSummary(PluginArena arena, Player player) {
-        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
+        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
@@ -401,7 +405,7 @@ public class PlaceholderInitializer {
     });
 
 
-    getPlaceholderManager().registerPlaceholder(new Placeholder("summary", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+    placeholderManager.registerPlaceholder(new Placeholder("summary", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
       public String getValue(Player player, PluginArena arena) {
         return getSummary(arena);
@@ -414,7 +418,7 @@ public class PlaceholderInitializer {
 
       @Nullable
       private String getSummary(PluginArena arena) {
-        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
+        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
@@ -432,7 +436,7 @@ public class PlaceholderInitializer {
         return null;
       }
     });
-    getPlaceholderManager().registerPlaceholder(new Placeholder("summary_place_list", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+    placeholderManager.registerPlaceholder(new Placeholder("summary_place_list", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
       public String getValue(Player player, PluginArena arena) {
         return getSummary(arena);
@@ -445,7 +449,7 @@ public class PlaceholderInitializer {
 
       @Nullable
       private String getSummary(PluginArena arena) {
-        BaseArena pluginArena = getArenaRegistry().getArena(arena.getId());
+        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
@@ -468,13 +472,4 @@ public class PlaceholderInitializer {
       }
     });
   }
-
-  private PlaceholderManager getPlaceholderManager() {
-    return plugin.getPlaceholderManager();
-  }
-
-  private ArenaRegistry getArenaRegistry() {
-    return plugin.getArenaRegistry();
-  }
-
 }
