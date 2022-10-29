@@ -28,6 +28,7 @@ import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.BuildArena;
 import plugily.projects.buildbattle.arena.GuessArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
+import plugily.projects.buildbattle.handlers.themes.BBTheme;
 import plugily.projects.minigamesbox.classic.arena.ArenaState;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
@@ -95,7 +96,11 @@ public class PlaceholderInitializer {
       private String getTheme(PluginArena arena) {
         BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena instanceof GuessArena) {
-          return ((GuessArena) pluginArena).getCurrentBBTheme().getDifficulty().name();
+          BBTheme theme = ((GuessArena) pluginArena).getCurrentBBTheme();
+          if(theme == null) {
+            return null;
+          }
+          return theme.getDifficulty().name();
         }
         return null;
       }
@@ -116,7 +121,11 @@ public class PlaceholderInitializer {
       private String getTheme(PluginArena arena) {
         BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena instanceof GuessArena) {
-          return Integer.toString(((GuessArena) pluginArena).getCurrentBBTheme().getDifficulty().getPointsReward());
+          BBTheme theme = ((GuessArena) pluginArena).getCurrentBBTheme();
+          if(theme == null) {
+            return "0";
+          }
+          return Integer.toString(theme.getDifficulty().getPointsReward());
         }
         return null;
       }
@@ -139,7 +148,11 @@ public class PlaceholderInitializer {
         if(!(pluginArena instanceof GuessArena)) {
           return null;
         }
-        return ((GuessArena) pluginArena).getCurrentBuilder().getName();
+        Player player = ((GuessArena) pluginArena).getCurrentBuilder();
+        if(player == null) {
+          return "???";
+        }
+        return player.getName();
       }
     });
 

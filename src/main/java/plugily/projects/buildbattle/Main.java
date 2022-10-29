@@ -79,6 +79,7 @@ public class Main extends PluginMain {
     MessageInitializer messageInitializer = new MessageInitializer(this);
     super.onEnable();
     getDebugger().debug("[System] [Plugin] Initialization start");
+    arenaRegistry = new ArenaRegistry(this);
     new PlaceholderInitializer(this);
     messageInitializer.registerMessages();
     new AdditionalValueInitializer(this);
@@ -95,7 +96,6 @@ public class Main extends PluginMain {
     BaseArena.init(this);
     new ArenaEvents(this);
     arenaManager = new ArenaManager(this);
-    arenaRegistry = new ArenaRegistry(this);
     arenaRegistry.registerArenas();
     getSignManager().loadSigns();
     getSignManager().updateSigns();
