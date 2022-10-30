@@ -79,7 +79,7 @@ public final class PlotMenuHandler {
   }
 
   public void createMenu(Player player, BaseArena arena) {
-    NormalFastInv gui = new NormalFastInv(plugin.getBukkitHelper().serializeInt(arena.getPlotManager().getPlots().size()) / 9, new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_MENU_NAME").asKey().build());
+    NormalFastInv gui = new NormalFastInv(plugin.getBukkitHelper().serializeInt(arena.getPlotManager().getPlots().size()), new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_MENU_NAME").asKey().build());
     int plots = 0;
     int arenaPlotMemberSize = arena.getArenaOption("PLOT_MEMBER_SIZE");
 
