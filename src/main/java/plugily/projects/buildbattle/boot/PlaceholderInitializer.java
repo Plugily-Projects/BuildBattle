@@ -23,7 +23,6 @@ package plugily.projects.buildbattle.boot;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import plugily.projects.buildbattle.Main;
-import plugily.projects.buildbattle.arena.ArenaRegistry;
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.BuildArena;
 import plugily.projects.buildbattle.arena.GuessArena;
@@ -53,7 +52,6 @@ public class PlaceholderInitializer {
 
   private void registerPlaceholders() {
     PlaceholderManager placeholderManager = plugin.getPlaceholderManager();
-    ArenaRegistry arenaRegistry = plugin.getArenaRegistry();
 
     placeholderManager.registerPlaceholder(new Placeholder("theme", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
@@ -68,7 +66,7 @@ public class PlaceholderInitializer {
 
       @Nullable
       private String getTheme(PluginArena arena) {
-        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
+        BaseArena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
@@ -93,7 +91,7 @@ public class PlaceholderInitializer {
 
       @Nullable
       private String getTheme(PluginArena arena) {
-        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
+        BaseArena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
         if(pluginArena instanceof GuessArena) {
           return ((GuessArena) pluginArena).getCurrentBBTheme().getDifficulty().name();
         }
@@ -114,7 +112,7 @@ public class PlaceholderInitializer {
 
       @Nullable
       private String getTheme(PluginArena arena) {
-        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
+        BaseArena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
         if(pluginArena instanceof GuessArena) {
           return Integer.toString(((GuessArena) pluginArena).getCurrentBBTheme().getDifficulty().getPointsReward());
         }
@@ -135,7 +133,7 @@ public class PlaceholderInitializer {
 
       @Nullable
       private String getBuilder(PluginArena arena) {
-        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
+        BaseArena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
         if(!(pluginArena instanceof GuessArena)) {
           return null;
         }
@@ -156,7 +154,7 @@ public class PlaceholderInitializer {
 
       @Nullable
       private String getType(PluginArena arena) {
-        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
+        BaseArena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
@@ -176,7 +174,7 @@ public class PlaceholderInitializer {
 
       @Nullable
       private String getType(PluginArena arena) {
-        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
+        BaseArena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
@@ -198,7 +196,7 @@ public class PlaceholderInitializer {
 
         @Nullable
         private String getPlace(PluginArena arena) {
-          BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
+          BaseArena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
           if(pluginArena == null) {
             return null;
           }
@@ -238,7 +236,7 @@ public class PlaceholderInitializer {
 
         @Nullable
         private String getPlace(PluginArena arena) {
-          BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
+          BaseArena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
           if(pluginArena == null) {
             return null;
           }
@@ -276,7 +274,7 @@ public class PlaceholderInitializer {
 
       @Nullable
       private String getState(PluginArena arena) {
-        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
+        BaseArena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
@@ -300,7 +298,7 @@ public class PlaceholderInitializer {
 
       @Nullable
       private String getState(PluginArena arena) {
-        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
+        BaseArena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
@@ -320,7 +318,7 @@ public class PlaceholderInitializer {
 
       @Nullable
       private String getMembers(Player player, PluginArena arena) {
-        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
+        BaseArena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
@@ -349,7 +347,7 @@ public class PlaceholderInitializer {
 
       @Nullable
       private String getSummary(PluginArena arena, Player player) {
-        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
+        BaseArena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
@@ -376,7 +374,7 @@ public class PlaceholderInitializer {
 
       @Nullable
       private String getSummary(PluginArena arena, Player player) {
-        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
+        BaseArena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
@@ -418,7 +416,7 @@ public class PlaceholderInitializer {
 
       @Nullable
       private String getSummary(PluginArena arena) {
-        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
+        BaseArena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
@@ -449,7 +447,7 @@ public class PlaceholderInitializer {
 
       @Nullable
       private String getSummary(PluginArena arena) {
-        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
+        BaseArena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
