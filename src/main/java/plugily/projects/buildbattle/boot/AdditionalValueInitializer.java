@@ -107,5 +107,6 @@ public class AdditionalValueInitializer {
 
     arenaOptionManager.registerArenaOption("IN_PLOT_CHECKER", new ArenaOption("null", 0, true));
     arenaOptionManager.registerArenaOption("PLOT_MEMBER_SIZE", new ArenaOption("plotmembersize", 1, true));
+    arenaOptionManager.registerArenaOption("GTB_ROUNDS_PER_PLOT", new ArenaOption("roundsperplot", 2, true));
   }
 }
