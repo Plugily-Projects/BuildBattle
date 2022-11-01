@@ -34,7 +34,9 @@ import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Tigerpanzer_02
@@ -52,6 +54,8 @@ public class BaseArena extends PluginArena {
   private ArenaType arenaType;
 
   private ArenaInGameState arenaInGameState;
+
+  private Map<Player, Plot> plotList = new HashMap<>();
 
   public BaseArena(String id) {
     super(id);
@@ -96,6 +100,7 @@ public class BaseArena extends PluginArena {
 
   public void cleanUpArena() {
     spectators.clear();
+    plotList.clear();
   }
 
   public List<Player> getSpectators() {
@@ -214,6 +219,14 @@ public class BaseArena extends PluginArena {
   }
 
   public void distributePlots() {
+  }
+
+  public Map<Player, Plot> getPlotList() {
+    return plotList;
+  }
+
+  public Plot getPlotFromPlayer(Player player) {
+    return plotList.get(player);
   }
 
 }

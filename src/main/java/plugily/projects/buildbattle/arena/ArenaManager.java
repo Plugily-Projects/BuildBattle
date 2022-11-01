@@ -76,21 +76,26 @@ public class ArenaManager extends PluginArenaManager {
     User user = plugin.getUserManager().getUser(player);
     user.setStatistic("LOCAL_POINTS", 0);
     user.setStatistic("LOCAL_POINTS_GTB", 0);
+    Plot plot = pluginArena.getPlotManager().getPlot(player);
+    if(plot == null) {
+      return;
+    }
+    plot.getMembers().remove(player);
     if(arena instanceof BuildArena) {
-      Plot plot = pluginArena.getPlotManager().getPlot(player);
-      if(plot != null && plot.getMembers().size() <= 1) {
+      if(plot.getMembers().isEmpty()) {
         ((BuildArena) arena).getQueue().remove(plot);
       }
     }
     if(arena instanceof GuessArena) {
       GuessArena guessArena = (GuessArena) pluginArena;
-
       ((GuessArena) arena).getWhoGuessed().remove(player);
-      if(player == guessArena.getCurrentBuilder()) {
-        guessArena.setCurrentBuilder(null);
-        if(arena.getArenaState() == ArenaState.IN_GAME) {
-          pluginArena.setTimer(plugin.getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".Round-Delay"));
-          pluginArena.setArenaInGameState(BaseArena.ArenaInGameState.PLOT_VOTING);
+      if(guessArena.getCurrentBuilders().contains(player)) {
+        if(plot.getMembers().isEmpty()) {
+          if(arena.getArenaState() == ArenaState.IN_GAME) {
+            //ToDo message force skipped
+            pluginArena.setTimer(plugin.getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".Round-Delay"));
+            pluginArena.setArenaInGameState(BaseArena.ArenaInGameState.PLOT_VOTING);
+          }
         }
       }
     }

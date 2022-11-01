@@ -21,6 +21,8 @@
 package plugily.projects.buildbattle.handlers.setup;
 
 import org.bukkit.entity.Player;
+import plugily.projects.buildbattle.arena.BaseArena;
+import plugily.projects.buildbattle.arena.GuessArena;
 import plugily.projects.minigamesbox.classic.handlers.setup.categories.PluginSpecificCategory;
 import plugily.projects.minigamesbox.classic.handlers.setup.items.category.CountItem;
 import plugily.projects.minigamesbox.classic.handlers.setup.items.category.MultiLocationItem;
@@ -39,7 +41,13 @@ public class SpecificCategory extends PluginSpecificCategory {
   @Override
   public void addItems(NormalFastInv gui) {
     super.addItems(gui);
-    MultiLocationSelectorItem gamePlot = new MultiLocationSelectorItem(getSetupInventory(), new ItemBuilder(XMaterial.DIAMOND.parseMaterial()), "Game Plot", "Select one plot with our built-in \n selector (select minimum and maximum \n plot opposite selections with built-in wand) \n INCLUDE the plot floor!", "plots", 2);
+
+    BaseArena arena = (BaseArena) getSetupInventory().getPlugin().getArenaRegistry().getArena(getSetupInventory().getArenaKey());
+    int minPlots = 2;
+    if(arena instanceof GuessArena) {
+      minPlots = 1;
+    }
+    MultiLocationSelectorItem gamePlot = new MultiLocationSelectorItem(getSetupInventory(), new ItemBuilder(XMaterial.DIAMOND.parseMaterial()), "Game Plot", "Select one plot with our built-in \n selector (select minimum and maximum \n plot opposite selections with built-in wand) \n INCLUDE the plot floor!", "plots", minPlots);
     gui.setItem((getInventoryLine() * 9) + 1, gamePlot);
     getItemList().add(gamePlot);
 

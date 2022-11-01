@@ -37,6 +37,7 @@ import plugily.projects.minigamesbox.classic.handlers.placeholder.PlaceholderMan
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Tigerpanzer_02
@@ -216,7 +217,7 @@ public class PlaceholderInitializer {
           }
           if(pluginArena instanceof BuildArena) {
             if(pluginArena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
-              return null;
+              return "???";
             }
             StringBuilder members = new StringBuilder();
             List<Player> players = ((BuildArena) pluginArena).getTopList().get(number);
@@ -225,15 +226,16 @@ public class PlaceholderInitializer {
               members.delete(members.length() - 3, members.length());
               return new MessageBuilder(members.toString()).build();
             }
-            return "-";
+            return "???";
           }
           if(pluginArena instanceof GuessArena) {
-            if(pluginArena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
-              return null;
+            List<Map.Entry<Player, Integer>> list = new ArrayList<>(((GuessArena) pluginArena).getPlayersPoints().entrySet());
+            if(list.size() > number) {
+              return list.get(number).getKey().getName();
             }
-            return new ArrayList<>(((GuessArena) pluginArena).getPlayersPoints().entrySet()).get(number).getKey().getName();
+            return "???";
           }
-          return pluginArena.getArenaInGameState().toString();
+          return "???";
         }
       });
 
@@ -256,22 +258,23 @@ public class PlaceholderInitializer {
           }
           if(pluginArena instanceof BuildArena) {
             if(pluginArena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
-              return null;
+              return "???";
             }
             BuildArena buildArena = (BuildArena) pluginArena;
             List<Player> players = buildArena.getTopList().get(number);
             if(!players.isEmpty()) {
               return String.valueOf(buildArena.getPlotFromPlayer(players.get(0)).getPoints());
             }
-            return "-";
+            return "???";
           }
           if(pluginArena instanceof GuessArena) {
-            if(pluginArena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
-              return null;
+            List<Map.Entry<Player, Integer>> list = new ArrayList<>(((GuessArena) pluginArena).getPlayersPoints().entrySet());
+            if(list.size() > number) {
+              return String.valueOf(list.get(number).getValue());
             }
-            return String.valueOf(new ArrayList<>(((GuessArena) pluginArena).getPlayersPoints().entrySet()).get(number).getValue());
+            return "???";
           }
-          return null;
+          return "???";
         }
       });
     }

@@ -148,7 +148,6 @@ public final class PlotMenuHandler {
       plots++;
     }
 
-    gui.refresh();
     gui.open(player);
   }
 

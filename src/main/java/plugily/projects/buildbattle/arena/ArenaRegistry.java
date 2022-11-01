@@ -74,12 +74,13 @@ public class ArenaRegistry extends PluginArenaRegistry {
     if(!super.additionalValidatorChecks(section, arena, id)) return false;
 
     boolean isBuildArena = arena instanceof BuildArena;
+    boolean isGuessArena = arena instanceof GuessArena;
 
     if(isBuildArena) {
       int plotMemberSize = section.getInt(id + ".plotmembersize", 0);
 
       // Member size can not be less than 1
-      if (plotMemberSize < 1) {
+      if(plotMemberSize < 1) {
         plugin.getDebugger().sendConsoleMsg(new MessageBuilder("VALIDATOR_INVALID_ARENA_CONFIGURATION").asKey().value("INVALID PLOT MEMBER SIZE!").arena(arena).build());
         return false;
       }
@@ -119,7 +120,17 @@ public class ArenaRegistry extends PluginArenaRegistry {
             buildPlot.setCuboid(new Cuboid(minPoint, maxPoint));
             buildPlot.fullyResetPlot();
 
-            baseArena.getPlotManager().addBuildPlot(buildPlot);
+            if(isGuessArena) {
+              int plotMemberSize = arena.getArenaOption("PLOT_MEMBER_SIZE");
+              int maxPlayers = arena.getMaximumPlayers();
+              int plotAmount = maxPlayers / plotMemberSize;
+              for(int i = 0; i < plotAmount; i++) {
+                baseArena.getPlotManager().addBuildPlot(buildPlot);
+              }
+              break;
+            } else {
+              baseArena.getPlotManager().addBuildPlot(buildPlot);
+            }
           }
         }
       } else {

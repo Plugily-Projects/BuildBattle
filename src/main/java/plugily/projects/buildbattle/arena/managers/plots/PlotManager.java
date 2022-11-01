@@ -53,6 +53,10 @@ public class PlotManager {
     plots.add(buildPlot);
   }
 
+  public void removeBuildPlot(Plot buildPlot) {
+    plots.remove(buildPlot);
+  }
+
   public Plot getPlot(Player player) {
     if(player != null) {
       for(Plot buildPlot : plots) {

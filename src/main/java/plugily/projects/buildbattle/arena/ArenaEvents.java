@@ -115,7 +115,7 @@ public class ArenaEvents extends PluginArenaEvents {
       event.setCancelled(true);
       return;
     }
-    if(arena instanceof GuessArena && !event.getPlayer().equals(((GuessArena) arena).getCurrentBuilder())) {
+    if(arena instanceof GuessArena && !((GuessArena) arena).getCurrentBuilders().contains(event.getPlayer())) {
       event.setCancelled(true);
       return;
     }
@@ -573,13 +573,16 @@ public class ArenaEvents extends PluginArenaEvents {
     if(!(arena instanceof GuessArena)) {
       return;
     }
+    if(arena.getArenaState() != ArenaState.IN_GAME) {
+      return;
+    }
     GuessArena gameArena = (GuessArena) arena;
     if(gameArena.getWhoGuessed().contains(player)) {
       event.setCancelled(true);
       new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_GUESS_CANT_TALK").asKey().arena(gameArena).player(player).sendPlayer();
       return;
     }
-    if(player == gameArena.getCurrentBuilder()) {
+    if(gameArena.getCurrentBuilders().contains(player)) {
       event.setCancelled(true);
       new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_GUESS_BUILDER").asKey().arena(gameArena).player(player).sendPlayer();
       return;

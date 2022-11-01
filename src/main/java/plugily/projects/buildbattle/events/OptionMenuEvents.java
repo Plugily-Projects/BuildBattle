@@ -110,7 +110,7 @@ public final class OptionMenuEvents implements Listener {
   public void onInventoryClick(InventoryClickEvent event) {
     HumanEntity humanEntity = event.getWhoClicked();
 
-    if (!(humanEntity instanceof Player))
+    if(!(humanEntity instanceof Player))
       return;
 
     BaseArena arena = plugin.getArenaRegistry().getArena((Player) humanEntity);
@@ -124,7 +124,7 @@ public final class OptionMenuEvents implements Listener {
     if(arena instanceof BuildArena && arena.getArenaInGameState() == BaseArena.ArenaInGameState.BUILD_TIME) {
       return;
     }
-    if(arena instanceof GuessArena && humanEntity.equals(((GuessArena) arena).getCurrentBuilder())) {
+    if(arena instanceof GuessArena && ((GuessArena) arena).getCurrentBuilders().contains(humanEntity)) {
       return;
     }
     event.setCancelled(true);

@@ -62,7 +62,7 @@ public class GuessArgument {
           return;
         }
 
-        if(player == gameArena.getCurrentBuilder()) {
+        if(gameArena.getCurrentBuilders().contains(player)) {
           new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_GUESS_BUILDER").asKey().arena(gameArena).player(player).sendPlayer();
           return;
         }

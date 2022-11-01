@@ -36,7 +36,6 @@ Basic:
   # use 'buildbattle.join.*' to enable access to all arenas
   Join: "buildbattle.join.<arena>"
   Forcestart: "buildbattle.admin.forcestart"
-  Premium-Kits: "buildbattle.kits.premium"
 
 # Don't edit it. But who's stopping you? It's your server!
 # Really, don't edit ;p

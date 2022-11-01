@@ -444,8 +444,8 @@ Menu:
     Guess-The-Build:
       Inventory: "Select a theme to build!"
       Item:
-        Name: "%theme%"
-        Lore: "%difficulty%;;+%points% points if player's guess it correctly;;Click to select!"
+        Name: "%value%"
+        Lore: "%value%;;+%number% points if player's guess it correctly;;Click to select!"
       Difficulties:
         Easy: "&aEASY"
         Medium: "&eMEDIUM"

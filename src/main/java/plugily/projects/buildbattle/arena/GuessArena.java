@@ -21,6 +21,8 @@
 package plugily.projects.buildbattle.arena;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.api.event.guess.PlayerThemeGuessEvent;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
@@ -29,6 +31,7 @@ import plugily.projects.buildbattle.arena.states.guess.StartingState;
 import plugily.projects.buildbattle.handlers.themes.BBTheme;
 import plugily.projects.minigamesbox.classic.arena.ArenaState;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,14 +50,20 @@ public class GuessArena extends BaseArena {
 
   private final List<Player> whoGuessed = new ArrayList<>();
   private int round = 1;
-  private BBTheme currentTheme;
-  private Map<Player, Plot> plotList = new HashMap<>();
+  private BBTheme currentTheme = null;
   private Player winner;
   private Player currentBuilder;
+
+  private Plot buildPlot = null;
+  //ToDo consider guess together with plot members
   private Map<Player, Integer> playersPoints = new HashMap<>();
   private List<Integer> removedCharsAt = new ArrayList<>();
 
   private final int plotMemberSize = getArenaOption("PLOT_MEMBER_SIZE");
+
+  private List<Plot> playedPlots = new ArrayList<>();
+
+  private List<String> playedThemes = new ArrayList<>();
 
   public GuessArena(String id) {
     super(id);
@@ -71,9 +80,10 @@ public class GuessArena extends BaseArena {
     round = 1;
     whoGuessed.clear();
     playersPoints.clear();
-    plotList.clear();
     removedCharsAt.clear();
     winner = null;
+    playedPlots.clear();
+    playedThemes.clear();
     super.cleanUpArena();
   }
 
@@ -85,21 +95,23 @@ public class GuessArena extends BaseArena {
       getPlugin().getDebugger().sendConsoleMsg("&c[Build Battle] [PLOT WARNING] Not enough plots in arena " + getId() + "! Lacks " + (neededPlots - getPlotManager().getPlots().size()) + " plots");
       getPlugin().getDebugger().sendConsoleMsg("&c[PLOT WARNING] Required " + neededPlots + " but have " + getPlotManager().getPlots().size());
       getPlugin().getDebugger().sendConsoleMsg("&c[PLOT WARNING] Instance was stopped!");
-      getPlugin().getArenaManager().stopGame(false, this);
+      getPlugin().getArenaManager().stopGame(true, this);
     }
     List<Player> players = new ArrayList<>(getPlayersLeft());
     for(Plot plot : getPlotManager().getPlots()) {
       if(players.isEmpty()) {
         break;
       }
-
       if(!getPlugin().getUserManager().getUser(players.get(0)).isSpectator()) {
         plot.addMember(players.remove(0), this, true);
       }
     }
     for(Plot plot : getPlotManager().getPlots()) {
+      if(plot.getMembers().isEmpty()) {
+        continue;
+      }
       for(Player member : plot.getMembers()) {
-        plotList.put(member, plot);
+        getPlotList().put(member, plot);
       }
     }
     getPlotManager().teleportToPlots();
@@ -119,20 +131,41 @@ public class GuessArena extends BaseArena {
     return false;
   }
 
-  public Player getNextPlayerByRound() {
-    List<Player> playersLeft = getPlayersLeft();
-    int size = playersLeft.size();
-
-    if(size == 0) {
-      return null;
+  public void setNextPlot() {
+    List<Plot> plots = new ArrayList<>(getPlotList().values());
+    plots.removeAll(playedPlots);
+    if(plots.isEmpty()) {
+      plots = new ArrayList<>(getPlotList().values());
+      playedPlots.clear();
     }
+    Plot nextPlot = plots.get(getPlugin().getRandom().nextInt(plots.size()));
+    playedPlots.add(nextPlot);
+    buildPlot = nextPlot;
+    getPlugin().getDebugger().debug("Arena {0} Next BuilderTeam is {1}", getId(), nextPlot.getFormattedMembers());
+    teleportPlayersToPlot(nextPlot);
+  }
 
-    int part = round - 1;
-    if(part >= size) {
-      part = size - 1;
+  public void resetBuildPlot() {
+    buildPlot.resetPlot();
+    getRemovedCharsAt().clear();
+    setBuildPlot(null);
+    setCurrentTheme(null);
+    getWhoGuessed().clear();
+  }
+
+  public void teleportPlayersToPlot(Plot plot) {
+    Location plotLoc = plot.getTeleportLocation();
+    for(Player player : getPlayers()) {
+      VersionUtils.teleport(player, plotLoc);
+      player.setPlayerWeather(plot.getWeatherType());
+      player.setPlayerTime(Plot.Time.format(plot.getTime(), player.getWorld().getTime()), false);
+      VersionUtils.setCollidable(player, false);
+      player.setGameMode(GameMode.ADVENTURE);
+      player.setAllowFlight(true);
+      player.setFlying(true);
+      player.getInventory().clear();
+      player.updateInventory();
     }
-
-    return playersLeft.get(part);
   }
 
   @Override
@@ -200,19 +233,32 @@ public class GuessArena extends BaseArena {
     return currentTheme != null;
   }
 
-  public Player getCurrentBuilder() {
-    return currentBuilder;
+  public List<Player> getCurrentBuilders() {
+    if(buildPlot == null) {
+      return new ArrayList<>();
+    }
+    return buildPlot.getMembers();
+  }
+
+  public Plot getBuildPlot() {
+    return buildPlot;
+  }
+
+  public void setBuildPlot(Plot buildPlot) {
+    this.buildPlot = buildPlot;
+  }
+
+
+  public List<String> getPlayedThemes() {
+    return playedThemes;
   }
 
   public int getRound() {
     return round;
   }
 
-  public void setCurrentBuilder(Player currentBuilder) {
-    this.currentBuilder = currentBuilder;
-  }
-
   public void setCurrentTheme(BBTheme currentTheme) {
+    getPlugin().getDebugger().debug("Arena {0} set Theme to {1} ({2})", getId(), currentTheme.getTheme(), currentTheme.getDifficulty());
     this.currentTheme = currentTheme;
   }
 
@@ -232,15 +278,8 @@ public class GuessArena extends BaseArena {
     return removedCharsAt;
   }
 
-  public Map<Player, Plot> getPlotList() {
-    return plotList;
-  }
-
   public Map<Player, Integer> getPlayersPoints() {
     return playersPoints;
   }
 
-  public Plot getPlotFromPlayer(Player player) {
-    return plotList.get(player);
-  }
 }

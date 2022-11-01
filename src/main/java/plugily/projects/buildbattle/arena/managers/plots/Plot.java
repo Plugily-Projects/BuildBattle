@@ -124,7 +124,7 @@ public class Plot {
 
   @NotNull
   public String getFormattedMembers() {
-    if(members.size() >= 1) {
+    if(!members.isEmpty()) {
       StringBuilder member = new StringBuilder();
       members.forEach(player -> member.append(player.getName()).append(" & "));
       return member.substring(0, member.length() - 3);

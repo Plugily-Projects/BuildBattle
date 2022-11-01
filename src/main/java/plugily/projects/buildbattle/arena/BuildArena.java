@@ -32,6 +32,7 @@ import plugily.projects.minigamesbox.classic.arena.ArenaState;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -47,8 +48,6 @@ public class BuildArena extends BaseArena {
   private final Map<Integer, List<Player>> topList = new HashMap<>();
   private final Queue<Plot> queue = new LinkedList<>();
   private Plot votingPlot;
-
-  private Map<Player, Plot> plotList = new HashMap<>();
   private Plot winnerPlot;
   private VoteMenu voteMenu;
 
@@ -76,7 +75,6 @@ public class BuildArena extends BaseArena {
     if(voteMenu != null) {
       voteMenu.resetPoll();
     }
-    plotList.clear();
     super.cleanUpArena();
   }
 
@@ -162,8 +160,11 @@ public class BuildArena extends BaseArena {
         }
     }
     for(Plot plot : getPlotManager().getPlots()) {
+      if(plot.getMembers().isEmpty()) {
+        continue;
+      }
       for(Player member : plot.getMembers()) {
-        plotList.put(member, plot);
+        getPlotList().put(member, plot);
       }
     }
     getPlotManager().teleportToPlots();
@@ -179,7 +180,7 @@ public class BuildArena extends BaseArena {
       return true;
     }
     if(size == memberSize) {
-      return !getPlotManager().getPlot(getPlayersLeft().get(0)).getMembers().containsAll(getPlayers());
+      return !new HashSet<>(getPlotManager().getPlot(getPlayersLeft().get(0)).getMembers()).containsAll(getPlayers());
     }
     return false;
   }
@@ -198,11 +199,4 @@ public class BuildArena extends BaseArena {
     setArenaType(getArenaOption("PLOT_MEMBER_SIZE") <= 1 ? ArenaType.SOLO : ArenaType.TEAM);
   }
 
-  public Map<Player, Plot> getPlotList() {
-    return plotList;
-  }
-
-  public Plot getPlotFromPlayer(Player player) {
-    return plotList.get(player);
-  }
 }

@@ -40,14 +40,12 @@ public class StartingState extends PluginStartingState {
       return;
     }
     if (arena.getTimer() == 0 || arena.isForceStart()) {
-      //getPlotManager().resetPlotsGradually();
       pluginArena.setParticleRefreshScheduler(new ParticleRefreshScheduler(getPlugin()));
       if(!pluginArena.getPlotManager().isPlotsCleared()) {
         pluginArena.getPlotManager().resetQueuedPlots();
       }
-      //todo may removeable?
+
       pluginArena.distributePlots();
-      pluginArena.getPlotManager().teleportToPlots();
 
       setArenaTimer(getPlugin().getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".Voting.Theme"));
       pluginArena.setArenaInGameState(BaseArena.ArenaInGameState.THEME_VOTING);
