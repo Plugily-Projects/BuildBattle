@@ -109,11 +109,13 @@ public class InGameState extends PluginInGameState {
             calculateEndResults(pluginArena);
             calculateWinnerPlot(pluginArena);
             announceResults(pluginArena);
+
             Location winnerLocation = pluginArena.getWinnerPlot().getTeleportLocation();
+            String formattedMembers = pluginArena.getWinnerPlot().getFormattedMembers();
 
             for(Player player : pluginArena.getPlayers()) {
               VersionUtils.teleport(player, winnerLocation);
-              new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_WINNER").asKey().player(player).value(pluginArena.getWinnerPlot().getFormattedMembers()).sendPlayer();
+              new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_WINNER").asKey().player(player).value(formattedMembers).sendPlayer();
             }
             givePlaceRewards(pluginArena);
             getPlugin().getArenaManager().stopGame(false, arena);
