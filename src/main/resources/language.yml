@@ -219,7 +219,7 @@ Bossbar:
 In-Game:
   #Used in most game messages.
   Plugin-Prefix: "(%plugin_name%)"
-  Game-Chat-Format: "[%user_statistic_level%][%kit%] %player% | %message%"
+  Game-Chat-Format: "[%user_statistic_level%] %player% | %message%"
   You-Leveled-Up: "%plugin_prefix% You leveled up! You're now level %number%!"
   Commands-Blocked: "%color_chat_issue%%plugin_prefix% You have to leave the game first to perform commands. The only command that works is /%plugin_short_command% leave!"
   Join:
@@ -327,8 +327,8 @@ In-Game:
         Success: "%plugin_prefix% Voted successfully!"
         Winner: "5,20,5;%plugin_prefix% WINNER: %value%"
       Guess-The-Build:
-        Builder: "Builder: %BUILDER%"
-        Round: "Round: %number%/%arena_max_players%"
+        Builder: "Builder: %arena_builder%"
+        Round: "Round: %number%/%arena_gtb_rounds%"
         Theme:
           Chars: "%plugin_prefix% The theme is %NUM% characters long"
           Name: "%plugin_prefix% The theme is %arena_theme%"

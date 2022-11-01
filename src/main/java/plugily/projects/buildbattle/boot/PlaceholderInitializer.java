@@ -148,11 +148,10 @@ public class PlaceholderInitializer {
         if(!(pluginArena instanceof GuessArena)) {
           return null;
         }
-        Player player = ((GuessArena) pluginArena).getCurrentBuilder();
-        if(player == null) {
+        if(((GuessArena) pluginArena).getBuildPlot() == null || ((GuessArena) pluginArena).getBuildPlot().getMembers().isEmpty()) {
           return "???";
         }
-        return player.getName();
+        return ((GuessArena) pluginArena).getBuildPlot().getFormattedMembers();
       }
     });
 
@@ -484,5 +483,26 @@ public class PlaceholderInitializer {
         return placeSummary.toString();
       }
     });
+    placeholderManager.registerPlaceholder(new Placeholder("gtb_rounds", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+      @Override
+      public String getValue(Player player, PluginArena arena) {
+        return getSummary(arena);
+      }
+
+      @Override
+      public String getValue(PluginArena arena) {
+        return getSummary(arena);
+      }
+
+      @Nullable
+      private String getSummary(PluginArena arena) {
+        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
+        if(pluginArena == null) {
+          return null;
+        }
+        return String.valueOf(pluginArena.getPlotList().size() * pluginArena.getArenaOption("GTB_ROUNDS_PER_PLOT"));
+      }
+    });
+
   }
 }
