@@ -65,7 +65,7 @@ public class Plot {
   public Plot(BaseArena arena, Biome biome) {
     this.arena = arena;
     plotDefaultBiome = biome;
-    defaultFloor = XMaterial.matchXMaterial(arena.getPlugin().getConfig().getString("Default-Floor-Material-Name", "LOG")
+    defaultFloor = XMaterial.matchXMaterial(arena.getPlugin().getConfig().getString("Floor.Material", "LOG")
         .toUpperCase(java.util.Locale.ENGLISH)).orElse(XMaterial.OAK_LOG);
   }
 
