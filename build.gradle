@@ -81,8 +81,6 @@ processResources {
 }
 
 shadowJar {
-    exclude 'META-INF/**'
-    //exclude 'module-info.class'
     archiveClassifier.set('')
     relocate 'plugily.projects.minigamesbox', 'plugily.projects.buildbattle.minigamesbox'
     relocate 'com.zaxxer.hikari', 'plugily.projects.buildbattle.database.hikari'
@@ -111,9 +109,6 @@ publishing {
     publications {
         maven(MavenPublication) {
             from components.java
-            if (project.tasks.findByName("shadowJar") != null) {
-                artifact tasks.shadowJar
-            }
         }
     }
 }
