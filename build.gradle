@@ -43,7 +43,16 @@ repositories {
 }
 
 dependencies {
-    implementation 'plugily.projects:MiniGamesBox-Classic:1.2.0-SNAPSHOT0'
+    implementation('plugily.projects:MiniGamesBox-Classic:1.2.0-SNAPSHOT5') {
+        exclude group: 'com.google.code.gson', module: 'gson'
+        exclude group: 'fr.mrmicky', module: 'FastInv'
+        exclude group: 'me.tigerhix.lib', module: 'scoreboard'
+        exclude group: 'com.github.cryptomorin', module: 'XSeries'
+        exclude group: 'plugily.projects', module: 'MiniGamesBox-Inventory'
+        exclude group: 'plugily.projects', module: 'MiniGamesBox-Database'
+        exclude group: 'plugily.projects', module: 'MiniGamesBox-Utils'
+        exclude group: 'io.papermc', module: 'paperlib'
+    }
     compileOnly 'io.papermc.paper:paper-api:1.19.2-R0.1-SNAPSHOT'
     compileOnly 'net.citizensnpcs:citizensapi:2.0.30-SNAPSHOT'
     compileOnly 'org.jetbrains:annotations:23.1.0'
@@ -72,6 +81,8 @@ processResources {
 }
 
 shadowJar {
+    exclude 'META-INF/**'
+    //exclude 'module-info.class'
     archiveClassifier.set('')
     relocate 'plugily.projects.minigamesbox', 'plugily.projects.buildbattle.minigamesbox'
     relocate 'com.zaxxer.hikari', 'plugily.projects.buildbattle.database.hikari'
