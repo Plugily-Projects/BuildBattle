@@ -59,7 +59,7 @@ dependencies {
 }
 
 group = 'plugily.projects'
-version = '4.5.2-SNAPSHOT80'
+version = '4.5.2-SNAPSHOT81'
 description = 'BuildBattle'
 
 java {
