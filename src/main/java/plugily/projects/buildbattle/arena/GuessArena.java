@@ -146,7 +146,9 @@ public class GuessArena extends BaseArena {
   }
 
   public void resetBuildPlot() {
-    buildPlot.resetPlot();
+    if(buildPlot != null) {
+      buildPlot.resetPlot();
+    }
     getRemovedCharsAt().clear();
     setBuildPlot(null);
     setCurrentTheme(null);
@@ -258,7 +260,11 @@ public class GuessArena extends BaseArena {
   }
 
   public void setCurrentTheme(BBTheme currentTheme) {
-    getPlugin().getDebugger().debug("Arena {0} set Theme to {1} ({2})", getId(), currentTheme.getTheme(), currentTheme.getDifficulty());
+    if(currentTheme == null) {
+      getPlugin().getDebugger().debug("Arena {0} set Theme null", getId());
+    } else {
+      getPlugin().getDebugger().debug("Arena {0} set Theme to {1} ({2})", getId(), currentTheme.getTheme(), currentTheme.getDifficulty());
+    }
     this.currentTheme = currentTheme;
   }
 

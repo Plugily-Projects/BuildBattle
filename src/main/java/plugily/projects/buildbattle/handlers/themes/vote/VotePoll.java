@@ -24,7 +24,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.BuildArena;
-import plugily.projects.minigamesbox.classic.commonsbox.sorter.SortUtils;
+import plugily.projects.minigamesbox.sorter.SortUtils;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
