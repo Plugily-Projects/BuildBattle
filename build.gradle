@@ -52,7 +52,6 @@ dependencies {
 group = 'plugily.projects'
 version = '4.5.2-SNAPSHOT78'
 description = 'BuildBattle'
-java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 java {
     withJavadocJar()
