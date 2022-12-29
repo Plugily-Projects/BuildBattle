@@ -63,11 +63,10 @@ version = '4.5.2-SNAPSHOT82'
 description = 'BuildBattle'
 
 java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+    }
     withJavadocJar()
-}
-
-javadoc {
-    options.encoding = 'UTF-8'
 }
 
 build {
@@ -113,9 +112,7 @@ publishing {
     }
 }
 
-compileJava {
+tasks.compileJava {
     options.encoding = 'UTF-8'
     options.release.set(8)
-    setSourceCompatibility(JavaVersion.VERSION_1_8)
-    setTargetCompatibility(JavaVersion.VERSION_1_8)
 }
