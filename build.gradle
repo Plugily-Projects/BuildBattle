@@ -113,6 +113,9 @@ publishing {
     }
 }
 
-tasks.withType(JavaCompile) {
+compileJava {
     options.encoding = 'UTF-8'
+    options.release.set(8)
+    setSourceCompatibility(JavaVersion.VERSION_1_8)
+    setTargetCompatibility(JavaVersion.VERSION_1_8)
 }
