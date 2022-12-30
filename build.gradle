@@ -51,7 +51,7 @@ dependencies {
         exclude group: 'plugily.projects', module: 'MiniGamesBox-Utils'
         exclude group: 'io.papermc', module: 'paperlib'
     }
-    compileOnly 'io.papermc.paper:paper-api:1.19.2-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT'
     compileOnly 'net.citizensnpcs:citizensapi:2.0.30-SNAPSHOT'
     compileOnly 'org.jetbrains:annotations:23.1.0'
 }
@@ -61,14 +61,15 @@ version = '4.5.2-SNAPSHOT85'
 description = 'BuildBattle'
 
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(8)
-    }
     withJavadocJar()
 }
 
 build {
     dependsOn(shadowJar)
+}
+
+javadoc {
+    options.encoding = 'UTF-8'
 }
 
 processResources {
@@ -112,7 +113,4 @@ publishing {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-    javaCompiler = javaToolchains.compilerFor {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
 }
