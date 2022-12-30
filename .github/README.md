@@ -10,8 +10,8 @@ Have fun using it! Leave a good rating if you really like it.
 
 ## Want to contribute in this project?
 
-[**💣 Issues Reporting (Discord)**](https://discordapp.com/invite/UXzUdTP)[**❤ Make Donation
-**](https://www.paypal.me/plugilyprojects)
+[**💣 Issues Reporting (Discord)**](https://discordapp.com/invite/UXzUdTP)
+[**❤ Make Donation**](https://www.paypal.me/plugilyprojects)
 
 # Credits
 
