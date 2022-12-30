@@ -10,8 +10,6 @@ repositories {
     maven {
         url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
 
-        // As of Gradle 5.1, you can limit this to only those
-        // dependencies you expect from it
         content {
             includeGroup 'org.bukkit'
             includeGroup 'org.spigotmc'
@@ -64,7 +62,7 @@ description = 'BuildBattle'
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion = JavaLanguageVersion.of(8)
     }
     withJavadocJar()
 }
@@ -112,9 +110,9 @@ publishing {
     }
 }
 
-tasks.compileJava {
+tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-    javaCompiler.set(javaToolchains.compilerFor {
-        languageVersion.set(JavaLanguageVersion.of(8))
-    })
+    javaCompiler = javaToolchains.compilerFor {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
