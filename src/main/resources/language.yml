@@ -314,8 +314,8 @@ In-Game:
         Inside: "Your team"
         Name: "Plot - %number%"
         Menu-Name: "Plot Menu"
-        Plot-Choose: "You are now on plot %number%"
-        Member: "You are already member of it!"
+        Plot-Choose: "%plugin_prefix% You are now on plot %number%"
+        Member: "%color_chat_issue%%plugin_prefix% You are already member of it!"
       Voting:
         Name: "%color_chat_issue%Voting"
         Plot-Owner:
@@ -410,7 +410,7 @@ Menu:
         Type:
           Downfall: "Downfall"
           Clear: "Clear"
-        Changed: "%plugin_prefix% Weather has been changed"
+        Changed: "%plugin_prefix% Weather has been changed to %value%"
       Banner:
         Inventory:
           Color: "&bSelect color"

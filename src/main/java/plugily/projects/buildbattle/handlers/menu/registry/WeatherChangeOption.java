@@ -27,7 +27,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.menu.MenuOption;
@@ -94,7 +93,7 @@ public class WeatherChangeOption {
 
         for(Player p : plot.getMembers()) {
           p.setPlayerWeather(plot.getWeatherType());
-          new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_TYPE_" + (isDownfall ? "DOWNFALL" : "CLEAR")).asKey().player(p).sendPlayer();
+          new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_CHANGED").asKey().value(new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_TYPE_" + (isDownfall ? "DOWNFALL" : "CLEAR")).build()).player(p).sendPlayer();
         }
       }
     });
