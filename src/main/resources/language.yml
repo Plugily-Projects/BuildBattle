@@ -324,7 +324,7 @@ In-Game:
           Next: "%plugin_prefix% Now voting for %value%'s plot!"
           Was: "%plugin_prefix% The plot owner was %value%!"
           Own: "%color_chat_issue%%plugin_prefix% You can't vote for your plot!"
-        Success: "%plugin_prefix% Voted successfully!"
+        Success: "%plugin_prefix% Voted %value% successfully!"
         Winner: "5,20,5;%plugin_prefix% WINNER: %value%"
       Guess-The-Build:
         Builder: "Builder: %arena_builder%"

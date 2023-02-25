@@ -31,6 +31,7 @@ import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.minigamesbox.classic.arena.ArenaState;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.user.User;
+import plugily.projects.minigamesbox.classic.utils.misc.complement.ComplementAccessor;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerInteractEvent;
 
@@ -106,7 +107,7 @@ public class VoteEvents implements Listener {
     VoteItems.VoteItem voteItem = plugin.getVoteItems().getVoteItem(event.getItem());
     if(voteItem != null) {
       plugin.getUserManager().getUser(event.getPlayer()).setStatistic("LOCAL_POINTS", plugin.getVoteItems().getPointsAndPlayVoteSound(event.getPlayer(), voteItem));
-      new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_SUCCESS").asKey().arena(arena).player(event.getPlayer()).sendPlayer();
+      new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_SUCCESS").asKey().value(ComplementAccessor.getComplement().getDisplayName(voteItem.getItemStack().getItemMeta())).arena(arena).player(event.getPlayer()).sendPlayer();
       event.setCancelled(true);
     }
   }
