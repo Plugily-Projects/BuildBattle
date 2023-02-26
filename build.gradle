@@ -41,7 +41,7 @@ repositories {
 }
 
 dependencies {
-    implementation('plugily.projects:MiniGamesBox-Classic:1.2.0-SNAPSHOT7') {
+    implementation('plugily.projects:MiniGamesBox-Classic:1.2.0-SNAPSHOT9') {
         exclude group: 'com.google.code.gson', module: 'gson'
         exclude group: 'fr.mrmicky', module: 'FastInv'
         exclude group: 'me.tigerhix.lib', module: 'scoreboard'

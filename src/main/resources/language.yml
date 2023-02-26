@@ -330,10 +330,10 @@ In-Game:
         Builder: "Builder: %arena_builder%"
         Round: "Round: %number%/%arena_gtb_rounds%"
         Theme:
-          Chars: "%plugin_prefix% The theme is %NUM% characters long"
+          Chars: "%plugin_prefix% The theme is %number% characters long"
           Name: "%plugin_prefix% The theme is %arena_theme%"
-          Was: "%plugin_prefix% The theme was: %arena_theme%!"
-          Title: "20,30,20;The theme was;%arena_theme%!"
+          Was: "%plugin_prefix% The theme was: %value%!"
+          Title: "20,30,20;The theme was;%value%!"
           Guessed: "%plugin_prefix% All players guessed the theme!"
           Being-Selected: "%plugin_prefix% Theme is being selected..."
           Guess:

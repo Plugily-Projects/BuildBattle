@@ -60,7 +60,7 @@ public class PlaceholderInitializer {
     placeholderManager.registerPlaceholder(new Placeholder("theme", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
       public String getValue(Player player, PluginArena arena) {
-        return getTheme(arena);
+        return getTheme(player, arena);
       }
 
       @Override
@@ -77,6 +77,24 @@ public class PlaceholderInitializer {
         String theme = pluginArena.getTheme();
         if(theme.equalsIgnoreCase("theme")) {
           theme = new MessageBuilder("SCOREBOARD_THEME_UNKNOWN").asKey().build();
+        }
+        return theme;
+      }
+
+      @Nullable
+      private String getTheme(Player player, PluginArena arena) {
+        String theme = getTheme(arena);
+        BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
+        if(pluginArena == null) {
+          return null;
+        }
+        if(!(pluginArena instanceof GuessArena)) {
+          return theme;
+        }
+        if(theme.equalsIgnoreCase("theme")) {
+          if(((GuessArena) pluginArena).getCurrentBuilders().contains(player) || ((GuessArena) pluginArena).getWhoGuessed().contains(player)) {
+            return ((GuessArena) pluginArena).getCurrentBBTheme().getTheme();
+          }
         }
         return theme;
       }

@@ -93,8 +93,8 @@ public class InGameState extends PluginInGameState {
         }
         if(timer <= 0) {
           //not all guessed
-          new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_WAS").asKey().arena(pluginArena).sendArena();
-          new TitleBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_TITLE").asKey().arena(pluginArena).sendArena();
+          new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_WAS").asKey().value(pluginArena.getCurrentBBTheme().getTheme()).arena(pluginArena).sendArena();
+          new TitleBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_TITLE").asKey().value(pluginArena.getCurrentBBTheme().getTheme()).arena(pluginArena).sendArena();
 
           setArenaTimer(getPlugin().getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".Round-Delay"));
           pluginArena.setArenaInGameState(BaseArena.ArenaInGameState.PLOT_VOTING);
@@ -137,7 +137,7 @@ public class InGameState extends PluginInGameState {
         continue;
       }
       if(pluginArena.getWhoGuessed().contains(player)) {
-        getPlugin().getActionBarManager().addActionBar(player, new ActionBar(new MessageBuilder(pluginArena.getTheme()), ActionBar.ActionBarType.DISPLAY));
+        getPlugin().getActionBarManager().addActionBar(player, new ActionBar(new MessageBuilder(pluginArena.getCurrentBBTheme().getTheme()), ActionBar.ActionBarType.DISPLAY));
         continue;
       }
       int themeLength = pluginArena.getCurrentBBTheme().getTheme().length();
