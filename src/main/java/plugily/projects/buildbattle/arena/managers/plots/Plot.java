@@ -96,7 +96,7 @@ public class Plot {
   }
 
   public void setWeatherType(WeatherType weatherType) {
-    if (weatherType != null) {
+    if(weatherType != null) {
       this.weatherType = weatherType;
     }
   }
@@ -143,12 +143,14 @@ public class Plot {
     }
 
     if(members.contains(player)) {
-      if(!silent) new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_MEMBER").asKey().arena(arena).player(player).sendPlayer();
+      if(!silent)
+        new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_MEMBER").asKey().arena(arena).player(player).sendPlayer();
       return false;
     }
 
     if(members.size() >= arena.getArenaOption("PLOT_MEMBER_SIZE")) {
-      if(!silent) new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_FULL").asKey().arena(arena).player(player).sendPlayer();
+      if(!silent)
+        new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_FULL").asKey().arena(arena).player(player).sendPlayer();
       return false;
     }
 
@@ -166,7 +168,7 @@ public class Plot {
 
   public void fullyResetPlot() {
     resetPlot();
-    setPoints(0);
+    points = 0;
     members.clear();
     particles.clear();
   }
@@ -252,6 +254,10 @@ public class Plot {
 
   public void setPoints(int points) {
     this.points = points;
+  }
+
+  public void addPoints(int points) {
+    this.points += points;
   }
 
   private void changeFloor(Material material) {

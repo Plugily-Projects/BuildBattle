@@ -22,12 +22,12 @@ package plugily.projects.buildbattle.arena.states.guess;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.GuessArena;
+import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.themes.BBTheme;
 import plugily.projects.buildbattle.handlers.themes.ThemeManager;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
@@ -37,7 +37,6 @@ import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
 import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.actionbar.ActionBar;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
-import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
 import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
 
@@ -104,15 +103,11 @@ public class InGameState extends PluginInGameState {
         break;
       case PLOT_VOTING:
         if(pluginArena.getRound() + 1 > pluginArena.getPlotList().size() * pluginArena.getArenaOption("GTB_ROUNDS_PER_PLOT")) {
-          calculateResults(pluginArena);
-          announceResults(pluginArena);
+          pluginArena.calculateWinnerPlot();
+          adjustStatistics(pluginArena);
 
-          Location winnerLocation = pluginArena.getPlotList().get(pluginArena.getWinner()).getTeleportLocation();
-
-          for(Player player : pluginArena.getPlayers()) {
-            VersionUtils.teleport(player, winnerLocation);
-            new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_WINNER").asKey().player(player).value(pluginArena.getWinner().getName()).sendPlayer();
-          }
+          pluginArena.teleportToWinnerPlot();
+          pluginArena.executeEndRewards();
           getPlugin().getArenaManager().stopGame(false, arena);
         }
 //round delay
@@ -265,28 +260,29 @@ public class InGameState extends PluginInGameState {
     pluginArena.setCurrentTheme(theme);
   }
 
-  private void calculateResults(GuessArena pluginArena) {
-    pluginArena.recalculateLeaderboard();
-    List<Player> list = new ArrayList<>(pluginArena.getPlayersPoints().keySet());
-    pluginArena.setWinner(list.get(0));
-    for(int i = 1; i <= list.size(); i++) {
-      getPlugin().getRewardsHandler().performReward(list.get(i - 1), pluginArena, getPlugin().getRewardsHandler().getRewardType("PLACE"), i);
-    }
-    getPlugin().getRewardsHandler().performReward(pluginArena, getPlugin().getRewardsHandler().getRewardType("END_GAME"));
-  }
-
-  private void announceResults(GuessArena pluginArena) {
-    List<Player> list = new ArrayList<>(pluginArena.getPlayersPoints().keySet());
-
-    for(int i = 1; i <= list.size(); i++) {
-      Player player = list.get(i);
-      User user = getPlugin().getUserManager().getUser(player);
-      if(i > 3) {
-        user.adjustStatistic("LOSES", 1);
-      }
-      user.adjustStatistic("WINS", 1);
-      getPlugin().getUserManager().addExperience(player, 5);
-      //todo gtb stats
+  private void adjustStatistics(GuessArena pluginArena) {
+    for(Plot plot : pluginArena.getPlotManager().getTopPlotsOrder()) {
+      plot.getMembers().forEach(player -> {
+        User user = getPlugin().getUserManager().getUser(player);
+        /*
+        //ToDo GTB stats
+        if(plot.getPoints() > user.getStatistic("POINTS_HIGHEST")) {
+          user.setStatistic("POINTS_HIGHEST", plot.getPoints());
+        }
+        */
+        user.adjustStatistic("POINTS_TOTAL", plot.getPoints());
+        if(plot == pluginArena.getWinnerPlot()) {
+          user.adjustStatistic("WINS", 1);
+        } else {
+          user.adjustStatistic("LOSES", 1);
+        }
+        getPlugin().getUserManager().addExperience(player, 5);
+        /*
+        if(plot.getPoints() > user.getStatistic("POINTS_HIGHEST_WIN")) {
+          user.setStatistic("POINTS_HIGHEST_WIN", plot.getPoints());
+        }
+        */
+      });
     }
   }
 

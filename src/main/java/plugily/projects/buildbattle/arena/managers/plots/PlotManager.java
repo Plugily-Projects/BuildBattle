@@ -33,8 +33,11 @@ import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -150,6 +153,12 @@ public class PlotManager {
       }
       Bukkit.getPluginManager().callEvent(new PlotPlayerReceiveEvent(arena, buildPlot));
     }
+  }
+
+  public List<Plot> getTopPlotsOrder() {
+    List<Plot> plotRanking = plots.stream().filter(plot -> !plot.getMembers().isEmpty()).sorted(Comparator.comparingInt(Plot::getPoints)).collect(Collectors.toList());
+    Collections.reverse(plotRanking);
+    return plotRanking;
   }
 
   public List<Plot> getPlots() {

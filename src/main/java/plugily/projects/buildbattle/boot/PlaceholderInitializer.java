@@ -35,9 +35,8 @@ import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.placeholder.Placeholder;
 import plugily.projects.minigamesbox.classic.handlers.placeholder.PlaceholderManager;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Tigerpanzer_02
@@ -233,27 +232,17 @@ public class PlaceholderInitializer {
           if(pluginArena == null) {
             return null;
           }
-          if(pluginArena instanceof BuildArena) {
-            if(pluginArena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
-              return "???";
-            }
-            StringBuilder members = new StringBuilder();
-            List<Player> players = ((BuildArena) pluginArena).getTopList().get(number);
-            if(!players.isEmpty()) {
-              players.forEach(p -> members.append(p.getName()).append(" & "));
-              members.delete(members.length() - 3, members.length());
-              return new MessageBuilder(members.toString()).build();
-            }
+          if(pluginArena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
             return "???";
           }
-          if(pluginArena instanceof GuessArena) {
-            List<Map.Entry<Player, Integer>> list = new ArrayList<>(((GuessArena) pluginArena).getPlayersPoints().entrySet());
-            if(list.size() > number) {
-              return list.get(number).getKey().getName();
-            }
+          List<Plot> plotRanking = pluginArena.getPlotManager().getTopPlotsOrder();
+          if(plotRanking.size() < number) {
             return "???";
           }
-          return "???";
+          StringBuilder members = new StringBuilder();
+          plotRanking.get(number - 1).getMembers().forEach(player -> members.append(player.getName()).append(" & "));
+          members.delete(members.length() - 3, members.length());
+          return new MessageBuilder(members.toString()).build();
         }
       });
 
@@ -274,25 +263,14 @@ public class PlaceholderInitializer {
           if(pluginArena == null) {
             return null;
           }
-          if(pluginArena instanceof BuildArena) {
-            if(pluginArena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
-              return "???";
-            }
-            BuildArena buildArena = (BuildArena) pluginArena;
-            List<Player> players = buildArena.getTopList().get(number);
-            if(!players.isEmpty()) {
-              return String.valueOf(buildArena.getPlotFromPlayer(players.get(0)).getPoints());
-            }
+          if(pluginArena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
             return "???";
           }
-          if(pluginArena instanceof GuessArena) {
-            List<Map.Entry<Player, Integer>> list = new ArrayList<>(((GuessArena) pluginArena).getPlayersPoints().entrySet());
-            if(list.size() > number) {
-              return String.valueOf(list.get(number).getValue());
-            }
+          List<Plot> plotRanking = pluginArena.getPlotManager().getTopPlotsOrder();
+          if(plotRanking.size() < number) {
             return "???";
           }
-          return "???";
+          return String.valueOf(plotRanking.get(number - 1).getPoints());
         }
       });
     }
@@ -386,16 +364,9 @@ public class PlaceholderInitializer {
         if(pluginArena == null) {
           return null;
         }
-        if(pluginArena instanceof BuildArena) {
-          Plot plot = ((BuildArena) pluginArena).getWinnerPlot();
-          if(plot != null && !plot.getMembers().isEmpty() && plot.getMembers().contains(player)) {
-            return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_WIN").asKey().arena(pluginArena).build();
-          }
-        }
-        if(pluginArena instanceof GuessArena) {
-          if(((GuessArena) pluginArena).getWinner() == player) {
-            return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_WIN").asKey().arena(pluginArena).build();
-          }
+        Plot plot = pluginArena.getWinnerPlot();
+        if(plot != null && !plot.getMembers().isEmpty() && plot.getMembers().contains(player)) {
+          return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_WIN").asKey().arena(pluginArena).build();
         }
         return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_LOSE").asKey().arena(pluginArena).build();
       }
@@ -413,27 +384,19 @@ public class PlaceholderInitializer {
         if(pluginArena == null) {
           return null;
         }
-        if(pluginArena instanceof BuildArena) {
-          if(pluginArena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
-            return null;
-          }
-          List<List<Player>> playerList = new ArrayList<>(((BuildArena) pluginArena).getTopList().values());
-          for(int playerPlace = 0; playerPlace < playerList.size(); playerPlace++) {
-            if(playerList.get(playerPlace).contains(player)) {
-              return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_OWN").asKey().integer(playerPlace + 1).arena(pluginArena).build();
-            }
-          }
+        if(pluginArena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
+          return null;
         }
-        if(pluginArena instanceof GuessArena) {
-          if(pluginArena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
-            return null;
-          }
-          int playerPlace = new ArrayList<>(((GuessArena) pluginArena).getPlayersPoints().keySet()).indexOf(player);
-          if(playerPlace != -1) {
-            return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_OWN").asKey().integer(playerPlace).arena(pluginArena).build();
-          }
+        List<Plot> plotRanking = pluginArena.getPlotManager().getTopPlotsOrder();
+        List<Plot> potentialPlot = plotRanking.stream().filter(plot -> plot.getMembers().contains(player)).collect(Collectors.toList());
+        if(potentialPlot.isEmpty()) {
+          return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_OWN").asKey().integer(0).arena(pluginArena).build();
         }
-        return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_OWN").asKey().integer(0).arena(pluginArena).build();
+        int plotIndex = plotRanking.indexOf(potentialPlot.get(0));
+        if(plotIndex == -1) {
+          return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_OWN").asKey().integer(0).arena(pluginArena).build();
+        }
+        return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_OWN").asKey().integer(plotIndex + 1).arena(pluginArena).build();
       }
     });
 
@@ -455,16 +418,9 @@ public class PlaceholderInitializer {
         if(pluginArena == null) {
           return null;
         }
-        if(pluginArena instanceof BuildArena) {
-          Plot plot = ((BuildArena) pluginArena).getWinnerPlot();
-          if(plot != null && !plot.getMembers().isEmpty()) {
-            return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_WINNER").asKey().arena(pluginArena).build();
-          }
-        }
-        if(pluginArena instanceof GuessArena) {
-          if(((GuessArena) pluginArena).getWinner() != null) {
-            return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_WINNER").asKey().arena(pluginArena).build();
-          }
+        Plot plot = pluginArena.getWinnerPlot();
+        if(plot != null && !plot.getMembers().isEmpty()) {
+          return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_WINNER").asKey().arena(pluginArena).build();
         }
         return null;
       }
@@ -489,10 +445,7 @@ public class PlaceholderInitializer {
         if(pluginArena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
           return null;
         }
-        int places = pluginArena.getPlayersLeft().size();
-        if(pluginArena instanceof BuildArena) {
-          places = ((BuildArena) pluginArena).getTopList().size();
-        }
+        int places = pluginArena.getPlotManager().getTopPlotsOrder().size();
         if(places > 16) {
           places = 16;
         }

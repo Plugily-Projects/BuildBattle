@@ -30,16 +30,8 @@ import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.states.PluginInGameState;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
-import plugily.projects.minigamesbox.classic.handlers.reward.RewardType;
-import plugily.projects.minigamesbox.classic.handlers.reward.RewardsFactory;
 import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
 
 /**
  * @author Tigerpanzer_02
@@ -106,18 +98,11 @@ public class InGameState extends PluginInGameState {
         if(arena.getTimer() <= 0) {
           calculatePlotResults(pluginArena);
           if(pluginArena.getQueue().isEmpty()) {
-            calculateEndResults(pluginArena);
-            calculateWinnerPlot(pluginArena);
-            announceResults(pluginArena);
+            pluginArena.calculateWinnerPlot();
+            adjustStatistics(pluginArena);
 
-            Location winnerLocation = pluginArena.getWinnerPlot().getTeleportLocation();
-            String formattedMembers = pluginArena.getWinnerPlot().getFormattedMembers();
-
-            for(Player player : pluginArena.getPlayers()) {
-              VersionUtils.teleport(player, winnerLocation);
-              new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_WINNER").asKey().player(player).value(formattedMembers).sendPlayer();
-            }
-            givePlaceRewards(pluginArena);
+            pluginArena.teleportToWinnerPlot();
+            pluginArena.executeEndRewards();
             getPlugin().getArenaManager().stopGame(false, arena);
           } else {
             voteForNextPlot(pluginArena);
@@ -131,39 +116,6 @@ public class InGameState extends PluginInGameState {
     if(!pluginArena.enoughPlayersToContinue()) {
       getPlugin().getArenaManager().stopGame(false, pluginArena);
     }
-  }
-
-  private void givePlaceRewards(BuildArena pluginArena) {
-    RewardsFactory rewards = getPlugin().getRewardsHandler();
-    RewardType placeRewardType = null;
-
-    for(int i = 1; i <= pluginArena.getTopList().size(); i++) {
-      List<Player> list = pluginArena.getTopList().get(i);
-
-      if(list != null) {
-        for(Player player : list) {
-          if(placeRewardType == null) {
-            placeRewardType = rewards.getRewardType("PLACE");
-          }
-
-          rewards.performReward(player, pluginArena, placeRewardType, i);
-        }
-      }
-    }
-  }
-
-  private void calculateWinnerPlot(BuildArena pluginArena) {
-    Plot winnerPlot = null;
-    for(List<Player> potentialWinners : pluginArena.getTopList().values()) {
-      if(!potentialWinners.isEmpty()) {
-        winnerPlot = pluginArena.getPlotManager().getPlot(potentialWinners.get(0));
-        break;
-      }
-    }
-    if(winnerPlot == null) {
-      getPlugin().getLogger().log(Level.SEVERE, "Fatal error in getting winner plot in game! No plot contain any online player!");
-    }
-    pluginArena.setWinnerPlot(winnerPlot);
   }
 
   private void calculatePlotResults(BuildArena pluginArena) {
@@ -195,69 +147,31 @@ public class InGameState extends PluginInGameState {
       }
 
       if(!votingPlot.getMembers().contains(player)) {
-        votingPlot.setPoints(votingPlot.getPoints() + points);
+        votingPlot.addPoints(points);
       }
 
       user.setStatistic("LOCAL_POINTS", 3);
     }
   }
 
-  private void calculateEndResults(BuildArena pluginArena) {
-    for(int b = 1; b <= pluginArena.getPlayersLeft().size(); b++) {
-      pluginArena.getTopList().put(b, new ArrayList<>());
-    }
-    for(Plot buildPlot : pluginArena.getPlotManager().getPlots()) {
-      for(Map.Entry<Integer, List<Player>> map : new HashMap<>(pluginArena.getTopList()).entrySet()) {
-        Player first = map.getValue().isEmpty() ? null : map.getValue().get(0);
-
-        Plot plot = pluginArena.getPlotManager().getPlot(first);
-        if(plot == null) {
-          pluginArena.getTopList().put(map.getKey(), buildPlot.getMembers());
-          break;
+  private void adjustStatistics(BuildArena pluginArena) {
+    for(Plot plot : pluginArena.getPlotManager().getTopPlotsOrder()) {
+      plot.getMembers().forEach(player -> {
+        User user = getPlugin().getUserManager().getUser(player);
+        if(plot.getPoints() > user.getStatistic("POINTS_HIGHEST")) {
+          user.setStatistic("POINTS_HIGHEST", plot.getPoints());
         }
-        if(buildPlot.getPoints() > plot.getPoints()) {
-          moveScore(pluginArena, map.getKey(), buildPlot.getMembers());
-          break;
-        }
-        if(buildPlot.getPoints() == plot.getPoints()) {
-          List<Player> winners = pluginArena.getTopList().getOrDefault(map.getKey(), new ArrayList<>());
-          winners.addAll(buildPlot.getMembers());
-          pluginArena.getTopList().put(map.getKey(), winners);
-          break;
-        }
-      }
-    }
-  }
-
-  private void moveScore(BuildArena pluginArena, int pos, List<Player> owners) {
-    List<Player> after = pluginArena.getTopList().getOrDefault(pos, new ArrayList<>());
-    pluginArena.getTopList().put(pos, owners);
-    if(pos <= pluginArena.getPlayersLeft().size() && !after.isEmpty()) {
-      moveScore(pluginArena, pos + 1, after);
-    }
-  }
-
-  private void announceResults(BuildArena pluginArena) {
-    for(Map.Entry<Integer, List<Player>> map : pluginArena.getTopList().entrySet()) {
-      for(Player p : map.getValue()) {
-        User user = getPlugin().getUserManager().getUser(p);
-        Plot plot = pluginArena.getPlotManager().getPlot(p);
-        if(plot != null) {
-          if(plot.getPoints() > user.getStatistic("POINTS_HIGHEST")) {
-            user.setStatistic("POINTS_HIGHEST", plot.getPoints());
-          }
-          user.adjustStatistic("POINTS_TOTAL", plot.getPoints());
-        }
-        if(map.getKey() != 1) {
+        user.adjustStatistic("POINTS_TOTAL", plot.getPoints());
+        if(plot == pluginArena.getWinnerPlot()) {
+          user.adjustStatistic("WINS", 1);
+        } else {
           user.adjustStatistic("LOSES", 1);
-          continue;
         }
-        user.adjustStatistic("WINS", 1);
-        getPlugin().getUserManager().addExperience(p, 5);
-        if(plot != null && plot.getPoints() > user.getStatistic("POINTS_HIGHEST_WIN")) {
+        getPlugin().getUserManager().addExperience(player, 5);
+        if(plot.getPoints() > user.getStatistic("POINTS_HIGHEST_WIN")) {
           user.setStatistic("POINTS_HIGHEST_WIN", plot.getPoints());
         }
-      }
+      });
     }
   }
 
@@ -291,7 +205,7 @@ public class InGameState extends PluginInGameState {
           User user = getPlugin().getUserManager().getUser(player);
 
           if(!votingPlot.getMembers().contains(player))
-            votingPlot.setPoints(votingPlot.getPoints() + user.getStatistic("LOCAL_POINTS"));
+            votingPlot.addPoints(user.getStatistic("LOCAL_POINTS"));
 
           user.setStatistic("LOCAL_POINTS", 3);
 

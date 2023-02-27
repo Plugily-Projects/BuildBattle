@@ -31,11 +31,9 @@ import plugily.projects.minigamesbox.classic.arena.ArenaState;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 
 /**
@@ -44,11 +42,8 @@ import java.util.Queue;
  * Created at 22.04.2022
  */
 public class BuildArena extends BaseArena {
-
-  private final Map<Integer, List<Player>> topList = new HashMap<>();
   private final Queue<Plot> queue = new LinkedList<>();
   private Plot votingPlot;
-  private Plot winnerPlot;
   private VoteMenu voteMenu;
 
   public BuildArena(String id) {
@@ -69,9 +64,7 @@ public class BuildArena extends BaseArena {
 
   @Override
   public void cleanUpArena() {
-    winnerPlot = null;
     votingPlot = null;
-    topList.clear();
     if(voteMenu != null) {
       voteMenu.resetPoll();
     }
@@ -88,18 +81,6 @@ public class BuildArena extends BaseArena {
 
   public void setVotingPlot(Plot votingPlot) {
     this.votingPlot = votingPlot;
-  }
-
-  public Plot getWinnerPlot() {
-    return winnerPlot;
-  }
-
-  public void setWinnerPlot(Plot winnerPlot) {
-    this.winnerPlot = winnerPlot;
-  }
-
-  public Map<Integer, List<Player>> getTopList() {
-    return topList;
   }
 
   public Plot getVotingPlot() {

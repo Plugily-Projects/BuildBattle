@@ -34,12 +34,8 @@ import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author Tigerpanzer_02
@@ -51,12 +47,8 @@ public class GuessArena extends BaseArena {
   private final List<Player> whoGuessed = new ArrayList<>();
   private int round = 1;
   private BBTheme currentTheme = null;
-  private Player winner;
-  private Player currentBuilder;
 
   private Plot buildPlot = null;
-  //ToDo consider guess together with plot members
-  private Map<Player, Integer> playersPoints = new HashMap<>();
   private List<Integer> removedCharsAt = new ArrayList<>();
 
   private final int plotMemberSize = getArenaOption("PLOT_MEMBER_SIZE");
@@ -75,13 +67,10 @@ public class GuessArena extends BaseArena {
 
   @Override
   public void cleanUpArena() {
-    currentBuilder = null;
     currentTheme = null;
     round = 1;
     whoGuessed.clear();
-    playersPoints.clear();
     removedCharsAt.clear();
-    winner = null;
     playedPlots.clear();
     playedThemes.clear();
     super.cleanUpArena();
@@ -180,13 +169,6 @@ public class GuessArena extends BaseArena {
     super.setMinimumPlayers(amount);
   }
 
-  public void recalculateLeaderboard() {
-    playersPoints = playersPoints.entrySet()
-        .stream()
-        .sorted((Map.Entry.<Player, Integer>comparingByValue().reversed()))
-        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-  }
-
   public void addWhoGuessed(Player player) {
     whoGuessed.add(player);
     getPlugin().getRewardsHandler().performReward(player, this, getPlugin().getRewardsHandler().getRewardType("GUESS"), -1);
@@ -216,15 +198,12 @@ public class GuessArena extends BaseArena {
 
     int bonusAmount = getPlugin().getConfig().getInt("Guessing-Points." + (whoGuessed.size() + 1), 0);
 
-    playersPoints.put(player, playersPoints.getOrDefault(player, 0) + currentTheme.getDifficulty().getPointsReward() + bonusAmount);
+    getPlotManager().getPlot(player).addPoints(currentTheme.getDifficulty().getPointsReward() + bonusAmount);
+    buildPlot.addPoints(getPlugin().getConfig().getInt("Guessing-Points.Builder", 1));
 
-    playersPoints.put(currentBuilder, playersPoints.getOrDefault(currentBuilder, 0) + getPlugin().getConfig().getInt("Guessing-Points.Builder", 1));
+    addWhoGuessed(player);
+    Bukkit.getPluginManager().callEvent(new PlayerThemeGuessEvent(this, currentTheme));
 
-    getPlugin().getServer().getScheduler().runTask(getPlugin(), () -> {
-      addWhoGuessed(player);
-      Bukkit.getPluginManager().callEvent(new PlayerThemeGuessEvent(this, currentTheme));
-      recalculateLeaderboard();
-    });
   }
 
   public BBTheme getCurrentBBTheme() {
@@ -272,20 +251,8 @@ public class GuessArena extends BaseArena {
     return whoGuessed;
   }
 
-  public Player getWinner() {
-    return winner;
-  }
-
-  public void setWinner(Player winner) {
-    this.winner = winner;
-  }
-
   public List<Integer> getRemovedCharsAt() {
     return removedCharsAt;
-  }
-
-  public Map<Player, Integer> getPlayersPoints() {
-    return playersPoints;
   }
 
 }

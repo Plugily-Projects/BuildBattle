@@ -93,7 +93,7 @@ public class WeatherChangeOption {
 
         for(Player p : plot.getMembers()) {
           p.setPlayerWeather(plot.getWeatherType());
-          new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_CHANGED").asKey().value(new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_TYPE_" + (isDownfall ? "DOWNFALL" : "CLEAR")).build()).player(p).sendPlayer();
+          new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_CHANGED").asKey().value(new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_TYPE_" + (isDownfall ? "DOWNFALL" : "CLEAR")).asKey().build()).player(p).sendPlayer();
         }
       }
     });
