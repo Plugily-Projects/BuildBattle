@@ -125,7 +125,7 @@ public class PlaceholderInitializer {
       }
     });
 
-    placeholderManager.registerPlaceholder(new Placeholder("difficulty_pointsreward", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+    placeholderManager.registerPlaceholder(new Placeholder("difficulty_points_reward", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
       public String getValue(Player player, PluginArena arena) {
         return getTheme(arena);
