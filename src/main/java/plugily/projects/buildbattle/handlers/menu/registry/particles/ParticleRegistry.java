@@ -87,7 +87,7 @@ public class ParticleRegistry {
 
       ParticleItem particleItem = new ParticleItem();
       particleItem.setItemStack(new ItemBuilder(XMaterial.matchXMaterial(config
-          .getString(particle + ".material-name", "bedrock").toUpperCase(Locale.ENGLISH)).orElse(XMaterial.BEDROCK).parseItem())
+          .getString(particle + ".material-name", "bedrock").toUpperCase(Locale.ENGLISH)).orElse(XMaterial.PAPER).parseItem())
           .name(new MessageBuilder(config.getString(particle + ".displayname")).build())
           .lore(lore)
           .build());

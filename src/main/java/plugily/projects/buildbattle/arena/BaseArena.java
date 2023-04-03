@@ -193,7 +193,7 @@ public class BaseArena extends PluginArena {
   }
 
   public void calculateWinnerPlot() {
-    winnerPlot = plotManager.getTopPlotsOrder().get(plotManager.getTopPlotsOrder().size() - 1);
+    winnerPlot = plotManager.getTopPlotsOrder().get(0);
   }
 
   public void executeEndRewards() {

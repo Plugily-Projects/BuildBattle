@@ -2,7 +2,7 @@ name: ${description}
 main: plugily.projects.buildbattle.Main
 authors: [ PlugilyProjects, Tigerpanzer_02, Tigerpanzer, Plajer, TomTheDeveloper ]
 version: ${version}
-softdepend: [ Vault,Citizens,  PlaceholderAPI, Parties, Spigot-Party-API-PAF, PartyAndFriends, ViaVersion, ProtocolSupport ]
+softdepend: [ Vault, Citizens,  PlaceholderAPI, Parties, Spigot-Party-API-PAF, PartyAndFriends, ViaVersion, ProtocolSupport ]
 api-version: 1.13
 
 commands:
