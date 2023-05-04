@@ -56,7 +56,6 @@ public class StartingState extends PluginStartingState {
       pluginArena.setArenaInGameState(BaseArena.ArenaInGameState.THEME_VOTING);
 
       for(Player player : arena.getPlayers()) {
-        pluginArena.addMenuItem(player);
         //to prevent Multiverse changing gamemode bug
         Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setGameMode(GameMode.CREATIVE), 40);
       }

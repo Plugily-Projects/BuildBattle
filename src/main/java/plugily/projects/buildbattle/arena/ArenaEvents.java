@@ -25,30 +25,14 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.ItemFrame;
-import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Vehicle;
+import org.bukkit.entity.*;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockDispenseEvent;
-import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.block.BlockIgniteEvent;
-import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPistonRetractEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.BlockSpreadEvent;
-import org.bukkit.event.block.LeavesDecayEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.block.*;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -541,13 +525,21 @@ public class ArenaEvents extends PluginArenaEvents {
 
 
   @EventHandler
-  public void onArrowPickup(PlugilyPlayerPickupArrow e) {
-    if(plugin.getArenaRegistry().isInArena(e.getPlayer())) {
-      e.getItem().remove();
-      e.setCancelled(true);
+  public void onArrowPickup(PlugilyPlayerPickupArrow event) {
+    if(plugin.getArenaRegistry().isInArena(event.getPlayer())) {
+      event.getItem().remove();
+      event.setCancelled(true);
     }
   }
 
+  @EventHandler
+  public void onInventoryClose(InventoryCloseEvent event) {
+    Player player = (Player) event.getPlayer();
+    BaseArena baseArena = plugin.getArenaRegistry().getArena(player);
+    if(baseArena != null && baseArena.getArenaInGameState() == BaseArena.ArenaInGameState.BUILD_TIME) {
+      baseArena.addMenuItem(player);
+    }
+  }
 
   @EventHandler
   public void onItemMove(InventoryClickEvent event) {

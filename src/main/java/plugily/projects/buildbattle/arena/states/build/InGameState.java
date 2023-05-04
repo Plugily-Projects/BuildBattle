@@ -61,11 +61,7 @@ public class InGameState extends PluginInGameState {
 
           for(Player player : pluginArena.getPlayers()) {
             player.closeInventory();
-            /*Teleports on Starting state already
-            Plot plot = getPlotManager().getPlot(p);
-            if(plot != null) {
-              p.teleport(plot.getTeleportLocation());
-            }*/
+            pluginArena.addMenuItem(player);
           }
         } else {
           handleThemeVoting(pluginArena);
