@@ -338,7 +338,7 @@ In-Game:
           Being-Selected: "%plugin_prefix% Theme is being selected..."
           Guess:
             Title: "5,20,5;Start Guessing!"
-            Points: "%plugin_prefix% +%difficulty_points_reward% points!"
+            Points: "%plugin_prefix% +%arena_difficulty_points_reward% points!"
             Guessed: "%plugin_prefix% %player% correctly guessed the theme!"
             Cant-Talk: "%color_chat_issue%%plugin_prefix% You can't talk if you already guessed!"
             Builder: "%color_chat_issue%%plugin_prefix% You can't talk when you're building!"
