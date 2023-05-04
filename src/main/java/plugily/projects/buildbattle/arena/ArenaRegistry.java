@@ -94,6 +94,7 @@ public class ArenaRegistry extends PluginArenaRegistry {
 
       ((BuildArena) arena).setTypeByPlotMembers();
     } else {
+      //todo gtb team mode, because why not!
       arena.setArenaOption("PLOT_MEMBER_SIZE", 1);
     }
 
