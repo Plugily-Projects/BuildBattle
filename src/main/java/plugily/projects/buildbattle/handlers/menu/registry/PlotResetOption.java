@@ -39,6 +39,7 @@ import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
 public class PlotResetOption {
 
   public PlotResetOption(OptionsRegistry registry) {
+    //todo reset after confirmation
     registry.registerOption(new MenuOption(34, "RESET", new ItemBuilder(Material.BARRIER)
         .name(new MessageBuilder("MENU_OPTION_CONTENT_RESET_ITEM_NAME").asKey().build())
         .lore(new MessageBuilder("MENU_OPTION_CONTENT_RESET_ITEM_LORE").asKey().build())

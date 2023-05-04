@@ -38,43 +38,41 @@ import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
  */
 public class PlayerHeadsOption {
 
-  public PlayerHeadsOption(OptionsRegistry registry) {
-    registry.registerOption(new MenuOption(10, "PLAYER_HEADS", new ItemBuilder(ItemUtils.PLAYER_HEAD_ITEM.clone())
-        .name(new MessageBuilder("MENU_OPTION_CONTENT_HEADS_ITEM_NAME").asKey().build())
-        .lore(new MessageBuilder("MENU_OPTION_CONTENT_HEADS_ITEM_LORE").asKey().build())
-        .build(), new MessageBuilder("MENU_OPTION_CONTENT_HEADS_INVENTORY").asKey().build()) {
+    public PlayerHeadsOption(OptionsRegistry registry) {
+        registry.registerOption(new MenuOption(10, "PLAYER_HEADS", new ItemBuilder(ItemUtils.PLAYER_HEAD_ITEM.clone())
+                .name(new MessageBuilder("MENU_OPTION_CONTENT_HEADS_ITEM_NAME").asKey().build())
+                .lore(new MessageBuilder("MENU_OPTION_CONTENT_HEADS_ITEM_LORE").asKey().build())
+                .build(), new MessageBuilder("MENU_OPTION_CONTENT_HEADS_INVENTORY").asKey().build()) {
 
-      @Override
-      public void onClick(InventoryClickEvent event) {
-        HumanEntity humanEntity = event.getWhoClicked();
-        humanEntity.closeInventory();
-        if(!(humanEntity instanceof Player)) {
-          return;
-        }
-        Player player = (Player) humanEntity;
-        if(registry.getPlugin().getConfigPreferences().getOption("HEAD_MENU_CUSTOM")) {
-          player.performCommand(registry.getPlugin().getConfig().getString("Head-Menu.Command", "heads"));
-          return;
-        }
-        NormalFastInv gui = new NormalFastInv(registry.getPlugin().getBukkitHelper().serializeInt(registry.getPlayerHeadsRegistry().getCategories().size() + 1), new MessageBuilder("MENU_OPTION_CONTENT_HEADS_INVENTORY").asKey().build());
+            @Override
+            public void onClick(InventoryClickEvent event) {
+                HumanEntity humanEntity = event.getWhoClicked();
+                humanEntity.closeInventory();
+                if (!(humanEntity instanceof Player)) {
+                    return;
+                }
+                Player player = (Player) humanEntity;
+                if (registry.getPlugin().getConfigPreferences().getOption("HEAD_MENU_CUSTOM")) {
+                    player.performCommand(registry.getPlugin().getConfig().getString("Head-Menu.Command", "heads"));
+                    return;
+                }
+                NormalFastInv gui = new NormalFastInv(registry.getPlugin().getBukkitHelper().serializeInt(registry.getPlayerHeadsRegistry().getCategories().size() + 1), new MessageBuilder("MENU_OPTION_CONTENT_HEADS_INVENTORY").asKey().build());
 
-        for(HeadsCategory headsCategory : registry.getPlayerHeadsRegistry().getCategories().keySet()) {
-          gui.addItem(new SimpleClickableItem(headsCategory.getItemStack(), clickEvent -> {
-            player.closeInventory();
-            for(HeadsCategory category : registry.getPlayerHeadsRegistry().getCategories().keySet()) {
-              if(player.hasPermission(category.getPermission())) {
-                category.getGui().open(player);
-                return;
-              }
-              new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_HEAD").asKey().player(player).sendPlayer();
-              return;
+                for (HeadsCategory headsCategory : registry.getPlayerHeadsRegistry().getCategories().keySet()) {
+                    gui.addItem(new SimpleClickableItem(headsCategory.getItemStack(), clickEvent -> {
+                        player.closeInventory();
+                        if (!player.hasPermission(headsCategory.getPermission())) {
+                            new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_HEAD").asKey().player(player).sendPlayer();
+                            return;
+                        }
+                        headsCategory.getGui().open(player);
+                    }));
+                }
+
+                registry.getPlugin().getOptionsRegistry().addGoBackItem(gui, gui.getInventory().getSize() - 1);
+                gui.open(humanEntity);
             }
-          }));
-        }
-        registry.getPlugin().getOptionsRegistry().addGoBackItem(gui, gui.getInventory().getSize() - 1);
-        gui.open(humanEntity);
-      }
-    });
-  }
+        });
+    }
 
 }

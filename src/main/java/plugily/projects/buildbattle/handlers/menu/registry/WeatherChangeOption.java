@@ -42,6 +42,7 @@ import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
 public class WeatherChangeOption {
 
   public WeatherChangeOption(OptionsRegistry registry) {
+    //todo add stormy (lightnings) and winter (snowflakes) with ice biome
     registry.registerOption(new MenuOption(28, "WEATHER", new ItemBuilder(Material.BUCKET)
         .name(new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_ITEM_NAME").asKey().build())
         .lore(new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_ITEM_LORE").asKey().build())
@@ -68,7 +69,7 @@ public class WeatherChangeOption {
         NormalFastInv gui = new NormalFastInv(9, new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_INVENTORY").asKey().build());
         for(WeatherType weatherType : WeatherType.values()) {
           Material material = Material.BUCKET;
-          if(weatherType == WeatherType.CLEAR) {
+          if (weatherType == WeatherType.DOWNFALL) {
             material = Material.WATER_BUCKET;
           }
           gui.addItem(new SimpleClickableItem(new ItemBuilder(material).name(new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_TYPE_" + weatherType.name()).asKey().build()).build(), clickEvent -> {

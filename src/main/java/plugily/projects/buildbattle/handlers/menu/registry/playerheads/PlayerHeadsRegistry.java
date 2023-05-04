@@ -88,7 +88,6 @@ public class PlayerHeadsRegistry {
       }
       NormalFastInv gui = new NormalFastInv(plugin.getBukkitHelper().serializeInt(playerHeads.size() + 1), new MessageBuilder(config.getString(str + ".menuname")).build());
 
-      playerHeads.forEach(gui::addItem);
       for(ItemStack playerHead : playerHeads) {
         gui.addItem(new SimpleClickableItem(playerHead, clickEvent -> clickEvent.getWhoClicked().getInventory().addItem(playerHead.clone())));
       }
