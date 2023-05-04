@@ -122,7 +122,7 @@ public class InGameState extends PluginInGameState {
     }
     // no players - stop game
     if(!pluginArena.enoughPlayersToContinue()) {
-      getPlugin().getArenaManager().stopGame(false, pluginArena);
+      getPlugin().getArenaManager().stopGame(true, pluginArena);
     }
   }
 

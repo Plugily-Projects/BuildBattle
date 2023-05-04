@@ -29,12 +29,7 @@ import plugily.projects.buildbattle.handlers.themes.vote.VoteMenu;
 import plugily.projects.buildbattle.handlers.themes.vote.VotePoll;
 import plugily.projects.minigamesbox.classic.arena.ArenaState;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * @author Tigerpanzer_02
@@ -100,7 +95,7 @@ public class BuildArena extends BaseArena {
       getPlugin().getDebugger().sendConsoleMsg("&c[Build Battle] [PLOT WARNING] Not enough plots in arena " + getId() + "! Lacks " + (neededPlots - getPlotManager().getPlots().size()) + " plots");
       getPlugin().getDebugger().sendConsoleMsg("&c[PLOT WARNING] Required " + neededPlots + " but have " + getPlotManager().getPlots().size());
       getPlugin().getDebugger().sendConsoleMsg("&c[PLOT WARNING] Instance was stopped!");
-      getPlugin().getArenaManager().stopGame(false, this);
+      getPlugin().getArenaManager().stopGame(true, this);
     }
     switch(getArenaType()) {
       case SOLO:
