@@ -25,7 +25,6 @@ import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
-
 import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 
@@ -42,8 +41,8 @@ public class Banner {
   private final List<BannerPattern> patterns = new LinkedList<>();
   private DyeColor color = DyeColor.WHITE;
 
-  public void setBaseColor(DyeColor color) {
-    this.color = color;
+  public void setBaseColor(DyeColor dyeColor) {
+    color = dyeColor;
   }
 
   public void addPattern(BannerPattern pattern) {

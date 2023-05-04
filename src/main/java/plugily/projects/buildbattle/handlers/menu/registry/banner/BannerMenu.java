@@ -82,6 +82,7 @@ public class BannerMenu {
       gui.addItem(new SimpleClickableItem(item, event -> {
         event.setCancelled(true);
         banner.setBaseColor(color);
+        banner.addPattern(new BannerPattern(color, PatternType.BASE));
         new BannerMenu(player, banner).openInventory(PatternStage.LAYER);
       }));
     }
