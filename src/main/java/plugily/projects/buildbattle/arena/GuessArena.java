@@ -194,18 +194,15 @@ public class GuessArena extends BaseArena {
   }
 
   public void broadcastPlayerGuessed(Player player) {
-    new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_GUESS_GUESSED").asKey().arena(this).player(player).sendArena();
-
-    new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_GUESS_POINTS").asKey().arena(this).player(player).sendPlayer();
-
     int bonusAmount = getPlugin().getConfig().getInt("Guessing-Points." + (whoGuessed.size() + 1), 0);
-
-    getPlotManager().getPlot(player).addPoints(currentTheme.getDifficulty().getPointsReward() + bonusAmount);
+    int points = currentTheme.getDifficulty().getPointsReward() + bonusAmount;
+    getPlotManager().getPlot(player).addPoints(points);
     buildPlot.addPoints(getPlugin().getConfig().getInt("Guessing-Points.Builder", 1));
+    new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_GUESS_GUESSED").asKey().arena(this).player(player).sendArena();
+    new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_GUESS_POINTS").asKey().integer(points).arena(this).player(player).sendPlayer();
 
     addWhoGuessed(player);
     Bukkit.getScheduler().runTask(getPlugin(), () -> Bukkit.getPluginManager().callEvent(new PlayerThemeGuessEvent(this, currentTheme)));
-
   }
 
   public BBTheme getCurrentBBTheme() {
