@@ -19,6 +19,8 @@ permissions:
   buildbattle.admin.*:
     default: op
     children:
+      buildbattle.particles: true
+      buildbattle.heads: true
       buildbattle.updatenotify: true
       buildbattle.admin: true
       buildbattle.admin.sign.create: true
