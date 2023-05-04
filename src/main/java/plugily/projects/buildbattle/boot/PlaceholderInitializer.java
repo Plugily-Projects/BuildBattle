@@ -323,7 +323,7 @@ public class PlaceholderInitializer {
     });
 
 
-    placeholderManager.registerPlaceholder(new Placeholder("team", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+    placeholderManager.registerPlaceholder(new Placeholder("teammates", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
       public String getValue(Player player, PluginArena arena) {
         return getMembers(player, arena);
