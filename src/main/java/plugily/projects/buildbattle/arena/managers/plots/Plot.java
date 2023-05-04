@@ -150,7 +150,7 @@ public class Plot {
 
     if(members.size() >= arena.getArenaOption("PLOT_MEMBER_SIZE")) {
       if(!silent)
-        new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_FULL").asKey().arena(arena).player(player).sendPlayer();
+        new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_FULL").asKey().prefix().arena(arena).player(player).sendPlayer();
       return false;
     }
 

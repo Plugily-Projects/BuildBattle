@@ -20,13 +20,13 @@
 
 package plugily.projects.buildbattle.handlers.menu.registry.particles;
 
-import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import plugily.projects.buildbattle.Main;
+import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
 import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
@@ -55,7 +55,7 @@ public class ParticleRemoveMenu {
       }
 
       Location location = map.getKey();
-      ItemStack itemStack = new ItemBuilder(particleItem.getItemStack().clone()).lore(new MessageBuilder("MENU_LOCATION").asKey().build(),
+      ItemStack itemStack = new ItemBuilder(particleItem.getItemStack().clone()).removeLore().lore(new MessageBuilder("MENU_LOCATION").asKey().build(),
           ChatColor.GRAY + "  x: " + Math.round(location.getX()),
           ChatColor.GRAY + "  y: " + Math.round(location.getY()),
           ChatColor.GRAY + "  z: " + Math.round(location.getZ())).build();

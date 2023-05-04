@@ -54,7 +54,6 @@ public class MessageInitializer {
     messageManager.registerMessage("IN_GAME_MESSAGES_ADMIN_CHANGED_THEME", new Message("In-Game.Messages.Admin.Changed-Theme", ""));
 
     messageManager.registerMessage("IN_GAME_MESSAGES_PLOT_", new Message("In-Game.Messages.Plot.", ""));
-    messageManager.registerMessage("IN_GAME_MESSAGES_PLOT_PARTICLE_ADDED", new Message("In-Game.Messages.Plot.Added-Particle", ""));
     messageManager.registerMessage("IN_GAME_MESSAGES_PLOT_NOBODY", new Message("In-Game.Messages.Plot.Nobody", ""));
     messageManager.registerMessage("IN_GAME_MESSAGES_PLOT_TIME_LEFT_TITLE", new Message("In-Game.Messages.Plot.Time-Left.Title", ""));
     messageManager.registerMessage("IN_GAME_MESSAGES_PLOT_TIME_LEFT_CHAT", new Message("In-Game.Messages.Plot.Time-Left.Chat", ""));
