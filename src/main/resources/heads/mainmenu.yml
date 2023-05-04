@@ -6,7 +6,7 @@ animals:
     - "animal heads menu"
   enabled: true
   config: animalheads
-  permission: particles.VIP
+  permission: buildbattle.heads
   menuname: "Animal heads"
 miniblocks:
   displayname: '&6Mini block heads'
@@ -16,7 +16,7 @@ miniblocks:
     - "mini blocks heads menu"
   enabled: true
   config: miniblocks
-  permission: particles.VIP
+  permission: buildbattle.heads
   menuname: "Mini blocks"
 info:
   displayname: '&6Info heads'
@@ -26,5 +26,5 @@ info:
     - "info heads menu"
   enabled: true
   config: info
-  permission: particles.VIP
+  permission: buildbattle.heads
   menuname: "Info blocks"

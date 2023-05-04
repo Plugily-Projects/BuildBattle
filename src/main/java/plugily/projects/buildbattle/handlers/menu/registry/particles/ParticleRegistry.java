@@ -39,12 +39,7 @@ import plugily.projects.minigamesbox.inventory.common.item.ItemMap;
 import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
 import plugily.projects.minigamesbox.inventory.paged.PagedFastInv;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -107,7 +102,7 @@ public class ParticleRegistry {
         config.set(particle + ".displayname", "&6" + particle);
         config.set(particle + ".lore", Arrays.asList("&7Click to activate", "&7on your location"));
         config.set(particle + ".material-name", Material.PAPER.name());
-        config.set(particle + ".permission", "particles.VIP");
+        config.set(particle + ".permission", "buildbattle.particles");
         continue;
       }
       if(!config.isSet(particle + ".material-name")) {

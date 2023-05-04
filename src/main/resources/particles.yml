@@ -6,7 +6,7 @@ ASH:
     - 'Click to activate'
     - 'on your location'
   material-name: CHARCOAL
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 BARRIER:
   displayname: '&6Barrier'
@@ -14,7 +14,7 @@ BARRIER:
     - 'Click to activate'
     - 'on your location'
   material-name: BARRIER
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 BLOCK_CRACK:
   displayname: '&6Block Crack'
@@ -22,7 +22,7 @@ BLOCK_CRACK:
     - 'Click to activate'
     - 'on your location'
   material-name: PAPER
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 BLOCK_DUST:
   displayname: '&6Block Dust'
@@ -30,7 +30,7 @@ BLOCK_DUST:
     - 'Click to activate'
     - 'on your location'
   material-name: PAPER
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 BUBBLE_COLUMN_UP:
   displayname: '&6Bubble Column Up'
@@ -38,7 +38,7 @@ BUBBLE_COLUMN_UP:
     - 'Click to activate'
     - 'on your location'
   material-name: WATER_BUCKET
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 BUBBLE_POP:
   displayname: '&6Bubble Pop'
@@ -46,7 +46,7 @@ BUBBLE_POP:
     - 'Click to activate'
     - 'on your location'
   material-name: WATER_BUCKET
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 CAMPFIRE_COSY_SMOKE:
   displayname: '&6Campfire Cosy Smoke'
@@ -54,7 +54,7 @@ CAMPFIRE_COSY_SMOKE:
     - 'Click to activate'
     - 'on your location'
   material-name: CAMPFIRE
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 CAMPFIRE_SIGNAL_SMOKE:
   displayname: '&6Campfire Signal Smoke'
@@ -62,7 +62,7 @@ CAMPFIRE_SIGNAL_SMOKE:
     - 'Click to activate'
     - 'on your location'
   material-name: CAMPFIRE
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 CLOUD:
   displayname: '&6Cloud'
@@ -70,7 +70,7 @@ CLOUD:
     - 'Click to activate'
     - 'on your location'
   material-name: SNOW_BLOCK
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 COMPOSTER:
   displayname: '&6Composter'
@@ -78,7 +78,7 @@ COMPOSTER:
     - 'Click to activate'
     - 'on your location'
   material-name: COMPOSTER
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 CRIMSON_SPORE:
   displayname: '&6Crimson Spore'
@@ -86,7 +86,7 @@ CRIMSON_SPORE:
     - 'Click to activate'
     - 'on your location'
   material-name: CRIMSON_FUNGUS
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 CRIT:
   displayname: '&6Critical'
@@ -94,7 +94,7 @@ CRIT:
     - 'Click to activate'
     - 'on your location'
   material-name: LIGHT_GRAY_DYE
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 CRIT_MAGIC:
   displayname: '&6Critical Magic'
@@ -102,7 +102,7 @@ CRIT_MAGIC:
     - 'Click to activate'
     - 'on your location'
   material-name: CYAN_DYE
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 CURRENT_DOWN:
   displayname: '&6Current Down'
@@ -110,7 +110,7 @@ CURRENT_DOWN:
     - 'Click to activate'
     - 'on your location'
   material-name: WATER_BUCKET
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 DAMAGE_INDICATOR:
   displayname: '&6Damage Indicator'
@@ -118,7 +118,7 @@ DAMAGE_INDICATOR:
     - 'Click to activate'
     - 'on your location'
   material-name: NETHER_WART
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 DOLPHIN:
   displayname: '&6Dolphin'
@@ -126,7 +126,7 @@ DOLPHIN:
     - 'Click to activate'
     - 'on your location'
   material-name: DOLPHIN_SPAWN_EGG
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 DRAGON_BREATH:
   displayname: '&6Dragon Breath'
@@ -134,7 +134,7 @@ DRAGON_BREATH:
     - 'Click to activate'
     - 'on your location'
   material-name: DRAGON_BREATH
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 DRIP_LAVA:
   displayname: '&6Drip Lava'
@@ -142,7 +142,7 @@ DRIP_LAVA:
     - 'Click to activate'
     - 'on your location'
   material-name: LAVA_BUCKET
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 DRIP_WATER:
   displayname: '&6Drip Water'
@@ -150,7 +150,7 @@ DRIP_WATER:
     - 'Click to activate'
     - 'on your location'
   material-name: WATER_BUCKET
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 DRIPPING_HONEY:
   displayname: '&6Dripping Honey'
@@ -158,7 +158,7 @@ DRIPPING_HONEY:
     - 'Click to activate'
     - 'on your location'
   material-name: HONEYCOMB
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 DRIPPING_OBSIDIAN_TEAR:
   displayname: '&6Dripping Obsidian Tear'
@@ -166,7 +166,7 @@ DRIPPING_OBSIDIAN_TEAR:
     - 'Click to activate'
     - 'on your location'
   material-name: OBSIDIAN
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 ENCHANTMENT_TABLE:
   displayname: '&6Enchantment Table'
@@ -174,7 +174,7 @@ ENCHANTMENT_TABLE:
     - 'Click to activate'
     - 'on your location'
   material-name: ENCHANTING_TABLE
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 END_ROD:
   displayname: '&6End Rod'
@@ -182,7 +182,7 @@ END_ROD:
     - 'Click to activate'
     - 'on your location'
   material-name: END_ROD
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 EXPLOSION_NORMAL:
   displayname: '&6Explosion Normal'
@@ -190,7 +190,7 @@ EXPLOSION_NORMAL:
     - 'Click to activate'
     - 'on your location'
   material-name: TNT
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 EXPLOSION_LARGE:
   displayname: '&6Explosion Large'
@@ -198,7 +198,7 @@ EXPLOSION_LARGE:
     - 'Click to activate'
     - 'on your location'
   material-name: TNT
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 EXPLOSION_HUGE:
   displayname: '&6Explosion Huge'
@@ -206,7 +206,7 @@ EXPLOSION_HUGE:
     - 'Click to activate'
     - 'on your location'
   material-name: TNT
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 FALLING_DUST:
   displayname: '&6Falling Dust'
@@ -214,7 +214,7 @@ FALLING_DUST:
     - 'Click to activate'
     - 'on your location'
   material-name: MELON_SEEDS
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 FALLING_HONEY:
   displayname: '&6Falling Honey'
@@ -222,7 +222,7 @@ FALLING_HONEY:
     - 'Click to activate'
     - 'on your location'
   material-name: HONEYCOMB
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 FALLING_LAVA:
   displayname: '&6Falling Lava'
@@ -230,7 +230,7 @@ FALLING_LAVA:
     - 'Click to activate'
     - 'on your location'
   material-name: LAVA_BUCKET
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 FALLING_NECTAR:
   displayname: '&6Falling Nectar'
@@ -238,7 +238,7 @@ FALLING_NECTAR:
     - 'Click to activate'
     - 'on your location'
   material-name: WHITE_TERRACOTTA
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 FALLING_OBSIDIAN_TEAR:
   displayname: '&6Falling Obsidian Tear'
@@ -246,7 +246,7 @@ FALLING_OBSIDIAN_TEAR:
     - 'Click to activate'
     - 'on your location'
   material-name: OBSIDIAN
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 FALLING_WATER:
   displayname: '&6Falling Water'
@@ -254,7 +254,7 @@ FALLING_WATER:
     - 'Click to activate'
     - 'on your location'
   material-name: WATER_BUCKET
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 FIREWORKS_SPARK:
   displayname: '&6Fireworks Spark'
@@ -262,7 +262,7 @@ FIREWORKS_SPARK:
     - 'Click to activate'
     - 'on your location'
   material-name: FIREWORK_ROCKET
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 FLAME:
   displayname: '&6Flame'
@@ -270,7 +270,7 @@ FLAME:
     - 'Click to activate'
     - 'on your location'
   material-name: BLAZE_POWDER
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 FLASH:
   displayname: '&6Flash'
@@ -278,7 +278,7 @@ FLASH:
     - 'Click to activate'
     - 'on your location'
   material-name: NETHER_STAR
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 HEART:
   displayname: '&6Heart'
@@ -286,7 +286,7 @@ HEART:
     - 'Click to activate'
     - 'on your location'
   material-name: REDSTONE
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 ITEM_CRACK:
   displayname: '&6Item Cract'
@@ -294,7 +294,7 @@ ITEM_CRACK:
     - 'Click to activate'
     - 'on your location'
   material-name: PAPER
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 LANDING_HONEY:
   displayname: '&6Landing Honey'
@@ -302,7 +302,7 @@ LANDING_HONEY:
     - 'Click to activate'
     - 'on your location'
   material-name: HONEYCOMB
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 LANDING_LAVA:
   displayname: '&6Landing Lava'
@@ -310,7 +310,7 @@ LANDING_LAVA:
     - 'Click to activate'
     - 'on your location'
   material-name: LAVA_BUCKET
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 LANDING_OBSIDIAN_TEAR:
   displayname: '&6Landing Obsidian Tear'
@@ -318,7 +318,7 @@ LANDING_OBSIDIAN_TEAR:
     - 'Click to activate'
     - 'on your location'
   material-name: OBSIDIAN
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 LAVA:
   displayname: '&6Lava'
@@ -326,7 +326,7 @@ LAVA:
     - 'Click to activate'
     - 'on your location'
   material-name: LAVA_BUCKET
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 MOB_APPEARANCE:
   displayname: '&6Mob Appearance'
@@ -334,7 +334,7 @@ MOB_APPEARANCE:
     - 'Click to activate'
     - 'on your location'
   material-name: PAPER
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 NAUTILUS:
   displayname: '&6Nautilus'
@@ -342,7 +342,7 @@ NAUTILUS:
     - 'Click to activate'
     - 'on your location'
   material-name: NAUTILUS_SHELL
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 NOTE:
   displayname: '&6Note'
@@ -350,7 +350,7 @@ NOTE:
     - 'Click to activate'
     - 'on your location'
   material-name: NOTE_BLOCK
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 PORTAL:
   displayname: '&6Portal'
@@ -358,7 +358,7 @@ PORTAL:
     - 'Click to activate'
     - 'on your location'
   material-name: ENDER_EYE
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 REDSTONE:
   displayname: '&6Redstone'
@@ -366,7 +366,7 @@ REDSTONE:
     - 'Click to activate'
     - 'on your location'
   material-name: REDSTONE
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 REVERSE_PORTAL:
   displayname: '&6Reverse Portal'
@@ -374,7 +374,7 @@ REVERSE_PORTAL:
     - 'Click to activate'
     - 'on your location'
   material-name: ENDER_EYE
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 SLIME:
   displayname: '&6Slime'
@@ -382,7 +382,7 @@ SLIME:
     - 'Click to activate'
     - 'on your location'
   material-name: SLIME_BLOCK
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 SMOKE_NORMAL:
   data: 0
@@ -391,7 +391,7 @@ SMOKE_NORMAL:
     - 'Click to activate'
     - 'on your location'
   material-name: FLINT
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 SMOKE_LARGE:
   displayname: '&6Smoke Large'
@@ -399,7 +399,7 @@ SMOKE_LARGE:
     - 'Click to activate'
     - 'on your location'
   material-name: COAL_BLOCK
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 SNEEZE:
   displayname: '&6Sneeze'
@@ -407,7 +407,7 @@ SNEEZE:
     - 'Click to activate'
     - 'on your location'
   material-name: BAMBOO
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 SNOWBALL:
   displayname: '&6Snowball'
@@ -415,7 +415,7 @@ SNOWBALL:
     - 'Click to activate'
     - 'on your location'
   material-name: SNOWBALL
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 SNOW_SHOVEL:
   displayname: '&6Snow Shovel'
@@ -423,7 +423,7 @@ SNOW_SHOVEL:
     - 'Click to activate'
     - 'on your location'
   material-name: SNOWBALL
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 SOUL:
   displayname: '&6Soul'
@@ -431,7 +431,7 @@ SOUL:
     - 'Click to activate'
     - 'on your location'
   material-name: SOUL_SAND
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 SOUL_FIRE_FLAME:
   displayname: '&6Soul Fire Flame'
@@ -439,7 +439,7 @@ SOUL_FIRE_FLAME:
     - 'Click to activate'
     - 'on your location'
   material-name: SOUL_CAMPFIRE
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 SPELL:
   displayname: '&6Spell'
@@ -447,7 +447,7 @@ SPELL:
     - 'Click to activate'
     - 'on your location'
   material-name: SPLASH_POTION
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 SPELL_INSTANT:
   displayname: '&6Spell Instant'
@@ -455,7 +455,7 @@ SPELL_INSTANT:
     - 'Click to activate'
     - 'on your location'
   material-name: SPLASH_POTION
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 SPELL_MOB:
   displayname: '&6Spell Mob'
@@ -463,7 +463,7 @@ SPELL_MOB:
     - 'Click to activate'
     - 'on your location'
   material-name: LINGERING_POTION
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 SPELL_MOB_AMBIENT:
   displayname: '&6Spell Mob Ambient'
@@ -471,7 +471,7 @@ SPELL_MOB_AMBIENT:
     - 'Click to activate'
     - 'on your location'
   material-name: LINGERING_POTION
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 SPELL_WITCH:
   displayname: '&6Spell Witch'
@@ -479,7 +479,7 @@ SPELL_WITCH:
     - 'Click to activate'
     - 'on your location'
   material-name: WITCH_SPAWN_EGG
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 SPIT:
   displayname: '&6Spit'
@@ -487,7 +487,7 @@ SPIT:
     - 'Click to activate'
     - 'on your location'
   material-name: LLAMA_SPAWN_EGG
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 SQUID_INK:
   displayname: '&6Squid Ink'
@@ -495,7 +495,7 @@ SQUID_INK:
     - 'Click to activate'
     - 'on your location'
   material-name: INK_SAC
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 SUSPENDED:
   displayname: '&6Suspended'
@@ -503,7 +503,7 @@ SUSPENDED:
     - 'Click to activate'
     - 'on your location'
   material-name: INK_SAC
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 SUSPENDED_DEPTH:
   displayname: '&6Suspended Depth'
@@ -511,7 +511,7 @@ SUSPENDED_DEPTH:
     - 'Click to activate'
     - 'on your location'
   material-name: INK_SAC
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 SWEEP_ATTACK:
   displayname: '&6Sweep Attack'
@@ -519,7 +519,7 @@ SWEEP_ATTACK:
     - 'Click to activate'
     - 'on your location'
   material-name: IRON_SWORD
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 TOTEM:
   displayname: '&6Totem'
@@ -527,7 +527,7 @@ TOTEM:
     - 'Click to activate'
     - 'on your location'
   material-name: TOTEM_OF_UNDYING
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 TOWN_AURA:
   displayname: '&6Town Aura'
@@ -535,7 +535,7 @@ TOWN_AURA:
     - 'Click to activate'
     - 'on your location'
   material-name: COAL
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 VILLAGER_ANGRY:
   displayname: '&6Villager Angry'
@@ -543,7 +543,7 @@ VILLAGER_ANGRY:
     - 'Click to activate'
     - 'on your location'
   material-name: EMERALD
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 VILLAGER_HAPPY:
   displayname: '&6Villager Happy'
@@ -551,7 +551,7 @@ VILLAGER_HAPPY:
     - 'Click to activate'
     - 'on your location'
   material-name: EMERALD
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 WARPED_SPORE:
   displayname: '&6Warped Spore'
@@ -559,7 +559,7 @@ WARPED_SPORE:
     - 'Click to activate'
     - 'on your location'
   material-name: WARPED_ROOTS
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 WATER_BUBBLE:
   displayname: '&6Water Bubble'
@@ -567,7 +567,7 @@ WATER_BUBBLE:
     - 'Click to activate'
     - 'on your location'
   material-name: WATER_BUCKET
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 WATER_SPLASH:
   displayname: '&6Water Splash'
@@ -575,7 +575,7 @@ WATER_SPLASH:
     - 'Click to activate'
     - 'on your location'
   material-name: WATER_BUCKET
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 WATER_WAKE:
   displayname: '&6Water Wake'
@@ -583,7 +583,7 @@ WATER_WAKE:
     - 'Click to activate'
     - 'on your location'
   material-name: WATER_BUCKET
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 WHITE_ASH:
   displayname: '&6White Ash'
@@ -591,7 +591,7 @@ WHITE_ASH:
     - 'Click to activate'
     - 'on your location'
   material-name: BONE_MEAL
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 WATER_DROP:
   displayname: '&6Water Drop'
@@ -599,7 +599,7 @@ WATER_DROP:
     - 'Click to activate'
     - 'on your location'
   material-name: WATER_BUCKET
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: false
 LEGACY_BLOCK_CRACK:
   displayname: '&6Legacy Block Crack'
@@ -607,7 +607,7 @@ LEGACY_BLOCK_CRACK:
     - 'Click to activate'
     - 'on your location'
   material-name: PAPER
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: true
 LEGACY_BLOCK_DUST:
   displayname: '&6Legacy Block Crack'
@@ -615,7 +615,7 @@ LEGACY_BLOCK_DUST:
     - 'Click to activate'
     - 'on your location'
   material-name: PAPER
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: true
 LEGACY_FALLING_DUST:
   displayname: '&6Legacy Falling Dust'
@@ -623,5 +623,5 @@ LEGACY_FALLING_DUST:
     - 'Click to activate'
     - 'on your location'
   material-name: PAPER
-  permission: particles.VIP
+  permission: buildbattle.particles
   disabled: true

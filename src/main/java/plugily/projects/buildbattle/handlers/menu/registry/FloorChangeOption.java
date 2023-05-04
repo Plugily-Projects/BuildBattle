@@ -27,7 +27,6 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.menu.MenuOption;
@@ -44,7 +43,6 @@ import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 public class FloorChangeOption {
 
   public FloorChangeOption(OptionsRegistry registry) {
-    //todo material change
     registry.registerOption(new MenuOption(14, "FLOOR", new ItemBuilder(XMaterial.OAK_LOG.parseItem())
         .name(new MessageBuilder("MENU_OPTION_CONTENT_FLOOR_ITEM_NAME").asKey().build())
         .lore(new MessageBuilder("MENU_OPTION_CONTENT_FLOOR_ITEM_LORE").asKey().build())
