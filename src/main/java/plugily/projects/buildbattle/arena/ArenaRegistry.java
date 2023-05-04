@@ -86,6 +86,12 @@ public class ArenaRegistry extends PluginArenaRegistry {
       }
 
       arena.setArenaOption("PLOT_MEMBER_SIZE", plotMemberSize);
+      int minPlayers = arena.getArenaOption("MINIMUM_PLAYERS");
+      if(minPlayers <= plotMemberSize) {
+        arena.setArenaOption("MINIMUM_PLAYERS", plotMemberSize + 1);
+        plugin.getDebugger().sendConsoleMsg(new MessageBuilder("VALIDATOR_INVALID_ARENA_CONFIGURATION").asKey().value("MIN PLAYERS NEEDS TO BE 1 MORE THAN PLOT_MEMBER_SIZE, AUTOMATICALLY ADJUSTED. CONFIRM BY CHECKING ARENA SETUP!").arena(arena).build());
+      }
+
       ((BuildArena) arena).setTypeByPlotMembers();
     } else {
       arena.setArenaOption("PLOT_MEMBER_SIZE", 1);
