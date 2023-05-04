@@ -108,6 +108,15 @@ public class VoteEvents implements Listener {
     if(voteItem != null) {
       plugin.getUserManager().getUser(event.getPlayer()).setStatistic("LOCAL_POINTS", plugin.getVoteItems().getPointsAndPlayVoteSound(event.getPlayer(), voteItem));
       new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_SUCCESS").asKey().value(ComplementAccessor.getComplement().getDisplayName(voteItem.getItemStack().getItemMeta())).arena(arena).player(event.getPlayer()).sendPlayer();
+      if(arena.getArenaType() == BaseArena.ArenaType.TEAM) {
+        plot.getMembers().forEach(player -> {
+          plugin.getUserManager().getUser(player).setStatistic("LOCAL_POINTS", plugin.getVoteItems().getPointsAndPlayVoteSound(player, voteItem));
+          if(player != event.getPlayer()) {
+            //todo add by who
+            new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_SUCCESS").asKey().value(ComplementAccessor.getComplement().getDisplayName(voteItem.getItemStack().getItemMeta())).arena(arena).player(event.getPlayer()).send(player);
+          }
+        });
+      }
       event.setCancelled(true);
     }
   }

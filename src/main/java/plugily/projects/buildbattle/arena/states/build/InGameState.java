@@ -20,6 +20,7 @@
 
 package plugily.projects.buildbattle.arena.states.build;
 
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.arena.BaseArena;
@@ -32,6 +33,9 @@ import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
 import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Tigerpanzer_02
@@ -62,6 +66,7 @@ public class InGameState extends PluginInGameState {
           for(Player player : pluginArena.getPlayers()) {
             player.closeInventory();
             pluginArena.addMenuItem(player);
+            player.setGameMode(GameMode.CREATIVE);
           }
         } else {
           handleThemeVoting(pluginArena);
@@ -127,7 +132,7 @@ public class InGameState extends PluginInGameState {
     if(hidePlotOwner) {
       formattedMembers = votingPlot.getFormattedMembers();
     }
-
+    List<Plot> plotsVoted = new ArrayList<>();
     for(Player player : pluginArena.getPlayersLeft()) {
       if(hidePlotOwner) {
         new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_WAS").asKey().arena(pluginArena).player(player).value(formattedMembers).sendArena();
@@ -141,9 +146,12 @@ public class InGameState extends PluginInGameState {
       if(points == 0) {
         points = 3;
       }
-
+      Plot plot = pluginArena.getPlotFromPlayer(player);
       if(!votingPlot.getMembers().contains(player)) {
-        votingPlot.addPoints(points);
+        if(!plotsVoted.contains(plot)) {
+          votingPlot.addPoints(points);
+          plotsVoted.add(plot);
+        }
       }
 
       user.setStatistic("LOCAL_POINTS", 3);
@@ -197,11 +205,16 @@ public class InGameState extends PluginInGameState {
 
     if(votingPlot != null) {
       if(votingPlot.getPoints() == 0) {
+        List<Plot> plotsVoted = new ArrayList<>();
         for(Player player : pluginArena.getPlayersLeft()) {
           User user = getPlugin().getUserManager().getUser(player);
-
-          if(!votingPlot.getMembers().contains(player))
-            votingPlot.addPoints(user.getStatistic("LOCAL_POINTS"));
+          Plot plot = pluginArena.getPlotFromPlayer(player);
+          if(!votingPlot.getMembers().contains(player)) {
+            if(!plotsVoted.contains(plot)) {
+              votingPlot.addPoints(user.getStatistic("LOCAL_POINTS"));
+              plotsVoted.add(plot);
+            }
+          }
 
           user.setStatistic("LOCAL_POINTS", 3);
 
