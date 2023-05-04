@@ -31,7 +31,7 @@ import plugily.projects.minigamesbox.classic.arena.states.PluginStartingState;
 
 /**
  * @author Plajer
- *     <p>Created at 03.06.2019
+ * <p>Created at 03.06.2019
  */
 public class StartingState extends PluginStartingState {
 
@@ -39,10 +39,10 @@ public class StartingState extends PluginStartingState {
   public void handleCall(PluginArena arena) {
     super.handleCall(arena);
     BuildArena pluginArena = (BuildArena) getPlugin().getArenaRegistry().getArena(arena.getId());
-    if (pluginArena == null) {
+    if(pluginArena == null) {
       return;
     }
-    if (arena.getTimer() == 0 || arena.isForceStart()) {
+    if(arena.getTimer() == 0 || arena.isForceStart()) {
 
       pluginArena.setParticleRefreshScheduler(new ParticleRefreshScheduler(getPlugin()));
 
@@ -55,8 +55,8 @@ public class StartingState extends PluginStartingState {
 
       pluginArena.setArenaInGameState(BaseArena.ArenaInGameState.THEME_VOTING);
 
-      for (Player player : arena.getPlayers()) {
-        player.getInventory().setItem(8, pluginArena.getPlugin().getOptionsRegistry().getMenuItem());
+      for(Player player : arena.getPlayers()) {
+        pluginArena.addMenuItem(player);
         //to prevent Multiverse changing gamemode bug
         Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.setGameMode(GameMode.CREATIVE), 40);
       }

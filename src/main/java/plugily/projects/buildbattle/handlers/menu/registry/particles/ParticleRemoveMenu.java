@@ -70,7 +70,7 @@ public class ParticleRemoveMenu {
       }));
     }
 
-    gui.setItem(45, plugin.getOptionsRegistry().getGoBackItem());
+    plugin.getOptionsRegistry().addGoBackItem(gui, 45);
     gui.open(player);
   }
 

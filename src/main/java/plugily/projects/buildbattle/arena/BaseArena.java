@@ -34,6 +34,7 @@ import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
 import plugily.projects.minigamesbox.classic.handlers.reward.RewardType;
 import plugily.projects.minigamesbox.classic.handlers.reward.RewardsFactory;
+import plugily.projects.minigamesbox.classic.utils.items.HandlerItem;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 
 import java.util.ArrayList;
@@ -214,6 +215,22 @@ public class BaseArena extends PluginArena {
       new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_WINNER").asKey().player(player).value(formattedMembers).sendPlayer();
     }
   }
+
+  private HandlerItem getMenuItem() {
+    HandlerItem optionsMenu = new HandlerItem(getPlugin().getOptionsRegistry().getMenuItem());
+    optionsMenu.setLeftClick(true);
+    optionsMenu.setRightClick(true);
+    optionsMenu.addInteractHandler(event -> {
+      event.setCancelled(true);
+      getPlugin().getOptionsRegistry().getOptionsGui().open(event.getPlayer());
+    });
+    return optionsMenu;
+  }
+
+  public void addMenuItem(Player player) {
+    player.getInventory().setItem(8, getMenuItem().getItemStack());
+  }
+
 
   public PlotManager getPlotManager() {
     return plotManager;

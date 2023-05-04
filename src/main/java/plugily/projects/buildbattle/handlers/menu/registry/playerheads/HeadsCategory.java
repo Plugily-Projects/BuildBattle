@@ -20,8 +20,8 @@
 
 package plugily.projects.buildbattle.handlers.menu.registry.playerheads;
 
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
 
 /**
  * @author Plajer
@@ -35,7 +35,7 @@ public class HeadsCategory {
   private final String categoryID;
   private ItemStack itemStack;
   private String permission;
-  private Inventory inventoryView;
+  private NormalFastInv gui;
 
   public HeadsCategory(String categoryID) {
     this.categoryID = categoryID;
@@ -61,11 +61,11 @@ public class HeadsCategory {
     this.permission = permission;
   }
 
-  public Inventory getInventory() {
-    return inventoryView;
+  public NormalFastInv getGui() {
+    return gui;
   }
 
-  public void setInventory(Inventory inventoryView) {
-    this.inventoryView = inventoryView;
+  public void setGui(NormalFastInv inventoryView) {
+    this.gui = inventoryView;
   }
 }

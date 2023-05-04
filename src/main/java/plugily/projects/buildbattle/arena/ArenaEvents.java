@@ -52,6 +52,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.event.world.StructureGrowEvent;
@@ -592,6 +593,17 @@ public class ArenaEvents extends PluginArenaEvents {
     }
     event.setCancelled(true);
     gameArena.broadcastPlayerGuessed(player);
+  }
+
+  @EventHandler
+  public void onPlayerDropItem(PlayerDropItemEvent event) {
+    if(!plugin.getArenaRegistry().isInArena(event.getPlayer())) {
+      return;
+    }
+    ItemStack drop = event.getItemDrop().getItemStack();
+    if(plugin.getVoteItems().getPoints(drop) != 0) {
+      event.setCancelled(true);
+    }
   }
 
 }

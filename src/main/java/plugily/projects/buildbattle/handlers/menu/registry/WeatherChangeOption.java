@@ -25,15 +25,14 @@ import org.bukkit.WeatherType;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.menu.MenuOption;
 import plugily.projects.buildbattle.handlers.menu.OptionsRegistry;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
-import plugily.projects.minigamesbox.classic.utils.misc.complement.ComplementAccessor;
+import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
+import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
 
 /**
  * @author Plajer
@@ -52,25 +51,9 @@ public class WeatherChangeOption {
       public void onClick(InventoryClickEvent event) {
         HumanEntity humanEntity = event.getWhoClicked();
         humanEntity.closeInventory();
-
-        Inventory weatherInv = ComplementAccessor.getComplement().createInventory(null, 9, new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_INVENTORY").asKey().build());
-        weatherInv.addItem(new ItemBuilder(Material.BUCKET).name(new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_TYPE_CLEAR").asKey().build()).build());
-        weatherInv.addItem(new ItemBuilder(Material.WATER_BUCKET).name(new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_TYPE_DOWNFALL").asKey().build()).build());
-        weatherInv.addItem(registry.getGoBackItem());
-        humanEntity.openInventory(weatherInv);
-      }
-
-      @Override
-      public void onTargetClick(InventoryClickEvent event) {
-        ItemStack item = event.getCurrentItem();
-        if(item == null)
+        if(!(humanEntity instanceof Player)) {
           return;
-
-        HumanEntity humanEntity = event.getWhoClicked();
-
-        if (!(humanEntity instanceof Player))
-          return;
-
+        }
         Player player = (Player) humanEntity;
         BaseArena arena = registry.getPlugin().getArenaRegistry().getArena(player);
 
@@ -82,19 +65,23 @@ public class WeatherChangeOption {
         if(plot == null) {
           return;
         }
+        NormalFastInv gui = new NormalFastInv(9, new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_INVENTORY").asKey().build());
+        for(WeatherType weatherType : WeatherType.values()) {
+          Material material = Material.BUCKET;
+          if(weatherType == WeatherType.CLEAR) {
+            material = Material.WATER_BUCKET;
+          }
+          gui.addItem(new SimpleClickableItem(new ItemBuilder(material).name(new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_TYPE_" + weatherType.name()).asKey().build()).build(), clickEvent -> {
+            plot.setWeatherType(weatherType);
 
-        boolean isDownfall = item.getType() == Material.WATER_BUCKET;
-
-        if (!isDownfall && item.getType() != Material.BUCKET) {
-          return;
+            for(Player p : plot.getMembers()) {
+              p.setPlayerWeather(plot.getWeatherType());
+              new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_CHANGED").asKey().value(new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_TYPE_" + weatherType.name()).asKey().build()).player(p).sendPlayer();
+            }
+          }));
         }
-
-        plot.setWeatherType(isDownfall ? WeatherType.DOWNFALL : WeatherType.CLEAR);
-
-        for(Player p : plot.getMembers()) {
-          p.setPlayerWeather(plot.getWeatherType());
-          new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_CHANGED").asKey().value(new MessageBuilder("MENU_OPTION_CONTENT_WEATHER_TYPE_" + (isDownfall ? "DOWNFALL" : "CLEAR")).asKey().build()).player(p).sendPlayer();
-        }
+        registry.getPlugin().getOptionsRegistry().addGoBackItem(gui, 8);
+        gui.open(player);
       }
     });
   }

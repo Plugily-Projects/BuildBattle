@@ -23,13 +23,13 @@ package plugily.projects.buildbattle.handlers.menu.registry.playerheads;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import plugily.projects.buildbattle.handlers.menu.MenuOption;
 import plugily.projects.buildbattle.handlers.menu.OptionsRegistry;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemUtils;
-import plugily.projects.minigamesbox.classic.utils.misc.complement.ComplementAccessor;
+import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
+import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
 
 /**
  * @author Plajer
@@ -47,41 +47,32 @@ public class PlayerHeadsOption {
       @Override
       public void onClick(InventoryClickEvent event) {
         HumanEntity humanEntity = event.getWhoClicked();
-
         humanEntity.closeInventory();
+        if(!(humanEntity instanceof Player)) {
+          return;
+        }
+        Player player = (Player) humanEntity;
         if(registry.getPlugin().getConfigPreferences().getOption("HEAD_MENU_CUSTOM")) {
-          if(humanEntity instanceof Player) {
-            ((Player) humanEntity).performCommand(registry.getPlugin().getConfig().getString("Head-Menu.Command", "heads"));
-          }
+          player.performCommand(registry.getPlugin().getConfig().getString("Head-Menu.Command", "heads"));
           return;
         }
-        Inventory inventory = ComplementAccessor.getComplement().createInventory(null,
-            registry.getPlugin().getBukkitHelper().serializeInt(registry.getPlayerHeadsRegistry().getCategories().size() + 1),
-            new MessageBuilder("MENU_OPTION_CONTENT_HEADS_INVENTORY").asKey().build());
-        for(HeadsCategory categoryItem : registry.getPlayerHeadsRegistry().getCategories().keySet()) {
-          inventory.addItem(categoryItem.getItemStack());
-        }
-        inventory.addItem(registry.getGoBackItem());
-        humanEntity.openInventory(inventory);
-      }
+        NormalFastInv gui = new NormalFastInv(registry.getPlugin().getBukkitHelper().serializeInt(registry.getPlayerHeadsRegistry().getCategories().size() + 1), new MessageBuilder("MENU_OPTION_CONTENT_HEADS_INVENTORY").asKey().build());
 
-      @Override
-      public void onTargetClick(InventoryClickEvent event) {
-        HumanEntity humanEntity = event.getWhoClicked();
-        String currentItemDisplayName = ComplementAccessor.getComplement().getDisplayName(event.getCurrentItem().getItemMeta());
-
-        humanEntity.closeInventory();
-        for(HeadsCategory category : registry.getPlayerHeadsRegistry().getCategories().keySet()) {
-          if(!ComplementAccessor.getComplement().getDisplayName(category.getItemStack().getItemMeta()).equals(currentItemDisplayName)) {
-            continue;
-          }
-          if(humanEntity.hasPermission(category.getPermission())) {
-            humanEntity.openInventory(category.getInventory());
-            return;
-          }
-          new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_HEAD").asKey().player((Player) humanEntity).sendPlayer();
-          return;
+        for(HeadsCategory headsCategory : registry.getPlayerHeadsRegistry().getCategories().keySet()) {
+          gui.addItem(new SimpleClickableItem(headsCategory.getItemStack(), clickEvent -> {
+            player.closeInventory();
+            for(HeadsCategory category : registry.getPlayerHeadsRegistry().getCategories().keySet()) {
+              if(player.hasPermission(category.getPermission())) {
+                category.getGui().open(player);
+                return;
+              }
+              new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_HEAD").asKey().player(player).sendPlayer();
+              return;
+            }
+          }));
         }
+        registry.getPlugin().getOptionsRegistry().addGoBackItem(gui, gui.getInventory().getSize() - 1);
+        gui.open(humanEntity);
       }
     });
   }

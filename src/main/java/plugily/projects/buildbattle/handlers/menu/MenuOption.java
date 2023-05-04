@@ -75,15 +75,4 @@ public class MenuOption {
    */
   public void onClick(InventoryClickEvent e) {
   }
-
-  /**
-   * Called when anything is clicked in inventory registered in onClick method
-   * Method won't be called if inventory is not enabled.
-   * Method won't be called also if e.getCurrentItem() is not named or null
-   *
-   * @param e passed InventoryClickEvent when anything is clicked within target MenuOption
-   * @see #onClick(InventoryClickEvent)
-   */
-  public void onTargetClick(InventoryClickEvent e) {
-  }
 }

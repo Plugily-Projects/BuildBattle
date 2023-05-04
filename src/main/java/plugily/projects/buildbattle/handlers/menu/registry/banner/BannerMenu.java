@@ -27,7 +27,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import plugily.projects.buildbattle.Main;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
@@ -88,7 +87,7 @@ public class BannerMenu {
     }
 
     addCreatorItem(gui);
-    addGoBackItem(gui);
+    plugin.getOptionsRegistry().addGoBackItem(gui, 45);
     guiStages.put(PatternStage.BASE, gui);
     gui.refresh();
   }
@@ -112,7 +111,7 @@ public class BannerMenu {
     }
 
     addCreatorItem(gui);
-    addGoBackItem(gui);
+    plugin.getOptionsRegistry().addGoBackItem(gui, 45);
     guiStages.put(PatternStage.LAYER, gui);
     gui.refresh();
   }
@@ -135,7 +134,7 @@ public class BannerMenu {
     }
 
     addCreatorItem(gui);
-    addGoBackItem(gui);
+    plugin.getOptionsRegistry().addGoBackItem(gui, 45);
     guiStages.put(PatternStage.LAYER_COLOR, gui);
     gui.refresh();
   }
@@ -148,14 +147,6 @@ public class BannerMenu {
       event.setCancelled(true);
       event.getWhoClicked().closeInventory();
       player.getInventory().addItem(banner.buildBanner());
-    }));
-  }
-
-  private void addGoBackItem(NormalFastInv gui) {
-    gui.setItem(45, new SimpleClickableItem(plugin.getOptionsRegistry().getGoBackItem(), event -> {
-      event.setCancelled(true);
-      event.getWhoClicked().closeInventory();
-      player.openInventory(plugin.getOptionsRegistry().formatInventory());
     }));
   }
 

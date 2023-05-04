@@ -23,16 +23,15 @@ package plugily.projects.buildbattle.handlers.menu.registry;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
-
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.menu.MenuOption;
 import plugily.projects.buildbattle.handlers.menu.OptionsRegistry;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
-import plugily.projects.minigamesbox.classic.utils.misc.complement.ComplementAccessor;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
+import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
+import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
 
 import static plugily.projects.buildbattle.handlers.menu.registry.TimeChangeOption.TimeClickPosition.getByPosition;
 
@@ -53,58 +52,43 @@ public class TimeChangeOption {
       public void onClick(InventoryClickEvent event) {
         HumanEntity humanEntity = event.getWhoClicked();
         humanEntity.closeInventory();
-
-        Inventory timeInv = ComplementAccessor.getComplement().createInventory(null, 9, new MessageBuilder("MENU_OPTION_CONTENT_TIME_INVENTORY").asKey().build());
-        BaseArena arena = registry.getPlugin().getArenaRegistry().getArena((Player) humanEntity);
-
-        if (arena != null) {
-          Plot plot = arena.getPlotManager().getPlot((Player) humanEntity);
-
-          if (plot != null) {
-            timeInv.addItem(new ItemBuilder(XMaterial.CLOCK.parseItem()).name(new MessageBuilder("MENU_OPTION_CONTENT_TIME_TYPE_WORLD").asKey().build()).lore(plot.getTime().name()).build());
-          }
-        }
-
-        addClockItem(timeInv, "MENU_OPTION_CONTENT_TIME_TYPE_DAY");
-        addClockItem(timeInv, "MENU_OPTION_CONTENT_TIME_TYPE_NOON");
-        addClockItem(timeInv, "MENU_OPTION_CONTENT_TIME_TYPE_SUNSET");
-        addClockItem(timeInv, "MENU_OPTION_CONTENT_TIME_TYPE_NIGHT");
-        addClockItem(timeInv, "MENU_OPTION_CONTENT_TIME_TYPE_MIDNIGHT");
-        addClockItem(timeInv, "MENU_OPTION_CONTENT_TIME_TYPE_SUNRISE");
-        timeInv.addItem(registry.getGoBackItem());
-
-        humanEntity.openInventory(timeInv);
-      }
-
-      private void addClockItem(Inventory timeInv, String messageKey) {
-        timeInv.addItem(new ItemBuilder(XMaterial.CLOCK.parseItem()).name(new MessageBuilder(messageKey).asKey().build()).build());
-      }
-
-      @Override
-      public void onTargetClick(InventoryClickEvent event) {
-        HumanEntity humanEntity = event.getWhoClicked();
-
         if(!(humanEntity instanceof Player))
           return;
 
         Player player = (Player) humanEntity;
-        BaseArena arena = registry.getPlugin().getArenaRegistry().getArena(player);
+        NormalFastInv gui = new NormalFastInv(9, new MessageBuilder("MENU_OPTION_CONTENT_TIME_INVENTORY").asKey().build());
 
+        BaseArena arena = registry.getPlugin().getArenaRegistry().getArena(player);
         if(arena == null) {
           return;
         }
-
         Plot plot = arena.getPlotManager().getPlot(player);
-        if(plot == null)
+        if(plot == null) {
           return;
-
-        Plot.Time time = Plot.Time.valueOf(getByPosition(event.getSlot()).toString());
-        plot.setTime(time);
-
-        for(Player p : plot.getMembers()) {
-          p.setPlayerTime(Plot.Time.format(time, p.getWorld().getTime()), false);
-          new MessageBuilder("MENU_OPTION_CONTENT_TIME_CHANGED").asKey().player(p).value(time.name()).sendPlayer();
         }
+
+        gui.addItem(new ItemBuilder(XMaterial.CLOCK.parseItem()).name(new MessageBuilder("MENU_OPTION_CONTENT_TIME_TYPE_WORLD").asKey().build()).lore(plot.getTime().name()).build());
+
+        addClockItem(gui, plot, "MENU_OPTION_CONTENT_TIME_TYPE_DAY");
+        addClockItem(gui, plot, "MENU_OPTION_CONTENT_TIME_TYPE_NOON");
+        addClockItem(gui, plot, "MENU_OPTION_CONTENT_TIME_TYPE_SUNSET");
+        addClockItem(gui, plot, "MENU_OPTION_CONTENT_TIME_TYPE_NIGHT");
+        addClockItem(gui, plot, "MENU_OPTION_CONTENT_TIME_TYPE_MIDNIGHT");
+        addClockItem(gui, plot, "MENU_OPTION_CONTENT_TIME_TYPE_SUNRISE");
+        registry.getPlugin().getOptionsRegistry().addGoBackItem(gui, 8);
+        gui.open(player);
+      }
+
+      private void addClockItem(NormalFastInv gui, Plot plot, String messageKey) {
+        gui.addItem(new SimpleClickableItem(new ItemBuilder(XMaterial.CLOCK.parseItem()).name(new MessageBuilder(messageKey).asKey().build()).build(), event -> {
+          Plot.Time time = Plot.Time.valueOf(getByPosition(event.getSlot()).toString());
+          plot.setTime(time);
+
+          for(Player p : plot.getMembers()) {
+            p.setPlayerTime(Plot.Time.format(time, p.getWorld().getTime()), false);
+            new MessageBuilder("MENU_OPTION_CONTENT_TIME_CHANGED").asKey().player(p).value(time.name()).sendPlayer();
+          }
+        }));
       }
     });
   }

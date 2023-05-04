@@ -63,7 +63,7 @@ public class PlotResetOption {
 
         if (plot != null) {
           plot.resetPlot();
-          new MessageBuilder("MENU_OPTION_CONTENT_RESET_ITEM_LORE").asKey().player(player).sendPlayer();
+          new MessageBuilder("MENU_OPTION_CONTENT_RESET_CHAT").asKey().player(player).sendPlayer();
         }
       }
     });

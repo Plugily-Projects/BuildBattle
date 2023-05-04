@@ -35,6 +35,10 @@ import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
 import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
+import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
+import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
+
+import java.util.Set;
 
 /**
  * @author Plajer
@@ -52,63 +56,58 @@ public class BiomeChangeOption {
       @Override
       public void onClick(InventoryClickEvent event) {
         HumanEntity humanEntity = event.getWhoClicked();
-
         humanEntity.closeInventory();
-        humanEntity.openInventory(registry.getBiomesRegistry().getInventory());
-      }
-
-      @Override
-      public void onTargetClick(InventoryClickEvent event) {
-        HumanEntity humanEntity = event.getWhoClicked();
-
-        if (!(humanEntity instanceof Player))
+        if(!(humanEntity instanceof Player)) {
           return;
-
+        }
         Player player = (Player) humanEntity;
         BaseArena arena = registry.getPlugin().getArenaRegistry().getArena(player);
-
         if(arena == null) {
           return;
         }
-
-        BiomeItem item = registry.getBiomesRegistry().getByItem(event.getCurrentItem());
-        if(item == BiomeItem.INVALID_BIOME) {
-          return;
-        }
-
         Plot plot = arena.getPlotManager().getPlot(player);
-        if(plot == null || plot.getCuboid() == null)
-          return;
-
-        if(!player.hasPermission(item.getPermission())) {
-          new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_BIOME").asKey().player(player).sendPlayer();
+        if(plot == null || plot.getCuboid() == null) {
           return;
         }
 
-        Biome biome = item.getBiome().getBiome();
+        Set<BiomeItem> biomes = registry.getBiomesRegistry().getBiomes();
 
-        if(biome != null) {
-          for(Block block : plot.getCuboid().blockList()) {
-            block.setBiome(biome);
-          }
-        }
+        NormalFastInv gui = new NormalFastInv(registry.getPlugin().getBukkitHelper().serializeInt(biomes.size() + 1), new MessageBuilder("MENU_OPTION_CONTENT_BIOME_INVENTORY").asKey().build());
 
-        for(Chunk chunk : plot.getCuboid().chunkList()) {
-          if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_15_R1)) {
-            chunk.getWorld().refreshChunk(chunk.getX(), chunk.getZ());
-            continue;
-          }
-
-          for(Player p : registry.getPlugin().getServer().getOnlinePlayers()) {
-            if(p.getWorld().equals(chunk.getWorld())) {
-              ChunkManager.sendMapChunk(p, chunk);
+        for(BiomeItem biomeItem : biomes) {
+          gui.addItem(new SimpleClickableItem(biomeItem.getItemStack(), clickEvent -> {
+            if(!player.hasPermission(biomeItem.getPermission())) {
+              new MessageBuilder("IN_GAME_MESSAGES_PLOT_PERMISSION_BIOME").asKey().player(player).sendPlayer();
+              return;
             }
-          }
-        }
+            Biome biome = biomeItem.getBiome().getBiome();
+            if(biome != null) {
+              for(Block block : plot.getCuboid().blockList()) {
+                block.setBiome(biome);
+              }
+            }
 
-        for(Player p : plot.getMembers()) {
-          new MessageBuilder("MENU_OPTION_CONTENT_BIOME_CHANGED").asKey().player(p).sendPlayer();
+            for(Chunk chunk : plot.getCuboid().chunkList()) {
+              if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_15_R1)) {
+                chunk.getWorld().refreshChunk(chunk.getX(), chunk.getZ());
+                continue;
+              }
+
+              for(Player p : registry.getPlugin().getServer().getOnlinePlayers()) {
+                if(p.getWorld().equals(chunk.getWorld())) {
+                  ChunkManager.sendMapChunk(p, chunk);
+                }
+              }
+            }
+
+            for(Player p : plot.getMembers()) {
+              new MessageBuilder("MENU_OPTION_CONTENT_BIOME_CHANGED").asKey().player(p).sendPlayer();
+            }
+          }));
         }
+        registry.getPlugin().getOptionsRegistry().addGoBackItem(gui, gui.getInventory().getSize() - 1);
+
+        gui.open(player);
       }
     });
   }

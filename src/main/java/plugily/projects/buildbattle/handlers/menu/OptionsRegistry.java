@@ -20,7 +20,6 @@
 
 package plugily.projects.buildbattle.handlers.menu;
 
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.handlers.menu.registry.FloorChangeOption;
@@ -36,8 +35,10 @@ import plugily.projects.buildbattle.handlers.menu.registry.playerheads.PlayerHea
 import plugily.projects.buildbattle.handlers.menu.registry.playerheads.PlayerHeadsRegistry;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
-import plugily.projects.minigamesbox.classic.utils.misc.complement.ComplementAccessor;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
+import plugily.projects.minigamesbox.inventory.common.item.ItemMap;
+import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
+import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -57,7 +58,7 @@ public class OptionsRegistry {
   private final ItemStack menuItem;
   private final Main plugin;
 
-  private Inventory optionsInventory;
+  private NormalFastInv optionsGui;
 
   public OptionsRegistry(Main plugin) {
     this.plugin = plugin;
@@ -129,17 +130,15 @@ public class OptionsRegistry {
    *
    * @return options inventory
    */
-  public Inventory formatInventory() {
-    if (optionsInventory != null)
-      return optionsInventory;
-
-    Inventory inv = ComplementAccessor.getComplement().createInventory(null, inventorySize, new MessageBuilder("MENU_OPTION_INVENTORY").asKey().build());
+  public NormalFastInv getOptionsGui() {
+    if(optionsGui != null)
+      return optionsGui;
+    NormalFastInv gui = new NormalFastInv(inventorySize, new MessageBuilder("MENU_OPTION_INVENTORY").asKey().build());
 
     for(MenuOption option : registeredOptions) {
-      inv.setItem(option.getSlot(), option.getItemStack());
+      gui.setItem(option.getSlot(), new SimpleClickableItem(option.getItemStack(), option::onClick));
     }
-
-    return optionsInventory = inv;
+    return optionsGui = gui;
   }
 
   public Set<MenuOption> getRegisteredOptions() {
@@ -168,12 +167,26 @@ public class OptionsRegistry {
 
   private ItemBuilder backButton;
 
-  public ItemStack getGoBackItem() {
-    if (backButton == null)
+  private SimpleClickableItem getBackItem() {
+    if(backButton == null) {
       backButton = new ItemBuilder(XMaterial.STONE_BUTTON.parseItem())
           .name(new MessageBuilder("MENU_BUTTONS_BACK_ITEM_NAME").asKey().build())
           .lore(new MessageBuilder("MENU_BUTTONS_BACK_ITEM_LORE").asKey().build());
-
-    return backButton.build();
+    }
+    return new SimpleClickableItem(backButton.build(), event -> {
+      event.setCancelled(true);
+      event.getWhoClicked().closeInventory();
+      getOptionsGui().open(event.getWhoClicked());
+    });
   }
+
+  public void addGoBackItem(ItemMap page, int slot) {
+    page.setItem(slot, getBackItem());
+  }
+
+  public void addGoBackItem(NormalFastInv gui, int slot) {
+    gui.setItem(slot, getBackItem());
+  }
+
+
 }

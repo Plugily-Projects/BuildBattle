@@ -151,16 +151,8 @@ public class ParticleRegistry {
     addRemoveItem(page2);
     setParticles(gui);
 
-    page1.setItem(46, new SimpleClickableItem(plugin.getOptionsRegistry().getGoBackItem(), event -> {
-      event.setCancelled(true);
-      event.getWhoClicked().closeInventory();
-      event.getWhoClicked().openInventory(plugin.getOptionsRegistry().formatInventory());
-    }));
-    page2.setItem(46, new SimpleClickableItem(plugin.getOptionsRegistry().getGoBackItem(), event -> {
-      event.setCancelled(true);
-      event.getWhoClicked().closeInventory();
-      event.getWhoClicked().openInventory(plugin.getOptionsRegistry().formatInventory());
-    }));
+    plugin.getOptionsRegistry().addGoBackItem(page1, 46);
+    plugin.getOptionsRegistry().addGoBackItem(page2, 46);
 
     gui.refresh();
   }

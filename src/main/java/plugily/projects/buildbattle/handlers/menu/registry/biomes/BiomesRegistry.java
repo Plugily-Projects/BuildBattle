@@ -22,14 +22,11 @@ package plugily.projects.buildbattle.handlers.menu.registry.biomes;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.handlers.menu.OptionsRegistry;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
-import plugily.projects.minigamesbox.classic.utils.misc.complement.ComplementAccessor;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XBiome;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 
@@ -50,7 +47,6 @@ public class BiomesRegistry {
   public BiomesRegistry(OptionsRegistry registry) {
     this.plugin = registry.getPlugin();
     registerBiomes();
-    registerInventory();
   }
 
   private void registerBiomes() {
@@ -73,33 +69,6 @@ public class BiomesRegistry {
       i++;
     }
     plugin.getDebugger().debug("Registered in total " + i + " biomes!");
-  }
-
-  private void registerInventory() {
-    Inventory inv = ComplementAccessor.getComplement().createInventory(null, plugin.getBukkitHelper().serializeInt(biomes.size() + 1),
-        new MessageBuilder("MENU_OPTION_CONTENT_BIOME_INVENTORY").asKey().build());
-
-    biomes.stream().map(BiomeItem::getItemStack).forEach(inv::addItem);
-
-    inv.addItem(plugin.getOptionsRegistry().getGoBackItem());
-    inventory = inv;
-  }
-
-  public Inventory getInventory() {
-    return inventory;
-  }
-
-  public void setInventory(Inventory inventory) {
-    this.inventory = inventory;
-  }
-
-  public BiomeItem getByItem(ItemStack stack) {
-    for(BiomeItem item : biomes) {
-      if(item.getItemStack().isSimilar(stack)) {
-        return item;
-      }
-    }
-    return BiomeItem.INVALID_BIOME;
   }
 
   public Set<BiomeItem> getBiomes() {

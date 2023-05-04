@@ -21,7 +21,6 @@
 package plugily.projects.buildbattle.handlers.menu.registry.playerheads;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import plugily.projects.buildbattle.Main;
@@ -31,6 +30,8 @@ import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemUtils;
 import plugily.projects.minigamesbox.classic.utils.misc.complement.ComplementAccessor;
+import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
+import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,7 +47,7 @@ import java.util.stream.Collectors;
 public class PlayerHeadsRegistry {
 
   private final Main plugin;
-  private final Map<HeadsCategory, Inventory> categories = new HashMap<>();
+  private final Map<HeadsCategory, NormalFastInv> categories = new HashMap<>();
 
   public PlayerHeadsRegistry(OptionsRegistry registry) {
     this.plugin = registry.getPlugin();
@@ -64,7 +65,7 @@ public class PlayerHeadsRegistry {
       category.setItemStack(new ItemBuilder(ItemUtils.getSkull(config.getString(str + ".texture")))
           .name(new MessageBuilder(config.getString(str + ".displayname")).build())
           .lore(config.getStringList(str + ".lore").stream()
-              .map(lore -> lore = new MessageBuilder(lore).build()).collect(Collectors.toList()))
+              .map(lore -> new MessageBuilder(lore).build()).collect(Collectors.toList()))
           .build());
       category.setPermission(config.getString(str + ".permission"));
 
@@ -81,30 +82,24 @@ public class PlayerHeadsRegistry {
 
         ComplementAccessor.getComplement().setDisplayName(im, new MessageBuilder(categoryConfig.getString(path + ".displayname")).build());
         ComplementAccessor.getComplement().setLore(im, categoryConfig.getStringList(path + ".lore").stream()
-            .map(lore -> lore = new MessageBuilder(lore).build()).collect(Collectors.toList()));
+            .map(lore -> new MessageBuilder(lore).build()).collect(Collectors.toList()));
         stack.setItemMeta(im);
         playerHeads.add(stack);
       }
-      Inventory inv = ComplementAccessor.getComplement().createInventory(null, plugin.getBukkitHelper().serializeInt(playerHeads.size() + 1),
-          new MessageBuilder(config.getString(str + ".menuname")).build());
-      playerHeads.forEach(inv::addItem);
-      inv.addItem(plugin.getOptionsRegistry().getGoBackItem());
-      category.setInventory(inv);
-      categories.put(category, inv);
-    }
-  }
+      NormalFastInv gui = new NormalFastInv(plugin.getBukkitHelper().serializeInt(playerHeads.size() + 1), new MessageBuilder(config.getString(str + ".menuname")).build());
 
-  public boolean isHeadsMenu(Inventory inventory) {
-    for(Inventory inv : categories.values()) {
-      if(inv == inventory) {
-        return true;
+      playerHeads.forEach(gui::addItem);
+      for(ItemStack playerHead : playerHeads) {
+        gui.addItem(new SimpleClickableItem(playerHead, clickEvent -> clickEvent.getWhoClicked().getInventory().addItem(playerHead.clone())));
       }
-    }
 
-    return false;
+      plugin.getOptionsRegistry().addGoBackItem(gui, gui.getInventory().getSize() - 1);
+      category.setGui(gui);
+      categories.put(category, gui);
+    }
   }
 
-  public Map<HeadsCategory, Inventory> getCategories() {
+  public Map<HeadsCategory, NormalFastInv> getCategories() {
     return categories;
   }
 

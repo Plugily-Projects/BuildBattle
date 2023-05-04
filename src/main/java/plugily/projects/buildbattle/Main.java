@@ -34,8 +34,6 @@ import plugily.projects.buildbattle.boot.AdditionalValueInitializer;
 import plugily.projects.buildbattle.boot.MessageInitializer;
 import plugily.projects.buildbattle.boot.PlaceholderInitializer;
 import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
-import plugily.projects.buildbattle.events.OptionMenuEvents;
-import plugily.projects.buildbattle.handlers.menu.OptionsMenuHandler;
 import plugily.projects.buildbattle.handlers.menu.OptionsRegistry;
 import plugily.projects.buildbattle.handlers.misc.BlacklistManager;
 import plugily.projects.buildbattle.handlers.setup.SetupCategoryManager;
@@ -105,8 +103,6 @@ public class Main extends PluginMain {
     plotMenuHandler = new PlotMenuHandler(this);
     optionsRegistry = new OptionsRegistry(this);
     optionsRegistry.registerOptions();
-    new OptionsMenuHandler(this);
-    new OptionMenuEvents(this);
     addPluginMetrics();
   }
 
