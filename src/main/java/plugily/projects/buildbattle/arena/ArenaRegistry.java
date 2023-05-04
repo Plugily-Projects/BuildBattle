@@ -131,7 +131,10 @@ public class ArenaRegistry extends PluginArenaRegistry {
               int maxPlayers = arena.getMaximumPlayers();
               int plotAmount = maxPlayers / plotMemberSize;
               for(int i = 0; i < plotAmount; i++) {
-                baseArena.getPlotManager().addBuildPlot(buildPlot);
+                Plot copyBuildPlot = new Plot(baseArena, biome);
+                copyBuildPlot.setCuboid(new Cuboid(minPoint, maxPoint));
+                copyBuildPlot.fullyResetPlot();
+                baseArena.getPlotManager().addBuildPlot(copyBuildPlot);
               }
               break;
             } else {

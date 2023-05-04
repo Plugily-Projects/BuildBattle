@@ -86,7 +86,7 @@ public class InGameState extends PluginInGameState {
 
         if(timer <= 90) {
           if(timer == 90) {
-            new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_CHARS").asKey().arena(pluginArena).integer(pluginArena.getTheme().length()).sendArena();
+            new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_CHARS").asKey().arena(pluginArena).integer(pluginArena.getCurrentBBTheme().getTheme().length()).sendArena();
           }
           sendThemeHints(arena, pluginArena);
         }
@@ -106,7 +106,7 @@ public class InGameState extends PluginInGameState {
           pluginArena.calculateWinnerPlot();
           adjustStatistics(pluginArena);
 
-          pluginArena.teleportToWinnerPlot();
+          pluginArena.teleportToWinnerPlot(); //todo save built plot from winner
           pluginArena.executeEndRewards();
           getPlugin().getArenaManager().stopGame(false, arena);
         }
@@ -186,13 +186,15 @@ public class InGameState extends PluginInGameState {
       default:
         break;
     }
+    setChosenTheme(pluginArena, getThemeByDifficulty(pluginArena, difficulty));
+  }
 
-    setTheme(pluginArena, getThemeByDifficulty(pluginArena, difficulty));
-    pluginArena.getCurrentBuilders().forEach(player ->
-        getPlugin().getActionBarManager().addActionBar(player, new ActionBar(new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_NAME").asKey().arena(pluginArena),
-            ActionBar.ActionBarType.DISPLAY)));
-
+  private void setChosenTheme(GuessArena pluginArena, BBTheme bbTheme) {
+    setTheme(pluginArena, bbTheme);
     pluginArena.getCurrentBuilders().forEach(HumanEntity::closeInventory);
+    pluginArena.getCurrentBuilders().forEach(player ->
+        getPlugin().getActionBarManager().addActionBar(player, new ActionBar(new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_NAME").asKey().player(player).arena(pluginArena),
+            ActionBar.ActionBarType.DISPLAY)));
   }
 
 
@@ -215,19 +217,19 @@ public class InGameState extends PluginInGameState {
     BBTheme easy = getThemeByDifficulty(pluginArena, BBTheme.Difficulty.EASY);
     gui.setItem(11, new SimpleClickableItem(new ItemBuilder(Material.PAPER).name(getThemeItemName(pluginArena).value(easy.getTheme()).build())
         .lore(getThemeItemLore(pluginArena).value(new MessageBuilder("MENU_THEME_GTB_DIFFICULTIES_EASY").asKey().build()).integer(easy.getDifficulty().getPointsReward()).build().split(";")).build(), event -> {
-      setTheme(pluginArena, easy);
+      setChosenTheme(pluginArena, easy);
     }));
 
     BBTheme medium = getThemeByDifficulty(pluginArena, BBTheme.Difficulty.MEDIUM);
     gui.setItem(13, new SimpleClickableItem(new ItemBuilder(Material.PAPER).name(getThemeItemName(pluginArena).value(medium.getTheme()).build())
         .lore(getThemeItemLore(pluginArena).value(new MessageBuilder("MENU_THEME_GTB_DIFFICULTIES_MEDIUM").asKey().build()).integer(medium.getDifficulty().getPointsReward()).build().split(";")).build(), event -> {
-      setTheme(pluginArena, medium);
+      setChosenTheme(pluginArena, medium);
     }));
 
     BBTheme hard = getThemeByDifficulty(pluginArena, BBTheme.Difficulty.HARD);
     gui.setItem(15, new SimpleClickableItem(new ItemBuilder(Material.PAPER).name(getThemeItemName(pluginArena).value(hard.getTheme()).build())
         .lore(getThemeItemLore(pluginArena).value(new MessageBuilder("MENU_THEME_GTB_DIFFICULTIES_HARD").asKey().build()).integer(hard.getDifficulty().getPointsReward()).build().split(";")).build(), event -> {
-      setTheme(pluginArena, hard);
+      setChosenTheme(pluginArena, hard);
     }));
 
     getPlugin().getDebugger().debug("Opened Theme Selector for {0}", pluginArena.getCurrentBuilders().toString());

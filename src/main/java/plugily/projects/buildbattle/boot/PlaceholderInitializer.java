@@ -90,9 +90,10 @@ public class PlaceholderInitializer {
         if(!(pluginArena instanceof GuessArena)) {
           return theme;
         }
-        if(theme.equalsIgnoreCase("theme")) {
+        if(theme.equalsIgnoreCase(new MessageBuilder("SCOREBOARD_THEME_UNKNOWN").asKey().build())) {
           if(((GuessArena) pluginArena).getCurrentBuilders().contains(player) || ((GuessArena) pluginArena).getWhoGuessed().contains(player)) {
-            return ((GuessArena) pluginArena).getCurrentBBTheme().getTheme();
+            BBTheme guessTheme = ((GuessArena) pluginArena).getCurrentBBTheme();
+            theme = guessTheme == null ? new MessageBuilder("SCOREBOARD_THEME_UNKNOWN").asKey().build() : guessTheme.getTheme();
           }
         }
         return theme;

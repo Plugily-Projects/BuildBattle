@@ -142,6 +142,8 @@ public class GuessArena extends BaseArena {
     setBuildPlot(null);
     setCurrentTheme(null);
     getWhoGuessed().clear();
+    round += 1;
+    getPlayers().forEach(player -> getPlugin().getActionBarManager().clearActionBarsFromPlayer(player));
   }
 
   public void teleportPlayersToPlot(Plot plot) {
@@ -202,7 +204,7 @@ public class GuessArena extends BaseArena {
     buildPlot.addPoints(getPlugin().getConfig().getInt("Guessing-Points.Builder", 1));
 
     addWhoGuessed(player);
-    Bukkit.getPluginManager().callEvent(new PlayerThemeGuessEvent(this, currentTheme));
+    Bukkit.getScheduler().runTask(getPlugin(), () -> Bukkit.getPluginManager().callEvent(new PlayerThemeGuessEvent(this, currentTheme)));
 
   }
 
