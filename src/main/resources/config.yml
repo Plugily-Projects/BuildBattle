@@ -11,16 +11,11 @@
 #   default - uses messages from 'old_language.yml' file.
 #   de - Deutsche sprache          pl - Jezyk polski
 #   es - Idioma español            fr - Langue française
+#   fr_BE - French Belgium
 #   zh - 简体中文                   vn - Tiếng Việt
-#   hu - Magyar nyelv              kr - 한국어
-#   tr - Türk dili                 id - Bhasa Indonesia
-#   et - Eesti keel                ru - Русский язык
-#   cs - Český jazyk               ro - Limba română
-#   ja - 日本語                     it - Lingua italiana
-#   lt - Lietuvių kalba            sl - Slovenščina
-#   pt_BR - Português (Brasil)     zh_tw - 中文(繁體)
-#   uk - Ukrainian                 be - Belarusian
-#   eu - Basque                    el - Greek
+#   hu - Magyar nyelv              tr - Türk dili
+#   cs - Český jazyk               it - Lingua italiana
+#   pt_BR - Português (Brasil)     ru - Русский язык
 locale: default
 
 # Should we display a boss bar with additional arena information?
