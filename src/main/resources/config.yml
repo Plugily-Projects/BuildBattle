@@ -8,14 +8,9 @@
 
 # Locale of BuildBattle language. By default it's english.
 # Available localizations:
-#   default - uses messages from 'old_language.yml' file.
-#   de - Deutsche sprache          pl - Jezyk polski
-#   es - Idioma español            fr - Langue française
-#   fr_BE - French Belgium
-#   zh - 简体中文                   vn - Tiếng Việt
-#   hu - Magyar nyelv              tr - Türk dili
-#   cs - Český jazyk               it - Lingua italiana
-#   pt_BR - Português (Brasil)     ru - Русский язык
+#    default - English language. Uses 'language.yml'.
+#    See https://github.com/Plugily-Projects/locale_storage/tree/master/plugins/minecraft/buildbattle
+#    Use filename of the language e.g. de_DE.yml -> locale: de_DE
 locale: default
 
 # Should we display a boss bar with additional arena information?
@@ -47,23 +42,23 @@ Commands:
   Shorter:
     '1':
       Short: "start"
-      Executes: "plugilyprojectsadmin forcestart"
+      Executes: "buildbattleadmin forcestart"
       Enabled: true
     '2':
       Short: "leave"
-      Executes: "plugilyprojects leave"
+      Executes: "buildbattle leave"
       Enabled: true
     '3':
       Short: "kit"
-      Executes: "plugilyprojects selectkit"
+      Executes: "buildbattle selectkit"
       Enabled: false
     '4':
       Short: "stats"
-      Executes: "plugilyprojects stats"
+      Executes: "buildbattle stats"
       Enabled: false
     '5':
       Short: "top"
-      Executes: "plugilyprojects top"
+      Executes: "buildbattle top"
       Enabled: true
 
 
