@@ -180,6 +180,7 @@ public class MessageInitializer {
             new Locale("French (BE)", "Belgian French", "fr_BE", "POEditor contributors", Arrays.asList("belgiumfrench", "fr-be", "fr_be")),
             new Locale("German", "Deutsch", "de_DE", "Tigerkatze and POEditor contributors", Arrays.asList("deutsch", "german", "de")),
             new Locale("Italian", "Italiano", "it_IT", "POEditor contributors", Arrays.asList("italian", "italiano", "it")),
+            new Locale("Persian", "Persian", "fa_FA", "POEditor contributors", Arrays.asList("persian", "fa", "fa-FA")),
             new Locale("Polish", "Polski", "pl_PL", "Plajer", Arrays.asList("polish", "polski", "pl")),
             new Locale("Portuguese (BR)", "Português Brasileiro", "pt_BR", "POEditor contributors", Arrays.asList("brazilian", "brasil", "brasileiro", "pt-br", "pt_br")),
             new Locale("Russian", "Pусский", "ru_RU", "POEditor contributors", Arrays.asList("russian", "pусский", "pyccknn", "russkiy", "ru")),
