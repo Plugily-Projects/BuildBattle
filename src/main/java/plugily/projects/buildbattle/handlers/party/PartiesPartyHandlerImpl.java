@@ -49,9 +49,13 @@ public class PartiesPartyHandlerImpl implements PartyHandler {
   public GameParty getParty(Player player) {
     PartiesAPI api = Parties.getApi();
     PartyPlayer partyPlayer = api.getPartyPlayer(player.getUniqueId());
-    if(partyPlayer == null) return null;
+    if(partyPlayer == null) {
+      return null;
+    }
     Party party = api.getParty(partyPlayer.getPartyId());
-    if (party==null) return null;
+    if (party==null) {
+      return null;
+    }
     return new GameParty(party.getOnlineMembers(true).stream().map(localPlayer -> Bukkit.getPlayer(localPlayer.getPlayerUUID())).collect(Collectors.toList()), Bukkit.getPlayer(party.getLeader()));
   }
 
