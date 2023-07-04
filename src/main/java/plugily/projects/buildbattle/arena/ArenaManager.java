@@ -98,44 +98,40 @@ public class ArenaManager {
     if(plugin.getPartyHandler().isPlayerInParty(player)) {
       Debugger.debug("[Party] Initialized party check " + player.getName());
       GameParty party = plugin.getPartyHandler().getParty(player);
-      if (party != null) {
-        if (party.getLeader() == player) {
-          if (arena.getMaximumPlayers() - arena.getPlayers().size() >= party.getPlayers().size()) {
-            partyPlot = arena.getPlotManager().getPlots().get(ThreadLocalRandom.current().nextInt(arena.getPlotManager().getPlots().size()));
-            for (Player partyPlayer : party.getPlayers()) {
-              if (partyPlayer == player) {
-                continue;
-              }
-              BaseArena partyPlayerArena = ArenaRegistry.getArena(partyPlayer);
-              if (partyPlayerArena != null) {
-                if (partyPlayerArena.getArenaState() == ArenaState.IN_GAME) {
-                  continue;
-                }
-                Debugger.debug("[Party] Remove party member " + partyPlayer.getName() + " from other not ingame arena " + player.getName());
-                leaveAttempt(partyPlayer, partyPlayerArena);
-              }
-              partyPlayer.sendMessage(chatManager.getPrefix() + chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Join-As-Party-Member"), partyPlayer));
-              joinAttempt(partyPlayer, arena);
-              Debugger.debug("[Party] Added party member " + partyPlayer.getName() + " to arena of " + player.getName());
-            }
-          } else {
-            player.sendMessage(chatManager.getPrefix() + chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Not-Enough-Space-For-Party"), player));
-            Debugger.debug("[Party] Not enough space for party of " + player.getName());
-            return;
-          }
-        }
-        Player partyLeader = party.getLeader();
-        if (arena.getPlayers().contains(partyLeader)) {
-          Plot partyLeaderPlot = arena.getPlotManager().getPlot(partyLeader);
-          if (partyLeaderPlot != null) {
-            partyPlot = partyLeaderPlot;
-          }
-        }
-        Debugger.debug("[Party] Party check done for " + player.getName());
+
+      if (party.getLeader() == player) {
+         if (arena.getMaximumPlayers() - arena.getPlayers().size() >= party.getPlayers().size()) {
+           partyPlot = arena.getPlotManager().getPlots().get(ThreadLocalRandom.current().nextInt(arena.getPlotManager().getPlots().size()));
+           for (Player partyPlayer : party.getPlayers()) {
+             if (partyPlayer == player) {
+               continue;
+             }
+             BaseArena partyPlayerArena = ArenaRegistry.getArena(partyPlayer);
+             if (partyPlayerArena != null) {
+               if (partyPlayerArena.getArenaState() == ArenaState.IN_GAME) {
+                 continue;
+               }
+               Debugger.debug("[Party] Remove party member " + partyPlayer.getName() + " from other not ingame arena " + player.getName());
+               leaveAttempt(partyPlayer, partyPlayerArena);
+             }
+             partyPlayer.sendMessage(chatManager.getPrefix() + chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Join-As-Party-Member"), partyPlayer));
+             joinAttempt(partyPlayer, arena);
+             Debugger.debug("[Party] Added party member " + partyPlayer.getName() + " to arena of " + player.getName());
+           }
+         } else {
+           player.sendMessage(chatManager.getPrefix() + chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Not-Enough-Space-For-Party"), player));
+           Debugger.debug("[Party] Not enough space for party of " + player.getName());
+           return;
+         }
       }
-      else {
-        Debugger.debug("[Party] Party is null for " + player.getName() + " while the player is in a party.");
+      Player partyLeader = party.getLeader();
+      if (arena.getPlayers().contains(partyLeader)) {
+        Plot partyLeaderPlot = arena.getPlotManager().getPlot(partyLeader);
+        if (partyLeaderPlot != null) {
+          partyPlot = partyLeaderPlot;
+        }
       }
+      Debugger.debug("[Party] Party check done for " + player.getName());
     }
     //Arena join permission when bungee false
     if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) &&
