@@ -10,6 +10,15 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+### 5.0.0 Release (09.08.2023)
+* Added up to 1.20 compatibility
+* Changed arena solo and team to classic, with different team sizes
+* Changed supported languages [https://translate.plugily.xyz]
+* Changed plugin base is based on MinigamesCore [https://github.com/Plugily-Projects/MiniGamesBox]
+* Changed native java building to java17, java 8 downloadable on our discord [https://discord.plugily.xyz]
+* Fixed gtb mode issues
+* Fixed all known bugs
+
 ### 4.5.3 Release (04.08.2021 - xx.xx.2021)
 
 * Fixed when players didn't got rewards after plot reset
