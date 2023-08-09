@@ -1,7 +1,7 @@
 /*
  *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2022 Plugily Projects - maintained by Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,17 +21,18 @@
 package plugily.projects.buildbattle.commands.arguments.admin.plot;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
-import plugily.projects.commonsbox.minecraft.serialization.LocationSerializer;
-import plugily.projects.buildbattle.arena.ArenaRegistry;
-import plugily.projects.buildbattle.arena.impl.BaseArena;
+import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
-import plugily.projects.buildbattle.commands.arguments.data.CommandArgument;
-import plugily.projects.buildbattle.commands.arguments.data.LabelData;
-import plugily.projects.buildbattle.commands.arguments.data.LabeledCommandArgument;
-import plugily.projects.buildbattle.utils.CuboidSelector;
+import plugily.projects.minigamesbox.classic.commands.arguments.data.CommandArgument;
+import plugily.projects.minigamesbox.classic.commands.arguments.data.LabelData;
+import plugily.projects.minigamesbox.classic.commands.arguments.data.LabeledCommandArgument;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
+import plugily.projects.minigamesbox.classic.utils.dimensional.CuboidSelector;
+import plugily.projects.minigamesbox.classic.utils.serialization.LocationSerializer;
 
 /**
  * @author Plajer
@@ -46,30 +47,30 @@ public class AddPlotArgument {
             "&7Add new game plot to the arena\n&6Permission: &7buildbattle.admin.addplot")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        Player player = (Player) sender;
         if(args.length == 1) {
-          //todo translatable
-          player.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorRawMessage("&cPlease type arena name!"));
+          new MessageBuilder("COMMANDS_TYPE_ARENA_NAME").asKey().send(sender);
           return;
         }
-        BaseArena arena = ArenaRegistry.getArena(args[1]);
+        BaseArena arena = (BaseArena) registry.getPlugin().getArenaRegistry().getArena(args[1]);
         if(arena == null) {
-          player.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Arena-Like-That"));
+          new MessageBuilder("COMMANDS_NO_ARENA_LIKE_THAT").asKey().send(sender);
           return;
         }
+        Player player = (Player) sender;
         CuboidSelector.Selection selection = registry.getPlugin().getCuboidSelector().getSelection(player);
         if(selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
-          player.sendMessage(registry.getPlugin().getChatManager().colorRawMessage(registry.getPlugin().getChatManager().getPrefix() + "&cPlease select both corners before adding a plot!"));
+          new MessageBuilder("&cPlease select both corners before adding a plot!").send(sender);
           return;
         }
         FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
         int id = 0;
-        if(config.isConfigurationSection("instances." + arena.getID() + ".plots")) {
-          id = config.getConfigurationSection("instances." + arena.getID() + ".plots").getKeys(false).size() + 1;
+        ConfigurationSection section = config.getConfigurationSection("instances." + arena.getId() + ".plots");
+        if(section != null) {
+          id = section.getKeys(false).size() + 1;
         }
-        LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", "instances." + arena.getID() + ".plots." + id + ".minpoint", selection.getFirstPos());
-        LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", "instances." + arena.getID() + ".plots." + id + ".maxpoint", selection.getSecondPos());
-        player.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorRawMessage("&aPlot with ID &e" + id + "&a added to arena instance &e" + arena.getID()));
+        LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", "instances." + arena.getId() + ".plots." + id + ".1", selection.getFirstPos());
+        LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", "instances." + arena.getId() + ".plots." + id + ".2", selection.getSecondPos());
+        new MessageBuilder("&aPlot with ID &e" + id + "&a added to arena instance &e" + arena.getId()).send(sender);
         registry.getPlugin().getCuboidSelector().removeSelection(player);
       }
     });

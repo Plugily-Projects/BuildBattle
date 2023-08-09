@@ -1,0 +1,80 @@
+# Theme configuration
+
+# All game themes players will build.
+Themes:
+  # Solo themes.
+  Classic:
+    - Heart
+    - Castle
+    - Emoji
+    - House
+    - Flower
+  # Team mode themes.
+  Teams:
+    - Well
+    - Car
+    - Rainbow
+    - Arcade Machine
+  # Guess the build themes.
+  Guess-The-Build:
+    Easy:
+      - Apple
+      - Sun
+      - Bread
+      - Book
+      - Dollar
+    Medium:
+      - School Bus
+      - Horse
+      - Fountain
+      - Sumo
+      - Bicycle
+    Hard:
+      - Soccer
+      - Birthday Cake
+      - Typewriter
+      - Solar System
+
+
+# Special holiday themes
+# that will be used during holiday events if enabled.
+Holiday:
+  AprilFools:
+    - Hypercube
+    - Nothing
+    - Void
+    - Minecraft
+    - Mojang
+  Valentine:
+    - Heart
+    - Love
+    - Cupid
+    - Chocolate Box
+  Halloween:
+    - Pumpkin
+    - Skeleton
+    - Jack'o'Lantern
+    - Candies
+  Christmas:
+    - Santa
+    - Presents
+    - Snowman
+    - Stocking
+  NewYear:
+    - Rocket
+    - Firework
+    - Party
+    - Firecracker
+    - Champagne
+
+# Theme names that are blacklisted.
+Blacklisted:
+  - Fuck
+
+
+# Don't edit it. But who's stopping you? It's your server!
+# Really, don't edit ;p
+# You edited it, huh? Next time hurt yourself!
+Do-Not-Edit:
+  File-Version: 1
+  Core-Version: 1

@@ -4,7 +4,7 @@
 #                          Placeholders list:
 #                   %PLAYER% - Current player name
 #                       %MAPNAME% - Name of map
-#                    %ARENA-ID% - Arena Identifier
+#                    %ARENA-ID% - BaseArena Identifier
 #                    %PLACE% - Player Place (Working on category place)
 #             %PLAYERAMOUNT% - Number of players in game
 #
@@ -26,6 +26,10 @@
 #    - script:player.getInventory().addItem(new org.bukkit.inventory.ItemStack(org.bukkit.Material.DIRT));
 #         ^ Gives player dirt item (you must always use direct package names for not provided objects)
 #
+#   You can specify that the console command should only perform only once with the "once" tag:
+#     startgame:
+#     - once:say This broadcast only performed only once at start of the game
+#
 #                               All script provided objects:
 #            player - Player object (API methods https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/Player.html)
 #    arena - BuildBattle BaseArena (API methods https://jd.plugily.xyz/apidocs/minecraft/buildbattle/plugily/projects/buildbattle/arena/impl/BaseArena.html)
@@ -35,21 +39,26 @@
 
 # Rewards must be enabled via config.yml first!
 rewards:
-  # Commands performed when this game has started.
-  startgame:
-  - say This game has been started!
+  # Commands performed when game is started
+  game-start:
+    - say %arena_name% has started
+    - say Ooh and there are playing %arena_players_size% players
   # Commands performed when game is finished
-  endgame:
-    - say %MAPNAME% has ended
-    - say Ooh and there were playing %PLAYERAMOUNT% players
+  game-end:
+    - say %arena_name% has ended, reached wave %WAVE%
+    - say Ooh and there were playing %arena_players_size% players
   # Commands performed when all themes are guessed in GTB
   # Delete everything if you don't want to use this section
   guess:
     - eco give %PLAYER% 2
-  allguessed:
+  guess-all:
     - eco give %PLAYER% 2
   # Commands executed when someone vote
   vote:
+    - eco give %PLAYER% 2
+    - chance(10):eco give %PLAYER% 8
+  # Commands executed when all voted for a plot
+  vote-all:
     - eco give %PLAYER% 2
     - chance(10):eco give %PLAYER% 8
   # Commands executed when someone report a building

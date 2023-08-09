@@ -1,7 +1,7 @@
 /*
  *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2022 Plugily Projects - maintained by Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,15 +22,13 @@ package plugily.projects.buildbattle.commands.arguments.admin.arena;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import plugily.projects.buildbattle.ConfigPreferences;
-import plugily.projects.buildbattle.arena.ArenaRegistry;
-import plugily.projects.buildbattle.arena.ArenaState;
-import plugily.projects.buildbattle.arena.impl.BaseArena;
-import plugily.projects.buildbattle.arena.impl.SoloArena;
+import plugily.projects.buildbattle.arena.BaseArena;
+import plugily.projects.buildbattle.arena.BuildArena;
 import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
-import plugily.projects.buildbattle.commands.arguments.data.CommandArgument;
-import plugily.projects.buildbattle.commands.arguments.data.LabelData;
-import plugily.projects.buildbattle.commands.arguments.data.LabeledCommandArgument;
+import plugily.projects.minigamesbox.classic.commands.arguments.data.CommandArgument;
+import plugily.projects.minigamesbox.classic.commands.arguments.data.LabelData;
+import plugily.projects.minigamesbox.classic.commands.arguments.data.LabeledCommandArgument;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 
 /**
  * @author Plajer
@@ -45,34 +43,32 @@ public class SetThemeArgument {
             "&7Set new arena theme\n&6Permission: &7buildbattle.admin.settheme\n&6You can set arena theme only when it started\n&6and only for 20 seconds after start!")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        BaseArena arena = ArenaRegistry.getArena((Player) sender);
+        BaseArena arena = (BaseArena) registry.getPlugin().getArenaRegistry().getArena((Player) sender);
         if(arena == null) {
-          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Playing"));
+          new MessageBuilder("COMMANDS_NOT_PLAYING").asKey().send(sender);
           return;
         }
-        if(!(arena instanceof SoloArena)) {
+        if(!(arena instanceof BuildArena)) {
           //todo translatable
-          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorRawMessage("&cCan't set theme on this arena type!"));
+          new MessageBuilder("&cCan't set theme on this arena type!").prefix().send(sender);
           return;
         }
         if(args.length == 1) {
           //todo translatable
-          sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorRawMessage("&cPlease type arena theme!"));
+          new MessageBuilder("&cPlease type arena theme!").prefix().send(sender);
           return;
         }
-        if(arena.getArenaState() == ArenaState.IN_GAME && registry.getPlugin().getConfigPreferences().getTimer(ConfigPreferences.TimerType.BUILD, arena) - arena.getTimer() <= 20) {
-          if(registry.getPlugin().getConfigPreferences().isThemeBlacklisted(args[1].toLowerCase())) {
-            sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Admin-Commands.Theme-Blacklisted"));
+        if(arena.getArenaInGameState() == BaseArena.ArenaInGameState.THEME_VOTING) {
+          String themeName = args[1];
+
+          if(arena.getPlugin().getThemeManager().isThemeBlacklisted(themeName)) {
+            new MessageBuilder("COMMANDS_THEME_BLACKLISTED").asKey().prefix().send(sender);
             return;
           }
-          arena.setTheme(args[1]);
-          registry.getPlugin().getChatManager().broadcast(arena, registry.getPlugin().getChatManager().colorMessage("In-Game.Messages.Admin-Messages.Changed-Theme").replace("%THEME%", args[1]));
+          arena.setTheme(themeName);
+          new MessageBuilder("IN_GAME_MESSAGES_ADMIN_CHANGED_THEME").asKey().prefix().value(themeName).arena(arena).sendArena();
         } else {
-          if(arena.getArenaState() == ArenaState.STARTING) {
-            sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Wait-For-Start"));
-          } else {
-            sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Arena-Started"));
-          }
+          new MessageBuilder("&cWrong state to force theme!").prefix().send(sender);
         }
       }
     });

@@ -2,119 +2,119 @@
 SUNFLOWER_PLAINS:
   displayname: "&6Sunflower Plains"
   lore:
-    - "&7Click to set biome"
-    - "&7in your plot"
+    - "Click to set biome"
+    - "in your plot"
   material-name: SUNFLOWER
   permission: biomes.VIP
 FLOWER_FOREST:
   displayname: "&6Flower Forest"
   lore:
-    - "&7Click to set biome"
-    - "&7in your plot"
+    - "Click to set biome"
+    - "in your plot"
   material-name: DANDELION
   permission: biomes.VIP
 ICE_SPIKES:
   displayname: "&6Ice Spikes"
   lore:
-    - "&7Click to set biome"
-    - "&7in your plot"
+    - "Click to set biome"
+    - "in your plot"
   material-name: PACKED_ICE
   permission: biomes.VIP
 THE_VOID:
   displayname: "&6Void"
   lore:
-    - "&7Click to set biome"
-    - "&7in your plot"
+    - "Click to set biome"
+    - "in your plot"
   material-name: ENDER_PEARL
   permission: biomes.VIP
 SWAMP:
   displayname: "&6Swamp"
   lore:
-    - "&7Click to set biome"
-    - "&7in your plot"
+    - "Click to set biome"
+    - "in your plot"
   material-name: LILY_PAD
   permission: biomes.VIP
 BEACH:
   displayname: "&6Beach"
   lore:
-    - "&7Click to set biome"
-    - "&7in your plot"
+    - "Click to set biome"
+    - "in your plot"
   material-name: SAND
   permission: biomes.VIP
 BADLANDS:
   displayname: "&6Badlands"
   lore:
-    - "&7Click to set biome"
-    - "&7in your plot"
+    - "Click to set biome"
+    - "in your plot"
   material-name: RED_SAND
   permission: biomes.VIP
 DARK_FOREST:
   displayname: "&6Dark Forest"
   lore:
-    - "&7Click to set biome"
-    - "&7in your plot"
+    - "Click to set biome"
+    - "in your plot"
   material-name: RED_MUSHROOM_BLOCK
   permission: biomes.VIP
 OCEAN:
   displayname: "&6Ocean"
   lore:
-    - "&7Click to set biome"
-    - "&7in your plot"
+    - "Click to set biome"
+    - "in your plot"
   material-name: WATER_BUCKET
   permission: biomes.VIP
 PLAINS:
   displayname: "&6Plains"
   lore:
-    - "&7Click to set biome"
-    - "&7in your plot"
+    - "Click to set biome"
+    - "in your plot"
   material-name: GRASS
   permission: biomes.VIP
 DESERT:
   displayname: "&6Desert"
   lore:
-    - "&7Click to set biome"
-    - "&7in your plot"
+    - "Click to set biome"
+    - "in your plot"
   material-name: SANDSTONE
   permission: biomes.VIP
 FOREST:
   displayname: "&6Forest"
   lore:
-    - "&7Click to set biome"
-    - "&7in your plot"
+    - "Click to set biome"
+    - "in your plot"
   material-name: OAK_LOG
   permission: biomes.VIP
 TAIGA:
   displayname: "&6Taiga"
   lore:
-    - "&7Click to set biome"
-    - "&7in your plot"
+    - "Click to set biome"
+    - "in your plot"
   material-name: SPRUCE_LOG
   permission: biomes.VIP
 FROZEN_OCEAN:
   displayname: "&6Frozen Ocean"
   lore:
-    - "&7Click to set biome"
-    - "&7in your plot"
+    - "Click to set biome"
+    - "in your plot"
   material-name: ICE
   permission: biomes.VIP
 JUNGLE:
   displayname: "&6Jungle"
   lore:
-    - "&7Click to set biome"
-    - "&7in your plot"
+    - "Click to set biome"
+    - "in your plot"
   material-name: JUNGLE_LOG
   permission: biomes.VIP
 BIRCH_FOREST:
   displayname: "&6Birch Forest"
   lore:
-    - "&7Click to set biome"
-    - "&7in your plot"
+    - "Click to set biome"
+    - "in your plot"
   material-name: BIRCH_LOG
   permission: biomes.VIP
 SAVANNA:
   displayname: "&6Savanna"
   lore:
-    - "&7Click to set biome"
-    - "&7in your plot"
+    - "Click to set biome"
+    - "in your plot"
   material-name: ACACIA_LOG
   permission: biomes.VIP

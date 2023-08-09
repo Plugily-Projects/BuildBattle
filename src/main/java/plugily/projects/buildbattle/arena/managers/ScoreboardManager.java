@@ -1,7 +1,7 @@
 /*
  *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2022 Plugily Projects - maintained by Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,174 +20,66 @@
 
 package plugily.projects.buildbattle.arena.managers;
 
-import me.clip.placeholderapi.PlaceholderAPI;
-import me.tigerhix.lib.scoreboard.ScoreboardLib;
-import me.tigerhix.lib.scoreboard.common.EntryBuilder;
-import me.tigerhix.lib.scoreboard.type.Entry;
-import me.tigerhix.lib.scoreboard.type.Scoreboard;
-import me.tigerhix.lib.scoreboard.type.ScoreboardHandler;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-import plugily.projects.buildbattle.Main;
-import plugily.projects.buildbattle.arena.ArenaState;
-import plugily.projects.buildbattle.arena.impl.BaseArena;
-import plugily.projects.buildbattle.arena.impl.SoloArena;
-import plugily.projects.buildbattle.arena.managers.plots.Plot;
-import plugily.projects.buildbattle.handlers.language.LanguageManager;
-import plugily.projects.buildbattle.user.User;
-import plugily.projects.commonsbox.string.StringFormatUtils;
+import plugily.projects.buildbattle.arena.BaseArena;
+import plugily.projects.buildbattle.arena.GuessArena;
+import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.classic.arena.PluginArena;
+import plugily.projects.minigamesbox.classic.arena.managers.PluginScoreboardManager;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.user.User;
+import plugily.projects.minigamesbox.classic.utils.scoreboard.common.EntryBuilder;
+import plugily.projects.minigamesbox.classic.utils.scoreboard.type.Entry;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
- * @author Plajer
- * <p>
- * Created at 11.01.2019
+ * @author Tigerpanzer_02
+ * <p>Created at 19.12.2021
  */
-public class ScoreboardManager {
+public class ScoreboardManager extends PluginScoreboardManager {
 
-  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
-  private final Map<String, List<String>> scoreboardContents = new HashMap<>();
-  private final List<Scoreboard> scoreboards = new ArrayList<>();
-  private final String boardTitle = plugin.getChatManager().colorMessage("Scoreboard.Title");
-  private final BaseArena arena;
+  private final PluginArena arena;
 
-  public ScoreboardManager(BaseArena arena) {
+  public ScoreboardManager(PluginArena arena) {
+    super(arena);
     this.arena = arena;
-    for(ArenaState state : ArenaState.values()) {
-      //not registering RESTARTING state and registering IN_GAME and ENDING later
-      if(state == ArenaState.RESTARTING || state == ArenaState.IN_GAME || state == ArenaState.ENDING) {
-        continue;
-      }
-      //todo migrator
-      List<String> lines = LanguageManager.getLanguageList("Scoreboard.Content." + state.getFormattedName());
-      scoreboardContents.put(state.getFormattedName(), lines);
-    }
-    for(BaseArena.ArenaType type : BaseArena.ArenaType.values()) {
-      List<String> playing = LanguageManager.getLanguageList("Scoreboard.Content.Playing-States." + type.getPrefix());
-      List<String> ending = LanguageManager.getLanguageList("Scoreboard.Content.Ending-States." + type.getPrefix());
-      //todo locale
-      scoreboardContents.put(ArenaState.IN_GAME.getFormattedName() + "_" + type.getPrefix(), playing);
-      scoreboardContents.put(ArenaState.ENDING.getFormattedName() + "_" + type.getPrefix(), ending);
-    }
   }
 
-  /**
-   * Creates arena scoreboard for target user
-   *
-   * @param user user that represents game player
-   * @see User
-   */
-  public void createScoreboard(User user) {
-    Scoreboard scoreboard = ScoreboardLib.createScoreboard(user.getPlayer()).setHandler(new ScoreboardHandler() {
-      @Override
-      public String getTitle(Player player) {
-        return boardTitle;
-      }
-
-      @Override
-      public List<Entry> getEntries(Player player) {
-        return formatScoreboard(user);
-      }
-    });
-    scoreboard.activate();
-    scoreboards.add(scoreboard);
-  }
-
-  /**
-   * Removes scoreboard of user
-   *
-   * @param user user that represents game player
-   * @see User
-   */
-  public void removeScoreboard(User user) {
-    for(Scoreboard board : scoreboards) {
-      if(board.getHolder().equals(user.getPlayer())) {
-        scoreboards.remove(board);
-        board.deactivate();
-        return;
-      }
-    }
-  }
-
-  /**
-   * Forces all scoreboards to deactivate.
-   */
-  public void stopAllScoreboards() {
-    scoreboards.forEach(Scoreboard::deactivate);
-    scoreboards.clear();
-  }
-
+  @Override
   public List<Entry> formatScoreboard(User user) {
     EntryBuilder builder = new EntryBuilder();
-    List<String> lines = scoreboardContents.get(arena.getArenaState().getFormattedName());
-    if(arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
-      lines = scoreboardContents.get(arena.getArenaState().getFormattedName() + "_" + arena.getArenaType().getPrefix());
-    }
-    if(lines != null) {
-      for(String line : lines) {
-        builder.next(formatScoreboardLine(line, user));
-      }
-    }
-    return builder.build();
-  }
+    List<String> lines;
+    PluginArena userArena = user.getArena();
 
-  public String formatScoreboardLine(String string, User user) {
-    Player player = user.getPlayer();
-    String returnString = string;
-    returnString = StringUtils.replace(returnString, "%PLAYERS%", Integer.toString(arena.getPlayers().size()));
-    returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());
-    returnString = replaceValues(returnString);
-    if(((SoloArena) arena).isThemeVoteTime()) {
-      returnString = StringUtils.replace(returnString, "%THEME%", plugin.getChatManager().colorMessage("In-Game.No-Theme-Yet"));
-      returnString = StringUtils.replace(returnString, "%TEAMMATE%", plugin.getChatManager().colorMessage("In-Game.Nobody"));
-    } else {
-      returnString = StringUtils.replace(returnString, "%THEME%", arena.getTheme());
-
-      Plot plot = arena.getPlotManager().getPlot(player);
-      if(arena.getArenaType() == BaseArena.ArenaType.TEAM && plot != null) {
-        if(plot.getMembers().size() > 1) {
-          StringBuilder members = new StringBuilder();
-          plot.getMembers().forEach(p -> members.append(p.getName()).append(" & "));
-          members.deleteCharAt(members.length() - 2);
-          returnString = StringUtils.replace(returnString, "%TEAMMATE%", members.toString());
+    if(userArena.getArenaState() == ArenaState.FULL_GAME) {
+      lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content.Starting");
+    } else if(userArena.getArenaState() == ArenaState.IN_GAME) {
+      if(userArena instanceof GuessArena) {
+        lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName() + ".Guess-The-Build" + (((GuessArena) userArena).getArenaInGameState() == BaseArena.ArenaInGameState.PLOT_VOTING ? "-Waiting" : ""));
+      } else {
+        if(userArena.getArenaOption("PLOT_MEMBER_SIZE") <= 1) {
+          lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName() + ".Classic");
         } else {
-          returnString = StringUtils.replace(returnString, "%TEAMMATE%", plugin.getChatManager().colorMessage("In-Game.Nobody"));
+          lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName() + ".Teams");
         }
       }
+    } else if(userArena.getArenaState() == ArenaState.ENDING) {
+      if(userArena instanceof GuessArena) {
+        lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName() + ".Guess-The-Build");
+      } else {
+        lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName() + ".Classic");
+      }
+    } else {
+      lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName());
     }
-    if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-      returnString = PlaceholderAPI.setPlaceholders(player, returnString);
+
+    Player player = user.getPlayer();
+
+    for(String line : lines) {
+      builder.next(new MessageBuilder(line).player(player).arena(arena).build());
     }
-    returnString = plugin.getChatManager().colorRawMessage(returnString);
-    return returnString;
-  }
-
-  public String replaceValues(String string) {
-    String returnString = string;
-    returnString = StringUtils.replace(returnString, "%MIN_PLAYERS%", Integer.toString(arena.getMinimumPlayers()));
-    returnString = StringUtils.replace(returnString, "%MAX_PLAYERS%", Integer.toString(arena.getMaximumPlayers()));
-
-    int timer = arena.getTimer();
-
-    returnString = StringUtils.replace(returnString, "%TIMER%", Integer.toString(timer));
-    returnString = StringUtils.replace(returnString, "%TIME_LEFT%", Long.toString(timer));
-    returnString = StringUtils.replace(returnString, "%FORMATTED_TIME_LEFT%", StringFormatUtils.formatIntoMMSS(timer));
-    returnString = StringUtils.replace(returnString, "%ARENA_ID%", arena.getID());
-    returnString = StringUtils.replace(returnString, "%MAPNAME%", arena.getMapName());
-    return returnString;
-  }
-
-  public String getBoardTitle() {
-    return boardTitle;
-  }
-
-  public Main getPlugin() {
-    return plugin;
+    return builder.build();
   }
 
 }

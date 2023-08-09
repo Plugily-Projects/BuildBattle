@@ -1,7 +1,7 @@
 /*
  *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2022 Plugily Projects - maintained by Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,15 +25,13 @@ import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
-
-import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
-import plugily.projects.commonsbox.minecraft.compat.xseries.XSound;
-import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
-import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.buildbattle.Main;
-import plugily.projects.buildbattle.utils.Debugger;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
+import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XSound;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -45,13 +43,14 @@ public class VoteItems {
 
   private final Set<VoteItem> voteItems = new HashSet<>();
   private final FileConfiguration config;
-  private final Main plugin = JavaPlugin.getPlugin(Main.class);
+  private final Main plugin;
 
   private ItemStack reportItem = new ItemStack(Material.BEDROCK, 32);
   private VoteItem reportVoteItem = new VoteItem(new ItemStack(Material.BEDROCK, 32), 8, 8 + 1, XSound.ENTITY_ARROW_HIT.parseSound());
 
-  public VoteItems() {
-    config = ConfigUtils.getConfig(plugin, "voteItems");
+  public VoteItems(Main plugin) {
+    this.plugin = plugin;
+    config = ConfigUtils.getConfig(plugin, "vote_items");
 
     updateVoteItemsConfig();
     loadVoteItems();
@@ -59,26 +58,33 @@ public class VoteItems {
 
   private void loadVoteItems() {
     for(String key : config.getKeys(false)) {
-      if(!config.isSet(key + ".displayname")) {
+      String displayName = config.getString(key + ".displayname", null);
+
+      if(displayName == null) {
         continue;
       }
 
       ItemStack stack = new ItemBuilder(XMaterial.matchXMaterial(config.getString(key + ".material-name", "BEDROCK")
-          .toUpperCase()).orElse(XMaterial.BEDROCK).parseItem())
-          .name(plugin.getChatManager().colorRawMessage(config.getString(key + ".displayname")))
+          .toUpperCase(java.util.Locale.ENGLISH)).orElse(XMaterial.BEDROCK).parseItem())
+          .name(new MessageBuilder(displayName).build())
           .build();
 
-      if(config.getBoolean(key + ".report-item-function")) {
-        reportItem = stack;
-      }
-      Sound sound = null;
+      Sound sound = XSound.matchXSound(config.getString(key + ".sound", "")).orElse(XSound.BLOCK_ANVIL_HIT).parseSound();
+
+      int slot;
       try {
-        sound = Sound.valueOf(config.getString(key + ".sound", ""));
-      } catch(IllegalArgumentException ignored) {
+        slot = Integer.parseInt(key);
+      } catch(NumberFormatException e) {
+        continue;
       }
-      int s = Integer.parseInt(key);
-      VoteItem voteItem = new VoteItem(stack, s, s + 1, sound);
-      reportVoteItem = voteItem;
+
+      VoteItem voteItem = new VoteItem(stack, slot, slot + 1, sound);
+
+      if(config.getBoolean(key + ".report-item-function", false)) {
+        reportItem = stack;
+        reportVoteItem = voteItem;
+      }
+
       voteItems.add(voteItem);
     }
   }
@@ -89,25 +95,25 @@ public class VoteItems {
         continue;
       }
       config.set(key + ".material-name", XMaterial.GREEN_TERRACOTTA.name());
-      Debugger.debug(Debugger.Level.WARN, "Found outdated item in votingItems.yml! We've converted it to the newest version!");
+      plugin.getDebugger().debug("Found outdated item in vote_items.yml! We've converted it to the newest version!");
     }
-    ConfigUtils.saveConfig(plugin, config, "voteItems");
+    ConfigUtils.saveConfig(plugin, config, "vote_items");
   }
 
   public void giveVoteItems(Player player) {
     for(VoteItem voteItem : voteItems) {
-      player.getInventory().setItem(voteItem.getSlot(), voteItem.getItemStack());
+      player.getInventory().setItem(voteItem.slot, voteItem.itemStack);
     }
     player.updateInventory();
   }
 
   public void playVoteSound(Player player, ItemStack itemStack) {
     for(VoteItem item : voteItems) {
-      if(item.getItemStack().isSimilar(itemStack)) {
-        if(item.getSound() == null) {
+      if(item.itemStack.isSimilar(itemStack)) {
+        if(item.sound == null) {
           return;
         }
-        player.playSound(player.getLocation(), item.getSound(), 1, 1);
+        player.playSound(player.getLocation(), item.sound, 1, 1);
       }
     }
   }
@@ -120,11 +126,28 @@ public class VoteItems {
    */
   public int getPoints(ItemStack itemStack) {
     for(VoteItem item : voteItems) {
-      if(item.getItemStack().isSimilar(itemStack)) {
-        return item.getPoints();
+      if(item.itemStack.isSimilar(itemStack)) {
+        return item.points;
       }
     }
     return 1;
+  }
+
+  public int getPointsAndPlayVoteSound(Player player, VoteItem voteItem) {
+    if(voteItem.sound == null) {
+      return voteItem.points;
+    }
+    player.playSound(player.getLocation(), voteItem.sound, 1, 1);
+    return voteItem.points;
+  }
+
+  public VoteItem getVoteItem(ItemStack itemStack) {
+    for(VoteItem item : voteItems) {
+      if(item.itemStack.isSimilar(itemStack)) {
+        return item;
+      }
+    }
+    return null;
   }
 
   /**

@@ -1,7 +1,7 @@
 /*
  *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2022 Plugily Projects - maintained by Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,11 +22,10 @@ package plugily.projects.buildbattle.commands.arguments.admin.plot;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import plugily.projects.buildbattle.arena.ArenaRegistry;
-import plugily.projects.buildbattle.arena.ArenaState;
-import plugily.projects.buildbattle.arena.impl.BaseArena;
+import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
-import plugily.projects.buildbattle.commands.arguments.data.CommandArgument;
+import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.classic.commands.arguments.data.CommandArgument;
 
 /**
  * @author Tigerpanzer_02
@@ -39,12 +38,11 @@ public class SelectPlotArgument {
     registry.mapArgument("buildbattle", new CommandArgument("selectplot", "buildbattle.command.selectplot", CommandArgument.ExecutorType.PLAYER) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        BaseArena arena = ArenaRegistry.getArena((Player) sender);
-        if(arena == null) {
-          return;
-        }
-        if(arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING)
-          registry.getPlugin().getPlotMenuHandler().createMenu((Player) sender, arena);
+        Player player = (Player) sender;
+        BaseArena arena = (BaseArena) registry.getPlugin().getArenaRegistry().getArena(player);
+
+        if(arena != null && (arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING))
+          arena.getPlugin().getPlotMenuHandler().createMenu(player, arena);
       }
     });
   }

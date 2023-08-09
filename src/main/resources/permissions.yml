@@ -1,0 +1,45 @@
+# You can change custom players permissions here.
+# Player with your custom permission will get int
+
+# Create custom points boost permissions
+Points-Boost:
+  # Do not use dots (.), they won't work.
+  # Increase points by 1
+  point-boost-1: 1
+  point-boost-5: 5
+  # Increase points by 10
+  admin-boost: 10
+
+# Create custom voting boost permissions
+Voting-Boost:
+  # Do not use dots (.), they won't work.
+  # Increase voting by 1
+  voting-boost-1: 1
+  voting-boost-5: 5
+  # Increase voting by 10
+  admin-boost: 10
+
+
+# Create custom exp boost permissions
+Exp-Boost:
+  # Do not use dots (.), they won't work.
+  # Increase exp by 10 percent
+  exp-boost-10: 10
+  exp-boost-50: 50
+  # Increase exp by 300 percent
+  admin-boost: 300
+
+# Basic permissions for game, permissions explained here: https://wiki.plugily.xyz/
+Basic:
+  Full-Games: "buildbattle.fullgames"
+  # <arena> represents arena name (NOT MAP NAME!), for example: 'buildbattle.join.ARENAnice'
+  # use 'buildbattle.join.*' to enable access to all arenas
+  Join: "buildbattle.join.<arena>"
+  Forcestart: "buildbattle.admin.forcestart"
+
+# Don't edit it. But who's stopping you? It's your server!
+# Really, don't edit ;p
+# You edited it, huh? Next time hurt yourself!
+Do-Not-Edit:
+  File-Version: 1
+  Core-Version: 1

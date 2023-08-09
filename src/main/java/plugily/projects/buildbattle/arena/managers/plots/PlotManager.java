@@ -1,7 +1,7 @@
 /*
  *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2022 Plugily Projects - maintained by Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,19 +21,22 @@
 package plugily.projects.buildbattle.arena.managers.plots;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import plugily.projects.buildbattle.api.event.plot.BBPlayerPlotReceiveEvent;
-import plugily.projects.buildbattle.arena.ArenaState;
-import plugily.projects.buildbattle.arena.impl.BaseArena;
-import plugily.projects.commonsbox.minecraft.compat.ServerVersion.Version;
-import plugily.projects.commonsbox.minecraft.dimensional.Cuboid;
+import plugily.projects.buildbattle.api.event.plot.PlotPlayerReceiveEvent;
+import plugily.projects.buildbattle.arena.BaseArena;
+import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.classic.utils.dimensional.Cuboid;
+import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
+import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
  * Created by Tom on 17/08/2015.
@@ -50,6 +53,10 @@ public class PlotManager {
 
   public void addBuildPlot(Plot buildPlot) {
     plots.add(buildPlot);
+  }
+
+  public void removeBuildPlot(Plot buildPlot) {
+    plots.remove(buildPlot);
   }
 
   public Plot getPlot(Player player) {
@@ -93,7 +100,7 @@ public class PlotManager {
           continue;
         }
 
-        if(Version.isCurrentEqualOrLower(Version.v1_13_R2)) { // Async catch in old versions
+        if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_13_R2)) { // Async catch in old versions
           Location loc = tploc;
           int m = 0;
           while(loc.getBlock().getType() != Material.AIR) {
@@ -114,8 +121,8 @@ public class PlotManager {
             m++; // Preventing server froze on flat map
           }
 
-          for(Player p : buildPlot.getMembers()) {
-            p.teleport(cuboid.getCenter());
+          for(Player player : buildPlot.getMembers()) {
+            VersionUtils.teleport(player, cuboid.getCenter());
           }
         } else {
           // Should do this in async thread to do not cause dead for the main thread
@@ -135,16 +142,20 @@ public class PlotManager {
 
             return loc;
           }).thenAccept(loc -> {
-            for(Player p : buildPlot.getMembers()) {
-              p.teleport(cuboid.getCenter());
-              //apply creative again to prevent multiverse default gamemode on world switch
-              p.setGameMode(GameMode.CREATIVE);
+            for(Player player : buildPlot.getMembers()) {
+              VersionUtils.teleport(player, cuboid.getCenter());
             }
           });
         }
       }
-      Bukkit.getPluginManager().callEvent(new BBPlayerPlotReceiveEvent(arena, buildPlot));
+      Bukkit.getPluginManager().callEvent(new PlotPlayerReceiveEvent(arena, buildPlot));
     }
+  }
+
+  public List<Plot> getTopPlotsOrder() {
+    List<Plot> plotRanking = plots.stream().filter(plot -> !plot.getMembers().isEmpty()).sorted(Comparator.comparingInt(Plot::getPoints)).collect(Collectors.toList());
+    Collections.reverse(plotRanking);
+    return plotRanking;
   }
 
   public List<Plot> getPlots() {

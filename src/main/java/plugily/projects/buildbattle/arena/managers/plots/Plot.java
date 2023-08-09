@@ -1,7 +1,7 @@
 /*
  *
  * BuildBattle - Ultimate building competition minigame
- * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C) 2022 Plugily Projects - maintained by Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,15 +31,14 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import plugily.projects.buildbattle.Main;
-import plugily.projects.buildbattle.api.event.plot.BBPlotResetEvent;
-import plugily.projects.buildbattle.arena.impl.BaseArena;
-import plugily.projects.buildbattle.utils.Utils;
-import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
-import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
-import plugily.projects.commonsbox.minecraft.dimensional.Cuboid;
+import plugily.projects.buildbattle.api.event.plot.PlotResetEvent;
+import plugily.projects.buildbattle.arena.BaseArena;
+import plugily.projects.buildbattle.handlers.misc.ChunkManager;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.utils.dimensional.Cuboid;
+import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,8 +49,6 @@ import java.util.Map;
  * Created by Tom on 17/08/2015.
  */
 public class Plot {
-
-  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
   private final Map<Location, String> particles = new HashMap<>();
   private final XMaterial defaultFloor;
@@ -68,8 +65,8 @@ public class Plot {
   public Plot(BaseArena arena, Biome biome) {
     this.arena = arena;
     plotDefaultBiome = biome;
-    defaultFloor = XMaterial.matchXMaterial(plugin.getConfig().getString("Default-Floor-Material-Name", "LOG")
-        .toUpperCase()).orElse(XMaterial.OAK_LOG);
+    defaultFloor = XMaterial.matchXMaterial(arena.getPlugin().getConfig().getString("Floor.Material", "LOG")
+        .toUpperCase(java.util.Locale.ENGLISH)).orElse(XMaterial.OAK_LOG);
   }
 
   public int getEntities() {
@@ -99,7 +96,9 @@ public class Plot {
   }
 
   public void setWeatherType(WeatherType weatherType) {
-    this.weatherType = weatherType;
+    if(weatherType != null) {
+      this.weatherType = weatherType;
+    }
   }
 
   public Time getTime() {
@@ -125,13 +124,13 @@ public class Plot {
 
   @NotNull
   public String getFormattedMembers() {
-    if(members.size() >= 1) {
+    if(!members.isEmpty()) {
       StringBuilder member = new StringBuilder();
       members.forEach(player -> member.append(player.getName()).append(" & "));
       return member.substring(0, member.length() - 3);
-    } else {
-      return "PLAYER_NOT_FOUND";
     }
+
+    return "PLAYER_NOT_FOUND";
   }
 
   public int getMembersSize() {
@@ -144,12 +143,14 @@ public class Plot {
     }
 
     if(members.contains(player)) {
-      if(!silent) player.sendMessage(plugin.getChatManager().colorMessage("Plots.Team.Member"));
+      if(!silent)
+        new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_MEMBER").asKey().arena(arena).player(player).sendPlayer();
       return false;
     }
 
-    if(members.size() >= playerArena.getPlotSize()) {
-      if(!silent) player.sendMessage(plugin.getChatManager().colorMessage("Plots.Team.Full"));
+    if(members.size() >= arena.getArenaOption("PLOT_MEMBER_SIZE")) {
+      if(!silent)
+        new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_FULL").asKey().prefix().arena(arena).player(player).sendPlayer();
       return false;
     }
 
@@ -158,7 +159,6 @@ public class Plot {
       plot.removeMember(player);
     }
     members.add(player);
-    plugin.getUserManager().getUser(player).setCurrentPlot(this);
     return true;
   }
 
@@ -168,12 +168,7 @@ public class Plot {
 
   public void fullyResetPlot() {
     resetPlot();
-
-    for(Player p : members) {
-      plugin.getUserManager().getUser(p).setCurrentPlot(null);
-    }
-
-    setPoints(0);
+    points = 0;
     members.clear();
     particles.clear();
   }
@@ -200,11 +195,12 @@ public class Plot {
     World centerWorld = cuboid.getCenter().getWorld();
 
     if(centerWorld != null) {
+      boolean isCitizensEnabled = arena.getPlugin().getServer().getPluginManager().isPluginEnabled("Citizens");
+
       for(Entity entity : centerWorld.getEntities()) {
         if(cuboid.isInWithMarge(entity.getLocation(), 5)) {
           //deprecated seems not to work with latest builds of citizens
-          if(plugin.getServer().getPluginManager().isPluginEnabled("Citizens") && CitizensAPI.getNPCRegistry() != null
-              && CitizensAPI.getNPCRegistry().isNPC(entity)) {
+          if(isCitizensEnabled && CitizensAPI.getNPCRegistry() != null && CitizensAPI.getNPCRegistry().isNPC(entity)) {
             continue;
           }
           //citizens also uses metadata, see https://wiki.citizensnpcs.co/API
@@ -224,9 +220,14 @@ public class Plot {
     }
 
     for(Chunk chunk : cuboid.chunkList()) {
-      for(Player p : plugin.getServer().getOnlinePlayers()) {
+      if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_15_R1)) {
+        chunk.getWorld().refreshChunk(chunk.getX(), chunk.getZ());
+        continue;
+      }
+
+      for(Player p : arena.getPlugin().getServer().getOnlinePlayers()) {
         if(p.getWorld().equals(chunk.getWorld())) {
-          Utils.sendMapChunk(p, chunk);
+          ChunkManager.sendMapChunk(p, chunk);
         }
       }
     }
@@ -238,15 +239,13 @@ public class Plot {
         Location min = cuboid.getMinPoint();
         Location max = cuboid.getMaxPoint();
 
-        int y = Math.min(min.getBlockY(), max.getBlockY());
-
-        centerWorld.setBiome(min.getBlockX(), y, max.getBlockZ(), plotDefaultBiome);
+        centerWorld.setBiome(min.getBlockX(), Math.min(min.getBlockY(), max.getBlockY()), max.getBlockZ(), plotDefaultBiome);
       } else {
         centerWorld.setBiome(cuboid.getMinPoint().getBlockX(), cuboid.getMaxPoint().getBlockZ(), plotDefaultBiome);
       }
     }
 
-    plugin.getServer().getPluginManager().callEvent(new BBPlotResetEvent(arena, this));
+    arena.getPlugin().getServer().getPluginManager().callEvent(new PlotResetEvent(arena, this));
   }
 
   public int getPoints() {
@@ -255,6 +254,10 @@ public class Plot {
 
   public void setPoints(int points) {
     this.points = points;
+  }
+
+  public void addPoints(int points) {
+    this.points += points;
   }
 
   private void changeFloor(Material material) {
@@ -324,7 +327,9 @@ public class Plot {
     int counter = 0;
     Location location = tploc.clone();
     while(counter != 10) {
-      if(!(location.getBlock().getType() == Material.BARRIER || location.getBlock().getType() == Material.AIR)) {
+      Material type = location.getBlock().getType();
+
+      if(!(type == Material.BARRIER || type == Material.AIR)) {
         enclosed = true;
         tploc = location;
         counter = 9;
@@ -353,7 +358,7 @@ public class Plot {
     }
 
     public static long format(Time time, long currTime) {
-      return time == Time.WORLD_TIME ? currTime : time.getTicks();
+      return time == Time.WORLD_TIME ? currTime : time.ticks;
     }
 
     public long getTicks() {
