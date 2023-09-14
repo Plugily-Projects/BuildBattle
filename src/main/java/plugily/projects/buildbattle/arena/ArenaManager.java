@@ -93,7 +93,7 @@ public class ArenaManager extends PluginArenaManager {
         if(plot.getMembers().isEmpty()) {
           if(arena.getArenaState() == ArenaState.IN_GAME) {
             //ToDo message force skipped
-            pluginArena.setTimer(plugin.getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".Round-Delay"));
+            pluginArena.setTimer(plugin.getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".Round-Delay"), true);
             pluginArena.setArenaInGameState(BaseArena.ArenaInGameState.PLOT_VOTING);
           }
         }

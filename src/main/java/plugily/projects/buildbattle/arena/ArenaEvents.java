@@ -569,6 +569,9 @@ public class ArenaEvents extends PluginArenaEvents {
     if(arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
+    if(arena.getSpectators().contains(player)) {
+      return;
+    }
     GuessArena gameArena = (GuessArena) arena;
     if(gameArena.getWhoGuessed().contains(player)) {
       event.setCancelled(true);
