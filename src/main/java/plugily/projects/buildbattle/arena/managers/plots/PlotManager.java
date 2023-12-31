@@ -100,53 +100,30 @@ public class PlotManager {
           continue;
         }
 
-        if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_13_R2)) { // Async catch in old versions
+        // Should do this in async thread to do not cause dead for the main thread
+        CompletableFuture.supplyAsync(() -> {
           Location loc = tploc;
-          int m = 0;
           while(loc.getBlock().getType() != Material.AIR) {
-            if(m >= 500) {
-              break;// Thread never ends on flat map?
+            if(arena.getArenaInGameState() != BaseArena.ArenaInGameState.THEME_VOTING) {
+              break; // Thread never ends on flat map?
             }
-
-            if(arena.getArenaState() == ArenaState.IN_GAME && arena.getTimer() > 30) {
-              break;
-            }
-
             loc = loc.add(0, 1, 0);
             //teleporting 1 x and z block away from center cause Y is above plot limit
             if(loc.getY() >= cuboid.getMaxPoint().getY()) {
               loc = cuboid.getCenter().clone().add(1, 0, 1);
             }
-
-            m++; // Preventing server froze on flat map
           }
-
+          return loc;
+        }).thenAccept(loc -> {
           for(Player player : buildPlot.getMembers()) {
-            VersionUtils.teleport(player, cuboid.getCenter());
+            VersionUtils.teleport(player, loc);
+            //Fix respawning bug while theme voting
+            Bukkit.getScheduler().runTaskLater(arena.getPlugin(), () -> {
+              player.setAllowFlight(true);
+              player.setFlying(true);
+            }, 40);
           }
-        } else {
-          // Should do this in async thread to do not cause dead for the main thread
-          CompletableFuture.supplyAsync(() -> {
-            Location loc = tploc;
-            while(loc.getBlock().getType() != Material.AIR) {
-              if(arena.getArenaState() == ArenaState.IN_GAME && arena.getTimer() > 30) {
-                break; // Thread never ends on flat map?
-              }
-
-              loc = loc.add(0, 1, 0);
-              //teleporting 1 x and z block away from center cause Y is above plot limit
-              if(loc.getY() >= cuboid.getMaxPoint().getY()) {
-                loc = cuboid.getCenter().clone().add(1, 0, 1);
-              }
-            }
-
-            return loc;
-          }).thenAccept(loc -> {
-            for(Player player : buildPlot.getMembers()) {
-              VersionUtils.teleport(player, cuboid.getCenter());
-            }
-          });
-        }
+        });
       }
       Bukkit.getPluginManager().callEvent(new PlotPlayerReceiveEvent(arena, buildPlot));
     }
