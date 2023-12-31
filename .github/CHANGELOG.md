@@ -10,6 +10,10 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+### 5.0.3 Release (31.12.2023)
+* Added 1.20.3 & 1.20.4 support
+* Updated to minigamesbox 1.3.4
+
 ### 5.0.2 Release (14.09.2023)
 * Fixed gtb round reset on player leave
 * Fixed gtb "could not pass event AsyncPlayerChatEvent" if spectators ingame
