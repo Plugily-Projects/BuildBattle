@@ -10,6 +10,11 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+### 5.0.3 Release (03.01.2024)
+* Added new command /bba locale <locale> to set your locale
+* Fixed GameProfile API 1.20 change
+* Fixed none kits related plugins issues
+
 ### 5.0.2 Release (31.12.2023)
 * Fixed gtb round reset on player leave
 * Fixed gtb "could not pass event AsyncPlayerChatEvent" if spectators ingame
