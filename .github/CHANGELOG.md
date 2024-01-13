@@ -10,6 +10,9 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+### 5.0.4 Release (13.01.2024)
+* Updated to minigamesbox 1.3.6
+
 ### 5.0.3 Release (03.01.2024)
 * Added new command /bba locale <locale> to set your locale
 * Fixed GameProfile API 1.20 change

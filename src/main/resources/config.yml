@@ -49,14 +49,10 @@ Commands:
       Executes: "buildbattle leave"
       Enabled: true
     '3':
-      Short: "kit"
-      Executes: "buildbattle selectkit"
-      Enabled: false
-    '4':
       Short: "stats"
       Executes: "buildbattle stats"
       Enabled: false
-    '5':
+    '4':
       Short: "top"
       Executes: "buildbattle top"
       Enabled: true
@@ -82,16 +78,14 @@ Database: false
 
 # Should we enable in game rewards? See rewards.yml for more...
 # You should also check out our script engine tutorial for rewards! https://tutorial.plugily.xyz
-Rewards: true
-
-
-# Enable in game (eg. '[KIT][LEVEL] Tigerpanzer_02: hey') special formatting?
-# Formatting is configurable in old_language.yml
-# You can use PlaceholderAPI placeholders in chat format!
-Plugin-Chat-Format: true
+Rewards: false
 
 
 Chat:
+  # Enable in game (eg. '[KIT][LEVEL] Tigerpanzer_02: hey') special formatting?
+  # Formatting is configurable in language.yml
+  # You can use PlaceholderAPI placeholders in chat format!
+  Format: true
   Separate:
     # Should we enable a separate arena chat for players inside a arena
     # Useful on multi arena servers that don't want the same chat for all players on the server
@@ -275,4 +269,4 @@ Update-Notifier:
 # You edited it, huh? Next time hurt yourself!
 Do-Not-Edit:
   File-Version: 1
-  Core-Version: 2
+  Core-Version: 3
