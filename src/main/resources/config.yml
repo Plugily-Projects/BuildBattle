@@ -136,7 +136,8 @@ Damage:
   Drowning: false
   # Should players get fire damage?
   Fire: false
-
+  # Should players lose food ingame & get damage?
+  Hunger: false
 
 Cycle:
   # Should we make permanent clear weather on all worlds where our arenas are?
@@ -269,4 +270,4 @@ Update-Notifier:
 # You edited it, huh? Next time hurt yourself!
 Do-Not-Edit:
   File-Version: 1
-  Core-Version: 3
+  Core-Version: 4
