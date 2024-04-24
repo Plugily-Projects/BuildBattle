@@ -21,6 +21,7 @@
 package plugily.projects.buildbattle.boot;
 
 import plugily.projects.buildbattle.Main;
+import plugily.projects.minigamesbox.api.preferences.IConfigPreferences;
 import plugily.projects.minigamesbox.classic.api.StatisticType;
 import plugily.projects.minigamesbox.classic.api.StatsStorage;
 import plugily.projects.minigamesbox.classic.arena.options.ArenaOption;
@@ -31,7 +32,6 @@ import plugily.projects.minigamesbox.classic.handlers.permissions.PermissionsMan
 import plugily.projects.minigamesbox.classic.handlers.reward.RewardType;
 import plugily.projects.minigamesbox.classic.handlers.reward.RewardsFactory;
 import plugily.projects.minigamesbox.classic.preferences.ConfigOption;
-import plugily.projects.minigamesbox.classic.preferences.ConfigPreferences;
 
 /**
  * @author Tigerpanzer_02
@@ -53,7 +53,7 @@ public class AdditionalValueInitializer {
   }
 
   private void registerConfigOptions() {
-    ConfigPreferences configPreferences = plugin.getConfigPreferences();
+    IConfigPreferences configPreferences = plugin.getConfigPreferences();
 
     configPreferences.registerOption("MOB_SPAWN", new ConfigOption("Mob.Spawn", false));
     configPreferences.registerOption("HEAD_MENU_CUSTOM", new ConfigOption("Head-Menu.Custom", false));

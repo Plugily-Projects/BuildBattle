@@ -29,7 +29,7 @@ import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.arena.states.guess.InGameState;
 import plugily.projects.buildbattle.arena.states.guess.StartingState;
 import plugily.projects.buildbattle.handlers.themes.BBTheme;
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.api.arena.IArenaState;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 
@@ -60,8 +60,8 @@ public class GuessArena extends BaseArena {
   public GuessArena(String id) {
     super(id);
     setArenaType(ArenaType.GUESS_THE_BUILD);
-    addGameStateHandler(ArenaState.IN_GAME, new InGameState());
-    addGameStateHandler(ArenaState.STARTING, new StartingState());
+    addGameStateHandler(IArenaState.IN_GAME, new InGameState());
+    addGameStateHandler(IArenaState.STARTING, new StartingState());
     getPlugin().getDebugger().debug("Init Arena {0} with ArenaType {1}", getId(), getArenaType());
   }
 

@@ -25,7 +25,7 @@ import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.GuessArena;
 import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.api.arena.IArenaState;
 import plugily.projects.minigamesbox.classic.commands.arguments.data.CommandArgument;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 
@@ -37,7 +37,6 @@ import java.util.Arrays;
  * Created at 30.05.2021
  */
 public class GuessArgument {
-
   public GuessArgument(ArgumentsRegistry registry) {
     registry.mapArgument("buildbattle", new CommandArgument("guess", "", CommandArgument.ExecutorType.PLAYER) {
       @Override
@@ -50,7 +49,7 @@ public class GuessArgument {
         Player player = (Player) sender;
         BaseArena arena = (BaseArena) registry.getPlugin().getArenaRegistry().getArena(player);
 
-        if(!(arena instanceof GuessArena) || arena.getArenaState() != ArenaState.IN_GAME) {
+        if(!(arena instanceof GuessArena) || arena.getArenaState() != IArenaState.IN_GAME) {
           new MessageBuilder("COMMANDS_NOT_PLAYING").asKey().player(player).sendPlayer();
           return;
         }
@@ -75,6 +74,4 @@ public class GuessArgument {
       }
     });
   }
-
-
 }
