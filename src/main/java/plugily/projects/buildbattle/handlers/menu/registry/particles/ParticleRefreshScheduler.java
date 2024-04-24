@@ -25,8 +25,8 @@ import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitTask;
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
+import plugily.projects.minigamesbox.api.arena.IPluginArena;
 import plugily.projects.minigamesbox.classic.PluginMain;
-import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 
 import java.util.HashSet;
@@ -42,24 +42,24 @@ public class ParticleRefreshScheduler {
   public ParticleRefreshScheduler(PluginMain plugin) {
     int particleRefreshTick = plugin.getConfig().getInt("Particle.Refresh-Rate", 10);
 
-    if(particleRefreshTick < 0) {
+    if (particleRefreshTick < 0) {
       particleRefreshTick = 20;
     }
 
     int amountParticle = plugin.getConfig().getInt("Particle.Effects", 20);
 
-    if(amountParticle < 0) {
+    if (amountParticle < 0) {
       amountParticle = 20;
     }
 
     final int particleAmount = amountParticle;
 
     task = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-      for(PluginArena arena : plugin.getArenaRegistry().getArenas()) {
-        if(arena instanceof BaseArena && !arena.getPlayers().isEmpty()) {
-          for(Plot buildPlot : ((BaseArena) arena).getPlotManager().getPlots()) {
-            if(!buildPlot.getMembers().isEmpty()) {
-              for(Entry<Location, String> map : buildPlot.getParticles().entrySet()) {
+      for (IPluginArena arena : plugin.getArenaRegistry().getArenas()) {
+        if (arena instanceof BaseArena && !arena.getPlayers().isEmpty()) {
+          for (Plot buildPlot : ((BaseArena) arena).getPlotManager().getPlots()) {
+            if (!buildPlot.getMembers().isEmpty()) {
+              for (Entry<Location, String> map : buildPlot.getParticles().entrySet()) {
                 VersionUtils.sendParticles(map.getValue(), new HashSet<>(buildPlot.getMembers()), map.getKey(), particleAmount);
               }
             }
@@ -70,7 +70,7 @@ public class ParticleRefreshScheduler {
   }
 
   public void cancelTask() {
-    if(task != null) {
+    if (task != null) {
       task.cancel();
     }
   }

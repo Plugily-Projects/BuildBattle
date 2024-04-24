@@ -30,11 +30,11 @@ import plugily.projects.buildbattle.arena.GuessArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.themes.BBTheme;
 import plugily.projects.buildbattle.handlers.themes.ThemeManager;
+import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.states.PluginInGameState;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
-import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.actionbar.ActionBar;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
 import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
@@ -265,7 +265,7 @@ public class InGameState extends PluginInGameState {
   private void adjustStatistics(GuessArena pluginArena) {
     for(Plot plot : pluginArena.getPlotManager().getTopPlotsOrder()) {
       plot.getMembers().forEach(player -> {
-        User user = getPlugin().getUserManager().getUser(player);
+        IUser user = getPlugin().getUserManager().getUser(player);
         /*
         //ToDo GTB stats
         if(plot.getPoints() > user.getStatistic("POINTS_HIGHEST")) {

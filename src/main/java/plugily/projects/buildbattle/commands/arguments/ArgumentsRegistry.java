@@ -30,7 +30,7 @@ import plugily.projects.buildbattle.commands.arguments.admin.plot.AddPlotArgumen
 import plugily.projects.buildbattle.commands.arguments.admin.plot.RemovePlotArgument;
 import plugily.projects.buildbattle.commands.arguments.admin.plot.SelectPlotArgument;
 import plugily.projects.buildbattle.commands.arguments.game.GuessArgument;
-import plugily.projects.minigamesbox.classic.arena.PluginArena;
+import plugily.projects.minigamesbox.api.arena.IPluginArena;
 import plugily.projects.minigamesbox.classic.commands.arguments.PluginArgumentsRegistry;
 
 import java.util.List;
@@ -55,8 +55,8 @@ public class ArgumentsRegistry extends PluginArgumentsRegistry {
   }
 
   @Override
-  public List<PluginArena> getSpecificFilteredArenas(List<PluginArena> arenas, String filter) {
-    switch(filter.toLowerCase(Locale.ENGLISH)) {
+  public List<IPluginArena> getSpecificFilteredArenas(List<IPluginArena> arenas, String filter) {
+    switch (filter.toLowerCase(Locale.ENGLISH)) {
       case "gtb":
       case "guessthebuild":
       case "guess_the_build":
@@ -69,5 +69,5 @@ public class ArgumentsRegistry extends PluginArgumentsRegistry {
     }
   }
 
-  
+
 }

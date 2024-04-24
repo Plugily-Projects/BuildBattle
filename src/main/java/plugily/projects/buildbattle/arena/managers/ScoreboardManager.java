@@ -23,11 +23,12 @@ package plugily.projects.buildbattle.arena.managers;
 import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.GuessArena;
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.api.arena.IArenaState;
+import plugily.projects.minigamesbox.api.arena.IPluginArena;
+import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.managers.PluginScoreboardManager;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
-import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.scoreboard.common.EntryBuilder;
 import plugily.projects.minigamesbox.classic.utils.scoreboard.type.Entry;
 
@@ -47,14 +48,14 @@ public class ScoreboardManager extends PluginScoreboardManager {
   }
 
   @Override
-  public List<Entry> formatScoreboard(User user) {
+  public List<Entry> formatScoreboard(IUser user) {
     EntryBuilder builder = new EntryBuilder();
     List<String> lines;
-    PluginArena userArena = user.getArena();
+    IPluginArena userArena = user.getArena();
 
-    if(userArena.getArenaState() == ArenaState.FULL_GAME) {
+    if(userArena.getArenaState() == IArenaState.FULL_GAME) {
       lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content.Starting");
-    } else if(userArena.getArenaState() == ArenaState.IN_GAME) {
+    } else if(userArena.getArenaState() == IArenaState.IN_GAME) {
       if(userArena instanceof GuessArena) {
         lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName() + ".Guess-The-Build" + (((GuessArena) userArena).getArenaInGameState() == BaseArena.ArenaInGameState.PLOT_VOTING ? "-Waiting" : ""));
       } else {
@@ -64,7 +65,7 @@ public class ScoreboardManager extends PluginScoreboardManager {
           lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName() + ".Teams");
         }
       }
-    } else if(userArena.getArenaState() == ArenaState.ENDING) {
+    } else if(userArena.getArenaState() == IArenaState.ENDING) {
       if(userArena instanceof GuessArena) {
         lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName() + ".Guess-The-Build");
       } else {
