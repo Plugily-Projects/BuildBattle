@@ -130,25 +130,30 @@ public class VoteMenu {
 
       setGlassPanes(gui, multiplied, percent);
 
-      gui.setItem(multiplied + 8, new SimpleClickableItem(new ItemBuilder(new ItemStack(Material.PAPER))
-          .name(new MessageBuilder("MENU_THEME_VOTE_SUPER_ITEM_NAME").asKey().arena(arena).value(theme).build())
-          .lore(new MessageBuilder("MENU_THEME_VOTE_SUPER_ITEM_LORE").asKey().player(guiPlayer).arena(arena).value(theme).build().split(";"))
-          .build(), event -> {
-        HumanEntity humanEntity = event.getWhoClicked();
+      if (plugin.getConfigPreferences().getOption("SUPER_VOTES")) {
+        gui.setItem(multiplied + 8, new SimpleClickableItem(new ItemBuilder(new ItemStack(Material.PAPER))
+            .name(new MessageBuilder("MENU_THEME_VOTE_SUPER_ITEM_NAME").asKey().arena(arena).value(theme).build())
+            .lore(new MessageBuilder("MENU_THEME_VOTE_SUPER_ITEM_LORE").asKey().player(guiPlayer).arena(arena).value(theme).build().split(";"))
+            .build(), event -> {
+          HumanEntity humanEntity = event.getWhoClicked();
 
-        if(!(humanEntity instanceof Player))
-          return;
+          if(!(humanEntity instanceof Player))
+            return;
 
-        Player player = (Player) humanEntity;
-        User user = plugin.getUserManager().getUser(player);
+          Player player = (Player) humanEntity;
+          User user = plugin.getUserManager().getUser(player);
 
-        if(user.getStatistic("SUPER_VOTES") > 0) {
-          user.adjustStatistic("SUPER_VOTES", -1);
-          new MessageBuilder("MENU_THEME_VOTE_SUPER_USED").asKey().arena(arena).player(player).value(theme).sendArena();
-          arena.setTheme(theme);
-          arena.setTimer(0, true);
-        }
-      }));
+          if(user.getStatistic("SUPER_VOTES") > 0) {
+            user.adjustStatistic("SUPER_VOTES", -1);
+            new MessageBuilder("MENU_THEME_VOTE_SUPER_USED").asKey().arena(arena).player(player).value(theme).sendArena();
+            arena.setTheme(theme);
+            arena.setTimer(0, true);
+          }
+        }));
+      }
+      else {
+        gui.setItem(multiplied + 8, ClickableItem.of(new ItemBuilder(XMaterial.IRON_BARS.parseItem()).name("&7<-").colorizeItem().build()));
+      }
 
       i++;
     }
