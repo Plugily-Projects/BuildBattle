@@ -23,7 +23,6 @@ package plugily.projects.buildbattle.arena.managers;
 import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.GuessArena;
-import plugily.projects.minigamesbox.api.arena.IArenaState;
 import plugily.projects.minigamesbox.api.arena.IPluginArena;
 import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
@@ -53,26 +52,34 @@ public class ScoreboardManager extends PluginScoreboardManager {
     List<String> lines;
     IPluginArena userArena = user.getArena();
 
-    if(userArena.getArenaState() == IArenaState.FULL_GAME) {
-      lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content.Starting");
-    } else if(userArena.getArenaState() == IArenaState.IN_GAME) {
-      if(userArena instanceof GuessArena) {
-        lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName() + ".Guess-The-Build" + (((GuessArena) userArena).getArenaInGameState() == BaseArena.ArenaInGameState.PLOT_VOTING ? "-Waiting" : ""));
-      } else {
-        if(userArena.getArenaOption("PLOT_MEMBER_SIZE") <= 1) {
-          lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName() + ".Classic");
+    switch (userArena.getArenaState()) {
+      case FULL_GAME: {
+        lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content.Starting");
+        break;
+      }
+      case IN_GAME: {
+        if(userArena instanceof GuessArena) {
+          lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName() + ".Guess-The-Build" + (((GuessArena) userArena).getArenaInGameState() == BaseArena.ArenaInGameState.PLOT_VOTING ? "-Waiting" : ""));
         } else {
-          lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName() + ".Teams");
+          if(userArena.getArenaOption("PLOT_MEMBER_SIZE") <= 1) {
+            lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName() + ".Classic");
+          } else {
+            lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName() + ".Teams");
+          }
         }
+        break;
       }
-    } else if(userArena.getArenaState() == IArenaState.ENDING) {
-      if(userArena instanceof GuessArena) {
-        lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName() + ".Guess-The-Build");
-      } else {
-        lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName() + ".Classic");
+      case ENDING: {
+        if(userArena instanceof GuessArena) {
+          lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName() + ".Guess-The-Build");
+        } else {
+          lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName() + ".Classic");
+        }
+        break;
       }
-    } else {
-      lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName());
+      default: {
+        lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName());
+      }
     }
 
     Player player = user.getPlayer();
