@@ -33,7 +33,8 @@ import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.BuildArena;
 import plugily.projects.buildbattle.handlers.themes.ThemeManager;
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.api.arena.IArenaState;
+import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
@@ -102,7 +103,7 @@ public class VoteMenu {
     NormalFastInv gui = new NormalFastInv(9 * themeSelection.size(), new MessageBuilder("MENU_THEME_INVENTORY").asKey().build());
 
     gui.addCloseHandler(event -> {
-      if(arena.getArenaState() == ArenaState.IN_GAME && arena.getArenaInGameState() == BaseArena.ArenaInGameState.THEME_VOTING) {
+      if(arena.getArenaState() == IArenaState.IN_GAME && arena.getArenaInGameState() == BaseArena.ArenaInGameState.THEME_VOTING) {
         plugin.getServer().getScheduler().runTask(plugin, () -> {
           HumanEntity humanEntity = event.getPlayer();
           Inventory inventory = event.getInventory();
@@ -140,7 +141,7 @@ public class VoteMenu {
           return;
 
         Player player = (Player) humanEntity;
-        User user = plugin.getUserManager().getUser(player);
+        IUser user = plugin.getUserManager().getUser(player);
 
         if(user.getStatistic("SUPER_VOTES") > 0) {
           user.adjustStatistic("SUPER_VOTES", -1);

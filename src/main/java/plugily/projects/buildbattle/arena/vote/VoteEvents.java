@@ -28,9 +28,9 @@ import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.BuildArena;
 import plugily.projects.buildbattle.arena.GuessArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.api.arena.IArenaState;
+import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
-import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.misc.complement.ComplementAccessor;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerInteractEvent;
@@ -60,7 +60,7 @@ public class VoteEvents implements Listener {
     }
 
     BaseArena arena = plugin.getArenaRegistry().getArena(event.getPlayer());
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME || arena instanceof GuessArena) {
+    if(arena == null || arena.getArenaState() != IArenaState.IN_GAME || arena instanceof GuessArena) {
       return;
     }
 
@@ -72,7 +72,7 @@ public class VoteEvents implements Listener {
     Plot plot = solo.getVotingPlot();
 
     if(plugin.getVoteItems().getReportItem().equals(event.getItem())) {
-      User user = plugin.getUserManager().getUser(event.getPlayer());
+      IUser user = plugin.getUserManager().getUser(event.getPlayer());
 
       user.adjustStatistic("REPORTS_TRIGGERED", 1);
 

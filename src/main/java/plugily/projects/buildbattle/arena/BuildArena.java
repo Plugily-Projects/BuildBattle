@@ -27,7 +27,7 @@ import plugily.projects.buildbattle.arena.states.build.InGameState;
 import plugily.projects.buildbattle.arena.states.build.StartingState;
 import plugily.projects.buildbattle.handlers.themes.vote.VoteMenu;
 import plugily.projects.buildbattle.handlers.themes.vote.VotePoll;
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.api.arena.IArenaState;
 
 import java.util.*;
 
@@ -44,8 +44,8 @@ public class BuildArena extends BaseArena {
   public BuildArena(String id) {
     super(id);
     setArenaType(ArenaType.SOLO);
-    addGameStateHandler(ArenaState.IN_GAME, new InGameState());
-    addGameStateHandler(ArenaState.STARTING, new StartingState());
+    addGameStateHandler(IArenaState.IN_GAME, new InGameState());
+    addGameStateHandler(IArenaState.STARTING, new StartingState());
     getPlugin().getDebugger().debug("Init Arena {0} with ArenaType {1}", getId(), getArenaType());
   }
 
