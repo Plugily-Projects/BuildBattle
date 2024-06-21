@@ -32,7 +32,6 @@ import plugily.projects.minigamesbox.classic.handlers.permissions.PermissionsMan
 import plugily.projects.minigamesbox.classic.handlers.reward.RewardType;
 import plugily.projects.minigamesbox.classic.handlers.reward.RewardsFactory;
 import plugily.projects.minigamesbox.classic.preferences.ConfigOption;
-import plugily.projects.minigamesbox.classic.preferences.ConfigPreferences;
 
 /**
  * @author Tigerpanzer_02
@@ -61,6 +60,7 @@ public class AdditionalValueInitializer {
     configPreferences.registerOption("REPORT_COMMANDS", new ConfigOption("Report.Commands", false));
     configPreferences.registerOption("PLOT_HIDE_OWNER", new ConfigOption("Plot.Hide-Owner", false));
     configPreferences.registerOption("PLOT_MOVE_OUTSIDE", new ConfigOption("Plot.Move-Outside", false));
+    configPreferences.registerOption("SUPER_VOTES", new ConfigOption("Super-Votes", true));
   }
 
   private void registerStatistics() {

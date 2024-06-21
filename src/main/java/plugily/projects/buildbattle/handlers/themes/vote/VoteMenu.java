@@ -36,19 +36,13 @@ import plugily.projects.buildbattle.handlers.themes.ThemeManager;
 import plugily.projects.minigamesbox.api.arena.IArenaState;
 import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
-import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.minigamesbox.inventory.common.item.ClickableItem;
 import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
 import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -131,25 +125,30 @@ public class VoteMenu {
 
       setGlassPanes(gui, multiplied, percent);
 
-      gui.setItem(multiplied + 8, new SimpleClickableItem(new ItemBuilder(new ItemStack(Material.PAPER))
-          .name(new MessageBuilder("MENU_THEME_VOTE_SUPER_ITEM_NAME").asKey().arena(arena).value(theme).build())
-          .lore(new MessageBuilder("MENU_THEME_VOTE_SUPER_ITEM_LORE").asKey().player(guiPlayer).arena(arena).value(theme).build().split(";"))
-          .build(), event -> {
-        HumanEntity humanEntity = event.getWhoClicked();
+      if (plugin.getConfigPreferences().getOption("SUPER_VOTES")) {
+        gui.setItem(multiplied + 8, new SimpleClickableItem(new ItemBuilder(new ItemStack(Material.PAPER))
+            .name(new MessageBuilder("MENU_THEME_VOTE_SUPER_ITEM_NAME").asKey().arena(arena).value(theme).build())
+            .lore(new MessageBuilder("MENU_THEME_VOTE_SUPER_ITEM_LORE").asKey().player(guiPlayer).arena(arena).value(theme).build().split(";"))
+            .build(), event -> {
+          HumanEntity humanEntity = event.getWhoClicked();
 
-        if(!(humanEntity instanceof Player))
-          return;
+          if(!(humanEntity instanceof Player))
+            return;
 
-        Player player = (Player) humanEntity;
-        IUser user = plugin.getUserManager().getUser(player);
+          Player player = (Player) humanEntity;
+          IUser user = plugin.getUserManager().getUser(player);
 
-        if(user.getStatistic("SUPER_VOTES") > 0) {
-          user.adjustStatistic("SUPER_VOTES", -1);
-          new MessageBuilder("MENU_THEME_VOTE_SUPER_USED").asKey().arena(arena).player(player).value(theme).sendArena();
-          arena.setTheme(theme);
-          arena.setTimer(0, true);
-        }
-      }));
+          if(user.getStatistic("SUPER_VOTES") > 0) {
+            user.adjustStatistic("SUPER_VOTES", -1);
+            new MessageBuilder("MENU_THEME_VOTE_SUPER_USED").asKey().arena(arena).player(player).value(theme).sendArena();
+            arena.setTheme(theme);
+            arena.setTimer(0, true);
+          }
+        }));
+      }
+      else {
+        gui.setItem(multiplied + 8, ClickableItem.of(new ItemBuilder(XMaterial.IRON_BARS.parseItem()).name("&7<-").colorizeItem().build()));
+      }
 
       i++;
     }
