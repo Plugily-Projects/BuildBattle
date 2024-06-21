@@ -24,7 +24,9 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.api.arena.IArenaState;
+import plugily.projects.minigamesbox.api.arena.IPluginArena;
+import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.PluginArenaManager;
 import plugily.projects.minigamesbox.classic.user.User;
@@ -45,7 +47,7 @@ public class ArenaManager extends PluginArenaManager {
   }
 
   @Override
-  public void additionalPartyJoin(Player player, PluginArena arena, Player partyLeader) {
+  public void additionalPartyJoin(Player player, IPluginArena arena, Player partyLeader) {
     BaseArena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
     if(pluginArena == null) {
       return;
@@ -67,13 +69,13 @@ public class ArenaManager extends PluginArenaManager {
   }
 
   @Override
-  public void leaveAttempt(@NotNull Player player, @NotNull PluginArena arena) {
+  public void leaveAttempt(@NotNull Player player, @NotNull IPluginArena arena) {
     BaseArena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
     if(pluginArena == null) {
       return;
     }
     super.leaveAttempt(player, arena);
-    User user = plugin.getUserManager().getUser(player);
+    IUser user = plugin.getUserManager().getUser(player);
     user.setStatistic("LOCAL_POINTS", 0);
     user.setStatistic("LOCAL_POINTS_GTB", 0);
     Plot plot = pluginArena.getPlotManager().getPlot(player);
@@ -91,7 +93,7 @@ public class ArenaManager extends PluginArenaManager {
       ((GuessArena) arena).getWhoGuessed().remove(player);
       if(guessArena.getCurrentBuilders().contains(player)) {
         if(plot.getMembers().isEmpty()) {
-          if(arena.getArenaState() == ArenaState.IN_GAME) {
+          if(arena.getArenaState() == IArenaState.IN_GAME) {
             //ToDo message force skipped
             pluginArena.setTimer(plugin.getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".Round-Delay"), true);
             pluginArena.setArenaInGameState(BaseArena.ArenaInGameState.PLOT_VOTING);

@@ -26,9 +26,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.api.event.plot.PlotPlayerReceiveEvent;
 import plugily.projects.buildbattle.arena.BaseArena;
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
 import plugily.projects.minigamesbox.classic.utils.dimensional.Cuboid;
-import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 
 import java.util.ArrayList;

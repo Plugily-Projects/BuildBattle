@@ -25,6 +25,7 @@ import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitTask;
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
+import plugily.projects.minigamesbox.api.arena.IPluginArena;
 import plugily.projects.minigamesbox.classic.PluginMain;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
@@ -55,7 +56,7 @@ public class ParticleRefreshScheduler {
     final int particleAmount = amountParticle;
 
     task = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-      for(PluginArena arena : plugin.getArenaRegistry().getArenas()) {
+      for(IPluginArena arena : plugin.getArenaRegistry().getArenas()) {
         if(arena instanceof BaseArena && !arena.getPlayers().isEmpty()) {
           for(Plot buildPlot : ((BaseArena) arena).getPlotManager().getPlots()) {
             if(!buildPlot.getMembers().isEmpty()) {

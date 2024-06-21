@@ -29,8 +29,8 @@ import plugily.projects.buildbattle.arena.BuildArena;
 import plugily.projects.buildbattle.arena.GuessArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.themes.BBTheme;
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
-import plugily.projects.minigamesbox.classic.arena.PluginArena;
+import plugily.projects.minigamesbox.api.arena.IArenaState;
+import plugily.projects.minigamesbox.api.arena.IPluginArena;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.placeholder.Placeholder;
 import plugily.projects.minigamesbox.classic.handlers.placeholder.PlaceholderManager;
@@ -58,17 +58,17 @@ public class PlaceholderInitializer {
 
     placeholderManager.registerPlaceholder(new Placeholder("theme", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
-      public String getValue(Player player, PluginArena arena) {
+      public String getValue(Player player, IPluginArena arena) {
         return getTheme(player, arena);
       }
 
       @Override
-      public String getValue(PluginArena arena) {
+      public String getValue(IPluginArena arena) {
         return getTheme(arena);
       }
 
       @Nullable
-      private String getTheme(PluginArena arena) {
+      private String getTheme(IPluginArena arena) {
         BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena == null) {
           return null;
@@ -81,7 +81,7 @@ public class PlaceholderInitializer {
       }
 
       @Nullable
-      private String getTheme(Player player, PluginArena arena) {
+      private String getTheme(Player player, IPluginArena arena) {
         String theme = getTheme(arena);
         BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena == null) {
@@ -102,17 +102,17 @@ public class PlaceholderInitializer {
 
     placeholderManager.registerPlaceholder(new Placeholder("difficulty", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
-      public String getValue(Player player, PluginArena arena) {
+      public String getValue(Player player, IPluginArena arena) {
         return getTheme(arena);
       }
 
       @Override
-      public String getValue(PluginArena arena) {
+      public String getValue(IPluginArena arena) {
         return getTheme(arena);
       }
 
       @Nullable
-      private String getTheme(PluginArena arena) {
+      private String getTheme(IPluginArena arena) {
         BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena instanceof GuessArena) {
           BBTheme theme = ((GuessArena) pluginArena).getCurrentBBTheme();
@@ -127,17 +127,17 @@ public class PlaceholderInitializer {
 
     placeholderManager.registerPlaceholder(new Placeholder("difficulty_points_reward", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
-      public String getValue(Player player, PluginArena arena) {
+      public String getValue(Player player, IPluginArena arena) {
         return getTheme(arena);
       }
 
       @Override
-      public String getValue(PluginArena arena) {
+      public String getValue(IPluginArena arena) {
         return getTheme(arena);
       }
 
       @Nullable
-      private String getTheme(PluginArena arena) {
+      private String getTheme(IPluginArena arena) {
         BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena instanceof GuessArena) {
           BBTheme theme = ((GuessArena) pluginArena).getCurrentBBTheme();
@@ -152,17 +152,17 @@ public class PlaceholderInitializer {
 
     placeholderManager.registerPlaceholder(new Placeholder("builder", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
-      public String getValue(Player player, PluginArena arena) {
+      public String getValue(Player player, IPluginArena arena) {
         return getBuilder(arena);
       }
 
       @Override
-      public String getValue(PluginArena arena) {
+      public String getValue(IPluginArena arena) {
         return getBuilder(arena);
       }
 
       @Nullable
-      private String getBuilder(PluginArena arena) {
+      private String getBuilder(IPluginArena arena) {
         BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(!(pluginArena instanceof GuessArena)) {
           return null;
@@ -176,17 +176,17 @@ public class PlaceholderInitializer {
 
     placeholderManager.registerPlaceholder(new Placeholder("type", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
-      public String getValue(Player player, PluginArena arena) {
+      public String getValue(Player player, IPluginArena arena) {
         return getType(arena);
       }
 
       @Override
-      public String getValue(PluginArena arena) {
+      public String getValue(IPluginArena arena) {
         return getType(arena);
       }
 
       @Nullable
-      private String getType(PluginArena arena) {
+      private String getType(IPluginArena arena) {
         BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena == null) {
           return null;
@@ -196,17 +196,17 @@ public class PlaceholderInitializer {
     });
     placeholderManager.registerPlaceholder(new Placeholder("type_pretty", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
-      public String getValue(Player player, PluginArena arena) {
+      public String getValue(Player player, IPluginArena arena) {
         return getType(arena);
       }
 
       @Override
-      public String getValue(PluginArena arena) {
+      public String getValue(IPluginArena arena) {
         return getType(arena);
       }
 
       @Nullable
-      private String getType(PluginArena arena) {
+      private String getType(IPluginArena arena) {
         BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena == null) {
           return null;
@@ -218,22 +218,22 @@ public class PlaceholderInitializer {
       final int number = i;
       placeholderManager.registerPlaceholder(new Placeholder("place_member_" + number, Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
         @Override
-        public String getValue(Player player, PluginArena arena) {
+        public String getValue(Player player, IPluginArena arena) {
           return getPlace(arena);
         }
 
         @Override
-        public String getValue(PluginArena arena) {
+        public String getValue(IPluginArena arena) {
           return getPlace(arena);
         }
 
         @Nullable
-        private String getPlace(PluginArena arena) {
+        private String getPlace(IPluginArena arena) {
           BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
           if(pluginArena == null) {
             return null;
           }
-          if(pluginArena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
+          if(pluginArena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING && pluginArena.getArenaState() != IArenaState.ENDING) {
             return "???";
           }
           List<Plot> plotRanking = pluginArena.getPlotManager().getTopPlotsOrder();
@@ -249,22 +249,22 @@ public class PlaceholderInitializer {
 
       placeholderManager.registerPlaceholder(new Placeholder("place_points_" + number, Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
         @Override
-        public String getValue(Player player, PluginArena arena) {
+        public String getValue(Player player, IPluginArena arena) {
           return getPlace(arena);
         }
 
         @Override
-        public String getValue(PluginArena arena) {
+        public String getValue(IPluginArena arena) {
           return getPlace(arena);
         }
 
         @Nullable
-        private String getPlace(PluginArena arena) {
+        private String getPlace(IPluginArena arena) {
           BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
           if(pluginArena == null) {
             return null;
           }
-          if(pluginArena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
+          if(pluginArena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING && pluginArena.getArenaState() != IArenaState.ENDING) {
             return "???";
           }
           List<Plot> plotRanking = pluginArena.getPlotManager().getTopPlotsOrder();
@@ -277,17 +277,17 @@ public class PlaceholderInitializer {
     }
     placeholderManager.registerPlaceholder(new Placeholder("ingame_state", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
-      public String getValue(Player player, PluginArena arena) {
+      public String getValue(Player player, IPluginArena arena) {
         return getState(arena);
       }
 
       @Override
-      public String getValue(PluginArena arena) {
+      public String getValue(IPluginArena arena) {
         return getState(arena);
       }
 
       @Nullable
-      private String getState(PluginArena arena) {
+      private String getState(IPluginArena arena) {
         BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena == null) {
           return null;
@@ -301,17 +301,17 @@ public class PlaceholderInitializer {
 
     placeholderManager.registerPlaceholder(new Placeholder("ingame_state_pretty", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
-      public String getValue(Player player, PluginArena arena) {
+      public String getValue(Player player, IPluginArena arena) {
         return getState(arena);
       }
 
       @Override
-      public String getValue(PluginArena arena) {
+      public String getValue(IPluginArena arena) {
         return getState(arena);
       }
 
       @Nullable
-      private String getState(PluginArena arena) {
+      private String getState(IPluginArena arena) {
         BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena == null) {
           return null;
@@ -326,12 +326,12 @@ public class PlaceholderInitializer {
 
     placeholderManager.registerPlaceholder(new Placeholder("teammates", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
-      public String getValue(Player player, PluginArena arena) {
+      public String getValue(Player player, IPluginArena arena) {
         return getMembers(player, arena);
       }
 
       @Nullable
-      private String getMembers(Player player, PluginArena arena) {
+      private String getMembers(Player player, IPluginArena arena) {
         BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena == null) {
           return null;
@@ -355,12 +355,12 @@ public class PlaceholderInitializer {
 
     placeholderManager.registerPlaceholder(new Placeholder("summary_player", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
-      public String getValue(Player player, PluginArena arena) {
+      public String getValue(Player player, IPluginArena arena) {
         return getSummary(arena, player);
       }
 
       @Nullable
-      private String getSummary(PluginArena arena, Player player) {
+      private String getSummary(IPluginArena arena, Player player) {
         BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena == null) {
           return null;
@@ -375,17 +375,17 @@ public class PlaceholderInitializer {
 
     placeholderManager.registerPlaceholder(new Placeholder("summary_place_own", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
-      public String getValue(Player player, PluginArena arena) {
+      public String getValue(Player player, IPluginArena arena) {
         return getSummary(arena, player);
       }
 
       @Nullable
-      private String getSummary(PluginArena arena, Player player) {
+      private String getSummary(IPluginArena arena, Player player) {
         BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
-        if(pluginArena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
+        if(pluginArena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING && pluginArena.getArenaState() != IArenaState.ENDING) {
           return null;
         }
         List<Plot> plotRanking = pluginArena.getPlotManager().getTopPlotsOrder();
@@ -404,17 +404,17 @@ public class PlaceholderInitializer {
 
     placeholderManager.registerPlaceholder(new Placeholder("summary", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
-      public String getValue(Player player, PluginArena arena) {
+      public String getValue(Player player, IPluginArena arena) {
         return getSummary(arena);
       }
 
       @Override
-      public String getValue(PluginArena arena) {
+      public String getValue(IPluginArena arena) {
         return getSummary(arena);
       }
 
       @Nullable
-      private String getSummary(PluginArena arena) {
+      private String getSummary(IPluginArena arena) {
         BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena == null) {
           return null;
@@ -428,22 +428,22 @@ public class PlaceholderInitializer {
     });
     placeholderManager.registerPlaceholder(new Placeholder("summary_place_list", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
-      public String getValue(Player player, PluginArena arena) {
+      public String getValue(Player player, IPluginArena arena) {
         return getSummary(arena);
       }
 
       @Override
-      public String getValue(PluginArena arena) {
+      public String getValue(IPluginArena arena) {
         return getSummary(arena);
       }
 
       @Nullable
-      private String getSummary(PluginArena arena) {
+      private String getSummary(IPluginArena arena) {
         BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena == null) {
           return null;
         }
-        if(pluginArena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING && pluginArena.getArenaState() != ArenaState.ENDING) {
+        if(pluginArena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING && pluginArena.getArenaState() != IArenaState.ENDING) {
           return null;
         }
         int places = pluginArena.getPlotManager().getTopPlotsOrder().size();
@@ -460,17 +460,17 @@ public class PlaceholderInitializer {
     });
     placeholderManager.registerPlaceholder(new Placeholder("gtb_rounds", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
-      public String getValue(Player player, PluginArena arena) {
+      public String getValue(Player player, IPluginArena arena) {
         return getSummary(arena);
       }
 
       @Override
-      public String getValue(PluginArena arena) {
+      public String getValue(IPluginArena arena) {
         return getSummary(arena);
       }
 
       @Nullable
-      private String getSummary(PluginArena arena) {
+      private String getSummary(IPluginArena arena) {
         BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena == null) {
           return null;

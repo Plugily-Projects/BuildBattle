@@ -20,8 +20,6 @@
 
 package plugily.projects.buildbattle;
 
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.java.JavaPluginLoader;
 import org.jetbrains.annotations.TestOnly;
 import plugily.projects.buildbattle.arena.ArenaEvents;
 import plugily.projects.buildbattle.arena.ArenaManager;
@@ -43,8 +41,6 @@ import plugily.projects.minigamesbox.classic.handlers.setup.SetupInventory;
 import plugily.projects.minigamesbox.classic.handlers.setup.categories.PluginSetupCategoryManager;
 import plugily.projects.minigamesbox.classic.utils.services.metrics.Metrics;
 
-import java.io.File;
-
 /**
  * Created by Tom on 17/08/2015.
  * Updated by Tigerpanzer_02 on 03.12.2021
@@ -64,11 +60,6 @@ public class Main extends PluginMain {
   @TestOnly
   public Main() {
     super();
-  }
-
-  @TestOnly
-  protected Main(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
-    super(loader, description, dataFolder, file);
   }
 
   @Override

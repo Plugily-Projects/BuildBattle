@@ -24,7 +24,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.api.arena.IArenaState;
 import plugily.projects.minigamesbox.classic.commands.arguments.data.CommandArgument;
 
 /**
@@ -41,7 +41,7 @@ public class SelectPlotArgument {
         Player player = (Player) sender;
         BaseArena arena = (BaseArena) registry.getPlugin().getArenaRegistry().getArena(player);
 
-        if(arena != null && (arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING))
+        if(arena != null && (arena.getArenaState() == IArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == IArenaState.STARTING))
           arena.getPlugin().getPlotMenuHandler().createMenu(player, arena);
       }
     });
