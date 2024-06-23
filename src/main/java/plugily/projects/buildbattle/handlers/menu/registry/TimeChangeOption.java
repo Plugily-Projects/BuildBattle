@@ -67,8 +67,9 @@ public class TimeChangeOption {
           return;
         }
 
-        gui.addItem(new ItemBuilder(XMaterial.CLOCK.parseItem()).name(new MessageBuilder("MENU_OPTION_CONTENT_TIME_TYPE_WORLD").asKey().build()).lore(plot.getTime().name()).build());
+        //gui.addItem(new ItemBuilder(XMaterial.CLOCK.parseItem()).name(new MessageBuilder("MENU_OPTION_CONTENT_TIME_TYPE_WORLD").asKey().build()).lore(plot.getTime().name()).build());
 
+        addClockItem(gui, plot, "MENU_OPTION_CONTENT_TIME_TYPE_WORLD");
         addClockItem(gui, plot, "MENU_OPTION_CONTENT_TIME_TYPE_DAY");
         addClockItem(gui, plot, "MENU_OPTION_CONTENT_TIME_TYPE_NOON");
         addClockItem(gui, plot, "MENU_OPTION_CONTENT_TIME_TYPE_SUNSET");
