@@ -103,8 +103,8 @@ public class InGameState extends PluginInGameState {
             adjustStatistics(pluginArena);
 
             pluginArena.teleportToWinnerPlot();
-            pluginArena.executeEndRewards();
             getPlugin().getArenaManager().stopGame(false, arena);
+            pluginArena.executeEndRewards();
           } else {
             voteForNextPlot(pluginArena);
           }
