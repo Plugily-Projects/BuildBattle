@@ -47,7 +47,7 @@ dependencies {
 }
 
 group = "plugily.projects"
-version = "5.0.7-SNAPSHOT0"
+version = "5.0.7-SNAPSHOT1"
 description = "BuildBattle"
 
 java {
