@@ -27,11 +27,11 @@ import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.BuildArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.arena.vote.VoteItems;
+import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.states.PluginInGameState;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
-import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 
 import java.util.ArrayList;
@@ -77,7 +77,7 @@ public class InGameState extends PluginInGameState {
         handleBuildTime(pluginArena);
         if(arena.getTimer() <= 0) {
           for(Player player : pluginArena.getPlayersLeft()) {
-            User user = getPlugin().getUserManager().getUser(player);
+            IUser user = getPlugin().getUserManager().getUser(player);
 
             if(user.isSpectator()) continue;
 
@@ -139,7 +139,7 @@ public class InGameState extends PluginInGameState {
         new TitleBuilder("IN_GAME_MESSAGES_PLOT_VOTING_PLOT_OWNER_TITLE").asKey().arena(pluginArena).player(player).value(formattedMembers).sendArena();
       }
 
-      User user = getPlugin().getUserManager().getUser(player);
+      IUser user = getPlugin().getUserManager().getUser(player);
       int points = user.getStatistic("LOCAL_POINTS");
 
       //no vote made, in this case make it a good vote
@@ -161,7 +161,7 @@ public class InGameState extends PluginInGameState {
   private void adjustStatistics(BuildArena pluginArena) {
     for(Plot plot : pluginArena.getPlotManager().getTopPlotsOrder()) {
       plot.getMembers().forEach(player -> {
-        User user = getPlugin().getUserManager().getUser(player);
+        IUser user = getPlugin().getUserManager().getUser(player);
         if(plot.getPoints() > user.getStatistic("POINTS_HIGHEST")) {
           user.setStatistic("POINTS_HIGHEST", plot.getPoints());
         }
@@ -207,7 +207,7 @@ public class InGameState extends PluginInGameState {
       if(votingPlot.getPoints() == 0) {
         List<Plot> plotsVoted = new ArrayList<>();
         for(Player player : pluginArena.getPlayersLeft()) {
-          User user = getPlugin().getUserManager().getUser(player);
+          IUser user = getPlugin().getUserManager().getUser(player);
           Plot plot = pluginArena.getPlotFromPlayer(player);
           if(!votingPlot.getMembers().contains(player)) {
             if(!plotsVoted.contains(plot)) {

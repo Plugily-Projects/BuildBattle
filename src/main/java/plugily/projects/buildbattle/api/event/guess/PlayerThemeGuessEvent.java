@@ -23,7 +23,7 @@ package plugily.projects.buildbattle.api.event.guess;
 import org.bukkit.event.HandlerList;
 import plugily.projects.buildbattle.arena.GuessArena;
 import plugily.projects.buildbattle.handlers.themes.BBTheme;
-import plugily.projects.minigamesbox.classic.api.event.PlugilyEvent;
+import plugily.projects.minigamesbox.api.events.PlugilyEvent;
 
 
 /**

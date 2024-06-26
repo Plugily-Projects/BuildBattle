@@ -43,8 +43,8 @@ import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
-import plugily.projects.minigamesbox.classic.arena.PluginArena;
+import plugily.projects.minigamesbox.api.arena.IArenaState;
+import plugily.projects.minigamesbox.api.arena.IPluginArena;
 import plugily.projects.minigamesbox.classic.arena.PluginArenaEvents;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
@@ -74,7 +74,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(arena == null) {
       return;
     }
-    if(arena.getArenaState() != ArenaState.IN_GAME || (arena instanceof BuildArena && arena.getArenaInGameState() == BaseArena.ArenaInGameState.PLOT_VOTING)
+    if(arena.getArenaState() != IArenaState.IN_GAME || (arena instanceof BuildArena && arena.getArenaInGameState() == BaseArena.ArenaInGameState.PLOT_VOTING)
         || plugin.getBlacklistManager().getItemList().contains(event.getBlock().getType())) {
       event.setCancelled(true);
       return;
@@ -95,7 +95,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(arena == null) {
       return;
     }
-    if(arena.getArenaState() != ArenaState.IN_GAME || plugin.getBlacklistManager().getItemList().contains(event.getBlock().getType())
+    if(arena.getArenaState() != IArenaState.IN_GAME || plugin.getBlacklistManager().getItemList().contains(event.getBlock().getType())
         || (arena instanceof BuildArena && arena.getArenaInGameState() == BaseArena.ArenaInGameState.PLOT_VOTING)) {
       event.setCancelled(true);
       return;
@@ -119,7 +119,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(event.getRightClicked().getType() == EntityType.ITEM_FRAME && ((ItemFrame) event.getRightClicked()).getItem().getType() != Material.AIR) {
       Location entityLocation = event.getRightClicked().getLocation();
 
-      for(PluginArena arena : plugin.getArenaRegistry().getArenas()) {
+      for(IPluginArena arena : plugin.getArenaRegistry().getArenas()) {
         if(!(arena instanceof BaseArena)) {
           continue;
         }
@@ -146,7 +146,7 @@ public class ArenaEvents extends PluginArenaEvents {
 
     BaseArena arena = plugin.getArenaRegistry().getArena(event.getPlayer());
 
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null || arena.getArenaState() != IArenaState.IN_GAME) {
       return;
     }
 
@@ -204,7 +204,7 @@ public class ArenaEvents extends PluginArenaEvents {
       return;
     }
 
-    if(arena.getArenaState() != ArenaState.IN_GAME || event.getClickedBlock().getType() == XMaterial.ENDER_CHEST.parseMaterial()) {
+    if(arena.getArenaState() != IArenaState.IN_GAME || event.getClickedBlock().getType() == XMaterial.ENDER_CHEST.parseMaterial()) {
       event.setCancelled(true);
     }
   }
@@ -215,7 +215,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(vehicle.getType() != EntityType.MINECART) {
       return;
     }
-    for(PluginArena arena : plugin.getArenaRegistry().getArenas()) {
+    for(IPluginArena arena : plugin.getArenaRegistry().getArenas()) {
       if(!(arena instanceof BaseArena)) {
         continue;
       }
@@ -232,7 +232,7 @@ public class ArenaEvents extends PluginArenaEvents {
   public void onIgniteEvent(BlockIgniteEvent event) {
     Location blockLocation = event.getBlock().getLocation();
 
-    for(PluginArena arena : plugin.getArenaRegistry().getArenas()) {
+    for(IPluginArena arena : plugin.getArenaRegistry().getArenas()) {
       if(!(arena instanceof BaseArena)) {
         continue;
       }
@@ -248,7 +248,7 @@ public class ArenaEvents extends PluginArenaEvents {
   public void onPistonRetractEvent(BlockPistonRetractEvent event) {
     Location blockLocation = event.getBlock().getLocation();
 
-    for(PluginArena arena : plugin.getArenaRegistry().getArenas()) {
+    for(IPluginArena arena : plugin.getArenaRegistry().getArenas()) {
       if(!(arena instanceof BaseArena)) {
         continue;
       }
@@ -266,7 +266,7 @@ public class ArenaEvents extends PluginArenaEvents {
   public void onLeavesDecay(LeavesDecayEvent event) {
     Location blockLocation = event.getBlock().getLocation();
 
-    for(PluginArena arena : plugin.getArenaRegistry().getArenas()) {
+    for(IPluginArena arena : plugin.getArenaRegistry().getArenas()) {
       if(!(arena instanceof BaseArena)) {
         continue;
       }
@@ -301,7 +301,7 @@ public class ArenaEvents extends PluginArenaEvents {
     int maxMobPerPlot = plugin.getConfig().getInt("Mob.Max-Amount", 20);
     Location entityLoc = event.getEntity().getLocation();
 
-    for(PluginArena arena : plugin.getArenaRegistry().getArenas()) {
+    for(IPluginArena arena : plugin.getArenaRegistry().getArenas()) {
       if(!(arena instanceof BaseArena)) {
         continue;
       }
@@ -353,7 +353,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(event.getSource().getType() != Material.FIRE)
       return;
 
-    for(PluginArena arena : plugin.getArenaRegistry().getArenas()) {
+    for(IPluginArena arena : plugin.getArenaRegistry().getArenas()) {
       if(!(arena instanceof BaseArena)) {
         continue;
       }
@@ -373,7 +373,7 @@ public class ArenaEvents extends PluginArenaEvents {
   public void onDispense(BlockDispenseEvent event) {
     Location blockLoc = event.getBlock().getLocation();
 
-    for(PluginArena arena : plugin.getArenaRegistry().getArenas()) {
+    for(IPluginArena arena : plugin.getArenaRegistry().getArenas()) {
       if(!(arena instanceof BaseArena)) {
         continue;
       }
@@ -409,7 +409,7 @@ public class ArenaEvents extends PluginArenaEvents {
       return;
     }
     BaseArena arena = plugin.getArenaRegistry().getArena((Player) event.getEntity());
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null || arena.getArenaState() != IArenaState.IN_GAME) {
       return;
     }
     if(event.getEntity().getType() != EntityType.PLAYER) {
@@ -424,7 +424,7 @@ public class ArenaEvents extends PluginArenaEvents {
       return;
     }
     BaseArena arena = plugin.getArenaRegistry().getArena((Player) event.getEntity());
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null || arena.getArenaState() != IArenaState.IN_GAME) {
       return;
     }
     event.setCancelled(true);
@@ -455,7 +455,7 @@ public class ArenaEvents extends PluginArenaEvents {
   public void onTNTExplode(EntityExplodeEvent event) {
     Location entityLocation = event.getEntity().getLocation();
 
-    for(PluginArena arena : plugin.getArenaRegistry().getArenas()) {
+    for(IPluginArena arena : plugin.getArenaRegistry().getArenas()) {
       if(!(arena instanceof BaseArena)) {
         continue;
       }
@@ -473,7 +473,7 @@ public class ArenaEvents extends PluginArenaEvents {
     Location toBlock = event.getToBlock().getLocation();
     Location blockLoc = event.getBlock().getLocation();
 
-    for(PluginArena arena : plugin.getArenaRegistry().getArenas()) {
+    for(IPluginArena arena : plugin.getArenaRegistry().getArenas()) {
       if(!(arena instanceof BaseArena)) {
         continue;
       }
@@ -507,7 +507,7 @@ public class ArenaEvents extends PluginArenaEvents {
   @EventHandler
   public void onPistonExtendEvent(BlockPistonExtendEvent event) {
     Location blockLoc = event.getBlock().getLocation();
-    for(PluginArena arena : plugin.getArenaRegistry().getArenas()) {
+    for(IPluginArena arena : plugin.getArenaRegistry().getArenas()) {
       if(!(arena instanceof BaseArena)) {
         continue;
       }
@@ -548,7 +548,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(humanEntity instanceof Player) {
       BaseArena baseArena = plugin.getArenaRegistry().getArena((Player) humanEntity);
 
-      if(baseArena != null && baseArena.getArenaState() != ArenaState.IN_GAME) {
+      if(baseArena != null && baseArena.getArenaState() != IArenaState.IN_GAME) {
         if(event.getClickedInventory() == humanEntity.getInventory()) {
           if(event.getView().getType() == InventoryType.CRAFTING
               || event.getView().getType() == InventoryType.PLAYER) {
@@ -566,7 +566,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(!(arena instanceof GuessArena)) {
       return;
     }
-    if(arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena.getArenaState() != IArenaState.IN_GAME) {
       return;
     }
     if(arena.getSpectators().contains(player)) {

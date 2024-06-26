@@ -81,6 +81,10 @@ Database: false
 Rewards: false
 
 
+# Enable the super votes in the theme vote menu
+Super-Votes: true
+
+
 Chat:
   # Enable in game (eg. '[KIT][LEVEL] Tigerpanzer_02: hey') special formatting?
   # Formatting is configurable in language.yml

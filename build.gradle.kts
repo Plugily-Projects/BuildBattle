@@ -1,3 +1,4 @@
+
 /*
  *
  * BuildBattle - Ultimate building competition minigame
@@ -38,14 +39,15 @@ repositories {
 }
 
 dependencies {
-    implementation("plugily.projects:MiniGamesBox-Classic:1.3.8-waterman") { isTransitive = false }
-    compileOnly("org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT")
+    implementation("plugily.projects:MiniGamesBox-Classic:1.3.10") { isTransitive = false }
+    compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
     compileOnly("net.citizensnpcs:citizensapi:2.0.31-SNAPSHOT")
     compileOnly("org.jetbrains:annotations:24.0.1")
 }
 
 group = "plugily.projects"
-version = "5.0.6"
+version = "5.0.8"
 description = "BuildBattle"
 
 java {
