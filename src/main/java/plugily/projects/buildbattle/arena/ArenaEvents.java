@@ -469,6 +469,23 @@ public class ArenaEvents extends PluginArenaEvents {
   }
 
   @EventHandler
+  public void onOtherBlockExplode(BlockExplodeEvent event) {
+    Location blockLocation = event.getBlock().getLocation();
+
+    for(IPluginArena arena : plugin.getArenaRegistry().getArenas()) {
+      if(!(arena instanceof BaseArena)) {
+        continue;
+      }
+      for(Plot buildPlot : ((BaseArena) arena).getPlotManager().getPlots()) {
+        if(buildPlot.getCuboid() != null && buildPlot.getCuboid().isInWithMarge(blockLocation, 5)) {
+          event.blockList().clear();
+          event.setCancelled(true);
+        }
+      }
+    }
+  }
+
+  @EventHandler
   public void onWaterFlowEvent(BlockFromToEvent event) {
     Location toBlock = event.getToBlock().getLocation();
     Location blockLoc = event.getBlock().getLocation();
