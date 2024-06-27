@@ -489,12 +489,14 @@ public class ArenaEvents extends PluginArenaEvents {
 
   @EventHandler
   public void onEnderpearlThrow(ProjectileLaunchEvent event) {
-    BaseArena arena = plugin.getArenaRegistry().getArena((Player) event.getEntity().getShooter());
-    if(arena == null || arena.getArenaState() != IArenaState.IN_GAME) {
-      return;
-    }
-    if(event.getEntity() instanceof EnderPearl) {
-      event.setCancelled(true);
+    if(event.getEntity().getShooter() instanceof Player) {
+      BaseArena arena = plugin.getArenaRegistry().getArena((Player) event.getEntity().getShooter());
+      if (arena == null || arena.getArenaState() != IArenaState.IN_GAME) {
+        return;
+      }
+      if (event.getEntity() instanceof EnderPearl) {
+        event.setCancelled(true);
+      }
     }
   }
 
