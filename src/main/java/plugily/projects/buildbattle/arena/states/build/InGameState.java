@@ -65,7 +65,6 @@ public class InGameState extends PluginInGameState {
 
           for(Player player : pluginArena.getPlayers()) {
             player.closeInventory();
-            pluginArena.addMenuItem(player);
             player.setGameMode(GameMode.CREATIVE);
           }
         } else {

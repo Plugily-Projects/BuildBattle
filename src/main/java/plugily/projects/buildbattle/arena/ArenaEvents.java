@@ -550,15 +550,6 @@ public class ArenaEvents extends PluginArenaEvents {
   }
 
   @EventHandler
-  public void onInventoryClose(InventoryCloseEvent event) {
-    Player player = (Player) event.getPlayer();
-    BaseArena baseArena = plugin.getArenaRegistry().getArena(player);
-    if(baseArena != null && baseArena.getArenaInGameState() == BaseArena.ArenaInGameState.BUILD_TIME) {
-      baseArena.addMenuItem(player);
-    }
-  }
-
-  @EventHandler
   public void onItemMove(InventoryClickEvent event) {
     HumanEntity humanEntity = event.getWhoClicked();
 
