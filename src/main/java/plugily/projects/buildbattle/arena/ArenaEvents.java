@@ -418,6 +418,8 @@ public class ArenaEvents extends PluginArenaEvents {
     event.setCancelled(true);
   }
 
+
+
   @EventHandler(priority = EventPriority.HIGH)
   public void onDamage(EntityDamageEvent event) {
     if(event.getEntity().getType() != EntityType.PLAYER) {
@@ -482,6 +484,17 @@ public class ArenaEvents extends PluginArenaEvents {
           event.setCancelled(true);
         }
       }
+    }
+  }
+
+  @EventHandler
+  public void onEnderpearlThrow(ProjectileLaunchEvent event) {
+    BaseArena arena = plugin.getArenaRegistry().getArena((Player) event.getEntity().getShooter());
+    if(arena == null || arena.getArenaState() != IArenaState.IN_GAME) {
+      return;
+    }
+    if(event.getEntity() instanceof EnderPearl) {
+      event.setCancelled(true);
     }
   }
 

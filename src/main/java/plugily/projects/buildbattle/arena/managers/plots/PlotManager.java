@@ -119,7 +119,7 @@ public class PlotManager {
             Bukkit.getScheduler().runTaskLater(arena.getPlugin(), () -> {
               player.setAllowFlight(true);
               player.setFlying(true);
-            }, 40);
+            }, 2);
           }
         });
       }
