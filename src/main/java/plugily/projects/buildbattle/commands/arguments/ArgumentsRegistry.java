@@ -30,6 +30,7 @@ import plugily.projects.buildbattle.commands.arguments.admin.plot.AddPlotArgumen
 import plugily.projects.buildbattle.commands.arguments.admin.plot.RemovePlotArgument;
 import plugily.projects.buildbattle.commands.arguments.admin.plot.SelectPlotArgument;
 import plugily.projects.buildbattle.commands.arguments.game.GuessArgument;
+import plugily.projects.buildbattle.commands.arguments.game.MenuArgument;
 import plugily.projects.minigamesbox.api.arena.IPluginArena;
 import plugily.projects.minigamesbox.classic.commands.arguments.PluginArgumentsRegistry;
 
@@ -50,6 +51,7 @@ public class ArgumentsRegistry extends PluginArgumentsRegistry {
     new AddPlotArgument(this);
     new RemovePlotArgument(this);
     new SelectPlotArgument(this);
+    new MenuArgument(this);
     new GuessArgument(this);
     new ThemeArgument(this);
   }

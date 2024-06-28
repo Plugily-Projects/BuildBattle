@@ -72,7 +72,6 @@ public class InGameState extends PluginInGameState {
           new TitleBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_GUESS_TITLE").asKey().arena(pluginArena).sendArena();
 
           Bukkit.getScheduler().runTaskLater(getPlugin(), () -> pluginArena.getCurrentBuilders().forEach(player -> player.setGameMode(GameMode.CREATIVE)), 40);
-          pluginArena.getCurrentBuilders().forEach(pluginArena::addMenuItem);
 
           setArenaTimer(getPlugin().getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".In-Game"));
           pluginArena.setArenaInGameState(BaseArena.ArenaInGameState.BUILD_TIME);

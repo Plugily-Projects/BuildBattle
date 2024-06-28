@@ -418,6 +418,8 @@ public class ArenaEvents extends PluginArenaEvents {
     event.setCancelled(true);
   }
 
+
+
   @EventHandler(priority = EventPriority.HIGH)
   public void onDamage(EntityDamageEvent event) {
     if(event.getEntity().getType() != EntityType.PLAYER) {
@@ -464,6 +466,36 @@ public class ArenaEvents extends PluginArenaEvents {
           event.blockList().clear();
           event.setCancelled(true);
         }
+      }
+    }
+  }
+
+  @EventHandler
+  public void onOtherBlockExplode(BlockExplodeEvent event) {
+    Location blockLocation = event.getBlock().getLocation();
+
+    for(IPluginArena arena : plugin.getArenaRegistry().getArenas()) {
+      if(!(arena instanceof BaseArena)) {
+        continue;
+      }
+      for(Plot buildPlot : ((BaseArena) arena).getPlotManager().getPlots()) {
+        if(buildPlot.getCuboid() != null && buildPlot.getCuboid().isInWithMarge(blockLocation, 5)) {
+          event.blockList().clear();
+          event.setCancelled(true);
+        }
+      }
+    }
+  }
+
+  @EventHandler
+  public void onEnderpearlThrow(ProjectileLaunchEvent event) {
+    if(event.getEntity().getShooter() instanceof Player) {
+      BaseArena arena = plugin.getArenaRegistry().getArena((Player) event.getEntity().getShooter());
+      if (arena == null || arena.getArenaState() != IArenaState.IN_GAME) {
+        return;
+      }
+      if (event.getEntity() instanceof EnderPearl) {
+        event.setCancelled(true);
       }
     }
   }
@@ -529,15 +561,6 @@ public class ArenaEvents extends PluginArenaEvents {
     if(plugin.getArenaRegistry().isInArena(event.getPlayer())) {
       event.getItem().remove();
       event.setCancelled(true);
-    }
-  }
-
-  @EventHandler
-  public void onInventoryClose(InventoryCloseEvent event) {
-    Player player = (Player) event.getPlayer();
-    BaseArena baseArena = plugin.getArenaRegistry().getArena(player);
-    if(baseArena != null && baseArena.getArenaInGameState() == BaseArena.ArenaInGameState.BUILD_TIME) {
-      baseArena.addMenuItem(player);
     }
   }
 

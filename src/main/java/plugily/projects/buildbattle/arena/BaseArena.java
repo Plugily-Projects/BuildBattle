@@ -217,33 +217,6 @@ public class BaseArena extends PluginArena {
     }
   }
 
-  HandlerItem optionsMenuItem;
-
-  private HandlerItem getMenuItem() {
-    if(optionsMenuItem == null) {
-      HandlerItem optionsMenu = new HandlerItem(getPlugin().getOptionsRegistry().getMenuItem());
-      optionsMenu.setLeftClick(true);
-      optionsMenu.setRightClick(true);
-      optionsMenu.addInteractHandler(event -> {
-        event.setCancelled(true);
-        getPlugin().getOptionsRegistry().getOptionsGui().open(event.getPlayer());
-      });
-      optionsMenu.addInventoryClickHandler(event -> {
-        getPlugin().getOptionsRegistry().getOptionsGui().open(event.getWhoClicked());
-      });
-      optionsMenuItem = optionsMenu.build();
-    }
-    return optionsMenuItem;
-  }
-
-  public void addMenuItem(Player player) {
-    if(player.getInventory().contains(getMenuItem().getItemStack())) {
-      return;
-    }
-    player.getInventory().setItem(8, getMenuItem().getItemStack());
-  }
-
-
   public PlotManager getPlotManager() {
     return plotManager;
   }

@@ -121,7 +121,7 @@ Back-To-Hub:
 Options-Menu:
   permission: ""
   execute:
-    - ""
+    - "p:bb menu"
   displayname: "&a&lOptions menu &7(Right Click)"
   lore:
     - "&7Right-click to open options menu"

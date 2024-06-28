@@ -93,7 +93,7 @@ public class AdditionalValueInitializer {
     rewardsFactory.registerRewardType("VOTE", new RewardType("voted"));
     rewardsFactory.registerRewardType("VOTE_ALL", new RewardType("voted-all"));
     rewardsFactory.registerRewardType("REPORT", new RewardType("report"));
-    rewardsFactory.registerRewardType("PLACE", new RewardType("place"));
+    rewardsFactory.registerRewardType("PLACE", new RewardType("place", RewardType.ExecutorType.NUMBER, false));
   }
 
   private void registerSpecialItems() {
