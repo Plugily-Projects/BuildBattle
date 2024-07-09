@@ -13,6 +13,12 @@ That's all, matcher will stop when detects next line started with `###` match
 ### 5.0.9 Release (09.07.2024)
 * Updated to minigamesbox 1.3.11
 * Fixed ChunkManager.sendMapChunk
+* Fixed error in time change menu
+* Fixed issue with %player% placeholder (should be lowercase)
+* Fixed problem in place rewards
+* Fixed small error if non-player threw projectile.
+* Added Cancel of BlockExplodeEvent to prevent blocks such as Respawn Anchor explode and damage the arena
+* Added Disabled enderpearl throwing while in arena because it allows to teleport to other players plots or outside the arena map, even during voting stage.
 
 ### 5.0.8 Release (25.06.2024)
 * Updated to minigamesbox 1.3.9
