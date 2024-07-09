@@ -10,6 +10,16 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+### 5.0.9 Release (09.07.2024)
+* Updated to minigamesbox 1.3.11
+* Fixed ChunkManager.sendMapChunk
+
+### 5.0.8 Release (25.06.2024)
+* Updated to minigamesbox 1.3.9
+
+### 5.0.7 Release (18.06.2024)
+* API update
+
 ### 5.0.6 Release (24.04.2024)
 * Updated to minigamesbox 1.3.8
 
