@@ -65,7 +65,6 @@ public class InGameState extends PluginInGameState {
 
           for(Player player : pluginArena.getPlayers()) {
             player.closeInventory();
-            pluginArena.addMenuItem(player);
             player.setGameMode(GameMode.CREATIVE);
           }
         } else {
@@ -103,8 +102,8 @@ public class InGameState extends PluginInGameState {
             adjustStatistics(pluginArena);
 
             pluginArena.teleportToWinnerPlot();
-            pluginArena.executeEndRewards();
             getPlugin().getArenaManager().stopGame(false, arena);
+            pluginArena.executeEndRewards();
           } else {
             voteForNextPlot(pluginArena);
           }

@@ -393,7 +393,7 @@ Menu:
           Noon: "Noon (6000 ticks)"
           Sunset: "Sunset (12000 ticks)"
           Night: "Night (13000 ticks)"
-          MidNight: "MidNight (18000 ticks)"
+          MidNight: "Midnight (18000 ticks)"
           Sunrise: "Sunrise (23000 ticks)"
         Changed: "%plugin_prefix% Time has been changed to %value%"
       Biome:

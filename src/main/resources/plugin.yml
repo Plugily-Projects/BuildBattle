@@ -8,11 +8,11 @@ api-version: 1.13
 commands:
   buildbattle:
     description: BuildBattle Commands
-    usage: "\u00A76Correct usage: /bb [option]"
+    usage: "§6Correct usage: /bb [option]"
     aliases: [ bb, buildb ]
   buildbattleadmin:
     description: BuildBattle Admin Commands
-    usage: "\u00A76Correct usage: /bba [option]"
+    usage: "§6Correct usage: /bba [option]"
     aliases: [ bba, buildbadmin ]
 
 permissions:
