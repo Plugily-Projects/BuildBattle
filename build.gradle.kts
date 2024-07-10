@@ -39,7 +39,7 @@ repositories {
 }
 
 dependencies {
-    implementation("plugily.projects:MiniGamesBox-Classic:1.3.11") { isTransitive = false }
+    implementation("plugily.projects:MiniGamesBox-Classic:1.3.12") { isTransitive = false }
     compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
     compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
     compileOnly("net.citizensnpcs:citizensapi:2.0.31-SNAPSHOT")
@@ -47,7 +47,7 @@ dependencies {
 }
 
 group = "plugily.projects"
-version = "5.0.9"
+version = "5.0.9-SNAPSHOT1"
 description = "BuildBattle"
 
 java {
