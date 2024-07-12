@@ -88,7 +88,7 @@ public class BiomeChangeOption {
             }
 
             for(Chunk chunk : plot.getCuboid().chunkList()) {
-              if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_15_R1)) {
+              if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_15)) {
                 chunk.getWorld().refreshChunk(chunk.getX(), chunk.getZ());
                 continue;
               }

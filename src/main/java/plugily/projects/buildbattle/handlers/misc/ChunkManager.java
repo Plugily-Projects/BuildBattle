@@ -39,11 +39,11 @@ public class ChunkManager {
   private static Constructor<?> mapChunkConstructor;
 
   static {
-    if (ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_18_R1)) {
+    if (ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_18)) {
       packetPlayOutMapChunk = PacketUtils.classByName("net.minecraft.network.protocol.game", "PacketPlayOutMapChunk");
       chunkClass = PacketUtils.classByName("net.minecraft.world.level.chunk", "Chunk");
 
-      if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_17_R1)) {
+      if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_17)) {
         try {
           mapChunkConstructor = packetPlayOutMapChunk.getConstructor(PacketUtils.classByName("net.minecraft.world.level.chunk", "LevelChunk"));
         } catch (NoSuchMethodException e) {
@@ -58,18 +58,18 @@ public class ChunkManager {
   }
 
   public static void sendMapChunk(Player player, Chunk chunk) {
-    if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_18_R1)) {
+    if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_18)) {
       return; // Should just use World#refreshChunk instead
     }
 
     try {
       Method chunkHandleMethod = chunk.getClass().getMethod("getHandle");
-      if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_17_R1)) {
+      if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_17)) {
         PacketUtils.sendPacket(player, mapChunkConstructor.newInstance(chunkHandleMethod.invoke(chunk)));
         return;
       }
 
-      if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1)) {
+      if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16)) {
         if (mapChunkConstructor == null)
           mapChunkConstructor = packetPlayOutMapChunk.getConstructor(chunkClass, int.class, boolean.class);
 
@@ -77,7 +77,7 @@ public class ChunkManager {
         return;
       }
 
-      if (ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_10_R2)) {
+      if (ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_10)) {
         if (mapChunkConstructor == null)
           mapChunkConstructor = packetPlayOutMapChunk.getConstructor(chunkClass, boolean.class, int.class);
 
