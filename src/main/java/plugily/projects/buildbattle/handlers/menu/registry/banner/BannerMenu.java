@@ -69,7 +69,7 @@ public class BannerMenu {
     for(DyeColor color : DyeColor.values()) {
       ItemStack item;
 
-      if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {
+      if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12)) {
         item = XMaterial.WHITE_BANNER.parseItem();
         BannerMeta meta = (BannerMeta) item.getItemMeta();
 

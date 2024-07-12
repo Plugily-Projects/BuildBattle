@@ -119,7 +119,7 @@ public class ArenaRegistry extends PluginArenaRegistry {
           World minWorld = minPoint.getWorld();
 
           if(minWorld != null) {
-            Biome biome = ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_15_R1) ?
+            Biome biome = ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_15) ?
                 minWorld.getBiome(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ())
                 : minWorld.getBiome(minPoint.getBlockX(), minPoint.getBlockZ());
 

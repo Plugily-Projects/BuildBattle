@@ -66,7 +66,7 @@ public class Banner {
     ItemStack item = XMaterial.WHITE_BANNER.parseItem();
     BannerMeta meta = (BannerMeta) item.getItemMeta();
 
-    if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {
+    if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12)) {
       meta.setBaseColor(color);
     }
 

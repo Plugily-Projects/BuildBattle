@@ -189,7 +189,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(playerPlot != null) {
 
       // Prevent "Legacy material support initialisation"
-      playerPlot.changeFloor(material, ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1) ? hand.getData().getData() : 0);
+      playerPlot.changeFloor(material, ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12) ? hand.getData().getData() : 0);
       new MessageBuilder("MENU_OPTION_CONTENT_FLOOR_CHANGED").asKey().player(event.getPlayer()).sendPlayer();
     }
   }
@@ -340,7 +340,7 @@ public class ArenaEvents extends PluginArenaEvents {
           plot.addEntity();
           event.setCancelled(false);
 
-          if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+          if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9)) {
             event.getEntity().setAI(false);
           }
         }

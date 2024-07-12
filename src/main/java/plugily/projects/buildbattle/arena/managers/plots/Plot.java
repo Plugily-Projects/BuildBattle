@@ -220,7 +220,7 @@ public class Plot {
     }
 
     for(Chunk chunk : cuboid.chunkList()) {
-      if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_15_R1)) {
+      if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_15)) {
         chunk.getWorld().refreshChunk(chunk.getX(), chunk.getZ());
         continue;
       }
@@ -235,7 +235,7 @@ public class Plot {
     changeFloor(defaultFloor.parseMaterial());
 
     if(centerWorld != null) {
-      if(ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_15_R1)) {
+      if(ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_15)) {
         Location min = cuboid.getMinPoint();
         Location max = cuboid.getMaxPoint();
 
@@ -307,7 +307,7 @@ public class Plot {
         Block block = maxWorld.getBlockAt(x, y, z);
         block.setType(material);
 
-        if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12_R1)) {
+        if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12)) {
           try {
             Block.class.getMethod("setData", byte.class).invoke(block, data);
           } catch(Exception e) {
