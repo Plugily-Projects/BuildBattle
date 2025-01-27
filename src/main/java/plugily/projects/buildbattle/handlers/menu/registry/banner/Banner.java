@@ -21,10 +21,12 @@
 package plugily.projects.buildbattle.handlers.menu.registry.banner;
 
 import org.bukkit.DyeColor;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
+import org.bukkit.inventory.meta.BlockStateMeta;
 import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 
@@ -67,7 +69,13 @@ public class Banner {
     BannerMeta meta = (BannerMeta) item.getItemMeta();
 
     if(ServerVersion.Version.isCurrentEqualOrLower(ServerVersion.Version.v1_12)) {
-      meta.setBaseColor(color);
+      BlockStateMeta bsm = (BlockStateMeta) meta;
+      BlockState state = ((BlockStateMeta) meta).getBlockState();
+      if (state instanceof org.bukkit.block.Banner) {
+        ((org.bukkit.block.Banner) state).setBaseColor(color);
+        state.update(true);
+      }
+      bsm.setBlockState(state);
     }
 
     for(BannerPattern pattern : patterns) {

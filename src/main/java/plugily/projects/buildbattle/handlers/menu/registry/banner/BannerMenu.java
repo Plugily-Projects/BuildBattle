@@ -21,11 +21,13 @@
 package plugily.projects.buildbattle.handlers.menu.registry.banner;
 
 import org.bukkit.DyeColor;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
+import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
@@ -73,7 +75,13 @@ public class BannerMenu {
         item = XMaterial.WHITE_BANNER.parseItem();
         BannerMeta meta = (BannerMeta) item.getItemMeta();
 
-        meta.setBaseColor(color);
+        BlockStateMeta bsm = (BlockStateMeta) meta;
+        BlockState state = ((BlockStateMeta) meta).getBlockState();
+        if (state instanceof org.bukkit.block.Banner) {
+          ((org.bukkit.block.Banner) state).setBaseColor(color);
+          state.update(true);
+        }
+        bsm.setBlockState(state);
         item.setItemMeta(meta);
       } else {
         item = XMaterial.matchXMaterial(color.toString() + "_BANNER").orElse(XMaterial.WHITE_BANNER).parseItem();
