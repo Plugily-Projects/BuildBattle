@@ -33,6 +33,8 @@ import plugily.projects.buildbattle.handlers.menu.MenuOption;
 import plugily.projects.buildbattle.handlers.menu.OptionsRegistry;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
+import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XEntityType;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 
 /**
@@ -88,8 +90,9 @@ public class FloorChangeOption {
         event.getCurrentItem().setType(Material.AIR);
         player.closeInventory();
 
-        player.getNearbyEntities(5, 5, 5).stream().filter(entity -> entity.getType() == EntityType.DROPPED_ITEM)
-            .forEach(Entity::remove);
+        player.getNearbyEntities(5, 5, 5).stream().filter(entity -> entity.getType() == XEntityType.ITEM.get())
+                .forEach(Entity::remove);
+
       }
     });
   }
