@@ -64,7 +64,7 @@ public class BiomesRegistry {
           .getString(biome + ".material-name", "bedrock").toUpperCase()).orElse(XMaterial.BEDROCK).parseItem())
           .name(new MessageBuilder(config.getString(biome + ".displayname")).build())
           .lore(lore)
-          .build(), config.getString(biome + ".permission"), XBiome.matchXBiome(biome).orElse(XBiome.BADLANDS));
+          .build(), config.getString(biome + ".permission"), XBiome.of(biome).orElse(XBiome.BADLANDS));
       biomes.add(biomeItem);
       i++;
     }
