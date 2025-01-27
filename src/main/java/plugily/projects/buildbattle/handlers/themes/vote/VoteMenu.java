@@ -183,7 +183,7 @@ public class VoteMenu {
       ItemBuilder itemBuilder = new ItemBuilder(clickableSignItem.getItem()).removeLore();
       itemBuilder.lore(new MessageBuilder("MENU_THEME_ITEM_LORE").asKey().arena(arena).value(theme).integer((int) percent).build().split(";"));
       if(theme.equals(playerVote)) {
-        itemBuilder.enchantment(Enchantment.DAMAGE_ALL, 1).flags(ItemFlag.HIDE_ENCHANTS);
+        itemBuilder.enchantment(Enchantment.UNBREAKING, 1).flags(ItemFlag.HIDE_ENCHANTS);
       } else {
         itemBuilder.removeEnchants().removeFlags();
       }
@@ -215,10 +215,10 @@ public class VoteMenu {
       int slot = multiplied + 2 + j;
 
       if(vote > percent) {
-        gui.setItem(slot, ClickableItem.of(new ItemBuilder(XMaterial.RED_STAINED_GLASS_PANE.parseItem()).name("").build()));
+        gui.setItem(slot, ClickableItem.of(new ItemBuilder(XMaterial.RED_STAINED_GLASS_PANE.parseItem()).name("???").build()));
         continue;
       }
-      gui.setItem(slot, ClickableItem.of(new ItemBuilder(XMaterial.LIME_STAINED_GLASS_PANE.parseItem()).name("").build()));
+      gui.setItem(slot, ClickableItem.of(new ItemBuilder(XMaterial.LIME_STAINED_GLASS_PANE.parseItem()).name("???").build()));
       vote += 16.7;
     }
   }
