@@ -25,10 +25,13 @@ import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.BuildArena;
 import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
+import plugily.projects.minigamesbox.api.arena.IArenaState;
 import plugily.projects.minigamesbox.classic.commands.arguments.data.CommandArgument;
 import plugily.projects.minigamesbox.classic.commands.arguments.data.LabelData;
 import plugily.projects.minigamesbox.classic.commands.arguments.data.LabeledCommandArgument;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+
+import java.util.StringJoiner;
 
 /**
  * @author Plajer
@@ -58,15 +61,16 @@ public class SetThemeArgument {
           new MessageBuilder("&cPlease type arena theme!").prefix().send(sender);
           return;
         }
-        if(arena.getArenaInGameState() == BaseArena.ArenaInGameState.THEME_VOTING) {
-          String themeName = args[1];
-
-          if(arena.getPlugin().getThemeManager().isThemeBlacklisted(themeName)) {
+        StringJoiner themeName = new StringJoiner(" ");
+        for(int i = 1; i < args.length; i++)
+          themeName.add(args[i]);
+        if(arena.getArenaInGameState() == BaseArena.ArenaInGameState.BUILD_TIME || arena.getArenaState() == IArenaState.STARTING) {
+          if(arena.getPlugin().getThemeManager().isThemeBlacklisted(themeName.toString())) {
             new MessageBuilder("COMMANDS_THEME_BLACKLISTED").asKey().prefix().send(sender);
             return;
           }
-          arena.setTheme(themeName);
-          new MessageBuilder("IN_GAME_MESSAGES_ADMIN_CHANGED_THEME").asKey().prefix().value(themeName).arena(arena).sendArena();
+          arena.setTheme(themeName.toString());
+          new MessageBuilder("IN_GAME_MESSAGES_ADMIN_CHANGED_THEME").asKey().prefix().value(themeName.toString()).arena(arena).sendArena();
         } else {
           new MessageBuilder("&cWrong state to force theme!").prefix().send(sender);
         }

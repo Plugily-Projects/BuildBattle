@@ -74,7 +74,7 @@ public class PlaceholderInitializer {
           return null;
         }
         String theme = pluginArena.getTheme();
-        if(theme.equalsIgnoreCase("theme")) {
+        if(theme == null) {
           theme = new MessageBuilder("SCOREBOARD_THEME_UNKNOWN").asKey().build();
         }
         return theme;

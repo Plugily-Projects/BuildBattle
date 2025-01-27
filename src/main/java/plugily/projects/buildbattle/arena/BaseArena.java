@@ -53,7 +53,7 @@ public class BaseArena extends PluginArena {
   private final List<Player> spectators = new ArrayList<>();
   private MapRestorerManager mapRestorerManager;
   private final PlotManager plotManager;
-  private String theme = "Theme";
+  private String theme = null;
   protected ParticleRefreshScheduler particleRefreshScheduler;
   private ArenaType arenaType;
 
@@ -153,8 +153,8 @@ public class BaseArena extends PluginArena {
     return theme;
   }
 
-  public void setTheme(String theme) {
-    this.theme = theme == null ? "Theme" : theme;
+  public void setTheme(String arenaTheme) {
+    this.theme = arenaTheme;
   }
 
   public void sendBuildLeftTimeMessage() {

@@ -52,13 +52,13 @@ public class InGameState extends PluginInGameState {
     }
     switch(pluginArena.getArenaInGameState()) {
       case THEME_VOTING:
-        if(arena.getTimer() <= 0) {
+        if(arena.getTimer() <= 0 || pluginArena.getTheme() != null) {
           // may consider start to build message...
           pluginArena.setArenaInGameState(BaseArena.ArenaInGameState.BUILD_TIME);
 
           setArenaTimer(getPlugin().getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".In-Game"));
 
-          if(pluginArena.getVotePoll() != null && pluginArena.getTheme().equals("Theme")) {
+          if(pluginArena.getVotePoll() != null && pluginArena.getTheme() == null) {
             pluginArena.setTheme(pluginArena.getVotePoll().getVotedTheme());
             new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_NAME").asKey().arena(pluginArena).sendArena();
           }
