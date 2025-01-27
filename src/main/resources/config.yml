@@ -191,8 +191,8 @@ Time-Manager:
 
 
 Mob:
-  # Should mob spawning on arenas be enabled?
-  Spawn: false
+  # Should mob spawning on arenas be enabled? (Contains Armour Stands)
+  Spawn: true
   # The list of restricted entities that can't be spawned in game
   Restricted:
     - wither
