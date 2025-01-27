@@ -32,7 +32,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -317,13 +316,13 @@ public class ArenaEvents extends PluginArenaEvents {
         continue;
       }
 
-      if(event.getEntity().getType() == EntityType.WITHER || !plugin.getConfigPreferences().getOption("MOB_SPAWN")) {
-        event.setCancelled(true);
-        return;
-      }
-
       for(Plot plot : baseArena.getPlotManager().getPlots()) {
         if(plot.getCuboid() != null && plot.getCuboid().isInWithMarge(entityLoc, 1)) {
+          if(!plugin.getConfigPreferences().getOption("MOB_SPAWN")) {
+            event.setCancelled(true);
+            return;
+          }
+
           if(plot.getEntities() >= maxMobPerPlot) {
             plot.getMembers().forEach(player -> new MessageBuilder("IN_GAME_MESSAGES_PLOT_LIMIT_ENTITIES").asKey().arena(arena).player(player).sendPlayer());
             event.setCancelled(true);
