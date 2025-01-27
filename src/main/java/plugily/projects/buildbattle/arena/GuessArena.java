@@ -183,7 +183,7 @@ public class GuessArena extends BaseArena {
     }
 
     //-1 because builder can´t guess
-    if(whoGuessed.size() >= getPlayers().size() - 1) {
+    if(whoGuessed.size() >= getPlayersLeft().size() - 1) {
       setTimer(getPlugin().getConfig().getInt("Time-Manager." + getArenaType().getPrefix() + ".Round-Delay"));
       setArenaInGameState(ArenaInGameState.PLOT_VOTING);
 
