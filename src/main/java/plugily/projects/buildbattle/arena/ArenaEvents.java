@@ -83,6 +83,10 @@ public class ArenaEvents extends PluginArenaEvents {
 
     if(buildPlot != null && buildPlot.getCuboid() != null && buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
       plugin.getUserManager().getUser(event.getPlayer()).adjustStatistic("BLOCKS_BROKEN", 1);
+      if(event.isDropItems()) {
+        event.setCancelled(true);
+        event.getBlock().setType(Material.AIR);
+      }
       return;
     }
     event.setCancelled(true);
