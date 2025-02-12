@@ -57,6 +57,11 @@ public class GuessArgument {
 
         GuessArena gameArena = (GuessArena) arena;
 
+        if(gameArena.getArenaInGameState() != BaseArena.ArenaInGameState.BUILD_TIME) {
+          new MessageBuilder("COMMANDS_NOT_PLAYING").asKey().player(player).sendPlayer();
+          return;
+        }
+
         if(gameArena.getWhoGuessed().contains(player)) {
           new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_GUESS_CANT_TALK").asKey().arena(gameArena).player(player).sendPlayer();
           return;

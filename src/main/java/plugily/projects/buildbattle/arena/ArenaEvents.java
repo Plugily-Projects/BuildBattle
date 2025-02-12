@@ -591,6 +591,9 @@ public class ArenaEvents extends PluginArenaEvents {
     if(arena.getArenaState() != IArenaState.IN_GAME) {
       return;
     }
+    if(arena.getArenaInGameState() != BaseArena.ArenaInGameState.BUILD_TIME) {
+      return;
+    }
     if(arena.getSpectators().contains(player)) {
       return;
     }
