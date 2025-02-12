@@ -111,9 +111,7 @@ public class InGameState extends PluginInGameState {
           pluginArena.teleportToWinnerPlot(); //todo save built plot from winner
           pluginArena.executeEndRewards();
           getPlugin().getArenaManager().stopGame(false, arena);
-        }
-//round delay
-        if(arena.getTimer() <= 0) {
+        } else if (arena.getTimer() <= 0) {
           pluginArena.resetBuildPlot();
           setArenaTimer(getPlugin().getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".Voting.Theme"));
           pluginArena.setArenaInGameState(BaseArena.ArenaInGameState.THEME_VOTING);
