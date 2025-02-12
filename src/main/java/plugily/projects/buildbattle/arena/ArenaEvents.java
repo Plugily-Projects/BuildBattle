@@ -84,12 +84,32 @@ public class ArenaEvents extends PluginArenaEvents {
     if(buildPlot != null && buildPlot.getCuboid() != null && buildPlot.getCuboid().isIn(event.getBlock().getLocation())) {
       plugin.getUserManager().getUser(event.getPlayer()).adjustStatistic("BLOCKS_BROKEN", 1);
       if(event.isDropItems()) {
-        event.setCancelled(true);
-        event.getBlock().setType(Material.AIR);
+        event.getBlock().getDrops().clear();
       }
       return;
     }
     event.setCancelled(true);
+  }
+
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onItemSpawn(ItemSpawnEvent event) {
+    if (!plugin.getArenaRegistry().getArenaWorlds().contains(event.getLocation().getWorld())) {
+      return;
+    }
+
+    plugin.getArenaRegistry().getArenas().forEach(arena -> {
+      if(!(arena instanceof BaseArena)) {
+        return;
+      }
+      if(((BaseArena) arena).getArenaInGameState() != BaseArena.ArenaInGameState.BUILD_TIME || plugin.getBlacklistManager().getItemList().contains(event.getEntity().getItemStack().getType())) {
+        return;
+      }
+      for(Plot buildPlot : ((BaseArena) arena).getPlotManager().getPlots()) {
+        if(buildPlot.getCuboid() != null && buildPlot.getCuboid().isInWithMarge(event.getLocation(), 1)) {
+          event.setCancelled(true);
+        }
+      }
+    });
   }
 
   @EventHandler(priority = EventPriority.HIGH)
