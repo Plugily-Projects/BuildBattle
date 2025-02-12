@@ -411,9 +411,6 @@ public class ArenaEvents extends PluginArenaEvents {
     if(arena == null || arena.getArenaState() != IArenaState.IN_GAME) {
       return;
     }
-    if(event.getEntity().getType() != EntityType.PLAYER) {
-      return;
-    }
     event.setCancelled(true);
   }
 
