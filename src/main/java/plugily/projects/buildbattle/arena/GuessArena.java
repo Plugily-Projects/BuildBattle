@@ -68,9 +68,8 @@ public class GuessArena extends BaseArena {
   @Override
   public void cleanUpArena() {
     currentTheme = null;
+    resetBuildPlot();
     round = 1;
-    whoGuessed.clear();
-    removedCharsAt.clear();
     playedPlots.clear();
     playedThemes.clear();
     super.cleanUpArena();
@@ -138,10 +137,10 @@ public class GuessArena extends BaseArena {
     if(buildPlot != null) {
       buildPlot.resetPlot();
     }
-    getRemovedCharsAt().clear();
+    removedCharsAt.clear();
     setBuildPlot(null);
     setCurrentTheme(null);
-    getWhoGuessed().clear();
+    whoGuessed.clear();
     round += 1;
     getPlayers().forEach(player -> getPlugin().getActionBarManager().clearActionBarsFromPlayer(player));
   }
