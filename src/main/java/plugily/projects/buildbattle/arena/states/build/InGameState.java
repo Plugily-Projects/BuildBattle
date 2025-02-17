@@ -66,6 +66,7 @@ public class InGameState extends PluginInGameState {
           for(Player player : pluginArena.getPlayers()) {
             player.closeInventory();
             player.setGameMode(GameMode.CREATIVE);
+            VersionUtils.setCollidable(player, false);
           }
         } else {
           handleThemeVoting(pluginArena);
