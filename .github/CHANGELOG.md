@@ -10,6 +10,24 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+### 5.0.12 Release (17.02.2025)
+* Fixed ItemSpawn on Plotarea also for dropped items by not player related drops
+* Fixed gtb plot reset
+* Fixed gtb Arena CleanUp which results in first round issues at selection of theme etc.
+* Fixed gtb options menu is not showing up for every builder
+* Fixed block destroy drops
+* Fixed a bug on gtb where players were getting points for guess even when they wrote the theme on chat when it was already shown by the plugin
+* Fixed spectator counts on gtb guess
+* Fixed bba settheme command
+* Fixed PlayerHeads on 1.20+
+* Fixed clearing of dropped items on 1.21+
+* Fixed Biomes on 1.21
+* Fixed Banner Building on 1.20+
+* Fixed Creature Spawning outside plots in same world
+* Changed stained glass pane naming to ???
+* Updated to minigamesbox 1.3.16
+
+
 ### 5.0.9 Release (09.07.2024)
 * Updated to minigamesbox 1.3.11
 * Fixed ChunkManager.sendMapChunk
