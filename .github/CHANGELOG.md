@@ -24,6 +24,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Fixed Biomes on 1.21
 * Fixed Banner Building on 1.20+
 * Fixed Creature Spawning outside plots in same world
+* Fixed players are collidable on normal mode
 * Changed stained glass pane naming to ???
 * Updated to minigamesbox 1.3.16
 
