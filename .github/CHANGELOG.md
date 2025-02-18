@@ -10,6 +10,9 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+### 5.0.13 Release (18.02.2025)
+* Fixed Progress must be between 0 and 1
+
 ### 5.0.12 Release (17.02.2025)
 * Fixed ItemSpawn on Plotarea also for dropped items by not player related drops
 * Fixed gtb plot reset
