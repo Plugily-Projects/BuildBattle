@@ -23,6 +23,7 @@ package plugily.projects.buildbattle.arena.managers;
 import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.GuessArena;
+import plugily.projects.minigamesbox.api.arena.IArenaState;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.managers.PluginScoreboardManager;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
@@ -48,10 +49,6 @@ public class ScoreboardManager extends PluginScoreboardManager {
     List<String> changedLines = new ArrayList<>();
 
     switch (arena.getArenaState()) {
-      case FULL_GAME: {
-        lines = arena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content.Starting");
-        break;
-      }
       case IN_GAME: {
         if(arena instanceof GuessArena) {
           lines = arena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + arena.getArenaState().getFormattedName() + ".Guess-The-Build" + (((GuessArena) arena).getArenaInGameState() == BaseArena.ArenaInGameState.PLOT_VOTING ? "-Waiting" : ""));
@@ -73,7 +70,9 @@ public class ScoreboardManager extends PluginScoreboardManager {
         break;
       }
       default: {
-        lines = arena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + arena.getArenaState().getFormattedName());
+        lines = arena.getPlugin().getLanguageManager().getLanguageList(arena.getArenaState() == IArenaState.FULL_GAME ? "Scoreboard.Content.Starting"
+                : "Scoreboard.Content." + arena.getArenaState().getFormattedName());
+
       }
     }
 
