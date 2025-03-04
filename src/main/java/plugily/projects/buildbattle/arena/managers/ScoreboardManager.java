@@ -23,14 +23,11 @@ package plugily.projects.buildbattle.arena.managers;
 import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.GuessArena;
-import plugily.projects.minigamesbox.api.arena.IPluginArena;
-import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.managers.PluginScoreboardManager;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
-import plugily.projects.minigamesbox.classic.utils.scoreboard.common.EntryBuilder;
-import plugily.projects.minigamesbox.classic.utils.scoreboard.type.Entry;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,47 +44,43 @@ public class ScoreboardManager extends PluginScoreboardManager {
   }
 
   @Override
-  public List<Entry> formatScoreboard(IUser user) {
-    EntryBuilder builder = new EntryBuilder();
-    List<String> lines;
-    IPluginArena userArena = user.getArena();
+  public List<String> formatScoreboardLines(List<String> lines, Player player) {
+    List<String> changedLines = new ArrayList<>();
 
-    switch (userArena.getArenaState()) {
+    switch (arena.getArenaState()) {
       case FULL_GAME: {
-        lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content.Starting");
+        lines = arena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content.Starting");
         break;
       }
       case IN_GAME: {
-        if(userArena instanceof GuessArena) {
-          lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName() + ".Guess-The-Build" + (((GuessArena) userArena).getArenaInGameState() == BaseArena.ArenaInGameState.PLOT_VOTING ? "-Waiting" : ""));
+        if(arena instanceof GuessArena) {
+          lines = arena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + arena.getArenaState().getFormattedName() + ".Guess-The-Build" + (((GuessArena) arena).getArenaInGameState() == BaseArena.ArenaInGameState.PLOT_VOTING ? "-Waiting" : ""));
         } else {
-          if(userArena.getArenaOption("PLOT_MEMBER_SIZE") <= 1) {
-            lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName() + ".Classic");
+          if(arena.getArenaOption("PLOT_MEMBER_SIZE") <= 1) {
+            lines = arena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + arena.getArenaState().getFormattedName() + ".Classic");
           } else {
-            lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName() + ".Teams");
+            lines = arena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + arena.getArenaState().getFormattedName() + ".Teams");
           }
         }
         break;
       }
       case ENDING: {
-        if(userArena instanceof GuessArena) {
-          lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName() + ".Guess-The-Build");
+        if(arena instanceof GuessArena) {
+          lines = arena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + arena.getArenaState().getFormattedName() + ".Guess-The-Build");
         } else {
-          lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName() + ".Classic");
+          lines = arena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + arena.getArenaState().getFormattedName() + ".Classic");
         }
         break;
       }
       default: {
-        lines = userArena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + userArena.getArenaState().getFormattedName());
+        lines = arena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + arena.getArenaState().getFormattedName());
       }
     }
 
-    Player player = user.getPlayer();
-
     for(String line : lines) {
-      builder.next(new MessageBuilder(line).player(player).arena(arena).build());
+      changedLines.add(new MessageBuilder(line).player(player).arena(arena).build());
     }
-    return builder.build();
+    return changedLines;
   }
 
 }
