@@ -56,7 +56,7 @@ public class ArenaManager extends PluginArenaManager {
     List<Plot> plots = pluginArena.getPlotManager().getPlots();
     Plot partyPlot = plots.get(plots.size() == 1 ? 0 : plugin.getRandom().nextInt(plots.size()));
 
-    if(arena.getPlayers().contains(partyLeader)) {
+    if(arena.getPlayersLeft().contains(partyLeader)) {
       Plot partyLeaderPlot = pluginArena.getPlotManager().getPlot(partyLeader);
       if(partyLeaderPlot != null) {
         partyPlot = partyLeaderPlot;

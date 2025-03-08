@@ -76,8 +76,8 @@ public class GuessArena extends BaseArena {
   }
 
   @Override
-  public void distributePlots() {
-    int neededPlots = getPlayers().size() / plotMemberSize;
+  public void   distributePlots() {
+    int neededPlots = getPlayersLeft().size() / plotMemberSize;
     if(getPlotManager().getPlots().size() < neededPlots) {
       getPlugin().getMessageUtils().errorOccurred();
       getPlugin().getDebugger().sendConsoleMsg("&c[Build Battle] [PLOT WARNING] Not enough plots in arena " + getId() + "! Lacks " + (neededPlots - getPlotManager().getPlots().size()) + " plots");
@@ -108,13 +108,13 @@ public class GuessArena extends BaseArena {
 
   @Override
   public boolean enoughPlayersToContinue() {
-    int size = getPlayers().size();
+    int size = getPlayersLeft().size();
 
     if(size > plotMemberSize) {
       return true;
     }
     if(size == plotMemberSize) {
-      return !new HashSet<>(getPlotManager().getPlot(getPlayersLeft().get(0)).getMembers()).containsAll(getPlayers());
+      return !new HashSet<>(getPlotManager().getPlot(getPlayersLeft().get(0)).getMembers()).containsAll(getPlayersLeft());
     }
     return false;
   }

@@ -30,6 +30,7 @@ import plugily.projects.buildbattle.handlers.themes.vote.VotePoll;
 import plugily.projects.minigamesbox.api.arena.IArenaState;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Tigerpanzer_02
@@ -89,7 +90,7 @@ public class BuildArena extends BaseArena {
 
   @Override
   public void distributePlots() {
-    int neededPlots = getPlayers().size() / getArenaOption("PLOT_MEMBER_SIZE");
+    int neededPlots = getPlayersLeft().size() / getArenaOption("PLOT_MEMBER_SIZE");
     if(getPlotManager().getPlots().size() < neededPlots) {
       getPlugin().getMessageUtils().errorOccurred();
       getPlugin().getDebugger().sendConsoleMsg("&c[Build Battle] [PLOT WARNING] Not enough plots in arena " + getId() + "! Lacks " + (neededPlots - getPlotManager().getPlots().size()) + " plots");
@@ -111,23 +112,27 @@ public class BuildArena extends BaseArena {
         }
         break;
       case TEAM:
-        for(Player player : getPlayers()) {
-          // get base with min players
-          Plot minPlayers = getPlotManager().getPlots().stream().min(Comparator.comparing(Plot::getMembersSize)).get();
-          // add player to min base if he got no base
-          Plot playerPlot = getPlotManager().getPlot(player);
-          if(playerPlot == null) {
-            minPlayers.addMember(player, this, true);
-          }
-          // fallback
-          if(playerPlot == null) {
-            getPlotManager().getPlots().get(0).addMember(player, this, true);
+        int plotMemberSize = getArenaOption("PLOT_MEMBER_SIZE");
+        int neededDividedPlots = getPlayersLeft().size() / plotMemberSize;
+        int currentDividedPlots = (int) getPlotManager().getPlots().stream().filter(plot -> plot.getMembersSize() > 0).count();
+
+
+        if(neededDividedPlots > currentDividedPlots) {
+          List<Plot> fullPlots = getPlotManager().getPlots().stream().filter(plot -> plot.getMembersSize() == plotMemberSize).collect(Collectors.toList());
+          List<Player> playersToMove = getPlayersLeft().stream().filter(player -> fullPlots.stream().noneMatch(plot -> plot.getMembers().contains(player))).collect(Collectors.toList());
+          if(!playersToMove.isEmpty()) {
+              for(int i = 0; i < playersToMove.size(); i++) {
+                  Player move = playersToMove.get(i);
+                  List<Plot> emptyPlots = getPlotManager().getPlots().stream().filter(plot -> plot.getMembersSize() < plotMemberSize).collect(Collectors.toList());
+                  Plot maxEmptyPlot = emptyPlots.stream().max(Comparator.comparing(Plot::getMembersSize)).get();
+                  maxEmptyPlot.addMember(move, this, true);
+              }
           }
         }
         //check if not only one plot got players
         Plot maxPlayers = getPlotManager().getPlots().stream().max(Comparator.comparing(Plot::getMembersSize)).get();
         Plot minPlayers = getPlotManager().getPlots().stream().min(Comparator.comparing(Plot::getMembersSize)).get();
-        if(maxPlayers.getMembersSize() == getPlayers().size()) {
+        if(maxPlayers.getMembersSize() == getPlayersLeft().size()) {
           for(int i = 0; i < maxPlayers.getMembersSize() / 2; i++) {
             Player move = maxPlayers.getMembers().get(i);
             minPlayers.addMember(move, this, true);
@@ -149,14 +154,14 @@ public class BuildArena extends BaseArena {
 
   @Override
   public boolean enoughPlayersToContinue() {
-    int size = getPlayers().size();
+    int size = getPlayersLeft().size();
     int memberSize = getArenaOption("PLOT_MEMBER_SIZE");
 
     if(size > memberSize) {
       return true;
     }
     if(size == memberSize) {
-      return !new HashSet<>(getPlotManager().getPlot(getPlayersLeft().get(0)).getMembers()).containsAll(getPlayers());
+      return !new HashSet<>(getPlotManager().getPlot(getPlayersLeft().get(0)).getMembers()).containsAll(getPlayersLeft());
     }
     return false;
   }

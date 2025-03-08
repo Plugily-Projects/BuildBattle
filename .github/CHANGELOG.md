@@ -10,7 +10,10 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
-### 5.0.14 Release (04.03.2025)
+### 5.0.14 Release (08.03.2025)
+* Changed plot distribution on team mode tries to create only full plots now
+* Fixed plot distribution in same cases lets spectators into the plot as member
+* Fixed game ending due to not enough players counted spectators
 * Updated to minigamesbox 1.3.17
 
 ### 5.0.13 Release (18.02.2025)
