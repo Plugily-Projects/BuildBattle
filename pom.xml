@@ -77,12 +77,12 @@
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>23.0.0</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>plugily.projects</groupId>
             <artifactId>MiniGamesBox-Classic</artifactId>
-            <version>1.3.17-SNAPSHOT10</version>
+            <version>1.3.17-SNAPSHOT12</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
@@ -137,10 +137,10 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.11.2</version>
                 <configuration>
-                    <windowtitle>Murder Mystery API docs for v${project.version}</windowtitle>
-                    <description>Minecraft survival minigame.
-                        Be the murderer, innocent or the detective! Don't be killed during the game to win! API
-                        documentation for hooking Murder Mystery with your plugin.
+                    <windowtitle>BuildBattle API docs for v${project.version}</windowtitle>
+                    <description>Minecraft building minigame.
+                        The goal is to build the best you can! You must compete with other players in this building game.
+                        Who will be the best? Have fun using it! Leave a good rating if you really like it.
                     </description>
                 </configuration>
             </plugin>
