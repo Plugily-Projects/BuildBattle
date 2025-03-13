@@ -21,7 +21,6 @@
 package plugily.projects.buildbattle.handlers.themes.vote;
 
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -37,6 +36,7 @@ import plugily.projects.minigamesbox.api.arena.IArenaState;
 import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XEnchantment;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.minigamesbox.inventory.common.item.ClickableItem;
 import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
@@ -183,7 +183,7 @@ public class VoteMenu {
       ItemBuilder itemBuilder = new ItemBuilder(clickableSignItem.getItem()).removeLore();
       itemBuilder.lore(new MessageBuilder("MENU_THEME_ITEM_LORE").asKey().arena(arena).value(theme).integer((int) percent).build().split(";"));
       if(theme.equals(playerVote)) {
-        itemBuilder.enchantment(Enchantment.UNBREAKING, 1).flags(ItemFlag.HIDE_ENCHANTS);
+        itemBuilder.enchantment(XEnchantment.UNBREAKING.get(), 1).flags(ItemFlag.HIDE_ENCHANTS);
       } else {
         itemBuilder.removeEnchants().removeFlags();
       }

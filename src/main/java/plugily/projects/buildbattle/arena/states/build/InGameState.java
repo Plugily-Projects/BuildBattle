@@ -63,11 +63,13 @@ public class InGameState extends PluginInGameState {
             new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_NAME").asKey().arena(pluginArena).sendArena();
           }
 
-          for(Player player : pluginArena.getPlayers()) {
+          for(Player player : pluginArena.getPlayersLeft()) {
             player.closeInventory();
             player.setGameMode(GameMode.CREATIVE);
             VersionUtils.setCollidable(player, false);
           }
+          // second time after voting as sometimes world switch causing no teleportation!
+          pluginArena.getPlotManager().teleportToPlots();
         } else {
           handleThemeVoting(pluginArena);
         }
@@ -180,7 +182,7 @@ public class InGameState extends PluginInGameState {
   }
 
   private void handleThemeVoting(BuildArena pluginArena) {
-    for(Player player : pluginArena.getPlayers()) {
+    for(Player player : pluginArena.getPlayersLeft()) {
       pluginArena.getVoteMenu().updateInventory(player);
     }
   }
@@ -268,7 +270,7 @@ public class InGameState extends PluginInGameState {
     String formattedMembers = plot.getFormattedMembers();
     boolean hidePlotOwner = getPlugin().getConfigPreferences().getOption("PLOT_HIDE_OWNER");
 
-    for(Player player : pluginArena.getPlayers()) {
+    for(Player player : pluginArena.getPlayersLeft()) {
       VersionUtils.teleport(player, teleportLoc);
       player.setPlayerWeather(plot.getWeatherType());
       player.setPlayerTime(Plot.Time.format(plot.getTime(), player.getWorld().getTime()), false);
