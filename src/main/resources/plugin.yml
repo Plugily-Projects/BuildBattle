@@ -1,4 +1,4 @@
-name: ${description}
+name: BuildBattle
 main: plugily.projects.buildbattle.Main
 authors: [ PlugilyProjects, Tigerpanzer_02, Tigerpanzer, Plajer, TomTheDeveloper ]
 version: ${version}
