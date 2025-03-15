@@ -51,23 +51,15 @@ public class VoteEvents implements Listener {
 
   @EventHandler
   public void onVote(PlugilyPlayerInteractEvent event) {
-    if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) {
-      return;
-    }
+    if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) return;
 
-    if(VersionUtils.checkOffHand(event.getHand())) {
-      return;
-    }
+    if(VersionUtils.checkOffHand(event.getHand())) return;
 
     BaseArena arena = plugin.getArenaRegistry().getArena(event.getPlayer());
-    if(arena == null || arena.getArenaState() != IArenaState.IN_GAME || arena instanceof GuessArena) {
-      return;
-    }
+    if(arena == null || arena.getArenaState() != IArenaState.IN_GAME || arena instanceof GuessArena) return;
 
     BuildArena solo = (BuildArena) arena;
-    if(solo.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING) {
-      return;
-    }
+    if(solo.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING) return;
 
     Plot plot = solo.getVotingPlot();
 
@@ -76,23 +68,23 @@ public class VoteEvents implements Listener {
 
       user.adjustStatistic("REPORTS_TRIGGERED", 1);
 
-      if(plot != null && plugin.getConfigPreferences().getOption("REPORT_COMMANDS")) {
-        int reportsAmountNeeded = plugin.getConfig().getInt("Report.Amount", -1);
+      if (plot == null & !plugin.getConfigPreferences().getOption("REPORT_COMMANDS")) return;
 
-        if(reportsAmountNeeded == -1 || user.getStatistic("REPORTS_TRIGGERED") >= reportsAmountNeeded) {
-          String reportCommand = plugin.getConfig().getString("Report.Execute", "kick %reported%");
-          reportCommand = reportCommand.replace("%reporter%", event.getPlayer().getName());
+      int reportsAmountNeeded = plugin.getConfig().getInt("Report.Amount", -1);
 
-          for(org.bukkit.entity.Player player : plot.getMembers()) {
-            plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),
-                reportCommand.replace("%reported%", player.getName()));
-          }
+      if(reportsAmountNeeded == -1 || user.getStatistic("REPORTS_TRIGGERED") >= reportsAmountNeeded) {
+        String reportCommand = plugin.getConfig().getString("Report.Execute", "kick %reported%");
+        reportCommand = reportCommand.replace("%reporter%", event.getPlayer().getName());
 
-          event.getPlayer().getInventory().remove(event.getItem());
-          event.getPlayer().updateInventory();
-
-          plugin.getRewardsHandler().performReward(event.getPlayer(), arena, plugin.getRewardsHandler().getRewardType("REPORT"));
+        for(org.bukkit.entity.Player player : plot.getMembers()) {
+          plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),
+              reportCommand.replace("%reported%", player.getName()));
         }
+
+        event.getPlayer().getInventory().remove(event.getItem());
+        event.getPlayer().updateInventory();
+
+        plugin.getRewardsHandler().performReward(event.getPlayer(), arena, plugin.getRewardsHandler().getRewardType("REPORT"));
       }
 
       event.setCancelled(true);
@@ -105,20 +97,22 @@ public class VoteEvents implements Listener {
       return;
     }
     VoteItems.VoteItem voteItem = plugin.getVoteItems().getVoteItem(event.getItem());
-    if(voteItem != null) {
-      plugin.getUserManager().getUser(event.getPlayer()).setStatistic("LOCAL_POINTS", plugin.getVoteItems().getPointsAndPlayVoteSound(event.getPlayer(), voteItem));
-      new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_SUCCESS").asKey().value(ComplementAccessor.getComplement().getDisplayName(voteItem.getItemStack().getItemMeta())).arena(arena).player(event.getPlayer()).sendPlayer();
-      if(arena.getArenaType() == BaseArena.ArenaType.TEAM) {
-        plot.getMembers().forEach(player -> {
-          plugin.getUserManager().getUser(player).setStatistic("LOCAL_POINTS", plugin.getVoteItems().getPointsAndPlayVoteSound(player, voteItem));
-          if(player != event.getPlayer()) {
-            //todo add by who
-            new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_SUCCESS").asKey().value(ComplementAccessor.getComplement().getDisplayName(voteItem.getItemStack().getItemMeta())).arena(arena).player(event.getPlayer()).send(player);
-          }
-        });
-      }
-      event.setCancelled(true);
+
+    if (voteItem == null) return;
+    if (plot == null) return;
+
+    plugin.getUserManager().getUser(event.getPlayer()).setStatistic("LOCAL_POINTS", plugin.getVoteItems().getPointsAndPlayVoteSound(event.getPlayer(), voteItem));
+    new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_SUCCESS").asKey().value(ComplementAccessor.getComplement().getDisplayName(voteItem.getItemStack().getItemMeta())).arena(arena).player(event.getPlayer()).sendPlayer();
+    if(arena.getArenaType() == BaseArena.ArenaType.TEAM) {
+      plot.getMembers().forEach(player -> {
+        plugin.getUserManager().getUser(player).setStatistic("LOCAL_POINTS", plugin.getVoteItems().getPointsAndPlayVoteSound(player, voteItem));
+        if(player != event.getPlayer()) {
+          //todo add by who
+          new MessageBuilder("IN_GAME_MESSAGES_PLOT_VOTING_SUCCESS").asKey().value(ComplementAccessor.getComplement().getDisplayName(voteItem.getItemStack().getItemMeta())).arena(arena).player(event.getPlayer()).send(player);
+        }
+      });
     }
+    event.setCancelled(true);
   }
 
 }

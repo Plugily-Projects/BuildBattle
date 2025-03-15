@@ -96,9 +96,7 @@ public class Plot {
   }
 
   public void setWeatherType(WeatherType weatherType) {
-    if(weatherType != null) {
-      this.weatherType = weatherType;
-    }
+    if(weatherType != null) this.weatherType = weatherType;
   }
 
   public Time getTime() {

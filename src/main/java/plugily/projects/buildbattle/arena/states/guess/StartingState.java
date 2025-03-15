@@ -41,9 +41,8 @@ public class StartingState extends PluginStartingState {
     }
     if (arena.getTimer() == 0 || arena.isForceStart()) {
       pluginArena.setParticleRefreshScheduler(new ParticleRefreshScheduler(getPlugin()));
-      if(!pluginArena.getPlotManager().isPlotsCleared()) {
-        pluginArena.getPlotManager().resetQueuedPlots();
-      }
+
+      if(!pluginArena.getPlotManager().isPlotsCleared()) pluginArena.getPlotManager().resetQueuedPlots();
 
       pluginArena.distributePlots();
 

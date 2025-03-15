@@ -58,13 +58,14 @@ public class PlotManager {
   }
 
   public Plot getPlot(Player player) {
-    if(player != null) {
-      for(Plot buildPlot : plots) {
-        if(buildPlot.getMembers().contains(player)) {
-          return buildPlot;
-        }
+    if (player == null) return null;
+
+    for(Plot buildPlot : plots) {
+      if(buildPlot.getMembers().contains(player)) {
+        return buildPlot;
       }
     }
+
     return null;
   }
 
@@ -89,9 +90,7 @@ public class PlotManager {
     for(Plot buildPlot : plots) {
       if(!buildPlot.getMembers().isEmpty()) {
         Cuboid cuboid = buildPlot.getCuboid();
-        if(cuboid == null) {
-          continue;
-        }
+        if(cuboid == null) continue;
 
         final Location tploc = cuboid.getCenter();
         if(tploc == null) {

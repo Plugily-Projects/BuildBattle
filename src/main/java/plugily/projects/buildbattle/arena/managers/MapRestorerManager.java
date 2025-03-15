@@ -51,8 +51,6 @@ public class MapRestorerManager extends PluginMapRestorerManager {
   }
 
   private void cancelParticleRefresh() {
-    if(arena.getParticleRefreshScheduler() != null) {
-      arena.getParticleRefreshScheduler().cancelTask();
-    }
+    if(arena.getParticleRefreshScheduler() != null) arena.getParticleRefreshScheduler().cancelTask();
   }
 }
