@@ -43,9 +43,7 @@ public class StartingState extends PluginStartingState {
 
       pluginArena.setParticleRefreshScheduler(new ParticleRefreshScheduler(getPlugin()));
 
-      if(!pluginArena.getPlotManager().isPlotsCleared()) {
-        pluginArena.getPlotManager().resetQueuedPlots();
-      }
+      if(!pluginArena.getPlotManager().isPlotsCleared()) pluginArena.getPlotManager().resetQueuedPlots();
 
       pluginArena.distributePlots();
       setArenaTimer(getPlugin().getConfig().getInt("Time-Manager." + pluginArena.getArenaType().getPrefix() + ".Voting.Theme"));

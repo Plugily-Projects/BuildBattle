@@ -73,11 +73,8 @@ public class PlaceholderInitializer {
         if(pluginArena == null) {
           return null;
         }
-        String theme = pluginArena.getTheme();
-        if(theme == null) {
-          theme = new MessageBuilder("SCOREBOARD_THEME_UNKNOWN").asKey().build();
-        }
-        return theme;
+
+        return pluginArena.getTheme();
       }
 
       @Nullable
@@ -90,7 +87,8 @@ public class PlaceholderInitializer {
         if(!(pluginArena instanceof GuessArena)) {
           return theme;
         }
-        if(theme.equalsIgnoreCase(new MessageBuilder("SCOREBOARD_THEME_UNKNOWN").asKey().build())) {
+          assert theme != null;
+          if(theme.equalsIgnoreCase(new MessageBuilder("SCOREBOARD_THEME_UNKNOWN").asKey().build())) {
           if(((GuessArena) pluginArena).getCurrentBuilders().contains(player) || ((GuessArena) pluginArena).getWhoGuessed().contains(player)) {
             BBTheme guessTheme = ((GuessArena) pluginArena).getCurrentBBTheme();
             theme = guessTheme == null ? new MessageBuilder("SCOREBOARD_THEME_UNKNOWN").asKey().build() : guessTheme.getTheme();

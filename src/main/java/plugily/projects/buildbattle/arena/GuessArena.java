@@ -76,7 +76,7 @@ public class GuessArena extends BaseArena {
   }
 
   @Override
-  public void   distributePlots() {
+  public void distributePlots() {
     int neededPlots = getPlayersLeft().size() / plotMemberSize;
     if(getPlotManager().getPlots().size() < neededPlots) {
       getPlugin().getMessageUtils().errorOccurred();
@@ -134,9 +134,8 @@ public class GuessArena extends BaseArena {
   }
 
   public void resetBuildPlot() {
-    if(buildPlot != null) {
-      buildPlot.resetPlot();
-    }
+    if(buildPlot != null) buildPlot.resetPlot();
+
     removedCharsAt.clear();
     setBuildPlot(null);
     setCurrentTheme(null);
@@ -177,9 +176,7 @@ public class GuessArena extends BaseArena {
     int timer = getTimer();
 
     //decrease game time by guessed theme
-    if(timer >= 15) {
-      setTimer(timer - getPlugin().getConfig().getInt("Time-Manager." + getArenaType().getPrefix() + ".Guess"));
-    }
+    if(timer >= 15) setTimer(timer - getPlugin().getConfig().getInt("Time-Manager." + getArenaType().getPrefix() + ".Guess"));
 
     //-1 because builder can´t guess
     if(whoGuessed.size() >= getPlayersLeft().size() - 1) {
@@ -213,9 +210,7 @@ public class GuessArena extends BaseArena {
   }
 
   public List<Player> getCurrentBuilders() {
-    if(buildPlot == null) {
-      return new ArrayList<>();
-    }
+    if(buildPlot == null) return new ArrayList<>();
     return buildPlot.getMembers();
   }
 
@@ -237,12 +232,12 @@ public class GuessArena extends BaseArena {
   }
 
   public void setCurrentTheme(BBTheme currentTheme) {
+    this.currentTheme = currentTheme;
     if(currentTheme == null) {
       getPlugin().getDebugger().debug("Arena {0} set Theme null", getId());
-    } else {
-      getPlugin().getDebugger().debug("Arena {0} set Theme to {1} ({2})", getId(), currentTheme.getTheme(), currentTheme.getDifficulty());
+      return;
     }
-    this.currentTheme = currentTheme;
+    getPlugin().getDebugger().debug("Arena {0} set Theme to {1} ({2})", getId(), currentTheme.getTheme(), currentTheme.getDifficulty());
   }
 
   public List<Player> getWhoGuessed() {
