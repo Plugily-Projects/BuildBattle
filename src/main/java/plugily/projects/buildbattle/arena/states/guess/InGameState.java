@@ -26,6 +26,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.arena.BaseArena;
+import plugily.projects.buildbattle.arena.BuildArena;
 import plugily.projects.buildbattle.arena.GuessArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.handlers.themes.BBTheme;
@@ -102,6 +103,7 @@ public class InGameState extends PluginInGameState {
         }
         //}
         handleBuildTime(pluginArena);
+        handleOptionsMenu(pluginArena);
         break;
       case PLOT_VOTING:
         if(pluginArena.getRound() + 1 > pluginArena.getPlotList().size() * pluginArena.getArenaOption("GTB_ROUNDS_PER_PLOT")) {
@@ -187,6 +189,15 @@ public class InGameState extends PluginInGameState {
         break;
     }
     setChosenTheme(pluginArena, getThemeByDifficulty(pluginArena, difficulty));
+  }
+
+  private void handleOptionsMenu(GuessArena pluginArena) {
+    if(pluginArena.getTimer() % 10 != 0) {
+      return;
+    }
+    for(Player player : pluginArena.getCurrentBuilders()) {
+      pluginArena.getPlugin().getSpecialItemManager().getSpecialItem("OPTIONS_MENU").setItem(player);
+    }
   }
 
   private void setChosenTheme(GuessArena pluginArena, BBTheme bbTheme) {
