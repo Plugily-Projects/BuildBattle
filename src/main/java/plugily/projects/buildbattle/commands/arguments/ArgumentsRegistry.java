@@ -21,6 +21,7 @@
 package plugily.projects.buildbattle.commands.arguments;
 
 import plugily.projects.buildbattle.Main;
+import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.BuildArena;
 import plugily.projects.buildbattle.arena.GuessArena;
 import plugily.projects.buildbattle.commands.arguments.admin.ThemeArgument;
@@ -63,10 +64,13 @@ public class ArgumentsRegistry extends PluginArgumentsRegistry {
       case "guessthebuild":
       case "guess_the_build":
         return arenas.stream().filter(GuessArena.class::isInstance).collect(Collectors.toList());
+      case "team":
+        return arenas.stream().filter(BuildArena.class::isInstance).filter(arena -> ((BuildArena) arena).getArenaType().equals(BaseArena.ArenaType.TEAM)).collect(Collectors.toList());
       case "classic":
       case "solo":
-      case "team":
-      default:
+        return arenas.stream().filter(BuildArena.class::isInstance).filter(arena -> ((BuildArena) arena).getArenaType().equals(BaseArena.ArenaType.SOLO)).collect(Collectors.toList());
+      case "build":
+        default:
         return arenas.stream().filter(BuildArena.class::isInstance).collect(Collectors.toList());
     }
   }
