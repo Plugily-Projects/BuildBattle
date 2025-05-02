@@ -45,10 +45,9 @@ public class ScoreboardManager extends PluginScoreboardManager {
   }
 
   @Override
-  public List<String> formatScoreboardLines(List<String> lines, Player player) {
-    List<String> changedLines = new ArrayList<>();
-
-    switch (arena.getArenaState()) {
+  public List<String> getScoreboardLines(Player player) {
+    List<String> lines;
+    switch(arena.getArenaState()) {
       case IN_GAME: {
         if(arena instanceof GuessArena) {
           lines = arena.getPlugin().getLanguageManager().getLanguageList("Scoreboard.Content." + arena.getArenaState().getFormattedName() + ".Guess-The-Build" + (((GuessArena) arena).getArenaInGameState() == BaseArena.ArenaInGameState.PLOT_VOTING ? "-Waiting" : ""));
@@ -70,16 +69,9 @@ public class ScoreboardManager extends PluginScoreboardManager {
         break;
       }
       default: {
-        lines = arena.getPlugin().getLanguageManager().getLanguageList(arena.getArenaState() == IArenaState.FULL_GAME ? "Scoreboard.Content.Starting"
-                : "Scoreboard.Content." + arena.getArenaState().getFormattedName());
-
+        lines = super.getScoreboardLines(player);
       }
     }
-
-    for(String line : lines) {
-      changedLines.add(new MessageBuilder(line).player(player).arena(arena).build());
-    }
-    return changedLines;
+    return lines;
   }
-
 }
