@@ -10,6 +10,13 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+## 5.0.15 Release (03.05.2025)
+* Allowing by default 20 places placeholder for summary list
+* Check if OPTIONS_MENU item is still in builders inventory and readd it if necessary
+* Fixed IllegalArgumentException on PlotSelector, also switched to PaginatedInventory to support all Plots
+* Added filter to maxplayers/random join team / solo so that only the correct arenas are selected
+* Updated Minigamesbox to 1.4.1
+
 ### 5.0.14 Release (13.03.2025)
 * Changed plot distribution on team mode tries to create only full plots now
 * Fixed plot distribution in same cases lets spectators into the plot as member
