@@ -52,7 +52,7 @@ public class ParticlesOption {
         }
 
         humanEntity.closeInventory();
-        registry.getPlugin().getOptionsRegistry().getParticleRegistry().getParticles().open(humanEntity);
+        registry.getPlugin().getOptionsRegistry().getParticleRegistry().getParticles().open(((Player) humanEntity));
       }
     });
   }
