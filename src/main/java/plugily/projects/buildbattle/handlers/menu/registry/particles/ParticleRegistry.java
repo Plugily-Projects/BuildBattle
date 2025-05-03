@@ -35,9 +35,8 @@ import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
-import plugily.projects.minigamesbox.inventory.common.item.ItemMap;
-import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
-import plugily.projects.minigamesbox.inventory.paged.PagedFastInv;
+import plugily.projects.minigamesbox.inventory.utils.fastinv.InventoryScheme;
+import plugily.projects.minigamesbox.inventory.utils.fastinv.PaginatedFastInv;
 
 import java.util.*;
 
@@ -49,7 +48,7 @@ import java.util.*;
  */
 public class ParticleRegistry {
 
-  private PagedFastInv particles;
+  private PaginatedFastInv particles;
   private final List<String> blackListedParticles = Arrays.asList("BLOCK_CRACK", "ITEM_CRACK", "ITEM_TAKE", "BLOCK_DUST", "MOB_APPEARANCE", "FOOTSTEP", "REDSTONE");
   private final Set<ParticleItem> registeredParticles = new HashSet<>();
   private final Main plugin;
@@ -114,46 +113,23 @@ public class ParticleRegistry {
   }
 
   private void registerInventory() {
-    int i = 0;
-    Set<ParticleItem> particleItemsPage1 = new HashSet<>(registeredParticles.size());
-    Set<ParticleItem> particleItemsPage2 = new HashSet<>();
+    PaginatedFastInv gui = new PaginatedFastInv(54, new MessageBuilder("MENU_OPTION_CONTENT_PARTICLE_INVENTORY").asKey().build());
 
-    for(ParticleItem item : registeredParticles) {
-      (i >= 45 ? particleItemsPage2 : particleItemsPage1).add(item);
-      i++;
-    }
+    new InventoryScheme()
+        .mask(" 1111111 ")
+        .mask(" 1111111 ")
+        .mask(" 1111111 ")
+        .mask(" 1111111 ")
+        .bindPagination('1').apply(gui);
 
-    PagedFastInv gui = new PagedFastInv(54, new MessageBuilder("MENU_OPTION_CONTENT_PARTICLE_INVENTORY").asKey().build());
 
-    gui.setForceRefresh(true);
+    gui.previousPageItem(45, p -> new ItemBuilder(XMaterial.ARROW.parseItem()).name("<- " + p + "/" + gui.lastPage()).build());
+    gui.nextPageItem(53, p -> new ItemBuilder(XMaterial.ARROW.parseItem()).name(p + "/" + gui.lastPage() + " ->").build());
 
-    ItemMap page1 = gui.createNewPage();
-    ItemMap page2 = gui.createNewPage();
+    gui.setItem(52, new ItemBuilder(XMaterial.BARRIER.parseItem()).name("X").build(),
+        e -> e.getWhoClicked().closeInventory());
 
-    page2.setItem(45, new SimpleClickableItem(new ItemBuilder(new ItemStack(XMaterial.ARROW.parseMaterial())).name("<-").build(), event -> {
-      gui.setCurrentPage(0);
-      gui.refresh();
-    }));
-    page1.setItem(53, new SimpleClickableItem(new ItemBuilder(new ItemStack(XMaterial.ARROW.parseMaterial())).name("->").build(), event -> {
-      gui.setCurrentPage(1);
-      gui.refresh();
-    }));
-
-    addParticles(page1, particleItemsPage1);
-    addParticles(page2, particleItemsPage2);
-
-    addRemoveItem(page1);
-    addRemoveItem(page2);
-    setParticles(gui);
-
-    plugin.getOptionsRegistry().addGoBackItem(page1, 46);
-    plugin.getOptionsRegistry().addGoBackItem(page2, 46);
-
-    gui.refresh();
-  }
-
-  private void addRemoveItem(ItemMap itemMap) {
-    itemMap.setItem(49, new SimpleClickableItem(new ItemBuilder(new ItemStack(Material.REDSTONE_BLOCK))
+    gui.setItem(49, new ItemBuilder(new ItemStack(Material.REDSTONE_BLOCK))
         .name(new MessageBuilder("MENU_OPTION_CONTENT_PARTICLE_ITEM_REMOVE_NAME").asKey().build())
         .lore(Collections.singletonList(new MessageBuilder("MENU_OPTION_CONTENT_PARTICLE_ITEM_REMOVE_LORE").asKey().build()))
         .build(), event -> {
@@ -170,12 +146,18 @@ public class ParticleRegistry {
       event.setCancelled(false);
       player.closeInventory();
       ParticleRemoveMenu.openMenu(player, arena.getPlotManager().getPlot(player));
-    }));
+    });
+
+    plugin.getOptionsRegistry().addGoBackItem(gui, 46);
+
+    addParticles(gui);
+
+    setParticles(gui);
   }
 
-  private void addParticles(ItemMap itemMap, Set<ParticleItem> particleItems) {
-    for(ParticleItem item : particleItems) {
-      itemMap.addItem(new SimpleClickableItem(item.getItemStack(), event -> {
+  private void addParticles(PaginatedFastInv gui) {
+    for(ParticleItem item : registeredParticles) {
+      gui.addContent(item.getItemStack(), event -> {
         HumanEntity humanEntity = event.getWhoClicked();
 
         if(!(humanEntity instanceof Player))
@@ -198,15 +180,15 @@ public class ParticleRegistry {
         plot.getParticles().put(player.getLocation(), item.getEffect());
         plugin.getUserManager().getUser(player).adjustStatistic("PARTICLES_USED", 1);
         new MessageBuilder("MENU_OPTION_CONTENT_PARTICLE_ADDED").asKey().player(player).sendPlayer();
-      }));
+      });
     }
   }
 
-  public PagedFastInv getParticles() {
+  public PaginatedFastInv getParticles() {
     return particles;
   }
 
-  public void setParticles(PagedFastInv particles) {
+  public void setParticles(PaginatedFastInv particles) {
     this.particles = particles;
   }
 

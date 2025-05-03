@@ -447,8 +447,8 @@ public class PlaceholderInitializer {
           return null;
         }
         int places = pluginArena.getPlotManager().getTopPlotsOrder().size();
-        if(places > 16) {
-          places = 16;
+        if(places > 20) {
+          places = 20;
         }
         StringBuilder placeSummary = new StringBuilder();
         for(int i = 1; i <= places; i++) {

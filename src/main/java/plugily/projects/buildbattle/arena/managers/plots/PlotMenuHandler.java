@@ -35,6 +35,8 @@ import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
 import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
+import plugily.projects.minigamesbox.inventory.utils.fastinv.InventoryScheme;
+import plugily.projects.minigamesbox.inventory.utils.fastinv.PaginatedFastInv;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,9 +81,21 @@ public final class PlotMenuHandler {
   }
 
   public void createMenu(Player player, BaseArena arena) {
-    NormalFastInv gui = new NormalFastInv(plugin.getBukkitHelper().serializeInt(arena.getPlotManager().getPlots().size()), new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_MENU_NAME").asKey().build());
+    PaginatedFastInv gui = new PaginatedFastInv(27, new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_MENU_NAME").asKey().build());
+    new InventoryScheme()
+        .mask(" 1111111 ")
+        .mask(" 1111111 ")
+        .bindPagination('1').apply(gui);
+
+
     int plots = 0;
     int arenaPlotMemberSize = arena.getArenaOption("PLOT_MEMBER_SIZE");
+
+    gui.previousPageItem(20, p -> new ItemBuilder(XMaterial.ARROW.parseItem()).name("<- " + p + "/" + gui.lastPage()).build());
+    gui.nextPageItem(24, p -> new ItemBuilder(XMaterial.ARROW.parseItem()).name(p + "/" + gui.lastPage() + " ->").build());
+
+    gui.setItem(22, new ItemBuilder(XMaterial.BARRIER.parseItem()).name("X").build(),
+        e -> e.getWhoClicked().closeInventory());
 
     for(Plot plot : arena.getPlotManager().getPlots()) {
       ItemStack itemStack = getItemStack(plot, arenaPlotMemberSize, player);
@@ -127,7 +141,7 @@ public final class PlotMenuHandler {
       });
 
       int finalPlots = plots;
-      gui.addItem(new SimpleClickableItem(itemStack, event -> {
+      gui.addContent(itemStack, event -> {
         event.setCancelled(true);
 
         if(!(event.isLeftClick() || event.isRightClick())) {
@@ -143,7 +157,7 @@ public final class PlotMenuHandler {
 
         new MessageBuilder("IN_GAME_MESSAGES_PLOT_SELECTOR_PLOT_CHOOSE").asKey().player(player).integer(finalPlots).sendPlayer();
         event.getWhoClicked().closeInventory();
-      }));
+      });
 
       plots++;
     }

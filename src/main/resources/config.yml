@@ -10,6 +10,7 @@
 # Available localizations:
 #    default - English language. Uses 'language.yml'.
 #    See https://github.com/Plugily-Projects/locale_storage/tree/master/plugins/minecraft/buildbattle
+#    Help us translate the project -> https://translate.plugily.xyz
 #    Use filename of the language e.g. de_DE.yml -> locale: de_DE
 locale: default
 

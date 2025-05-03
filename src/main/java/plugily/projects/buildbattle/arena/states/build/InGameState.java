@@ -77,11 +77,10 @@ public class InGameState extends PluginInGameState {
         break;
       case BUILD_TIME:
         handleBuildTime(pluginArena);
+        handleOptionsMenu(pluginArena);
         if(arena.getTimer() <= 0) {
           for(Player player : pluginArena.getPlayersLeft()) {
             IUser user = getPlugin().getUserManager().getUser(player);
-
-            if(user.isSpectator()) continue;
 
             Plot playerPlot = pluginArena.getPlotFromPlayer(player);
             if(!pluginArena.getQueue().contains(playerPlot)) {
@@ -196,6 +195,15 @@ public class InGameState extends PluginInGameState {
       }
     }
     pluginArena.checkPlayerOutSidePlot();
+  }
+
+  private void handleOptionsMenu(BuildArena pluginArena) {
+    if(pluginArena.getTimer() % 10 != 0) {
+      return;
+    }
+    for(Player player : pluginArena.getPlayersLeft()) {
+      pluginArena.getPlugin().getSpecialItemManager().getSpecialItem("OPTIONS_MENU").setItem(player);
+    }
   }
 
   private void handlePlotVoting(BuildArena pluginArena) {
