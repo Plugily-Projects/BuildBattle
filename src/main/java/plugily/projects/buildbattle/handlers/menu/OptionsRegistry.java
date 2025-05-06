@@ -194,7 +194,9 @@ public class OptionsRegistry {
   }
 
   public void addGoBackItem(PaginatedFastInv gui, int slot) {
-    gui.setItem(slot, backButton.build(), event -> {
+    gui.setItem(slot, new ItemBuilder(XMaterial.STONE_BUTTON.parseItem())
+        .name(new MessageBuilder("MENU_BUTTONS_BACK_ITEM_NAME").asKey().build())
+        .lore(new MessageBuilder("MENU_BUTTONS_BACK_ITEM_LORE").asKey().build()).build(), event -> {
       event.setCancelled(true);
       event.getWhoClicked().closeInventory();
       getOptionsGui().open(event.getWhoClicked());
