@@ -31,9 +31,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCreativeEvent;
-import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -113,7 +113,7 @@ public class ArenaEvents extends PluginArenaEvents {
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onItemSpawn(ItemSpawnEvent event) {
-    if (!plugin.getArenaRegistry().getArenaWorlds().contains(event.getLocation().getWorld())) {
+    if(!plugin.getArenaRegistry().getArenaWorlds().contains(event.getLocation().getWorld())) {
       return;
     }
 
@@ -171,6 +171,29 @@ public class ArenaEvents extends PluginArenaEvents {
             event.setCancelled(true);
           }
         }
+      }
+    }
+  }
+
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void onHangingBreakEvent(HangingBreakByEntityEvent event) {
+    if(event.getEntity() instanceof ItemFrame || event.getEntity() instanceof Painting) {
+      if(event.getRemover() instanceof Player && plugin.getArenaRegistry().isInArena((Player) event.getRemover())) {
+        Player player = (Player) event.getRemover();
+        BaseArena arena = plugin.getArenaRegistry().getArena(player);
+        if(arena == null) {
+          return;
+        }
+        if(arena.getArenaState() != IArenaState.IN_GAME) {
+          return;
+        }
+        Plot buildPlot = arena.getPlotManager().getPlot(player);
+
+        if(buildPlot != null && buildPlot.getCuboid() != null && buildPlot.getCuboid().isIn(event.getEntity().getLocation())) {
+          event.setCancelled(false);
+          return;
+        }
+        event.setCancelled(true);
       }
     }
   }
@@ -459,7 +482,6 @@ public class ArenaEvents extends PluginArenaEvents {
   }
 
 
-
   @EventHandler(priority = EventPriority.HIGH)
   public void onDamage(EntityDamageEvent event) {
     if(event.getEntity().getType() != EntityType.PLAYER) {
@@ -531,10 +553,10 @@ public class ArenaEvents extends PluginArenaEvents {
   public void onEnderpearlThrow(ProjectileLaunchEvent event) {
     if(event.getEntity().getShooter() instanceof Player) {
       BaseArena arena = plugin.getArenaRegistry().getArena((Player) event.getEntity().getShooter());
-      if (arena == null || arena.getArenaState() != IArenaState.IN_GAME) {
+      if(arena == null || arena.getArenaState() != IArenaState.IN_GAME) {
         return;
       }
-      if (event.getEntity() instanceof EnderPearl) {
+      if(event.getEntity() instanceof EnderPearl) {
         event.setCancelled(true);
       }
     }
