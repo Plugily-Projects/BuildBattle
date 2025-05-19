@@ -191,6 +191,7 @@ public class Plot {
       setWeatherType(p.getPlayerWeather());
       p.resetPlayerTime();
     }
+    setTime(Time.WORLD_TIME);
 
     World centerWorld = cuboid.getCenter().getWorld();
 
