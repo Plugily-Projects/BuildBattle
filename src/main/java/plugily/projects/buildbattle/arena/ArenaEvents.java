@@ -104,7 +104,7 @@ public class ArenaEvents extends PluginArenaEvents {
       return;
     }
     Plot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
-    if(buildPlot != null && buildPlot.getCuboid() != null && !buildPlot.getCuboid().isIn(event.getClickedBlock().getLocation())) {
+    if(buildPlot != null && buildPlot.getCuboid() != null && !buildPlot.getCuboid().isInWithMarge(event.getClickedBlock().getLocation(), 2)) {
       event.setCancelled(true);
     }
   }
