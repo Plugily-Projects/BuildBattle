@@ -179,7 +179,8 @@ public class BaseArena extends PluginArena {
 
         if(this instanceof BuildArena) {
           buildPlot = getPlotFromPlayer(player);
-        } else if(this instanceof GuessArena && (buildPlot = getPlotFromPlayer(player)) != null) {
+        } else if(this instanceof GuessArena) {
+          buildPlot = ((GuessArena) this).getBuildPlot();
           player.setPlayerWeather(buildPlot.getWeatherType());
           player.setPlayerTime(Plot.Time.format(buildPlot.getTime(), player.getWorld().getTime()), false);
         }
