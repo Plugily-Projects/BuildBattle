@@ -90,6 +90,9 @@ public class GuessArena extends BaseArena {
       if(players.isEmpty()) {
         break;
       }
+      if(!plot.getMembers().isEmpty()) {
+        continue;
+      }
       if(!getPlugin().getUserManager().getUser(players.get(0)).isSpectator()) {
         plot.addMember(players.remove(0), this, true);
       }
