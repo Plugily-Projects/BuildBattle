@@ -91,6 +91,24 @@ public class ArenaEvents extends PluginArenaEvents {
     event.setCancelled(true);
   }
 
+  @EventHandler
+  public void onOutSidePlotInteract(PlugilyPlayerInteractEvent event) {
+    if(event.getClickedBlock() == null) {
+      return;
+    }
+    BaseArena arena = plugin.getArenaRegistry().getArena(event.getPlayer());
+    if(arena == null) {
+      return;
+    }
+    if(arena.getArenaState() != IArenaState.IN_GAME) {
+      return;
+    }
+    Plot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
+    if(buildPlot != null && buildPlot.getCuboid() != null && !buildPlot.getCuboid().isIn(event.getClickedBlock().getLocation())) {
+      event.setCancelled(true);
+    }
+  }
+
   @EventHandler(priority = EventPriority.HIGH)
   public void onItemSpawn(ItemSpawnEvent event) {
     if (!plugin.getArenaRegistry().getArenaWorlds().contains(event.getLocation().getWorld())) {
