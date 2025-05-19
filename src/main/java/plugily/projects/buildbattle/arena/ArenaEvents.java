@@ -32,6 +32,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCreativeEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -663,6 +665,25 @@ public class ArenaEvents extends PluginArenaEvents {
     if(plugin.getVoteItems().getPoints(drop) != 0) {
       event.setCancelled(true);
     }
+  }
+
+  @EventHandler
+  public void onVoteInventoryInteractEvent(InventoryCreativeEvent event) {
+    if(!(event.getWhoClicked() instanceof Player)) {
+      return;
+    }
+    Player player = (Player) event.getWhoClicked();
+    BaseArena arena = plugin.getArenaRegistry().getArena(player);
+    if(!(arena instanceof BuildArena)) {
+      return;
+    }
+    if(arena.getArenaState() != IArenaState.IN_GAME) {
+      return;
+    }
+    if(arena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING) {
+      return;
+    }
+    event.setCancelled(true);
   }
 
 }
