@@ -57,7 +57,7 @@ public class BaseArena extends PluginArena {
   protected ParticleRefreshScheduler particleRefreshScheduler;
   private ArenaType arenaType;
 
-  private ArenaInGameState arenaInGameState;
+  private ArenaInGameState arenaInGameState = ArenaInGameState.NONE;
 
   private Map<Player, Plot> plotList = new HashMap<>();
 
