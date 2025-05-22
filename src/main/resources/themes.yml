@@ -1,6 +1,10 @@
 # Theme configuration
 
 # All game themes players will build.
+# Use the following layout to support multiple answers
+# Main theme, second possibility, x possibility
+# E.g. You want Castle as main Theme but also allow fortress and mansion as different possibility it would look like
+# - Castle, Fortress, Mansion
 Themes:
   # Solo themes.
   Classic:
@@ -9,12 +13,81 @@ Themes:
     - Emoji
     - House
     - Flower
+    - Tree
+    - Car
+    - Book
+    - Ocean
+    - Mountain
+    - Forest
+    - Desert
+    - Volcano
+    - Island
+    - Cave
+    - Waterfall
+    - River
+    - Lake
+    - Glacier
+    - Jungle
+    - Pizza
+    - Burger
+    - Cake
+    - Ice Cream
+    - Fruit
+    - Vegetable
+    - Candy
+    - Sushi
+    - Bread
+    - Coffee
+    - Dragon
+    - Wizard Tower
+    - Fairy Tale
+    - Spaceship
+    - Robot
+    - Alien
+    - Monster
+    - Superhero
+    - Pirate Ship
+    - Ancient Ruin
+    - Music
+    - Dreams
+    - Emotions
+    - Future
+    - Past
+    - Chaos
+    - Order
+    - Light
+    - Darkness
+    - Time
+    - Shoe
+    - Chair
+    - Lamp
+    - Clock
+    - Camera
+    - Phone
+    - Television
+    - Pencil
+    - Key
+    - Umbrella
   # Team mode themes.
   Teams:
     - Well
     - Car
     - Rainbow
     - Arcade Machine
+    - Bridge
+    - Road
+    - Train Tracks
+    - Chain
+    - Puzzle
+    - Web
+    - Rainbow
+    - Secret Passage
+    - Parallel Worlds
+    - Lost and Found
+    - A New Discovery
+    - The Great Escape
+    - Time Travel
+    - A Legendary Battle
   # Guess the build themes.
   Guess-The-Build:
     Easy:
@@ -22,18 +95,64 @@ Themes:
       - Sun
       - Bread
       - Book
-      - Dollar
+      - Dollar, Money, Bill
+      - Cloud
+      - Tree
+      - House, Home, Abode
+      - Car, Automobile, Vehicle
+      - Ball, Sphere
+      - Chair, Seat
+      - Lamp, Light
+      - River, Stream
+      - Mountain, Peak, Summit
+      - Flower, Bloom
+      - Boat, Ship
+      - Hat, Cap
+      - Shoe, Footwear
+      - Door, Gateway
+      - Window, Pane
     Medium:
       - School Bus
-      - Horse
+      - Horse, Steed, Pony
       - Fountain
       - Sumo
-      - Bicycle
+      - Bicycle, Bike
+      - Lighthouse
+      - Pyramid
+      - Robot, Android, Golem
+      - Spaceship, Rocket
+      - Guitar, Instrument
+      - Volcano, Mount Vesuvius
+      - Castle, Fortress, Mansion
+      - Bridge, Overpass, Viaduct
+      - Windmill, Mill
+      - Octopus, Cephalopod
+      - Hot Air Balloon, Airship
+      - Train, Locomotive
+      - Carousel, Merry-go-round
+      - Chess Piece, Knight, Rook
+      - Telescope, Spyglass
     Hard:
-      - Soccer
-      - Birthday Cake
+      - Soccer, Football
+      - Birthday Cake, Celebration Cake
       - Typewriter
-      - Solar System
+      - Solar System, Galaxy, Cosmos
+      - Eiffel Tower, Landmark
+      - Dragon, Wyrm, Beast
+      - Submarine, U-boat
+      - Grandfather Clock, Timepiece
+      - Rollercoaster, Amusement Ride
+      - DNA, Helix
+      - Globe, World Map, Earth
+      - Opera House, Concert Hall
+      - Satellite, Orbiter
+      - Microscope, Magnifying Glass
+      - Labyrinth, Maze
+      - Golden Gate Bridge, Suspension Bridge
+      - The Sphinx, Monument
+      - Chandelier, Candelabra
+      - Pirate Ship, Galleon, Brig
+      - Globe Theater, Amphitheater
 
 
 # Special holiday themes
@@ -45,27 +164,55 @@ Holiday:
     - Void
     - Minecraft
     - Mojang
+    - Prank
+    - Illusion
+    - Trick
+    - Joke
+    - Upside Down
   Valentine:
     - Heart
     - Love
     - Cupid
     - Chocolate Box
+    - Roses
+    - Romance
+    - Teddy Bear
+    - Arrow
+    - Poem
+    - Sweet
   Halloween:
     - Pumpkin
     - Skeleton
     - Jack'o'Lantern
     - Candies
+    - Ghost
+    - Witch
+    - Bat
+    - Spiderweb
+    - Vampire
+    - Zombie
   Christmas:
     - Santa
     - Presents
     - Snowman
     - Stocking
+    - Reindeer
+    - Sleigh
+    - Elf
+    - Ornament
+    - Gingerbread
+    - Chimney
   NewYear:
     - Rocket
     - Firework
     - Party
     - Firecracker
     - Champagne
+    - Clock
+    - Countdown
+    - Confetti
+    - Ball Drop
+    - Resolutions
 
 # Theme names that are blacklisted.
 Blacklisted:
