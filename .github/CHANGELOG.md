@@ -12,7 +12,7 @@ That's all, matcher will stop when detects next line started with `###` match
 
 ### 5.1.0 Release (22.05.2025)
 * Added onVoteInventoryInteractEvent to block movement of items while plot voting stage
-* Added a lot of new default themes at themes.yml 
+* Added a lot of new default themes at themes.yml (+140)
 * Added possibility to add same meaning words for gtb themes by using ", " in themes.yml
 * Fixed NPE if OptionsMenu Particles are opened as none builder whileas in gtb
 * Fixed on first time setup without restart the NPE getArenaInGameState is null
