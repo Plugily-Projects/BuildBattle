@@ -5,7 +5,7 @@
 BuildBattle / Guess The Build is a Minecraft minigame designed for small and big servers. This minigame is unique and very configurable,
 100% free and open source!
 
-There are different modes such as the classic BuildBattle and the guess mode calles Guess The Build. On the classic version the goal is to build the best you can! You must compete with other players in this building game. Who will be the best? On the guess mode you have to build whileas the other players are guessing the correct word according to your building which grants points to the players. The player with the most points (best guesses) wins. 
+There are different modes such as the classic BuildBattle and the guess mode called Guess The Build. On the classic version the goal is to build the best you can on your own as solo or as team with unlimited team sizes! You must compete with other players in this building game. Who will be the best? On the guess mode you have to build whileas the other players are guessing the correct word according to your building which grants points to the players. The player with the most points (best guesses) wins. 
 Have fun using it! Leave a good rating if you really like it.
 
 ## Want to contribute in this project?
