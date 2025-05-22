@@ -671,7 +671,7 @@ public class ArenaEvents extends PluginArenaEvents {
       new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_GUESS_BUILDER").asKey().arena(gameArena).player(player).sendPlayer();
       return;
     }
-    if(gameArena.getCurrentBBTheme() == null || !gameArena.getCurrentBBTheme().getTheme().equalsIgnoreCase(event.getMessage())) {
+    if(gameArena.getCurrentBBTheme() == null || gameArena.getCurrentBBTheme().getThemes().stream().noneMatch(theme -> theme.equalsIgnoreCase(event.getMessage()))) {
       return;
     }
     event.setCancelled(true);

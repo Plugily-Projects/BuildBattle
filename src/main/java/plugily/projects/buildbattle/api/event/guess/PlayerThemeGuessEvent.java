@@ -22,7 +22,7 @@ package plugily.projects.buildbattle.api.event.guess;
 
 import org.bukkit.event.HandlerList;
 import plugily.projects.buildbattle.arena.GuessArena;
-import plugily.projects.buildbattle.handlers.themes.BBTheme;
+import plugily.projects.buildbattle.handlers.themes.GuessTheme;
 import plugily.projects.minigamesbox.api.events.PlugilyEvent;
 
 
@@ -35,9 +35,9 @@ import plugily.projects.minigamesbox.api.events.PlugilyEvent;
 public class PlayerThemeGuessEvent extends PlugilyEvent {
 
   private static final HandlerList HANDLERS = new HandlerList();
-  private final BBTheme theme;
+  private final GuessTheme theme;
 
-  public PlayerThemeGuessEvent(GuessArena eventArena, BBTheme theme) {
+  public PlayerThemeGuessEvent(GuessArena eventArena, GuessTheme theme) {
     super(eventArena);
     this.theme = theme;
   }
@@ -51,7 +51,7 @@ public class PlayerThemeGuessEvent extends PlugilyEvent {
     return HANDLERS;
   }
 
-  public BBTheme getTheme() {
+  public GuessTheme getTheme() {
     return theme;
   }
 }

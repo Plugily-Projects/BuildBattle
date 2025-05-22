@@ -1,10 +1,6 @@
 # Theme configuration
 
 # All game themes players will build.
-# Use the following layout to support multiple answers
-# Main theme, second possibility, x possibility
-# E.g. You want Castle as main Theme but also allow fortress and mansion as different possibility it would look like
-# - Castle, Fortress, Mansion
 Themes:
   # Solo themes.
   Classic:
@@ -89,6 +85,10 @@ Themes:
     - Time Travel
     - A Legendary Battle
   # Guess the build themes.
+  # Use the following layout to support multiple answers
+  # Main theme, second possibility, x possibility
+  # E.g. You want Castle as main Theme but also allow fortress and mansion as different possibility it would look like
+  # - Castle, Fortress, Mansion
   Guess-The-Build:
     Easy:
       - Apple
@@ -223,5 +223,5 @@ Blacklisted:
 # Really, don't edit ;p
 # You edited it, huh? Next time hurt yourself!
 Do-Not-Edit:
-  File-Version: 1
+  File-Version: 2
   Core-Version: 1

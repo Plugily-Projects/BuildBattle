@@ -12,6 +12,8 @@ That's all, matcher will stop when detects next line started with `###` match
 
 ### 5.1.0 Release (22.05.2025)
 * Added onVoteInventoryInteractEvent to block movement of items while plot voting stage
+* Added a lot of new default themes at themes.yml 
+* Added possibility to add same meaning words for gtb themes by using ", " in themes.yml
 * Fixed NPE if OptionsMenu Particles are opened as none builder whileas in gtb
 * Fixed on first time setup without restart the NPE getArenaInGameState is null
 * Fixed ItemFrames and Paintings were not able to be removed by player on plot
@@ -23,6 +25,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Fixed Player Outside Plot interaction with blocks were possible
 * Fixed NPE AddGoBackButton
 * Changed Allow Plot selection also if ArenaState is FULL_GAME
+* Changed (for API usage) renamed BBTheme to GuessTheme
 * Updated Minigamesbox to 1.4.2
 
 ### 5.0.15 Release (03.05.2025)
