@@ -30,13 +30,11 @@ import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemUtils;
 import plugily.projects.minigamesbox.classic.utils.misc.complement.ComplementAccessor;
-import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
-import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
+import plugily.projects.minigamesbox.inventory.utils.fastinv.InventoryScheme;
+import plugily.projects.minigamesbox.inventory.utils.fastinv.PaginatedFastInv;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -47,7 +45,7 @@ import java.util.stream.Collectors;
 public class PlayerHeadsRegistry {
 
   private final Main plugin;
-  private final Map<HeadsCategory, NormalFastInv> categories = new HashMap<>();
+  private final Map<HeadsCategory, PaginatedFastInv> categories = new HashMap<>();
 
   public PlayerHeadsRegistry(OptionsRegistry registry) {
     this.plugin = registry.getPlugin();
@@ -86,10 +84,27 @@ public class PlayerHeadsRegistry {
         stack.setItemMeta(im);
         playerHeads.add(stack);
       }
-      NormalFastInv gui = new NormalFastInv(plugin.getBukkitHelper().serializeInt(playerHeads.size() + 1), new MessageBuilder(config.getString(str + ".menuname")).build());
+      PaginatedFastInv gui = new PaginatedFastInv(54, new MessageBuilder(config.getString(str + ".menuname")).build());
+      new InventoryScheme()
+          .mask(" 1111111 ")
+          .mask(" 1111111 ")
+          .mask(" 1111111 ")
+          .mask(" 1111111 ")
+          .bindPagination('1').apply(gui);
+
+
+      gui.previousPageItem(45, p -> new ItemBuilder(XMaterial.ARROW.parseItem()).name("<- " + p + "/" + gui.lastPage()).build());
+      gui.nextPageItem(53, p -> new ItemBuilder(XMaterial.ARROW.parseItem()).name(p + "/" + gui.lastPage() + " ->").build());
+
+      gui.setItem(52, new ItemBuilder(XMaterial.BARRIER.parseItem()).name("X").build(),
+          e -> e.getWhoClicked().closeInventory());
+
+      plugin.getOptionsRegistry().addGoBackItem(gui, 46);
+
+
 
       for(ItemStack playerHead : playerHeads) {
-        gui.addItem(new SimpleClickableItem(playerHead, clickEvent -> clickEvent.getWhoClicked().getInventory().addItem(playerHead.clone())));
+        gui.addContent(playerHead, clickEvent -> clickEvent.getWhoClicked().getInventory().addItem(playerHead.clone()));
       }
 
       plugin.getOptionsRegistry().addGoBackItem(gui, gui.getInventory().getSize() - 1);
@@ -98,7 +113,7 @@ public class PlayerHeadsRegistry {
     }
   }
 
-  public Map<HeadsCategory, NormalFastInv> getCategories() {
+  public Map<HeadsCategory, PaginatedFastInv> getCategories() {
     return categories;
   }
 
