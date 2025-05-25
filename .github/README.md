@@ -31,7 +31,13 @@ Have fun using it! Leave a good rating if you really like it.
 
 <img src="https://poeditor.com/public/images/logo/logo_head_500_transparent.png" alt="jetbrains logo" width="150"/>
 
-Thanks to Code Whale for Open Source license for POEditor project.
+Thanks to Code Whale for Open Source license for POEditor project, so we are able to have locales.
+
+#### Minecraft Heads
+
+[![https://minecraft-heads.com/](https://images.minecraft-heads.com/banners/minecraft-heads_leaderboard_728x90.png)](https://minecraft-heads.com/)
+
+Thanks to Minecraft Heads to let us use the Name and Textures of the heads to provide you a better heads experience ingame.
 
 ## Contributors
 
