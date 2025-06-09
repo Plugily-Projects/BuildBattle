@@ -32,11 +32,13 @@ import plugily.projects.buildbattle.handlers.themes.GuessTheme;
 import plugily.projects.buildbattle.handlers.themes.ThemeManager;
 import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
+import plugily.projects.minigamesbox.classic.arena.PluginArenaUtils;
 import plugily.projects.minigamesbox.classic.arena.states.PluginInGameState;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
 import plugily.projects.minigamesbox.classic.utils.actionbar.ActionBar;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
+import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
 import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
 
@@ -75,6 +77,7 @@ public class InGameState extends PluginInGameState {
 
           Bukkit.getScheduler().runTaskLater(getPlugin(), () -> pluginArena.getCurrentBuilders().forEach(player -> {
             player.setGameMode(GameMode.CREATIVE);
+            pluginArena.getPlayersLeft().forEach(ingamePlayer -> VersionUtils.hidePlayer(getPlugin(), player, ingamePlayer));
             pluginArena.getPlugin().getSpecialItemManager().getSpecialItem("OPTIONS_MENU").setItem(player);
           } ), 40);
 
@@ -107,6 +110,9 @@ public class InGameState extends PluginInGameState {
         handleOptionsMenu(pluginArena);
         break;
       case PLOT_VOTING:
+        for(Player player : pluginArena.getPlayersLeft()) {
+          PluginArenaUtils.showPlayer(player, arena);
+        }
         if(pluginArena.getRound() + 1 > pluginArena.getPlotList().size() * pluginArena.getArenaOption("GTB_ROUNDS_PER_PLOT")) {
           pluginArena.calculateWinnerPlot();
           adjustStatistics(pluginArena);
