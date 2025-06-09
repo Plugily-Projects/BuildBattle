@@ -11,6 +11,7 @@ deploy webhooks to print changelog successfully
 That's all, matcher will stop when detects next line started with `###` match
 
 ### 5.1.0 Release (22.05.2025)
+* Added paginated Heads menu to support more than one site of heads
 * Added onVoteInventoryInteractEvent to block movement of items while plot voting stage
 * Added a lot of new default themes at themes.yml (+140)
 * Added possibility to add same meaning words for gtb themes by using ", " in themes.yml
@@ -24,8 +25,10 @@ That's all, matcher will stop when detects next line started with `###` match
 * Fixed on Plotreset time did not update to world time
 * Fixed Player Outside Plot interaction with blocks were possible
 * Fixed NPE AddGoBackButton
+* Fixed Water Flow on Ground
 * Changed Allow Plot selection also if ArenaState is FULL_GAME
 * Changed (for API usage) renamed BBTheme to GuessTheme
+* Changed Hide guessing players from builder in gtb mode
 * Updated Minigamesbox to 1.4.2
 
 ### 5.0.15 Release (03.05.2025)
