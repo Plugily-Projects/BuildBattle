@@ -576,7 +576,7 @@ public class ArenaEvents extends PluginArenaEvents {
           if(!buildPlot.getCuboid().isIn(toBlock) && buildPlot.getCuboid().isIn(blockLoc)) {
             event.setCancelled(true);
           }
-          if(!buildPlot.getCuboid().isInWithMarge(toBlock, -1) && buildPlot.getCuboid().isIn(toBlock)) {
+          if(!buildPlot.getCuboid().isIn(toBlock)) {
             event.setCancelled(true);
           }
         }
