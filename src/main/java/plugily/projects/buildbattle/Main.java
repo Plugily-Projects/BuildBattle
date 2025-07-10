@@ -32,6 +32,7 @@ import plugily.projects.buildbattle.boot.AdditionalValueInitializer;
 import plugily.projects.buildbattle.boot.MessageInitializer;
 import plugily.projects.buildbattle.boot.PlaceholderInitializer;
 import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
+import plugily.projects.buildbattle.handlers.LanguageMigrator;
 import plugily.projects.buildbattle.handlers.menu.OptionsRegistry;
 import plugily.projects.buildbattle.handlers.misc.BlacklistManager;
 import plugily.projects.buildbattle.handlers.misc.HeadDatabaseManager;
@@ -70,6 +71,7 @@ public class Main extends PluginMain {
     MessageInitializer messageInitializer = new MessageInitializer(this);
     super.onEnable();
     getDebugger().debug("[System] [Plugin] Initialization start");
+    new LanguageMigrator(this);
     arenaRegistry = new ArenaRegistry(this);
     new PlaceholderInitializer(this);
     messageInitializer.registerMessages();
