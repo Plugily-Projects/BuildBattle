@@ -10,7 +10,7 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
-### 5.1.0 Release (22.05.2025)
+### 5.1.0 Release (10.07.2025)
 * TODO MAKE LANGUAGE:YML UPDATE BEFORE RELEASE!
 * Added Heads from HeadDatabase (selected on each server start 200 per category)
 * Added Heads Search function
@@ -31,6 +31,9 @@ That's all, matcher will stop when detects next line started with `###` match
 * Fixed Player Outside Plot interaction with blocks were possible
 * Fixed NPE AddGoBackButton
 * Fixed Water Flow on Ground
+* Fixed Vehicles such as Boats could drive outside plot
+* Fixed Flower Pots couldn't be destroyed on plot
+* Fixed placeholder on message Changed-Theme
 * Changed Allow Plot selection also if ArenaState is FULL_GAME
 * Changed (for API usage) renamed BBTheme to GuessTheme
 * Changed Hide guessing players from builder in gtb mode

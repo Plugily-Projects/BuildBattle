@@ -293,7 +293,7 @@ In-Game:
         Own: "&aYou became #%number%"
     Admin:
       Set-Starting-In-To-0: "%plugin_prefix% An admin set waiting time to 0. The game starts now!"
-      Changed-Theme: "%plugin_prefix% Admin has changed theme to %THEME%"
+      Changed-Theme: "%plugin_prefix% Admin has changed theme to %value%"
     Plot:
       Nobody: "%color_chat_issue%Nobody"
       Time-Left:

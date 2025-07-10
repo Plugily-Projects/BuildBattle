@@ -53,6 +53,7 @@ import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerInteractEntityEvent;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerInteractEvent;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerPickupArrow;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XEntityType;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 
 /**
@@ -198,6 +199,26 @@ public class ArenaEvents extends PluginArenaEvents {
     }
   }
 
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void onPaintandFlowerInteraction(PlugilyPlayerInteractEvent event) {
+    Player player = event.getPlayer();
+    BaseArena arena = plugin.getArenaRegistry().getArena(player);
+    if(arena == null || event.getClickedBlock() == null) {
+      return;
+    }
+    if(arena.getArenaState() != IArenaState.IN_GAME) {
+      return;
+    }
+    Plot buildPlot = arena.getPlotManager().getPlot(player);
+    if(event.getClickedBlock().getType() != XMaterial.PAINTING.parseMaterial() && event.getClickedBlock().getType() != XMaterial.FLOWER_POT.parseMaterial()) {
+      return;
+    }
+    if(buildPlot != null && buildPlot.getCuboid() != null && buildPlot.getCuboid().isIn(event.getClickedBlock().getLocation())) {
+      //need to cancel with highest as minigamescore is blocking it!
+      event.setCancelled(false);
+    }
+  }
+
   @EventHandler
   public void onNPCClick(PlugilyPlayerInteractEntityEvent event) {
     if(VersionUtils.checkOffHand(event.getHand()) || event.getRightClicked().getType() != EntityType.VILLAGER) {
@@ -270,25 +291,28 @@ public class ArenaEvents extends PluginArenaEvents {
       return;
     }
 
-    if(arena.getArenaState() != IArenaState.IN_GAME || event.getClickedBlock().getType() == XMaterial.ENDER_CHEST.parseMaterial()) {
+    if(event.getClickedBlock().getType() == XMaterial.ENDER_CHEST.parseMaterial()) {
       event.setCancelled(true);
     }
   }
 
+  //TODO recognise plot by location should be added, as current check will go through all plots...
+  //Alternative use filter!!
   @EventHandler
-  public void onMinecartMove(VehicleMoveEvent event) {
+  public void onVehicleMove(VehicleMoveEvent event) {
     Vehicle vehicle = event.getVehicle();
-    if(vehicle.getType() != EntityType.MINECART) {
-      return;
-    }
     for(IPluginArena arena : plugin.getArenaRegistry().getArenas()) {
       if(!(arena instanceof BaseArena)) {
         continue;
       }
       for(Plot buildPlot : ((BaseArena) arena).getPlotManager().getPlots()) {
-        if(buildPlot.getCuboid() != null && !buildPlot.getCuboid().isInWithMarge(event.getTo(), -1) && buildPlot.getCuboid().isIn(event.getTo())) {
-          ((Minecart) vehicle).setMaxSpeed(0);
+        if(buildPlot.getCuboid() != null && !buildPlot.getCuboid().isIn(event.getTo())) {
           vehicle.setVelocity(vehicle.getVelocity().zero());
+          if(vehicle.getType() == XEntityType.MINECART.get()) {
+            ((Minecart) vehicle).setMaxSpeed(0);
+          } else {
+            vehicle.remove();
+          }
         }
       }
     }
