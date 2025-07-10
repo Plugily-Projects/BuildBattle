@@ -36,6 +36,7 @@ public class HeadsCategory {
   private ItemStack itemStack;
   private String permission;
   private PaginatedFastInv gui;
+  private boolean search = false;
 
   public HeadsCategory(String categoryID) {
     this.categoryID = categoryID;
@@ -67,5 +68,13 @@ public class HeadsCategory {
 
   public void setGui(PaginatedFastInv inventoryView) {
     this.gui = inventoryView;
+  }
+
+  public void setSearch(boolean search) {
+    this.search = search;
+  }
+
+  public boolean isSearch() {
+    return search;
   }
 }

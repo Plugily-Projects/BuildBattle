@@ -251,7 +251,7 @@ Items:
 # Enable another Head menu instead of our
 Head-Menu:
   Custom: false
-  # The command that should be executed on the player
+  # The command that should be executed on the player if Head-Menu.Custom = true
   Command: heads
 
 

@@ -34,6 +34,7 @@ import plugily.projects.buildbattle.boot.PlaceholderInitializer;
 import plugily.projects.buildbattle.commands.arguments.ArgumentsRegistry;
 import plugily.projects.buildbattle.handlers.menu.OptionsRegistry;
 import plugily.projects.buildbattle.handlers.misc.BlacklistManager;
+import plugily.projects.buildbattle.handlers.misc.HeadDatabaseManager;
 import plugily.projects.buildbattle.handlers.setup.SetupCategoryManager;
 import plugily.projects.buildbattle.handlers.themes.ThemeManager;
 import plugily.projects.minigamesbox.classic.PluginMain;
@@ -48,6 +49,7 @@ import plugily.projects.minigamesbox.classic.utils.services.metrics.Metrics;
 public class Main extends PluginMain {
 
   private VoteItems voteItems;
+  private HeadDatabaseManager headDatabaseManager;
   private ThemeManager themeManager;
   private BlacklistManager blacklistManager;
   private OptionsRegistry optionsRegistry;
@@ -81,6 +83,7 @@ public class Main extends PluginMain {
     addFileName("themes");
     addFileName("vote_items");
     blacklistManager = new BlacklistManager(this);
+    headDatabaseManager = new HeadDatabaseManager(this);
     themeManager = new ThemeManager(this);
     BaseArena.init(this);
     new ArenaEvents(this);
@@ -109,6 +112,10 @@ public class Main extends PluginMain {
 
   public VoteItems getVoteItems() {
     return voteItems;
+  }
+
+  public HeadDatabaseManager getHeadDatabaseManager() {
+    return headDatabaseManager;
   }
 
   public ThemeManager getThemeManager() {
