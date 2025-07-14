@@ -33,6 +33,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Fixed Vehicles such as Boats could drive outside plot
 * Fixed Flower Pots couldn't be destroyed on plot
 * Fixed placeholder on message Changed-Theme
+* Fixed sendBuildLeftTimeMessage is not handled by MessageBuilder correctly
 * Changed Allow Plot selection also if ArenaState is FULL_GAME
 * Changed (for API usage) renamed BBTheme to GuessTheme
 * Changed Hide guessing players from builder in gtb mode
