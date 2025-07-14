@@ -67,6 +67,9 @@ public class PlayerHeadsRegistry {
       if(!config.getBoolean(str + ".enabled", true)) {
         continue;
       }
+      if(str.equalsIgnoreCase("Do-Not-Edit")) {
+        continue;
+      }
       if(config.getBoolean(str + ".database", false)) {
         String categoryName = config.getString(str + ".config", "fail");
         if(categoryName.equalsIgnoreCase("search")) {

@@ -68,10 +68,10 @@ public class Main extends PluginMain {
   @Override
   public void onEnable() {
     long start = System.currentTimeMillis();
+    new LanguageMigrator(this);
     MessageInitializer messageInitializer = new MessageInitializer(this);
     super.onEnable();
     getDebugger().debug("[System] [Plugin] Initialization start");
-    new LanguageMigrator(this);
     arenaRegistry = new ArenaRegistry(this);
     new PlaceholderInitializer(this);
     messageInitializer.registerMessages();

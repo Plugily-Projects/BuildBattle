@@ -156,8 +156,8 @@ database-search:
   displayname: '&6%value% heads'
   texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjViOTVkYTEyODE2NDJkYWE1ZDAyMmFkYmQzZTdjYjY5ZGMwOTQyYzgxY2Q2M2JlOWMzODU3ZDIyMmUxYzhkOSJ9fX0="
   lore:
-    - "Click to open"
-    - "%value% menu"
+    - "Click to search"
+    - "for a head (english only!)"
   enabled: true
   database: true
   config: search
