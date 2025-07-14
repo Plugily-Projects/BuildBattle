@@ -187,11 +187,10 @@ public class Plot {
     particles.clear();
 
     for(Player p : members) {
-      p.setPlayerWeather(WeatherType.CLEAR);
+      p.resetPlayerWeather();
+      setWeatherType(p.getPlayerWeather());
       p.resetPlayerTime();
     }
-    setTime(Time.WORLD_TIME);
-    setWeatherType(WeatherType.CLEAR);
 
     World centerWorld = cuboid.getCenter().getWorld();
 

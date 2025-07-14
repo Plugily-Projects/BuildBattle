@@ -31,9 +31,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
-import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCreativeEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -53,7 +51,6 @@ import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerInteractEntityEvent;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerInteractEvent;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerPickupArrow;
-import plugily.projects.minigamesbox.classic.utils.version.xseries.XEntityType;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 
 /**
@@ -94,27 +91,9 @@ public class ArenaEvents extends PluginArenaEvents {
     event.setCancelled(true);
   }
 
-  @EventHandler
-  public void onOutSidePlotInteract(PlugilyPlayerInteractEvent event) {
-    if(event.getClickedBlock() == null) {
-      return;
-    }
-    BaseArena arena = plugin.getArenaRegistry().getArena(event.getPlayer());
-    if(arena == null) {
-      return;
-    }
-    if(arena.getArenaState() != IArenaState.IN_GAME) {
-      return;
-    }
-    Plot buildPlot = arena.getPlotManager().getPlot(event.getPlayer());
-    if(buildPlot != null && buildPlot.getCuboid() != null && !buildPlot.getCuboid().isInWithMarge(event.getClickedBlock().getLocation(), 2)) {
-      event.setCancelled(true);
-    }
-  }
-
   @EventHandler(priority = EventPriority.HIGH)
   public void onItemSpawn(ItemSpawnEvent event) {
-    if(!plugin.getArenaRegistry().getArenaWorlds().contains(event.getLocation().getWorld())) {
+    if (!plugin.getArenaRegistry().getArenaWorlds().contains(event.getLocation().getWorld())) {
       return;
     }
 
@@ -173,49 +152,6 @@ public class ArenaEvents extends PluginArenaEvents {
           }
         }
       }
-    }
-  }
-
-  @EventHandler(priority = EventPriority.HIGHEST)
-  public void onHangingBreakEvent(HangingBreakByEntityEvent event) {
-    if(event.getEntity() instanceof ItemFrame || event.getEntity() instanceof Painting) {
-      if(event.getRemover() instanceof Player && plugin.getArenaRegistry().isInArena((Player) event.getRemover())) {
-        Player player = (Player) event.getRemover();
-        BaseArena arena = plugin.getArenaRegistry().getArena(player);
-        if(arena == null) {
-          return;
-        }
-        if(arena.getArenaState() != IArenaState.IN_GAME) {
-          return;
-        }
-        Plot buildPlot = arena.getPlotManager().getPlot(player);
-
-        if(buildPlot != null && buildPlot.getCuboid() != null && buildPlot.getCuboid().isIn(event.getEntity().getLocation())) {
-          event.setCancelled(false);
-          return;
-        }
-        event.setCancelled(true);
-      }
-    }
-  }
-
-  @EventHandler(priority = EventPriority.HIGHEST)
-  public void onPaintandFlowerInteraction(PlugilyPlayerInteractEvent event) {
-    Player player = event.getPlayer();
-    BaseArena arena = plugin.getArenaRegistry().getArena(player);
-    if(arena == null || event.getClickedBlock() == null) {
-      return;
-    }
-    if(arena.getArenaState() != IArenaState.IN_GAME) {
-      return;
-    }
-    Plot buildPlot = arena.getPlotManager().getPlot(player);
-    if(event.getClickedBlock().getType() != XMaterial.PAINTING.parseMaterial() && event.getClickedBlock().getType() != XMaterial.FLOWER_POT.parseMaterial()) {
-      return;
-    }
-    if(buildPlot != null && buildPlot.getCuboid() != null && buildPlot.getCuboid().isIn(event.getClickedBlock().getLocation())) {
-      //need to cancel with highest as minigamescore is blocking it!
-      event.setCancelled(false);
     }
   }
 
@@ -291,28 +227,25 @@ public class ArenaEvents extends PluginArenaEvents {
       return;
     }
 
-    if(event.getClickedBlock().getType() == XMaterial.ENDER_CHEST.parseMaterial()) {
+    if(arena.getArenaState() != IArenaState.IN_GAME || event.getClickedBlock().getType() == XMaterial.ENDER_CHEST.parseMaterial()) {
       event.setCancelled(true);
     }
   }
 
-  //TODO recognise plot by location should be added, as current check will go through all plots...
-  //Alternative use filter!!
   @EventHandler
-  public void onVehicleMove(VehicleMoveEvent event) {
+  public void onMinecartMove(VehicleMoveEvent event) {
     Vehicle vehicle = event.getVehicle();
+    if(vehicle.getType() != EntityType.MINECART) {
+      return;
+    }
     for(IPluginArena arena : plugin.getArenaRegistry().getArenas()) {
       if(!(arena instanceof BaseArena)) {
         continue;
       }
       for(Plot buildPlot : ((BaseArena) arena).getPlotManager().getPlots()) {
-        if(buildPlot.getCuboid() != null && !buildPlot.getCuboid().isIn(event.getTo())) {
+        if(buildPlot.getCuboid() != null && !buildPlot.getCuboid().isInWithMarge(event.getTo(), -1) && buildPlot.getCuboid().isIn(event.getTo())) {
+          ((Minecart) vehicle).setMaxSpeed(0);
           vehicle.setVelocity(vehicle.getVelocity().zero());
-          if(vehicle.getType() == XEntityType.MINECART.get()) {
-            ((Minecart) vehicle).setMaxSpeed(0);
-          } else {
-            vehicle.remove();
-          }
         }
       }
     }
@@ -506,6 +439,7 @@ public class ArenaEvents extends PluginArenaEvents {
   }
 
 
+
   @EventHandler(priority = EventPriority.HIGH)
   public void onDamage(EntityDamageEvent event) {
     if(event.getEntity().getType() != EntityType.PLAYER) {
@@ -577,10 +511,10 @@ public class ArenaEvents extends PluginArenaEvents {
   public void onEnderpearlThrow(ProjectileLaunchEvent event) {
     if(event.getEntity().getShooter() instanceof Player) {
       BaseArena arena = plugin.getArenaRegistry().getArena((Player) event.getEntity().getShooter());
-      if(arena == null || arena.getArenaState() != IArenaState.IN_GAME) {
+      if (arena == null || arena.getArenaState() != IArenaState.IN_GAME) {
         return;
       }
-      if(event.getEntity() instanceof EnderPearl) {
+      if (event.getEntity() instanceof EnderPearl) {
         event.setCancelled(true);
       }
     }
@@ -600,7 +534,7 @@ public class ArenaEvents extends PluginArenaEvents {
           if(!buildPlot.getCuboid().isIn(toBlock) && buildPlot.getCuboid().isIn(blockLoc)) {
             event.setCancelled(true);
           }
-          if(!buildPlot.getCuboid().isIn(toBlock)) {
+          if(!buildPlot.getCuboid().isInWithMarge(toBlock, -1) && buildPlot.getCuboid().isIn(toBlock)) {
             event.setCancelled(true);
           }
         }
@@ -695,7 +629,7 @@ public class ArenaEvents extends PluginArenaEvents {
       new MessageBuilder("IN_GAME_MESSAGES_PLOT_GTB_THEME_GUESS_BUILDER").asKey().arena(gameArena).player(player).sendPlayer();
       return;
     }
-    if(gameArena.getCurrentBBTheme() == null || gameArena.getCurrentBBTheme().getThemes().stream().noneMatch(theme -> theme.equalsIgnoreCase(event.getMessage()))) {
+    if(gameArena.getCurrentBBTheme() == null || !gameArena.getCurrentBBTheme().getTheme().equalsIgnoreCase(event.getMessage())) {
       return;
     }
     event.setCancelled(true);
@@ -711,25 +645,6 @@ public class ArenaEvents extends PluginArenaEvents {
     if(plugin.getVoteItems().getPoints(drop) != 0) {
       event.setCancelled(true);
     }
-  }
-
-  @EventHandler
-  public void onVoteInventoryInteractEvent(InventoryCreativeEvent event) {
-    if(!(event.getWhoClicked() instanceof Player)) {
-      return;
-    }
-    Player player = (Player) event.getWhoClicked();
-    BaseArena arena = plugin.getArenaRegistry().getArena(player);
-    if(!(arena instanceof BuildArena)) {
-      return;
-    }
-    if(arena.getArenaState() != IArenaState.IN_GAME) {
-      return;
-    }
-    if(arena.getArenaInGameState() != BaseArena.ArenaInGameState.PLOT_VOTING) {
-      return;
-    }
-    event.setCancelled(true);
   }
 
 }

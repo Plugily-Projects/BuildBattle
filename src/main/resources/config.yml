@@ -77,9 +77,6 @@ Block:
       # Setting it to false means on all stages of the game the event will be cancelled.
       # Setting it to true means only while IN_GAME the event will be cancelled.
       Check: true
-    # Should all interactions with interactive materials such as doors / buttons / fences / redstone be blocked during ingame
-    # Full list see https://github.com/CryptoMorin/XSeries/blob/e84000a2bead7367d893cf8661f8d5432116adaa/core/src/main/java/com/cryptomorin/xseries/XTag.java#L2793
-    Interact: false
 
 
 # Enable this option when you're using MySQL, otherwise it won't work.
@@ -251,7 +248,7 @@ Items:
 # Enable another Head menu instead of our
 Head-Menu:
   Custom: false
-  # The command that should be executed on the player if Head-Menu.Custom = true
+  # The command that should be executed on the player
   Command: heads
 
 
@@ -287,4 +284,4 @@ Update-Notifier:
 # You edited it, huh? Next time hurt yourself!
 Do-Not-Edit:
   File-Version: 1
-  Core-Version: 6
+  Core-Version: 5

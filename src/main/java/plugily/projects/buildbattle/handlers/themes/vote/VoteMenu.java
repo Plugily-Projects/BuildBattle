@@ -37,7 +37,6 @@ import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XEnchantment;
-import plugily.projects.minigamesbox.classic.utils.version.xseries.XItemFlag;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.minigamesbox.inventory.common.item.ClickableItem;
 import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
@@ -184,7 +183,7 @@ public class VoteMenu {
       ItemBuilder itemBuilder = new ItemBuilder(clickableSignItem.getItem()).removeLore();
       itemBuilder.lore(new MessageBuilder("MENU_THEME_ITEM_LORE").asKey().arena(arena).value(theme).integer((int) percent).build().split(";"));
       if(theme.equals(playerVote)) {
-        itemBuilder.enchantment(XEnchantment.UNBREAKING.get(), 1).flags(XItemFlag.HIDE_ENCHANTS.get());
+        itemBuilder.enchantment(XEnchantment.UNBREAKING.get(), 1).flags(ItemFlag.HIDE_ENCHANTS);
       } else {
         itemBuilder.removeEnchants().removeFlags();
       }
