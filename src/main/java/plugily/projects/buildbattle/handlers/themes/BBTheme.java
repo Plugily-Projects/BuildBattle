@@ -20,28 +20,18 @@
 
 package plugily.projects.buildbattle.handlers.themes;
 
-import java.util.ArrayList;
+public class BBTheme {
 
-public class GuessTheme {
-
-  private final ArrayList<String> themes;
+  private final String theme;
   private final Difficulty difficulty;
 
-  public GuessTheme(ArrayList<String> themes, Difficulty difficulty) {
-    this.themes = themes;
+  public BBTheme(String theme, Difficulty difficulty) {
+    this.theme = theme == null ? "" : theme;
     this.difficulty = difficulty;
   }
 
-  public ArrayList<String> getThemes() {
-    return themes;
-  }
-
-  public String getThemesAsString() {
-    return String.join(", ", themes);
-  }
-
-  public String getDefaultTheme() {
-    return themes.get(0);
+  public String getTheme() {
+    return theme;
   }
 
   public Difficulty getDifficulty() {

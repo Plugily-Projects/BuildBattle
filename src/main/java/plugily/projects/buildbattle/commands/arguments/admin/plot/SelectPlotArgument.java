@@ -41,7 +41,7 @@ public class SelectPlotArgument {
         Player player = (Player) sender;
         BaseArena arena = (BaseArena) registry.getPlugin().getArenaRegistry().getArena(player);
 
-        if(arena != null && (arena.getArenaState() == IArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == IArenaState.STARTING || arena.getArenaState() == IArenaState.FULL_GAME))
+        if(arena != null && (arena.getArenaState() == IArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == IArenaState.STARTING))
           arena.getPlugin().getPlotMenuHandler().createMenu(player, arena);
       }
     });

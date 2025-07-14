@@ -28,7 +28,7 @@ import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.BuildArena;
 import plugily.projects.buildbattle.arena.GuessArena;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
-import plugily.projects.buildbattle.handlers.themes.GuessTheme;
+import plugily.projects.buildbattle.handlers.themes.BBTheme;
 import plugily.projects.minigamesbox.api.arena.IArenaState;
 import plugily.projects.minigamesbox.api.arena.IPluginArena;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
@@ -92,8 +92,8 @@ public class PlaceholderInitializer {
         }
         if(theme.equalsIgnoreCase(new MessageBuilder("SCOREBOARD_THEME_UNKNOWN").asKey().build())) {
           if(((GuessArena) pluginArena).getCurrentBuilders().contains(player) || ((GuessArena) pluginArena).getWhoGuessed().contains(player)) {
-            GuessTheme guessTheme = ((GuessArena) pluginArena).getCurrentBBTheme();
-            theme = guessTheme == null ? new MessageBuilder("SCOREBOARD_THEME_UNKNOWN").asKey().build() : guessTheme.getDefaultTheme();
+            BBTheme guessTheme = ((GuessArena) pluginArena).getCurrentBBTheme();
+            theme = guessTheme == null ? new MessageBuilder("SCOREBOARD_THEME_UNKNOWN").asKey().build() : guessTheme.getTheme();
           }
         }
         return theme;
@@ -115,7 +115,7 @@ public class PlaceholderInitializer {
       private String getTheme(IPluginArena arena) {
         BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena instanceof GuessArena) {
-          GuessTheme theme = ((GuessArena) pluginArena).getCurrentBBTheme();
+          BBTheme theme = ((GuessArena) pluginArena).getCurrentBBTheme();
           if(theme == null) {
             return null;
           }
@@ -140,7 +140,7 @@ public class PlaceholderInitializer {
       private String getTheme(IPluginArena arena) {
         BaseArena pluginArena = arenaRegistry.getArena(arena.getId());
         if(pluginArena instanceof GuessArena) {
-          GuessTheme theme = ((GuessArena) pluginArena).getCurrentBBTheme();
+          BBTheme theme = ((GuessArena) pluginArena).getCurrentBBTheme();
           if(theme == null) {
             return "0";
           }

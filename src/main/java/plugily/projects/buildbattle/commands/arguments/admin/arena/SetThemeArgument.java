@@ -31,7 +31,6 @@ import plugily.projects.minigamesbox.classic.commands.arguments.data.LabelData;
 import plugily.projects.minigamesbox.classic.commands.arguments.data.LabeledCommandArgument;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 
-import java.io.Console;
 import java.util.StringJoiner;
 
 /**
@@ -42,29 +41,12 @@ import java.util.StringJoiner;
 public class SetThemeArgument {
 
   public SetThemeArgument(ArgumentsRegistry registry) {
-    registry.mapArgument("buildbattleadmin", new LabeledCommandArgument("settheme", "buildbattle.admin.settheme", CommandArgument.ExecutorType.BOTH,
-        new LabelData("/bba settheme &6<theme>", "/bba settheme <theme> || Console /bba settheme <arena> <theme>",
+    registry.mapArgument("buildbattleadmin", new LabeledCommandArgument("settheme", "buildbattle.admin.settheme", CommandArgument.ExecutorType.PLAYER,
+        new LabelData("/bba settheme &6<theme>", "/bba settheme",
             "&7Set new arena theme\n&6Permission: &7buildbattle.admin.settheme\n&6You can set arena theme only when it started\n&6and only for 20 seconds after start!")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        if(args.length == 1) {
-          //todo translatable
-          new MessageBuilder("&cPlease type arena theme!").prefix().send(sender);
-          return;
-        }
-        BaseArena arena;
-        int themeArgStart = 1;
-        if(!(sender instanceof Player)) {
-          if(args.length == 2) {
-            //todo translatable
-            new MessageBuilder("&cPlease type arena name!").prefix().send(sender);
-            return;
-          }
-          arena = (BaseArena) registry.getPlugin().getArenaRegistry().getArena(args[1]);
-          themeArgStart = 2;
-        } else {
-          arena = (BaseArena) registry.getPlugin().getArenaRegistry().getArena((Player) sender);
-        }
+        BaseArena arena = (BaseArena) registry.getPlugin().getArenaRegistry().getArena((Player) sender);
         if(arena == null) {
           new MessageBuilder("COMMANDS_NOT_PLAYING").asKey().send(sender);
           return;
@@ -74,9 +56,13 @@ public class SetThemeArgument {
           new MessageBuilder("&cCan't set theme on this arena type!").prefix().send(sender);
           return;
         }
+        if(args.length == 1) {
+          //todo translatable
+          new MessageBuilder("&cPlease type arena theme!").prefix().send(sender);
+          return;
+        }
         StringJoiner themeName = new StringJoiner(" ");
-
-        for(int i = themeArgStart; i < args.length; i++)
+        for(int i = 1; i < args.length; i++)
           themeName.add(args[i]);
         if(arena.getArenaInGameState() == BaseArena.ArenaInGameState.BUILD_TIME || arena.getArenaState() == IArenaState.STARTING) {
           if(arena.getPlugin().getThemeManager().isThemeBlacklisted(themeName.toString())) {

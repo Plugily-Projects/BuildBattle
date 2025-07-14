@@ -293,7 +293,7 @@ In-Game:
         Own: "&aYou became #%number%"
     Admin:
       Set-Starting-In-To-0: "%plugin_prefix% An admin set waiting time to 0. The game starts now!"
-      Changed-Theme: "%plugin_prefix% Admin has changed theme to %value%"
+      Changed-Theme: "%plugin_prefix% Admin has changed theme to %THEME%"
     Plot:
       Nobody: "%color_chat_issue%Nobody"
       Time-Left:
@@ -377,8 +377,6 @@ Menu:
         Item:
           Name: "&bGet player heads"
           Lore: "Click to get heads"
-        Database:
-          Lore: "Get Head %value%"
       Floor:
         Item:
           Name: "&bChange floor material"
@@ -573,5 +571,5 @@ Leaderboard:
 # Really, don't edit ;p
 # You edited it, huh? Next time hurt yourself!
 Do-Not-Edit:
-  File-Version: 2
+  File-Version: 1
   Core-Version: 2

@@ -111,7 +111,6 @@ public class MessageInitializer {
     messageManager.registerMessage("MENU_OPTION_CONTENT_HEADS_INVENTORY", new Message("Menu.Option.Content.Heads.Inventory", ""));
     messageManager.registerMessage("MENU_OPTION_CONTENT_HEADS_ITEM_NAME", new Message("Menu.Option.Content.Heads.Item.Name", ""));
     messageManager.registerMessage("MENU_OPTION_CONTENT_HEADS_ITEM_LORE", new Message("Menu.Option.Content.Heads.Item.Lore", ""));
-    messageManager.registerMessage("MENU_OPTION_CONTENT_HEADS_DATABASE_LORE", new Message("Menu.Option.Content.Heads.Database.Lore", "Get Head %value%"));
     messageManager.registerMessage("MENU_OPTION_CONTENT_FLOOR_ITEM_NAME", new Message("Menu.Option.Content.Floor.Item.Name", ""));
     messageManager.registerMessage("MENU_OPTION_CONTENT_FLOOR_ITEM_LORE", new Message("Menu.Option.Content.Floor.Item.Lore", ""));
     messageManager.registerMessage("MENU_OPTION_CONTENT_FLOOR_CHANGED", new Message("Menu.Option.Content.Floor.Changed", ""));
