@@ -78,7 +78,7 @@ public class ForcePlayArgument {
 
         for(int i = themeArgStart; i < args.length; i++)
           themeName.add(args[i]);
-        if(arena.getArenaInGameState() == BaseArena.ArenaInGameState.BUILD_TIME || arena.getArenaState() == IArenaState.STARTING || arena.getArenaState() == IArenaState.FULL_GAME || arena.getArenaInGameState() == BaseArena.ArenaInGameState.THEME_VOTING) {
+        if(arena.getArenaInGameState() == BaseArena.ArenaInGameState.BUILD_TIME || arena.getArenaState() == IArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == IArenaState.STARTING || arena.getArenaState() == IArenaState.FULL_GAME || arena.getArenaInGameState() == BaseArena.ArenaInGameState.THEME_VOTING) {
           if(arena.getPlugin().getThemeManager().isThemeBlacklisted(themeName.toString())) {
             new MessageBuilder("COMMANDS_THEME_BLACKLISTED").asKey().prefix().send(sender);
             return;
