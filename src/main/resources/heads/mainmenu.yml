@@ -1,13 +1,13 @@
-animals:
-  displayname: '&6Animal heads'
+simple-animals:
+  displayname: '&6Simple Animal heads'
   texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjIxNjY4ZWY3Y2I3OWRkOWMyMmNlM2QxZjNmNGNiNmUyNTU5ODkzYjZkZjRhNDY5NTE0ZTY2N2MxNmFhNCJ9fX0="
   lore:
     - "Click to open"
-    - "animal heads menu"
+    - "simple animal heads menu"
   enabled: true
   config: animalheads
   permission: buildbattle.heads
-  menuname: "Animal heads"
+  menuname: "Simple Animal heads"
 miniblocks:
   displayname: '&6Mini block heads'
   texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzI4YTE4MTU2ODlkNzE5NGNmN2RiMDYxYjU5ZjYzMTA2MjY0YjUxMzg3OTc2YTdmYjc0YWI3OWI1NjQxIn19fQ=="
@@ -28,3 +28,138 @@ info:
   config: info
   permission: buildbattle.heads
   menuname: "Info blocks"
+
+# Use HeadDatabase in addition to the configured ones
+# You can remove categories from the catalog which shouldn't be loaded!
+# Catalog:
+#      - alphabet
+#      - animals
+#      - blocks
+#      - decoration
+#      - food-drinks
+#      - humanoid
+#      - humans
+#      - miscellaneous
+#      - monsters
+#      - plants
+database-alphabet:
+  displayname: '&6%value% heads'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzI1MDhlMmNhNjUwMGJjZTMwNTM5YzM4ODg0MmE1NjcyYjdiYzI5YTY4NzZkZDZhNTAyNTY3MmUyNTJkMjVkYSJ9fX0="
+  lore:
+    - "Click to open"
+    - "%value% menu"
+  enabled: true
+  database: true
+  config: alphabet
+  permission: buildbattle.heads
+  menuname: "%value% blocks"
+database-animals:
+  displayname: '&6%value% heads'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTQyYjllYzM0OTYwNjRiMDg1ZjdkMzBjZTkwYTBjOGY3NjM2YzhlZjUzMDNiMjBjMjVjYTEwYTk5N2JkNzQzMyJ9fX0="
+  lore:
+    - "Click to open"
+    - "%value% menu"
+  enabled: true
+  database: true
+  config: animals
+  permission: buildbattle.heads
+  menuname: "%value% blocks"
+database-blocks:
+  displayname: '&6%value% heads'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzViNDQ4ZmQ5NWM4NzRjOTVmZTc0ODQ0NDFhNDM5NGQ2NDZiNzJiYzgyYTUyNzQ4M2ZkYzcwY2E3OTg2ZmNhNSJ9fX0="
+  lore:
+    - "Click to open"
+    - "%value% menu"
+  enabled: true
+  database: true
+  config: blocks
+  permission: buildbattle.heads
+  menuname: "%value% blocks"
+database-decoration:
+  displayname: '&6%value% heads'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjNhZjk0YTUwZmFmNTBhZTAyMzZjNzExZWMxMzZiMjgwOGFjODJiYjE3MWQ0MmIzOGQxNjc2MGQyMjBmMjU4MiJ9fX0="
+  lore:
+    - "Click to open"
+    - "%value% menu"
+  enabled: true
+  database: true
+  config: decoration
+  permission: buildbattle.heads
+  menuname: "%value% blocks"
+database-food-drinks:
+  displayname: '&6%value% heads'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDUxMzdmYzBjZDUxMjAyNjcyMzgyYmZhZTAxZmViM2UxZTJiNzMxMDdlOThkMmM2YzhmNzE5ZjFkYTUzMGU2OCJ9fX0="
+  lore:
+    - "Click to open"
+    - "%value% menu"
+  enabled: true
+  database: true
+  config: food-drinks
+  permission: buildbattle.heads
+  menuname: "%value% blocks"
+database-humanoid:
+  displayname: '&6%value% heads'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTc5Yzc3ZjEyYzg2NzM5OGE0MTgxMDgxZmI1YmY3MGM1ZmYzMjcxNWM2ODk3NTBjNmU3MTdkMDY5ZTgxMzFhOSJ9fX0="
+  lore:
+    - "Click to open"
+    - "%value% menu"
+  enabled: true
+  database: true
+  config: humanoid
+  permission: buildbattle.heads
+  menuname: "%value% blocks"
+database-humans:
+  displayname: '&6%value% heads'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDQ5MmRmZTNjZThjYjYxYjkwODYwZWZmOTM4Y2I4M2UxOWMxNmU5Y2IyZDliZjJhZDc4OTZjOTBmNWIyZTFmMCJ9fX0="
+  lore:
+    - "Click to open"
+    - "%value% menu"
+  enabled: true
+  database: true
+  config: humans
+  permission: buildbattle.heads
+  menuname: "%value% blocks"
+database-miscellaneous:
+  displayname: '&6%value% heads'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDQ3OTE3MTkzZTlmYjdjYjk2OGZiYTAzYTJlMjg0YTA0NjEyMWIyZGMwMTU0MWNhY2RiYTUzYTRmOWJiZjcwOCJ9fX0="
+  lore:
+    - "Click to open"
+    - "%value% menu"
+  enabled: true
+  database: true
+  config: miscellaneous
+  permission: buildbattle.heads
+  menuname: "%value% blocks"
+database-monsters:
+  displayname: '&6%value% heads'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTgyYjQxZjY3YjMzNzE0NWM1ZWI4M2I5ZTAwMTU1NzQ4MDE2MGE1NWU5MWVmODYzZWIwYmYwNTU3Mzg0MmNlMSJ9fX0="
+  lore:
+    - "Click to open"
+    - "%value% menu"
+  enabled: true
+  database: true
+  config: monsters
+  permission: buildbattle.heads
+  menuname: "%value% blocks"
+database-plants:
+  displayname: '&6%value% heads'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDA4MzY2YjgxMWM0MzU5YWVhNjY4NjMwMGNmZDQ1MGQ5ZWFhNDYxNGMzYWYwOGExN2YxNTEzZjVkMmY0OGM0YSJ9fX0="
+  lore:
+    - "Click to open"
+    - "%value% menu"
+  enabled: true
+  database: true
+  config: plants
+  permission: buildbattle.heads
+  menuname: "%value% blocks"
+database-search:
+  displayname: '&6%value% heads'
+  texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjViOTVkYTEyODE2NDJkYWE1ZDAyMmFkYmQzZTdjYjY5ZGMwOTQyYzgxY2Q2M2JlOWMzODU3ZDIyMmUxYzhkOSJ9fX0="
+  lore:
+    - "Click to search"
+    - "for a head (english only!)"
+  enabled: true
+  database: true
+  config: search
+  permission: buildbattle.heads
+  menuname: "%value% blocks"

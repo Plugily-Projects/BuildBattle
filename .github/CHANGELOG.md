@@ -10,7 +10,38 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
-## 5.0.15 Release (03.05.2025)
+### 5.1.0 Release (10.07.2025)
+* Added Heads from HeadDatabase (selected on each server start 200 per category)
+* Added Heads Search function
+* Added paginated Heads menu to support more than one site of heads
+* Added onVoteInventoryInteractEvent to block movement of items while plot voting stage
+* Added a lot of new default themes at themes.yml (+140)
+* Added possibility to add same meaning words for gtb themes by using ", " in themes.yml
+* Added /bba settheme <arena> <theme> for Console use
+* Added /bba forceplay <arena> <theme> which moves all online players into arena and sets the theme
+* Fixed Floor NPC spawns on any actions
+* Fixed NPE if OptionsMenu Particles are opened as none builder whileas in gtb
+* Fixed on first time setup without restart the NPE getArenaInGameState is null
+* Fixed ItemFrames and Paintings were not able to be removed by player on plot
+* Fixed plot distribution on plot selection on a solo game could cause to set multiple players on the same plot
+* Fixed resetPlayerWeather did not change the weather
+* Fixed none builder Players of GTB didn't got the builder set weather and time
+* Fixed Time.Changed message did not translate placeholder into language.yml content
+* Fixed on Plotreset time did not update to world time
+* Fixed Player Outside Plot interaction with blocks were possible
+* Fixed NPE AddGoBackButton
+* Fixed Water Flow on Ground
+* Fixed Vehicles such as Boats could drive outside plot
+* Fixed Flower Pots couldn't be destroyed on plot
+* Fixed placeholder on message Changed-Theme
+* Fixed sendBuildLeftTimeMessage is not handled by MessageBuilder correctly
+* Changed Allow Plot selection also if ArenaState is FULL_GAME
+* Changed (for API usage) renamed BBTheme to GuessTheme
+* Changed Hide guessing players from builder in gtb mode
+* Changed LanguageMigrator on plugin level to update file versions
+* Updated Minigamesbox to 1.4.2
+
+### 5.0.15 Release (03.05.2025)
 * Allowing by default 20 places placeholder for summary list
 * Check if OPTIONS_MENU item is still in builders inventory and readd it if necessary
 * Fixed IllegalArgumentException on PlotSelector, also switched to PaginatedInventory to support all Plots

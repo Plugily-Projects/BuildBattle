@@ -23,6 +23,7 @@ package plugily.projects.buildbattle.handlers.setup;
 import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.GuessArena;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.setup.categories.PluginSpecificCategory;
 import plugily.projects.minigamesbox.classic.handlers.setup.items.category.CountItem;
 import plugily.projects.minigamesbox.classic.handlers.setup.items.category.MultiLocationItem;
@@ -52,8 +53,20 @@ public class SpecificCategory extends PluginSpecificCategory {
     getItemList().add(gamePlot);
 
     MultiLocationItem floorNPC = new MultiLocationItem(getSetupInventory(), new ItemBuilder(XMaterial.VILLAGER_SPAWN_EGG.parseMaterial()), "Floor Changer NPC", "Add floor changer NPC to your plot.\nRequires Citizens plugin! Runs addnpc command", "floornpc", 0, event -> {
-      ((Player) event.getWhoClicked()).performCommand("bba addnpc");
+      switch (event.getClick()) {
+        case LEFT:
+          ((Player) event.getWhoClicked()).performCommand("bba addnpc");
+      }
     }, interactEvent -> {
+      switch (interactEvent.getAction()) {
+        case PHYSICAL:
+        case LEFT_CLICK_AIR:
+          interactEvent.getPlayer().performCommand("bba addnpc");
+          (new MessageBuilder("&cPlease keep in mind to use blocks instead of player location for precise coordinates!")).prefix().send(interactEvent.getPlayer());
+          break;
+        case LEFT_CLICK_BLOCK:
+          interactEvent.getPlayer().performCommand("bba addnpc");
+      }
     });
     gui.setItem((getInventoryLine() * 9) + 2, floorNPC);
     getItemList().add(floorNPC);

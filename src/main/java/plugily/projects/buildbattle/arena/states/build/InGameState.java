@@ -259,7 +259,7 @@ public class InGameState extends PluginInGameState {
 
     while(plot == null && !pluginArena.getQueue().isEmpty()) {
       // should not happen anymore... to be removed
-      System.out.print("A PLAYER HAS NO PLOT!");
+      getPlugin().getDebugger().debug("A PLAYER HAS NO PLOT!");
       plot = pluginArena.getQueue().poll();
     }
 

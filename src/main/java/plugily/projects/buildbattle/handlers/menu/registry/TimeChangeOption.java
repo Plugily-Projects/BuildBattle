@@ -87,7 +87,7 @@ public class TimeChangeOption {
 
           for(Player p : plot.getMembers()) {
             p.setPlayerTime(Plot.Time.format(time, p.getWorld().getTime()), false);
-            new MessageBuilder("MENU_OPTION_CONTENT_TIME_CHANGED").asKey().player(p).value(time.name()).sendPlayer();
+            new MessageBuilder("MENU_OPTION_CONTENT_TIME_CHANGED").asKey().player(p).value(new MessageBuilder(messageKey).asKey().build()).sendPlayer();
           }
         }));
       }
