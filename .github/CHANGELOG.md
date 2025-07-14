@@ -18,6 +18,7 @@ That's all, matcher will stop when detects next line started with `###` match
 * Added a lot of new default themes at themes.yml (+140)
 * Added possibility to add same meaning words for gtb themes by using ", " in themes.yml
 * Added /bba settheme <arena> <theme> for Console use
+* Added /bba forceplay <arena> <theme> which moves all online players into arena and sets the theme
 * Fixed Floor NPC spawns on any actions
 * Fixed NPE if OptionsMenu Particles are opened as none builder whileas in gtb
 * Fixed on first time setup without restart the NPE getArenaInGameState is null
