@@ -28,7 +28,7 @@ import plugily.projects.buildbattle.api.event.guess.PlayerThemeGuessEvent;
 import plugily.projects.buildbattle.arena.managers.plots.Plot;
 import plugily.projects.buildbattle.arena.states.guess.InGameState;
 import plugily.projects.buildbattle.arena.states.guess.StartingState;
-import plugily.projects.buildbattle.handlers.themes.BBTheme;
+import plugily.projects.buildbattle.handlers.themes.GuessTheme;
 import plugily.projects.minigamesbox.api.arena.IArenaState;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
@@ -46,7 +46,7 @@ public class GuessArena extends BaseArena {
 
   private final List<Player> whoGuessed = new ArrayList<>();
   private int round = 1;
-  private BBTheme currentTheme = null;
+  private GuessTheme currentTheme = null;
 
   private Plot buildPlot = null;
   private List<Integer> removedCharsAt = new ArrayList<>();
@@ -89,6 +89,9 @@ public class GuessArena extends BaseArena {
     for(Plot plot : getPlotManager().getPlots()) {
       if(players.isEmpty()) {
         break;
+      }
+      if(!plot.getMembers().isEmpty()) {
+        continue;
       }
       if(!getPlugin().getUserManager().getUser(players.get(0)).isSpectator()) {
         plot.addMember(players.remove(0), this, true);
@@ -204,7 +207,7 @@ public class GuessArena extends BaseArena {
     Bukkit.getScheduler().runTask(getPlugin(), () -> Bukkit.getPluginManager().callEvent(new PlayerThemeGuessEvent(this, currentTheme)));
   }
 
-  public BBTheme getCurrentBBTheme() {
+  public GuessTheme getCurrentBBTheme() {
     return currentTheme;
   }
 
@@ -236,11 +239,11 @@ public class GuessArena extends BaseArena {
     return round;
   }
 
-  public void setCurrentTheme(BBTheme currentTheme) {
+  public void setCurrentTheme(GuessTheme currentTheme) {
     if(currentTheme == null) {
       getPlugin().getDebugger().debug("Arena {0} set Theme null", getId());
     } else {
-      getPlugin().getDebugger().debug("Arena {0} set Theme to {1} ({2})", getId(), currentTheme.getTheme(), currentTheme.getDifficulty());
+      getPlugin().getDebugger().debug("Arena {0} set Theme to {1} ({2})", getId(), currentTheme.getThemesAsString(), currentTheme.getDifficulty());
     }
     this.currentTheme = currentTheme;
   }

@@ -20,12 +20,14 @@
 
 package plugily.projects.buildbattle.commands.arguments;
 
+import org.checkerframework.checker.units.qual.Force;
 import plugily.projects.buildbattle.Main;
 import plugily.projects.buildbattle.arena.BaseArena;
 import plugily.projects.buildbattle.arena.BuildArena;
 import plugily.projects.buildbattle.arena.GuessArena;
 import plugily.projects.buildbattle.commands.arguments.admin.ThemeArgument;
 import plugily.projects.buildbattle.commands.arguments.admin.arena.AddNpcArgument;
+import plugily.projects.buildbattle.commands.arguments.admin.arena.ForcePlayArgument;
 import plugily.projects.buildbattle.commands.arguments.admin.arena.SetThemeArgument;
 import plugily.projects.buildbattle.commands.arguments.admin.plot.AddPlotArgument;
 import plugily.projects.buildbattle.commands.arguments.admin.plot.RemovePlotArgument;
@@ -48,6 +50,7 @@ public class ArgumentsRegistry extends PluginArgumentsRegistry {
   public ArgumentsRegistry(Main plugin) {
     super(plugin);
     new AddNpcArgument(this);
+    new ForcePlayArgument(this);
     new SetThemeArgument(this);
     new AddPlotArgument(this);
     new RemovePlotArgument(this);

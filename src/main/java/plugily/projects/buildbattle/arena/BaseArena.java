@@ -34,6 +34,7 @@ import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
 import plugily.projects.minigamesbox.classic.handlers.reward.RewardType;
 import plugily.projects.minigamesbox.classic.handlers.reward.RewardsFactory;
+import plugily.projects.minigamesbox.classic.utils.actionbar.ActionBar;
 import plugily.projects.minigamesbox.classic.utils.items.HandlerItem;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 
@@ -57,7 +58,7 @@ public class BaseArena extends PluginArena {
   protected ParticleRefreshScheduler particleRefreshScheduler;
   private ArenaType arenaType;
 
-  private ArenaInGameState arenaInGameState;
+  private ArenaInGameState arenaInGameState = ArenaInGameState.NONE;
 
   private Map<Player, Plot> plotList = new HashMap<>();
 
@@ -159,11 +160,11 @@ public class BaseArena extends PluginArena {
 
   public void sendBuildLeftTimeMessage() {
     new TitleBuilder("IN_GAME_MESSAGES_PLOT_TIME_LEFT_TITLE").asKey().arena(this).sendArena();
-    String message = new MessageBuilder("IN_GAME_MESSAGES_PLOT_TIME_LEFT_CHAT").asKey().arena(this).build();
-    for(Player p : getPlayers()) {
-      VersionUtils.sendActionBar(p, message);
-      p.sendMessage(message);
-    }
+    MessageBuilder message = new MessageBuilder("IN_GAME_MESSAGES_PLOT_TIME_LEFT_CHAT").asKey().arena(this);
+    message.sendArena();
+    getPlayers().forEach(player ->
+        getPlugin().getActionBarManager().addActionBar(player, new ActionBar(message,
+            ActionBar.ActionBarType.DISPLAY)));
   }
 
   public final void checkPlayerOutSidePlot() {
@@ -179,7 +180,8 @@ public class BaseArena extends PluginArena {
 
         if(this instanceof BuildArena) {
           buildPlot = getPlotFromPlayer(player);
-        } else if(this instanceof GuessArena && (buildPlot = getPlotFromPlayer(player)) != null) {
+        } else if(this instanceof GuessArena) {
+          buildPlot = ((GuessArena) this).getBuildPlot();
           player.setPlayerWeather(buildPlot.getWeatherType());
           player.setPlayerTime(Plot.Time.format(buildPlot.getTime(), player.getWorld().getTime()), false);
         }

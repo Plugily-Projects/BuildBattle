@@ -160,7 +160,7 @@ public class ThemeManager {
     }
 
     @Nullable
-    public static GameThemes getByDifficulty(BBTheme.Difficulty difficulty) {
+    public static GameThemes getByDifficulty(GuessTheme.Difficulty difficulty) {
       switch(difficulty) {
       case EASY:
         return GUESS_THE_BUILD_EASY;

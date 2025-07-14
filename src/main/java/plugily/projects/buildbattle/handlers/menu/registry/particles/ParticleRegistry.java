@@ -173,6 +173,9 @@ public class ParticleRegistry {
           return;
         }
         Plot plot = arena.getPlotManager().getPlot(player);
+        if(plot == null) {
+          return;
+        }
         if(plot.getParticles().size() >= plugin.getConfig().getInt("Particle.Max-Amount", 25)) {
           new MessageBuilder("IN_GAME_MESSAGES_PLOT_LIMIT_PARTICLES").asKey().player(player).sendPlayer();
           return;

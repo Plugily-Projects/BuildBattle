@@ -26,7 +26,7 @@
 
     <groupId>plugily.projects</groupId>
     <artifactId>buildbattle</artifactId>
-    <version>5.0.15</version>
+    <version>5.0.15-SNAPSHOT18</version>
     <name>BuildBattle</name>
 
     <properties>
@@ -62,6 +62,14 @@
     </repositories>
 
     <dependencies>
+        <!--
+        Needed for HeadDatabase Conversion of JSON to YML
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.9</version>
+        </dependency>
+        -->
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
@@ -78,7 +86,7 @@
         <dependency>
             <groupId>plugily.projects</groupId>
             <artifactId>MiniGamesBox-Classic</artifactId>
-            <version>1.4.1</version>
+            <version>1.4.3</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>

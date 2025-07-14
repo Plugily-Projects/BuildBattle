@@ -20,6 +20,7 @@
 
 package plugily.projects.buildbattle.commands.arguments.admin.arena;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import plugily.projects.buildbattle.arena.BaseArena;
@@ -31,7 +32,6 @@ import plugily.projects.minigamesbox.classic.commands.arguments.data.LabelData;
 import plugily.projects.minigamesbox.classic.commands.arguments.data.LabeledCommandArgument;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 
-import java.io.Console;
 import java.util.StringJoiner;
 
 /**
@@ -39,12 +39,12 @@ import java.util.StringJoiner;
  * <p>
  * Created at 11.01.2019
  */
-public class SetThemeArgument {
+public class ForcePlayArgument {
 
-  public SetThemeArgument(ArgumentsRegistry registry) {
-    registry.mapArgument("buildbattleadmin", new LabeledCommandArgument("settheme", "buildbattle.admin.settheme", CommandArgument.ExecutorType.BOTH,
-        new LabelData("/bba settheme &6<theme>", "/bba settheme <theme> || Console /bba settheme <arena> <theme>",
-            "&7Set new arena theme\n&6Permission: &7buildbattle.admin.settheme\n&6You can set arena theme only when it started\n&6and only for 20 seconds after start!")) {
+  public ForcePlayArgument(ArgumentsRegistry registry) {
+    registry.mapArgument("buildbattleadmin", new LabeledCommandArgument("forceplay", "buildbattle.admin.forceplay", CommandArgument.ExecutorType.BOTH,
+        new LabelData("/bba forceplay <arena> <theme>", "/bba forceplay <arena> <theme>",
+            "&7Start a arena by command \n&6Permission: &7buildbattle.admin.forceplay\n&cNOT FOR PRODUCTION!")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
         if(args.length == 1) {
@@ -78,11 +78,15 @@ public class SetThemeArgument {
 
         for(int i = themeArgStart; i < args.length; i++)
           themeName.add(args[i]);
-        if(arena.getArenaInGameState() == BaseArena.ArenaInGameState.BUILD_TIME || arena.getArenaState() == IArenaState.STARTING) {
+        if(arena.getArenaInGameState() == BaseArena.ArenaInGameState.BUILD_TIME || arena.getArenaState() == IArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == IArenaState.STARTING || arena.getArenaState() == IArenaState.FULL_GAME || arena.getArenaInGameState() == BaseArena.ArenaInGameState.THEME_VOTING) {
           if(arena.getPlugin().getThemeManager().isThemeBlacklisted(themeName.toString())) {
             new MessageBuilder("COMMANDS_THEME_BLACKLISTED").asKey().prefix().send(sender);
             return;
           }
+          Bukkit.getOnlinePlayers().forEach(player -> {
+            registry.getPlugin().getArenaManager().joinAttempt(player, arena);
+          });
+          arena.setForceStart(true);
           arena.setTheme(themeName.toString());
           new MessageBuilder("IN_GAME_MESSAGES_ADMIN_CHANGED_THEME").asKey().prefix().value(themeName.toString()).arena(arena).sendArena();
         } else {
