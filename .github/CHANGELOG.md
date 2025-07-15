@@ -10,6 +10,10 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+### 5.1.1 Release
+* Fixed liquid flow outside plots and different worlds
+* Fixed forceplay console command without theme
+
 ### 5.1.0 Release (10.07.2025)
 * Added Heads from HeadDatabase (selected on each server start 200 per category)
 * Added Heads Search function
