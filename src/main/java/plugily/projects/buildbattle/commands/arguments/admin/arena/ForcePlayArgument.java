@@ -48,29 +48,33 @@ public class ForcePlayArgument {
       @Override
       public void execute(CommandSender sender, String[] args) {
         if(args.length == 1) {
-          //todo translatable
           new MessageBuilder("&cPlease type arena theme!").prefix().send(sender);
           return;
         }
         BaseArena arena;
         int themeArgStart = 1;
         if(!(sender instanceof Player)) {
-          if(args.length == 2) {
-            //todo translatable
-            new MessageBuilder("&cPlease type arena name!").prefix().send(sender);
+          arena = (BaseArena) registry.getPlugin().getArenaRegistry().getArena(args[1]);
+          if(args.length == 2 && arena != null) {
+            BaseArena finalArena = arena;
+            Bukkit.getOnlinePlayers().forEach(player -> {
+              registry.getPlugin().getArenaManager().joinAttempt(player, finalArena);
+            });
+            arena.setForceStart(true);
             return;
           }
-          arena = (BaseArena) registry.getPlugin().getArenaRegistry().getArena(args[1]);
           themeArgStart = 2;
         } else {
           arena = (BaseArena) registry.getPlugin().getArenaRegistry().getArena((Player) sender);
+          if(arena == null) {
+            arena = (BaseArena) registry.getPlugin().getArenaRegistry().getArena(args[1]);
+          }
         }
         if(arena == null) {
           new MessageBuilder("COMMANDS_NOT_PLAYING").asKey().send(sender);
           return;
         }
         if(!(arena instanceof BuildArena)) {
-          //todo translatable
           new MessageBuilder("&cCan't set theme on this arena type!").prefix().send(sender);
           return;
         }
@@ -83,8 +87,9 @@ public class ForcePlayArgument {
             new MessageBuilder("COMMANDS_THEME_BLACKLISTED").asKey().prefix().send(sender);
             return;
           }
+          BaseArena finalArena1 = arena;
           Bukkit.getOnlinePlayers().forEach(player -> {
-            registry.getPlugin().getArenaManager().joinAttempt(player, arena);
+            registry.getPlugin().getArenaManager().joinAttempt(player, finalArena1);
           });
           arena.setForceStart(true);
           arena.setTheme(themeName.toString());

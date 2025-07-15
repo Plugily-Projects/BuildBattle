@@ -596,11 +596,14 @@ public class ArenaEvents extends PluginArenaEvents {
         continue;
       }
       for(Plot buildPlot : ((BaseArena) arena).getPlotManager().getPlots()) {
+        if(buildPlot.getTeleportLocation().getWorld() != toBlock.getWorld()) {
+          continue;
+        }
         if(buildPlot.getCuboid() != null) {
           if(!buildPlot.getCuboid().isIn(toBlock) && buildPlot.getCuboid().isIn(blockLoc)) {
             event.setCancelled(true);
           }
-          if(!buildPlot.getCuboid().isIn(toBlock)) {
+          if(!buildPlot.getCuboid().isInWithMarge(toBlock, -1) && buildPlot.getCuboid().isIn(toBlock)) {
             event.setCancelled(true);
           }
         }
