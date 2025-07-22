@@ -55,6 +55,7 @@ import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPla
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerPickupArrow;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XEntityType;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.inventory.XInventoryView;
 
 /**
  * @author Plajer
@@ -663,8 +664,8 @@ public class ArenaEvents extends PluginArenaEvents {
 
       if(baseArena != null && baseArena.getArenaState() != IArenaState.IN_GAME) {
         if(event.getClickedInventory() == humanEntity.getInventory()) {
-          if(event.getView().getType() == InventoryType.CRAFTING
-              || event.getView().getType() == InventoryType.PLAYER) {
+          if(XInventoryView.of(event.getView()).getType() == InventoryType.CRAFTING
+              || XInventoryView.of(event.getView()).getType() == InventoryType.PLAYER) {
             event.setResult(Event.Result.DENY);
           }
         }
