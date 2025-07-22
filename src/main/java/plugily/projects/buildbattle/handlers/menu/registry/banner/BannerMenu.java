@@ -34,6 +34,7 @@ import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
 import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XPatternType;
 import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
 import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
 
@@ -104,17 +105,17 @@ public class BannerMenu {
   private void prepareLayerStageGui() {
     NormalFastInv gui = new NormalFastInv(54, new MessageBuilder("MENU_OPTION_CONTENT_BANNER_INVENTORY_LAYER").asKey().build());
 
-    for(PatternType pattern : PatternType.values()) {
+    for(XPatternType pattern : XPatternType.getValues()) {
       ItemStack item = banner.buildBanner();
       BannerMeta meta = (BannerMeta) item.getItemMeta();
       DyeColor color = banner.getColor() == DyeColor.BLACK ? DyeColor.WHITE : DyeColor.BLACK;
 
-      meta.addPattern(new Pattern(color, pattern));
+      meta.addPattern(new Pattern(color, pattern.get()));
       item.setItemMeta(meta);
 
       gui.addItem(new SimpleClickableItem(item, event -> {
         event.setCancelled(true);
-        banner.addPattern(new BannerPattern(color, pattern));
+        banner.addPattern(new BannerPattern(color, pattern.get()));
         new BannerMenu(player, banner).openInventory(PatternStage.LAYER_COLOR);
       }));
     }
