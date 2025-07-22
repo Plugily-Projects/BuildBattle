@@ -55,6 +55,7 @@ import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPla
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerPickupArrow;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XEntityType;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.inventory.XInventoryView;
 
 /**
  * @author Plajer
@@ -296,8 +297,6 @@ public class ArenaEvents extends PluginArenaEvents {
     }
   }
 
-  //TODO recognise plot by location should be added, as current check will go through all plots...
-  //Alternative use filter!!
   @EventHandler
   public void onVehicleMove(VehicleMoveEvent event) {
     Vehicle vehicle = event.getVehicle();
@@ -306,13 +305,14 @@ public class ArenaEvents extends PluginArenaEvents {
         continue;
       }
       for(Plot buildPlot : ((BaseArena) arena).getPlotManager().getPlots()) {
-        if(buildPlot.getCuboid() != null && !buildPlot.getCuboid().isIn(event.getTo())) {
+        if(buildPlot.getCuboid() != null && buildPlot.getCuboid().isIn(event.getFrom()) && !buildPlot.getCuboid().isInWithMarge(event.getTo(), 1)) {
           vehicle.setVelocity(vehicle.getVelocity().zero());
           if(vehicle.getType() == XEntityType.MINECART.get()) {
             ((Minecart) vehicle).setMaxSpeed(0);
           } else {
             vehicle.remove();
           }
+          return;
         }
       }
     }
@@ -329,6 +329,7 @@ public class ArenaEvents extends PluginArenaEvents {
       for(Plot buildPlot : ((BaseArena) arena).getPlotManager().getPlots()) {
         if(buildPlot.getCuboid() != null && buildPlot.getCuboid().isInWithMarge(blockLocation, 5)) {
           event.setCancelled(true);
+          return;
         }
       }
     }
@@ -346,6 +347,7 @@ public class ArenaEvents extends PluginArenaEvents {
         for(Block block : event.getBlocks()) {
           if(buildPlot.getCuboid() != null && !buildPlot.getCuboid().isInWithMarge(block.getLocation(), -1) && buildPlot.getCuboid().isIn(blockLocation)) {
             event.setCancelled(true);
+            return;
           }
         }
       }
@@ -662,8 +664,8 @@ public class ArenaEvents extends PluginArenaEvents {
 
       if(baseArena != null && baseArena.getArenaState() != IArenaState.IN_GAME) {
         if(event.getClickedInventory() == humanEntity.getInventory()) {
-          if(event.getView().getType() == InventoryType.CRAFTING
-              || event.getView().getType() == InventoryType.PLAYER) {
+          if(XInventoryView.of(event.getView()).getType() == InventoryType.CRAFTING
+              || XInventoryView.of(event.getView()).getType() == InventoryType.PLAYER) {
             event.setResult(Event.Result.DENY);
           }
         }

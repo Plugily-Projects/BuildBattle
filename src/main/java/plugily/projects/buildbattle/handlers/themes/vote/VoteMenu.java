@@ -39,6 +39,7 @@ import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XEnchantment;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XItemFlag;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.inventory.XInventoryView;
 import plugily.projects.minigamesbox.inventory.common.item.ClickableItem;
 import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
 import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
@@ -103,7 +104,7 @@ public class VoteMenu {
           HumanEntity humanEntity = event.getPlayer();
           Inventory inventory = event.getInventory();
 
-          if(humanEntity.getOpenInventory().getTopInventory() != inventory) {
+          if(XInventoryView.of(humanEntity.getOpenInventory()).getTopInventory() != inventory) {
             humanEntity.openInventory(inventory);
           }
         });
