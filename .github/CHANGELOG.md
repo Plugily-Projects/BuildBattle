@@ -10,6 +10,12 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+### 5.1.2 Release
+* Fixed InventoryView not interface on getGui @VoteMenu
+* Fixed Method 'org.bukkit.block.banner.PatternType[] org.bukkit.block.banner.PatternType.values()' must be Methodref constant
+* Fixed InventoryView not interface onItemMove
+* Fixed vehicle moving outside of arena plots and other worlds
+
 ### 5.1.1 Release
 * Fixed liquid flow outside plots and different worlds
 * Fixed forceplay console command without theme
