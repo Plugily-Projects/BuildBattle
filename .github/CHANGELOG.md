@@ -10,6 +10,9 @@ deploy webhooks to print changelog successfully
 
 That's all, matcher will stop when detects next line started with `###` match
 
+### 5.1.4 Release (14.05.2026)
+* Updated to MinigamesBox 1.4.6
+
 ### 5.1.3 Release
 * Fixed startup issue on 1.21.9+ because of Heads not loading
 
