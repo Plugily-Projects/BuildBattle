@@ -1,3 +1,6 @@
+### 5.1.7 Release (10.10.2026)
+* Changed Minigamesbox to 1.4.11
+
 ## Build Battle Changelog
 
 Changelog is followed by special scheme which is required in order to allow automatic discord
